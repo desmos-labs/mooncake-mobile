@@ -7,25 +7,68 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "prepare": "husky install",
+    "prestorybook": "rnstl",
+    "use:main": "cp index.main.js index.js",
+    "use:storybook": "cp index.storybook.js index.js"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@react-native-masked-view/masked-view": "^0.2.6",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/stack": "^6.2.1",
+    "big.js": "^6.2.0",
+    "formik": "^2.2.9",
+    "graphql": "^16.5.0",
+    "i18next": "^21.8.10",
+    "numeral": "^2.0.6",
     "react": "18.0.0",
-    "react-native": "0.69.0"
+    "react-i18next": "^11.17.2",
+    "react-native": "0.69.0",
+    "react-native-gesture-handler": "^2.5.0",
+    "react-native-safe-area-context": "^4.3.1",
+    "react-native-screens": "^3.13.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@storybook/addon-actions": "^5.3",
+    "@storybook/addon-knobs": "^5.3",
+    "@storybook/addon-links": "^5.3",
+    "@storybook/addon-ondevice-actions": "^5.3.23",
+    "@storybook/addon-ondevice-knobs": "^5.3.25",
+    "@storybook/react-native": "^5.3.25",
+    "@testing-library/jest-native": "^4.0.5",
+    "@testing-library/react-native": "^10.1.0",
+    "@types/big.js": "^6.1.4",
     "@types/jest": "^26.0.23",
+    "@types/numeral": "^2.0.2",
     "@types/react-native": "^0.69.0",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "babel-jest": "^26.6.3",
+    "babel-loader": "^8.2.5",
+    "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-recommended": "^4.1.0",
+    "eslint-config-typescript": "^3.0.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.0.0",
+    "husky": ">=6",
     "jest": "^26.6.3",
+    "lint-staged": ">=10",
     "metro-react-native-babel-preset": "^0.70.3",
+    "react-dom": "18.0.0",
+    "react-native-storybook-loader": "^2.0.5",
     "react-test-renderer": "18.0.0",
     "typescript": "^4.4.4"
   },
@@ -41,6 +84,31 @@
       "jsx",
       "json",
       "node"
+    ],
+    "testEnvironment": "jsdom",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|@react-native-community|@react-native|@react-navigation)"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect",
+      "<rootDir>/jest/setupAfterEnv.js",
+      "<rootDir>/jest/globalMock.js"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest/setup.js"
     ]
-  }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --quiet"
+  },
+  "config": {
+    "react-native-storybook-loader": {
+      "searchDir": [
+        "./src"
+      ],
+      "pattern": "**/*.stories.tsx",
+      "outputFile": "./storybook/storyLoader.js"
+    }
+  },
+  "License": "Apache-2.0"
 }

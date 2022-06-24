@@ -1,0 +1,79 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "assets": [
+        "./assets"
+      ],
+      "assets/*": [
+        "./assets/*"
+      ],
+      "components": [
+        "./components"
+      ],
+      "components/*": [
+        "./components/*"
+      ],
+      "config": [
+        "./config"
+      ],
+      "config/*": [
+        "./config/*"
+      ],
+      "contexts": [
+        "./contexts"
+      ],
+      "contexts/*": [
+        "./contexts/*"
+      ],
+      "hooks": [
+        "./hooks"
+      ],
+      "hooks/*": [
+        "./hooks/*"
+      ],
+      "lib": [
+        "./lib"
+      ],
+      "lib/*": [
+        "./lib/*"
+      ],
+      "navigation": [
+        "./navigation"
+      ],
+      "navigation/*": [
+        "./navigation/*"
+      ],
+      "screens": [
+        "./screens"
+      ],
+      "screens/*": [
+        "./screens/*"
+      ],
+      "services": [
+        "./services"
+      ],
+      "services/*": [
+        "./services/*"
+      ],
+      "types": [
+        "./types"
+      ],
+      "types/*": [
+        "./types/*"
+      ],
+      "jest": [
+        "../jest"
+      ],
+      "jest/*": [
+        "../jest/*"
+      ],
+      "storybook": [
+        "../storybook"
+      ],
+      "storybook/*": [
+        "../storybook/*"
+      ]
+    }
+  }
+}
