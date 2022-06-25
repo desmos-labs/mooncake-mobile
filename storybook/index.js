@@ -4,8 +4,10 @@ import { AppRegistry } from 'react-native';
 import { getStorybookUI, configure, addDecorator } from '@storybook/react-native';
 import { withKnobs } from '@storybook/addon-knobs';
 import { loadStories } from './storyLoader';
+import darkTheme from '../src/config/theme/dark'
 
 import './rn-addons';
+import { ThemeProvider } from "react-native-paper";
 
 // init i18
 // uncomment/change if i18n is installed
@@ -17,7 +19,9 @@ addDecorator(withKnobs);
 // Add all necessary providers here
 addDecorator(getStories =>
 <>
-  {getStories()}
+  <ThemeProvider theme={darkTheme}>
+    {getStories()}
+  </ThemeProvider>
 </>
 )
 

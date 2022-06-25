@@ -24,6 +24,11 @@ module.exports = {
     'react/require-default-props': 0,
     'react/function-component-definition': 0,
     'react-native/sort-styles': 'error',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
+    'no-unused-vars': 'off',
+    'no-undef': 0,
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
   },
   settings: {
     'import/resolver': {

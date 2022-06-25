@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from "react";
 
 import {ColorValue, View} from 'react-native';
 
 interface Props {
+    children?: ReactNode;
     justifyContent?: any;
     alignItems?: any;
     padding?: number;
