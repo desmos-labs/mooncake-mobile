@@ -22,7 +22,8 @@ const ContainedMode: CompProps = {
   mode: 'contained',
 };
 
-storiesOf('components/FbxButton', module)
+// DButton as in Desmos Button
+storiesOf('components/DButton', module)
   .addDecorator(getStories => (
     <SbContainer justifyContent="center" padding={16}>
       {getStories()}
