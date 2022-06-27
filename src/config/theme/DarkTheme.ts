@@ -1,4 +1,4 @@
-import LightTheme from './light';
+import LightTheme from './LightTheme';
 
 const DarkTheme: ReactNativePaper.Theme = {
   ...LightTheme,
