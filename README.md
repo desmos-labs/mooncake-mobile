@@ -11,7 +11,8 @@
 ## Storybook
 To run the application in storybook mode:
 1. `yarn use:storybook`
-2. `yarn ios` or `yarn android`
+2. If you encounter a `storyloader.js not found error`, run `yarn prestorybook` to generate stories.
+3. `yarn ios` or `yarn android`
 
 To run the application in regular mode:
 1. `yarn use:main`

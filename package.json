@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "prestorybook": "rnstl",
     "use:main": "cp index.main.js index.js",
-    "use:storybook": "cp index.storybook.js index.js",
+    "use:storybook": "cp index.storybook.js index.js && yarn prestorybook",
     "postinstall": "patch-package && rn-nodeify --install stream,crypto,fs,path --hack"
   },
   "dependencies": {
