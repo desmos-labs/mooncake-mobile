@@ -18,7 +18,7 @@ interface Props {
  */
 const SbContainer: React.FC<Props> = ({ backgroundColor, justifyContent, alignItems, padding, children }) => {
 
-  const [isDarkMode, setIsDarkMode] = useMMKVBoolean("isDarkMode");
+  const [isDarkMode, setIsDarkMode] = useMMKVBoolean("SB_isDarkMode");
 
   // hacky way to use dark/light themes as this call is not inside the PaperProvider
   // but this is fine, as it is only used to control the background color of the
