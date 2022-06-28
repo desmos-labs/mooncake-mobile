@@ -1,7 +1,7 @@
 name: Run linter and tests on merge
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
 jobs:
   tests:
     runs-on: ubuntu-latest
