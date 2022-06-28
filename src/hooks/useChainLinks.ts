@@ -1,15 +1,17 @@
 import {ChainLink} from 'types/link';
+import {useQuery} from '@apollo/client';
+import {useRecoilState} from 'recoil';
+import GetChainLinkByAddressDocument from 'services/graphql/queries/GetChainLinkAddressDocument';
+import chainLinkState from '../recoil/chainLinks';
 
 export default function useChainLinks(address: string) {
-  const userLinks = chainLinks[address];
+  const [chainLinks, setChainLinks] = useRecoilState(chainLinkState);
 
-  useGetChainLinkByAddress({
-    variables: {
-      address,
-    },
+  useQuery(GetChainLinkByAddressDocument, {
+    variables: {address},
     onCompleted: ({chain_link}) => {
       const cLinks = chain_link.map(
-        link =>
+        (link: any) =>
           ({
             chainName: link.chain_config.name,
             externalAddress: link.external_address,
@@ -17,28 +19,11 @@ export default function useChainLinks(address: string) {
             creationTime: new Date(`${link.creation_time}Z`),
           } as ChainLink),
       );
-      if (userLinks === undefined) {
-        setChainLinks(old => {
-          const newState = {
-            ...old,
-          };
-          newState[address] = cLinks;
-          return newState;
-        });
-      }
+
+      setChainLinks(cLinks);
     },
-    onError: () => {
-      if (userLinks === undefined) {
-        setChainLinks(old => {
-          const newState = {
-            ...old,
-          };
-          newState[address] = [];
-          return newState;
-        });
-      }
-    },
+    onError: () => {},
   });
 
-  return userLinks ?? [];
+  return chainLinks;
 }
