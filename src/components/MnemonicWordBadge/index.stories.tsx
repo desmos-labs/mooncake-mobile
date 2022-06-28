@@ -12,7 +12,6 @@ const PlaceholderMnemonic: CompProps = {
   value: 'Matrix',
 };
 
-// DButton as in Desmos Button
 storiesOf('components/MnemonicWordBadge', module)
   .addDecorator(getStories => (
     <SbContainer justifyContent="center" padding={16}>

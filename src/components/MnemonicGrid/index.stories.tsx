@@ -10,7 +10,6 @@ const Mnemonic: CompProps = {
     'Twirly Matrices Service Fat Dentists Twirly Matrices Service Fat Dentists Twirly Matrices Service Fat',
 };
 
-// DButton as in Desmos Button
 storiesOf('components/MnemonicGrid', module)
   .addDecorator(getStories => (
     <SbContainer justifyContent="center" padding={16}>
