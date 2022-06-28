@@ -16,5 +16,5 @@ storiesOf('components/DTextInput', module)
       {getStories()}
     </SbContainer>
   ))
-  .add('Standard', () => <DTextInput />)
+  .add('Default', () => <DTextInput />)
   .add('Error', () => <DTextInput {...InputError} />);
