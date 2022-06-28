@@ -73,6 +73,12 @@
       ],
       "storybook/*": [
         "../storybook/*"
+      ],
+      "@recoil": [
+        "../recoil"
+      ],
+      "@recoil/*": [
+        "../recoil/*"
       ]
     }
   }
