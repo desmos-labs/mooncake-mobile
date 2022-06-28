@@ -1,12 +1,11 @@
 import {useMemo} from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {Theme} from 'react-native-paper/lib/typescript/types';
 import NamedStyles = StyleSheet.NamedStyles;
 
 export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(
   // eslint-disable-next-line no-unused-vars
-  styleProvider: (theme: Theme) => T,
+  styleProvider: (theme: ReactNativePaper.Theme) => T,
 ): () => T {
   return () => {
     const theme = useTheme();
