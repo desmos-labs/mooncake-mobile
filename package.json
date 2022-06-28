@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@habx/apollo-multi-endpoint-link": "^2.7.0",
     "@react-native-masked-view/masked-view": "^0.2.6",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
