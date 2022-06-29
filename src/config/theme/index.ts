@@ -6,7 +6,7 @@ import NamedStyles = StyleSheet.NamedStyles;
 
 export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(
   // eslint-disable-next-line no-unused-vars
-  styleProvider: (theme: Theme) => T,
+  styleProvider: (theme: ReactNativePaper.Theme) => T,
 ): () => T {
   return () => {
     const theme = useTheme();

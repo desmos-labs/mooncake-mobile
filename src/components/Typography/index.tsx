@@ -107,6 +107,15 @@ const Typography = {
     letterSpacing: 0.0015,
     textAlign: 'left',
   })),
+  H3: createTextComponent(() => ({
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 22,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 33,
+    letterSpacing: 0.0015,
+    textAlign: 'left',
+  })),
   H4: createTextComponent(() => ({
     fontFamily: 'Poppins-Medium',
     fontStyle: 'normal',
