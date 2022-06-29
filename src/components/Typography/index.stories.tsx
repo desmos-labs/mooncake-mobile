@@ -5,11 +5,7 @@ import Typography from './index';
 
 storiesOf('components/Typography', module)
   .addDecorator(getStories => (
-    <SbContainer
-      backgroundColor="gray"
-      alignItems="center"
-      justifyContent="space-evenly"
-      padding={16}>
+    <SbContainer alignItems="center" justifyContent="space-evenly" padding={16}>
       {getStories()}
     </SbContainer>
   ))

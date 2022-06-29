@@ -1,7 +1,6 @@
 import {useMemo} from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {Theme} from 'react-native-paper/lib/typescript/types';
 import NamedStyles = StyleSheet.NamedStyles;
 
 export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(

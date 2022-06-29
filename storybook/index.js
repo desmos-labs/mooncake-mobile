@@ -1,13 +1,11 @@
 import React from 'react';
 // if you use expo remove this line
-import { AppRegistry } from 'react-native';
-import { getStorybookUI, configure, addDecorator } from '@storybook/react-native';
-import { withKnobs } from '@storybook/addon-knobs';
-import { loadStories } from './storyLoader';
-import DarkTheme from "config/theme/DarkTheme";
+import {AppRegistry} from 'react-native';
+import {getStorybookUI, configure, addDecorator} from '@storybook/react-native';
+import {withKnobs} from '@storybook/addon-knobs';
+import {loadStories} from './storyLoader';
 
 import './rn-addons';
-import { Provider as PaperProvider } from "react-native-paper";
 
 // init i18
 // uncomment/change if i18n is installed
@@ -17,13 +15,13 @@ import '../src/assets/locales/i18n';
 addDecorator(withKnobs);
 
 // Add all necessary providers here
-addDecorator(getStories =>
-<>
-  <PaperProvider theme={DarkTheme}>
-    {getStories()}
-  </PaperProvider>
-</>
-)
+addDecorator(getStories => {
+  return (
+    <>
+      {getStories()}
+    </>
+  )
+});
 
 // import stories
 configure(() => {
