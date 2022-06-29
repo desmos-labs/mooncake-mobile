@@ -4,6 +4,7 @@ import ROUTES from 'navigation/routes';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import EnterPassword from 'screens/EnterPassword';
+import ChangePassword from 'screens/ChangePassword';
 
 const Stack = createStackNavigator();
 
@@ -12,6 +13,7 @@ const Stack = createStackNavigator();
 const RootNavigator = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
