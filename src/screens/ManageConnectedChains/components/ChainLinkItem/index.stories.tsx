@@ -10,6 +10,7 @@ const defaultProps: CompProps = {
   chainName: 'cosmos',
   address: 'cosmo123123123123123123',
   onPressDisconnect: action('onPressDisconnect'),
+  showSnackBar: action('showSnackBar'),
 };
 
 storiesOf('components/ChainLinkItem', module)

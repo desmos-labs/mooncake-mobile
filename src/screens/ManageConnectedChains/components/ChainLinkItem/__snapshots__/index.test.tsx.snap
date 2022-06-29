@@ -1,0 +1,195 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: ChainLinkItem renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "padding": 16,
+      }
+    }
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/cosmos.png",
+        }
+      }
+      style={
+        Object {
+          "height": 40,
+          "resizeMode": "contain",
+          "width": 40,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "marginLeft": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#0b0b0b",
+              },
+              Object {
+                "fontFamily": "Poppins-Medium",
+                "fontSize": 16,
+                "fontStyle": "normal",
+                "fontWeight": "500",
+                "letterSpacing": 0.0015,
+                "lineHeight": 24,
+                "textAlign": "left",
+              },
+            ],
+            Object {
+              "color": "#0b0b0b",
+            },
+          ]
+        }
+      >
+        Testmosis
+      </Text>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "width": "50%",
+          }
+        }
+      >
+        <Text
+          ellipsizeMode="middle"
+          numberOfLines={1}
+          style={
+            Array [
+              Array [
+                Object {
+                  "color": "#0b0b0b",
+                },
+                Object {
+                  "fontFamily": "Poppins-Regular",
+                  "fontSize": 12,
+                  "fontStyle": "normal",
+                  "fontWeight": "400",
+                  "letterSpacing": 0.004,
+                  "lineHeight": 18,
+                  "textAlign": "left",
+                },
+              ],
+              Object {
+                "color": "#0b0b0b",
+              },
+            ]
+          }
+        >
+          test123123123
+        </Text>
+        <View
+          accessibilityLabel="copy address button"
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "opacity": 1,
+            }
+          }
+        >
+          <Image
+            source={
+              Object {
+                "testUri": "../../../src/assets/images/copy.png",
+              }
+            }
+            style={
+              Object {
+                "height": 16,
+                "marginLeft": 8,
+                "resizeMode": "contain",
+                "tintColor": "#9d9d9d",
+                "width": 16,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            Array [
+              Array [
+                Object {
+                  "color": "#0b0b0b",
+                },
+                Object {
+                  "fontFamily": "Poppins-Regular",
+                  "fontSize": 16,
+                  "fontStyle": "normal",
+                  "fontWeight": "400",
+                  "letterSpacing": 0.005,
+                  "lineHeight": 22,
+                  "textAlign": "left",
+                },
+              ],
+              Object {
+                "color": "#ED6C53",
+              },
+            ]
+          }
+        >
+          Disconnect
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

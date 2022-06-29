@@ -29,13 +29,19 @@ const ChainLinkItem = ({
     Clipboard.setString(address);
   }, [address]);
 
+  const capitalizedFirstLetter = React.useMemo(() => {
+    const [firstLetter, ...restOfString] = chainName;
+
+    return firstLetter.toUpperCase().concat(...restOfString);
+  }, [chainName]);
+
   return (
     <View style={styles.container}>
       <Image style={styles.icon} source={GetChainIcon(chainName)} />
 
       <View style={styles.centerGroup}>
         <Typography.Subtitle style={styles.baseText}>
-          {chainName}
+          {capitalizedFirstLetter}
         </Typography.Subtitle>
         <View style={styles.addressGroup}>
           <Typography.Caption
@@ -45,7 +51,9 @@ const ChainLinkItem = ({
             {address}
           </Typography.Caption>
 
-          <TouchableOpacity onPress={onPressCopy}>
+          <TouchableOpacity
+            accessibilityLabel="copy address button"
+            onPress={onPressCopy}>
             <Image style={styles.copyIcon} source={copyIcon} />
           </TouchableOpacity>
         </View>
