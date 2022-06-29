@@ -980,18 +980,18 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@3.0.0-alpha.9":
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-3.0.0-alpha.9.tgz#e9df44ef3ddcb470846351f05530243cf7197c4a"
-  integrity sha512-T3fDGZe9DAt7e4q09pCS8+04y2G/4SF6XmeXZYI60TjnBbup2hEh9GVRHjvQGF8nkzWAQMQfBcxrRF1FVh63Yg==
+"@desmoslabs/desmjs-types@3.0.1", "@desmoslabs/desmjs-types@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-3.0.1.tgz#a4a5cbe2ce838d81105d3c2d591664807c3a780a"
+  integrity sha512-E0CIpYt116fV3T6wVvVBpo3277rgYc4BdCfa1QZl01aI/uJ6XxMLmyQgYRGjS207KmKcQvbMwNe7vrEM6fooNg==
   dependencies:
     long "^4.0.0"
     protobufjs "^6.11.2"
 
-"@desmoslabs/desmjs@^3.0.0-alpha.10":
-  version "3.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-3.0.0-alpha.10.tgz#677aff4f0baef511b9bb2fba78c26ebb4545bc2b"
-  integrity sha512-mN4jld0DaWdJNaI2gY6kXTq5wIgrR6Hqme6vPhc0xz/6ZltafbyDjY4J6L+UEQkGr7ihBLVkQ0qc9Sto7It5Yg==
+"@desmoslabs/desmjs@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-3.0.1.tgz#47bf08f3da6d4ed18b00129dce3255222f66e5ed"
+  integrity sha512-jZ5mLK4QCPk9kBss3j/bDwZqf5EphOllo8yDaAWTYp7m7l/M4zanTPiy4JtwJk0Xbo3G4xjfaf7+CYT3JBXkFg==
   dependencies:
     "@cosmjs/amino" "^0.28.4"
     "@cosmjs/crypto" "^0.28.4"
@@ -1001,18 +1001,10 @@
     "@cosmjs/stargate" "^0.28.4"
     "@cosmjs/tendermint-rpc" "^0.28.4"
     "@cosmjs/utils" "^0.28.4"
-    "@desmoslabs/desmjs-types" "3.0.0-alpha.9"
+    "@desmoslabs/desmjs-types" "3.0.1"
     cosmjs-types "^0.4.1"
     cosmos-wallet "^1.1.0"
     long "^4.0.0"
-
-"@desmoslabs/proto@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/proto/-/proto-2.0.0.tgz#b3a4c8810315ac2a44e133f4326575ada2491db5"
-  integrity sha512-16kzjmhK/fpH1iVk4UFXqcCHP5Ves/f7bK7xuKuKDj8MEhdzs4Hl/+5UEUZXI8l/6If9U+P5hdz5qbsJ4n8Pdg==
-  dependencies:
-    long "4.0.0"
-    protobufjs "~6.11.2"
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
@@ -7065,7 +7057,7 @@ logkitty@^0.7.1:
     dayjs "^1.8.15"
     yargs "^15.1.0"
 
-long@4.0.0, long@^4.0.0:
+long@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==

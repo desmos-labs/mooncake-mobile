@@ -1,8 +1,8 @@
 import {
   ChainConfig,
   Proof,
-} from '@desmoslabs/proto/desmos/profiles/v1beta1/models_chain_links';
-import {Any} from '@desmoslabs/proto/google/protobuf/any';
+} from '@desmoslabs/desmjs-types/desmos/profiles/v2/models_chain_links';
+import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 
 export type ChainLink = {
   /**
