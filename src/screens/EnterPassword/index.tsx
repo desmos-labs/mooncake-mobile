@@ -12,6 +12,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import DButton from 'components/DButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -62,14 +63,22 @@ const EnterPassword = () => {
               error={!!errors.password}
             />
             {errors.password && (
-              <Typography.Subtitle>{errors.password}</Typography.Subtitle>
+              <Typography.Subtitle2 style={styles.errorText}>
+                {errors.password}
+              </Typography.Subtitle2>
             )}
 
             <KeyboardAvoidingView
               keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton onPress={handleSubmit} mode="contained">
+              <DButton
+                disabled={
+                  !values.password ||
+                  _.flatten(Object.values(errors)).length > 0
+                }
+                onPress={handleSubmit}
+                mode="contained">
                 <Typography.Body1 style={styles.confirmButtonText}>
                   {t('common:confirm')}
                 </Typography.Body1>

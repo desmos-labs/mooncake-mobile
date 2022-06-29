@@ -29,6 +29,9 @@ const useStyles = makeStyle(theme => ({
   confirmButtonText: {
     color: theme.colors.font[5],
   },
+  errorText: {
+    color: theme.colors.error,
+  },
 }));
 
 export default useStyles;
