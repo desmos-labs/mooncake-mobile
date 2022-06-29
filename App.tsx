@@ -6,19 +6,22 @@ import {NavigationContainer} from '@react-navigation/native';
 import {ApolloProvider} from '@apollo/client';
 import useApolloClient from 'services/graphql/useApolloClient';
 import {RecoilRoot} from 'recoil';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const App = () => {
   const client = useApolloClient();
   return (
-    <PaperProvider theme={LightTheme}>
-      <ApolloProvider client={client}>
-        <RecoilRoot>
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
-        </RecoilRoot>
-      </ApolloProvider>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={LightTheme}>
+        <ApolloProvider client={client}>
+          <RecoilRoot>
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          </RecoilRoot>
+        </ApolloProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 };
 

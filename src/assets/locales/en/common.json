@@ -1,5 +1,6 @@
 {
   "hello": "world",
   "hide": "Hide",
-  "disconnect": "Disconnect"
+  "disconnect": "Disconnect",
+  "confirm": "Confirm"
 }
