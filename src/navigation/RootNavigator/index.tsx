@@ -5,14 +5,26 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import EnterPassword from 'screens/EnterPassword';
 import ChangePassword from 'screens/ChangePassword';
+import ResultModal, {ResultModalParams} from 'screens/ResultModal';
+import {useTranslation} from 'react-i18next';
 
-const Stack = createStackNavigator();
+export type RootNavigatorParamList = {
+  [ROUTES.CHANGE_PASSWORD]: undefined;
+  [ROUTES.ENTER_PASSWORD]: undefined;
+  [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
+  [ROUTES.LANDING]: undefined;
+  [ROUTES.RESULT_MODAL]: ResultModalParams;
+};
+
+const Stack = createStackNavigator<RootNavigatorParamList>();
 
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
+  const {t} = useTranslation();
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen
@@ -20,6 +32,24 @@ const RootNavigator = () => {
         component={ManageConnectedChains}
       />
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+      <Stack.Group
+        screenOptions={{
+          cardStyle: {
+            backgroundColor: 'transparent',
+          },
+          presentation: 'transparentModal',
+          cardOverlayEnabled: true,
+        }}>
+        <Stack.Screen
+          initialParams={{
+            title: t('resultModal:success'),
+            subtitle: t('resultModal:passwordWasChanged'),
+            confirmButtonLabel: t('resultModal:goToProfile'),
+          }}
+          name={ROUTES.RESULT_MODAL}
+          component={ResultModal}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };
