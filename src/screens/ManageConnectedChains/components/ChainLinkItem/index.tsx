@@ -4,15 +4,30 @@ import GetChainIcon from 'lib/GetChainIcon';
 import Typography from 'components/Typography';
 import {copyIcon} from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
 
 type Props = {
+  /**
+   * The name of the chain. Component will map the icon or show a cosmos icon
+   * if a matching image cannot be found. See lib/GetChainIcon for more details.
+   */
   chainName: string;
 
+  /**
+   * The address of the connected account.
+   */
   address: string;
 
+  /**
+   * What to do when the user presses the Disconnect button.
+   */
   onPressDisconnect: () => void;
 
+  /**
+   * A callback to show the snackbar on the parent container when the copy
+   * button is pressed.
+   */
   showSnackBar: () => void;
 };
 
@@ -22,6 +37,7 @@ const ChainLinkItem = ({
   onPressDisconnect,
   showSnackBar,
 }: Props) => {
+  const {t} = useTranslation('common');
   const styles = useStyles();
 
   const onPressCopy = React.useCallback(() => {
@@ -62,7 +78,7 @@ const ChainLinkItem = ({
       <View style={styles.disconnectButton}>
         <TouchableOpacity onPress={onPressDisconnect}>
           <Typography.Body1 style={styles.disconnectText}>
-            Disconnect
+            {t('disconnect')}
           </Typography.Body1>
         </TouchableOpacity>
       </View>
