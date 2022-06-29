@@ -1,13 +1,18 @@
 import React, { FC, ReactElement } from "react";
 import { render } from "@testing-library/react-native";
 import { Options } from "@testing-library/react-native/build/render";
-import MockProvider from "../MockProvider";
+import {Provider as PaperProvider} from 'react-native-paper';
+import LightTheme from "config/theme/LightTheme";
 
+/**
+ * A custom render function for use in unit tests for components that
+ * require a PaperProvider (or any other Provider) context
+ */
 const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <MockProvider>
+    <PaperProvider theme={LightTheme}>
       {children}
-    </MockProvider>
+    </PaperProvider>
   );
 };
 
