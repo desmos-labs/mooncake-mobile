@@ -16,11 +16,7 @@ addDecorator(withKnobs);
 
 // Add all necessary providers here
 addDecorator(getStories => {
-  return (
-    <>
-      {getStories()}
-    </>
-  )
+  return <>{getStories()}</>;
 });
 
 // import stories
@@ -30,7 +26,9 @@ configure(() => {
 
 // Refer to https://github.com/storybookjs/storybook/tree/master/app/react-native#start-command-parameters
 // To find allowed options for getStorybookUI
-const StorybookUIRoot = getStorybookUI({});
+const StorybookUIRoot = getStorybookUI({
+  asyncStorage: null,
+});
 
 // If you are using React Native vanilla and after installation you don't see your app name here, write it manually.
 // If you use Expo you should remove this line.
