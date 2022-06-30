@@ -124,6 +124,14 @@ const Typography = {
     lineHeight: 32,
     letterSpacing: 0.0015,
   })),
+  Button2: createTextComponent(() => ({
+    fontFamily: 'Poppins-SemiBold',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 21,
+    letterSpacing: 0.015,
+  })),
 };
 
 export default Typography;

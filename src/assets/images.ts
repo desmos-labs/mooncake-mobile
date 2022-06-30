@@ -23,3 +23,5 @@ export const regenIcon = require('./images/regen.png');
 export const terraIcon = require('./images/terra.png');
 
 export const copyIcon = require('./images/copy.png');
+
+export const moreIcon = require('./images/more.png');

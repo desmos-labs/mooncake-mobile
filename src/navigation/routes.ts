@@ -2,6 +2,8 @@ enum ROUTES {
   LANDING = 'LANDING',
 
   MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',
+
+  HOME = 'HOME',
 }
 
 export default ROUTES;
