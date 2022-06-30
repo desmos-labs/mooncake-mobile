@@ -14,12 +14,3 @@ export type AppSettings = {
   biometrics: boolean;
   notifications: boolean;
 };
-
-/**
- * Default application settings
- */
-export const DefaultAppSettings: AppSettings = {
-  theme: 'light',
-  biometrics: false,
-  notifications: false,
-};

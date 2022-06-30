@@ -5,14 +5,13 @@ import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
 
 const Settings = () => {
-  const {biometrics, notifications} = useRecoilValue(appSettingsState);
-  const setSettings = useSetRecoilState(appSettingsState);
+  const [settings, setSettings] = useRecoilState(appSettingsState);
   const {t} = useTranslation();
   const styles = useStyles();
 
@@ -48,24 +47,24 @@ const Settings = () => {
         />
         <SectionSwitch
           label={t('enable biometrics')}
-          value={biometrics}
+          value={settings.biometrics}
           onValueChange={() =>
             setSettings((oldState: AppSettings) => {
               return {
                 ...oldState,
-                biometrics: !biometrics,
+                biometrics: !settings.biometrics,
               };
             })
           }
         />
         <SectionSwitch
           label={t('enable notifications')}
-          value={notifications}
+          value={settings.notifications}
           onValueChange={() =>
             setSettings((oldState: AppSettings) => {
               return {
                 ...oldState,
-                notifications: !notifications,
+                notifications: !settings.notifications,
               };
             })
           }
