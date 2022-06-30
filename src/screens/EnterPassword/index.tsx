@@ -3,7 +3,6 @@ import Typography from 'components/Typography';
 import {
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -44,7 +43,6 @@ const EnterPassword = () => {
 
   return (
     <DView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
 
       <Formik
