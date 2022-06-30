@@ -5,7 +5,6 @@ import {moreIcon} from 'assets/images';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
-//
 export enum POST_TYPE {
   DISCOVER = 'DISCOVER_POSTS',
   FOLLOWING = 'FOLLOWING_POSTS',
