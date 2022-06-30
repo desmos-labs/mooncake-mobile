@@ -24,14 +24,12 @@ const Section: React.FC<Props> = props => {
     return React.Children.map(children, (c, index) => {
       const last = count === index + 1;
       return (
-        <View
-          style={[!last && styles.interBorder]}
-          key={`w_${index.toString()}`}>
+        <View style={[!last && styles.spacer]} key={`w_${index.toString()}`}>
           {c}
         </View>
       );
     });
-  }, [children, styles.interBorder]);
+  }, [children, styles.spacer]);
 
   return (
     <View style={style}>
