@@ -2,5 +2,6 @@
   "hello": "world",
   "hide": "Hide",
   "disconnect": "Disconnect",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "settings": "Settings"
 }

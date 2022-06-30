@@ -7,6 +7,7 @@ import EnterPassword from 'screens/EnterPassword';
 import ChangePassword from 'screens/ChangePassword';
 import ResultModal, {ResultModalParams} from 'screens/ResultModal';
 import {useTranslation} from 'react-i18next';
+import Settings from 'screens/Settings';
 
 export type RootNavigatorParamList = {
   [ROUTES.CHANGE_PASSWORD]: undefined;
@@ -14,6 +15,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
+  [ROUTES.SETTINGS]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -49,6 +51,7 @@ const RootNavigator = () => {
           name={ROUTES.RESULT_MODAL}
           component={ResultModal}
         />
+        <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       </Stack.Group>
     </Stack.Navigator>
   );

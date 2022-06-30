@@ -6,13 +6,11 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.s,
   },
   fieldsContainer: {
-    backgroundColor: theme.colors.surface2,
+    backgroundColor: theme.colors.background2,
     borderRadius: theme.roundness,
   },
-  interBorder: {
-    borderBottomWidth: 1,
-    borderRadius: 0,
-    borderColor: theme.colors.line,
+  spacer: {
+    marginBottom: theme.spacing.s,
   },
 }));
 
