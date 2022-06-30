@@ -1,8 +1,40 @@
-import {MMKV} from 'react-native-mmkv';
+import {MMKV, useMMKVObject} from 'react-native-mmkv';
 import EnvConfig from 'config/EnvConfig';
+
+export enum MMKVKEYS {
+  EXAMPLE_KEY = 'EXAMPLE_KEY',
+  APP_SETTINGS = 'APP_SETTINGS',
+}
 
 const MMKVStorage = new MMKV({
   id: EnvConfig.MMKV_ID,
 });
 
-export default MMKVStorage;
+/**
+ * Retrieve a value from MMKV and attempts to parse it into a json value.
+ * If invalid, it will return undefined or the stored raw value.
+ */
+export const getMMKV = (key: MMKVKEYS) => {
+  const mmkvValue = MMKVStorage.getString(key);
+
+  if (!mmkvValue) return undefined;
+  try {
+    return JSON.parse(mmkvValue);
+  } catch (err) {
+    console.log(err);
+    return mmkvValue;
+  }
+};
+
+/**
+ * Stringifies a value and writes it to a given MMKV key
+ */
+export const setMMKV = (key: MMKVKEYS, value: any) =>
+  MMKVStorage.set(key, JSON.stringify(value));
+
+/**
+ * A hook that wraps useMMKVObject to enforce MMKVKEYS enum usage.
+ */
+export const useMMKVStorage = <T>(key: MMKVKEYS) => {
+  return useMMKVObject<T>(key, MMKVStorage);
+};
