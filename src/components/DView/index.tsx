@@ -1,25 +1,19 @@
 import React, {ReactElement} from 'react';
-import {
-  ImageBackground,
-  ScrollView,
-  StatusBar,
-  View,
-  ViewProps,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {ImageBackground, ScrollView, StatusBar, View} from 'react-native';
+import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
-export type Props = ViewProps & {
+export type Props = SafeAreaViewProps & {
   /**
-   * True if the content should be wrapped inside a ScrollView.
+   * True if the content should be wrapped inside a ScrollView
    */
   scrollable?: boolean;
   /**
-   * Shows an element as a top bar.
+   * Shows an element as a top bar
    */
   topBar?: ReactElement;
   /**
-   * Image that will be displayed as background.
+   * Image that will be displayed as background
    */
   background?: React.ComponentProps<typeof ImageBackground>['source'];
 };

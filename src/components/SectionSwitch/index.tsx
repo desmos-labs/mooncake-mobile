@@ -16,11 +16,15 @@ export type Props = {
   /**
    * True to disable the switch (opacity 0.3)
    */
-  disabled: boolean;
+  disabled?: boolean;
+  /**
+   * Callback that receives the new value as an argument
+   */
+  onValueChange: () => void;
 };
 
 const SectionSwitch: React.FC<Props> = props => {
-  const {label, value, disabled} = props;
+  const {label, value, disabled, onValueChange} = props;
   const styles = useStyles();
 
   return (
@@ -29,7 +33,7 @@ const SectionSwitch: React.FC<Props> = props => {
         style={[styles.label, disabled ? styles.disabled : null]}>
         {label}
       </Typography.Body1>
-      <Switch value={value} disabled={disabled} />
+      <Switch value={value} disabled={disabled} onValueChange={onValueChange} />
     </View>
   );
 };

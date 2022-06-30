@@ -26,8 +26,18 @@ const MixedPlaceholder = (
   <>
     <SectionButton label="Button1" />
     <SectionButton label="Button2" rightIconName="home" />
-    <SectionSwitch label="Switch1" value={true} disabled={false} />
-    <SectionSwitch label="Switch2" value={false} disabled={false} />
+    <SectionSwitch
+      label="Switch1"
+      value={true}
+      disabled={false}
+      onValueChange={() => console.log('valueChange')}
+    />
+    <SectionSwitch
+      label="Switch2"
+      value={false}
+      disabled={false}
+      onValueChange={() => console.log('valueChange')}
+    />
     <SectionText label="Left" value="Right" />
   </>
 );
