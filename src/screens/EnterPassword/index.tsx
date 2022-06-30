@@ -3,6 +3,7 @@ import Typography from 'components/Typography';
 import {
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -11,8 +12,8 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import DButton from 'components/DButton';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import _ from 'lodash';
+import DView from 'components/DView';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -42,7 +43,8 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
+    <DView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
 
       <Formik
@@ -93,7 +95,7 @@ const EnterPassword = () => {
           </View>
         )}
       </Formik>
-    </SafeAreaView>
+    </DView>
   );
 };
 

@@ -27,8 +27,8 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
+      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
@@ -46,7 +46,7 @@ const RootNavigator = () => {
           initialParams={{
             title: t('resultModal:success'),
             subtitle: t('resultModal:passwordWasChanged'),
-            confirmButtonLabel: t('resultModal:goToProfile'),
+            primaryButtonLabel: t('resultModal:goToProfile'),
           }}
           name={ROUTES.RESULT_MODAL}
           component={ResultModal}

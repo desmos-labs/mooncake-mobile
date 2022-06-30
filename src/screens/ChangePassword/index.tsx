@@ -1,13 +1,13 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import DSecureTextInput from 'components/DSecureTextInput';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, StatusBar, View} from 'react-native';
 import DButton from 'components/DButton';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import _ from 'lodash';
+import DView from 'components/DView';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -44,7 +44,8 @@ const ChangePassword = () => {
   }, []);
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.container}>
+    <DView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
 
       <Formik
@@ -109,7 +110,7 @@ const ChangePassword = () => {
           </View>
         )}
       </Formik>
-    </SafeAreaView>
+    </DView>
   );
 };
 
