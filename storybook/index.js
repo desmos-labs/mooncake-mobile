@@ -4,7 +4,6 @@ import {AppRegistry} from 'react-native';
 import {getStorybookUI, configure, addDecorator} from '@storybook/react-native';
 import {withKnobs} from '@storybook/addon-knobs';
 import {loadStories} from './storyLoader';
-import { NavigationContainer } from "@react-navigation/native";
 
 import './rn-addons';
 
