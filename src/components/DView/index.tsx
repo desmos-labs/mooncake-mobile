@@ -30,13 +30,7 @@ const DView: React.FC<Props> = props => {
       )}
       {topBar}
       <View style={[styles.content, style]}>
-        {scrollable ? (
-          <View style={styles.scrollViewContainer}>
-            <ScrollView>{children}</ScrollView>
-          </View>
-        ) : (
-          children
-        )}
+        {scrollable ? <ScrollView>{children}</ScrollView> : children}
       </View>
     </SafeAreaView>
   );

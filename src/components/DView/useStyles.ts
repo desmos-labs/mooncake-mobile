@@ -3,7 +3,6 @@ import {makeStyleWithProps} from 'config/theme';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => ({
   root: {
-    display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
     backgroundColor: theme.colors.background,
@@ -14,14 +13,11 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     height: '100%',
   },
   content: {
-    display: 'flex',
+    flex: 1,
     flexDirection: 'column',
     flexGrow: 1,
     backgroundColor:
       props.background === undefined ? theme.colors.background : 'transparent',
-  },
-  scrollViewContainer: {
-    flex: 1,
   },
 }));
 
