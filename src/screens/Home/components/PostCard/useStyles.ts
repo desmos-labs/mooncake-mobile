@@ -35,6 +35,17 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.font[5],
     fontSize: 32,
   },
+  blankAvatar: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    borderRadius: 20,
+    backgroundColor: theme.colors.backgroundGray,
+  },
+  nameGroup: {
+    marginLeft: theme.spacing.s,
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;

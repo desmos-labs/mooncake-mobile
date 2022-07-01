@@ -1,62 +1,78 @@
 import {atom, useRecoilState} from 'recoil';
-import {Post} from '@desmoslabs/desmjs-types/desmos/posts/v1beta1/posts';
 
-export const postsState = atom<Post[]>({
+export const postsState = atom<PostItem[]>({
   key: 'posts',
   default: [
     {
-      subspaceId: '5',
-      sectionId: 1,
-      id: '1',
-      text: 'WHAT ARE YOU DOING IN MY SWAMP',
-      entities: {
-        urls: [
-          {
-            end: '3',
-            url: 'https://example.com',
-            displayUrl: 'this.uri',
-          },
-        ],
+      author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      author: {
+        address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+        bio: '',
+        dtag: 'Raffaello',
+        profile_pic: '',
+        nickname: '',
       },
-      author: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      replySettings: 'REPLY_SETTING_EVERYONE',
-      creationDate: '2022-06-30T17:04:54.578160261Z',
+      subspace_id: 5,
+      reactions: [],
+      attachments: [
+        {
+          content: {
+            uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
+            '@type': '/desmos.posts.v1.Media',
+            mime_type: 'image/png',
+          },
+        },
+      ],
+      text: 'This is a test post',
     },
     {
-      subspaceId: '5',
-      sectionId: 1,
-      id: '2',
-      text: 'Ogres are like onions.',
-      entities: {
-        urls: [
-          {
-            end: '3',
-            url: 'https://example.com',
-            displayUrl: 'this.uri',
-          },
-        ],
+      author_address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
+      author: {
+        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
+        bio: '',
+        dtag: 'Michelangelo',
+        profile_pic: '',
+        nickname: '',
       },
-      author: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
-      replySettings: 'REPLY_SETTING_EVERYONE',
-      creationDate: '2022-06-30T17:06:30.426295549Z',
+      subspace_id: 5,
+      reactions: [],
+      attachments: [
+        {
+          content: {
+            '@type': '/desmos.posts.v1.Poll',
+            end_date: '2025-01-01T12:00:00Z',
+            question: 'A question',
+            provided_answers: [
+              {
+                text: 'yes',
+                attachments: [],
+              },
+              {
+                text: 'no',
+                attachments: [],
+              },
+            ],
+            allows_answer_edits: true,
+            final_tally_results: null,
+            allows_multiple_answers: true,
+          },
+        },
+      ],
+      text: 'This is a test post',
     },
     {
-      subspaceId: '5',
-      sectionId: 1,
-      id: '3',
-      text: 'I like that boulder.',
-      entities: {
-        urls: [
-          {
-            end: '3',
-            url: 'https://example.com',
-            displayUrl: 'this.uri',
-          },
-        ],
+      author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
+      author: {
+        address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
+        bio: '',
+        dtag: 'Donatello',
+        profile_pic: '',
+        nickname: '',
       },
-      author: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-      replySettings: 'REPLY_SETTING_EVERYONE',
-      creationDate: '2022-06-30T17:06:47.475816605Z',
+      subspace_id: 5,
+      reactions: [],
+      attachments: [],
+      text: 'This is a test post',
     },
   ],
 });
@@ -70,7 +86,7 @@ export const useGetPosts = (timestamp: string) => {
   const [posts, setPosts] = useRecoilState(postsState);
 
   // pretend a gql query gets called here
-  const newPosts: Post[] = [];
+  const newPosts: PostItem[] = [];
 
   setPosts(prev => [...prev, ...newPosts]);
 

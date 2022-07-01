@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'screens/Home/components/ProfileHeaderButton';
 import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
@@ -17,10 +17,21 @@ export enum POST_TYPE {
   FOLLOWING = 'FOLLOWING_POSTS',
 }
 
+// This warning is emitted from react-native-reanimated-carousel, but it
+// does not affect operation
+LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
+
 const Home = () => {
   const styles = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const posts = useRecoilValue(postsState);
+
+  const onPostChanged = React.useCallback(
+    (index: number) => {
+      console.log(index);
+    },
+    [posts],
+  );
 
   const postTypes = React.useMemo(() => {
     return [POST_TYPE.DISCOVER, POST_TYPE.FOLLOWING];
@@ -53,7 +64,7 @@ const Home = () => {
   const renderPost = React.useCallback((info: CarouselRenderItemInfo<any>) => {
     return (
       <PostCard
-        PostData={info.item}
+        postData={info.item}
         onPressAuthor={() => handlePressAuthor('')}
         onPressDetails={() => handlePressDetails('')}
         onPressFollow={() => handlePressFollow('')}
@@ -62,7 +73,7 @@ const Home = () => {
   }, []);
 
   return (
-    <DView>
+    <DView style={styles.container}>
       <View style={styles.headerGroup}>
         <ProfileHeaderButton
           // TODO: replace this with user's image
@@ -89,6 +100,7 @@ const Home = () => {
       </View>
 
       <Carousel
+        onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}
         modeConfig={{
@@ -96,7 +108,7 @@ const Home = () => {
           parallaxScrollingOffset: 50,
         }}
         width={Dimensions.get('window').width}
-        height={Dimensions.get('window').height * 0.75}
+        height={Dimensions.get('window').height * 0.7}
         data={posts}
         renderItem={renderPost}
       />

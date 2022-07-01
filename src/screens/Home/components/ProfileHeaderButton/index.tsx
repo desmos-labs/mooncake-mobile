@@ -10,7 +10,7 @@ type Props = {
   /**
    * What to do when the button is pressed.
    */
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 const ProfileHeaderButton = ({imageSrc, onPress}: Props) => {

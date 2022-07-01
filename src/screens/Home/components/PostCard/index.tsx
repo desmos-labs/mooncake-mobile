@@ -1,6 +1,5 @@
 import React from 'react';
-import {Post} from '@desmoslabs/desmjs-types/desmos/posts/v1beta1/posts';
-import {TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Typography from 'components/Typography';
 import ProfileHeaderButton from 'screens/Home/components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
@@ -8,12 +7,8 @@ import {blogDetails, followIcon} from 'assets/images';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
-interface PostType extends Post {
-  text: string;
-}
-
 type Props = {
-  PostData: PostType;
+  postData: PostItem;
 
   onPressAuthor: () => void;
 
@@ -24,7 +19,7 @@ type Props = {
 
 // The post dimensions are controlled by the Carousel
 const PostCard = ({
-  PostData,
+  postData,
   onPressAuthor,
   onPressFollow,
   onPressDetails,
@@ -32,26 +27,56 @@ const PostCard = ({
   const styles = useStyles();
   const theme = useTheme();
 
-  // author data is hardcoded until data flow is finalized
+  const {
+    author: {dtag, nickname, profile_pic},
+    attachments,
+  } = postData;
+
+  const Avatar = React.useMemo(() => {
+    if (profile_pic) {
+      return <ProfileHeaderButton imageSrc={{uri: profile_pic}} />;
+    }
+    return <View style={styles.blankAvatar} />;
+  }, [profile_pic]);
+
+  const AttachmentImage = React.useMemo(() => {
+    const [attachment] = attachments;
+
+    if (attachment) {
+      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
+        return (
+          <Image
+            source={{
+              uri: attachment.content.uri,
+            }}
+            style={StyleSheet.absoluteFillObject}
+          />
+        );
+      }
+    }
+    return undefined;
+  }, []);
+
   return (
     <View style={styles.container}>
+      {AttachmentImage}
       <View style={styles.textContainer}>
-        <Typography.H2 style={styles.textStyle}>{PostData.text}</Typography.H2>
+        <Typography.H2 style={styles.textStyle}>{postData.text}</Typography.H2>
       </View>
       <View style={styles.bottomGroup}>
         <TouchableOpacity onPress={onPressAuthor} style={styles.profileGroup}>
-          <ProfileHeaderButton
-            imageSrc={{uri: 'https://i.imgur.com/aih9snA.png'}}
-            onPress={onPressAuthor}
-          />
-          <Spacer paddingLeft={theme.spacing.m}>
-            <Typography.Subtitle2 style={styles.profileText}>
-              Shrek
-            </Typography.Subtitle2>
+          {Avatar}
+          <View style={styles.nameGroup}>
+            {nickname && (
+              <Typography.Subtitle2 style={styles.profileText}>
+                {nickname}
+              </Typography.Subtitle2>
+            )}
+
             <Typography.Body6 style={styles.profileText}>
-              @SwampyBoi
+              {`@${dtag}`}
             </Typography.Body6>
-          </Spacer>
+          </View>
         </TouchableOpacity>
 
         <View>
