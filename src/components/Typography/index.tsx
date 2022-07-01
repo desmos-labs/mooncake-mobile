@@ -8,7 +8,6 @@ function createTextComponent(
   styleProvider: (_theme: ReactNativePaper.Theme) => StyleProp<TextStyle>,
 ): React.FC<TypographyComponentProps> {
   return props => {
-    // eslint-disable-next-line react/prop-types
     const {style} = props;
     const theme = useTheme();
     const themeStyle = useMemo(() => styleProvider(theme), [theme]);
@@ -131,6 +130,22 @@ const Typography = {
     fontSize: 14,
     lineHeight: 21,
     letterSpacing: 0.015,
+  })),
+  Body6: createTextComponent(() => ({
+    fontFamily: 'Poppins-Regular',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: 21,
+    letterSpacing: 0.025,
+  })),
+  Subtitle3: createTextComponent(() => ({
+    fontFamily: 'Poppins-SemiBold',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 21,
+    letterSpacing: 0.125,
   })),
 };
 
