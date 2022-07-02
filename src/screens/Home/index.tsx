@@ -25,6 +25,14 @@ const Home = () => {
   const styles = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const posts = useRecoilValue(postsState);
+  const maxOffset = React.useRef<number>(0);
+
+  // recalculate max carousel offset. This value is used to determine if the
+  // carousel has been overscrolled
+  React.useEffect(() => {
+    maxOffset.current =
+      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
+  }, [posts.length]);
 
   const onPostChanged = React.useCallback(
     (index: number) => {
@@ -72,6 +80,19 @@ const Home = () => {
     );
   }, []);
 
+  const onCarouselProgressChange = React.useCallback(
+    (_: number, __: number, value: number) => {
+      const offsetValue = value;
+      if (offsetValue > 0) {
+        // do overscroll right things
+      }
+      if (offsetValue < maxOffset.current) {
+        // do overscroll left things
+      }
+    },
+    [maxOffset.current],
+  );
+
   return (
     <DView style={styles.container}>
       <View style={styles.headerGroup}>
@@ -100,6 +121,7 @@ const Home = () => {
       </View>
 
       <Carousel
+        onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}
