@@ -3,10 +3,9 @@ import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'screens/Home/components/ProfileHeaderButton';
 import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
-import {useRecoilValue} from 'recoil';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
-import {postsState} from '@recoil/posts';
+import {useGetPosts} from '@recoil/posts';
 import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import PostTypeTab from './components/PostTypeTab';
@@ -24,8 +23,10 @@ LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 const Home = () => {
   const styles = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const posts = useRecoilValue(postsState);
+  // const posts = useRecoilValue(postsState);
   const maxOffset = React.useRef<number>(0);
+
+  const {posts, fetchNewPosts} = useGetPosts();
 
   // recalculate max carousel offset. This value is used to determine if the
   // carousel has been overscrolled
@@ -36,9 +37,11 @@ const Home = () => {
 
   const onPostChanged = React.useCallback(
     (index: number) => {
-      console.log(index);
+      if (index >= posts.length - 1) {
+        fetchNewPosts();
+      }
     },
-    [posts],
+    [posts.length],
   );
 
   const postTypes = React.useMemo(() => {
@@ -83,6 +86,7 @@ const Home = () => {
   const onCarouselProgressChange = React.useCallback(
     (_: number, __: number, value: number) => {
       const offsetValue = value;
+      // console.log(offsetValue, maxOffset.current);
       if (offsetValue > 0) {
         // do overscroll right things
       }
