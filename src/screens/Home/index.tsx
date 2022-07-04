@@ -35,9 +35,11 @@ const Home = () => {
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
   }, [posts.length]);
 
+  // fetch new posts before the user reaches the last post so they
+  // will be enslaved by the app forever
   const onPostChanged = React.useCallback(
     (index: number) => {
-      if (index >= posts.length - 1) {
+      if (index >= posts.length - 2) {
         fetchNewPosts();
       }
     },

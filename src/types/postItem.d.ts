@@ -13,6 +13,8 @@ declare global {
     attachments: PostAttachment[];
 
     text: string;
+
+    id: number;
   }
 
   interface PostAuthor {
