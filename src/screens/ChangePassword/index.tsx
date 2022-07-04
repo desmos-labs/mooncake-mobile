@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import DSecureTextInput from 'components/DSecureTextInput';
-import {KeyboardAvoidingView, Platform, StatusBar, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import DButton from 'components/DButton';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -45,7 +45,6 @@ const ChangePassword = () => {
 
   return (
     <DView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
 
       <Formik
