@@ -8,6 +8,7 @@ import PostCard from 'screens/Home/components/PostCard';
 import {useGetPosts} from '@recoil/posts';
 import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
+import {useTranslation} from 'react-i18next';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -21,6 +22,7 @@ export enum POST_TYPE {
 LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
 const Home = () => {
+  const {t} = useTranslation('home');
   const styles = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   // const posts = useRecoilValue(postsState);
@@ -47,7 +49,7 @@ const Home = () => {
   );
 
   const postTypes = React.useMemo(() => {
-    return [POST_TYPE.DISCOVER, POST_TYPE.FOLLOWING];
+    return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
   }, []);
 
   const handlePressAuthor = React.useCallback((address: string) => {

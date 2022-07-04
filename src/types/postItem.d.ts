@@ -15,6 +15,10 @@ declare global {
     text: string;
 
     id: number;
+
+    creation_date: string;
+
+    conversation: any;
   }
 
   interface PostAuthor {
@@ -26,6 +30,8 @@ declare global {
   }
 
   interface PostAttachment {
+    id: number;
+
     content: MediaContent | PollContent;
   }
 

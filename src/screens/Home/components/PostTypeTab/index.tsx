@@ -1,6 +1,5 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import Animated from 'react-native-reanimated';
 import Typography from 'components/Typography';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,15 +7,24 @@ import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
 type Props = {
+  /**
+   * The currently selected tab index.
+   * Should be managed by the parent container.
+   */
   selectedIndex: number;
 
+  /**
+   * Callback to set the selected tab index on the parent container.
+   */
   setSelectedIndex: (idx: number) => void;
 
+  /**
+   * Selectable tab types.
+   */
   postTypes: string[];
 };
 
 const PostTypeTab = ({selectedIndex, setSelectedIndex, postTypes}: Props) => {
-  const {t} = useTranslation('home');
   const {setOffset, animatedStyles} = useAnimations();
 
   const styles = useStyles({numTypes: postTypes.length});
@@ -55,7 +63,7 @@ const PostTypeTab = ({selectedIndex, setSelectedIndex, postTypes}: Props) => {
               styles.buttonText,
               idx === selectedIndex ? styles.selected : styles.unselected,
             ]}>
-            {t(post)}
+            {post}
           </Typography.Button2>
         </TouchableOpacity>
       ))}

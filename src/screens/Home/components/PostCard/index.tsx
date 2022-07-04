@@ -8,12 +8,24 @@ import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
+  /**
+   * The data of the post retrieved from a query.
+   */
   postData: PostItem;
 
+  /**
+   * What to do when the author's avatar, name, or dtag is pressed.
+   */
   onPressAuthor: () => void;
 
+  /**
+   * What to do if the follow button is pressed.
+   */
   onPressFollow: () => void;
 
+  /**
+   * What to do if the post details button is pressed.
+   */
   onPressDetails: () => void;
 };
 
