@@ -19,7 +19,9 @@ type Props = {
   setSelectedIndex: (idx: number) => void;
 
   /**
-   * Selectable tab types.
+   * Selectable tab types. Component will automatically scale accordingly to
+   * the amount of postTypes, however it will enforce 1 line text for each
+   * label, so beware of truncated text.
    */
   postTypes: string[];
 };

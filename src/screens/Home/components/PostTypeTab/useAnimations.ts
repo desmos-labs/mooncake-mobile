@@ -4,6 +4,9 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+/**
+ * Animations for the PostTypeTab component.
+ */
 const useAnimations = () => {
   const offset = useSharedValue(0);
 

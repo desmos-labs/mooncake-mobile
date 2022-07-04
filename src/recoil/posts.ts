@@ -9,12 +9,12 @@ export const postsState = atom<PostItem[]>({
   default: [],
 });
 
+/**
+ * Increase this to get more posts per query.
+ */
 const POSTS_PER_FETCH = 3;
 
 // Get posts up to a given timestamp
-// wip: complete this once BDJuno is updated with post queries
-// note that posts only have the author's address, will need to make another
-// query to retrieve the user's profile
 export const useGetPosts = () => {
   const [posts, setPosts] = useRecoilState(postsState);
 
