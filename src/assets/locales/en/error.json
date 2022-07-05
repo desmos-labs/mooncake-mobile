@@ -1,0 +1,5 @@
+{
+  "required": "This field is required.",
+  "minChar": "At least {{numChar}} characters required.",
+  "pwMustMatch": "Passwords must match."
+}
