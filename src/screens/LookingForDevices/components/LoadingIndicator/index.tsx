@@ -48,9 +48,7 @@ const LoadingIndicator = ({
   // Math.random to (hopefully) generate a unique number per dot.
   // The values are used as the key when mapping. This is very bad but
   // I am too lazy to prepare a proper keyExtractor function
-  const iterableArray = React.useRef(
-    new Array(numDots).fill(Math.random()),
-  ).current;
+  const iterableArray = React.useRef(new Array(numDots).fill(0)).current;
 
   const opacity = React.useRef(
     iterableArray.map(_ => new Animated.Value(0)),
@@ -90,9 +88,10 @@ const LoadingIndicator = ({
   return (
     <View style={styles.container}>
       <View style={[styles.container, StyleSheet.absoluteFillObject]}>
-        {iterableArray.map(_ => (
+        {iterableArray.map((_, idx) => (
           <View
-            key={_}
+            /* eslint-disable-next-line react/no-array-index-key */
+            key={`${idx}-dot`}
             style={[
               styles.ellipsis,
               {
@@ -107,7 +106,8 @@ const LoadingIndicator = ({
       </View>
       {iterableArray.map((_, idx) => (
         <Animated.View
-          key={_}
+          /* eslint-disable-next-line react/no-array-index-key */
+          key={`${idx}-dot2`}
           style={[
             styles.ellipsis,
             {opacity: opacity[idx]},
