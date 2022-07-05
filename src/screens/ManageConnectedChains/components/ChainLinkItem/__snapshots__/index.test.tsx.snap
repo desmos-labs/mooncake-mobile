@@ -186,7 +186,7 @@ exports[`component: ChainLinkItem renders 1`] = `
             ]
           }
         >
-          disconnect
+          Disconnect
         </Text>
       </View>
     </View>

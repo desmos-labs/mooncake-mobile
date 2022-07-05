@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components: LedgerDeviceItem renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    nativeID="animatedComponent"
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#F7F7F7",
+        "flexDirection": "row",
+        "opacity": 1,
+        "paddingHorizontal": 20,
+        "paddingVertical": 10,
+      }
+    }
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/ledgerIcon.png",
+        }
+      }
+      style={
+        Object {
+          "height": 32,
+          "resizeMode": "contain",
+          "width": 6.1,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "#000000",
+          "fontSize": 16,
+          "fontWeight": "500",
+          "letterSpacing": 0.15,
+          "marginLeft": 20,
+        }
+      }
+    >
+      test
+    </Text>
+  </View>
+  ,
+</View>
+`;

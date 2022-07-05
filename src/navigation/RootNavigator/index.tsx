@@ -8,6 +8,7 @@ import ChangePassword from 'screens/ChangePassword';
 import ResultModal, {ResultModalParams} from 'screens/ResultModal';
 import {useTranslation} from 'react-i18next';
 import Settings from 'screens/Settings';
+import LookingForDevices from 'screens/LookingForDevices';
 
 export type RootNavigatorParamList = {
   [ROUTES.CHANGE_PASSWORD]: undefined;
@@ -16,6 +17,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LANDING]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.SETTINGS]: undefined;
+  [ROUTES.LOOKING_FOR_DEVICES]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -27,6 +29,10 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        name={ROUTES.LOOKING_FOR_DEVICES}
+        component={LookingForDevices}
+      />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen
