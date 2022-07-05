@@ -16,7 +16,7 @@ import DButton from 'components/DButton';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
-import useStartBleScan from 'hooks/useStartBleScan';
+import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
