@@ -69,17 +69,9 @@ const Settings = () => {
           />
         </Section>
         <Section style={styles.spacer} title={t('others')}>
-          <SectionSwitch
-            label={t('enable notifications')}
-            value={settings.notifications}
-            onValueChange={() =>
-              setSettings((oldState: AppSettings) => {
-                return {
-                  ...oldState,
-                  notifications: !settings.notifications,
-                };
-              })
-            }
+          <SectionButton
+            label={t('notifications')}
+            onPress={() => console.log('notifications')}
           />
           <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
           <SectionButton
