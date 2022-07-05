@@ -5,7 +5,7 @@ const useStyles = makeStyle(theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.spacing.m,
+    paddingVertical: theme.spacing.m,
   },
   label: {
     flex: 1,

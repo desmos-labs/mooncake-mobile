@@ -7,6 +7,6 @@ export const DefaultSpacing = {
 };
 
 export const Colors = {
-  DesmosOrange: '#ED6C53',
-  DesmosBlue: '#379AFE',
+  DesmosOrange: '#F3725A',
+  DesmosBlue: '#59DBF3',
 };

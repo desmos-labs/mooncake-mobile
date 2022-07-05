@@ -1,5 +1,7 @@
 import React, {useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 import Typography from '../Typography';
 
@@ -18,26 +20,28 @@ export type Props = {
 const Section: React.FC<Props> = props => {
   const {title, style, children} = props;
   const styles = useStyles();
+  const theme = useTheme();
 
   const wrapped = useMemo(() => {
-    const count = React.Children.count(children);
     return React.Children.map(children, (c, index) => {
-      const last = count === index + 1;
-      return (
-        <View style={[!last && styles.spacer]} key={`w_${index.toString()}`}>
-          {c}
-        </View>
-      );
+      return <View key={`w_${index.toString()}`}>{c}</View>;
     });
-  }, [children, styles.spacer]);
+  }, [children]);
 
   return (
-    <View style={style}>
+    <Shadow
+      viewStyle={[style, styles.container]}
+      startColor="rgba(37, 87, 188, 0.1)"
+      distance={40}
+      offset={[20, 30]}
+      radius={theme.roundness}>
       {title ? (
-        <Typography.Subtitle style={styles.title}>{title}</Typography.Subtitle>
+        <Typography.Subtitle3 style={styles.title}>
+          {title}
+        </Typography.Subtitle3>
       ) : null}
-      <View style={styles.fieldsContainer}>{wrapped}</View>
-    </View>
+      <View>{wrapped}</View>
+    </Shadow>
   );
 };
 
