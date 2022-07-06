@@ -4,6 +4,7 @@ import EnvConfig from 'config/EnvConfig';
 export enum MMKVKEYS {
   EXAMPLE_KEY = 'EXAMPLE_KEY',
   APP_SETTINGS = 'APP_SETTINGS',
+  PROFILES = 'PROFILES',
 }
 
 const MMKVStorage = new MMKV({
