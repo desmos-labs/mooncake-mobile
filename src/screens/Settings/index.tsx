@@ -15,7 +15,7 @@ import {AppSettings} from 'types/settings';
 
 const Settings = () => {
   const [settings, setSettings] = useRecoilState(appSettingsState);
-  const {t} = useTranslation();
+  const {t} = useTranslation('settings');
   const styles = useStyles();
 
   const areBiometricsSupported = useCallback(async () => {
@@ -79,8 +79,8 @@ const Settings = () => {
             onPress={() => console.log('community')}
           />
           <SectionButton
-            label={t('feedback')}
-            onPress={() => console.log('feedback')}
+            label={t('feedbacks')}
+            onPress={() => console.log('feedbacks')}
           />
           <SectionButton
             label={t('about')}
