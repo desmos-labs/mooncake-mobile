@@ -103,7 +103,9 @@ const Settings = () => {
           </DButton>
         </LinearGradient>
         <Typography.Body7 style={styles.bottomText}>
-          {t('joined flagship since 21 june 2022')}
+          {t('joined product', {
+            formattedDate: '21 June 2022',
+          })}
         </Typography.Body7>
       </ScrollView>
     </DView>

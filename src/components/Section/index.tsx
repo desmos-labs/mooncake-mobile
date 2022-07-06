@@ -1,7 +1,6 @@
+import DropShadowWrapper from 'components/DropShadowWrapper';
 import React, {useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 import Typography from '../Typography';
 
@@ -20,7 +19,6 @@ export type Props = {
 const Section: React.FC<Props> = props => {
   const {title, style, children} = props;
   const styles = useStyles();
-  const theme = useTheme();
 
   const wrapped = useMemo(() => {
     return React.Children.map(children, (c, index) => {
@@ -29,19 +27,16 @@ const Section: React.FC<Props> = props => {
   }, [children]);
 
   return (
-    <Shadow
-      viewStyle={[style, styles.container]}
-      startColor="rgba(37, 87, 188, 0.1)"
-      distance={40}
-      offset={[20, 30]}
-      radius={theme.roundness}>
+    <DropShadowWrapper
+      style={[style, styles.container]}
+      innerStyle={styles.innerContainer}>
       {title ? (
         <Typography.Subtitle3 style={styles.title}>
           {title}
         </Typography.Subtitle3>
       ) : null}
       <View>{wrapped}</View>
-    </Shadow>
+    </DropShadowWrapper>
   );
 };
 

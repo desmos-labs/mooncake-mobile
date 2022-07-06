@@ -13,5 +13,6 @@
   "feedbacks": "Feedbacks",
   "about": "About",
   "manage connected addresses": "Manage connected addresses",
-  "manage connected apps": "Manage connected apps"
+  "manage connected apps": "Manage connected apps",
+  "joined product": "Joined flagship since {{formattedDate}}"
 }
