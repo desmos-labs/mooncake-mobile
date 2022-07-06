@@ -13,6 +13,7 @@ const LightTheme: ReactNativePaper.Theme = {
     background2: '#f9f9f9',
     background3: '#dfdfdf',
     popupBackground: 'rgba(0, 0, 0, 0.6)',
+    backgroundGray: '#F7F7F7',
     surface: '#f9f9f9',
     surface2: '#ffffff',
     popupSurface: '#ffffff',

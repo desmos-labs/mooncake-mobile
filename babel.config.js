@@ -29,8 +29,10 @@ module.exports = {
           types: './src/types',
           jest: './jest',
           storybook: './storybook',
+          '@recoil': './src/recoil',
         },
       },
     ],
+    'react-native-reanimated/plugin',
   ],
 };

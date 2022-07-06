@@ -41,6 +41,8 @@ declare global {
       accent: string;
 
       background2: string;
+
+      backgroundGray: string;
       /**
        * Profile default
        */

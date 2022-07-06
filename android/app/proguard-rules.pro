@@ -12,3 +12,7 @@
 # react-native-ble-plx compat
 
 -dontwarn com.polidea.reactnativeble.**
+
+# react-native-reanimated compat
+-keep class com.swmansion.reanimated.** { *; }
+-keep class com.facebook.react.turbomodule.** { *; }
