@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
+import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
 import ChangePassword from 'screens/ChangePassword';
 import ResultModal, {ResultModalParams} from 'screens/ResultModal';
@@ -16,6 +17,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LANDING]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.SETTINGS]: undefined;
+  [ROUTES.HOME]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -27,6 +29,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen

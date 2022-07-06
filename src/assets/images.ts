@@ -24,6 +24,18 @@ export const terraIcon = require('./images/terra.png');
 
 export const copyIcon = require('./images/copy.png');
 
+export const moreIcon = require('./images/more.png');
+
 export const modalSuccess = require('./images/modalSuccess.png');
 
 export const iconCross = require('./images/iconCross.png');
+
+export const blogDetails = require('./images/blogDetails.png');
+
+export const followIcon = require('./images/followIcon.png');
+
+export const tipIcon = require('./images/tipIcon.png');
+
+export const commentIcon = require('./images/commentIcon.png');
+
+export const optionsIcon = require('./images/optionsIcon.png');
