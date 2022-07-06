@@ -9,4 +9,6 @@
 
 # Add any project specific keep options here:
 
+# react-native-ble-plx compat
+
 -dontwarn com.polidea.reactnativeble.**

@@ -1,6 +1,6 @@
 import React from 'react';
-import {AccessibilityProps, Image, TouchableOpacity} from 'react-native';
-import {ledgerIcon} from 'assets/images';
+import {AccessibilityProps, Image, TouchableOpacity, View} from 'react-native';
+import {checkboxIcon, ledgerIcon} from 'assets/images';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
@@ -13,20 +13,41 @@ interface Props extends AccessibilityProps {
   /**
    * OnPress callback of the button.
    */
-  onPress: () => void;
+  onPress?: () => void;
+
+  /**
+   * Whether to show a blue checkmark
+   */
+  showCheck?: boolean;
 }
 
 /**
  * A component used to render individual ledger devices discovered while the
  * user is on the LookingForDevices screen.
  */
-const LedgerDeviceItem = ({name, onPress, ...rest}: Props) => {
-  const {nameStyle, container, ledgerIconStyle} = useStyles();
+const LedgerDeviceItem = ({name, onPress, showCheck, ...rest}: Props) => {
+  const {
+    leftContainer,
+    nameStyle,
+    container,
+    ledgerIconStyle,
+    hidden,
+    checkImage,
+  } = useStyles();
 
   return (
-    <TouchableOpacity style={container} onPress={onPress} {...rest}>
-      <Image source={ledgerIcon} style={ledgerIconStyle} />
-      <Typography.Subtitle style={nameStyle}>{name}</Typography.Subtitle>
+    <TouchableOpacity
+      style={container}
+      onPress={onPress || undefined}
+      disabled={!onPress}
+      {...rest}>
+      <View style={leftContainer}>
+        <Image source={ledgerIcon} style={ledgerIconStyle} />
+
+        <Typography.Subtitle style={nameStyle}>{name}</Typography.Subtitle>
+      </View>
+
+      <Image source={checkboxIcon} style={[checkImage, !showCheck && hidden]} />
     </TouchableOpacity>
   );
 };

@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {btDevice, ledgerIcon} from 'assets/images';
-import LedgerDeviceItem from 'components/LedgerDeviceItem';
 import Spacer from 'components/Spacer';
 import {useNavigation} from '@react-navigation/native';
 import DView from 'components/DView';
@@ -20,6 +19,7 @@ import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import ROUTES from 'navigation/routes';
 import {DesmosLedgerApp} from 'config/LedgerApps';
+import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
 

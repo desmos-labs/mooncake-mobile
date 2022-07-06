@@ -10,6 +10,11 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.surface,
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   nameStyle: {
     color: theme.colors.font[1],
@@ -19,6 +24,14 @@ const useStyles = makeStyle(theme => ({
     width: 6.1,
     height: 32,
     resizeMode: 'contain',
+  },
+  checkImage: {
+    width: 16,
+    height: 16,
+    resizeMode: 'contain',
+  },
+  hidden: {
+    opacity: 0,
   },
 }));
 

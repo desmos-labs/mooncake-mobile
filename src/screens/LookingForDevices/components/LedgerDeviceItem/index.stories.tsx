@@ -11,10 +11,19 @@ const defaultProps: LedgerDeviceItemProps = {
   onPress: action('onPress'),
 };
 
+const withCheckIconProps: LedgerDeviceItemProps = {
+  name: 'Nano X B6E3',
+  showCheck: true,
+};
+
 storiesOf('components/LedgerDeviceItem', module)
   .addDecorator(stories => (
-    <SbContainer justifyContent="center" padding={8}>
+    <SbContainer
+      justifyContent="center"
+      padding={8}
+      backgroundColor="rgba(0,0,0,0.2)">
       {stories()}
     </SbContainer>
   ))
-  .add('default', () => <LedgerDeviceItem {...defaultProps} />);
+  .add('default', () => <LedgerDeviceItem {...defaultProps} />)
+  .add('with checkIcon', () => <LedgerDeviceItem {...withCheckIconProps} />);
