@@ -9,6 +9,7 @@ import ResultModal, {ResultModalParams} from 'screens/ResultModal';
 import {useTranslation} from 'react-i18next';
 import Settings from 'screens/Settings';
 import LookingForDevices from 'screens/LookingForDevices';
+import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 
 export type RootNavigatorParamList = {
   [ROUTES.CHANGE_PASSWORD]: undefined;
@@ -18,6 +19,7 @@ export type RootNavigatorParamList = {
   [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
+  [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -32,6 +34,10 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
         component={LookingForDevices}
+      />
+      <Stack.Screen
+        name={ROUTES.CONNECT_TO_LEDGER}
+        component={ConnectToLedger}
       />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />

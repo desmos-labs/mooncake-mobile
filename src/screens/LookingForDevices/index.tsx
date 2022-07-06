@@ -18,6 +18,8 @@ import {useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
 import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
+import ROUTES from 'navigation/routes';
+import {DesmosLedgerApp} from 'config/LedgerApps';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
 
@@ -77,9 +79,12 @@ const LookingForDevices = () => {
         <LedgerDeviceItem
           name={item.name || 'UNKNOWN LEDGER DEVICE'}
           onPress={async () => {
-            navigate('PairYourDevices', {
-              deviceId: item.id,
-              deviceName: item.name,
+            navigate(ROUTES.CONNECT_TO_LEDGER, {
+              bleLedger: {
+                id: item.id,
+                name: item.name,
+              },
+              ledgerApp: DesmosLedgerApp,
             });
           }}
         />
