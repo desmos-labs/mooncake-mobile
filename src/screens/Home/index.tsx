@@ -9,6 +9,7 @@ import {useGetPosts} from '@recoil/posts';
 import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import {useTranslation} from 'react-i18next';
+import {verticalScale} from 'react-native-size-matters';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -135,10 +136,11 @@ const Home = () => {
         loop={false}
         modeConfig={{
           parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
+          parallaxScrollingOffset: 60,
         }}
         width={Dimensions.get('window').width}
-        height={Dimensions.get('window').height * 0.7}
+        height={verticalScale(500)}
+        style={styles.carousel}
         data={posts}
         renderItem={renderPost}
       />

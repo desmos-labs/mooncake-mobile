@@ -6,12 +6,14 @@ import {StyleSheet} from 'react-native';
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    flex: 1,
     borderRadius: 18,
     backgroundColor: theme.colors.primary,
     justifyContent: 'flex-end',
     overflow: 'hidden',
     padding: theme.spacing.m,
+    width: '95%',
+    height: '100%',
+    alignSelf: 'center',
   },
   textContainer: {
     alignItems: 'center',

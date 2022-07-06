@@ -24,6 +24,9 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  carousel: {
+    alignItems: 'center',
+  },
 }));
 
 export default useStyles;
