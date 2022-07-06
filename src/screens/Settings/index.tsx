@@ -1,9 +1,12 @@
+import {StackScreenProps} from '@react-navigation/stack';
 import DButton from 'components/DButton';
 import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -13,7 +16,9 @@ import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
 
-const Settings = () => {
+declare type Props = StackScreenProps<RootNavigatorParamList>;
+
+const Settings: React.FC<Props> = props => {
   const [settings, setSettings] = useRecoilState(appSettingsState);
   const {t} = useTranslation('settings');
   const styles = useStyles();
@@ -30,7 +35,7 @@ const Settings = () => {
   }, []);
 
   return (
-    <DView style={styles.root}>
+    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
       <ScrollView
         style={styles.scrollViewOuter}
