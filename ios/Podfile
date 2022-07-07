@@ -19,6 +19,10 @@ target 'desmosFlagship' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # react-native-permissions compat
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
+
   target 'desmosFlagshipTests' do
     inherit! :complete
     # Pods for testing

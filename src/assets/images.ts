@@ -30,6 +30,12 @@ export const modalSuccess = require('./images/modalSuccess.png');
 
 export const iconCross = require('./images/iconCross.png');
 
+export const btDevice = require('./images/btDevice.png');
+
+export const ledgerIcon = require('./images/ledgerIcon.png');
+
+export const checkboxIcon = require('./images/checkboxIcon.png');
+
 export const blogDetails = require('./images/blogDetails.png');
 
 export const followIcon = require('./images/followIcon.png');
