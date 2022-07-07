@@ -2,15 +2,17 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   title: {
-    color: theme.colors.font['2'],
-    marginBottom: theme.spacing.s,
+    color: theme.colors.primary,
+    paddingVertical: theme.spacing.s,
   },
-  fieldsContainer: {
-    backgroundColor: theme.colors.background2,
+  container: {
     borderRadius: theme.roundness,
+    backgroundColor: theme.colors.background,
   },
-  spacer: {
-    marginBottom: theme.spacing.s,
+  innerContainer: {
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.roundness,
+    padding: theme.spacing.m,
   },
 }));
 

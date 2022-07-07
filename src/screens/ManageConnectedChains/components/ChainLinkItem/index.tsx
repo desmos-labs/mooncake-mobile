@@ -56,16 +56,16 @@ const ChainLinkItem = ({
       <Image style={styles.icon} source={GetChainIcon(chainName)} />
 
       <View style={styles.centerGroup}>
-        <Typography.Subtitle style={styles.baseText}>
+        <Typography.Subtitle1 style={styles.baseText}>
           {capitalizedFirstLetter}
-        </Typography.Subtitle>
+        </Typography.Subtitle1>
         <View style={styles.addressGroup}>
-          <Typography.Caption
+          <Typography.Caption1
             style={styles.baseText}
             numberOfLines={1}
             ellipsizeMode="middle">
             {address}
-          </Typography.Caption>
+          </Typography.Caption1>
 
           <TouchableOpacity
             accessibilityLabel="copy address button"

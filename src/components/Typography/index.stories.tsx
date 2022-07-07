@@ -11,12 +11,13 @@ storiesOf('components/Typography', module)
   ))
   .add('Default', () => (
     <>
-      <Typography.Body>Body</Typography.Body>
       <Typography.Body1>Body1</Typography.Body1>
-      <Typography.Caption>Caption</Typography.Caption>
+      <Typography.Body2>Body2</Typography.Body2>
+      <Typography.Caption1>Caption1</Typography.Caption1>
       <Typography.Caption2>Caption2</Typography.Caption2>
-      <Typography.Title>Title</Typography.Title>
-      <Typography.Subtitle>Subtitle</Typography.Subtitle>
+      <Typography.Display1>Display1</Typography.Display1>
+      <Typography.Display2>Display2</Typography.Display2>
+      <Typography.Subtitle1>Subtitle1</Typography.Subtitle1>
       <Typography.Subtitle2>Subtitle2</Typography.Subtitle2>
       <Typography.H1>H1</Typography.H1>
       <Typography.H2>H2</Typography.H2>

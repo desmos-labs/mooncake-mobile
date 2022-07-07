@@ -6,22 +6,21 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
   const color = props.color ? props.color : accent;
   return {
     labelStyle: {
-      fontFamily: 'Poppins-Medium',
+      fontFamily: 'Poppins-SemiBold',
       fontStyle: 'normal',
-      fontWeight: '500',
+      fontWeight: '600',
       fontSize: 16,
       lineHeight: 24,
-      letterSpacing: 0.0125,
+      letterSpacing: 0.015,
       color: props.mode === 'contained' ? theme.colors.font['5'] : color,
       textTransform: 'capitalize',
     },
     btnStyle: {
       borderColor: color,
       borderWidth: props.mode === 'outlined' ? 1 : 0,
-      elevation: 0,
     },
     contentStyle: {
-      height: 42,
+      height: 52,
     },
   };
 });

@@ -4,7 +4,7 @@ import {Colors, DefaultSpacing} from './common';
 const LightTheme: ReactNativePaper.Theme = {
   ...DefaultTheme,
   spacing: DefaultSpacing,
-  roundness: 8,
+  roundness: 12,
   colors: {
     ...DefaultTheme.colors,
     primary: Colors.DesmosOrange,

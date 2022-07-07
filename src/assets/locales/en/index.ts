@@ -5,6 +5,8 @@ import enterPassword from './enterPassword.json';
 import error from './error.json';
 import changePassword from './changePassword.json';
 import resultModal from './resultModal.json';
+import lookingForDevices from './lookingForDevices.json';
+import settings from './settingsScreen.json';
 
 const en = {
     common,
@@ -13,7 +15,9 @@ const en = {
     enterPassword,
     error,
     changePassword,
-    resultModal
+    resultModal,
+    lookingForDevices,
+    settings
 };
 
 export default en;

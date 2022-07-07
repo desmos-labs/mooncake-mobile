@@ -71,9 +71,9 @@ const ChangePassword = () => {
               </Typography.Subtitle2>
             )}
 
-            <Typography.Body style={styles.tooltipText}>
+            <Typography.Body1 style={styles.tooltipText}>
               {t('atLeast6Char')}
-            </Typography.Body>
+            </Typography.Body1>
             <Typography.Body1 style={styles.inputLabel}>
               {t('confirmPw')}
             </Typography.Body1>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, ImageProps, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import MaterialCommunityIcon from 'react-native-paper/src/components/MaterialCommunityIcon';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
@@ -31,12 +31,11 @@ const SectionButton: React.FC<Props> = props => {
       {leftIcon && (
         <Image style={styles.icon} source={leftIcon} resizeMode="contain" />
       )}
-      <Typography.Body1 style={styles.label}>{label}</Typography.Body1>
-      <MaterialCommunityIcon
-        name={rightIconName || 'arrow-right'}
-        color={theme.colors.icon[3]}
-        size={20}
-        direction="ltr"
+      <Typography.Button1 style={styles.label}>{label}</Typography.Button1>
+      <Icon
+        name={rightIconName || 'angle-right'}
+        color={theme.colors.icon[1]}
+        size={24}
         allowFontScaling
       />
     </TouchableOpacity>

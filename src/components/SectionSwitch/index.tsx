@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Switch} from 'react-native-paper';
+import {Switch, useTheme} from 'react-native-paper';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
@@ -26,14 +26,21 @@ export type Props = {
 const SectionSwitch: React.FC<Props> = props => {
   const {label, value, disabled, onValueChange} = props;
   const styles = useStyles();
+  const theme = useTheme();
 
   return (
     <View style={styles.root}>
-      <Typography.Body1
+      <Typography.Button1
         style={[styles.label, disabled ? styles.disabled : null]}>
         {label}
-      </Typography.Body1>
-      <Switch value={value} disabled={disabled} onValueChange={onValueChange} />
+      </Typography.Button1>
+      <Switch
+        value={value}
+        trackColor={{true: theme.colors.primary}}
+        thumbColor="white"
+        disabled={disabled}
+        onValueChange={onValueChange}
+      />
     </View>
   );
 };
