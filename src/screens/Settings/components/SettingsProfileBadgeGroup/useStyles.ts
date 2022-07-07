@@ -4,18 +4,18 @@ import {makeStyle} from 'config/theme';
  * Theme hook for the PostCard component
  */
 const useStyles = makeStyle(theme => ({
-  externalShadow: {
+  externalContainer: {
+    flex: 1,
     borderRadius: 12,
-    width: '100%',
     backgroundColor: theme.colors.background,
     marginBottom: 16,
   },
   container: {
+    flex: 1,
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 19,
     borderRadius: 12,
-    width: '100%',
     backgroundColor: theme.colors.background,
   },
   textContainer: {
@@ -32,6 +32,22 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'cover',
     borderRadius: 26,
     alignSelf: 'center',
+  },
+  swipeableOuter: {
+    overflow: 'visible',
+  },
+  swipeableInner: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  outerBox: {
+    paddingHorizontal: 16,
+    marginHorizontal: 8,
+    marginBottom: 14,
+    backgroundColor: '#E7FAFD',
+    borderRadius: 12,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
 }));
 

@@ -34,6 +34,11 @@ export const setMMKV = (key: MMKVKEYS, value: any) =>
   MMKVStorage.set(key, JSON.stringify(value));
 
 /**
+ * Clear the whole MMKV storage
+ */
+export const clearMMKV = () => MMKVStorage.clearAll();
+
+/**
  * A hook that wraps useMMKVObject to enforce MMKVKEYS enum usage.
  */
 export const useMMKVStorage = <T>(key: MMKVKEYS) => {

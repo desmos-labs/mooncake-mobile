@@ -7,7 +7,8 @@ import SectionSwitch from 'components/SectionSwitch';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import React, {useCallback, useEffect} from 'react';
+import ROUTES from 'navigation/routes';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,19 +20,20 @@ import {AppSettings} from 'types/settings';
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const Settings: React.FC<Props> = props => {
+  const {navigation} = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
   const {t} = useTranslation('settings');
   const styles = useStyles();
 
-  const areBiometricsSupported = useCallback(async () => {
+  /*  const areBiometricsSupported = useCallback(async () => {
     console.log('checkIfBiometricsAreSupported');
-  }, []);
+  }, []); */
 
   useEffect(() => {
     /**
      * We need to check if the user has a compatible device with biometrics. If not we should disable this button
      */
-    areBiometricsSupported();
+    // areBiometricsSupported();
   }, []);
 
   return (
@@ -44,7 +46,7 @@ const Settings: React.FC<Props> = props => {
         <Section style={styles.spacer} title={t('account')}>
           <SectionButton
             label={t('profiles')}
-            onPress={() => console.log('profiles')}
+            onPress={() => navigation.navigate(ROUTES.SETTINGS_PROFILES)}
           />
           <SectionButton
             label={t('manage connected addresses')}
@@ -56,6 +58,10 @@ const Settings: React.FC<Props> = props => {
           />
         </Section>
         <Section style={styles.spacer} title={t('security')}>
+          <SectionButton
+            label={t('backup secret recovey phrase')}
+            onPress={() => console.log('backup secret recovey phrase')}
+          />
           <SectionButton
             label={t('change password')}
             onPress={() => console.log('change password')}

@@ -11,6 +11,8 @@ interface DesmosProfile {
   profilePicture?: string;
   /** Url to the user cover picture */
   coverPicture?: string;
+  /** Is the profile selected as main profile */
+  selected?: boolean;
 }
 
 export default DesmosProfile;

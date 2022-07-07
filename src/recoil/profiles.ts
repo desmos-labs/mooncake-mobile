@@ -13,11 +13,21 @@ const profilesState = atom<DesmosProfile[]>({
     return (
       savedProfiles || [
         {
+          address: '123',
           nickname: 'Donatello',
-          dtag: 'Don',
+          dtag: '@don',
           bio: 'Ninja turtles to the moon!',
           profilePicture:
             'https://bbts1.azureedge.net/images/p/full/2020/10/07490a8f-220f-4c56-abe8-2dc70f84aea4.jpg',
+          selected: true,
+        },
+        {
+          address: '12345',
+          nickname: 'Michelangelo',
+          dtag: '@mic',
+          bio: 'Ninja turtles to the moon!',
+          profilePicture: 'https://wallpaperaccess.com/full/196551.jpg',
+          selected: false,
         },
       ]
     );
