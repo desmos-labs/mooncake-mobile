@@ -10,6 +10,8 @@ import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import {useTranslation} from 'react-i18next';
 import {verticalScale} from 'react-native-size-matters';
+import {useGetFollowing} from '@recoil/following';
+import _ from 'lodash';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -30,6 +32,19 @@ const Home = () => {
   const maxOffset = React.useRef<number>(0);
 
   const {posts, fetchNewPosts} = useGetPosts();
+  const {following} = useGetFollowing();
+
+  const postData = React.useMemo(() => {
+    if (selectedIndex === 0) return posts;
+
+    // Get the list of following accounts
+    const followedAddresses = following.map(x => x.address);
+
+    return _.filter(
+      posts,
+      x => followedAddresses.indexOf(x.author_address) !== -1,
+    );
+  }, [posts, following, selectedIndex]);
 
   // recalculate max carousel offset. This value is used to determine if the
   // carousel has been overscrolled
@@ -89,7 +104,7 @@ const Home = () => {
   }, []);
 
   const onCarouselProgressChange = React.useCallback(
-    (_: number, __: number, value: number) => {
+    (_temp: number, __: number, value: number) => {
       const offsetValue = value;
       // console.log(offsetValue, maxOffset.current);
       if (offsetValue > 0) {
@@ -141,7 +156,7 @@ const Home = () => {
         width={Dimensions.get('window').width}
         height={verticalScale(500)}
         style={styles.carousel}
-        data={posts}
+        data={postData}
         renderItem={renderPost}
       />
 
