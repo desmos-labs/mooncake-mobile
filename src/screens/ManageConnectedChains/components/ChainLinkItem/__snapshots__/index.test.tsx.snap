@@ -49,12 +49,12 @@ exports[`component: ChainLinkItem renders 1`] = `
                 "color": "#0b0b0b",
               },
               Object {
-                "fontFamily": "Poppins-Medium",
-                "fontSize": 16,
+                "fontFamily": "Poppins-Regular",
+                "fontSize": 18,
                 "fontStyle": "normal",
                 "fontWeight": "500",
-                "letterSpacing": 0.0015,
-                "lineHeight": 24,
+                "letterSpacing": 0.015,
+                "lineHeight": 27,
                 "textAlign": "left",
               },
             ],
@@ -172,16 +172,16 @@ exports[`component: ChainLinkItem renders 1`] = `
                 },
                 Object {
                   "fontFamily": "Poppins-Regular",
-                  "fontSize": 16,
+                  "fontSize": 24,
                   "fontStyle": "normal",
                   "fontWeight": "400",
                   "letterSpacing": 0.005,
-                  "lineHeight": 22,
+                  "lineHeight": 36,
                   "textAlign": "left",
                 },
               ],
               Object {
-                "color": "#ED6C53",
+                "color": "#F3725A",
               },
             ]
           }

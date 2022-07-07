@@ -9,18 +9,21 @@ const ActiveSwitchProps: CompProps = {
   label: 'Switch active',
   value: true,
   disabled: false,
+  onValueChange: () => console.log('test'),
 };
 
 const InactiveSwitchProps: CompProps = {
   label: 'Switch inactive',
   value: false,
   disabled: false,
+  onValueChange: () => console.log('test'),
 };
 
 const DisabledSwitchProps: CompProps = {
   label: 'Switch disabled',
   value: false,
   disabled: true,
+  onValueChange: () => console.log('test'),
 };
 
 storiesOf('components/Section', module)

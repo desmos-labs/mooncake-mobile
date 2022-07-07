@@ -1,3 +1,4 @@
+import DropShadowWrapper from 'components/DropShadowWrapper';
 import React, {useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 import useStyles from './useStyles';
@@ -20,24 +21,22 @@ const Section: React.FC<Props> = props => {
   const styles = useStyles();
 
   const wrapped = useMemo(() => {
-    const count = React.Children.count(children);
     return React.Children.map(children, (c, index) => {
-      const last = count === index + 1;
-      return (
-        <View style={[!last && styles.spacer]} key={`w_${index.toString()}`}>
-          {c}
-        </View>
-      );
+      return <View key={`w_${index.toString()}`}>{c}</View>;
     });
-  }, [children, styles.spacer]);
+  }, [children]);
 
   return (
-    <View style={style}>
+    <DropShadowWrapper
+      style={[style, styles.container]}
+      innerStyle={styles.innerContainer}>
       {title ? (
-        <Typography.Subtitle style={styles.title}>{title}</Typography.Subtitle>
+        <Typography.Subtitle3 style={styles.title}>
+          {title}
+        </Typography.Subtitle3>
       ) : null}
-      <View style={styles.fieldsContainer}>{wrapped}</View>
-    </View>
+      <View>{wrapped}</View>
+    </DropShadowWrapper>
   );
 };
 
