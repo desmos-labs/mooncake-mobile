@@ -125,14 +125,14 @@ const LookingForDevices = () => {
       {!scanning && (
         <>
           {devices.length === 0 && (
-            <Typography.Subtitle style={styles.warningStyle}>
+            <Typography.Subtitle1 style={styles.warningStyle}>
               {t('noDeviceFound')}
-            </Typography.Subtitle>
+            </Typography.Subtitle1>
           )}
 
           <View style={styles.buttonContainer}>
             <DButton onPress={onPressRetry}>
-              <Typography.Subtitle>{t('common:retry')}</Typography.Subtitle>
+              <Typography.Subtitle1>{t('common:retry')}</Typography.Subtitle1>
             </DButton>
           </View>
         </>
