@@ -20,8 +20,8 @@ const SectionText: React.FC<Props> = props => {
 
   return (
     <View style={styles.root}>
-      <Typography.Body1 style={styles.label}>{label}</Typography.Body1>
-      <Typography.Body1 style={styles.value}>{value}</Typography.Body1>
+      <Typography.Button1 style={styles.label}>{label}</Typography.Button1>
+      <Typography.Button1 style={styles.value}>{value}</Typography.Button1>
     </View>
   );
 };

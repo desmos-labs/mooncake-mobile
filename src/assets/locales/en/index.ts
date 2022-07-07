@@ -5,15 +5,17 @@ import enterPassword from './enterPassword.json';
 import error from './error.json';
 import changePassword from './changePassword.json';
 import resultModal from './resultModal.json';
+import settings from './settingsScreen.json';
 
 const en = {
-    common,
-    manageChains,
-    home,
-    enterPassword,
-    error,
-    changePassword,
-    resultModal
+  common,
+  manageChains,
+  home,
+  enterPassword,
+  error,
+  changePassword,
+  resultModal,
+  settings,
 };
 
 export default en;

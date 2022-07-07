@@ -1,0 +1,18 @@
+{
+  "profile": "Profile",
+  "profiles": "Profiles",
+  "security": "Security",
+  "settings": "Settings",
+  "account": "Account",
+  "others": "Others",
+  "notifications": "Notifications",
+  "change password": "Change password",
+  "enable biometrics": "Enable biometrics",
+  "faq": "FAQ",
+  "community": "Community",
+  "feedbacks": "Feedbacks",
+  "about": "About",
+  "manage connected addresses": "Manage connected addresses",
+  "manage connected apps": "Manage connected apps",
+  "joined product": "Joined flagship since {{formattedDate}}"
+}

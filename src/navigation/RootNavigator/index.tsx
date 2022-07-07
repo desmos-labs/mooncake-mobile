@@ -29,6 +29,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
@@ -54,7 +55,6 @@ const RootNavigator = () => {
           name={ROUTES.RESULT_MODAL}
           component={ResultModal}
         />
-        <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       </Stack.Group>
     </Stack.Navigator>
   );
