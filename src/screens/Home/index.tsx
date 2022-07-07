@@ -5,13 +5,10 @@ import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
-import {useGetPosts} from '@recoil/posts';
 import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
-import {useTranslation} from 'react-i18next';
 import {verticalScale} from 'react-native-size-matters';
-import {useGetFollowing} from '@recoil/following';
-import _ from 'lodash';
+import useHooks from 'screens/Home/useHooks';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -25,72 +22,22 @@ export enum POST_TYPE {
 LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
 const Home = () => {
-  const {t} = useTranslation('home');
   const styles = useStyles();
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  // const posts = useRecoilValue(postsState);
-  const maxOffset = React.useRef<number>(0);
 
-  const {posts, fetchNewPosts} = useGetPosts();
-  const {following} = useGetFollowing();
-
-  const postData = React.useMemo(() => {
-    if (selectedIndex === 0) return posts;
-
-    // Get the list of following accounts
-    const followedAddresses = following.map(x => x.address);
-
-    return _.filter(
-      posts,
-      x => followedAddresses.indexOf(x.author_address) !== -1,
-    );
-  }, [posts, following, selectedIndex]);
-
-  // recalculate max carousel offset. This value is used to determine if the
-  // carousel has been overscrolled
-  React.useEffect(() => {
-    maxOffset.current =
-      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
-  }, [posts.length]);
-
-  // fetch new posts before the user reaches the last post so they
-  // will be enslaved by the app forever
-  const onPostChanged = React.useCallback(
-    (index: number) => {
-      if (index >= posts.length - 2) {
-        fetchNewPosts();
-      }
-    },
-    [posts.length],
-  );
-
-  const postTypes = React.useMemo(() => {
-    return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
-  }, []);
-
-  const handlePressAuthor = React.useCallback((address: string) => {
-    console.log(address);
-  }, []);
-
-  const handlePressFollow = React.useCallback((address: string) => {
-    console.log(address);
-  }, []);
-
-  const handlePressDetails = React.useCallback((postId: string) => {
-    console.log(postId);
-  }, []);
-
-  const handlePressOptions = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
-
-  const handlePressComments = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
-
-  const handlePressTip = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
+  const {
+    handlePressTip,
+    handlePressDetails,
+    handlePressFollow,
+    handlePressAuthor,
+    handlePressOptions,
+    handlePressComments,
+    selectedIndex,
+    setSelectedIndex,
+    postTypes,
+    onCarouselProgressChange,
+    onPostChanged,
+    postData,
+  } = useHooks();
 
   const renderPost = React.useCallback((info: CarouselRenderItemInfo<any>) => {
     return (
@@ -102,20 +49,6 @@ const Home = () => {
       />
     );
   }, []);
-
-  const onCarouselProgressChange = React.useCallback(
-    (_temp: number, __: number, value: number) => {
-      const offsetValue = value;
-      // console.log(offsetValue, maxOffset.current);
-      if (offsetValue > 0) {
-        // do overscroll right things
-      }
-      if (offsetValue < maxOffset.current) {
-        // do overscroll left things
-      }
-    },
-    [maxOffset.current],
-  );
 
   return (
     <DView style={styles.container}>
