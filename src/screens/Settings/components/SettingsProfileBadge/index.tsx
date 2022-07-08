@@ -17,7 +17,7 @@ import Animated, {
 import {RadioButtonInput} from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/Feather';
 import {RadioValue} from 'screens/Settings/components/SettingsProfileBadgeGroup';
-import useStyles from 'screens/Settings/components/SettingsProfileBadgeGroup/useStyles';
+import useStyles from './useStyles';
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
