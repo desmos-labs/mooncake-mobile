@@ -35,10 +35,13 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
    * @param index the values[index] on the clicked button.
    */
   onSelect: (index: number) => void;
+  onPressEdit: () => void;
+  onPressDelete: () => void;
 }
 
 const SettingsProfileBadgeGroup = (props: Props) => {
-  const {values, onSelect, simultaneousHandlers} = props;
+  const {values, onSelect, simultaneousHandlers, onPressEdit, onPressDelete} =
+    props;
 
   const radioValues: {label: string; value: string | number}[] | undefined = [];
 
@@ -53,9 +56,11 @@ const SettingsProfileBadgeGroup = (props: Props) => {
           <SettingsProfileBadge
             value={value}
             index={index}
-            onSelect={onSelect}
             simultaneousHandlers={simultaneousHandlers}
             key={value.dTag}
+            onSelect={onSelect}
+            onPressEdit={onPressEdit}
+            onPressDelete={onPressDelete}
           />
         );
       })}

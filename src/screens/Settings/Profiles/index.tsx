@@ -4,7 +4,8 @@ import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import React, {useMemo, useRef} from 'react';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -19,10 +20,23 @@ import useStyles from './useStyles';
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const Profiles: React.FC<Props> = props => {
+  const {navigation} = props;
   const [profiles, setProfiles] = useRecoilState(profilesState);
-  const {t} = useTranslation('settings');
+  const {t} = useTranslation();
   const styles = useStyles();
   const scrollRef = useRef(null);
+
+  const navigateToConfirmModal = useCallback(() => {
+    navigation.navigate({
+      name: ROUTES.CONFIRM_MODAL,
+      params: {
+        title: t('confirmModal:removeProfile'),
+        subtitle: t('confirmModal:backupSeedphrase'),
+        primaryButtonLabel: t('confirmModal:goToBackup'),
+        secondaryButtonLabel: t('confirmModal:remove'),
+      },
+    });
+  }, [navigation]);
 
   const selectProfile = (i: number) => {
     const newProfiles = profiles.map((profile, index) => {
@@ -56,7 +70,7 @@ const Profiles: React.FC<Props> = props => {
     <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
       <View style={styles.titleBar}>
         <Typography.H3 style={{alignSelf: 'center'}}>
-          {t('profiles')}
+          {t('settings:profiles')}
         </Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
@@ -87,6 +101,8 @@ const Profiles: React.FC<Props> = props => {
           simultaneousHandlers={scrollRef}
           values={values}
           onSelect={index => selectProfile(index)}
+          onPressEdit={() => console.log('edit')}
+          onPressDelete={navigateToConfirmModal}
         />
       </ScrollView>
     </DView>
