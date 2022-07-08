@@ -6,7 +6,8 @@ import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
 import ChangePassword from 'screens/ChangePassword';
-import ResultModal, {ResultModalParams} from 'screens/ResultModal';
+import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
+import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
 import Settings from 'screens/Settings';
 import Profiles from 'screens/Profiles';
@@ -19,6 +20,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
+  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
@@ -35,6 +37,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
@@ -45,14 +48,12 @@ const RootNavigator = () => {
         component={ConnectToLedger}
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
       />
-      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -63,6 +64,16 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen
           initialParams={{
+            title: t('confirmModal:removeProfile'),
+            subtitle: t('confirmModal:backupSeedphrase'),
+            primaryButtonLabel: t('confirmModal:goToBackup'),
+            secondaryButtonLabel: t('confirmModal:remove'),
+          }}
+          name={ROUTES.CONFIRM_MODAL}
+          component={ConfirmModal}
+        />
+        <Stack.Screen
+          initialParams={{
             title: t('resultModal:success'),
             subtitle: t('resultModal:passwordWasChanged'),
             primaryButtonLabel: t('resultModal:goToProfile'),
@@ -71,6 +82,7 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
+      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
     </Stack.Navigator>
   );
 };

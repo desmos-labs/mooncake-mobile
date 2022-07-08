@@ -30,6 +30,8 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
    * @param index the values[index] on the clicked button.
    */
   onSelect: (index: number) => void;
+  onPressEdit: () => void;
+  onPressDelete: () => void;
 }
 
 type ContextType = {
@@ -37,7 +39,14 @@ type ContextType = {
 };
 
 const SettingsProfileBadge = (props: Props) => {
-  const {value, index, onSelect, simultaneousHandlers} = props;
+  const {
+    value,
+    index,
+    onSelect,
+    simultaneousHandlers,
+    onPressEdit,
+    onPressDelete,
+  } = props;
   const styles = useStyles();
   const {t} = useTranslation('settings');
   const translateX = useSharedValue(0);
@@ -81,7 +90,7 @@ const SettingsProfileBadge = (props: Props) => {
 
   return (
     <View>
-      <TouchableOpacity style={styles.firstBox}>
+      <TouchableOpacity style={styles.firstBox} onPress={onPressEdit}>
         <Icon
           name="edit"
           size={26}
@@ -92,7 +101,7 @@ const SettingsProfileBadge = (props: Props) => {
           {t('edit')}
         </Typography.Subtitle4>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.secondBox}>
+      <TouchableOpacity style={styles.secondBox} onPress={onPressDelete}>
         <Icon
           name="trash-2"
           size={26}

@@ -1,0 +1,6 @@
+{
+  "removeProfile": "Remove profile",
+  "backupSeedphrase": "Make sure you have a backup of secret recovery phrase and DO NOT SHARE it to anyone; it is the only way to restore your profile dTags!",
+  "goToBackup": "Back up your phrase",
+  "remove": "Remove"
+}
