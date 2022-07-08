@@ -44,7 +44,6 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
-      <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
