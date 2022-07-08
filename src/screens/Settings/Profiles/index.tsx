@@ -4,7 +4,7 @@ import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -22,6 +22,7 @@ const Profiles: React.FC<Props> = props => {
   const [profiles, setProfiles] = useRecoilState(profilesState);
   const {t} = useTranslation('settings');
   const styles = useStyles();
+  const scrollRef = useRef(null);
 
   const selectProfile = (i: number) => {
     const newProfiles = profiles.map((profile, index) => {
@@ -79,9 +80,11 @@ const Profiles: React.FC<Props> = props => {
         </TouchableOpacity>
       </View>
       <ScrollView
+        ref={scrollRef}
         style={styles.scrollViewOuter}
         contentContainerStyle={styles.scrollViewInner}>
         <SettingsProfileBadgeGroup
+          simultaneousHandlers={scrollRef}
           values={values}
           onSelect={index => selectProfile(index)}
         />

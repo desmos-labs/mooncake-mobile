@@ -2,11 +2,10 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(() => ({
   externalShadow: {
-    flex: 1,
-    width: '100%',
+    alignSelf: 'stretch',
   },
   innerShadow: {
-    width: '100%',
+    alignSelf: 'stretch',
   },
 }));
 

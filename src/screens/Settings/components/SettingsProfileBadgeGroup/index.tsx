@@ -1,11 +1,7 @@
-import DropShadowWrapper from 'components/DropShadowWrapper';
-import Typography from 'components/Typography';
-import React, {useMemo} from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {RadioButtonInput} from 'react-native-simple-radio-button';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import useStyles from './useStyles';
+import React from 'react';
+import {ImageSourcePropType, View} from 'react-native';
+import {PanGestureHandlerProps} from 'react-native-gesture-handler';
+import SettingsProfileBadge from 'screens/Settings/components/SettingsProfileBadge';
 
 /**
  * Simple interface to display a radio button as a profile
@@ -29,7 +25,7 @@ export interface RadioValue {
   status: 0 | 1;
 }
 
-interface Props {
+interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
    * Values to be displayed as radio buttons.
    */
@@ -42,87 +38,29 @@ interface Props {
 }
 
 const SettingsProfileBadgeGroup = (props: Props) => {
-  const {values, onSelect} = props;
-  const styles = useStyles();
+  const {values, onSelect, simultaneousHandlers} = props;
 
-  const testRender = () => {
-    return (
-      <>
-        <View style={styles.outerBox}>
-          <TouchableOpacity
-            style={{alignSelf: 'center', margin: 'auto'}}
-            onPress={() => console.log('press')}>
-            <Icon
-              name="trash"
-              size={46}
-              allowFontScaling
-              style={{alignSelf: 'center'}}
-            />
-            <Typography.Subtitle4>remove</Typography.Subtitle4>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.outerBox}>
-          <TouchableOpacity
-            style={{alignSelf: 'center', margin: 'auto'}}
-            onPress={() => console.log('press')}>
-            <Icon
-              name="edit"
-              size={46}
-              allowFontScaling
-              style={{alignSelf: 'center'}}
-            />
-            <Typography.Subtitle4>remove</Typography.Subtitle4>
-          </TouchableOpacity>
-        </View>
-      </>
-    );
-  };
+  const radioValues: {label: string; value: string | number}[] | undefined = [];
 
-  const wrappedValues = useMemo(() => {
-    const radioValues: {label: string; value: string | number}[] | undefined =
-      [];
-    return values.map((value, index) => {
-      radioValues.push({
-        label: '',
-        value: value.status,
-      });
-      return (
-        <Swipeable
-          key={`w_${index.toString()}`}
-          containerStyle={styles.swipeableOuter}
-          childrenContainerStyle={styles.swipeableInner}
-          renderRightActions={() => testRender()}>
-          <DropShadowWrapper
-            style={styles.externalContainer}
-            innerStyle={styles.container}>
-            <Image
-              source={value.profilePicture}
-              style={styles.profilePicture}
-            />
-            <View style={styles.textContainer}>
-              <Typography.H5>{value.nickname}</Typography.H5>
-              <Typography.Body6>{value.dTag}</Typography.Body6>
-            </View>
-            <View style={styles.radioButton}>
-              <RadioButtonInput
-                obj={radioValues}
-                index={index}
-                isSelected={value.status !== 0}
-                onPress={() => onSelect(index)}
-                buttonSize={12}
-                // @ts-ignore
-                borderWidth={2}
-                buttonInnerColor="#F3725A"
-                buttonOuterColor="#F3725A"
-              />
-            </View>
-          </DropShadowWrapper>
-        </Swipeable>
-      );
-    });
-  }, [values]);
-
-  return <View>{wrappedValues}</View>;
+  return (
+    <View>
+      {values.map((value, index) => {
+        radioValues.push({
+          label: '',
+          value: value.status,
+        });
+        return (
+          <SettingsProfileBadge
+            value={value}
+            index={index}
+            onSelect={onSelect}
+            simultaneousHandlers={simultaneousHandlers}
+            key={value.dTag}
+          />
+        );
+      })}
+    </View>
+  );
 };
 
 export default SettingsProfileBadgeGroup;
