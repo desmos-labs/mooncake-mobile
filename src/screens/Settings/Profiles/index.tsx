@@ -34,6 +34,8 @@ const Profiles: React.FC<Props> = props => {
         subtitle: t('confirmModal:backupSeedphrase'),
         primaryButtonLabel: t('confirmModal:goToBackup'),
         secondaryButtonLabel: t('confirmModal:remove'),
+        onPressPrimary: () => console.log('primary'),
+        onPressSecondary: () => console.log('secondary'),
       },
     });
   }, [navigation]);

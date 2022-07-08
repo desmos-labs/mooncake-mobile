@@ -37,8 +37,10 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
+      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
+      <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
         component={LookingForDevices}
@@ -47,8 +49,6 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}

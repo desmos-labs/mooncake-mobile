@@ -15,28 +15,23 @@ export type ResultModalParams = {
    * of whatever the user was doing.
    */
   title?: string;
-
   /**
    * The image to be shown. It should be related to the result of what the
    * user was doing.
    */
   image?: ImageSourcePropType;
-
   /**
    * Additional description for the title.
    */
   subtitle?: string;
-
   /**
-   * What to do when the user presses the primary modal button
+   * Label of the primary button.
    */
   primaryButtonLabel: string;
-
   /**
    * What to do when the user presses the close button.
    */
   onDismiss?: () => void;
-
   /**
    * What to do when the user presses the primary (main) modal button.
    */

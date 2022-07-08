@@ -5,12 +5,14 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: theme.colors.surface,
+    backgroundColor: props.error
+      ? 'rgba(243, 89, 168, 0.16)'
+      : theme.colors.background2,
     borderRadius: theme.roundness,
     minHeight: 44,
     alignItems: 'center',
-    borderColor: props.error ? theme.colors.error : theme.colors.surface,
-    borderWidth: 2,
+    borderColor: props.error ? 'rgba(243, 89, 168, 1)' : theme.colors.surface,
+    borderWidth: 1,
   },
   input: {
     fontFamily: 'Poppins-Regular',

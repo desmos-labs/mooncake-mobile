@@ -20,11 +20,11 @@ export type ConfirmModalParams = {
    */
   subtitle?: string;
   /**
-   * Label of the primary button
+   * Label of the primary button.
    */
   primaryButtonLabel: string;
   /**
-   * Label of the secondary button
+   * Label of the secondary button.
    */
   secondaryButtonLabel: string;
   /**
@@ -36,7 +36,7 @@ export type ConfirmModalParams = {
    */
   onPressPrimary?: () => void;
   /**
-   * What to do when the user presses the primary (main) modal button.
+   * What to do when the user presses the secondary (bottom-one) modal button.
    */
   onPressSecondary?: () => void;
 };
