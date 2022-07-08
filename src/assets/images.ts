@@ -45,3 +45,13 @@ export const tipIcon = require('./images/tipIcon.png');
 export const commentIcon = require('./images/commentIcon.png');
 
 export const optionsIcon = require('./images/optionsIcon.png');
+
+export const defaultBanner = require('./images/defaultBanner.png');
+
+export const homeButton = require('./images/homeButton.png');
+
+export const settingsButton = require('./images/settingsButton.png');
+
+export const notificationsButton = require('./images/notificationsButton.png');
+
+export const editButton = require('./images/editButton.png');
