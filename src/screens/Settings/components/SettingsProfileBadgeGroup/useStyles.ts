@@ -33,21 +33,22 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 26,
     alignSelf: 'center',
   },
-  swipeableOuter: {
-    overflow: 'visible',
-  },
-  swipeableInner: {
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
-  outerBox: {
-    paddingHorizontal: 16,
-    marginHorizontal: 8,
-    marginBottom: 14,
-    backgroundColor: '#E7FAFD',
+  firstBox: {
+    right: 90,
     borderRadius: 12,
-    alignContent: 'center',
-    justifyContent: 'center',
+    width: 78,
+    paddingVertical: 20,
+    position: 'absolute',
+    backgroundColor: '#E7FAFD',
+  },
+
+  secondBox: {
+    right: 0,
+    borderRadius: 12,
+    paddingVertical: 20,
+    width: 78,
+    position: 'absolute',
+    backgroundColor: '#FDEBE7',
   },
 }));
 
