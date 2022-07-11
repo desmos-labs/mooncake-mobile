@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Typography from 'components/Typography';
 import LinearGradient from 'react-native-linear-gradient';
+import {formatNumShorthand} from 'lib/formatUtils';
 import useStyles from './useStyles';
 
 type Props = {
@@ -26,17 +27,6 @@ type Props = {
   icon: ImageSourcePropType;
 };
 
-/**
- * Very naive way to format interactionCount into something like 5000 > 5k
- */
-const formatCount = (count: number) => {
-  if (count < 1000) {
-    return count;
-  }
-  if (count < 1000000) return `${count / 1000}k`;
-  return `${count / 1000000}m`;
-};
-
 const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
   const styles = useStyles();
 
@@ -53,7 +43,7 @@ const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
       />
       <Image source={icon} style={styles.icon} />
       <Typography.Subtitle3 style={styles.countText}>
-        {formatCount(interactionCount)}
+        {formatNumShorthand(interactionCount)}
       </Typography.Subtitle3>
     </TouchableOpacity>
   );
