@@ -10,6 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
+import {Linking} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import {useRecoilState} from 'recoil';
@@ -96,7 +97,7 @@ const Settings: React.FC<Props> = props => {
         <Section style={styles.spacer} title={t('others')}>
           <SectionButton
             label={t('notifications')}
-            onPress={() => console.log('notifications')}
+            onPress={() => Linking.openSettings()}
           />
           <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
           <SectionButton

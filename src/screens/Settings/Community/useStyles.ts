@@ -15,6 +15,7 @@ const useStyles = makeStyle(theme => ({
   },
   scrollViewInner: {
     padding: 20,
+    flexGrow: 1,
   },
   spacer: {
     marginBottom: 24,
