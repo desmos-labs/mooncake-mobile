@@ -81,7 +81,7 @@ PODS:
   - MMKVCore (1.2.13)
   - MultiplatformBleAdapter (0.1.9)
   - OpenSSL-Universal (1.1.1100)
-  - Permission-BluetoothPeripheral (3.3.1):
+  - Permission-BluetoothPeripheral (3.4.0):
     - RNPermissions
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -386,7 +386,7 @@ PODS:
     - React-Core
   - RNKeychain (8.1.0):
     - React-Core
-  - RNPermissions (3.3.1):
+  - RNPermissions (3.4.0):
     - React-Core
   - RNReanimated (3.0.0-rc.0):
     - DoubleConversion
@@ -646,7 +646,7 @@ SPEC CHECKSUMS:
   MMKVCore: 3388952ded307e41b3ed8a05892736a236ed1b8e
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Permission-BluetoothPeripheral: a408e2ba4b43e60c5a4b8b4d442bb8abc93394b2
+  Permission-BluetoothPeripheral: 3146ac2226e243e050bd15e7fa6fca052cdeca87
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: eff60a46da0f496a6c76c8f60108c20626860d27
   RCTTypeSafety: 8cc8a45d0e2f93f1b42b5b2bbf23c4143f19935a
@@ -683,7 +683,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNKeychain: c442b8512802a20cab4db3e3a1cf53e4731615bc
-  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNPermissions: eac721f71748c4472d6e876038270b75397d6ee7
   RNReanimated: 89886d02e4748077c0dd3c645286b15a9bca097b
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
