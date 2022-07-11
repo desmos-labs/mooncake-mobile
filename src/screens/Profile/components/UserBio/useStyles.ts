@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     position: 'absolute',
     right: 0,
-    bottom: 0,
+    bottom: 8,
   },
   gradient: {
     width: 50,

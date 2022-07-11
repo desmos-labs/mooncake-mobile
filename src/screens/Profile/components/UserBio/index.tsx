@@ -35,9 +35,9 @@ const UserBio = ({content}: Props) => {
       </View>
 
       <Animated.View style={[animatedContainerStyle]}>
-        <Typography.Subtitle4 numberOfLines={expanded ? undefined : 2}>
+        <Typography.Caption1 numberOfLines={expanded ? undefined : 2}>
           {content}
-        </Typography.Subtitle4>
+        </Typography.Caption1>
         {/* Linear gradient effect so text for a more elegant truncate overlay */}
         {!expanded && (
           <View style={styles.gradientContainer}>
@@ -50,9 +50,9 @@ const UserBio = ({content}: Props) => {
               />
             </View>
 
-            <Typography.Subtitle4 style={styles.moreText}>
+            <Typography.Caption1 style={styles.moreText}>
               {t('more')}
-            </Typography.Subtitle4>
+            </Typography.Caption1>
           </View>
         )}
       </Animated.View>
