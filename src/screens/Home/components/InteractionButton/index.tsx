@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import Typography from 'components/Typography';
 import LinearGradient from 'react-native-linear-gradient';
-import {formatNumShorthand} from 'lib/formatUtils';
+import {formatNumShorthand} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 type Props = {

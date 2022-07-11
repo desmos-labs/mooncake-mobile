@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/formatUtils';
+import {formatNumShorthand} from 'lib/FormatUtils';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
