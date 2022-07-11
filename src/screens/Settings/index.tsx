@@ -101,7 +101,7 @@ const Settings: React.FC<Props> = props => {
           <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
           <SectionButton
             label={t('community')}
-            onPress={() => console.log('community')}
+            onPress={() => navigation.navigate(ROUTES.SETTINGS_COMMUNITY)}
           />
           <SectionButton
             label={t('feedbacks')}
