@@ -21,6 +21,10 @@ const UserBio = ({content}: Props) => {
   const {onLayout, animatedContainerStyle, expanded, setExpanded} =
     useAnimations();
 
+  if (!content) {
+    return <Typography.Subtitle4>{t('noBio')}</Typography.Subtitle4>;
+  }
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}

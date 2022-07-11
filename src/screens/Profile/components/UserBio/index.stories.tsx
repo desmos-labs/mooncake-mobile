@@ -16,4 +16,5 @@ storiesOf('components/UserBio', module)
       {s()}
     </SbContainer>
   ))
-  .add('default', () => <UserBio content={DUMMY_CONTENT} />);
+  .add('default', () => <UserBio content={DUMMY_CONTENT} />)
+  .add('with empty content', () => <UserBio content="" />);
