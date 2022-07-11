@@ -52,7 +52,9 @@ const SettingsProfileBadge = (props: Props) => {
       context.translateX = translateX.value;
     },
     onActive: (event, context) => {
-      translateX.value = event.translationX + context.translateX;
+      if (event.velocityX <= 0) {
+        translateX.value = event.translationX + context.translateX;
+      }
     },
     onEnd: () => {
       if (
