@@ -60,7 +60,9 @@ const Settings: React.FC<Props> = props => {
         <Section style={styles.spacer} title={t('security')}>
           <SectionButton
             label={t('reveal secret recovey phrase')}
-            onPress={() => console.log('reveal secret recovey phrase')}
+            onPress={() =>
+              navigation.navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)
+            }
           />
           <SectionButton
             label={t('change password')}

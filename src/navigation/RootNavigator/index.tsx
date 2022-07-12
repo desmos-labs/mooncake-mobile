@@ -8,6 +8,7 @@ import EnterPassword from 'screens/EnterPassword';
 import ChangePassword from 'screens/ChangePassword';
 import ResultModal, {ResultModalParams} from 'screens/ResultModal';
 import {useTranslation} from 'react-i18next';
+import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
 import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
@@ -24,6 +25,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
+  [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -35,6 +37,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
@@ -44,7 +47,10 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
+      <Stack.Screen
+        name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE}
+        component={RevealRecoveryPhrase}
+      />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />

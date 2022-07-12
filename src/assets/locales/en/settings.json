@@ -1,0 +1,22 @@
+{
+  "about": "About",
+  "account": "Account",
+  "change password": "Change password",
+  "community": "Community",
+  "edit": "Edit",
+  "enable biometrics": "Enable biometrics",
+  "faq": "FAQ",
+  "feedbacks": "Feedbacks",
+  "joined product": "Joined flagship since {{formattedDate}}",
+  "manage connected addresses": "Manage connected addresses",
+  "manage connected apps": "Manage connected apps",
+  "notifications": "Notifications",
+  "others": "Others",
+  "profile": "Profile",
+  "profiles": "Profiles",
+  "remove": "Remove",
+  "reveal secret phrase": "Reveal secret recovery phrase",
+  "secret recovery passphrase message": "The secret recovery phrase is used to recover your wallet, funds, and accounts. Leaking them is very dangerous. DO NOT SHARE with anyone. [Product] does not store your secret recovery phrase; you are the owner of your secret recovery phrase",
+  "security": "Security",
+  "settings": "Settings"
+}
