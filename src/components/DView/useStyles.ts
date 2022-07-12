@@ -19,6 +19,12 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     backgroundColor:
       props.background === undefined ? theme.colors.background : 'transparent',
   },
+  scrollViewOuter: {
+    margin: -20,
+  },
+  scrollViewInner: {
+    padding: 20,
+  },
 }));
 
 export default useStyles;

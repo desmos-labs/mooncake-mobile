@@ -1,0 +1,96 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import profilesState from '@recoil/profiles';
+import DView from 'components/DView';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import React, {useMemo, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/Feather';
+import {useRecoilState} from 'recoil';
+import SettingsProfileBadgeGroup, {
+  RadioValue,
+} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
+import useStyles from './useStyles';
+
+declare type Props = StackScreenProps<RootNavigatorParamList>;
+
+const Profiles: React.FC<Props> = props => {
+  const [profiles, setProfiles] = useRecoilState(profilesState);
+  const {t} = useTranslation('settings');
+  const styles = useStyles();
+  const scrollRef = useRef(null);
+
+  const selectProfile = (i: number) => {
+    const newProfiles = profiles.map((profile, index) => {
+      if (index === i) {
+        return {
+          ...profile,
+          selected: true,
+        };
+      } else {
+        return {
+          ...profile,
+          selected: false,
+        };
+      }
+    });
+    setProfiles(newProfiles);
+  };
+
+  const values = useMemo(() => {
+    return profiles.map(profile => {
+      return {
+        nickname: profile.nickname,
+        dTag: profile.dtag,
+        profilePicture: {uri: profile.profilePicture},
+        isSelected: profile.selected,
+      } as RadioValue;
+    });
+  }, [profiles]);
+
+  return (
+    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+      <View style={styles.titleBar}>
+        <Typography.H3 style={{alignSelf: 'center'}}>
+          {t('profiles')}
+        </Typography.H3>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => console.log('press')}>
+          <LinearGradient
+            colors={[
+              'rgba(255, 199, 91, 1)',
+              'rgba(255, 132, 79, 1)',
+              'rgba(255, 132, 79, 1)',
+              'rgba(255, 132, 79, 1)',
+            ]}
+            style={styles.plusButton}>
+            <Icon
+              name="plus"
+              color="white"
+              size={24}
+              allowFontScaling
+              style={styles.plusButtonIcon}
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        ref={scrollRef}
+        style={styles.scrollViewOuter}
+        contentContainerStyle={styles.scrollViewInner}>
+        <SettingsProfileBadgeGroup
+          simultaneousHandlers={scrollRef}
+          values={values}
+          onSelect={index => selectProfile(index)}
+        />
+      </ScrollView>
+    </DView>
+  );
+};
+
+export default Profiles;

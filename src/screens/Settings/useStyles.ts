@@ -11,10 +11,10 @@ const useStyles = makeStyle(theme => ({
     marginBottom: 24,
   },
   scrollViewOuter: {
-    margin: -20,
+    overflow: 'visible',
   },
   scrollViewInner: {
-    padding: 20,
+    overflow: 'visible',
   },
   signOutButton: {
     marginTop: theme.spacing.l,
