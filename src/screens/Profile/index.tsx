@@ -24,8 +24,8 @@ import AddressCopy from 'screens/Profile/components/AddressCopy';
 import UserBio from 'screens/Profile/components/UserBio';
 import SocialCounter from 'screens/Profile/components/SocialCounter';
 import DButton from 'components/DButton';
-import {scale} from 'react-native-size-matters';
 import ContentPanel from './components/ContentPanel';
+import useStyles from './useStyles';
 
 const DUMMY_CONTENT = ` Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed finibus orci porta, finibus lacus quis, facilisis metus. Nam aliquet rhoncus ullamcorper. Aenean sit amet auctor dolor, porttitor faucibus ex. Quisque neque lectus, auctor feugiat fringilla sit amet, lacinia ut urna. Duis iaculis ex sit amet luctus consequat. Ut blandit est in vestibulum maximus. Phasellus porttitor maximus orci, eu tincidunt sem tristique sed.
 
@@ -43,158 +43,115 @@ const Profile = () => {
 
   const {t} = useTranslation('profile');
 
+  const styles = useStyles();
+
   const name = 'Shrek';
   const dTag = '@swampyboi';
 
-  const address = 'desmosa;lsdjf;lkajsdf;klajsdfkl;ajsdf;lkajsd;fklajsdf;kl';
+  const address = 'desmosalsdjflkajsdfklajsdfklajsdflkajsdfklajsdfkl';
 
   const following = 1000;
 
   const followers = 12000;
 
+  // This implementation is temporary; the inner scrollview will likely
+  // be switched for a Animated.Scrollview once this page's scroll
+  // behavior is finalized
   return (
     <DView>
       <ImageBackground
         source={defaultBanner}
         style={StyleSheet.absoluteFillObject}>
-        {/* top buttons */}
-        <View
-          style={{
-            padding: theme.spacing.m,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View>
-            <ImageButton image={homeButton} style={{width: 32, height: 32}} />
-          </View>
+        <ScrollView>
+          {/* top buttons */}
+          <View style={styles.topButtonContainer}>
+            <View>
+              <ImageButton image={homeButton} style={styles.buttonStyle} />
+            </View>
 
-          <View>
-            <ImageButton
-              image={notificationsButton}
-              style={{width: 32, height: 32}}
-              overlayComponent={
-                <PingAnimation size={10} color={theme.colors.primary} />
-              }
-              overlayPosition={{
-                top: 2,
-                left: 12,
-              }}
-            />
-
-            <Spacer paddingTop={theme.spacing.m}>
+            <View>
               <ImageButton
-                image={settingsButton}
-                style={{width: 32, height: 32}}
-              />
-            </Spacer>
-          </View>
-        </View>
-        {/* top buttons end */}
-
-        <View>
-          <Image
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              resizeMode: 'contain',
-              position: 'absolute',
-              top: -40,
-              alignSelf: 'center',
-              zIndex: 2,
-            }}
-            source={{uri: 'https://i.imgur.com/aih9snA.png'}}
-          />
-        </View>
-        {/* main panel */}
-        <ScrollView
-          style={{
-            backgroundColor: theme.colors.background,
-            borderTopRightRadius: 24,
-            borderTopLeftRadius: 24,
-            marginTop: theme.spacing.m,
-          }}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingVertical: 14,
-          }}>
-          <View style={{paddingHorizontal: theme.spacing.m}}>
-            <ImageButton
-              image={editButton}
-              style={{width: 32, height: 32, alignSelf: 'flex-end'}}
-            />
-
-            <Typography.H3
-              style={{textAlign: 'center', marginTop: theme.spacing.s}}>
-              {name}
-            </Typography.H3>
-
-            <Typography.Body7
-              style={{
-                textAlign: 'center',
-              }}>
-              {dTag}
-            </Typography.Body7>
-
-            <Spacer paddingVertical={theme.spacing.s}>
-              <AddressCopy address={address} />
-            </Spacer>
-
-            <UserBio content={DUMMY_CONTENT} />
-
-            {/* social counters */}
-            <View
-              style={{
-                marginTop: theme.spacing.m,
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}>
-              <SocialCounter count={following} label={t('following')} />
-
-              <View
-                style={{
-                  backgroundColor: theme.colors.icon[3],
-                  width: StyleSheet.hairlineWidth,
-                  height: '90%',
+                image={notificationsButton}
+                style={styles.buttonStyle}
+                overlayComponent={
+                  <PingAnimation size={10} color={theme.colors.primary} />
+                }
+                overlayPosition={{
+                  top: 2,
+                  left: 12,
                 }}
               />
 
-              <SocialCounter count={followers} label={t('followers')} />
-            </View>
-
-            <View
-              style={{
-                marginTop: theme.spacing.m,
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}>
-              <DButton
-                mode="outlined"
-                style={{width: scale(140), height: 40}}
-                contentStyle={{height: '100%'}}>
-                <Typography.Button2
-                  style={{color: theme.colors.primary, lineHeight: 22}}>
-                  {t('connectAddress')}
-                </Typography.Button2>
-              </DButton>
-
-              <DButton
-                mode="outlined"
-                style={{width: scale(140), height: 40}}
-                contentStyle={{height: '100%'}}>
-                <Typography.Button2
-                  style={{color: theme.colors.primary, lineHeight: 22}}>
-                  {t('connectApp')}
-                </Typography.Button2>
-              </DButton>
+              <Spacer paddingTop={theme.spacing.m}>
+                <ImageButton
+                  image={settingsButton}
+                  style={styles.buttonStyle}
+                />
+              </Spacer>
             </View>
           </View>
+          {/* top buttons end */}
 
-          <ContentPanel
-            tabs={tabs}
-            selectedIndex={selectedTabIndex}
-            handleTabPressed={setSelectedTabIndex}
-          />
+          <View>
+            <Image
+              style={styles.avatar}
+              source={{uri: 'https://i.imgur.com/aih9snA.png'}}
+            />
+          </View>
+
+          {/* main panel */}
+          <View style={styles.contentGroup}>
+            <View style={{paddingHorizontal: theme.spacing.m}}>
+              <ImageButton image={editButton} style={styles.editButton} />
+
+              <Typography.H3 style={styles.nameText}>{name}</Typography.H3>
+
+              <Typography.Body7 style={styles.dTagText}>
+                {dTag}
+              </Typography.Body7>
+
+              <Spacer paddingVertical={theme.spacing.s}>
+                <AddressCopy address={address} />
+              </Spacer>
+
+              <UserBio content={DUMMY_CONTENT} />
+
+              {/* social counters */}
+              <View style={styles.socialCounterGroup}>
+                <SocialCounter count={following} label={t('following')} />
+
+                <View style={styles.separator} />
+
+                <SocialCounter count={followers} label={t('followers')} />
+              </View>
+
+              <View style={styles.connectButtonGroup}>
+                <DButton
+                  mode="outlined"
+                  style={styles.connectButton}
+                  contentStyle={styles.connectButtonContent}>
+                  <Typography.Button2 style={styles.connectButtonText}>
+                    {t('connectAddress')}
+                  </Typography.Button2>
+                </DButton>
+
+                <DButton
+                  mode="outlined"
+                  style={styles.connectButton}
+                  contentStyle={styles.connectButtonContent}>
+                  <Typography.Button2 style={styles.connectButtonText}>
+                    {t('connectApp')}
+                  </Typography.Button2>
+                </DButton>
+              </View>
+            </View>
+
+            <ContentPanel
+              tabs={tabs}
+              selectedIndex={selectedTabIndex}
+              handleTabPressed={setSelectedTabIndex}
+            />
+          </View>
         </ScrollView>
 
         {/* main panel end */}
