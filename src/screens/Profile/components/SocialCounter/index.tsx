@@ -3,7 +3,6 @@ import Typography from 'components/Typography';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import Spacer from 'components/Spacer';
 
 type Props = {
   count: number;
@@ -18,9 +17,7 @@ const SocialCounter = ({count, label}: Props) => {
       <Typography.H4 style={{color: theme.colors.primary}}>
         {formatNumShorthand(count)}
       </Typography.H4>
-      <Spacer paddingTop={theme.spacing.s}>
-        <Typography.Caption1>{label}</Typography.Caption1>
-      </Spacer>
+      <Typography.Caption1>{label}</Typography.Caption1>
     </View>
   );
 };
