@@ -14,7 +14,7 @@ const SelectedProfile: CompProps = {
       profilePicture: {
         uri: 'https://www.pinpng.com/pngs/m/156-1567852_random-image-from-user-mario-boo-animated-gif.png',
       },
-      status: 1,
+      isSelected: true,
     },
     {
       nickname: 'Joe',
@@ -22,13 +22,12 @@ const SelectedProfile: CompProps = {
       profilePicture: {
         uri: 'https://www.pinpng.com/pngs/m/156-1567852_random-image-from-user-mario-boo-animated-gif.png',
       },
-      status: 0,
+      isSelected: false,
     },
   ],
   onSelect: action('onPress'),
 };
 
-// DButton as in Desmos Button
 storiesOf('components/SettingsProfileBadge', module)
   .addDecorator(getStories => (
     <SbContainer justifyContent="center" padding={20} backgroundColor="#E6E6E6">

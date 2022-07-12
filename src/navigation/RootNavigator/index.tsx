@@ -9,7 +9,7 @@ import ChangePassword from 'screens/ChangePassword';
 import ResultModal, {ResultModalParams} from 'screens/ResultModal';
 import {useTranslation} from 'react-i18next';
 import Settings from 'screens/Settings';
-import Profiles from 'screens/Settings/Profiles';
+import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 

@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup, {
   RadioValue,
-} from 'screens/Settings/components/SettingsProfileBadgeGroup';
+} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -47,7 +47,7 @@ const Profiles: React.FC<Props> = props => {
         nickname: profile.nickname,
         dTag: profile.dtag,
         profilePicture: {uri: profile.profilePicture},
-        status: profile.selected ? 1 : 0,
+        isSelected: profile.selected,
       } as RadioValue;
     });
   }, [profiles]);

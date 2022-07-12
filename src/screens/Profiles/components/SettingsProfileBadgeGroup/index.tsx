@@ -1,7 +1,7 @@
 import React from 'react';
 import {ImageSourcePropType, View} from 'react-native';
 import {PanGestureHandlerProps} from 'react-native-gesture-handler';
-import SettingsProfileBadge from 'screens/Settings/components/SettingsProfileBadge';
+import SettingsProfileBadge from 'screens/Profiles/components/SettingsProfileBadge';
 
 /**
  * Simple interface to display a radio button as a profile
@@ -20,9 +20,9 @@ export interface RadioValue {
    */
   profilePicture: ImageSourcePropType;
   /**
-   * Unchecked 0 | Checked 1
+   * Is the badge selected
    */
-  status: 0 | 1;
+  isSelected: boolean;
 }
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -47,7 +47,7 @@ const SettingsProfileBadgeGroup = (props: Props) => {
       {values.map((value, index) => {
         radioValues.push({
           label: '',
-          value: value.status,
+          value: +value.isSelected,
         });
         return (
           <SettingsProfileBadge

@@ -16,7 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {RadioButtonInput} from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/Feather';
-import {RadioValue} from 'screens/Settings/components/SettingsProfileBadgeGroup';
+import {RadioValue} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -124,7 +124,7 @@ const SettingsProfileBadge = (props: Props) => {
               <RadioButtonInput
                 obj={value}
                 index={index}
-                isSelected={value.status !== 0}
+                isSelected={value.isSelected}
                 onPress={() => onSelect(index)}
                 buttonSize={12}
                 // @ts-ignore
