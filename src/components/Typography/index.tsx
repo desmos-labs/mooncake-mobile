@@ -80,7 +80,7 @@ const Typography = {
     fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 21,
-    letterSpacing: 0.005,
+    letterSpacing: 0.025,
     textAlign: 'left',
   })),
   Body7: createTextComponent(() => ({

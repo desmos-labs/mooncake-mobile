@@ -1,5 +1,6 @@
 import React, {ReactElement} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
@@ -29,12 +30,16 @@ export const TopBar: React.FC<Props> = props => {
   const styles = useStyles();
   const {navigation} = stackProps;
   const navigationGoBack = navigation.canGoBack() ? (
-    <Icon
-      name="angle-left"
-      color={theme.colors.icon[1]}
-      size={24}
-      allowFontScaling
-    />
+    <TouchableOpacity
+      hitSlop={{top: 30, bottom: 30, right: 30, left: 30}}
+      onPress={navigation.goBack}>
+      <Icon
+        name="angle-left"
+        color={theme.colors.icon[1]}
+        size={24}
+        allowFontScaling
+      />
+    </TouchableOpacity>
   ) : null;
 
   return (

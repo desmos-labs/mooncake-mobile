@@ -4,6 +4,7 @@ import EnvConfig from 'config/EnvConfig';
 export enum MMKVKEYS {
   EXAMPLE_KEY = 'EXAMPLE_KEY',
   APP_SETTINGS = 'APP_SETTINGS',
+  PROFILES = 'PROFILES',
 }
 
 const MMKVStorage = new MMKV({
@@ -31,6 +32,11 @@ export const getMMKV = (key: MMKVKEYS) => {
  */
 export const setMMKV = (key: MMKVKEYS, value: any) =>
   MMKVStorage.set(key, JSON.stringify(value));
+
+/**
+ * Clear the whole MMKV storage
+ */
+export const clearMMKV = () => MMKVStorage.clearAll();
 
 /**
  * A hook that wraps useMMKVObject to enforce MMKVKEYS enum usage.

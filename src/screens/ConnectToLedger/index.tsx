@@ -52,13 +52,13 @@ const ConnectToLedger = () => {
     <DView>
       {connecting && <ActivityIndicator size="small" />}
 
-      <Typography.Subtitle style={styles.status}>
+      <Typography.Subtitle1 style={styles.status}>
         {connecting ? t('connecting') : status}
-      </Typography.Subtitle>
+      </Typography.Subtitle1>
 
-      <Typography.Body style={styles.errorMessage}>
+      <Typography.Body1 style={styles.errorMessage}>
         {connectionError}
-      </Typography.Body>
+      </Typography.Body1>
 
       <DButton
         mode="contained"

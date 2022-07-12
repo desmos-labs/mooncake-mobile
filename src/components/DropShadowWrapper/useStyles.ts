@@ -2,10 +2,10 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(() => ({
   externalShadow: {
-    width: '100%',
+    alignSelf: 'stretch',
   },
   innerShadow: {
-    width: '100%',
+    alignSelf: 'stretch',
   },
 }));
 
