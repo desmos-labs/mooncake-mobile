@@ -25,6 +25,7 @@ import UserBio from 'screens/Profile/components/UserBio';
 import SocialCounter from 'screens/Profile/components/SocialCounter';
 import DButton from 'components/DButton';
 import {scale} from 'react-native-size-matters';
+import ContentPanel from './components/ContentPanel';
 
 const DUMMY_CONTENT = ` Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed finibus orci porta, finibus lacus quis, facilisis metus. Nam aliquet rhoncus ullamcorper. Aenean sit amet auctor dolor, porttitor faucibus ex. Quisque neque lectus, auctor feugiat fringilla sit amet, lacinia ut urna. Duis iaculis ex sit amet luctus consequat. Ut blandit est in vestibulum maximus. Phasellus porttitor maximus orci, eu tincidunt sem tristique sed.
 
@@ -35,6 +36,10 @@ Duis eget finibus mi. In imperdiet est at arcu vehicula, tempus volutpat sem con
 
 const Profile = () => {
   const theme = useTheme();
+
+  const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
+
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
 
   const {t} = useTranslation('profile');
 
@@ -96,8 +101,6 @@ const Profile = () => {
               position: 'absolute',
               top: -40,
               alignSelf: 'center',
-              // TODO: remove
-              backgroundColor: 'gray',
               zIndex: 2,
             }}
             source={{uri: 'https://i.imgur.com/aih9snA.png'}}
@@ -114,78 +117,86 @@ const Profile = () => {
           contentContainerStyle={{
             flexGrow: 1,
             paddingVertical: 14,
-            paddingHorizontal: theme.spacing.m,
           }}>
-          <ImageButton
-            image={editButton}
-            style={{width: 32, height: 32, alignSelf: 'flex-end'}}
-          />
+          <View style={{paddingHorizontal: theme.spacing.m}}>
+            <ImageButton
+              image={editButton}
+              style={{width: 32, height: 32, alignSelf: 'flex-end'}}
+            />
 
-          <Typography.H3
-            style={{textAlign: 'center', marginTop: theme.spacing.s}}>
-            {name}
-          </Typography.H3>
+            <Typography.H3
+              style={{textAlign: 'center', marginTop: theme.spacing.s}}>
+              {name}
+            </Typography.H3>
 
-          <Typography.Body7
-            style={{
-              textAlign: 'center',
-            }}>
-            {dTag}
-          </Typography.Body7>
+            <Typography.Body7
+              style={{
+                textAlign: 'center',
+              }}>
+              {dTag}
+            </Typography.Body7>
 
-          <Spacer paddingVertical={theme.spacing.s}>
-            <AddressCopy address={address} />
-          </Spacer>
+            <Spacer paddingVertical={theme.spacing.s}>
+              <AddressCopy address={address} />
+            </Spacer>
 
-          <UserBio content={DUMMY_CONTENT} />
+            <UserBio content={DUMMY_CONTENT} />
 
-          {/* social counters */}
-          <View
-            style={{
-              marginTop: theme.spacing.m,
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}>
-            <SocialCounter count={following} label={t('following')} />
+            {/* social counters */}
+            <View
+              style={{
+                marginTop: theme.spacing.m,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}>
+              <SocialCounter count={following} label={t('following')} />
+
+              <View
+                style={{
+                  backgroundColor: theme.colors.icon[3],
+                  width: StyleSheet.hairlineWidth,
+                  height: '90%',
+                }}
+              />
+
+              <SocialCounter count={followers} label={t('followers')} />
+            </View>
 
             <View
               style={{
-                backgroundColor: theme.colors.icon[3],
-                width: StyleSheet.hairlineWidth,
-                height: '90%',
-              }}
-            />
+                marginTop: theme.spacing.m,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}>
+              <DButton
+                mode="outlined"
+                style={{width: scale(140), height: 40}}
+                contentStyle={{height: '100%'}}>
+                <Typography.Button2
+                  style={{color: theme.colors.primary, lineHeight: 22}}>
+                  {t('connectAddress')}
+                </Typography.Button2>
+              </DButton>
 
-            <SocialCounter count={followers} label={t('followers')} />
+              <DButton
+                mode="outlined"
+                style={{width: scale(140), height: 40}}
+                contentStyle={{height: '100%'}}>
+                <Typography.Button2
+                  style={{color: theme.colors.primary, lineHeight: 22}}>
+                  {t('connectApp')}
+                </Typography.Button2>
+              </DButton>
+            </View>
           </View>
 
-          <View
-            style={{
-              marginTop: theme.spacing.m,
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}>
-            <DButton
-              mode="outlined"
-              style={{width: scale(140), height: 40}}
-              contentStyle={{height: '100%'}}>
-              <Typography.Button2
-                style={{color: theme.colors.primary, lineHeight: 22}}>
-                {t('connectAddress')}
-              </Typography.Button2>
-            </DButton>
-
-            <DButton
-              mode="outlined"
-              style={{width: scale(140), height: 40}}
-              contentStyle={{height: '100%'}}>
-              <Typography.Button2
-                style={{color: theme.colors.primary, lineHeight: 22}}>
-                {t('connectApp')}
-              </Typography.Button2>
-            </DButton>
-          </View>
+          <ContentPanel
+            tabs={tabs}
+            selectedIndex={selectedTabIndex}
+            handleTabPressed={setSelectedTabIndex}
+          />
         </ScrollView>
+
         {/* main panel end */}
       </ImageBackground>
     </DView>
