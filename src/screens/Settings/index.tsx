@@ -59,8 +59,8 @@ const Settings: React.FC<Props> = props => {
         </Section>
         <Section style={styles.spacer} title={t('security')}>
           <SectionButton
-            label={t('backup secret recovey phrase')}
-            onPress={() => console.log('backup secret recovey phrase')}
+            label={t('reveal secret recovey phrase')}
+            onPress={() => console.log('reveal secret recovey phrase')}
           />
           <SectionButton
             label={t('change password')}
