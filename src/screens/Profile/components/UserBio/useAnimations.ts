@@ -21,7 +21,9 @@ const useAnimations = () => {
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: theme.colors.background,
-      height: withTiming(expanded ? maxContainerHeight.current : 42),
+      // withTiming causes the container height to behave strangely,
+      // so the adjustment on its height while expanded is necessary
+      height: withTiming(expanded ? maxContainerHeight.current * 0.82 : 38),
     };
   });
 

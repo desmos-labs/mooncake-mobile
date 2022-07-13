@@ -35,7 +35,7 @@ const UserBio = ({content}: Props) => {
       </View>
 
       <Animated.View style={[animatedContainerStyle]}>
-        <Typography.Caption1 numberOfLines={expanded ? undefined : 2}>
+        <Typography.Caption1 numberOfLines={expanded ? undefined : undefined}>
           {content}
         </Typography.Caption1>
         {/* Linear gradient effect so text for a more elegant truncate overlay */}
