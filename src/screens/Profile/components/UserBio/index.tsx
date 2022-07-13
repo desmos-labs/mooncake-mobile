@@ -22,7 +22,11 @@ const UserBio = ({content}: Props) => {
     useAnimations();
 
   if (!content) {
-    return <Typography.Subtitle4>{t('noBio')}</Typography.Subtitle4>;
+    return (
+      <Typography.Caption1 style={{textAlign: 'center'}}>
+        {t('noBio')}
+      </Typography.Caption1>
+    );
   }
 
   return (

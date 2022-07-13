@@ -74,6 +74,19 @@ const useStyles = makeStyle(theme => ({
   connectButtonContent: {
     height: '100%',
   },
+  bannerImage: {
+    position: 'absolute',
+    width: '100%',
+    resizeMode: 'stretch',
+    height: 200,
+  },
+  whiteSpace: {
+    backgroundColor: 'white',
+    bottom: 0,
+    position: 'absolute',
+    width: '100%',
+    height: 500,
+  },
 }));
 
 export default useStyles;
