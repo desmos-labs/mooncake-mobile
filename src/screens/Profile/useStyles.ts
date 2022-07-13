@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
@@ -12,6 +12,9 @@ const useStyles = makeStyle(theme => ({
     width: 32,
     height: 32,
   },
+  avatarContainer: {
+    zIndex: 2,
+  },
   avatar: {
     width: 100,
     height: 100,
@@ -20,7 +23,6 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     top: -40,
     alignSelf: 'center',
-    zIndex: 2,
   },
   contentGroup: {
     backgroundColor: theme.colors.background,
@@ -63,7 +65,11 @@ const useStyles = makeStyle(theme => ({
   },
   connectButtonText: {
     color: theme.colors.primary,
-    lineHeight: 22,
+    lineHeight: Platform.select({
+      ios: 20,
+      android: 23,
+    }),
+    fontSize: 12,
   },
   connectButtonContent: {
     height: '100%',

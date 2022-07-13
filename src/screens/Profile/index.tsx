@@ -34,6 +34,195 @@ Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac tu
 Duis eget finibus mi. In imperdiet est at arcu vehicula, tempus volutpat sem congue. Praesent a egestas erat. Nulla sed convallis eros. Sed velit eros, ullamcorper egestas consequat at, consequat eget enim. Nulla ultricies ex mattis, aliquam neque id, lacinia enim. Praesent quis lobortis libero, ut blandit ligula. Nullam tristique quis purus quis gravida. Sed vel nulla rutrum diam gravida fringilla eu eu mi. Pellentesque non viverra nisi, vitae consequat mauris. Nam pellentesque feugiat lacus, non molestie nunc ornare id. Suspendisse vehicula nunc nec rutrum volutpat. Mauris fermentum velit vitae turpis venenatis, ac bibendum nisl ultrices. 
 `;
 
+const DUMMY_POSTS = [
+  {
+    id: 1,
+    creation_date: '2022-06-30T17:04:54.57816',
+    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+    author: {
+      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      bio: '',
+      dtag: 'Raffaello',
+      profile_pic: '',
+      nickname: '',
+    },
+    subspace_id: 5,
+    reactions: [
+      {
+        id: 1,
+        value: {
+          text: '🚀',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+      {
+        id: 2,
+        value: {
+          text: '😂',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+    ],
+    text: 'This is a test post',
+    conversation: null,
+  },
+  {
+    id: 2,
+    creation_date: '2022-06-30T17:04:54.57816',
+    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+    author: {
+      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      bio: '',
+      dtag: 'Raffaello',
+      profile_pic: '',
+      nickname: '',
+    },
+    subspace_id: 5,
+    reactions: [
+      {
+        id: 1,
+        value: {
+          text: '🚀',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+      {
+        id: 2,
+        value: {
+          text: '😂',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+    ],
+    text: 'This is a test post',
+    conversation: null,
+  },
+  {
+    id: 3,
+    creation_date: '2022-06-30T17:04:54.57816',
+    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+    author: {
+      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      bio: '',
+      dtag: 'Raffaello',
+      profile_pic: '',
+      nickname: '',
+    },
+    subspace_id: 5,
+    reactions: [
+      {
+        id: 1,
+        value: {
+          text: '🚀',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+      {
+        id: 2,
+        value: {
+          text: '😂',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+    ],
+    text: 'This is a test post',
+    conversation: null,
+  },
+  {
+    id: 4,
+    creation_date: '2022-06-30T17:04:54.57816',
+    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+    author: {
+      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      bio: '',
+      dtag: 'Raffaello',
+      profile_pic: '',
+      nickname: '',
+    },
+    subspace_id: 5,
+    reactions: [
+      {
+        id: 1,
+        value: {
+          text: '🚀',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+      {
+        id: 2,
+        value: {
+          text: '😂',
+          '@type': '/desmos.reactions.v1.FreeTextValue',
+        },
+      },
+    ],
+    text: 'This is a test post',
+    conversation: null,
+  },
+  {
+    id: 6,
+    creation_date: '2022-06-30T17:04:54.57816',
+    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://i.imgur.com/aih9snA.png',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+    author: {
+      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+      bio: '',
+      dtag: 'Raffaello',
+      profile_pic: '',
+      nickname: '',
+    },
+  },
+];
+
 const Profile = () => {
   const theme = useTheme();
 
@@ -54,6 +243,22 @@ const Profile = () => {
 
   const followers = 12000;
 
+  const handlePostPressed = React.useCallback(
+    ({
+      subspaceID,
+      authorAddress,
+      id,
+    }: {
+      subspaceID: number;
+      authorAddress: string;
+      id: number;
+    }) => {
+      // Pass these variables into the PostDetails page
+      console.log(subspaceID, authorAddress, id);
+    },
+    [],
+  );
+
   // This implementation is temporary; the inner scrollview will likely
   // be switched for a Animated.Scrollview once this page's scroll
   // behavior is finalized
@@ -62,6 +267,17 @@ const Profile = () => {
       <ImageBackground
         source={defaultBanner}
         style={StyleSheet.absoluteFillObject}>
+        {/* a dummy white box so ios overscroll effect does not reveal the default */}
+        {/* orange background underneath */}
+        <View
+          style={{
+            backgroundColor: 'white',
+            bottom: 0,
+            position: 'absolute',
+            width: '100%',
+            height: 500,
+          }}
+        />
         <ScrollView>
           {/* top buttons */}
           <View style={styles.topButtonContainer}>
@@ -92,7 +308,8 @@ const Profile = () => {
           </View>
           {/* top buttons end */}
 
-          <View>
+          {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+          <View style={styles.avatarContainer}>
             <Image
               style={styles.avatar}
               source={{uri: 'https://i.imgur.com/aih9snA.png'}}
@@ -150,6 +367,8 @@ const Profile = () => {
               tabs={tabs}
               selectedIndex={selectedTabIndex}
               handleTabPressed={setSelectedTabIndex}
+              posts={DUMMY_POSTS as PostItem[]}
+              handlePostPressed={handlePostPressed}
             />
           </View>
         </ScrollView>
