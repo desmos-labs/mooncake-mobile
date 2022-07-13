@@ -18,10 +18,23 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.s,
   },
   confirmButtonText: {
+    alignSelf: 'center',
     color: theme.colors.font[5],
   },
   errorText: {
     color: theme.colors.error,
+    marginTop: 8,
+  },
+  button: {
+    borderRadius: theme.roundness,
+  },
+  disabled: {
+    opacity: 0.3,
+  },
+  gradient: {
+    borderRadius: theme.roundness,
+    height: 52,
+    justifyContent: 'center',
   },
 }));
 

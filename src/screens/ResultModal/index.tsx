@@ -71,16 +71,16 @@ const ResultModal = () => {
         </TouchableOpacity>
         <Image style={styles.image} source={image || modalSuccess} />
         <Typography.H3>{title}</Typography.H3>
-        <Typography.Body style={styles.subtitleText}>
+        <Typography.Body1 style={styles.subtitleText}>
           {subtitle}
-        </Typography.Body>
+        </Typography.Body1>
         <DButton
           style={styles.primaryButton}
           mode="contained"
           onPress={onPressPrimary || goBack}>
-          <Typography.Subtitle style={styles.primaryButtonText}>
+          <Typography.Subtitle1 style={styles.primaryButtonText}>
             {primaryButtonLabel}
-          </Typography.Subtitle>
+          </Typography.Subtitle1>
         </DButton>
       </View>
     </View>

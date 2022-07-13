@@ -5,6 +5,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.surface,
     borderRadius: 4,
     padding: theme.spacing.s,
+    minWidth: 24,
   },
   index: {
     position: 'absolute',

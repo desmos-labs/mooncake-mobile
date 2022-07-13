@@ -17,7 +17,6 @@ const en = {
   settings,
   changePassword,
   resultModal,
-
   lookingForDevices,
 };
 

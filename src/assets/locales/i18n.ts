@@ -8,6 +8,7 @@ i18next
     fallbackLng: 'en',
     lng: 'en',
     defaultNS: 'common',
+    keySeparator: 'false',
     ns: [...Object.keys(en)],
     resources: {
       en,

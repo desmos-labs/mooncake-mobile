@@ -1,5 +1,4 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import DButton from 'components/DButton';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -7,15 +6,23 @@ import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const RevealRecoveryPhrase: React.FC<Props> = props => {
+  const {navigation} = props;
   const {t} = useTranslation();
   const styles = useStyles();
 
@@ -25,7 +32,9 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
 
   const onFormSubmit = React.useCallback(
     (formValues: typeof initialFormValues) => {
+      // if password is correct, navigate to the next screen
       console.log(formValues);
+      navigation.navigate(ROUTES.SETTINGS_SHOW_SECRET_PHRASE);
     },
     [],
   );
@@ -48,11 +57,11 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
         validationSchema={validationSchema}>
         {({handleSubmit, errors, setValues, values}) => (
           <View style={styles.formContainer}>
-            <Typography.Body6 style={styles.inputLabel}>
-              {t('enterPassword:inputPlaceholder')}
-            </Typography.Body6>
+            <Typography.Subtitle2 style={styles.inputLabel}>
+              {t('settings:enter password to continue')}
+            </Typography.Subtitle2>
             <DSecureTextInput
-              placeholder={t('password')}
+              placeholder={t('enterPassword:inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {
                 setValues({password: text}, true);
@@ -60,26 +69,41 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
               error={!!errors.password}
             />
             {errors.password && (
-              <Typography.Body6 style={styles.errorText}>
+              <Typography.Caption1 style={styles.errorText}>
                 {errors.password}
-              </Typography.Body6>
+              </Typography.Caption1>
             )}
 
             <KeyboardAvoidingView
               keyboardVerticalOffset={Platform.OS === 'ios' ? 340 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton
+              <TouchableOpacity
+                onPress={handleSubmit}
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                onPress={handleSubmit}
-                mode="contained">
-                <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:next')}
-                </Typography.Button1>
-              </DButton>
+                style={[
+                  styles.button,
+                  !values.password ||
+                  _.flatten(Object.values(errors)).length > 0
+                    ? styles.disabled
+                    : null,
+                ]}>
+                <LinearGradient
+                  style={styles.gradient}
+                  colors={[
+                    'rgba(255, 199, 91, 1)',
+                    'rgba(255, 132, 79, 1)',
+                    'rgba(255, 132, 79, 1)',
+                    'rgba(255, 132, 79, 1)',
+                  ]}>
+                  <Typography.Button1 style={styles.confirmButtonText}>
+                    {t('common:next')}
+                  </Typography.Button1>
+                </LinearGradient>
+              </TouchableOpacity>
             </KeyboardAvoidingView>
           </View>
         )}

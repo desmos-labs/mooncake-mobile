@@ -16,11 +16,9 @@ const useStyles = makeStyle(theme => ({
   signOutButton: {
     marginTop: theme.spacing.l,
   },
-  scrollViewOuter: {
-    overflow: 'visible',
-  },
+  scrollViewOuter: {margin: -20},
   scrollViewInner: {
-    overflow: 'visible',
+    padding: 20,
     flexGrow: 1,
   },
   plusButton: {
