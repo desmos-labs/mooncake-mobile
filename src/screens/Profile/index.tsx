@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {
   defaultBanner,
@@ -24,204 +25,14 @@ import AddressCopy from 'screens/Profile/components/AddressCopy';
 import UserBio from 'screens/Profile/components/UserBio';
 import SocialCounter from 'screens/Profile/components/SocialCounter';
 import DButton from 'components/DButton';
-import ContentPanel from './components/ContentPanel';
+import {useQuery} from '@apollo/client';
+import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
+import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import _ from 'lodash';
 import useStyles from './useStyles';
+import ContentPanel from './components/ContentPanel';
 
-const DUMMY_CONTENT = ` Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed finibus orci porta, finibus lacus quis, facilisis metus. Nam aliquet rhoncus ullamcorper. Aenean sit amet auctor dolor, porttitor faucibus ex. Quisque neque lectus, auctor feugiat fringilla sit amet, lacinia ut urna. Duis iaculis ex sit amet luctus consequat. Ut blandit est in vestibulum maximus. Phasellus porttitor maximus orci, eu tincidunt sem tristique sed.
-
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec id auctor quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras non accumsan turpis. Sed a viverra felis, eu tincidunt tellus. In lacinia orci risus, ut ultrices tortor hendrerit id. Nam scelerisque semper libero volutpat venenatis. Nullam commodo ex vitae venenatis dignissim.
-
-Duis eget finibus mi. In imperdiet est at arcu vehicula, tempus volutpat sem congue. Praesent a egestas erat. Nulla sed convallis eros. Sed velit eros, ullamcorper egestas consequat at, consequat eget enim. Nulla ultricies ex mattis, aliquam neque id, lacinia enim. Praesent quis lobortis libero, ut blandit ligula. Nullam tristique quis purus quis gravida. Sed vel nulla rutrum diam gravida fringilla eu eu mi. Pellentesque non viverra nisi, vitae consequat mauris. Nam pellentesque feugiat lacus, non molestie nunc ornare id. Suspendisse vehicula nunc nec rutrum volutpat. Mauris fermentum velit vitae turpis venenatis, ac bibendum nisl ultrices. 
-`;
-
-const DUMMY_POSTS = [
-  {
-    id: 1,
-    creation_date: '2022-06-30T17:04:54.57816',
-    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-    author: {
-      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      bio: '',
-      dtag: 'Raffaello',
-      profile_pic: '',
-      nickname: '',
-    },
-    subspace_id: 5,
-    reactions: [
-      {
-        id: 1,
-        value: {
-          text: '🚀',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-      {
-        id: 2,
-        value: {
-          text: '😂',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-    ],
-    text: 'This is a test post',
-    conversation: null,
-  },
-  {
-    id: 2,
-    creation_date: '2022-06-30T17:04:54.57816',
-    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-    author: {
-      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      bio: '',
-      dtag: 'Raffaello',
-      profile_pic: '',
-      nickname: '',
-    },
-    subspace_id: 5,
-    reactions: [
-      {
-        id: 1,
-        value: {
-          text: '🚀',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-      {
-        id: 2,
-        value: {
-          text: '😂',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-    ],
-    text: 'This is a test post',
-    conversation: null,
-  },
-  {
-    id: 3,
-    creation_date: '2022-06-30T17:04:54.57816',
-    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-    author: {
-      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      bio: '',
-      dtag: 'Raffaello',
-      profile_pic: '',
-      nickname: '',
-    },
-    subspace_id: 5,
-    reactions: [
-      {
-        id: 1,
-        value: {
-          text: '🚀',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-      {
-        id: 2,
-        value: {
-          text: '😂',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-    ],
-    text: 'This is a test post',
-    conversation: null,
-  },
-  {
-    id: 4,
-    creation_date: '2022-06-30T17:04:54.57816',
-    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://images.app.goo.gl/g7VHpLGJYjndRfWL6',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-    author: {
-      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      bio: '',
-      dtag: 'Raffaello',
-      profile_pic: '',
-      nickname: '',
-    },
-    subspace_id: 5,
-    reactions: [
-      {
-        id: 1,
-        value: {
-          text: '🚀',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-      {
-        id: 2,
-        value: {
-          text: '😂',
-          '@type': '/desmos.reactions.v1.FreeTextValue',
-        },
-      },
-    ],
-    text: 'This is a test post',
-    conversation: null,
-  },
-  {
-    id: 6,
-    creation_date: '2022-06-30T17:04:54.57816',
-    author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://i.imgur.com/aih9snA.png',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-    author: {
-      address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      bio: '',
-      dtag: 'Raffaello',
-      profile_pic: '',
-      nickname: '',
-    },
-  },
-];
+const DUMMY_ADDRESS = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
 
 const Profile = () => {
   const theme = useTheme();
@@ -234,14 +45,20 @@ const Profile = () => {
 
   const styles = useStyles();
 
-  const name = 'Shrek';
-  const dTag = '@swampyboi';
+  const {data: profileData, loading: profileLoading} = useQuery(
+    GetProfileForAddress,
+    {
+      variables: {
+        address: DUMMY_ADDRESS,
+      },
+    },
+  );
 
-  const address = 'desmosalsdjflkajsdfklajsdfklajsdflkajsdfklajsdfkl';
-
-  const following = 1000;
-
-  const followers = 12000;
+  const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
+    variables: {
+      address: DUMMY_ADDRESS,
+    },
+  });
 
   const handlePostPressed = React.useCallback(
     ({
@@ -258,6 +75,21 @@ const Profile = () => {
     },
     [],
   );
+
+  if (profileLoading || postsLoading) {
+    return <ActivityIndicator />;
+  }
+
+  const [userProfile] = profileData.profile as any;
+
+  const {address, bio, dtag, profile_pic, nickname} =
+    userProfile as ProfileData;
+
+  const followers = _.get(userProfile, 'followage_aggregate.aggregate.count');
+
+  const following = _.get(userProfile, 'following_aggregate.aggregate.count');
+
+  const {posts} = postData;
 
   // This implementation is temporary; the inner scrollview will likely
   // be switched for a Animated.Scrollview once this page's scroll
@@ -310,10 +142,7 @@ const Profile = () => {
 
           {/* avatar needs to be in a view for positioning and ios zIndex compat */}
           <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={{uri: 'https://i.imgur.com/aih9snA.png'}}
-            />
+            <Image style={styles.avatar} source={{uri: profile_pic}} />
           </View>
 
           {/* main panel */}
@@ -321,17 +150,17 @@ const Profile = () => {
             <View style={{paddingHorizontal: theme.spacing.m}}>
               <ImageButton image={editButton} style={styles.editButton} />
 
-              <Typography.H3 style={styles.nameText}>{name}</Typography.H3>
+              <Typography.H3 style={styles.nameText}>{nickname}</Typography.H3>
 
               <Typography.Body7 style={styles.dTagText}>
-                {dTag}
+                {dtag}
               </Typography.Body7>
 
               <Spacer paddingVertical={theme.spacing.s}>
                 <AddressCopy address={address} />
               </Spacer>
 
-              <UserBio content={DUMMY_CONTENT} />
+              <UserBio content={bio} />
 
               {/* social counters */}
               <View style={styles.socialCounterGroup}>
@@ -367,7 +196,7 @@ const Profile = () => {
               tabs={tabs}
               selectedIndex={selectedTabIndex}
               handleTabPressed={setSelectedTabIndex}
-              posts={DUMMY_POSTS as PostItem[]}
+              posts={posts || []}
               handlePostPressed={handlePostPressed}
             />
           </View>
