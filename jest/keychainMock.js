@@ -7,4 +7,4 @@ const keychainMock = {
   resetGenericPassword: jest.fn().mockResolvedValue(),
 };
 
-export default keychainMock;
+jest.mock('react-native-keychain', () => keychainMock);
