@@ -12,6 +12,9 @@ const DarkTheme: ReactNativePaper.Theme = {
     surface: '#25282D',
     text: '#E6E6E6',
     disabled: '#9d9d9d',
+
+    // hacky fix for black on black text when in storybook dark mode
+    black: 'white',
   },
 };
 
