@@ -14,7 +14,7 @@ function createTextComponent(
 
     const commonStyle = useMemo<StyleProp<TextStyle>>(
       () => ({
-        color: theme.colors.font['1'],
+        color: theme.colors.black,
       }),
       [theme],
     );

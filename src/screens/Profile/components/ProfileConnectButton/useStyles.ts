@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
     height: 40,
   },
   connectButtonText: {
-    color: theme.colors.primary,
+    color: theme.colors.desmosOrange01,
     lineHeight: Platform.select({
       ios: 20,
       android: 23,

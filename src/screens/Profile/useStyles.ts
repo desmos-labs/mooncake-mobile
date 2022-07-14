@@ -51,7 +51,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-evenly',
   },
   separator: {
-    backgroundColor: theme.colors.icon[3],
+    backgroundColor: theme.colors.iconGrey,
     width: StyleSheet.hairlineWidth,
     height: '90%',
   },

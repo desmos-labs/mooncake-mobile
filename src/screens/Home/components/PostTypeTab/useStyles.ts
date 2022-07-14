@@ -10,7 +10,7 @@ export type StyleProp = {
 const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
   container: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.backgroundGray,
+    backgroundColor: theme.colors.backgroundGrey,
     borderRadius: 14,
     overflow: 'hidden',
     justifyContent: 'center',
@@ -32,10 +32,10 @@ const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
     textAlign: 'center',
   },
   unselected: {
-    color: theme.colors.primary,
+    color: theme.colors.desmosOrange01,
   },
   selected: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
   gradient: {
     flex: 1,

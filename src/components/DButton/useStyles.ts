@@ -12,7 +12,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
       fontSize: 16,
       lineHeight: 24,
       letterSpacing: 0.015,
-      color: props.mode === 'contained' ? theme.colors.font['5'] : color,
+      color: props.mode === 'contained' ? theme.colors.white : color,
       textTransform: 'capitalize',
     },
     btnStyle: {

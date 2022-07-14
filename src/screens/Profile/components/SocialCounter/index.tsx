@@ -14,7 +14,7 @@ const SocialCounter = ({count, label}: Props) => {
   const theme = useTheme();
   return (
     <View style={{alignItems: 'center'}}>
-      <Typography.H4 style={{color: theme.colors.primary}}>
+      <Typography.H4 style={{color: theme.colors.desmosOrange01}}>
         {formatNumShorthand(count)}
       </Typography.H4>
       <Typography.Caption1>{label}</Typography.Caption1>

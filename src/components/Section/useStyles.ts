@@ -2,7 +2,7 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   title: {
-    color: theme.colors.primary,
+    color: theme.colors.desmosOrange01,
     paddingVertical: theme.spacing.s,
   },
   container: {

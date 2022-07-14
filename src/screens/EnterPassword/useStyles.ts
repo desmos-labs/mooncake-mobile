@@ -27,7 +27,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   confirmButtonText: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
   errorText: {
     color: theme.colors.error,
