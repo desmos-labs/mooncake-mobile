@@ -4,5 +4,6 @@
   "following": "Following",
   "followers": "Followers",
   "connectAddress": "Connect Address",
-  "connectApp": "Connect App"
+  "connectApp": "Connect App",
+  "userNoPosts": "This user has not made any posts."
 }

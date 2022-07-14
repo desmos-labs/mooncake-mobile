@@ -73,6 +73,15 @@ const Profile = () => {
     [],
   );
 
+  const ListEmptyComponent = React.useMemo(
+    () => (
+      <Typography.Subtitle1 style={{textAlign: 'center'}}>
+        {t('userNoPosts')}
+      </Typography.Subtitle1>
+    ),
+    [],
+  );
+
   if (profileLoading || postsLoading) {
     return <ActivityIndicator />;
   }
@@ -207,6 +216,7 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: 20,
         }}
+        ListEmptyComponent={ListEmptyComponent}
       />
     </DView>
   );
