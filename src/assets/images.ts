@@ -55,3 +55,5 @@ export const settingsButton = require('./images/settingsButton.png');
 export const notificationsButton = require('./images/notificationsButton.png');
 
 export const editButton = require('./images/editButton.png');
+
+export const errorImage = require('./images/errorImage.png');

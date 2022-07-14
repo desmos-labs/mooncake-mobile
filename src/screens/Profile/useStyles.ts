@@ -29,7 +29,8 @@ const useStyles = makeStyle(theme => ({
     borderTopLeftRadius: 24,
     marginTop: theme.spacing.m,
     flexGrow: 1,
-    paddingVertical: 14,
+    paddingTop: theme.spacing.m,
+    paddingBottom: theme.spacing.s,
   },
   editButton: {
     width: 32,
@@ -38,9 +39,10 @@ const useStyles = makeStyle(theme => ({
   },
   nameText: {
     textAlign: 'center',
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacing.m,
   },
   dTagText: {
+    marginTop: theme.spacing.s,
     textAlign: 'center',
   },
   socialCounterGroup: {

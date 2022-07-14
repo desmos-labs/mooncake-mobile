@@ -27,6 +27,7 @@ import ProfilePostCard from './components/ProfilePostCard';
 import FakeDropShadow from './components/FakeDropShadow';
 import useStyles from './useStyles';
 import ContentTabs from './components/ContentTab';
+import EmptyPostComponent from './components/EmptyPostComponent';
 
 // Replace this with an address from recoil
 const DUMMY_ADDRESS = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
@@ -70,15 +71,6 @@ const Profile = () => {
       // Pass these variables into the PostDetails page
       console.log(subspaceID, authorAddress, id);
     },
-    [],
-  );
-
-  const ListEmptyComponent = React.useMemo(
-    () => (
-      <Typography.Subtitle1 style={{textAlign: 'center'}}>
-        {t('userNoPosts')}
-      </Typography.Subtitle1>
-    ),
     [],
   );
 
@@ -167,7 +159,7 @@ const Profile = () => {
                 </Typography.H3>
 
                 <Typography.Body7 style={styles.dTagText}>
-                  {dtag}
+                  @{dtag}
                 </Typography.Body7>
 
                 <Spacer paddingVertical={theme.spacing.s}>
@@ -216,7 +208,7 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: 20,
         }}
-        ListEmptyComponent={ListEmptyComponent}
+        ListEmptyComponent={EmptyPostComponent}
       />
     </DView>
   );

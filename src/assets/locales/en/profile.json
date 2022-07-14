@@ -1,9 +1,9 @@
 {
   "more": "...more",
-  "noBio": "This user has not set a biography yet.",
+  "noBio": "No bio yet",
   "following": "Following",
   "followers": "Followers",
   "connectAddress": "Connect Address",
   "connectApp": "Connect App",
-  "userNoPosts": "This user has not made any posts."
+  "userNoPosts": "No posts yet"
 }

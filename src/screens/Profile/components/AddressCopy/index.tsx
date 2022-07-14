@@ -46,7 +46,6 @@ const AddressCopy = ({address, externalCallback}: Props) => {
       <Image
         source={copyIcon}
         style={{
-          marginLeft: theme.spacing.s,
           width: 16,
           height: 16,
           resizeMode: 'contain',
