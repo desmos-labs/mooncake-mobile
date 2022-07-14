@@ -41,7 +41,7 @@ const Settings: React.FC<Props> = props => {
         onPressSecondary: () => console.log('secondary'),
       },
     });
-  }, [navigation]);
+  }, []);
 
   useEffect(() => {
     /**
