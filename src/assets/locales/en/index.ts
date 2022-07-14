@@ -8,18 +8,21 @@ import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settingsScreen.json';
 import confirmModal from './confirmModal.json';
+import profile from './profile.json'
+
 
 const en = {
-  common,
-  manageChains,
-  home,
-  enterPassword,
-  error,
-  changePassword,
-  resultModal,
-  confirmModal,
-  lookingForDevices,
-  settings,
+    common,
+    manageChains,
+    home,
+    enterPassword,
+    error,
+    changePassword,
+    resultModal,
+    confirmModal,
+    lookingForDevices,
+    settings,
+    profile
 };
 
 export default en;
