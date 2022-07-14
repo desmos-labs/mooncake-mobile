@@ -1,5 +1,4 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 /**
@@ -9,7 +8,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
     backgroundColor: theme.colors.primary,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     overflow: 'hidden',
     padding: theme.spacing.m,
     width: scale(97),
@@ -17,14 +16,10 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
     margin: theme.spacing.xs,
   },
-  textContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...StyleSheet.absoluteFillObject,
-  },
   textStyle: {
     color: theme.colors.font[5],
     fontSize: 8,
+    lineHeight: 15,
   },
 }));
 

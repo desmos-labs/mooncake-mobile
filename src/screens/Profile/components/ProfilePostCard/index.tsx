@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
@@ -35,9 +35,7 @@ const ProfilePostCard = ({postData, onPress}: Props) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       {AttachmentImage}
-      <View style={styles.textContainer}>
-        <Typography.H2 style={styles.textStyle}>{postData.text}</Typography.H2>
-      </View>
+      <Typography.H2 style={styles.textStyle}>{postData.text}</Typography.H2>
     </TouchableOpacity>
   );
 };
