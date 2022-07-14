@@ -8,4 +8,23 @@ declare global {
     nickname: string;
     address: string;
   }
+
+  interface ProfileData {
+    address: string;
+    bio: string;
+    cover_pic: string;
+    dtag: string;
+    profile_pic: string;
+    nickname: string;
+    followage_aggregate: {
+      aggregate: {
+        count: number;
+      };
+    };
+    following_aggregate: {
+      aggregate: {
+        count: number;
+      };
+    };
+  }
 }

@@ -39,9 +39,9 @@ const ManageConnectedChains = () => {
       <View style={styles.textContainer}>
         <Typography.H3>{t('connectedAddresses')}</Typography.H3>
 
-        <Typography.Body style={styles.descriptionText}>
+        <Typography.Body1 style={styles.descriptionText}>
           {t('description')}
-        </Typography.Body>
+        </Typography.Body1>
       </View>
 
       <FlatList
@@ -59,7 +59,7 @@ const ManageConnectedChains = () => {
           label: t('hide'),
         }}
         duration={Snackbar.DURATION_SHORT}>
-        <Typography.Body>{t('addressCopied')}</Typography.Body>
+        <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
     </View>
   );

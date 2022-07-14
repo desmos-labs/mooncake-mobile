@@ -12,6 +12,7 @@ import Settings from 'screens/Settings';
 import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
+import Profile from 'screens/Profile';
 
 export type RootNavigatorParamList = {
   [ROUTES.CHANGE_PASSWORD]: undefined;
@@ -23,6 +24,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
+  [ROUTES.USER_PROFILE]: undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
 };
 
@@ -35,6 +37,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
