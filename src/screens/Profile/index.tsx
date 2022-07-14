@@ -106,8 +106,6 @@ const Profile = () => {
 
   return (
     <DView>
-      {/* white space so ios overscroll does not reveal background underneath */}
-      <View style={styles.whiteSpace} />
       <FlatList
         ListHeaderComponent={
           <>

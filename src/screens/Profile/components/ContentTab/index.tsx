@@ -33,6 +33,7 @@ const ContentTabs = ({
     (tab: string, index: number) => {
       return (
         <TouchableOpacity
+          key={tab}
           style={styles.button}
           onPress={() => handleTabPressed(index)}>
           <Typography.Button2>{tab}</Typography.Button2>

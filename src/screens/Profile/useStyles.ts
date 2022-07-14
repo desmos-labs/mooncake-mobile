@@ -66,13 +66,6 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'stretch',
     height: 200,
   },
-  whiteSpace: {
-    backgroundColor: 'white',
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
-    height: 500,
-  },
   tabContainer: {
     flexGrow: 1,
     backgroundColor: theme.colors.background,
