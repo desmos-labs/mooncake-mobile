@@ -23,7 +23,7 @@ const useAnimations = () => {
       backgroundColor: theme.colors.background,
       // withTiming causes the container height to behave strangely,
       // so the adjustment on its height while expanded is necessary
-      height: withTiming(expanded ? maxContainerHeight.current * 0.82 : 38),
+      height: withTiming(expanded ? maxContainerHeight.current * 0.9 : 38),
     };
   });
 
