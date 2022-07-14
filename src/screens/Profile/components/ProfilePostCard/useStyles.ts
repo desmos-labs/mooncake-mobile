@@ -2,7 +2,7 @@ import {makeStyle} from 'config/theme';
 import {scale, verticalScale} from 'react-native-size-matters';
 
 /**
- * Theme hook for the ProfilePostCard component
+ * Style hook for the ProfilePostCard component
  */
 const useStyles = makeStyle(theme => ({
   container: {

@@ -4,10 +4,19 @@ import Typography from 'components/Typography';
 import {makeStyle} from 'config/theme';
 
 export interface ContentPanelProps {
+  /**
+   * The labels of the tabs that will be rendered.
+   */
   tabs: string[];
 
+  /**
+   * The selected tab index.
+   */
   selectedIndex: number;
 
+  /**
+   * What to do when a tab is pressed.
+   */
   handleTabPressed: (_index: number) => void;
 }
 

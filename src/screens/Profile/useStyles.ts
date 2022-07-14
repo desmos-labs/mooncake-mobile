@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   topButtonContainer: {
@@ -59,21 +59,6 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.m,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-  },
-  connectButton: {
-    // width: scale(140),
-    width: '100%',
-    height: 40,
-  },
-  connectButtonText: {
-    color: theme.colors.primary,
-    lineHeight: Platform.select({
-      ios: 20,
-      android: 23,
-    }),
-  },
-  connectButtonContent: {
-    height: '100%',
   },
   bannerImage: {
     position: 'absolute',

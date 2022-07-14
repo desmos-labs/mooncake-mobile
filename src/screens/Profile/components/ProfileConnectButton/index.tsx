@@ -9,6 +9,8 @@ type Props = {
   handlePress: () => void;
 };
 
+// should be used in a container with flexDirection:row, otherwise it will
+// behave strangely
 const ProfileConnectButton = ({label, handlePress}: Props) => {
   const styles = useStyles();
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import {action} from '@storybook/addon-actions';
+import {View} from 'react-native';
 import ProfileConnectButton from './index';
 
 type CompProps = React.ComponentProps<typeof ProfileConnectButton>;
@@ -18,4 +19,8 @@ storiesOf('components/ProfileConnectButton', module)
       {s()}
     </SbContainer>
   ))
-  .add('default', () => <ProfileConnectButton {...defaultProps} />);
+  .add('default', () => (
+    <View style={{flexDirection: 'row'}}>
+      <ProfileConnectButton {...defaultProps} />
+    </View>
+  ));

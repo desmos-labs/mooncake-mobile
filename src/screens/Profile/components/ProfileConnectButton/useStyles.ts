@@ -3,8 +3,7 @@ import {Platform} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   connectButton: {
-    // width: scale(140),
-    width: '100%',
+    flexGrow: 1,
     height: 40,
   },
   connectButtonText: {
