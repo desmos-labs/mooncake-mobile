@@ -1,6 +1,5 @@
 import {makeStyle} from 'config/theme';
 import {Platform, StyleSheet} from 'react-native';
-import {scale} from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   topButtonContainer: {
@@ -60,7 +59,8 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-evenly',
   },
   connectButton: {
-    width: scale(140),
+    // width: scale(140),
+    width: '100%',
     height: 40,
   },
   connectButtonText: {
@@ -69,7 +69,6 @@ const useStyles = makeStyle(theme => ({
       ios: 20,
       android: 23,
     }),
-    fontSize: 12,
   },
   connectButtonContent: {
     height: '100%',
@@ -86,6 +85,13 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: '100%',
     height: 500,
+  },
+  tabContainer: {
+    flexGrow: 1,
+    backgroundColor: theme.colors.background,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+    padding: theme.spacing.m,
   },
 }));
 

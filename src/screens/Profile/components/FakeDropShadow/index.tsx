@@ -21,11 +21,11 @@ const FakeDropShadow = () => {
     */
   }
   return (
-    <View style={{marginTop: theme.spacing.xl, marginBottom: -20}}>
+    <View style={{marginTop: theme.spacing.m, marginBottom: 12}}>
       <DropShadowWrapper
         customColor={addAlpha(theme.colors.primary, 0.1)}
         customOverlayColor="rgba(255,255,255,0.1)">
-        <View style={{height: 50}} />
+        <View style={{height: 20}} />
       </DropShadowWrapper>
     </View>
   );

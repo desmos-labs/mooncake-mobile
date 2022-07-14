@@ -1,8 +1,9 @@
 import React from 'react';
 import DView from 'components/DView';
-import {View, ScrollView, Image, ActivityIndicator} from 'react-native';
+import {View, Image, ActivityIndicator, FlatList} from 'react-native';
 import {
   defaultBanner,
+  desmosIcon,
   editButton,
   homeButton,
   notificationsButton,
@@ -14,17 +15,20 @@ import {useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
-import AddressCopy from 'screens/Profile/components/AddressCopy';
-import UserBio from 'screens/Profile/components/UserBio';
-import SocialCounter from 'screens/Profile/components/SocialCounter';
 import DButton from 'components/DButton';
 import {useQuery} from '@apollo/client';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import _ from 'lodash';
+import SocialCounter from './components/SocialCounter';
+import UserBio from './components/UserBio';
+import AddressCopy from './components/AddressCopy';
+import ProfilePostCard from './components/ProfilePostCard';
+import FakeDropShadow from './components/FakeDropShadow';
 import useStyles from './useStyles';
-import ContentPanel from './components/ContentPanel';
+import ContentTabs from './components/ContentTab';
 
+// Replace this with an address from recoil
 const DUMMY_ADDRESS = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
 
 const Profile = () => {
@@ -84,102 +88,134 @@ const Profile = () => {
 
   const {posts} = postData;
 
+  const renderPosts = ({item}: any) => (
+    <ProfilePostCard
+      postData={item}
+      onPress={() =>
+        handlePostPressed({
+          subspaceID: item.subspace_id,
+          authorAddress: item.author_address,
+          id: item.id,
+        })
+      }
+    />
+  );
+
   return (
     <DView>
-      <Image
-        source={cover_pic ? {uri: cover_pic} : defaultBanner}
-        style={styles.bannerImage}
-      />
-      {/* // This implementation is temporary; the inner scrollview will likely */}
-      {/* // be switched for a Animated.Scrollview once this page's scroll */}
-      {/* // behavior is finalized */}
+      {/* white space so ios overscroll does not reveal background underneath */}
       <View style={styles.whiteSpace} />
-      <ScrollView>
-        {/* top buttons */}
-        <View style={styles.topButtonContainer}>
-          <View>
-            <ImageButton image={homeButton} style={styles.buttonStyle} />
-          </View>
-
-          <View>
-            <ImageButton
-              image={notificationsButton}
-              style={styles.buttonStyle}
-              overlayComponent={
-                <PingAnimation size={10} color={theme.colors.primary} />
-              }
-              overlayPosition={{
-                top: 2,
-                left: 12,
-              }}
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <Image
+              source={cover_pic ? {uri: cover_pic} : defaultBanner}
+              style={styles.bannerImage}
             />
+            {/* top buttons start */}
+            <View style={styles.topButtonContainer}>
+              <View>
+                <ImageButton image={homeButton} style={styles.buttonStyle} />
+              </View>
 
-            <Spacer paddingTop={theme.spacing.m}>
-              <ImageButton image={settingsButton} style={styles.buttonStyle} />
-            </Spacer>
-          </View>
-        </View>
-        {/* top buttons end */}
+              <View>
+                <ImageButton
+                  image={notificationsButton}
+                  style={styles.buttonStyle}
+                  overlayComponent={
+                    <PingAnimation size={10} color={theme.colors.primary} />
+                  }
+                  overlayPosition={{
+                    top: 2,
+                    left: 12,
+                  }}
+                />
 
-        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-        <View style={styles.avatarContainer}>
-          <Image style={styles.avatar} source={{uri: profile_pic}} />
-        </View>
+                <Spacer paddingTop={theme.spacing.m}>
+                  <ImageButton
+                    image={settingsButton}
+                    style={styles.buttonStyle}
+                  />
+                </Spacer>
+              </View>
+            </View>
+            {/* top buttons end */}
 
-        {/* main panel */}
-        <View style={styles.contentGroup}>
-          <View style={{paddingHorizontal: theme.spacing.m}}>
-            <ImageButton image={editButton} style={styles.editButton} />
-
-            <Typography.H3 style={styles.nameText}>{nickname}</Typography.H3>
-
-            <Typography.Body7 style={styles.dTagText}>{dtag}</Typography.Body7>
-
-            <Spacer paddingVertical={theme.spacing.s}>
-              <AddressCopy address={address} />
-            </Spacer>
-
-            <UserBio content={bio} />
-
-            {/* social counters */}
-            <View style={styles.socialCounterGroup}>
-              <SocialCounter count={following} label={t('following')} />
-
-              <View style={styles.separator} />
-
-              <SocialCounter count={followers} label={t('followers')} />
+            {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+            <View style={styles.avatarContainer}>
+              <Image
+                style={styles.avatar}
+                source={profile_pic ? {uri: profile_pic} : desmosIcon}
+              />
             </View>
 
-            <View style={styles.connectButtonGroup}>
-              <DButton
-                mode="outlined"
-                style={styles.connectButton}
-                contentStyle={styles.connectButtonContent}>
-                <Typography.Button2 style={styles.connectButtonText}>
-                  {t('connectAddress')}
-                </Typography.Button2>
-              </DButton>
+            <View style={styles.contentGroup}>
+              <View style={{paddingHorizontal: theme.spacing.m}}>
+                <ImageButton image={editButton} style={styles.editButton} />
 
-              <DButton
-                mode="outlined"
-                style={styles.connectButton}
-                contentStyle={styles.connectButtonContent}>
-                <Typography.Button2 style={styles.connectButtonText}>
-                  {t('connectApp')}
-                </Typography.Button2>
-              </DButton>
+                <Typography.H3 style={styles.nameText}>
+                  {nickname}
+                </Typography.H3>
+
+                <Typography.Body7 style={styles.dTagText}>
+                  {dtag}
+                </Typography.Body7>
+
+                <Spacer paddingVertical={theme.spacing.s}>
+                  <AddressCopy address={address} />
+                </Spacer>
+
+                <UserBio content={bio} />
+
+                <View style={styles.socialCounterGroup}>
+                  <SocialCounter count={following} label={t('following')} />
+
+                  <View style={styles.separator} />
+
+                  <SocialCounter count={followers} label={t('followers')} />
+                </View>
+
+                <View style={styles.connectButtonGroup}>
+                  <DButton
+                    mode="outlined"
+                    style={styles.connectButton}
+                    contentStyle={styles.connectButtonContent}>
+                    <Typography.Button2 style={styles.connectButtonText}>
+                      {t('connectAddress')}
+                    </Typography.Button2>
+                  </DButton>
+
+                  {/* hidden on MVP */}
+                  {/* <DButton */}
+                  {/*  mode="outlined" */}
+                  {/*  style={styles.connectButton} */}
+                  {/*  contentStyle={styles.connectButtonContent}> */}
+                  {/*  <Typography.Button2 style={styles.connectButtonText}> */}
+                  {/*    {t('connectApp')} */}
+                  {/*  </Typography.Button2> */}
+                  {/* </DButton> */}
+                </View>
+              </View>
             </View>
-          </View>
 
-          <ContentPanel
-            tabs={tabs}
-            selectedIndex={selectedTabIndex}
-            handleTabPressed={setSelectedTabIndex}
-            posts={posts || []}
-            handlePostPressed={handlePostPressed}
-          />
-        </View>
-      </ScrollView>
+            <FakeDropShadow />
+            <View style={styles.tabContainer}>
+              <ContentTabs
+                tabs={tabs}
+                selectedIndex={selectedTabIndex}
+                handleTabPressed={setSelectedTabIndex}
+              />
+            </View>
+          </>
+        }
+        data={posts}
+        renderItem={renderPosts}
+        numColumns={3}
+        columnWrapperStyle={{
+          // slight adjustment so column items appear centered
+          left: 20,
+        }}
+      />
     </DView>
   );
 };
