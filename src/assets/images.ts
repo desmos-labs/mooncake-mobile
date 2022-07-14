@@ -6,7 +6,7 @@ export const cosmosIcon = require('./images/cosmos.png');
 
 export const cryptoComIcon = require('./images/crypto_com.png');
 
-export const desmosIcon = require('./images/desmos.png');
+export const desmosIcon = require('./images/desmosIcon.png');
 
 export const eMoneyIcon = require('./images/e_money.png');
 
