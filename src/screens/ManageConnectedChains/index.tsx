@@ -59,7 +59,7 @@ const ManageConnectedChains = () => {
           label: t('hide'),
         }}
         duration={Snackbar.DURATION_SHORT}>
-        <Typography.Body1>{t('common:addressCopied')}</Typography.Body1>
+        <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
     </View>
   );

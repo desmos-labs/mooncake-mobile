@@ -11,7 +11,7 @@ import {
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
-import {useTheme} from 'react-native-paper';
+import {Snackbar, useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
@@ -38,6 +38,8 @@ const Profile = () => {
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
+
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const {t} = useTranslation('profile');
 
@@ -163,7 +165,10 @@ const Profile = () => {
                 </Typography.Body7>
 
                 <Spacer paddingVertical={theme.spacing.s}>
-                  <AddressCopy address={address} />
+                  <AddressCopy
+                    address={address}
+                    externalCallback={() => setShowSnackbar(true)}
+                  />
                 </Spacer>
 
                 <UserBio content={bio} />
@@ -210,6 +215,17 @@ const Profile = () => {
         }}
         ListEmptyComponent={EmptyPostComponent}
       />
+
+      <Snackbar
+        visible={showSnackbar}
+        style={styles.snackbar}
+        onDismiss={() => setShowSnackbar(false)}
+        action={{
+          label: t('hide'),
+        }}
+        duration={Snackbar.DURATION_SHORT}>
+        <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
+      </Snackbar>
     </DView>
   );
 };

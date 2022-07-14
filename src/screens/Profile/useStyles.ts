@@ -80,6 +80,10 @@ const useStyles = makeStyle(theme => ({
     borderTopLeftRadius: 24,
     padding: theme.spacing.m,
   },
+  snackbar: {
+    zIndex: 2,
+    backgroundColor: theme.colors.popupSurface,
+  },
 }));
 
 export default useStyles;
