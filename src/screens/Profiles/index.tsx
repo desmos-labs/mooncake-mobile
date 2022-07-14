@@ -4,7 +4,8 @@ import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import React, {useMemo, useRef} from 'react';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -19,10 +20,28 @@ import useStyles from './useStyles';
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const Profiles: React.FC<Props> = props => {
+  const {navigation} = props;
   const [profiles, setProfiles] = useRecoilState(profilesState);
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
+
+  const navigateToConfirmModal = useCallback(
+    (index: number) => {
+      navigation.navigate({
+        name: ROUTES.CONFIRM_MODAL,
+        params: {
+          title: t('confirmModal:removeProfile'),
+          subtitle: t('confirmModal:backupSeedphrase'),
+          primaryButtonLabel: t('confirmModal:goToBackup'),
+          secondaryButtonLabel: t('confirmModal:remove'),
+          onPressPrimary: () => console.log('primary', index),
+          onPressSecondary: () => console.log('secondary', index),
+        },
+      });
+    },
+    [navigation],
+  );
 
   const selectProfile = (i: number) => {
     const newProfiles = profiles.map((profile, index) => {
@@ -87,6 +106,8 @@ const Profiles: React.FC<Props> = props => {
           simultaneousHandlers={scrollRef}
           values={values}
           onSelect={index => selectProfile(index)}
+          onEditProfile={index => console.log('edit profile', index)}
+          onRemoveProfile={index => navigateToConfirmModal(index)}
         />
       </ScrollView>
     </DView>

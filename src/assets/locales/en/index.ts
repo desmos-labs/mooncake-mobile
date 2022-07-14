@@ -7,7 +7,9 @@ import changePassword from './changePassword.json';
 import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settingsScreen.json';
+import confirmModal from './confirmModal.json';
 import profile from './profile.json'
+
 
 const en = {
     common,
@@ -17,9 +19,10 @@ const en = {
     error,
     changePassword,
     resultModal,
+    confirmModal,
     lookingForDevices,
     settings,
-    profile,
+    profile
 };
 
 export default en;

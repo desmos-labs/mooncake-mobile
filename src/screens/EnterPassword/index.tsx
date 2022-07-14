@@ -51,9 +51,9 @@ const EnterPassword = () => {
         validationSchema={validationSchema}>
         {({handleSubmit, errors, setValues, values}) => (
           <View style={styles.formContainer}>
-            <Typography.Body1 style={styles.inputLabel}>
+            <Typography.Subtitle2 style={styles.inputLabel}>
               {t('inputLabel')}
-            </Typography.Body1>
+            </Typography.Subtitle2>
             <DSecureTextInput
               placeholder={t('inputPlaceholder')}
               value={values.password}
@@ -79,15 +79,15 @@ const EnterPassword = () => {
                 }
                 onPress={handleSubmit}
                 mode="contained">
-                <Typography.Body1 style={styles.confirmButtonText}>
+                <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:confirm')}
-                </Typography.Body1>
+                </Typography.Button1>
               </DButton>
 
               <TouchableOpacity
                 style={styles.forgotPwButton}
                 onPress={onPressForgotPassword}>
-                <Typography.Body1>{t('forgotPassword')}</Typography.Body1>
+                <Typography.Button2>{t('forgotPassword')}</Typography.Button2>
               </TouchableOpacity>
             </KeyboardAvoidingView>
           </View>

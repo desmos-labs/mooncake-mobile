@@ -8,7 +8,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,6 +28,20 @@ const Settings: React.FC<Props> = props => {
   /*  const areBiometricsSupported = useCallback(async () => {
     console.log('checkIfBiometricsAreSupported');
   }, []); */
+
+  const navigateToConfirmModal = useCallback(() => {
+    navigation.navigate({
+      name: ROUTES.CONFIRM_MODAL,
+      params: {
+        title: t('confirmModal:signout'),
+        subtitle: t('confirmModal:backupSeedphrase'),
+        primaryButtonLabel: t('confirmModal:goToBackup'),
+        secondaryButtonLabel: t('confirmModal:signout'),
+        onPressPrimary: () => console.log('primary'),
+        onPressSecondary: () => console.log('secondary'),
+      },
+    });
+  }, []);
 
   useEffect(() => {
     /**
@@ -109,7 +123,7 @@ const Settings: React.FC<Props> = props => {
           <DButton
             style={styles.innerButton}
             mode="outlined"
-            onPress={() => console.log('onPress')}>
+            onPress={navigateToConfirmModal}>
             {t('signOut')}
           </DButton>
         </LinearGradient>
