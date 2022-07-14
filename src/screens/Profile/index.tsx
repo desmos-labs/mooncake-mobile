@@ -155,7 +155,7 @@ const Profile = () => {
                 <ImageButton image={editButton} style={styles.editButton} />
 
                 <Typography.H3 style={styles.nameText}>
-                  {nickname}
+                  {nickname || dtag}
                 </Typography.H3>
 
                 <Typography.Body7 style={styles.dTagText}>
