@@ -46,10 +46,11 @@ const ContentTabs = ({
 const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   button: {
     alignItems: 'center',
+    flex: 1,
   },
   indicator: {
     marginTop: theme.spacing.xs,

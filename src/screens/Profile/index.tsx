@@ -15,11 +15,11 @@ import {useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
-import DButton from 'components/DButton';
 import {useQuery} from '@apollo/client';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import _ from 'lodash';
+import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
 import AddressCopy from './components/AddressCopy';
@@ -176,24 +176,16 @@ const Profile = () => {
                 </View>
 
                 <View style={styles.connectButtonGroup}>
-                  <DButton
-                    mode="outlined"
-                    style={styles.connectButton}
-                    contentStyle={styles.connectButtonContent}>
-                    <Typography.Button2 style={styles.connectButtonText}>
-                      {t('connectAddress')}
-                    </Typography.Button2>
-                  </DButton>
+                  <ProfileConnectButton
+                    label={t('connectAddress')}
+                    handlePress={() => {}}
+                  />
 
                   {/* hidden on MVP */}
-                  {/* <DButton */}
-                  {/*  mode="outlined" */}
-                  {/*  style={styles.connectButton} */}
-                  {/*  contentStyle={styles.connectButtonContent}> */}
-                  {/*  <Typography.Button2 style={styles.connectButtonText}> */}
-                  {/*    {t('connectApp')} */}
-                  {/*  </Typography.Button2> */}
-                  {/* </DButton> */}
+                  {/* <ProfileConnectButton */}
+                  {/*  label={t('connectApp')} */}
+                  {/*  handlePress={() => {}} */}
+                  {/* /> */}
                 </View>
               </View>
             </View>
