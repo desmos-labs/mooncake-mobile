@@ -1,4 +1,5 @@
 {
   "connectedAddresses": "Connected addresses",
-  "description": "Link up your addresses and check other token assets and NFTs in one place."
+  "description": "Link up your addresses and check other token assets and NFTs in one place.",
+  "noConnectedAddresses": "No connected addreses yet"
 }

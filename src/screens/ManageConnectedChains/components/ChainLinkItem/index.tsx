@@ -5,6 +5,7 @@ import Typography from 'components/Typography';
 import {copyIcon} from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useTranslation} from 'react-i18next';
+import DropShadowWrapper from 'components/DropShadowWrapper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -52,37 +53,39 @@ const ChainLinkItem = ({
   }, [chainName]);
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.icon} source={GetChainIcon(chainName)} />
+    <DropShadowWrapper>
+      <View style={styles.container}>
+        <Image style={styles.icon} source={GetChainIcon(chainName)} />
 
-      <View style={styles.centerGroup}>
-        <Typography.Subtitle1 style={styles.baseText}>
-          {capitalizedFirstLetter}
-        </Typography.Subtitle1>
-        <View style={styles.addressGroup}>
-          <Typography.Caption1
-            style={styles.baseText}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {address}
-          </Typography.Caption1>
+        <View style={styles.centerGroup}>
+          <Typography.H5 style={styles.baseText}>
+            {capitalizedFirstLetter}
+          </Typography.H5>
+          <View style={styles.addressGroup}>
+            <Typography.Body7
+              style={styles.baseText}
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {address}
+            </Typography.Body7>
 
-          <TouchableOpacity
-            accessibilityLabel="copy address button"
-            onPress={onPressCopy}>
-            <Image style={styles.copyIcon} source={copyIcon} />
+            <TouchableOpacity
+              accessibilityLabel="copy address button"
+              onPress={onPressCopy}>
+              <Image style={styles.copyIcon} source={copyIcon} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.disconnectButton}>
+          <TouchableOpacity onPress={onPressDisconnect}>
+            <Typography.Subtitle4 style={styles.disconnectText}>
+              {t('disconnect')}
+            </Typography.Subtitle4>
           </TouchableOpacity>
         </View>
       </View>
-
-      <View style={styles.disconnectButton}>
-        <TouchableOpacity onPress={onPressDisconnect}>
-          <Typography.Body1 style={styles.disconnectText}>
-            {t('disconnect')}
-          </Typography.Body1>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </DropShadowWrapper>
   );
 };
 

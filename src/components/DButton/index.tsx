@@ -20,7 +20,7 @@ export type Props = {
    * - `outlined` - button with an outline (medium emphasis)
    * - `contained` - button with a background color and elevation shadow (high emphasis)
    */
-  mode?: 'text' | 'outlined' | 'contained' | 'gradient';
+  mode?: 'text' | 'outlined' | 'contained' | 'gradient' | 'gradientFilled';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -114,6 +114,29 @@ const DButton: React.FC<Props> = props => {
             ]}
           />
         </MaskedView>
+        <DButton
+          icon={icon}
+          color={color || accentColor}
+          onPress={onPress}
+          mode="outlined"
+          labelStyle={[styles.labelStyle, labelStyle]}
+          style={[styles.btnStyle, style]}
+          contentStyle={[styles.contentStyle, contentStyle]}
+          loading={loading}
+          disabled={disabled}>
+          {children}
+        </DButton>
+      </View>
+    );
+  }
+
+  if (mode === 'gradientFilled') {
+    return (
+      <View style={[styles.gradientFilledContainer]}>
+        <LinearGradient
+          style={[styles.maskedView, styles.linearGradient]}
+          colors={theme.colors.dOrangeGradient01}
+        />
         <DButton
           icon={icon}
           color={color || accentColor}

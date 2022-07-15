@@ -76,7 +76,8 @@ const LightTheme: ReactNativePaper.Theme = {
     accentBlue01: '#FF8272',
     accentBlue02: '#362187',
 
-    dOrangeGradient01: ['#FF3E9A', '#FFC75B', '#FF844F', '#FFD771'],
+    // modified gradient01 to replicate the same effect as the one on figma
+    dOrangeGradient01: ['#FFC75B', '#FF844F', '#FF844F', '#FF844F'],
     dOrangeGradient02: ['#FF3E9A', '#FFC75B', '#FF844F', '#FFD771'].map(x =>
       addAlphaToHex(x, 0.5),
     ),
