@@ -1,5 +1,4 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import DButton from 'components/DButton';
 import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
@@ -11,11 +10,11 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
 import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
+import DButton from 'components/DButton';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
@@ -112,21 +111,14 @@ const Settings: React.FC<Props> = props => {
             onPress={() => console.log('about')}
           />
         </Section>
-        <LinearGradient
+
+        <DButton
+          mode="gradient"
           style={styles.signOutButton}
-          colors={[
-            'rgba(255, 199, 91, 1)',
-            'rgba(255, 132, 79, 1)',
-            'rgba(255, 132, 79, 1)',
-            'rgba(255, 132, 79, 1)',
-          ]}>
-          <DButton
-            style={styles.innerButton}
-            mode="outlined"
-            onPress={navigateToConfirmModal}>
-            {t('signOut')}
-          </DButton>
-        </LinearGradient>
+          onPress={navigateToConfirmModal}>
+          {t('signOut')}
+        </DButton>
+
         <Typography.Body7 style={styles.bottomText}>
           {t('joined product', {
             formattedDate: '21 June 2022',

@@ -1,5 +1,6 @@
 import {makeStyleWithProps} from 'config/theme';
 import {Props} from 'components/DButton/index';
+import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => {
   const accent = props.accent ? theme.colors.accent : theme.colors.primary;
@@ -21,6 +22,36 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
     },
     contentStyle: {
       height: 52,
+    },
+
+    // gradient button
+    container: {
+      alignSelf: 'stretch',
+      justifyContent: 'center',
+    },
+    maskedView: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    maskingContainer: {
+      backgroundColor: 'transparent',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 1,
+    },
+    masking: {
+      alignSelf: 'stretch',
+      padding: 24,
+      borderRadius: theme.roundness,
+      borderWidth: 1,
+      borderColor: 'black',
+    },
+    linearGradient: {
+      flex: 1,
+    },
+    buttonStyle: {
+      alignSelf: 'stretch',
+      zIndex: 2,
+      borderRadius: theme.roundness,
     },
   };
 });
