@@ -6,10 +6,10 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {ChainLink} from 'types/link';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
-import FlatListSeparator from 'components/FlatListSeparator';
 import DView from 'components/DView';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import DButton from 'components/DButton';
+import GradientBorder from 'components/GradientBorder';
 import useStyles from './useStyles';
 
 const ManageConnectedChains = () => {
@@ -56,22 +56,29 @@ const ManageConnectedChains = () => {
     );
   }, []);
 
+  // This screen usings a combination of GradientBorder and zIndexWrapper to create
+  // a pleasant scrolling experience while on ios. Without it, the dropshadow would
+  // appear cut off during overscroll
   return (
     <DView>
-      <View style={styles.textContainer}>
-        <Typography.H3>{t('connectedAddresses')}</Typography.H3>
+      <View style={styles.zIndexWrapper}>
+        <View style={styles.textContainer}>
+          <Typography.H3>{t('connectedAddresses')}</Typography.H3>
 
-        <Typography.Body6 style={styles.descriptionText}>
-          {t('description')}
-        </Typography.Body6>
+          <Typography.Body6 style={styles.descriptionText}>
+            {t('description')}
+          </Typography.Body6>
+        </View>
+
+        <GradientBorder height={15} />
       </View>
 
       <FlatList
         data={chainLinks}
         renderItem={renderChainLinks}
-        ItemSeparatorComponent={FlatListSeparator}
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
+        style={{overflow: 'visible'}}
       />
 
       <Snackbar

@@ -8,13 +8,15 @@ type CompProps = React.ComponentProps<typeof ChainLinkItem>;
 
 const defaultProps: CompProps = {
   chainName: 'cosmos',
-  address: 'cosmo123123123123123123',
+  address: 'cosmo1231231alskdjf;laksdjfakl23123123123',
   onPressDisconnect: action('onPressDisconnect'),
   showSnackBar: action('showSnackBar'),
 };
 
 storiesOf('components/ChainLinkItem', module)
   .addDecorator(getStories => (
-    <SbContainer justifyContent="center">{getStories()}</SbContainer>
+    <SbContainer padding={16} justifyContent="center">
+      {getStories()}
+    </SbContainer>
   ))
   .add('Default', () => <ChainLinkItem {...defaultProps} />);

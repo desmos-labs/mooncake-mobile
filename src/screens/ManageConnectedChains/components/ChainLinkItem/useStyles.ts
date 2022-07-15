@@ -2,7 +2,7 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   baseText: {
-    color: theme.colors.black,
+    color: theme.colors.surfaceBlack,
   },
   addressText: {
     color: theme.colors.grey01,
@@ -14,6 +14,9 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     padding: theme.spacing.m,
+    margin: theme.spacing.m,
+    backgroundColor: theme.colors.background,
+    borderRadius: 12,
   },
   icon: {
     width: 40,
@@ -26,10 +29,10 @@ const useStyles = makeStyle(theme => ({
   },
   addressGroup: {
     flexDirection: 'row',
-    width: '50%',
+    maxWidth: '80%',
   },
   copyIcon: {
-    marginLeft: theme.spacing.s,
+    marginLeft: theme.spacing.xs,
     width: 16,
     height: 16,
     resizeMode: 'contain',
