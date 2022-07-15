@@ -9,6 +9,11 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
   const theme = useTheme();
   const styles = useStyles();
   const [hideText, setHideText] = useState(true);
+  const iconColor = error
+    ? theme.colors.pink01
+    : focused && !error
+    ? theme.colors.surfaceBlack
+    : theme.colors.iconGrey;
 
   return (
     <DTextInput
@@ -16,17 +21,12 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
       onFocus={() => setFocused(prev => !prev)}
       secureTextEntry={hideText}
       textAlignVertical="center"
-      style={focused && !error ? styles.focused : null}
+      placeHolderColor={iconColor}
+      style={[styles.input, focused && !error ? styles.focused : null]}
       rightElement={
         <IconButton
           icon={hideText ? 'eye' : 'eye-off'}
-          color={
-            error
-              ? 'rgba(243, 89, 168, 1)'
-              : focused && !error
-              ? '#25282D'
-              : theme.colors.iconGrey
-          }
+          color={iconColor}
           onPress={() => {
             setHideText(old => !old);
           }}

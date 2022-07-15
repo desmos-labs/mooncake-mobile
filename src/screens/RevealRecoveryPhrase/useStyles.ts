@@ -19,10 +19,10 @@ const useStyles = makeStyle(theme => ({
   },
   confirmButtonText: {
     alignSelf: 'center',
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
   errorText: {
-    color: theme.colors.error,
+    color: theme.colors.pink01,
     marginTop: 8,
   },
   button: {
