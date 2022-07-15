@@ -1,5 +1,12 @@
 import React, {ReactNode} from 'react';
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Button as MaterialButton, useTheme} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -44,6 +51,9 @@ export type Props = {
    * If tru display the button with the accent color from the current1 theme.
    */
   accent?: boolean;
+  /**
+   * Modify the container wrapping the children prop. Has no effect for text mode.
+   */
   contentStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
@@ -66,6 +76,18 @@ const DButton: React.FC<Props> = props => {
   const theme = useTheme();
   const styles = useStyles(props);
   const accentColor = accent ? theme.colors.accent : theme.colors.primary;
+
+  // unlike the other modes, the clickable area for text-mode is only where
+  // the text is rendered
+  if (mode === 'text') {
+    return (
+      <TouchableOpacity
+        style={[styles.btnStyle, style, {alignSelf: 'center'}]}
+        onPress={onPress}>
+        <Text style={[styles.labelStyle, labelStyle]}>{children}</Text>
+      </TouchableOpacity>
+    );
+  }
 
   if (mode === 'gradient') {
     return (
