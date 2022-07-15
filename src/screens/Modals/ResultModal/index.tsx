@@ -61,6 +61,7 @@ const ResultModal = () => {
       <View style={styles.innerContainer}>
         <TouchableOpacity
           style={styles.dismissButton}
+          hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
           onPress={onDismiss || goBack}>
           <Image style={styles.dismissButtonImage} source={iconCross} />
         </TouchableOpacity>

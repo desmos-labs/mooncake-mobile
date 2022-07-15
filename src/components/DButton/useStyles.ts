@@ -53,6 +53,10 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
       zIndex: 2,
       borderRadius: theme.roundness,
     },
+    gradientFilledContainer: {
+      borderRadius: theme.roundness,
+      overflow: 'hidden',
+    },
   };
 });
 

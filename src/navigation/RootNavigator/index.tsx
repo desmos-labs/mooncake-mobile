@@ -45,10 +45,15 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.HOME} component={Home} />
+      <Stack.Screen
+        name={ROUTES.MANAGE_CONNECTED_CHAINS}
+        component={ManageConnectedChains}
+      />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
-      <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
+      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
@@ -68,10 +73,6 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
-      <Stack.Screen
-        name={ROUTES.MANAGE_CONNECTED_CHAINS}
-        component={ManageConnectedChains}
-      />
       <Stack.Group
         screenOptions={{
           cardStyle: {

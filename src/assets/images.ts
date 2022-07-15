@@ -58,6 +58,8 @@ export const editButton = require('./images/editButton.png');
 
 export const errorImage = require('./images/errorImage.png');
 
+export const noConnectedAddresses = require('./images/noConnectedAddresses.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

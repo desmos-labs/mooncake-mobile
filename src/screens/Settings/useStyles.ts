@@ -17,9 +17,11 @@ const useStyles = makeStyle(theme => ({
     padding: 20,
   },
   signOutButton: {
-    marginTop: theme.spacing.l,
     borderRadius: theme.roundness,
     padding: 1,
+  },
+  buttonContainer: {
+    marginTop: theme.spacing.m,
   },
   innerButton: {
     backgroundColor: theme.colors.background,

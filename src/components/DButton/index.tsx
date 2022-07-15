@@ -20,7 +20,7 @@ export type Props = {
    * - `outlined` - button with an outline (medium emphasis)
    * - `contained` - button with a background color and elevation shadow (high emphasis)
    */
-  mode?: 'text' | 'outlined' | 'contained' | 'gradient';
+  mode?: 'text' | 'outlined' | 'contained' | 'gradient' | 'gradientFilled';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -55,6 +55,10 @@ export type Props = {
    * Modify the container wrapping the children prop. Has no effect for text mode.
    */
   contentStyle?: StyleProp<ViewStyle>;
+  /**
+   * Modify the container wrapping the gradient button. Has no effect for other modes.
+   */
+  containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
@@ -71,6 +75,7 @@ const DButton: React.FC<Props> = props => {
     accent,
     contentStyle,
     style,
+    containerStyle,
     children,
   } = props;
   const theme = useTheme();
@@ -91,7 +96,7 @@ const DButton: React.FC<Props> = props => {
 
   if (mode === 'gradient') {
     return (
-      <View style={[styles.container]}>
+      <View style={[styles.container, containerStyle]}>
         <MaskedView
           style={styles.maskedView}
           maskElement={
@@ -109,6 +114,29 @@ const DButton: React.FC<Props> = props => {
             ]}
           />
         </MaskedView>
+        <DButton
+          icon={icon}
+          color={color || accentColor}
+          onPress={onPress}
+          mode="outlined"
+          labelStyle={[styles.labelStyle, labelStyle]}
+          style={[styles.btnStyle, style]}
+          contentStyle={[styles.contentStyle, contentStyle]}
+          loading={loading}
+          disabled={disabled}>
+          {children}
+        </DButton>
+      </View>
+    );
+  }
+
+  if (mode === 'gradientFilled') {
+    return (
+      <View style={[styles.gradientFilledContainer]}>
+        <LinearGradient
+          style={[styles.maskedView, styles.linearGradient]}
+          colors={theme.colors.dOrangeGradient01}
+        />
         <DButton
           icon={icon}
           color={color || accentColor}

@@ -10,6 +10,11 @@ const useStyles = makeStyle(theme => ({
   },
   textContainer: {
     padding: theme.spacing.m,
+    paddingBottom: 0,
+    backgroundColor: theme.colors.background,
+  },
+  zIndexWrapper: {
+    zIndex: 2,
   },
   descriptionText: {
     marginTop: theme.spacing.m,
@@ -20,6 +25,14 @@ const useStyles = makeStyle(theme => ({
   },
   flatListContainer: {
     flexGrow: 1,
+    paddingTop: theme.spacing.l,
+  },
+  buttonStyle: {
+    color: theme.colors.white,
+  },
+  buttonContainer: {
+    marginTop: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.xl,
   },
 }));
 

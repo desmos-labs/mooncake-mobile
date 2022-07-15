@@ -6,7 +6,10 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {ChainLink} from 'types/link';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
-import FlatListSeparator from 'components/FlatListSeparator';
+import DView from 'components/DView';
+import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
+import DButton from 'components/DButton';
+import GradientBorder from 'components/GradientBorder';
 import useStyles from './useStyles';
 
 const ManageConnectedChains = () => {
@@ -15,7 +18,9 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
 
   // TODO: replace with user's address, or any address for testing
-  const chainLinks = useChainLinks('');
+  const chainLinks = useChainLinks(
+    'desmos1rqpjh38ssmu5wqxqvelttmg9wv4mupkxvr3je4',
+  );
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const renderChainLinks = React.useCallback(
@@ -34,21 +39,46 @@ const ManageConnectedChains = () => {
     [],
   );
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <Typography.H3>{t('connectedAddresses')}</Typography.H3>
+  const ListEmptyComponent = React.useMemo(() => {
+    return (
+      <View>
+        <NoConnections />
 
-        <Typography.Body1 style={styles.descriptionText}>
-          {t('description')}
-        </Typography.Body1>
+        <View style={styles.buttonContainer}>
+          <DButton
+            onPress={() => {}}
+            mode="gradientFilled"
+            labelStyle={styles.buttonStyle}>
+            {t('profile:connectAddress')}
+          </DButton>
+        </View>
+      </View>
+    );
+  }, []);
+
+  // This screen usings a combination of GradientBorder and zIndexWrapper to create
+  // a pleasant scrolling experience while on ios. Without it, the dropshadow would
+  // appear cut off during overscroll
+  return (
+    <DView>
+      <View style={styles.zIndexWrapper}>
+        <View style={styles.textContainer}>
+          <Typography.H3>{t('connectedAddresses')}</Typography.H3>
+
+          <Typography.Body6 style={styles.descriptionText}>
+            {t('description')}
+          </Typography.Body6>
+        </View>
+
+        <GradientBorder height={15} />
       </View>
 
       <FlatList
         data={chainLinks}
         renderItem={renderChainLinks}
-        ItemSeparatorComponent={FlatListSeparator}
+        ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
+        style={{overflow: 'visible'}}
       />
 
       <Snackbar
@@ -61,7 +91,7 @@ const ManageConnectedChains = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </View>
+    </DView>
   );
 };
 

@@ -65,6 +65,7 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         <TouchableOpacity
           style={styles.dismissButton}
+          hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
           onPress={onDismiss || goBack}>
           <Image style={styles.dismissButtonImage} source={iconCross} />
         </TouchableOpacity>
@@ -81,7 +82,7 @@ const ConfirmModal = () => {
           </Typography.Subtitle1>
         </DButton>
         <DButton
-          style={styles.primaryButton}
+          style={styles.secondaryButton}
           mode="text"
           onPress={onPressSecondary}>
           <Typography.Subtitle1 style={styles.secondaryButtonText}>
