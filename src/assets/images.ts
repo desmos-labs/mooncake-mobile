@@ -6,7 +6,7 @@ export const cosmosIcon = require('./images/cosmos.png');
 
 export const cryptoComIcon = require('./images/crypto_com.png');
 
-export const desmosIcon = require('./images/desmos.png');
+export const desmosIcon = require('./images/desmosIcon.png');
 
 export const eMoneyIcon = require('./images/e_money.png');
 
@@ -45,3 +45,27 @@ export const tipIcon = require('./images/tipIcon.png');
 export const commentIcon = require('./images/commentIcon.png');
 
 export const optionsIcon = require('./images/optionsIcon.png');
+
+export const defaultBanner = require('./images/defaultBanner.png');
+
+export const homeButton = require('./images/homeButton.png');
+
+export const settingsButton = require('./images/settingsButton.png');
+
+export const notificationsButton = require('./images/notificationsButton.png');
+
+export const editButton = require('./images/editButton.png');
+
+export const errorImage = require('./images/errorImage.png');
+
+//Socials
+
+export const discordIcon = require('./images/discord.png');
+
+export const telegramIcon = require('./images/telegram.png');
+
+export const twitterIcon = require('./images/twitter.png');
+
+export const mediumIcon = require('./images/medium.png');
+
+export const githubIcon = require('./images/github.png');
