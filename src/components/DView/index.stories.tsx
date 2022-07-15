@@ -22,7 +22,6 @@ const Topbar = (
   <View style={styles.topBar}>
     <Typography.H1>Topbar</Typography.H1>
     <Typography.H1>Topbar</Typography.H1>
-    <Typography.H1>Topbar</Typography.H1>
   </View>
 );
 
@@ -36,10 +35,10 @@ const TypographyPlaceholder = (
     <Typography.H1>H1</Typography.H1>
     <Typography.H2>H2</Typography.H2>
     <Typography.H4>H4</Typography.H4>
-    <Typography.Title>Title</Typography.Title>
-    <Typography.Subtitle>Subtitle</Typography.Subtitle>
+    <Typography.Display1>Title</Typography.Display1>
+    <Typography.Subtitle1>Subtitle</Typography.Subtitle1>
     <Typography.Subtitle2>Subtitle2</Typography.Subtitle2>
-    <Typography.Body>Body</Typography.Body>
+    <Typography.Body1>Body</Typography.Body1>
     <Typography.Body1>Body1</Typography.Body1>
   </>
 );

@@ -57,3 +57,15 @@ export const notificationsButton = require('./images/notificationsButton.png');
 export const editButton = require('./images/editButton.png');
 
 export const errorImage = require('./images/errorImage.png');
+
+//Socials
+
+export const discordIcon = require('./images/discord.png');
+
+export const telegramIcon = require('./images/telegram.png');
+
+export const twitterIcon = require('./images/twitter.png');
+
+export const mediumIcon = require('./images/medium.png');
+
+export const githubIcon = require('./images/github.png');
