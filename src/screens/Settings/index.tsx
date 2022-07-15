@@ -116,6 +116,7 @@ const Settings: React.FC<Props> = props => {
         <DButton
           mode="gradient"
           style={styles.signOutButton}
+          containerStyle={styles.buttonContainer}
           onPress={navigateToConfirmModal}>
           {t('signOut')}
         </DButton>

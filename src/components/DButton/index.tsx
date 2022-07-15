@@ -55,6 +55,10 @@ export type Props = {
    * Modify the container wrapping the children prop. Has no effect for text mode.
    */
   contentStyle?: StyleProp<ViewStyle>;
+  /**
+   * Modify the container wrapping the gradient button. Has no effect for other modes.
+   */
+  containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
@@ -71,6 +75,7 @@ const DButton: React.FC<Props> = props => {
     accent,
     contentStyle,
     style,
+    containerStyle,
     children,
   } = props;
   const theme = useTheme();
@@ -91,7 +96,7 @@ const DButton: React.FC<Props> = props => {
 
   if (mode === 'gradient') {
     return (
-      <View style={[styles.container]}>
+      <View style={[styles.container, containerStyle]}>
         <MaskedView
           style={styles.maskedView}
           maskElement={

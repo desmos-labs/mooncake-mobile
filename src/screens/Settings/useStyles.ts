@@ -17,9 +17,11 @@ const useStyles = makeStyle(theme => ({
     overflow: 'visible',
   },
   signOutButton: {
-    marginTop: theme.spacing.l,
     borderRadius: theme.roundness,
     padding: 1,
+  },
+  buttonContainer: {
+    marginTop: theme.spacing.m,
   },
   innerButton: {
     backgroundColor: theme.colors.background,
