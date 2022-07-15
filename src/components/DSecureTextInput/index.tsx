@@ -25,7 +25,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
               ? 'rgba(243, 89, 168, 1)'
               : focused && !error
               ? '#25282D'
-              : theme.colors.icon['3']
+              : theme.colors.iconGrey
           }
           onPress={() => {
             setHideText(old => !old);

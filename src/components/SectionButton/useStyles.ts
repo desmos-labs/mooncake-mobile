@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   value: {
-    color: theme.colors.font['3'],
+    color: theme.colors.grey01,
   },
   icon: {
     height: 24,

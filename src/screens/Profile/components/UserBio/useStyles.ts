@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
   },
   moreText: {
     backgroundColor: theme.colors.background,
-    color: theme.colors.font[4],
+    color: theme.colors.accentBlue02,
   },
   gradientContainer: {
     flexDirection: 'row',

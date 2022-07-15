@@ -7,7 +7,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.desmosOrange01,
     justifyContent: 'center',
     overflow: 'hidden',
     padding: theme.spacing.m,
@@ -17,7 +17,7 @@ const useStyles = makeStyle(theme => ({
     margin: theme.spacing.xs,
   },
   textStyle: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
     fontSize: 8,
     lineHeight: 15,
   },

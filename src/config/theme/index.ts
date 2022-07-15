@@ -4,7 +4,6 @@ import {useTheme} from 'react-native-paper';
 import NamedStyles = StyleSheet.NamedStyles;
 
 export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(
-  // eslint-disable-next-line no-unused-vars
   styleProvider: (theme: ReactNativePaper.Theme) => T,
 ): () => T {
   return () => {
@@ -17,9 +16,7 @@ export function makeStyleWithProps<
   P,
   T extends NamedStyles<T> | NamedStyles<any>,
 >(
-  // eslint-disable-next-line no-unused-vars
   styleProvider: (props: P, theme: ReactNativePaper.Theme) => T,
-  // eslint-disable-next-line no-unused-vars
 ): (props: P) => T {
   return (props: P) => {
     const theme = useTheme();
@@ -29,3 +26,9 @@ export function makeStyleWithProps<
     );
   };
 }
+
+export const addAlphaToHex = (color: string, opacity: number) => {
+  // coerce values so it is between 0 and 1.
+  const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
+  return color + _opacity.toString(16).toUpperCase();
+};

@@ -3,17 +3,17 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   // inactiveDotColor: surface1,
   headerStyle: {
-    color: theme.colors.font[1],
+    color: theme.colors.black,
     marginTop: 40,
     marginBottom: 20,
     textAlign: 'center',
   },
   descriptionStyle: {
-    color: theme.colors.font[1],
+    color: theme.colors.black,
     textAlign: 'center',
   },
   warningStyle: {
-    color: theme.colors.font[4],
+    color: theme.colors.accentBlue02,
     textAlign: 'center',
     marginTop: 30,
   },

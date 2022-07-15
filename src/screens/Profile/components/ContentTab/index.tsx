@@ -67,7 +67,7 @@ const useStyles = makeStyle(theme => ({
     height: INDICATOR_SIZE,
     width: INDICATOR_SIZE,
     borderRadius: INDICATOR_SIZE / 2,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.desmosOrange01,
   },
 }));
 

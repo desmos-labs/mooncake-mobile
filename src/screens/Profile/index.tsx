@@ -124,7 +124,10 @@ const Profile = () => {
                   image={notificationsButton}
                   style={styles.buttonStyle}
                   overlayComponent={
-                    <PingAnimation size={10} color={theme.colors.primary} />
+                    <PingAnimation
+                      size={10}
+                      color={theme.colors.desmosOrange01}
+                    />
                   }
                   overlayPosition={{
                     top: 2,

@@ -102,7 +102,7 @@ const LookingForDevices = () => {
           dotSize={8}
           hideActiveDots={!scanning}
           inactiveColor={theme.colors.surface}
-          activeColor={theme.colors.primary}
+          activeColor={theme.colors.desmosOrange01}
         />
         <Image source={ledgerIcon} style={styles.ledgerImg} />
       </View>

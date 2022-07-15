@@ -47,7 +47,7 @@ const SbContainer: React.FC<Props> = ({ backgroundColor, justifyContent, alignIt
         }}>
           <Text
             style={{
-              color: theme.colors.font[1]
+              color: theme.colors.black
             }}
           >
             {`Theme: ${isDarkMode ? "Dark" : "Light"}`}

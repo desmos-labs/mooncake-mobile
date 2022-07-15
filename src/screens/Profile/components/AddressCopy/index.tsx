@@ -39,7 +39,7 @@ const AddressCopy = ({address, externalCallback}: Props) => {
       <Typography.Body7
         numberOfLines={1}
         ellipsizeMode="middle"
-        style={{maxWidth: '40%', color: theme.colors.font[3]}}>
+        style={{maxWidth: '40%', color: theme.colors.grey01}}>
         {address}
       </Typography.Body7>
 
