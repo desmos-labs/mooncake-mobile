@@ -11,7 +11,10 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
-    marginBottom: 20,
+    marginBottom: theme.spacing.m,
+  },
+  title: {
+    alignSelf: 'center',
   },
   signOutButton: {
     marginTop: theme.spacing.l,

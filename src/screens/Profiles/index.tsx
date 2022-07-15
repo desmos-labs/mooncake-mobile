@@ -56,7 +56,7 @@ const Profiles: React.FC<Props> = props => {
         nickname: profile.nickname,
         dTag: profile.dtag,
         profilePicture: {uri: profile.profilePicture},
-        isSelected: profile === userOptions.selectedProfile,
+        isSelected: profile.address === userOptions.selectedProfile.address,
       } as RadioValue;
     });
   }, [profiles, userOptions.selectedProfile]);
@@ -64,9 +64,7 @@ const Profiles: React.FC<Props> = props => {
   return (
     <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
       <View style={styles.titleBar}>
-        <Typography.H3 style={{alignSelf: 'center'}}>
-          {t('profiles')}
-        </Typography.H3>
+        <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
           onPress={() => console.log('press')}>

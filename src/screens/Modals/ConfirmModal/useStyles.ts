@@ -42,6 +42,9 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'stretch',
     marginBottom: theme.spacing.m,
   },
+  secondaryButton: {
+    marginBottom: theme.spacing.m,
+  },
 }));
 
 export default useStyles;
