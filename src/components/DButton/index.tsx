@@ -82,7 +82,7 @@ const DButton: React.FC<Props> = props => {
   if (mode === 'text') {
     return (
       <TouchableOpacity
-        style={[styles.btnStyle, style, {alignSelf: 'center'}]}
+        style={[{alignSelf: 'center'}, styles.btnStyle, style]}
         onPress={onPress}>
         <Text style={[styles.labelStyle, labelStyle]}>{children}</Text>
       </TouchableOpacity>
