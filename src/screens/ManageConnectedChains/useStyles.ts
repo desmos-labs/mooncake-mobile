@@ -21,6 +21,13 @@ const useStyles = makeStyle(theme => ({
   flatListContainer: {
     flexGrow: 1,
   },
+  buttonStyle: {
+    color: theme.colors.white,
+  },
+  buttonContainer: {
+    marginTop: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.xl,
+  },
 }));
 
 export default useStyles;
