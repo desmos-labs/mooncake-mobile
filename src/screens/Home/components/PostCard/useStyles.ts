@@ -7,7 +7,7 @@ import {StyleSheet} from 'react-native';
 const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.desmosOrange01,
     justifyContent: 'flex-end',
     overflow: 'hidden',
     padding: theme.spacing.m,
@@ -31,10 +31,10 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
   },
   profileText: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
   textStyle: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
     fontSize: 32,
   },
   blankAvatar: {
@@ -42,7 +42,7 @@ const useStyles = makeStyle(theme => ({
     height: 40,
     resizeMode: 'contain',
     borderRadius: 20,
-    backgroundColor: theme.colors.backgroundGray,
+    backgroundColor: theme.colors.backgroundGrey,
   },
   nameGroup: {
     marginLeft: theme.spacing.s,

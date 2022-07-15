@@ -13,7 +13,7 @@ const FlatListSeparator = () => {
       style={{
         width: '100%',
         height: 1,
-        backgroundColor: theme.colors.line,
+        backgroundColor: theme.colors.grey01,
       }}
     />
   );

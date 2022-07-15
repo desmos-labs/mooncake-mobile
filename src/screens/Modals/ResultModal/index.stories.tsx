@@ -1,9 +1,9 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import ResultModal, {ResultModalParams} from 'screens/ResultModal/index';
 import {action} from '@storybook/addon-actions';
 import {modalSuccess} from 'assets/images';
+import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal/index';
 import SbContainer from 'storybook/decorators/SbContainer';
 import {NavigationContainer} from '@react-navigation/native';
 

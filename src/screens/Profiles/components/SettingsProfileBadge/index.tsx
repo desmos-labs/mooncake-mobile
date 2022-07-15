@@ -30,6 +30,16 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
    * @param index the values[index] on the clicked button.
    */
   onSelect: (index: number) => void;
+  /**
+   * Callback when the user click the edit profile button.
+   * @param index the values[index] on the clicked button.
+   */
+  onEditProfile: (index: number) => void;
+  /**
+   * Callback when the user click the remove profile button.
+   * @param index the values[index] on the clicked button.
+   */
+  onRemoveProfile: (index: number) => void;
 }
 
 type ContextType = {
@@ -37,7 +47,14 @@ type ContextType = {
 };
 
 const SettingsProfileBadge = (props: Props) => {
-  const {value, index, onSelect, simultaneousHandlers} = props;
+  const {
+    value,
+    index,
+    onSelect,
+    onEditProfile,
+    onRemoveProfile,
+    simultaneousHandlers,
+  } = props;
   const styles = useStyles();
   const {t} = useTranslation('settings');
   const translateX = useSharedValue(0);
@@ -83,7 +100,9 @@ const SettingsProfileBadge = (props: Props) => {
 
   return (
     <View>
-      <TouchableOpacity style={styles.firstBox}>
+      <TouchableOpacity
+        style={styles.firstBox}
+        onPress={() => onEditProfile(index)}>
         <Icon
           name="edit"
           size={26}
@@ -94,7 +113,9 @@ const SettingsProfileBadge = (props: Props) => {
           {t('edit')}
         </Typography.Subtitle4>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.secondBox}>
+      <TouchableOpacity
+        style={styles.secondBox}
+        onPress={() => onRemoveProfile(index)}>
         <Icon
           name="trash-2"
           size={26}

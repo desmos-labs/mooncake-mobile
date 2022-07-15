@@ -26,7 +26,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'flex-end',
   },
   confirmButtonText: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
   errorText: {
     color: theme.colors.error,

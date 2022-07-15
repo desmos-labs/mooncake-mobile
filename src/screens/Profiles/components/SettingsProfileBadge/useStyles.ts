@@ -39,7 +39,7 @@ const useStyles = makeStyle(theme => ({
     width: 78,
     paddingVertical: 20,
     position: 'absolute',
-    backgroundColor: '#E7FAFD',
+    backgroundColor: theme.colors.desmosBlue06,
   },
 
   secondBox: {

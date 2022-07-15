@@ -5,6 +5,7 @@ export enum MMKVKEYS {
   EXAMPLE_KEY = 'EXAMPLE_KEY',
   APP_SETTINGS = 'APP_SETTINGS',
   PROFILES = 'PROFILES',
+  USER_OPTIONS = 'USER_OPTIONS',
 }
 
 const MMKVStorage = new MMKV({

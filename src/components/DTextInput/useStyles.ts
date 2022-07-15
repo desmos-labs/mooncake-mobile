@@ -5,12 +5,14 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: theme.colors.surface,
+    backgroundColor: props.error
+      ? 'rgba(243, 89, 168, 0.16)'
+      : theme.colors.white,
     borderRadius: theme.roundness,
     minHeight: 44,
     alignItems: 'center',
-    borderColor: props.error ? theme.colors.error : theme.colors.surface,
-    borderWidth: 2,
+    borderColor: props.error ? 'rgba(243, 89, 168, 1)' : theme.colors.surface,
+    borderWidth: 1,
   },
   input: {
     fontFamily: 'Poppins-Regular',
@@ -18,7 +20,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     flexGrow: 1,
     textAlignVertical: props.multiline === true ? 'top' : 'center',
     height: '100%',
-    color: theme.colors.font['1'],
+    color: theme.colors.black,
     minHeight:
       props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,
   },

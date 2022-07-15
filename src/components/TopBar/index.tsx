@@ -35,7 +35,7 @@ export const TopBar: React.FC<Props> = props => {
       onPress={navigation.goBack}>
       <Icon
         name="angle-left"
-        color={theme.colors.icon[1]}
+        color={theme.colors.black}
         size={24}
         allowFontScaling
       />

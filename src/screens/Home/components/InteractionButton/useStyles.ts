@@ -19,7 +19,7 @@ const useStyles = makeStyle(theme => ({
   },
   countText: {
     marginTop: theme.spacing.xs,
-    color: theme.colors.font[5],
+    color: theme.colors.white,
   },
 }));
 

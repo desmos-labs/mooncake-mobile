@@ -22,6 +22,11 @@ const ContainedMode: CompProps = {
   mode: 'contained',
 };
 
+const GradientMode: CompProps = {
+  ...TextMode,
+  mode: 'gradient',
+};
+
 // DButton as in Desmos Button
 storiesOf('components/DButton', module)
   .addDecorator(getStories => (
@@ -42,5 +47,10 @@ storiesOf('components/DButton', module)
   .add('Contained', () => (
     <DButton {...ContainedMode}>
       <Text>Contained</Text>
+    </DButton>
+  ))
+  .add('Gradient', () => (
+    <DButton {...GradientMode}>
+      <Text>Gradient</Text>
     </DButton>
   ));

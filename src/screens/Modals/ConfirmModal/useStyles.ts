@@ -8,11 +8,12 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: theme.spacing.m,
   },
   innerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: theme.spacing.l,
+    paddingHorizontal: theme.spacing.xl,
     paddingTop: theme.spacing.m,
     paddingBottom: theme.spacing.l,
     backgroundColor: theme.colors.background,
@@ -20,32 +21,26 @@ const useStyles = makeStyle(theme => ({
   },
   dismissButton: {
     alignSelf: 'flex-end',
-    left: 4,
+    left: 10,
   },
   dismissButtonImage: {
     width: 11,
     height: 11,
     resizeMode: 'contain',
   },
-  // default image dimensions are a bit strange,
-  // may need standardize the dimensions if
-  // the image gets changed
-  image: {
-    width: 181,
-    height: 103,
-    resizeMode: 'contain',
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.l,
-  },
   subtitleText: {
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacing.l,
     marginBottom: theme.spacing.xl,
   },
   primaryButtonText: {
-    color: theme.colors.font[5],
+    color: theme.colors.white,
+  },
+  secondaryButtonText: {
+    color: theme.colors.black,
   },
   primaryButton: {
     alignSelf: 'stretch',
+    marginBottom: theme.spacing.m,
   },
 }));
 

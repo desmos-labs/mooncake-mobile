@@ -2,13 +2,13 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   baseText: {
-    color: theme.colors.font[1],
+    color: theme.colors.black,
   },
   addressText: {
-    color: theme.colors.font[3],
+    color: theme.colors.grey01,
   },
   disconnectText: {
-    color: theme.colors.primary,
+    color: theme.colors.desmosOrange01,
   },
   container: {
     flexDirection: 'row',
@@ -33,7 +33,7 @@ const useStyles = makeStyle(theme => ({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: theme.colors.font[3],
+    tintColor: theme.colors.grey01,
   },
   disconnectButton: {
     alignItems: 'center',
