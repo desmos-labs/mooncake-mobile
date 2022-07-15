@@ -1,4 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import DButton from 'components/DButton';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -9,13 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
@@ -61,6 +56,7 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
               {t('settings:enter password to continue')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              clearTextOnFocus={true}
               placeholder={t('enterPassword:inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {
@@ -78,32 +74,24 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
               keyboardVerticalOffset={Platform.OS === 'ios' ? 340 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <TouchableOpacity
+              <DButton
+                mode="gradientFilled"
                 onPress={handleSubmit}
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                style={[
-                  styles.button,
+                style={styles.button}
+                containerStyle={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                     ? styles.disabled
-                    : null,
-                ]}>
-                <LinearGradient
-                  style={styles.gradient}
-                  colors={[
-                    'rgba(255, 199, 91, 1)',
-                    'rgba(255, 132, 79, 1)',
-                    'rgba(255, 132, 79, 1)',
-                    'rgba(255, 132, 79, 1)',
-                  ]}>
-                  <Typography.Button1 style={styles.confirmButtonText}>
-                    {t('common:next')}
-                  </Typography.Button1>
-                </LinearGradient>
-              </TouchableOpacity>
+                    : null
+                }>
+                <Typography.Button1 style={styles.confirmButtonText}>
+                  {t('common:next')}
+                </Typography.Button1>
+              </DButton>
             </KeyboardAvoidingView>
           </View>
         )}

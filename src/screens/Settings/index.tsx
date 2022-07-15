@@ -64,7 +64,7 @@ const Settings: React.FC<Props> = props => {
           />
           <SectionButton
             label={t('manage connected addresses')}
-            onPress={() => console.log('manage connected addresses')}
+            onPress={() => navigation.navigate(ROUTES.MANAGE_CONNECTED_CHAINS)}
           />
           <SectionButton
             label={t('manage connected apps')}

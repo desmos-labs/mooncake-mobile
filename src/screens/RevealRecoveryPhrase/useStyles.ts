@@ -31,11 +31,6 @@ const useStyles = makeStyle(theme => ({
   disabled: {
     opacity: 0.3,
   },
-  gradient: {
-    borderRadius: theme.roundness,
-    height: 52,
-    justifyContent: 'center',
-  },
 }));
 
 export default useStyles;
