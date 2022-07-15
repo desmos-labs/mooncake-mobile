@@ -13,7 +13,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
   return (
     <DTextInput
       {...props}
-      onFocus={() => setFocused(!focused)}
+      onFocus={() => setFocused(prev => !prev)}
       secureTextEntry={hideText}
       textAlignVertical="center"
       style={focused && !error ? styles.focused : null}

@@ -10,6 +10,7 @@ import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
 import Settings from 'screens/Settings';
+import Community from 'screens/Community';
 import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -28,6 +29,7 @@ export type RootNavigatorParamList = {
   [ROUTES.HOME]: undefined;
   [ROUTES.USER_PROFILE]: undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
+  [ROUTES.SETTINGS_COMMUNITY]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -39,11 +41,12 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
+      <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
         name={ROUTES.LOOKING_FOR_DEVICES}
         component={LookingForDevices}
