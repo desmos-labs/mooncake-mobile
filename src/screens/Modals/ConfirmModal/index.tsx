@@ -1,12 +1,19 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {iconCross} from 'assets/images';
+// dismiss button
+// import {iconCross} from 'assets/images';
 import DButton from 'components/DButton';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  // dismiss button
+  // Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -69,12 +76,15 @@ const ConfirmModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        <TouchableOpacity
-          style={styles.dismissButton}
-          hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
-          onPress={onDismiss || goBack}>
-          <Image style={styles.dismissButtonImage} source={iconCross} />
-        </TouchableOpacity>
+        {/* newest design no longer has the dismiss button */}
+        {/* It can be deleted if it is not brought back before production release */}
+
+        {/* <TouchableOpacity */}
+        {/*  style={styles.dismissButton} */}
+        {/*  hitSlop={{top: 20, bottom: 20, right: 20, left: 20}} */}
+        {/*  onPress={onDismiss || goBack}> */}
+        {/*  <Image style={styles.dismissButtonImage} source={iconCross} /> */}
+        {/* </TouchableOpacity> */}
         <Typography.H5>{title}</Typography.H5>
         <Typography.Body5 style={styles.subtitleText}>
           {subtitle}
