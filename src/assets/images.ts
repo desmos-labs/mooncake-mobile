@@ -64,6 +64,8 @@ export const check = require('./images/check.png');
 
 export const validCheck = require('./images/validCheck.png');
 
+export const eyeClosed = require('./images/eyeClosed.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
