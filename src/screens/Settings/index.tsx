@@ -10,7 +10,6 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
@@ -51,82 +50,81 @@ const Settings: React.FC<Props> = props => {
   }, []);
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView
+      scrollable
+      style={styles.root}
+      topBar={<TopBar stackProps={props} />}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
-      <ScrollView
-        style={styles.scrollViewOuter}
-        contentContainerStyle={styles.scrollViewInner}
-        showsVerticalScrollIndicator={false}>
-        <Section style={styles.spacer} title={t('account')}>
-          <SectionButton
-            label={t('profiles')}
-            onPress={() => navigation.navigate(ROUTES.SETTINGS_PROFILES)}
-          />
-          <SectionButton
-            label={t('manage connected addresses')}
-            onPress={() => console.log('manage connected addresses')}
-          />
-          <SectionButton
-            label={t('manage connected apps')}
-            onPress={() => console.log('manage connected apps')}
-          />
-        </Section>
-        <Section style={styles.spacer} title={t('security')}>
-          <SectionButton
-            label={t('reveal secret recovey phrase')}
-            onPress={() => console.log('reveal secret recovey phrase')}
-          />
-          <SectionButton
-            label={t('change password')}
-            onPress={() => console.log('change password')}
-          />
-          <SectionSwitch
-            label={t('enable biometrics')}
-            value={settings.biometrics}
-            onValueChange={() =>
-              setSettings((oldState: AppSettings) => {
-                return {
-                  ...oldState,
-                  biometrics: !settings.biometrics,
-                };
-              })
-            }
-          />
-        </Section>
-        <Section style={styles.spacer} title={t('others')}>
-          <SectionButton
-            label={t('notifications')}
-            onPress={() => Linking.openSettings()}
-          />
-          <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
-          <SectionButton
-            label={t('community')}
-            onPress={() => navigation.navigate(ROUTES.SETTINGS_COMMUNITY)}
-          />
-          <SectionButton
-            label={t('feedbacks')}
-            onPress={() => console.log('feedbacks')}
-          />
-          <SectionButton
-            label={t('about')}
-            onPress={() => console.log('about')}
-          />
-        </Section>
 
-        <DButton
-          mode="gradient"
-          style={styles.signOutButton}
-          containerStyle={styles.buttonContainer}
-          onPress={navigateToConfirmModal}>
-          {t('signOut')}
-        </DButton>
+      <Section style={styles.spacer} title={t('account')}>
+        <SectionButton
+          label={t('profiles')}
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_PROFILES)}
+        />
+        <SectionButton
+          label={t('manage connected addresses')}
+          onPress={() => console.log('manage connected addresses')}
+        />
+        <SectionButton
+          label={t('manage connected apps')}
+          onPress={() => console.log('manage connected apps')}
+        />
+      </Section>
+      <Section style={styles.spacer} title={t('security')}>
+        <SectionButton
+          label={t('reveal secret recovey phrase')}
+          onPress={() => console.log('reveal secret recovey phrase')}
+        />
+        <SectionButton
+          label={t('change password')}
+          onPress={() => console.log('change password')}
+        />
+        <SectionSwitch
+          label={t('enable biometrics')}
+          value={settings.biometrics}
+          onValueChange={() =>
+            setSettings((oldState: AppSettings) => {
+              return {
+                ...oldState,
+                biometrics: !settings.biometrics,
+              };
+            })
+          }
+        />
+      </Section>
+      <Section style={styles.spacer} title={t('others')}>
+        <SectionButton
+          label={t('notifications')}
+          onPress={() => Linking.openSettings()}
+        />
+        <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
+        <SectionButton
+          label={t('community')}
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_COMMUNITY)}
+        />
+        <SectionButton
+          label={t('feedbacks')}
+          onPress={() => console.log('feedbacks')}
+        />
+        <SectionButton
+          label={t('about')}
+          onPress={() => console.log('about')}
+        />
+      </Section>
 
-        <Typography.Body7 style={styles.bottomText}>
-          {t('joined product', {
-            formattedDate: '21 June 2022',
-          })}
-        </Typography.Body7>
-      </ScrollView>
+      <DButton
+        mode="gradient"
+        style={styles.signOutButton}
+        containerStyle={styles.buttonContainer}
+        onPress={navigateToConfirmModal}>
+        {t('signOut')}
+      </DButton>
+
+      <Typography.Body7 style={styles.bottomText}>
+        {t('joined product', {
+          formattedDate: '21 June 2022',
+        })}
+      </Typography.Body7>
     </DView>
   );
 };
