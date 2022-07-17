@@ -10,6 +10,10 @@ import _ from 'lodash';
 import DView from 'components/DView';
 import {check, validCheck} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -17,14 +21,30 @@ const initialFormValues = {
   confirmPassword: '',
 };
 
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CHANGE_PASSWORD
+>;
+
 const ChangePassword = () => {
   const {t} = useTranslation('changePassword');
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
 
   const handleFormSubmit = React.useCallback(
     (formValues: typeof initialFormValues) => {
       console.log(formValues);
+
+      navigate(ROUTES.RESULT_MODAL, {
+        title: t('resultModal:success'),
+        subtitle: t('resultModal:passwordWasChanged'),
+        primaryButtonLabel: t('resultModal:goToProfile'),
+        onDismiss: () => {
+          // finish implementation when change pw feature is added
+        },
+      });
     },
     [],
   );
