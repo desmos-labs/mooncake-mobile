@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,6 +16,7 @@ import {useRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup, {
   RadioValue,
 } from 'screens/Profiles/components/SettingsProfileBadgeGroup';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -27,13 +28,23 @@ const Profiles: React.FC<Props> = props => {
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
+  const theme = useTheme();
 
   const navigateToConfirmModal = useCallback((index: number) => {
     navigation.navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:removeProfile'),
-        subtitle: t('confirmModal:backupSeedphrase'),
+        subtitle: (
+          <Trans
+            i18nKey="confirmModal:backupSeedphrase"
+            components={[
+              <Typography.Subtitle2
+                style={{color: theme.colors.desmosOrange01}}
+              />,
+            ]}
+          />
+        ),
         primaryButtonLabel: t('confirmModal:goToBackup'),
         secondaryButtonLabel: t('confirmModal:remove'),
         onPressPrimary: () => console.log('primary', index),
