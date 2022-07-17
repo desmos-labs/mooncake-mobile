@@ -60,6 +60,10 @@ export const errorImage = require('./images/errorImage.png');
 
 export const noConnectedAddresses = require('./images/noConnectedAddresses.png');
 
+export const check = require('./images/check.png');
+
+export const validCheck = require('./images/validCheck.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

@@ -2,12 +2,14 @@ import React from 'react';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import DSecureTextInput from 'components/DSecureTextInput';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
 import DButton from 'components/DButton';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import _ from 'lodash';
 import DView from 'components/DView';
+import {check, validCheck} from 'assets/images';
+import {passwordStrength} from 'check-password-strength';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -43,6 +45,19 @@ const ChangePassword = () => {
     });
   }, []);
 
+  const mapPwStyle = React.useCallback((password: string) => {
+    const {value} = passwordStrength(password);
+
+    switch (value) {
+      case 'Medium':
+        return styles.mediumPw;
+      case 'Strong':
+        return styles.strongPw;
+      default:
+        return styles.weakPw;
+    }
+  }, []);
+
   return (
     <DView style={styles.container}>
       <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
@@ -53,9 +68,16 @@ const ChangePassword = () => {
         validationSchema={validationSchema}>
         {({handleSubmit, values, errors, setFieldValue}) => (
           <View style={styles.formContainer}>
-            <Typography.Body1 style={styles.inputLabel}>
-              {t('enterNewPw')}
-            </Typography.Body1>
+            <View style={styles.labelGroup}>
+              <Typography.Subtitle2>{t('enterNewPw')}</Typography.Subtitle2>
+
+              {values.newPassword.length >= 6 && (
+                <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
+                  {t(passwordStrength(values.newPassword).value)}
+                </Typography.Subtitle4>
+              )}
+            </View>
+
             <DSecureTextInput
               value={values.newPassword}
               onChangeText={(value: string) =>
@@ -66,17 +88,25 @@ const ChangePassword = () => {
             />
 
             {errors.newPassword && (
-              <Typography.Subtitle2 style={styles.errorText}>
+              <Typography.Caption1 style={styles.errorText}>
                 {errors.newPassword}
-              </Typography.Subtitle2>
+              </Typography.Caption1>
             )}
 
-            <Typography.Body1 style={styles.tooltipText}>
-              {t('atLeast6Char')}
-            </Typography.Body1>
-            <Typography.Body1 style={styles.inputLabel}>
+            <View style={styles.tooltipGroup}>
+              <Image
+                source={values.newPassword.length >= 6 ? validCheck : check}
+                style={styles.check}
+              />
+              <Typography.Caption1
+                style={values.newPassword.length >= 6 && styles.tooltipValid}>
+                {t('atLeast6Char')}
+              </Typography.Caption1>
+            </View>
+
+            <Typography.Subtitle2 style={styles.inputLabel}>
               {t('confirmPw')}
-            </Typography.Body1>
+            </Typography.Subtitle2>
             <DSecureTextInput
               placeholder={t('pw')}
               onChangeText={(value: string) =>
@@ -84,9 +114,9 @@ const ChangePassword = () => {
               }
             />
             {errors.confirmPassword && (
-              <Typography.Subtitle2 style={styles.errorText}>
+              <Typography.Caption1 style={styles.errorText}>
                 {errors.confirmPassword}
-              </Typography.Subtitle2>
+              </Typography.Caption1>
             )}
 
             <KeyboardAvoidingView
@@ -100,10 +130,10 @@ const ChangePassword = () => {
                   !values.newPassword ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                mode="contained">
-                <Typography.Body1 style={styles.confirmButtonText}>
+                mode="gradientFilled">
+                <Typography.Button2 style={styles.confirmButtonText}>
                   {t('common:confirm')}
-                </Typography.Body1>
+                </Typography.Button2>
               </DButton>
             </KeyboardAvoidingView>
           </View>

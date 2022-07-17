@@ -41,6 +41,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
@@ -59,7 +60,6 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
-      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Group
         screenOptions={{
           cardStyle: {
