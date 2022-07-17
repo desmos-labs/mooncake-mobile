@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -62,6 +62,12 @@ const ConfirmModal = () => {
 
   return (
     <View style={styles.container}>
+      {/* invoke dismiss fn or goBack if user presses the background */}
+      <TouchableOpacity
+        onPress={onDismiss || goBack}
+        activeOpacity={1}
+        style={StyleSheet.absoluteFillObject}
+      />
       <View style={styles.innerContainer}>
         <TouchableOpacity
           style={styles.dismissButton}
