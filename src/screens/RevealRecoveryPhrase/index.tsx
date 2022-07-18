@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DButton from 'components/DButton';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -15,10 +16,13 @@ import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.SETTINGS_REVEAL_SECRET_PHRASE
+>;
 
-const RevealRecoveryPhrase: React.FC<Props> = props => {
-  const {navigation} = props;
+const RevealRecoveryPhrase: React.FC<NavProps> = props => {
+  const navigation = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
