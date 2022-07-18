@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacing.l,
   },
   title: {
     alignSelf: 'center',

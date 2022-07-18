@@ -5,7 +5,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -22,7 +22,15 @@ const ShowRecoveryPhrase: React.FC<Props> = props => {
         {t('settings:secret recovery phrase')}
       </Typography.H3>
       <Typography.Body6>
-        {t('settings:show recovery passphrase message')}
+        <Trans
+          i18nKey="settings:show recovery passphrase message"
+          components={[
+            <Typography.Subtitle2
+              style={{color: theme.colors.desmosOrange01}}
+            />,
+            <Typography.Subtitle2 style={{color: theme.colors.black}} />,
+          ]}
+        />
       </Typography.Body6>
       <MnemonicGrid
         style={{marginTop: theme.spacing.l}}

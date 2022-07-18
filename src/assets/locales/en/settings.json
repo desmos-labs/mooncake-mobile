@@ -18,8 +18,8 @@
   "remove": "Remove",
   "reveal secret phrase": "Reveal secret recovery phrase",
   "secret recovery phrase": "Secret recovery phrase",
-  "secret recovery passphrase message": "The secret recovery phrase is used to recover your wallet, funds, and accounts. Leaking them is very dangerous. DO NOT SHARE with anyone. [Product] does not store your secret recovery phrase; you are the owner of your secret recovery phrase",
-  "show recovery passphrase message": "This is the ONLY WAY to restore your account, write them down in the right order and save them somewhere safe. NEVER SHARE it with anyone",
+  "secret recovery passphrase message": "The secret recovery phrase is used to recover your wallet, funds, and accounts.Leaking them is very dangerous. <0>DO NOT SHARE</0> with anyone. [Product] does not store your secret recovery phrase; you are the owner of your secret recovery phrase",
+  "show recovery passphrase message": "This is the <0>ONLY WAY</0> to restore your account, write them down in the right order and save them somewhere safe. <1>NEVER SHARE</1> it with anyone",
   "security": "Security",
   "settings": "Settings"
 }

@@ -9,8 +9,9 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
@@ -20,6 +21,7 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
   const {navigation} = props;
   const {t} = useTranslation();
   const styles = useStyles();
+  const theme = useTheme();
 
   const initialFormValues = {
     password: '',
@@ -43,8 +45,13 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
   return (
     <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
       <Typography.H3>{t('settings:reveal secret phrase')}</Typography.H3>
-      <Typography.Body6 style={{marginBottom: 52, marginTop: 20}}>
-        {t('settings:secret recovery passphrase message')}
+      <Typography.Body6 style={styles.bodyText}>
+        <Trans
+          i18nKey="settings:secret recovery passphrase message"
+          components={[
+            <Typography.Subtitle2 style={{color: theme.colors.black}} />,
+          ]}
+        />
       </Typography.Body6>
       <Formik
         initialValues={initialFormValues}
@@ -71,7 +78,7 @@ const RevealRecoveryPhrase: React.FC<Props> = props => {
             )}
 
             <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 340 : 0}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 370 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <DButton

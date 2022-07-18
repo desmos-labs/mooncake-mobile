@@ -48,7 +48,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
