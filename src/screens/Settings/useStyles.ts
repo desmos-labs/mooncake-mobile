@@ -6,15 +6,10 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   root: {
     padding: theme.spacing.m,
+    overflow: 'visible',
   },
   title: {
     marginBottom: 24,
-  },
-  scrollViewOuter: {
-    margin: -20,
-  },
-  scrollViewInner: {
-    padding: 20,
   },
   signOutButton: {
     borderRadius: theme.roundness,
