@@ -1,6 +1,9 @@
 import {makeStyle} from 'config/theme';
 import {verticalScale} from 'react-native-size-matters';
 
+/**
+ * Style hook for the MnemonicInput screen
+ */
 const useStyles = makeStyle(theme => ({
   container: {
     padding: theme.spacing.m,
