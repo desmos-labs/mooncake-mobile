@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import DTextInput from 'components/DTextInput';
 import DButton from 'components/DButton';
@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 import useStyles from './useStyles';
 
 export enum MNEMONIC_INPUT_MODE {
@@ -40,17 +41,20 @@ const MnemonicInput = () => {
     params: {mode},
   } = useRoute<NavProps['route']>();
 
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
   const styles = useStyles();
 
   const {t} = useTranslation();
 
-  const Header = React.useMemo(() => {
-    const keyMap = {
-      [MNEMONIC_INPUT_MODE.RESET_PASSWORD]: 'forgotPassword:forgotPw',
-    };
-
-    return <Typography.H3>{t(keyMap[mode])}</Typography.H3>;
-  }, []);
+  const headerText = React.useMemo(() => {
+    switch (mode) {
+      case MNEMONIC_INPUT_MODE.RESET_PASSWORD:
+        return 'forgotPassword:forgotPw';
+      default:
+        return '';
+    }
+  }, [mode]);
 
   const validateForm = React.useCallback((values: FormFields) => {
     const errors: any = {};
@@ -62,13 +66,22 @@ const MnemonicInput = () => {
     return errors;
   }, []);
 
-  const onSubmit = React.useCallback((values: FormFields) => {
-    console.log(values);
-  }, []);
+  const onSubmit = React.useCallback(
+    (values: FormFields) => {
+      console.log(values);
+
+      if (mode === MNEMONIC_INPUT_MODE.RESET_PASSWORD) {
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+        });
+      }
+    },
+    [mode],
+  );
 
   return (
     <DView style={styles.container}>
-      {Header}
+      <Typography.H3>{headerText}</Typography.H3>
       <Typography.Body6 style={styles.descriptionText}>
         {t('forgotPassword:description')}
       </Typography.Body6>

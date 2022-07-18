@@ -5,7 +5,9 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
-import ChangePassword from 'screens/ChangePassword';
+import ChangePassword, {
+  PasswordManipulationParams,
+} from 'screens/PasswordManipulation';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
@@ -21,7 +23,7 @@ import MnemonicInput, {
 } from 'screens/MnemonicInput';
 
 export type RootNavigatorParamList = {
-  [ROUTES.CHANGE_PASSWORD]: undefined;
+  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.ENTER_PASSWORD]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
@@ -71,7 +73,10 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
-      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
+      <Stack.Screen
+        name={ROUTES.PASSWORD_MANIPULATION}
+        component={ChangePassword}
+      />
       <Stack.Group
         screenOptions={{
           cardStyle: {
