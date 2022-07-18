@@ -10,8 +10,7 @@ export const validateMnemonic = (mnemonic: string): boolean => {
   try {
     const check = new EnglishMnemonic(mnemonic);
     return !!check;
-  } catch (err) {
-    console.log(err);
+  } catch {
     return false;
   }
 };

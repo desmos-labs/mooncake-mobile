@@ -59,10 +59,12 @@ const MnemonicInput = () => {
   const validateForm = React.useCallback((values: FormFields) => {
     const errors: any = {};
 
-    console.log(values, validateMnemonic(values.mnemonic));
     if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
       errors.mnemonic = t('forgotPassword:invalidMnemonic');
     }
+
+    // Additionally, check if the mnemonic matches that of the wallet depending on
+    // mode (future feature)
 
     return errors;
   }, []);
