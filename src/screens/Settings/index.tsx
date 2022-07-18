@@ -80,7 +80,7 @@ const Settings: React.FC<Props> = props => {
           />
           <SectionButton
             label={t('change password')}
-            onPress={() => console.log('change password')}
+            onPress={() => navigation.navigate(ROUTES.CHANGE_PASSWORD)}
           />
           <SectionSwitch
             label={t('enable biometrics')}

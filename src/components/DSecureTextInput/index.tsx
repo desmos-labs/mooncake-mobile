@@ -1,6 +1,6 @@
+import {eyeClosed} from 'assets/images';
 import DTextInput, {Props as DTextInputProps} from 'components/DTextInput';
-import React, {useRef, useState} from 'react';
-import {TextInput} from 'react-native';
+import React, {useState} from 'react';
 import {IconButton, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -15,12 +15,10 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
     : focused && !error
     ? theme.colors.surfaceBlack
     : theme.colors.iconGrey;
-  const textInputRef = useRef<TextInput>(null);
 
   return (
     <DTextInput
       {...props}
-      inputRef={textInputRef}
       onFocus={() => setFocused(prev => !prev)}
       secureTextEntry={hideText}
       textAlignVertical="center"
@@ -28,7 +26,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
       style={[styles.input, focused && !error ? styles.focused : null]}
       rightElement={
         <IconButton
-          icon={hideText ? 'eye' : 'eye-off'}
+          icon={hideText ? 'eye' : eyeClosed}
           color={iconColor}
           onPress={() => {
             setHideText(old => !old);

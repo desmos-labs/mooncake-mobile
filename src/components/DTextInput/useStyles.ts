@@ -16,6 +16,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     fontFamily: 'Poppins-Regular',
     paddingHorizontal: 11,
     flexGrow: 1,
+    flex: 0.9,
     textAlignVertical: props.multiline === true ? 'top' : 'center',
     height: '100%',
     color: theme.colors.black,
@@ -26,6 +27,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     padding: 0,
     margin: 0,
     paddingRight: 11,
+    flex: 0.1,
   },
 }));
 
