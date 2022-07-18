@@ -1,15 +1,15 @@
-import React from 'react';
-import useChainLinks from 'hooks/useChainLinks';
-import {View, FlatList, ListRenderItemInfo} from 'react-native';
-import {Snackbar} from 'react-native-paper';
-import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {ChainLink} from 'types/link';
-import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
+import Button from 'components/Button';
 import DView from 'components/DView';
-import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
-import DButton from 'components/DButton';
 import GradientBorder from 'components/GradientBorder';
+import Typography from 'components/Typography';
+import useChainLinks from 'hooks/useChainLinks';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {Snackbar} from 'react-native-paper';
+import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
+import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
+import {ChainLink} from 'types/link';
 import useStyles from './useStyles';
 
 const ManageConnectedChains = () => {
@@ -45,12 +45,12 @@ const ManageConnectedChains = () => {
         <NoConnections />
 
         <View style={styles.buttonContainer}>
-          <DButton
+          <Button
             onPress={() => {}}
             mode="gradientFilled"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}
-          </DButton>
+          </Button>
         </View>
       </View>
     );
