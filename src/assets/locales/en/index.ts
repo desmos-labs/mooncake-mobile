@@ -3,7 +3,7 @@ import manageChains from './manageChains.json';
 import home from './home.json';
 import enterPassword from './enterPassword.json';
 import error from './error.json';
-import changePassword from './changePassword.json';
+import passwordManipulation from './passwordManipulation.json';
 import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settingsScreen.json';
@@ -18,7 +18,7 @@ const en = {
     home,
     enterPassword,
     error,
-    changePassword,
+    passwordManipulation,
     resultModal,
     confirmModal,
     lookingForDevices,

@@ -8,6 +8,10 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import _ from 'lodash';
 import DView from 'components/DView';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useRoute} from '@react-navigation/native';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -15,8 +19,37 @@ const initialFormValues = {
   confirmPassword: '',
 };
 
-const ChangePassword = () => {
-  const {t} = useTranslation('changePassword');
+export enum PASSWORD_MANIPULATION_MODE {
+  CHANGE_PASSWORD,
+  RESET_PASSWORD,
+}
+
+export type PasswordManipulationParams = {
+  mode: PASSWORD_MANIPULATION_MODE;
+};
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.PASSWORD_MANIPULATION
+>;
+
+const PasswordManipulation = () => {
+  const {t} = useTranslation('passwordManipulation');
+
+  const {
+    params: {mode},
+  } = useRoute<NavProps['route']>();
+
+  const headerText = React.useMemo(() => {
+    switch (mode) {
+      case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
+        return 'changePw';
+      case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
+        return 'resetPw';
+      default:
+        return '';
+    }
+  }, [mode]);
 
   const styles = useStyles();
 
@@ -24,7 +57,7 @@ const ChangePassword = () => {
     (formValues: typeof initialFormValues) => {
       console.log(formValues);
     },
-    [],
+    [mode],
   );
 
   const validationSchema = React.useMemo(() => {
@@ -45,7 +78,7 @@ const ChangePassword = () => {
 
   return (
     <DView style={styles.container}>
-      <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
+      <Typography.H3 style={styles.headerText}>{headerText}</Typography.H3>
 
       <Formik
         initialValues={initialFormValues}
@@ -113,4 +146,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default PasswordManipulation;
