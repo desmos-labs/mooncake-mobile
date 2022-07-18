@@ -791,7 +791,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                 Object {
                   "left": -10,
                   "position": "absolute",
-                  "top": 14,
+                  "top": 15,
                 },
                 Object {
                   "flex": 0,
@@ -837,7 +837,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                 }
                 width={10}
                 x={0}
-                y={-28}
+                y={-30}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -855,7 +855,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                 Object {
                   "left": "100%",
                   "position": "absolute",
-                  "top": 14,
+                  "top": 15,
                 },
                 Object {
                   "flex": 0,
@@ -901,7 +901,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                 }
                 width={10}
                 x={0}
-                y={-28}
+                y={-30}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -917,7 +917,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": 14,
+                  "left": 15,
                   "position": "absolute",
                   "top": "100%",
                 },
@@ -964,7 +964,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                   ]
                 }
                 width="100%"
-                x={-28}
+                x={-30}
                 y={0}
               />
             </RNSVGGroup>
@@ -981,7 +981,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": 14,
+                  "left": 15,
                   "position": "absolute",
                   "top": -10,
                 },
@@ -1028,16 +1028,16 @@ exports[`component: ChainLinkItem renders 1`] = `
                   ]
                 }
                 width="100%"
-                x={-28}
+                x={-30}
                 y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={25}
-            bbWidth={25}
+            bbHeight={26}
+            bbWidth={26}
             focusable={false}
-            height={25}
+            height={26}
             style={
               Array [
                 Object {
@@ -1051,23 +1051,23 @@ exports[`component: ChainLinkItem renders 1`] = `
                 },
                 Object {
                   "flex": 0,
-                  "height": 25,
-                  "width": 25,
+                  "height": 26,
+                  "width": 26,
                 },
               ]
             }
-            width={25}
+            width={26}
           >
             <RNSVGGroup>
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={24}
-                  cy={24}
-                  fx={24}
-                  fy={24}
+                  cx={25}
+                  cy={25}
+                  fx={25}
+                  fy={25}
                   gradient={
                     Array [
-                      0.5833333333333334,
+                      0.6,
                       219158568,
                       1,
                       1054760,
@@ -1076,12 +1076,12 @@ exports[`component: ChainLinkItem renders 1`] = `
                   gradientTransform={null}
                   gradientUnits={1}
                   name="topLeft"
-                  rx={24}
-                  ry={24}
+                  rx={25}
+                  ry={25}
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,24 a24,24 0 0 1 24 -24 v10 v14 h-14 h-10 Z"
+                d="M0,25 a25,25 0 0 1 25 -25 v10 v15 h-15 h-10 Z"
                 fill={
                   Array [
                     1,
@@ -1097,10 +1097,10 @@ exports[`component: ChainLinkItem renders 1`] = `
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={25}
-            bbWidth={25}
+            bbHeight={26}
+            bbWidth={26}
             focusable={false}
-            height={25}
+            height={26}
             style={
               Array [
                 Object {
@@ -1113,18 +1113,18 @@ exports[`component: ChainLinkItem renders 1`] = `
                   "top": -10,
                   "transform": Array [
                     Object {
-                      "translateX": -14,
+                      "translateX": -15,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 25,
-                  "width": 25,
+                  "height": 26,
+                  "width": 26,
                 },
               ]
             }
-            width={25}
+            width={26}
           >
             <RNSVGGroup
               matrix={
@@ -1141,12 +1141,12 @@ exports[`component: ChainLinkItem renders 1`] = `
               <RNSVGDefs>
                 <RNSVGRadialGradient
                   cx={0}
-                  cy={24}
+                  cy={25}
                   fx={0}
-                  fy={24}
+                  fy={25}
                   gradient={
                     Array [
-                      0.5833333333333334,
+                      0.6,
                       219158568,
                       1,
                       1054760,
@@ -1155,12 +1155,12 @@ exports[`component: ChainLinkItem renders 1`] = `
                   gradientTransform={null}
                   gradientUnits={1}
                   name="topRight"
-                  rx={24}
-                  ry={24}
+                  rx={25}
+                  ry={25}
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,0 a24,24 0 0 1 24,24 h-10 h-14 v-14 v-10 Z"
+                d="M0,0 a25,25 0 0 1 25,25 h-10 h-15 v-15 v-10 Z"
                 fill={
                   Array [
                     1,
@@ -1176,10 +1176,10 @@ exports[`component: ChainLinkItem renders 1`] = `
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={25}
-            bbWidth={25}
+            bbHeight={26}
+            bbWidth={26}
             focusable={false}
-            height={25}
+            height={26}
             style={
               Array [
                 Object {
@@ -1192,18 +1192,18 @@ exports[`component: ChainLinkItem renders 1`] = `
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateY": -14,
+                      "translateY": -15,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 25,
-                  "width": 25,
+                  "height": 26,
+                  "width": 26,
                 },
               ]
             }
-            width={25}
+            width={26}
           >
             <RNSVGGroup
               matrix={
@@ -1219,13 +1219,13 @@ exports[`component: ChainLinkItem renders 1`] = `
             >
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={24}
+                  cx={25}
                   cy={0}
-                  fx={24}
+                  fx={25}
                   fy={0}
                   gradient={
                     Array [
-                      0.5833333333333334,
+                      0.6,
                       219158568,
                       1,
                       1054760,
@@ -1234,12 +1234,12 @@ exports[`component: ChainLinkItem renders 1`] = `
                   gradientTransform={null}
                   gradientUnits={1}
                   name="bottomLeft"
-                  rx={24}
-                  ry={24}
+                  rx={25}
+                  ry={25}
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M24,24 a24,24 0 0 1 -24,-24 h10 h14 v14 v10 Z"
+                d="M25,25 a25,25 0 0 1 -25,-25 h10 h15 v15 v10 Z"
                 fill={
                   Array [
                     1,
@@ -1255,10 +1255,10 @@ exports[`component: ChainLinkItem renders 1`] = `
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={25}
-            bbWidth={25}
+            bbHeight={26}
+            bbWidth={26}
             focusable={false}
-            height={25}
+            height={26}
             style={
               Array [
                 Object {
@@ -1271,21 +1271,21 @@ exports[`component: ChainLinkItem renders 1`] = `
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateX": -14,
+                      "translateX": -15,
                     },
                     Object {
-                      "translateY": -14,
+                      "translateY": -15,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 25,
-                  "width": 25,
+                  "height": 26,
+                  "width": 26,
                 },
               ]
             }
-            width={25}
+            width={26}
           >
             <RNSVGGroup
               matrix={
@@ -1307,7 +1307,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                   fy={0}
                   gradient={
                     Array [
-                      0.5833333333333334,
+                      0.6,
                       219158568,
                       1,
                       1054760,
@@ -1316,12 +1316,12 @@ exports[`component: ChainLinkItem renders 1`] = `
                   gradientTransform={null}
                   gradientUnits={1}
                   name="bottomRight"
-                  rx={24}
-                  ry={24}
+                  rx={25}
+                  ry={25}
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M24,0 a24,24 0 0 1 -24,24 v-10 v-14 h14 h10 Z"
+                d="M25,0 a25,25 0 0 1 -25,25 v-10 v-15 h15 h10 Z"
                 fill={
                   Array [
                     1,
@@ -1394,26 +1394,26 @@ exports[`component: ChainLinkItem renders 1`] = `
                   />
                   <RNSVGRect
                     fill={4278190080}
-                    height={14}
+                    height={15}
                     propList={
                       Array [
                         "fill",
                       ]
                     }
-                    width={14}
+                    width={15}
                     x={0}
                     y={0}
                   />
                   <RNSVGRect
                     fill={4278190080}
-                    height={14}
+                    height={15}
                     matrix={
                       Array [
                         1,
                         0,
                         0,
                         1,
-                        -14,
+                        -15,
                         0,
                       ]
                     }
@@ -1422,13 +1422,13 @@ exports[`component: ChainLinkItem renders 1`] = `
                         "fill",
                       ]
                     }
-                    width={14}
+                    width={15}
                     x="100%"
                     y={0}
                   />
                   <RNSVGRect
                     fill={4278190080}
-                    height={14}
+                    height={15}
                     matrix={
                       Array [
                         1,
@@ -1436,7 +1436,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                         0,
                         1,
                         0,
-                        -14,
+                        -15,
                       ]
                     }
                     propList={
@@ -1444,21 +1444,21 @@ exports[`component: ChainLinkItem renders 1`] = `
                         "fill",
                       ]
                     }
-                    width={14}
+                    width={15}
                     x={0}
                     y="100%"
                   />
                   <RNSVGRect
                     fill={4278190080}
-                    height={14}
+                    height={15}
                     matrix={
                       Array [
                         1,
                         0,
                         0,
                         1,
-                        -14,
-                        -14,
+                        -15,
+                        -15,
                       ]
                     }
                     propList={
@@ -1466,7 +1466,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                         "fill",
                       ]
                     }
-                    width={14}
+                    width={15}
                     x="100%"
                     y="100%"
                   />
