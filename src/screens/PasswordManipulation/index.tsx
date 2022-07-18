@@ -104,7 +104,7 @@ const PasswordManipulation = () => {
 
   return (
     <DView style={styles.container}>
-      <Typography.H3 style={styles.headerText}>{headerText}</Typography.H3>
+      <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       <Formik
         initialValues={initialFormValues}
@@ -143,7 +143,10 @@ const PasswordManipulation = () => {
                 style={styles.check}
               />
               <Typography.Caption1
-                style={values.newPassword.length >= 6 && styles.tooltipValid}>
+                style={[
+                  styles.tooltipText,
+                  values.newPassword.length >= 6 && styles.tooltipValid,
+                ]}>
                 {t('atLeast6Char')}
               </Typography.Caption1>
             </View>
