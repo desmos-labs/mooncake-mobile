@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@cosmjs/crypto": "^0.28.11",
     "@cosmjs/ledger-amino": "^0.28.10",
     "@desmoslabs/desmjs": "^3.0.1",
     "@desmoslabs/desmjs-types": "^3.0.1",
@@ -82,8 +83,8 @@
     "@types/jest": "^26.0.23",
     "@types/numeral": "^2.0.2",
     "@types/react-native": "^0.69.0",
-    "@types/react-test-renderer": "^18.0.0",
     "@types/react-native-vector-icons": "^6.4.11",
+    "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "babel-jest": "^26.6.3",

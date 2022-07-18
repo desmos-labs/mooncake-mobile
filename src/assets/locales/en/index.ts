@@ -9,6 +9,7 @@ import lookingForDevices from './lookingForDevices.json';
 import settings from './settingsScreen.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json'
+import forgotPassword from './forgotPassword.json';
 
 
 const en = {
@@ -22,7 +23,8 @@ const en = {
     confirmModal,
     lookingForDevices,
     settings,
-    profile
+    profile,
+    forgotPassword
 };
 
 export default en;

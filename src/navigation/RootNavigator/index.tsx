@@ -15,6 +15,10 @@ import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import Profile from 'screens/Profile';
+import MnemonicInput, {
+  MNEMONIC_INPUT_MODE,
+  MnemonicInputParams,
+} from 'screens/MnemonicInput';
 
 export type RootNavigatorParamList = {
   [ROUTES.CHANGE_PASSWORD]: undefined;
@@ -30,6 +34,7 @@ export type RootNavigatorParamList = {
   [ROUTES.USER_PROFILE]: undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
+  [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -41,6 +46,13 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        initialParams={{
+          mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+        }}
+        name={ROUTES.MNEMONIC_INPUT}
+        component={MnemonicInput}
+      />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
