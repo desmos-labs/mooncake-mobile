@@ -96,6 +96,7 @@ const RootNavigator = () => {
           component={ConfirmModal}
         />
         <Stack.Screen
+          // Remove these when going production
           initialParams={{
             title: t('resultModal:success'),
             subtitle: t('resultModal:passwordWasChanged'),
