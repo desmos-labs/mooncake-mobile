@@ -9,6 +9,9 @@ const useStyles = makeStyle(theme => ({
     borderRadius: theme.roundness,
     borderColor: theme.colors.primary,
   },
+  eyeIcon: {
+    right: theme.spacing.s,
+  },
 }));
 
 export default useStyles;
