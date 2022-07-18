@@ -28,6 +28,7 @@
     "@react-navigation/stack": "^6.2.1",
     "@types/react-native-simple-radio-button": "^2.7.2",
     "asyncstorage-down": "^4.2.0",
+    "big-integer": "^1.6.51",
     "big.js": "^6.2.0",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",

@@ -59,6 +59,7 @@ const MnemonicInput = () => {
   const validateForm = React.useCallback((values: FormFields) => {
     const errors: any = {};
 
+    console.log(values, validateMnemonic(values.mnemonic));
     if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
       errors.mnemonic = t('forgotPassword:invalidMnemonic');
     }
@@ -81,7 +82,7 @@ const MnemonicInput = () => {
 
   return (
     <DView style={styles.container}>
-      <Typography.H3>{headerText}</Typography.H3>
+      <Typography.H3>{t(headerText)}</Typography.H3>
       <Typography.Body6 style={styles.descriptionText}>
         {t('forgotPassword:description')}
       </Typography.Body6>
