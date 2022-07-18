@@ -12,9 +12,6 @@ const useStyles = makeStyle(theme => ({
   headerText: {
     marginBottom: theme.spacing.m,
   },
-  tooltipText: {
-    marginBottom: theme.spacing.l,
-  },
   formContainer: {
     flex: 1,
   },
@@ -27,9 +24,44 @@ const useStyles = makeStyle(theme => ({
   },
   confirmButtonText: {
     color: theme.colors.white,
+    lineHeight: 30,
   },
   errorText: {
+    marginTop: theme.spacing.xs,
     color: theme.colors.error,
+  },
+  tooltipGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing.xs,
+    marginBottom: theme.spacing.l,
+  },
+  check: {
+    width: 16,
+    height: 16,
+    resizeMode: 'contain',
+    marginRight: theme.spacing.xs,
+  },
+  tooltipValid: {
+    color: theme.colors.accentGreen01,
+  },
+  tooltipText: {
+    color: theme.colors.grey02,
+  },
+  labelGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.s,
+  },
+  weakPw: {
+    color: theme.colors.accentOrange01,
+  },
+  mediumPw: {
+    color: theme.colors.accentYellow01,
+  },
+  strongPw: {
+    color: theme.colors.accentGreen01,
   },
 }));
 

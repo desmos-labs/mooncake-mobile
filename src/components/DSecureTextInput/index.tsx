@@ -1,6 +1,7 @@
 import DTextInput, {Props as DTextInputProps} from 'components/DTextInput';
 import React, {useState} from 'react';
 import {IconButton, useTheme} from 'react-native-paper';
+import {eyeClosed} from 'assets/images';
 import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = props => {
@@ -19,7 +20,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
       style={focused && !error ? styles.focused : null}
       rightElement={
         <IconButton
-          icon={hideText ? 'eye' : 'eye-off'}
+          icon={hideText ? 'eye' : eyeClosed}
           color={
             error
               ? 'rgba(243, 89, 168, 1)'
