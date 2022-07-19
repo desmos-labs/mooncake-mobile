@@ -19,6 +19,7 @@ import {useQuery} from '@apollo/client';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import _ from 'lodash';
+import {scale} from 'react-native-size-matters';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -30,7 +31,7 @@ import ContentTabs from './components/ContentTab';
 import EmptyPostComponent from './components/EmptyPostComponent';
 
 // Replace this with an address from recoil
-const DUMMY_ADDRESS = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
+const DUMMY_ADDRESS = 'desmos16c60y8t8vra27zjg2arlcd58dck9cwn7p6fwtd';
 
 const Profile = () => {
   const theme = useTheme();
@@ -89,7 +90,7 @@ const Profile = () => {
 
   const following = _.get(userProfile, 'following_aggregate.aggregate.count');
 
-  const {posts} = postData;
+  const {post} = postData;
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
@@ -207,12 +208,12 @@ const Profile = () => {
             </View>
           </>
         }
-        data={posts}
+        data={post}
         renderItem={renderPosts}
         numColumns={3}
         columnWrapperStyle={{
           // slight adjustment so column items appear centered
-          left: 20,
+          left: scale(20),
         }}
         ListEmptyComponent={EmptyPostComponent}
       />
