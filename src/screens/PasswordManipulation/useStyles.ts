@@ -37,7 +37,7 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.s,
   },
   weakPw: {
-    color: theme.colors.accentOrange01,
+    color: theme.colors.accentRed01,
   },
   mediumPw: {
     color: theme.colors.accentYellow01,

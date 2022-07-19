@@ -52,7 +52,9 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      initialRouteName={ROUTES.PASSWORD_MANIPULATION}
+      screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
@@ -79,7 +81,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         initialParams={{
-          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
         }}
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
