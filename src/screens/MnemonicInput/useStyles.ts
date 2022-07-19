@@ -30,6 +30,10 @@ const useStyles = makeStyle(theme => ({
   errorColor: {
     color: theme.colors.pink01,
   },
+  errorText: {
+    color: theme.colors.pink01,
+    flex: 1,
+  },
   buttonGroup: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -42,6 +46,19 @@ const useStyles = makeStyle(theme => ({
   },
   clearAllText: {
     color: theme.colors.desmosOrange01,
+  },
+  consentGroup: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  consentText: {
+    bottom: 4,
+    lineHeight: 20,
+    marginLeft: 8,
+    flex: 1,
+  },
+  touchableText: {
+    color: theme.colors.primary,
   },
 }));
 

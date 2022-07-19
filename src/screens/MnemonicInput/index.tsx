@@ -4,89 +4,55 @@ import Typography from 'components/Typography';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import DTextInput from 'components/DTextInput';
 import Button from 'components/Button';
 import {Formik} from 'formik';
-import {validateMnemonic} from 'lib/ValidationUtils';
-import {sanitizeMnemonic} from 'lib/FormatUtils';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
+import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import CustomCheckbox from 'components/CustomCheckbox';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useRoute} from '@react-navigation/native';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 export enum MNEMONIC_INPUT_MODE {
   RESET_PASSWORD,
+  IMPORT_RECOVERY_PHRASE,
 }
 
 export type MnemonicInputParams = {
   mode: MNEMONIC_INPUT_MODE;
 };
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MNEMONIC_INPUT>;
-
-const initialFormFields = {
-  mnemonic: '',
-};
-
-type FormFields = typeof initialFormFields;
+export type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.MNEMONIC_INPUT
+>;
 
 const MnemonicInput = () => {
   const {
     params: {mode},
   } = useRoute<NavProps['route']>();
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
-
   const styles = useStyles();
+  const {top} = useSafeAreaInsets();
 
-  const {t} = useTranslation();
+  const {t} = useTranslation('mnemonicInput');
 
-  const headerText = React.useMemo(() => {
-    switch (mode) {
-      case MNEMONIC_INPUT_MODE.RESET_PASSWORD:
-        return 'forgotPassword:forgotPw';
-      default:
-        return '';
-    }
-  }, [mode]);
-
-  const validateForm = React.useCallback((values: FormFields) => {
-    const errors: any = {};
-
-    if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
-      errors.mnemonic = t('forgotPassword:invalidMnemonic');
-    }
-
-    // Additionally, check if the mnemonic matches that of the wallet depending on
-    // mode (future feature)
-
-    return errors;
-  }, []);
-
-  const onSubmit = React.useCallback(
-    (values: FormFields) => {
-      console.log(values);
-
-      if (mode === MNEMONIC_INPUT_MODE.RESET_PASSWORD) {
-        navigate(ROUTES.PASSWORD_MANIPULATION, {
-          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
-        });
-      }
-    },
-    [mode],
-  );
+  const {
+    headerText,
+    buttonText,
+    handlePressPP,
+    handlePressTOS,
+    onSubmit,
+    validateForm,
+    initialFormFields,
+  } = useHooks();
 
   return (
     <DView style={styles.container}>
       <Typography.H3>{t(headerText)}</Typography.H3>
       <Typography.Body6 style={styles.descriptionText}>
-        {t('forgotPassword:description')}
+        {t('description')}
       </Typography.Body6>
 
       <Formik
@@ -94,10 +60,10 @@ const MnemonicInput = () => {
         validate={validateForm}
         validateOnChange={false}
         onSubmit={onSubmit}>
-        {({handleSubmit, errors, values, setValues, resetForm}) => (
+        {({handleSubmit, errors, values, setFieldValue, resetForm}) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>
-              {t('forgotPassword:inputPlaceholder')}
+              {t('inputLabel')}
             </Typography.Subtitle2>
 
             <DTextInput
@@ -107,39 +73,66 @@ const MnemonicInput = () => {
                 styles.mnemonicInput,
                 errors.mnemonic ? styles.errorInput : undefined,
               ]}
-              placeholder={t('forgotPassword:inputPlaceholder')}
+              placeholder={t('inputPlaceholder')}
               value={values.mnemonic}
               onChangeText={text => {
-                setValues({mnemonic: text}, false);
+                setFieldValue('mnemonic', text, false);
               }}
             />
 
             {errors.mnemonic && (
               <View style={styles.errorGroup}>
-                <Typography.Caption1 style={styles.errorColor}>
+                <Typography.Caption1 style={styles.errorText}>
                   {errors.mnemonic}
                 </Typography.Caption1>
 
-                <TouchableOpacity
+                <Typography.Subtitle4
                   onPress={() => {
                     resetForm({values: initialFormFields});
-                  }}>
-                  <Typography.Subtitle4 style={styles.clearAllText}>
-                    {t('forgotPassword:clearAll')}
-                  </Typography.Subtitle4>
-                </TouchableOpacity>
+                  }}
+                  style={styles.clearAllText}>
+                  {t('clearAll')}
+                </Typography.Subtitle4>
               </View>
             )}
 
             <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? top + 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
+              {mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE && (
+                <View style={styles.consentGroup}>
+                  <CustomCheckbox
+                    checked={values.consent}
+                    handlePress={() =>
+                      setFieldValue('consent', !values.consent, false)
+                    }
+                    error={!!errors.consent}
+                  />
+
+                  <Typography.Body6 style={styles.consentText}>
+                    <Trans
+                      i18nKey="mnemonicInput:userConsent"
+                      components={[
+                        <Typography.Body6
+                          onPress={handlePressTOS}
+                          style={styles.touchableText}
+                        />,
+                        <Typography.Body6
+                          onPress={handlePressPP}
+                          style={styles.touchableText}
+                        />,
+                      ]}
+                    />
+                  </Typography.Body6>
+                </View>
+              )}
+
               <Button
                 mode="gradientFilled"
                 labelStyle={styles.labelStyle}
                 onPress={handleSubmit}>
-                {t('common:confirm')}
+                {t(buttonText)}
               </Button>
             </KeyboardAvoidingView>
           </View>
