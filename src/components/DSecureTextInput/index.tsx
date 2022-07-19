@@ -24,7 +24,12 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
       secureTextEntry={hideText}
       textAlignVertical="center"
       placeHolderColor={iconColor}
-      style={[styles.input, focused && !error ? styles.focused : styles.error]}
+      style={[
+        styles.input,
+        // If focused without errors apply focused style, if focused but with errors
+        // apply error style, if not focused and no additional style is applied
+        focused && !error ? styles.focused : error ? styles.error : null,
+      ]}
       rightElement={
         <IconButton
           style={styles.eyeIcon}
