@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import DButton from 'components/DButton';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -85,7 +85,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = props => {
               keyboardVerticalOffset={Platform.OS === 'ios' ? 370 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton
+              <Button
                 mode="gradientFilled"
                 onPress={handleSubmit}
                 disabled={
@@ -102,7 +102,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = props => {
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:next')}
                 </Typography.Button1>
-              </DButton>
+              </Button>
             </KeyboardAvoidingView>
           </View>
         )}

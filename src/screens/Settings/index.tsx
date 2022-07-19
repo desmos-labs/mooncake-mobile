@@ -1,4 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
@@ -14,7 +15,6 @@ import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
-import DButton from 'components/DButton';
 import {useTheme} from 'react-native-paper';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -125,13 +125,13 @@ const Settings: React.FC<Props> = props => {
         />
       </Section>
 
-      <DButton
+      <Button
         mode="gradient"
         style={styles.signOutButton}
         containerStyle={styles.buttonContainer}
         onPress={navigateToConfirmModal}>
         {t('signOut')}
-      </DButton>
+      </Button>
 
       <Typography.Body7 style={styles.bottomText}>
         {t('joined product', {

@@ -1,18 +1,18 @@
-import React from 'react';
+import Button from 'components/Button';
+import DSecureTextInput from 'components/DSecureTextInput';
+import DView from 'components/DView';
 import Typography from 'components/Typography';
+import {Formik} from 'formik';
+import _ from 'lodash';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
-import DSecureTextInput from 'components/DSecureTextInput';
-import {Formik} from 'formik';
 import * as Yup from 'yup';
-import DButton from 'components/DButton';
-import _ from 'lodash';
-import DView from 'components/DView';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -72,7 +72,7 @@ const EnterPassword = () => {
               keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton
+              <Button
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
@@ -82,7 +82,7 @@ const EnterPassword = () => {
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:confirm')}
                 </Typography.Button1>
-              </DButton>
+              </Button>
 
               <TouchableOpacity
                 style={styles.forgotPwButton}

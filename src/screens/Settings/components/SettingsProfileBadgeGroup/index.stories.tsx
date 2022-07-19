@@ -26,9 +26,10 @@ const SelectedProfile: CompProps = {
     },
   ],
   onSelect: action('onPress'),
+  onPressEdit: () => console.log('test'),
+  onPressDelete: () => console.log('test'),
 };
 
-// DButton as in Desmos Button
 storiesOf('components/SettingsProfileBadge', module)
   .addDecorator(getStories => (
     <SbContainer justifyContent="center" padding={20} backgroundColor="#E6E6E6">

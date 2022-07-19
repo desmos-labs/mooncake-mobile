@@ -1,19 +1,19 @@
-import React from 'react';
-import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import DSecureTextInput from 'components/DSecureTextInput';
-import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
-import DButton from 'components/DButton';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
-import _ from 'lodash';
-import DView from 'components/DView';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {check, validCheck} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
-import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
+import DSecureTextInput from 'components/DSecureTextInput';
+import DView from 'components/DView';
+import Typography from 'components/Typography';
+import {Formik} from 'formik';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
+import * as Yup from 'yup';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -143,7 +143,7 @@ const ChangePassword = () => {
               keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton
+              <Button
                 onPress={handleSubmit}
                 disabled={
                   !values.confirmPassword ||
@@ -154,7 +154,7 @@ const ChangePassword = () => {
                 <Typography.Button2 style={styles.confirmButtonText}>
                   {t('common:confirm')}
                 </Typography.Button2>
-              </DButton>
+              </Button>
             </KeyboardAvoidingView>
           </View>
         )}

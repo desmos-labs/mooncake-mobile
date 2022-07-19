@@ -1,18 +1,18 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import GradientBorder from 'components/GradientBorder';
 import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import useChainLinks from 'hooks/useChainLinks';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
-import useChainLinks from 'hooks/useChainLinks';
-import {View, FlatList, ListRenderItemInfo} from 'react-native';
-import {Snackbar} from 'react-native-paper';
-import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
-import {ChainLink} from 'types/link';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {Snackbar} from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
-import DView from 'components/DView';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
-import DButton from 'components/DButton';
-import GradientBorder from 'components/GradientBorder';
+import {ChainLink} from 'types/link';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -49,12 +49,12 @@ const ManageConnectedChains: React.FC<Props> = props => {
         <NoConnections />
 
         <View style={styles.buttonContainer}>
-          <DButton
+          <Button
             onPress={() => {}}
             mode="gradientFilled"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}
-          </DButton>
+          </Button>
         </View>
       </View>
     );

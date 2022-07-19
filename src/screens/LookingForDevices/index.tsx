@@ -1,4 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
+import {btDevice, ledgerIcon} from 'assets/images';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import {DesmosLedgerApp} from 'config/LedgerApps';
+import useStartBleScan from 'hooks/ledger/useStartBleScan';
+import ROUTES from 'navigation/routes';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Alert,
   FlatList,
@@ -7,18 +17,8 @@ import {
   Platform,
   View,
 } from 'react-native';
-import {btDevice, ledgerIcon} from 'assets/images';
-import Spacer from 'components/Spacer';
-import {useNavigation} from '@react-navigation/native';
-import DView from 'components/DView';
-import DButton from 'components/DButton';
-import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
-import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
-import ROUTES from 'navigation/routes';
-import {DesmosLedgerApp} from 'config/LedgerApps';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
@@ -106,11 +106,11 @@ const LookingForDevices = () => {
         />
         <Image source={ledgerIcon} style={styles.ledgerImg} />
       </View>
-      <DButton>
+      <Button>
         <Typography.Body1 style={styles.headerStyle}>
           {t('header')}
         </Typography.Body1>
-      </DButton>
+      </Button>
       <Typography.Body1 style={styles.descriptionStyle}>
         {t('description')}
       </Typography.Body1>
@@ -131,9 +131,9 @@ const LookingForDevices = () => {
           )}
 
           <View style={styles.buttonContainer}>
-            <DButton onPress={onPressRetry}>
+            <Button onPress={onPressRetry}>
               <Typography.Subtitle1>{t('common:retry')}</Typography.Subtitle1>
-            </DButton>
+            </Button>
           </View>
         </>
       )}
