@@ -10,7 +10,7 @@ const LightTheme: ReactNativePaper.Theme = {
     l: 24,
     xl: 32,
   },
-  roundness: 12,
+  roundness: 14,
   colors: {
     ...DefaultTheme.colors,
     // override default colors for compatibility with

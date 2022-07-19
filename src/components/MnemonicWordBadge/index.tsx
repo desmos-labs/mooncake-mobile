@@ -39,7 +39,7 @@ const MnemonicWordBadge: React.FC<Props> = props => {
             }
           : undefined
       }>
-      <Typography.Subtitle1>{value}</Typography.Subtitle1>
+      <Typography.Body6>{value}</Typography.Body6>
       <Text style={styles.index}>{index}</Text>
     </TouchableOpacity>
   );

@@ -1,8 +1,11 @@
+import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useChainLinks from 'hooks/useChainLinks';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
@@ -12,9 +15,10 @@ import NoConnections from 'screens/ManageConnectedChains/components/NoConnection
 import {ChainLink} from 'types/link';
 import useStyles from './useStyles';
 
-const ManageConnectedChains = () => {
-  const {t} = useTranslation('manageChains');
+declare type Props = StackScreenProps<RootNavigatorParamList>;
 
+const ManageConnectedChains: React.FC<Props> = props => {
+  const {t} = useTranslation('manageChains');
   const styles = useStyles();
 
   // TODO: replace with user's address, or any address for testing
@@ -60,7 +64,7 @@ const ManageConnectedChains = () => {
   // a pleasant scrolling experience while on ios. Without it, the dropshadow would
   // appear cut off during overscroll
   return (
-    <DView>
+    <DView topBar={<TopBar stackProps={props} />}>
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
           <Typography.H3>{t('connectedAddresses')}</Typography.H3>

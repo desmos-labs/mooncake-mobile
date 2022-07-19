@@ -63,7 +63,7 @@ const MnemonicGrid: React.FC<Props> = props => {
         data={wordMatrix}
         renderItem={renderRow}
         keyExtractor={(item, index) => `row-${index}`}
-        showsVerticalScrollIndicator
+        scrollEnabled={false}
       />
     </View>
   );

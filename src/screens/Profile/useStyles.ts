@@ -75,7 +75,7 @@ const useStyles = makeStyle(theme => ({
   },
   snackbar: {
     zIndex: 2,
-    backgroundColor: theme.colors.popupSurface,
+    backgroundColor: theme.colors.surface,
   },
 }));
 

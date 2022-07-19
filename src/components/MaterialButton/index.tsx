@@ -132,7 +132,7 @@ const MaterialButton: React.FC<Props> = props => {
 
   if (mode === 'gradientFilled') {
     return (
-      <View style={[styles.gradientFilledContainer]}>
+      <View style={[styles.gradientFilledContainer, containerStyle]}>
         <LinearGradient
           style={[styles.maskedView, styles.linearGradient]}
           colors={theme.colors.dOrangeGradient01}
