@@ -52,9 +52,7 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   return (
-    <Stack.Navigator
-      initialRouteName={ROUTES.MNEMONIC_INPUT}
-      screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
