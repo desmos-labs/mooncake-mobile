@@ -1,12 +1,12 @@
 import React, {ReactNode} from 'react';
 import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {iconCross, modalSuccess} from 'assets/images';
+import Button from 'components/Button';
+import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import Typography from 'components/Typography';
-import {iconCross, modalSuccess} from 'assets/images';
-import DButton from 'components/DButton';
 import useStyles from './useStyles';
 
 export type ResultModalParams = {
@@ -70,14 +70,14 @@ const ResultModal = () => {
         <Typography.Body5 style={styles.subtitleText}>
           {subtitle}
         </Typography.Body5>
-        <DButton
+        <Button
           style={styles.primaryButton}
           mode="contained"
           onPress={onPressPrimary || goBack}>
           <Typography.Subtitle1 style={styles.primaryButtonText}>
             {primaryButtonLabel}
           </Typography.Subtitle1>
-        </DButton>
+        </Button>
       </View>
     </View>
   );

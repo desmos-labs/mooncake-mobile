@@ -32,6 +32,7 @@ const DView: React.FC<Props> = props => {
       <View style={[styles.content, style]}>
         {scrollable ? (
           <ScrollView
+            showsVerticalScrollIndicator={false}
             style={styles.scrollViewOuter}
             contentContainerStyle={styles.scrollViewInner}>
             {children}

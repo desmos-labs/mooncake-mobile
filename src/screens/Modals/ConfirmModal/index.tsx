@@ -1,19 +1,13 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
 // dismiss button
 // import {iconCross} from 'assets/images';
-import DButton from 'components/DButton';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {
-  // dismiss button
-  // Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -89,22 +83,22 @@ const ConfirmModal = () => {
         <Typography.Body5 style={styles.subtitleText}>
           {subtitle}
         </Typography.Body5>
-        <DButton
+        <Button
           style={styles.primaryButton}
           mode="contained"
           onPress={onPressPrimary}>
           <Typography.Subtitle1 style={styles.primaryButtonText}>
             {primaryButtonLabel}
           </Typography.Subtitle1>
-        </DButton>
-        <DButton
+        </Button>
+        <Button
           style={styles.secondaryButton}
           mode="text"
           onPress={onPressSecondary}>
           <Typography.Subtitle1 style={styles.secondaryButtonText}>
             {secondaryButtonLabel}
           </Typography.Subtitle1>
-        </DButton>
+        </Button>
       </View>
     </View>
   );

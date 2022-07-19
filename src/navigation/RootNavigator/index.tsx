@@ -11,6 +11,7 @@ import ChangePassword, {
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
+import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
 import Community from 'screens/Community';
 import Profiles from 'screens/Profiles';
@@ -21,6 +22,7 @@ import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
+import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -37,6 +39,8 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
+  [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
+  [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -55,6 +59,7 @@ const RootNavigator = () => {
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
@@ -62,7 +67,6 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
-      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
@@ -77,6 +81,15 @@ const RootNavigator = () => {
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
       />
+      <Stack.Screen
+        name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE}
+        component={RevealRecoveryPhrase}
+      />
+      <Stack.Screen
+        name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
+        component={ShowRecoveryPhrase}
+      />
+      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Group
         screenOptions={{
           cardStyle: {

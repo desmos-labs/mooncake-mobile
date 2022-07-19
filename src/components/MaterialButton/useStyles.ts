@@ -1,5 +1,5 @@
 import {makeStyleWithProps} from 'config/theme';
-import {Props} from 'components/DButton/index';
+import {Props} from 'components/MaterialButton/index';
 import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => {
@@ -13,7 +13,10 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
       fontSize: 16,
       lineHeight: 24,
       letterSpacing: 0.015,
-      color: props.mode === 'contained' ? theme.colors.white : color,
+      color:
+        props.mode === 'contained' || props.mode === 'gradientFilled'
+          ? theme.colors.white
+          : color,
       textTransform: 'capitalize',
     },
     btnStyle: {
@@ -56,6 +59,12 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
     gradientFilledContainer: {
       borderRadius: theme.roundness,
       overflow: 'hidden',
+    },
+    gradientFilledButton: {
+      borderRadius: theme.roundness,
+    },
+    gradientFilledGradient: {
+      paddingVertical: 14,
     },
   };
 });

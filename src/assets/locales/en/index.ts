@@ -6,11 +6,10 @@ import error from './error.json';
 import passwordManipulation from './passwordManipulation.json';
 import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
-import settings from './settingsScreen.json';
+import settings from './settings.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json'
 import forgotPassword from './forgotPassword.json';
-
 
 const en = {
     common,

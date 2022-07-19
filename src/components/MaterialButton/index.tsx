@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Button as MaterialButton, useTheme} from 'react-native-paper';
+import {Button, useTheme} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
@@ -63,7 +63,7 @@ export type Props = {
   children?: ReactNode;
 };
 
-const DButton: React.FC<Props> = props => {
+const MaterialButton: React.FC<Props> = props => {
   const {
     mode,
     color,
@@ -114,7 +114,7 @@ const DButton: React.FC<Props> = props => {
             ]}
           />
         </MaskedView>
-        <DButton
+        <Button
           icon={icon}
           color={color || accentColor}
           onPress={onPress}
@@ -125,19 +125,19 @@ const DButton: React.FC<Props> = props => {
           loading={loading}
           disabled={disabled}>
           {children}
-        </DButton>
+        </Button>
       </View>
     );
   }
 
   if (mode === 'gradientFilled') {
     return (
-      <View style={[styles.gradientFilledContainer]}>
+      <View style={[styles.gradientFilledContainer, containerStyle]}>
         <LinearGradient
           style={[styles.maskedView, styles.linearGradient]}
           colors={theme.colors.dOrangeGradient01}
         />
-        <DButton
+        <Button
           icon={icon}
           color={color || accentColor}
           onPress={onPress}
@@ -148,13 +148,13 @@ const DButton: React.FC<Props> = props => {
           loading={loading}
           disabled={disabled}>
           {children}
-        </DButton>
+        </Button>
       </View>
     );
   }
 
   return (
-    <MaterialButton
+    <Button
       icon={icon}
       color={color || accentColor}
       onPress={onPress}
@@ -165,8 +165,8 @@ const DButton: React.FC<Props> = props => {
       loading={loading}
       disabled={disabled}>
       {children}
-    </MaterialButton>
+    </Button>
   );
 };
 
-export default DButton;
+export default MaterialButton;

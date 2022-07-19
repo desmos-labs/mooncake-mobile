@@ -4,6 +4,8 @@ import Animated from 'react-native-reanimated';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
+import {addAlphaToHex} from 'config/theme';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 import useAnimations from './useAnimations';
 
@@ -17,9 +19,12 @@ type Props = {
 const UserBio = ({content}: Props) => {
   const styles = useStyles();
   const {t} = useTranslation('profile');
+  const theme = useTheme();
 
   const {onLayout, animatedContainerStyle, expanded, setExpanded} =
     useAnimations();
+
+  const showMoreLess = React.useMemo(() => content.length > 64, [content]);
 
   if (!content) {
     return (
@@ -32,7 +37,9 @@ const UserBio = ({content}: Props) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() => setExpanded(prev => !prev)}>
+      onPress={() => {
+        if (showMoreLess) setExpanded(prev => !prev);
+      }}>
       {/* dummy View with content so the maximum container height can be properly calculated */}
       <View pointerEvents="none" onLayout={onLayout} style={styles.dummyBio}>
         <Typography.Subtitle4>{content}</Typography.Subtitle4>
@@ -41,24 +48,26 @@ const UserBio = ({content}: Props) => {
       <Animated.View style={[animatedContainerStyle]}>
         <Typography.Caption1 numberOfLines={expanded ? undefined : undefined}>
           {content}
-          {expanded ? (
+          {expanded && showMoreLess ? (
             <Typography.Caption1 style={styles.moreText}>
               {t('less')}
             </Typography.Caption1>
           ) : undefined}
         </Typography.Caption1>
         {/* Linear gradient effect so text for a more elegant truncate overlay */}
-        {!expanded && (
+        {!expanded && showMoreLess && (
           <View style={styles.gradientContainer}>
             <View style={styles.gradient}>
               <LinearGradient
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={StyleSheet.absoluteFillObject}
-                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+                colors={[
+                  addAlphaToHex(theme.colors.background, 0.1),
+                  theme.colors.background,
+                ]}
               />
             </View>
-
             <Typography.Caption1 style={styles.moreText}>
               {t('more')}
             </Typography.Caption1>

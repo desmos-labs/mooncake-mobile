@@ -1,14 +1,14 @@
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Typography from 'components/Typography';
+import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native';
-import DView from 'components/DView';
-import DButton from 'components/DButton';
-import Typography from 'components/Typography';
-import {useRoute} from '@react-navigation/native';
-import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import useStyles from './useStyles';
 
 export type ConnectToLedgerParams = {
@@ -60,13 +60,13 @@ const ConnectToLedger = () => {
         {connectionError}
       </Typography.Body1>
 
-      <DButton
+      <Button
         mode="contained"
         onPress={handleButtonPressed}
         disabled={connecting}
         loading={connecting}>
         {connecting ? t('connecting') : statusButton}
-      </DButton>
+      </Button>
     </DView>
   );
 };

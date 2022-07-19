@@ -2,9 +2,10 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.white,
     borderRadius: 4,
     padding: theme.spacing.s,
+    minWidth: 24,
   },
   index: {
     position: 'absolute',
