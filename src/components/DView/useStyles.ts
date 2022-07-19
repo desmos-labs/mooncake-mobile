@@ -24,6 +24,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   },
   scrollViewInner: {
     padding: 20,
+    flexGrow: 1,
   },
 }));
 
