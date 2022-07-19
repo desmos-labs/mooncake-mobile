@@ -12,6 +12,11 @@ const useStyles = makeStyle(theme => ({
   eyeIcon: {
     right: theme.spacing.s,
   },
+  error: {
+    borderWidth: 1,
+    borderRadius: theme.roundness,
+    borderColor: theme.colors.pink01,
+  },
 }));
 
 export default useStyles;
