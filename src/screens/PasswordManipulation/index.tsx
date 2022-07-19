@@ -1,7 +1,6 @@
 import React from 'react';
-import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {check, validCheck} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -14,6 +13,9 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useTranslation} from 'react-i18next';
 import * as Yup from 'yup';
+import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordTooltip';
+import Spacer from 'components/Spacer';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -35,12 +37,16 @@ type NavProps = StackScreenProps<
   ROUTES.PASSWORD_MANIPULATION
 >;
 
+const MIN_PW_LENGTH = 10;
+
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
 
   const {
     params: {mode},
   } = useRoute<NavProps['route']>();
+
+  const theme = useTheme();
 
   const headerText = React.useMemo(() => {
     switch (mode) {
@@ -77,12 +83,21 @@ const PasswordManipulation = () => {
     return Yup.object().shape({
       newPassword: Yup.string()
         .min(
-          6,
+          MIN_PW_LENGTH,
           t('error:minChar', {
-            numChar: 6,
+            numChar: MIN_PW_LENGTH,
           }),
         )
-        .required(t('error:required')),
+        .required(t('error:required'))
+        .test('at least one lowercase', '', value =>
+          /(?=.*[a-z])/.test(value as string),
+        )
+        .test('at least one uppercase', '', value =>
+          /(?=.*[A-Z])/.test(value as string),
+        )
+        .test('at least one special', '', value =>
+          /(?=.*\W)/.test(value as string),
+        ),
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
@@ -110,81 +125,94 @@ const PasswordManipulation = () => {
         initialValues={initialFormValues}
         onSubmit={handleFormSubmit}
         validationSchema={validationSchema}>
-        {({handleSubmit, values, errors, setFieldValue}) => (
-          <View style={styles.formContainer}>
-            <View style={styles.labelGroup}>
-              <Typography.Subtitle2>{t('enterNewPw')}</Typography.Subtitle2>
+        {({handleSubmit, values, errors, setFieldValue}) => {
+          console.log(errors);
+          return (
+            <View style={styles.formContainer}>
+              <View style={styles.labelGroup}>
+                <Typography.Subtitle2>{t('enterNewPw')}</Typography.Subtitle2>
 
-              {values.newPassword.length >= 6 && (
-                <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
-                  {t(passwordStrength(values.newPassword).value)}
-                </Typography.Subtitle4>
-              )}
-            </View>
+                {values.newPassword.length >= MIN_PW_LENGTH && (
+                  <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
+                    {t(passwordStrength(values.newPassword).value)}
+                  </Typography.Subtitle4>
+                )}
+              </View>
 
-            <DSecureTextInput
-              value={values.newPassword}
-              onChangeText={(value: string) =>
-                setFieldValue('newPassword', value, true)
-              }
-              style={styles.inputLabel}
-              placeholder={t('newPw')}
-            />
-
-            {errors.newPassword && (
-              <Typography.Caption1 style={styles.errorText}>
-                {errors.newPassword}
-              </Typography.Caption1>
-            )}
-
-            <View style={styles.tooltipGroup}>
-              <Image
-                source={values.newPassword.length >= 6 ? validCheck : check}
-                style={styles.check}
-              />
-              <Typography.Caption1
-                style={[
-                  styles.tooltipText,
-                  values.newPassword.length >= 6 && styles.tooltipValid,
-                ]}>
-                {t('atLeast6Char')}
-              </Typography.Caption1>
-            </View>
-
-            <Typography.Subtitle2 style={styles.inputLabel}>
-              {t('confirmPw')}
-            </Typography.Subtitle2>
-            <DSecureTextInput
-              placeholder={t('pw')}
-              onChangeText={(value: string) =>
-                setFieldValue('confirmPassword', value)
-              }
-            />
-            {errors.confirmPassword && (
-              <Typography.Caption1 style={styles.errorText}>
-                {errors.confirmPassword}
-              </Typography.Caption1>
-            )}
-
-            <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-              style={styles.buttonGroup}>
-              <Button
-                onPress={handleSubmit}
-                disabled={
-                  !values.confirmPassword ||
-                  !values.newPassword ||
-                  _.flatten(Object.values(errors)).length > 0
+              <DSecureTextInput
+                value={values.newPassword}
+                onChangeText={(value: string) =>
+                  setFieldValue('newPassword', value, true)
                 }
-                mode="gradientFilled">
-                <Typography.Button2 style={styles.confirmButtonText}>
-                  {t('common:confirm')}
-                </Typography.Button2>
-              </Button>
-            </KeyboardAvoidingView>
-          </View>
-        )}
+                style={styles.inputLabel}
+                placeholder={t('newPw')}
+              />
+
+              {errors.newPassword && (
+                <Typography.Caption1 style={styles.errorText}>
+                  {errors.newPassword}
+                </Typography.Caption1>
+              )}
+
+              <PasswordTooltip
+                label={t('atLeastChar', {
+                  length: MIN_PW_LENGTH,
+                })}
+                isSatisfied={values.newPassword.length >= MIN_PW_LENGTH}
+              />
+
+              <PasswordTooltip
+                label={t('atLeastLower')}
+                isSatisfied={/(?=.*[a-z])/.test(values.newPassword)}
+              />
+
+              <PasswordTooltip
+                label={t('atLeastUpper')}
+                isSatisfied={/(?=.*[A-Z])/.test(values.newPassword)}
+              />
+
+              <Spacer paddingBottom={theme.spacing.m}>
+                <PasswordTooltip
+                  label={t('atLeastSpecial')}
+                  isSatisfied={/(?=.*\W)/.test(values.newPassword)}
+                />
+              </Spacer>
+
+              <Typography.Subtitle2 style={styles.inputLabel}>
+                {t('confirmPw')}
+              </Typography.Subtitle2>
+              <DSecureTextInput
+                placeholder={t('pw')}
+                onChangeText={(value: string) =>
+                  setFieldValue('confirmPassword', value, true)
+                }
+              />
+              {errors.confirmPassword && (
+                <Typography.Caption1 style={styles.errorText}>
+                  {errors.confirmPassword}
+                </Typography.Caption1>
+              )}
+
+              <KeyboardAvoidingView
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.buttonGroup}>
+                <Button
+                  onPress={handleSubmit}
+                  disabled={
+                    !values.confirmPassword ||
+                    !values.newPassword ||
+                    _.flatten(Object.values(errors)).length > 0
+                  }
+                  mode="gradientFilled">
+                  <Typography.Button2 style={styles.confirmButtonText}>
+                    {t('common:confirm')}
+                  </Typography.Button2>
+                </Button>
+              </KeyboardAvoidingView>
+            </View>
+          );
+        }}
       </Formik>
     </DView>
   );

@@ -6,6 +6,7 @@ import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
 import ChangePassword, {
+  PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
@@ -51,7 +52,9 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      initialRouteName={ROUTES.PASSWORD_MANIPULATION}
+      screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
@@ -77,6 +80,9 @@ const RootNavigator = () => {
         component={ConnectToLedger}
       />
       <Stack.Screen
+        initialParams={{
+          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+        }}
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
       />

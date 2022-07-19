@@ -30,24 +30,6 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.xs,
     color: theme.colors.error,
   },
-  tooltipGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: theme.spacing.xs,
-    marginBottom: theme.spacing.l,
-  },
-  check: {
-    width: 16,
-    height: 16,
-    resizeMode: 'contain',
-    marginRight: theme.spacing.xs,
-  },
-  tooltipValid: {
-    color: theme.colors.accentGreen01,
-  },
-  tooltipText: {
-    color: theme.colors.grey02,
-  },
   labelGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
