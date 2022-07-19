@@ -1,7 +1,8 @@
 import {gql} from '@apollo/client';
 
-const GetPostsForAddress = gql(`query GetPostsForAddress @api(name: desmos){
-  post(order_by: {creation_date: desc}) {
+const GetPostsForAddress =
+  gql(`query GetPostsForAddress ($address: String)@api(name: desmos) {
+  post(order_by: {creation_date: desc}, where: {author_address: {_eq: $address}}) {
     id
     creation_date
     author_address
