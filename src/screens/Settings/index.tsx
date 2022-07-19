@@ -16,6 +16,7 @@ import appSettingsState from 'recoil/settings';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
 import {useTheme} from 'react-native-paper';
+import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
@@ -90,7 +91,11 @@ const Settings: React.FC<Props> = props => {
         />
         <SectionButton
           label={t('change password')}
-          onPress={() => console.log('change password')}
+          onPress={() =>
+            navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
+              mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+            })
+          }
         />
         <SectionSwitch
           label={t('enable biometrics')}

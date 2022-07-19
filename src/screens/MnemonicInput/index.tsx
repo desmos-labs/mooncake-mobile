@@ -7,7 +7,7 @@ import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import DTextInput from 'components/DTextInput';
-import DButton from 'components/DButton';
+import Button from 'components/Button';
 import {Formik} from 'formik';
 import {validateMnemonic} from 'lib/ValidationUtils';
 import {sanitizeMnemonic} from 'lib/FormatUtils';
@@ -135,12 +135,12 @@ const MnemonicInput = () => {
               keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
-              <DButton
+              <Button
                 mode="gradientFilled"
                 labelStyle={styles.labelStyle}
                 onPress={handleSubmit}>
                 {t('common:confirm')}
-              </DButton>
+              </Button>
             </KeyboardAvoidingView>
           </View>
         )}
