@@ -13,3 +13,8 @@ export const formatNumShorthand = (value: number): string => {
   if (value < 1000000) return `${value / 1000}k`;
   return `${value / 1000000}m`;
 };
+
+// Remove newline characters and leading/trailing spaces from mnemonics
+export const sanitizeMnemonic = (mnemonic: string) => {
+  return mnemonic.replace(/\n\n/g, ' ').trim();
+};

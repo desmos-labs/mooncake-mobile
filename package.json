@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@cosmjs/crypto": "^0.28.11",
     "@cosmjs/ledger-amino": "^0.28.10",
     "@desmoslabs/desmjs": "^3.0.1",
     "@desmoslabs/desmjs-types": "^3.0.1",
@@ -27,6 +28,7 @@
     "@react-navigation/stack": "^6.2.1",
     "@types/react-native-simple-radio-button": "^2.7.2",
     "asyncstorage-down": "^4.2.0",
+    "big-integer": "^1.6.51",
     "big.js": "^6.2.0",
     "check-password-strength": "^2.0.5",
     "date-fns": "^2.28.0",

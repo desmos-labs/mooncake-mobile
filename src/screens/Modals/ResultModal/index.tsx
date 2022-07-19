@@ -1,3 +1,5 @@
+import React, {ReactNode} from 'react';
+import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {iconCross, modalSuccess} from 'assets/images';
@@ -5,8 +7,6 @@ import Button from 'components/Button';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
 
 export type ResultModalParams = {
@@ -14,7 +14,7 @@ export type ResultModalParams = {
    * The title of the modal. This should be the immediate result
    * of whatever the user was doing.
    */
-  title?: string;
+  title?: string | ReactNode;
   /**
    * The image to be shown. It should be related to the result of what the
    * user was doing.
@@ -23,7 +23,7 @@ export type ResultModalParams = {
   /**
    * Additional description for the title.
    */
-  subtitle?: string;
+  subtitle?: string | ReactNode;
   /**
    * Label of the primary button.
    */

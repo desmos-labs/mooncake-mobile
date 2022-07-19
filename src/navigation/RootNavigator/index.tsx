@@ -5,7 +5,10 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
-import ChangePassword from 'screens/ChangePassword';
+import ChangePassword, {
+  PASSWORD_MANIPULATION_MODE,
+  PasswordManipulationParams,
+} from 'screens/PasswordManipulation';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
@@ -16,10 +19,14 @@ import Profiles from 'screens/Profiles';
 import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import Profile from 'screens/Profile';
+import MnemonicInput, {
+  MNEMONIC_INPUT_MODE,
+  MnemonicInputParams,
+} from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 
 export type RootNavigatorParamList = {
-  [ROUTES.CHANGE_PASSWORD]: undefined;
+  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.ENTER_PASSWORD]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
@@ -32,6 +39,7 @@ export type RootNavigatorParamList = {
   [ROUTES.USER_PROFILE]: undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
+  [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
 };
@@ -45,8 +53,14 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        initialParams={{
+          mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+        }}
+        name={ROUTES.MNEMONIC_INPUT}
+        component={MnemonicInput}
+      />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
@@ -62,6 +76,13 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
+      />
+      <Stack.Screen
+        initialParams={{
+          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+        }}
+        name={ROUTES.PASSWORD_MANIPULATION}
+        component={ChangePassword}
       />
       <Stack.Screen
         name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE}
