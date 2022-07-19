@@ -21,6 +21,7 @@ const useHooks = () => {
   const initialFormFields = React.useMemo(
     () => ({
       mnemonic: '',
+      // only ask for consent if in import mode
       consent: mode !== MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
     }),
     [mode],
