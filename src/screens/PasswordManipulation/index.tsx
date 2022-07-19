@@ -146,6 +146,7 @@ const PasswordManipulation = () => {
                 }
                 style={styles.inputLabel}
                 placeholder={t('newPw')}
+                error={!!errors.newPassword}
               />
 
               {errors.newPassword && (
@@ -186,6 +187,7 @@ const PasswordManipulation = () => {
                 onChangeText={(value: string) =>
                   setFieldValue('confirmPassword', value, true)
                 }
+                error={!!errors.confirmPassword}
               />
               {errors.confirmPassword && (
                 <Typography.Caption1 style={styles.errorText}>

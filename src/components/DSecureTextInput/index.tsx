@@ -19,7 +19,8 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
   return (
     <DTextInput
       {...props}
-      onFocus={() => setFocused(prev => !prev)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       secureTextEntry={hideText}
       textAlignVertical="center"
       placeHolderColor={iconColor}
