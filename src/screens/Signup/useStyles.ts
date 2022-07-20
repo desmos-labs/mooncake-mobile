@@ -29,11 +29,11 @@ const useStyles = makeStyle(theme => ({
   errorText: {
     marginTop: theme.spacing.xs,
     marginBottom: theme.spacing.xs,
-    color: theme.colors.error,
+    color: theme.colors.pink01,
   },
   errorTextDtag: {
     marginBottom: theme.spacing.m,
-    color: theme.colors.error,
+    color: theme.colors.pink01,
   },
   labelGroup: {
     flexDirection: 'row',
@@ -53,6 +53,20 @@ const useStyles = makeStyle(theme => ({
   dTagRowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  consentGroup: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.s,
+    marginTop: theme.spacing.m,
+  },
+  consentText: {
+    bottom: 4,
+    lineHeight: 20,
+    marginLeft: 8,
+    flex: 1,
+  },
+  touchableText: {
+    color: theme.colors.primary,
   },
 }));
 

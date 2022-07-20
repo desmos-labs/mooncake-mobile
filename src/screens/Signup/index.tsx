@@ -1,8 +1,9 @@
-import {useLazyQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
+import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -12,12 +13,13 @@ import {Formik} from 'formik';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, {useCallback, useEffect} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {IconButton, useTheme} from 'react-native-paper';
 import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordTooltip';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
+import GetProfileParams from 'services/graphql/queries/GetProfileParams';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
@@ -25,6 +27,7 @@ const initialFormValues = {
   dTag: '',
   newPassword: '',
   confirmPassword: '',
+  consent: false,
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
@@ -36,8 +39,11 @@ const PasswordManipulation = () => {
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
-  const [validDtag, setValidDtag] = React.useState<boolean>(true);
+  const [availableDag, setAvailableDag] = React.useState<boolean>(true);
+  const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
+  const {data} = useQuery(GetProfileParams);
+
   const handleFormSubmit = React.useCallback(
     (formValues: typeof initialFormValues) => {
       console.log(formValues);
@@ -52,13 +58,23 @@ const PasswordManipulation = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (data) {
+      setDtagParams(data.profiles_params[0].params.dtag);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    console.log(dtagParams);
+  }, [dtagParams]);
+
   const checkAvailability = useCallback(async (newDtag: string) => {
     const result = await getDTagAvailability({variables: {dTag: newDtag}});
     if (result.data.profile.length !== 0) {
-      setValidDtag(false);
+      setAvailableDag(false);
       return;
     }
-    setValidDtag(true);
+    setAvailableDag(true);
   }, []);
 
   const validationSchema = React.useMemo(() => {
@@ -83,7 +99,47 @@ const PasswordManipulation = () => {
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
+      dTag: Yup.string()
+        .required(t('error:required'))
+        .min(
+          dtagParams.min_length,
+          t('error:minChar', {
+            numChar: dtagParams.min_length,
+          }),
+        )
+        .max(
+          dtagParams.max_length,
+          t('error:minChar', {
+            numChar: dtagParams.max_length,
+          }),
+        )
+        .test(
+          'respect reg_ex',
+          t('Only _ is allowed as special character'),
+          value => {
+            console.log(value);
+            return new RegExp(dtagParams.reg_ex, 'g').test(value as string);
+          },
+        ),
     });
+  }, [dtagParams]);
+
+  const validateForm = React.useCallback((values: typeof initialFormValues) => {
+    const errors: any = {};
+
+    if (!values.consent) {
+      errors.consent = 'Consent not checked';
+    }
+
+    return errors;
+  }, []);
+
+  const handlePressPP = React.useCallback(() => {
+    // go to Privacy policy page
+  }, []);
+
+  const handlePressTOS = React.useCallback(() => {
+    // go to Terms of Service page
   }, []);
 
   const mapPwStyle = React.useCallback((password: string) => {
@@ -111,7 +167,8 @@ const PasswordManipulation = () => {
         <Formik
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
-          validationSchema={validationSchema}>
+          validationSchema={validationSchema}
+          validate={validateForm}>
           {({handleSubmit, values, errors, setFieldValue}) => {
             console.log(errors);
             return (
@@ -132,14 +189,19 @@ const PasswordManipulation = () => {
                       value={values.dTag}
                       onChangeText={(value: string) => {
                         checkAvailability(value);
-                        setFieldValue('dTag', value, false);
+                        setFieldValue('dTag', value, true);
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
-                      error={!!errors.dTag}
+                      error={!!errors.dTag || !availableDag}
                     />
+                    {errors.dTag && (
+                      <Typography.Caption1 style={styles.errorText}>
+                        {errors.dTag}
+                      </Typography.Caption1>
+                    )}
                     <Typography.Caption1 style={styles.errorTextDtag}>
-                      {validDtag ? '' : t('signup:dtag taken')}
+                      {availableDag ? '' : t('signup:dtag taken')}
                     </Typography.Caption1>
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
@@ -211,11 +273,39 @@ const PasswordManipulation = () => {
                     )}
                   </View>
                 </ScrollView>
+                <View style={styles.consentGroup}>
+                  <CustomCheckbox
+                    checked={values.consent}
+                    handlePress={() =>
+                      setFieldValue('consent', !values.consent, false)
+                    }
+                    error={!!errors.consent}
+                  />
+
+                  <Typography.Body6 style={styles.consentText}>
+                    <Trans
+                      i18nKey="mnemonicInput:userConsent"
+                      components={[
+                        <Typography.Body6
+                          onPress={handlePressTOS}
+                          style={styles.touchableText}
+                        />,
+                        <Typography.Body6
+                          onPress={handlePressPP}
+                          style={styles.touchableText}
+                        />,
+                      ]}
+                    />
+                  </Typography.Body6>
+                </View>
                 <Button
                   onPress={handleSubmit}
                   disabled={
+                    !values.dTag ||
                     !values.confirmPassword ||
                     !values.newPassword ||
+                    !values.consent ||
+                    !availableDag ||
                     _.flatten(Object.values(errors)).length > 0
                   }
                   containerStyle={{marginTop: 10}}
