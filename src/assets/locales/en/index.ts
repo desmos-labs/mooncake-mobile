@@ -8,22 +8,24 @@ import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settings.json';
 import confirmModal from './confirmModal.json';
-import profile from './profile.json'
+import profile from './profile.json';
 import forgotPassword from './forgotPassword.json';
+import signup from './signup.json';
 
 const en = {
-    common,
-    manageChains,
-    home,
-    enterPassword,
-    error,
-    passwordManipulation,
-    resultModal,
-    confirmModal,
-    lookingForDevices,
-    settings,
-    profile,
-    forgotPassword
+  common,
+  manageChains,
+  home,
+  enterPassword,
+  error,
+  passwordManipulation,
+  resultModal,
+  confirmModal,
+  lookingForDevices,
+  settings,
+  profile,
+  forgotPassword,
+  signup,
 };
 
 export default en;
