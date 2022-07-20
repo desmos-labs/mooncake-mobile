@@ -57,6 +57,10 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
     marginTop: theme.spacing.xl,
   },
+  contentContainer: {
+    flexGrow: 1,
+    padding: theme.spacing.m,
+  },
 }));
 
 export default useStyles;

@@ -114,25 +114,28 @@ const LookingForDevices = () => {
   }
 
   return (
-    <DView style={styles.container}>
-      <View style={styles.graphicGroup}>
-        <Image source={btDevice} style={styles.btDeviceImg} />
-        <LoadingIndicator
-          numDots={5}
-          dotSize={8}
-          hideActiveDots={!scanning}
-          inactiveColor={theme.colors.surface}
-          activeColor={theme.colors.desmosOrange01}
-        />
-        <Image source={ledgerIcon} style={styles.ledgerImg} />
+    <DView>
+      <View style={styles.container}>
+        <View style={styles.graphicGroup}>
+          <Image source={btDevice} style={styles.btDeviceImg} />
+          <LoadingIndicator
+            numDots={5}
+            dotSize={8}
+            hideActiveDots={!scanning}
+            inactiveColor={theme.colors.desmosOrange03}
+            activeColor={theme.colors.desmosOrange01}
+          />
+          <Image source={ledgerIcon} style={styles.ledgerImg} />
+        </View>
+        <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
+        <Typography.Body6 style={styles.descriptionStyle}>
+          {t('description')}
+        </Typography.Body6>
       </View>
-      <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
-      <Typography.Body6 style={styles.descriptionStyle}>
-        {t('description')}
-      </Typography.Body6>
 
       <FlatList
         style={styles.flatlistContainer}
+        contentContainerStyle={styles.contentContainer}
         ItemSeparatorComponent={Spacer}
         data={devices}
         renderItem={renderItem}

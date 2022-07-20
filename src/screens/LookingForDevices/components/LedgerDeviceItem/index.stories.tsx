@@ -18,10 +18,7 @@ const withCheckIconProps: LedgerDeviceItemProps = {
 
 storiesOf('components/LedgerDeviceItem', module)
   .addDecorator(stories => (
-    <SbContainer
-      justifyContent="center"
-      padding={8}
-      backgroundColor="rgba(0,0,0,0.2)">
+    <SbContainer justifyContent="center" padding={8}>
       {stories()}
     </SbContainer>
   ))
