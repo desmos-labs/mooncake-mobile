@@ -54,6 +54,12 @@ const Settings: React.FC<Props> = props => {
     });
   }, []);
 
+  const sendFeedback = useCallback(async () => {
+    Linking.openURL('mailto:dev@forbole.com').catch(err =>
+      console.error("Couldn't open email application", err),
+    );
+  }, []);
+
   useEffect(() => {
     /**
      * We need to check if the user has a compatible device with biometrics. If not we should disable this button
@@ -120,10 +126,7 @@ const Settings: React.FC<Props> = props => {
           label={t('community')}
           onPress={() => navigation.navigate(ROUTES.SETTINGS_COMMUNITY)}
         />
-        <SectionButton
-          label={t('feedbacks')}
-          onPress={() => console.log('feedbacks')}
-        />
+        <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton
           label={t('about')}
           onPress={() => console.log('about')}

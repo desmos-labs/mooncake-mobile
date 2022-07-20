@@ -8,8 +8,8 @@ import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settings.json';
 import confirmModal from './confirmModal.json';
-import profile from './profile.json';
-import forgotPassword from './forgotPassword.json';
+import profile from './profile.json'
+import mnemonicInput from './mnemonicInput.json';
 import signup from './signup.json';
 
 const en = {
@@ -24,8 +24,8 @@ const en = {
   lookingForDevices,
   settings,
   profile,
-  forgotPassword,
   signup,
+  mnemonicInput
 };
 
 export default en;

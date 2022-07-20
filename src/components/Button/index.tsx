@@ -12,7 +12,7 @@ type Props = React.ComponentProps<typeof MaterialButton>;
  */
 const Button: React.FC<Props> = ({onPress, ...rest}: Props) => {
   return Platform.OS === 'ios' ? (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity disabled={rest.disabled} onPress={onPress}>
       <MaterialButton {...rest} />
     </TouchableOpacity>
   ) : (
