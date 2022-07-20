@@ -87,7 +87,13 @@ const MaterialButton: React.FC<Props> = props => {
   if (mode === 'text') {
     return (
       <TouchableOpacity
-        style={[{alignSelf: 'center'}, styles.btnStyle, style]}
+        disabled={disabled}
+        style={[
+          {alignSelf: 'center'},
+          styles.btnStyle,
+          style,
+          disabled && styles.disabledStyle,
+        ]}
         onPress={onPress}>
         <Text style={[styles.labelStyle, labelStyle]}>{children}</Text>
       </TouchableOpacity>
@@ -96,7 +102,12 @@ const MaterialButton: React.FC<Props> = props => {
 
   if (mode === 'gradient') {
     return (
-      <View style={[styles.container, containerStyle]}>
+      <View
+        style={[
+          styles.container,
+          containerStyle,
+          disabled && styles.disabledStyle,
+        ]}>
         <MaskedView
           style={styles.maskedView}
           maskElement={
@@ -132,7 +143,12 @@ const MaterialButton: React.FC<Props> = props => {
 
   if (mode === 'gradientFilled') {
     return (
-      <View style={[styles.gradientFilledContainer, containerStyle]}>
+      <View
+        style={[
+          styles.gradientFilledContainer,
+          containerStyle,
+          disabled && styles.disabledStyle,
+        ]}>
         <LinearGradient
           style={[styles.maskedView, styles.linearGradient]}
           colors={theme.colors.dOrangeGradient01}

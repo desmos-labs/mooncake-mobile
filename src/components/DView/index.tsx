@@ -1,5 +1,12 @@
 import React, {ReactElement} from 'react';
-import {ImageBackground, ScrollView, StatusBar, View} from 'react-native';
+import {
+  ImageBackground,
+  Keyboard,
+  ScrollView,
+  StatusBar,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
@@ -23,25 +30,29 @@ const DView: React.FC<Props> = props => {
   const styles = useStyles(props);
 
   return (
-    <SafeAreaView style={styles.root}>
-      <StatusBar backgroundColor="transparent" />
-      {background !== undefined && (
-        <ImageBackground style={styles.background} source={background} />
-      )}
-      {topBar}
-      <View style={[styles.content, style]}>
-        {scrollable ? (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.scrollViewOuter}
-            contentContainerStyle={styles.scrollViewInner}>
-            {children}
-          </ScrollView>
-        ) : (
-          children
+    <TouchableWithoutFeedback
+      touchSoundDisabled
+      onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.root}>
+        <StatusBar backgroundColor="transparent" />
+        {background !== undefined && (
+          <ImageBackground style={styles.background} source={background} />
         )}
-      </View>
-    </SafeAreaView>
+        {topBar}
+        <View style={[styles.content, style]}>
+          {scrollable ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.scrollViewOuter}
+              contentContainerStyle={styles.scrollViewInner}>
+              {children}
+            </ScrollView>
+          ) : (
+            children
+          )}
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

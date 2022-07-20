@@ -8,31 +8,28 @@ import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import _ from 'lodash';
-import {useRoute, useNavigation} from '@react-navigation/native';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useTranslation} from 'react-i18next';
-import * as Yup from 'yup';
-import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordTooltip';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import * as Yup from 'yup';
+import PasswordTooltip from './components/PasswordTooltip';
 import useStyles from './useStyles';
-
-const initialFormValues = {
-  newPassword: '',
-  confirmPassword: '',
-};
+import useHooks from './useHooks';
 
 export enum PASSWORD_MANIPULATION_MODE {
   CHANGE_PASSWORD,
   RESET_PASSWORD,
+  SETUP_PASSWORD,
 }
 
 export type PasswordManipulationParams = {
   mode: PASSWORD_MANIPULATION_MODE;
 };
 
-type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.PASSWORD_MANIPULATION
 >;
@@ -42,42 +39,11 @@ const MIN_PW_LENGTH = 10;
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
 
-  const {
-    params: {mode},
-  } = useRoute<NavProps['route']>();
-
-  const theme = useTheme();
-
-  const headerText = React.useMemo(() => {
-    switch (mode) {
-      case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
-        return 'changePw';
-      case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
-        return 'resetPw';
-      default:
-        return '';
-    }
-  }, [mode]);
-
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {top} = useSafeAreaInsets();
 
   const styles = useStyles();
 
-  const handleFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      console.log(formValues);
-
-      navigate(ROUTES.RESULT_MODAL, {
-        title: t('resultModal:success'),
-        subtitle: t('resultModal:passwordWasChanged'),
-        primaryButtonLabel: t('resultModal:goToProfile'),
-        onDismiss: () => {
-          // finish implementation when change pw feature is added
-        },
-      });
-    },
-    [mode],
-  );
+  const theme = useTheme();
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -104,22 +70,25 @@ const PasswordManipulation = () => {
     });
   }, []);
 
-  const mapPwStyle = React.useCallback((password: string) => {
-    const {value} = passwordStrength(password);
-
-    switch (value) {
-      case 'Medium':
-        return styles.mediumPw;
-      case 'Strong':
-        return styles.strongPw;
-      default:
-        return styles.weakPw;
-    }
-  }, []);
+  const {
+    headerText,
+    descriptionText,
+    pwInputLabel,
+    buttonLabel,
+    handleFormSubmit,
+    mapPwStyle,
+    initialFormValues,
+  } = useHooks();
 
   return (
-    <DView style={styles.container}>
+    <DView style={styles.container} scrollable>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
+
+      {descriptionText && (
+        <Spacer paddingBottom={32}>
+          <Typography.Body6>{t(descriptionText)}</Typography.Body6>
+        </Spacer>
+      )}
 
       <Formik
         initialValues={initialFormValues}
@@ -130,7 +99,7 @@ const PasswordManipulation = () => {
           return (
             <View style={styles.formContainer}>
               <View style={styles.labelGroup}>
-                <Typography.Subtitle2>{t('enterNewPw')}</Typography.Subtitle2>
+                <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
 
                 {values.newPassword.length >= MIN_PW_LENGTH && (
                   <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
@@ -196,19 +165,19 @@ const PasswordManipulation = () => {
               )}
 
               <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? top + 180 : 0}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={styles.buttonGroup}>
                 <Button
                   onPress={handleSubmit}
                   disabled={
-                    !values.confirmPassword ||
-                    !values.newPassword ||
+                    values.confirmPassword.length === 0 ||
+                    values.newPassword.length === 0 ||
                     _.flatten(Object.values(errors)).length > 0
                   }
-                  mode="gradientFilled">
+                  mode="text">
                   <Typography.Button2 style={styles.confirmButtonText}>
-                    {t('common:confirm')}
+                    {t(buttonLabel)}
                   </Typography.Button2>
                 </Button>
               </KeyboardAvoidingView>

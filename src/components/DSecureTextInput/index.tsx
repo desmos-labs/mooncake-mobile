@@ -5,7 +5,7 @@ import {IconButton, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = props => {
-  const [focused, setFocused] = useState<boolean>();
+  const [focused, setFocused] = useState<boolean>(false);
   const {error} = props;
   const theme = useTheme();
   const styles = useStyles();
@@ -24,7 +24,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
       secureTextEntry={hideText}
       textAlignVertical="center"
       placeHolderColor={iconColor}
-      style={[styles.input, focused && !error ? styles.focused : styles.error]}
+      style={[styles.input, error && styles.error, focused && styles.focused]}
       rightElement={
         <IconButton
           style={styles.eyeIcon}

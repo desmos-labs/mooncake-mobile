@@ -26,7 +26,9 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
     contentStyle: {
       height: 52,
     },
-
+    disabledStyle: {
+      opacity: 0.5,
+    },
     // gradient button
     container: {
       alignSelf: 'stretch',

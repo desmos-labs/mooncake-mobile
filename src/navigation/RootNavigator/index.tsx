@@ -79,7 +79,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         initialParams={{
-          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
         }}
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
