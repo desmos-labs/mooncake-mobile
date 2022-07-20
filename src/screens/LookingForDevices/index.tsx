@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {btDevice, ledgerIcon} from 'assets/images';
+import {btDevice, ledgerIcon, noLedgerFound} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -52,16 +52,12 @@ const LookingForDevices = () => {
       .then(permissions => {
         if (permissions) return scan();
         else {
-          Alert.alert(
-            'Please grant permissions to pair your ledger device.',
-            '',
-            [
-              {
-                text: 'Go Back',
-                onPress: () => {},
-              },
-            ],
-          );
+          Alert.alert(t('permissionsDialog'), '', [
+            {
+              text: 'Go Back',
+              onPress: () => {},
+            },
+          ]);
         }
       })
       .catch(err => {
@@ -93,8 +89,32 @@ const LookingForDevices = () => {
     [],
   );
 
+  if (!scanning && devices.length === 0) {
+    return (
+      <DView style={styles.container}>
+        <View style={styles.graphicGroup}>
+          <Image source={noLedgerFound} style={styles.noDeviceImage} />
+        </View>
+        <Typography.H4 style={[styles.headerStyle, styles.noDevicesText]}>
+          {t('noDeviceFound')}
+        </Typography.H4>
+
+        <Typography.Body6 style={styles.descriptionStyle}>
+          {t('description')}
+        </Typography.Body6>
+
+        <Button
+          mode="gradientFilled"
+          containerStyle={styles.retryButton}
+          onPress={onPressRetry}>
+          {t('common:retry')}
+        </Button>
+      </DView>
+    );
+  }
+
   return (
-    <DView>
+    <DView style={styles.container}>
       <View style={styles.graphicGroup}>
         <Image source={btDevice} style={styles.btDeviceImg} />
         <LoadingIndicator
@@ -106,14 +126,10 @@ const LookingForDevices = () => {
         />
         <Image source={ledgerIcon} style={styles.ledgerImg} />
       </View>
-      <Button>
-        <Typography.Body1 style={styles.headerStyle}>
-          {t('header')}
-        </Typography.Body1>
-      </Button>
-      <Typography.Body1 style={styles.descriptionStyle}>
+      <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
+      <Typography.Body6 style={styles.descriptionStyle}>
         {t('description')}
-      </Typography.Body1>
+      </Typography.Body6>
 
       <FlatList
         style={styles.flatlistContainer}
@@ -121,22 +137,6 @@ const LookingForDevices = () => {
         data={devices}
         renderItem={renderItem}
       />
-
-      {!scanning && (
-        <>
-          {devices.length === 0 && (
-            <Typography.Subtitle1 style={styles.warningStyle}>
-              {t('noDeviceFound')}
-            </Typography.Subtitle1>
-          )}
-
-          <View style={styles.buttonContainer}>
-            <Button onPress={onPressRetry}>
-              <Typography.Subtitle1>{t('common:retry')}</Typography.Subtitle1>
-            </Button>
-          </View>
-        </>
-      )}
     </DView>
   );
 };

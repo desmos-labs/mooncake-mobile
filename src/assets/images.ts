@@ -66,6 +66,8 @@ export const validCheck = require('./images/validCheck.png');
 
 export const eyeClosed = require('./images/eyeClosed.png');
 
+export const noLedgerFound = require('./images/noLedgerFound.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
