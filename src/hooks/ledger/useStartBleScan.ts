@@ -29,14 +29,11 @@ export default function useStartBleScan() {
   const [scanError, setScanError] = useState<ScanError | undefined>(undefined);
 
   // Clear the subscription when leaving the screen or when staring a new scan.
-  useEffect(
-    () => () => {
-      if (subscription !== undefined) {
-        subscription.unsubscribe();
-      }
-    },
-    [subscription],
-  );
+  useEffect(() => {
+    if (subscription !== undefined) {
+      subscription.unsubscribe();
+    }
+  }, [subscription]);
 
   // Clear the scan timeout
   useEffect(
@@ -141,8 +138,6 @@ export default function useStartBleScan() {
             }),
           );
           setStopStopScanTimeout(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             setTimeout(() => {
               stopScan();
             }, durationMs),

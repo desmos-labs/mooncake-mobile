@@ -3,6 +3,11 @@ import {verticalScale} from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   // inactiveDotColor: surface1,
+  centeredContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     padding: theme.spacing.m,
   },
