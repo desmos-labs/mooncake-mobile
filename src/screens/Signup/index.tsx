@@ -1,6 +1,4 @@
 import {useLazyQuery, useQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
@@ -11,9 +9,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {IconButton, useTheme} from 'react-native-paper';
@@ -21,42 +17,27 @@ import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordToo
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import GetProfileParams from 'services/graphql/queries/GetProfileParams';
 import * as Yup from 'yup';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-const initialFormValues = {
-  dTag: '',
-  newPassword: '',
-  confirmPassword: '',
-  consent: false,
-};
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 const MIN_PW_LENGTH = 10;
 
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const [availableDag, setAvailableDag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
   const {data} = useQuery(GetProfileParams);
-
-  const handleFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      console.log(formValues);
-    },
-    [],
-  );
-
-  const openInfoModal = useCallback(() => {
-    navigate(ROUTES.TEXTONLY_MODAL, {
-      title: t('signup:profile dtag'),
-      body: t('signup:dtag info'),
-    });
-  }, []);
+  const {
+    handlePressPP,
+    handlePressTOS,
+    handleFormSubmit,
+    openInfoModal,
+    validateForm,
+    initialFormValues,
+  } = useHooks();
 
   useEffect(() => {
     if (data) {
@@ -64,10 +45,9 @@ const PasswordManipulation = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log(dtagParams);
-  }, [dtagParams]);
-
+  /**
+   * Check with a query if the dTag is available
+   */
   const checkAvailability = useCallback(async (newDtag: string) => {
     const result = await getDTagAvailability({variables: {dTag: newDtag}});
     if (result.data.profile.length !== 0) {
@@ -77,7 +57,7 @@ const PasswordManipulation = () => {
     setAvailableDag(true);
   }, []);
 
-  const validationSchema = React.useMemo(() => {
+  const validationSchema = useMemo(() => {
     return Yup.object().shape({
       newPassword: Yup.string()
         .min(
@@ -124,25 +104,7 @@ const PasswordManipulation = () => {
     });
   }, [dtagParams]);
 
-  const validateForm = React.useCallback((values: typeof initialFormValues) => {
-    const errors: any = {};
-
-    if (!values.consent) {
-      errors.consent = 'Consent not checked';
-    }
-
-    return errors;
-  }, []);
-
-  const handlePressPP = React.useCallback(() => {
-    // go to Privacy policy page
-  }, []);
-
-  const handlePressTOS = React.useCallback(() => {
-    // go to Terms of Service page
-  }, []);
-
-  const mapPwStyle = React.useCallback((password: string) => {
+  const mapPwStyle = useCallback((password: string) => {
     const {value} = passwordStrength(password);
 
     switch (value) {
