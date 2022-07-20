@@ -9,7 +9,7 @@ import {View} from 'react-native';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const CreateAccount: React.FC<Props> = () => {
+const GenerateAccount: React.FC<Props> = () => {
   const {t} = useTranslation('accountCreation');
 
   return (
@@ -29,4 +29,4 @@ const CreateAccount: React.FC<Props> = () => {
   );
 };
 
-export default CreateAccount;
+export default GenerateAccount;

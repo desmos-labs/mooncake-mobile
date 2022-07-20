@@ -4,8 +4,8 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import Community from 'screens/Community';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import CreateAccount from 'screens/CreateAccount';
 import EnterPassword from 'screens/EnterPassword';
+import GenerateAccount from 'screens/GenerateAccount';
 import Home from 'screens/Home';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
@@ -47,7 +47,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
-  [ROUTES.CREATE_ACCOUNT]: undefined;
+  [ROUTES.GENERATE_ACCOUNT]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -59,7 +59,10 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.CREATE_ACCOUNT} component={CreateAccount} />
+      <Stack.Screen
+        name={ROUTES.GENERATE_ACCOUNT}
+        component={GenerateAccount}
+      />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen
