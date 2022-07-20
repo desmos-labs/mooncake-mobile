@@ -9,7 +9,7 @@ import lookingForDevices from './lookingForDevices.json';
 import settings from './settings.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json'
-import forgotPassword from './forgotPassword.json';
+import mnemonicInput from './mnemonicInput.json';
 
 const en = {
     common,
@@ -23,7 +23,7 @@ const en = {
     lookingForDevices,
     settings,
     profile,
-    forgotPassword
+    mnemonicInput
 };
 
 export default en;
