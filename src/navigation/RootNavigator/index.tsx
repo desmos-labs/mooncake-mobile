@@ -55,7 +55,7 @@ const RootNavigator = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
-          mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+          mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
         }}
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
@@ -79,7 +79,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         initialParams={{
-          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
         }}
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}

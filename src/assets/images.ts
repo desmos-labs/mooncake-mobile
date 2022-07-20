@@ -68,6 +68,10 @@ export const eyeClosed = require('./images/eyeClosed.png');
 
 export const noLedgerFound = require('./images/noLedgerFound.png');
 
+export const checkboxChecked = require('./images/checkboxChecked.png');
+
+export const checkboxUnchecked = require('./images/checkbox.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
