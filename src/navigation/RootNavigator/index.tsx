@@ -1,29 +1,30 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
-import Landing from 'screens/Landing';
-import ManageConnectedChains from 'screens/ManageConnectedChains';
-import Home from 'screens/Home';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import Community from 'screens/Community';
+import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
+import CreateAccount from 'screens/CreateAccount';
 import EnterPassword from 'screens/EnterPassword';
+import Home from 'screens/Home';
+import Landing from 'screens/Landing';
+import LookingForDevices from 'screens/LookingForDevices';
+import ManageConnectedChains from 'screens/ManageConnectedChains';
+import MnemonicInput, {
+  MNEMONIC_INPUT_MODE,
+  MnemonicInputParams,
+} from 'screens/MnemonicInput';
+import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
+import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
-import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
-import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
-import {useTranslation} from 'react-i18next';
+import Profile from 'screens/Profile';
+import Profiles from 'screens/Profiles';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
-import Community from 'screens/Community';
-import Profiles from 'screens/Profiles';
-import LookingForDevices from 'screens/LookingForDevices';
-import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import Profile from 'screens/Profile';
-import MnemonicInput, {
-  MNEMONIC_INPUT_MODE,
-  MnemonicInputParams,
-} from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 
@@ -46,6 +47,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.CREATE_ACCOUNT]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -57,6 +59,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.CREATE_ACCOUNT} component={CreateAccount} />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen

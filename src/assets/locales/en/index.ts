@@ -1,15 +1,16 @@
+import accountCreation from './accountCreation.json';
 import common from './common.json';
-import manageChains from './manageChains.json';
-import home from './home.json';
+import confirmModal from './confirmModal.json';
 import enterPassword from './enterPassword.json';
 import error from './error.json';
-import passwordManipulation from './passwordManipulation.json';
-import resultModal from './resultModal.json';
+import home from './home.json';
 import lookingForDevices from './lookingForDevices.json';
-import settings from './settings.json';
-import confirmModal from './confirmModal.json';
-import profile from './profile.json'
+import manageChains from './manageChains.json';
 import mnemonicInput from './mnemonicInput.json';
+import passwordManipulation from './passwordManipulation.json';
+import profile from './profile.json';
+import resultModal from './resultModal.json';
+import settings from './settings.json';
 import signup from './signup.json';
 
 const en = {
@@ -25,7 +26,8 @@ const en = {
   settings,
   profile,
   signup,
-  mnemonicInput
+  mnemonicInput,
+  accountCreation,
 };
 
 export default en;
