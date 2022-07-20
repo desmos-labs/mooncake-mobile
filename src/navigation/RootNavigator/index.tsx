@@ -52,9 +52,7 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   return (
-    <Stack.Navigator
-      initialRouteName={ROUTES.LOOKING_FOR_DEVICES}
-      screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
