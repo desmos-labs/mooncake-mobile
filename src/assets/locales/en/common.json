@@ -5,5 +5,10 @@
   "confirm": "Confirm",
   "settings": "Settings",
   "next": "Next",
-  "addressCopied" : "Address copied!"
+  "addressCopied" : "Address copied!",
+  "congratulations" : "Congratulations!",
+  "dtag created" : "Your dTag has been created!",
+  "backup phrase" : "Backup Secret Recovery Phrase",
+  "backup explanation" : "Why do I need to backup Secret Recovery Phrase?",
+  "welcome to": "Welcome to {{product}}"
 }
