@@ -1,6 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
+import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
@@ -42,6 +43,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -55,11 +57,21 @@ const RootNavigator = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
         initialParams={{
+          mnemonic:
+            'test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo',
+        }}
+        name={ROUTES.CHECK_MNEMONIC}
+        component={CheckMnemonic}
+      />
+
+      <Stack.Screen
+        initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
         }}
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
+
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
