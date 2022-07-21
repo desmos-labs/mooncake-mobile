@@ -18,12 +18,37 @@ export type Props = ViewProps & {
    * emphasis on the wrapped component.
    */
   customOverlayColor?: ColorValue;
+
+  /**
+   * Disable the inner "emphasis" shadow (customOverlayColor will no longer have any effect)
+   */
+  disableInnerWrapper?: boolean;
 };
 
 const DropShadowWrapper: React.FC<Props> = props => {
-  const {children, style, innerStyle, customColor, customOverlayColor} = props;
+  const {
+    children,
+    style,
+    innerStyle,
+    customColor,
+    customOverlayColor,
+    disableInnerWrapper,
+  } = props;
   const styles = useStyles();
   const theme = useTheme();
+  if (disableInnerWrapper) {
+    return (
+      <Shadow
+        viewStyle={[style, styles.externalShadow]}
+        startColor={(customColor as any) || 'rgba(37, 87, 188, 0.1)'}
+        distance={40}
+        offset={[10, 20]}
+        radius={theme.roundness}>
+        {children}
+      </Shadow>
+    );
+  }
+
   return (
     <Shadow
       viewStyle={[style, styles.externalShadow]}

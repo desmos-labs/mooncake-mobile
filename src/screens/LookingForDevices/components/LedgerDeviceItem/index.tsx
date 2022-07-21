@@ -2,6 +2,7 @@ import React from 'react';
 import {AccessibilityProps, Image, TouchableOpacity, View} from 'react-native';
 import {checkboxIcon, ledgerIcon} from 'assets/images';
 import Typography from 'components/Typography';
+import DropShadowWrapper from 'components/DropShadowWrapper';
 import useStyles from './useStyles';
 
 interface Props extends AccessibilityProps {
@@ -36,19 +37,24 @@ const LedgerDeviceItem = ({name, onPress, showCheck, ...rest}: Props) => {
   } = useStyles();
 
   return (
-    <TouchableOpacity
-      style={container}
-      onPress={onPress || undefined}
-      disabled={!onPress}
-      {...rest}>
-      <View style={leftContainer}>
-        <Image source={ledgerIcon} style={ledgerIconStyle} />
+    <DropShadowWrapper customColor="rgba(16, 24, 40,0.05)" disableInnerWrapper>
+      <TouchableOpacity
+        style={container}
+        onPress={onPress || undefined}
+        disabled={!onPress}
+        {...rest}>
+        <View style={leftContainer}>
+          <Image source={ledgerIcon} style={ledgerIconStyle} />
 
-        <Typography.Subtitle style={nameStyle}>{name}</Typography.Subtitle>
-      </View>
+          <Typography.Body5 style={nameStyle}>{name}</Typography.Body5>
+        </View>
 
-      <Image source={checkboxIcon} style={[checkImage, !showCheck && hidden]} />
-    </TouchableOpacity>
+        <Image
+          source={checkboxIcon}
+          style={[checkImage, !showCheck && hidden]}
+        />
+      </TouchableOpacity>
+    </DropShadowWrapper>
   );
 };
 
