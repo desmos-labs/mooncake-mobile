@@ -8,7 +8,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, View} from 'react-native';
+import {Image, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Animated, {
   interpolate,
@@ -40,7 +40,7 @@ const WelcomePage: React.FC<Props> = props => {
   });
   // callbacks
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    console.log('present'), bottomSheetModalRef.current?.present();
   }, []);
 
   const handleDimissModalPress = useCallback(() => {
@@ -81,7 +81,10 @@ const WelcomePage: React.FC<Props> = props => {
             {t('backup phrase')}
           </Typography.Button2>
         </Button>
-        <Button onPress={handlePresentModalPress}>
+        <Button
+          mode="text"
+          onPress={handlePresentModalPress}
+          style={{marginTop: theme.spacing.m}}>
           <Typography.Subtitle4>{t('backup explanation')}</Typography.Subtitle4>
         </Button>
       </Animated.View>
@@ -92,7 +95,10 @@ const WelcomePage: React.FC<Props> = props => {
             enablePanDownToClose={false}
             backgroundStyle={{
               borderRadius: 24,
-              backgroundColor: theme.colors.background,
+              backgroundColor:
+                Platform.OS === 'ios'
+                  ? theme.colors.background
+                  : theme.colors.white,
             }}
             style={styles.bottomSheet}
             ref={bottomSheetModalRef}

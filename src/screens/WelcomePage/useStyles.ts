@@ -5,6 +5,7 @@ import {makeStyle} from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
+    backgroundColor: theme.colors.background,
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: theme.spacing.m,
@@ -27,7 +28,7 @@ const useStyles = makeStyle(theme => ({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 
-    elevation: 10,
+    elevation: 24,
   },
 }));
 
