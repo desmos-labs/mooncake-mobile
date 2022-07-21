@@ -40,7 +40,7 @@ const WelcomePage: React.FC<Props> = props => {
   });
   // callbacks
   const handlePresentModalPress = useCallback(() => {
-    console.log('present'), bottomSheetModalRef.current?.present();
+    bottomSheetModalRef.current?.present();
   }, []);
 
   const handleDimissModalPress = useCallback(() => {
@@ -53,11 +53,11 @@ const WelcomePage: React.FC<Props> = props => {
   }, []);
 
   const navigateToHome = useCallback(() => {
-    console.log('nav');
+    console.log('navToHome');
   }, []);
 
   const navigateToBackupPhrase = useCallback(() => {
-    console.log('nav');
+    console.log('navToBackup');
   }, []);
 
   return (
