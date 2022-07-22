@@ -10,22 +10,24 @@ import settings from './settings.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json'
 import mnemonicInput from './mnemonicInput.json';
+import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 
 const en = {
-  common,
-  manageChains,
-  home,
-  enterPassword,
-  error,
-  passwordManipulation,
-  resultModal,
-  confirmModal,
-  lookingForDevices,
-  settings,
-  profile,
-  signup,
-  mnemonicInput
+    common,
+    manageChains,
+    home,
+    enterPassword,
+    error,
+    passwordManipulation,
+    resultModal,
+    confirmModal,
+    lookingForDevices,
+    settings,
+    profile,
+    mnemonicInput,
+    consentAgreement,
+    signup
 };
 
 export default en;

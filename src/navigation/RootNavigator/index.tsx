@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import Landing from 'screens/Landing';
@@ -26,6 +26,8 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import ConsentAgreement from 'screens/Modals/ConsentAgreement';
+import DevScreen from 'screens/DEV';
 import Signup from 'screens/Signup';
 
 export type RootNavigatorParamList = {
@@ -48,6 +50,10 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
+  [ROUTES.CONSENT_AGREEMENT]: undefined;
+
+  // only for dev
+  [ROUTES.DEV_SCREEN]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -59,6 +65,9 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
       <Stack.Screen
         initialParams={{
           mnemonic:
@@ -115,7 +124,12 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
+          ...TransitionPresets.BottomSheetAndroid,
         }}>
+        <Stack.Screen
+          name={ROUTES.CONSENT_AGREEMENT}
+          component={ConsentAgreement}
+        />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
