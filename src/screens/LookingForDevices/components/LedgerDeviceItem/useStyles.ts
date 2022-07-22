@@ -6,11 +6,12 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: theme.spacing.m,
+    paddingHorizontal: theme.spacing.l,
     backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderRadius: theme.roundness,
   },
   leftContainer: {
     flexDirection: 'row',

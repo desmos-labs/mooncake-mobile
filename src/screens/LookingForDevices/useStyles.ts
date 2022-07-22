@@ -1,7 +1,16 @@
 import {makeStyle} from 'config/theme';
+import {verticalScale} from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   // inactiveDotColor: surface1,
+  centeredContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    padding: theme.spacing.m,
+  },
   headerStyle: {
     color: theme.colors.black,
     marginTop: 40,
@@ -18,6 +27,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: 30,
   },
   graphicGroup: {
+    paddingTop: verticalScale(48),
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -39,6 +49,22 @@ const useStyles = makeStyle(theme => ({
   },
   flatlistContainer: {
     marginTop: 22,
+  },
+  noDevicesText: {
+    color: theme.colors.desmosOrange01,
+  },
+  noDeviceImage: {
+    width: 110,
+    height: 110,
+    redizeMode: 'contain',
+  },
+  retryButton: {
+    color: theme.colors.white,
+    marginTop: theme.spacing.xl,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    padding: theme.spacing.m,
   },
 }));
 

@@ -5,6 +5,7 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
+import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
@@ -25,14 +26,17 @@ import MnemonicInput, {
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import WelcomePage from 'screens/WelcomePage';
+import Signup from 'screens/Signup';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.ENTER_PASSWORD]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
+  [ROUTES.SIGNUP]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
+  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
@@ -55,6 +59,8 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen
         initialParams={{
@@ -63,7 +69,6 @@ const RootNavigator = () => {
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
@@ -113,6 +118,14 @@ const RootNavigator = () => {
           }}
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}
+        />
+        <Stack.Screen
+          initialParams={{
+            title: t('signup:profile dtag'),
+            body: t('signup:dtag info'),
+          }}
+          name={ROUTES.TEXTONLY_MODAL}
+          component={TextOnlyModal}
         />
         <Stack.Screen
           // Remove these when going production
