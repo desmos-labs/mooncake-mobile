@@ -1,10 +1,14 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
+import BackupSuccessful from 'screens/BackupSuccessful';
+import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
+import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
+import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
@@ -25,14 +29,20 @@ import MnemonicInput, {
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import SelectDtag from 'screens/SelectDtag';
+import ConsentAgreement from 'screens/Modals/ConsentAgreement';
+import DevScreen from 'screens/DEV';
+import WelcomePage from 'screens/WelcomePage';
+import Signup from 'screens/Signup';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.ENTER_PASSWORD]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
+  [ROUTES.SIGNUP]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
+  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
@@ -44,6 +54,14 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
   [ROUTES.SELECT_DTAG]: undefined;
+  [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
+  [ROUTES.CONSENT_AGREEMENT]: undefined;
+  [ROUTES.WELCOME_PAGE]: undefined;
+  [ROUTES.BACKUP_SUCCESSFUL]: undefined;
+  [ROUTES.BOTTOM_MODAL]: BottomModalParams;
+
+  // only for dev
+  [ROUTES.DEV_SCREEN]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -57,6 +75,24 @@ const RootNavigator = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
+      <Stack.Screen
+        name={ROUTES.BACKUP_SUCCESSFUL}
+        component={BackupSuccessful}
+      />
+      <Stack.Screen
+        initialParams={{
+          mnemonic:
+            'test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo',
+        }}
+        name={ROUTES.CHECK_MNEMONIC}
+        component={CheckMnemonic}
+      />
+      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
+      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -104,7 +140,12 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
+          ...TransitionPresets.BottomSheetAndroid,
         }}>
+        <Stack.Screen
+          name={ROUTES.CONSENT_AGREEMENT}
+          component={ConsentAgreement}
+        />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
@@ -114,6 +155,23 @@ const RootNavigator = () => {
           }}
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}
+        />
+        <Stack.Screen
+          initialParams={{
+            title: t('confirmModal:removeProfile'),
+            body: t('confirmModal:backupSeedphrase'),
+            primaryButtonLabel: t('confirmModal:goToBackup'),
+          }}
+          name={ROUTES.BOTTOM_MODAL}
+          component={BottomModal}
+        />
+        <Stack.Screen
+          initialParams={{
+            title: t('signup:profile dtag'),
+            body: t('signup:dtag info'),
+          }}
+          name={ROUTES.TEXTONLY_MODAL}
+          component={TextOnlyModal}
         />
         <Stack.Screen
           // Remove these when going production

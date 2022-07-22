@@ -11,6 +11,10 @@ import confirmModal from './confirmModal.json';
 import profile from './profile.json'
 import mnemonicInput from './mnemonicInput.json';
 import selectDtag from './selectDtag.json';
+import consentAgreement from './consentAgreement.json';
+import signup from './signup.json';
+import welcomePage from './welcomePage.json';
+import checkMnemonic from './checkMnemonic.json';
 
 const en = {
     common,
@@ -25,7 +29,11 @@ const en = {
     settings,
     profile,
     mnemonicInput,
-    selectDtag
+    selectDtag,
+    consentAgreement,
+    signup,
+    welcomePage,
+    checkMnemonic,
 };
 
 export default en;
