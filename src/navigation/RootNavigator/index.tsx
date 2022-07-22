@@ -69,10 +69,6 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
-      {__DEV__ && (
-        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
-      )}
       <Stack.Screen
         initialParams={{
           mnemonic:
@@ -81,6 +77,11 @@ const RootNavigator = () => {
         name={ROUTES.CHECK_MNEMONIC}
         component={CheckMnemonic}
       />
+      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
+
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{

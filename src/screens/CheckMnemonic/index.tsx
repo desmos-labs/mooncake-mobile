@@ -4,7 +4,7 @@ import DView from 'components/DView';
 import MnemonicWordBadge from 'components/MnemonicWordBadge';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import shuffleArray from 'lib/ArrayUtils';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -30,11 +30,11 @@ const CheckMnemonic = (props: Props): JSX.Element => {
   } = props;
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation();
+  const {t} = useTranslation('checkMnemonic');
   const receivedMnemonic = mnemonic;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const words = useMemo(
-    () => shuffleArray(receivedMnemonic.split(' '), 100),
+    () => _.shuffle(receivedMnemonic.split(' ')),
     [receivedMnemonic],
   );
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -66,7 +66,6 @@ const CheckMnemonic = (props: Props): JSX.Element => {
   );
 
   const onWordClearAll = useCallback(() => {
-    console.log(selectedWords);
     setErrorMessage(null);
     setAvailableWords([...availableWords, ...selectedWords]);
     setSelectedWords([]);
@@ -89,7 +88,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
     <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
       <Typography.H3>Backup Secret Recovery Phrase</Typography.H3>
       <Typography.Body6 style={{marginTop: theme.spacing.m}}>
-        Tap the words to put them next to each other in the correct order
+        {t('tap to order')}
       </Typography.Body6>
 
       <View
@@ -103,7 +102,8 @@ const CheckMnemonic = (props: Props): JSX.Element => {
               styles.wordBadgeSelected,
               errorMessage ? {backgroundColor: theme.colors.pink03} : null,
             ]}
-            key={`${w}-${i * 2}`}
+            /* eslint-disable-next-line react/no-array-index-key */
+            key={`${w}-${i}`}
             value={w}
             onPress={onWordDeselected}
           />
