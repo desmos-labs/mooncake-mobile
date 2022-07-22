@@ -59,8 +59,6 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen
         initialParams={{
           mnemonic:
@@ -69,7 +67,7 @@ const RootNavigator = () => {
         name={ROUTES.CHECK_MNEMONIC}
         component={CheckMnemonic}
       />
-
+      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
