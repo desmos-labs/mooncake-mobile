@@ -3,6 +3,7 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import BackupSuccessful from 'screens/BackupSuccessful';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
+import GenerateAccount from 'screens/GenerateAccount';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
@@ -57,6 +58,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
+  [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
 
@@ -73,6 +75,10 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        name={ROUTES.GENERATE_ACCOUNT}
+        component={GenerateAccount}
+      />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
       <Stack.Screen
