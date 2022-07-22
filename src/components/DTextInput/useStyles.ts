@@ -5,9 +5,9 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: props.error ? theme.colors.pink03 : theme.colors.white,
+    backgroundColor: theme.colors.white,
     borderRadius: theme.roundness,
-    minHeight: 44,
+    minHeight: 48,
     alignItems: 'center',
     borderColor: props.error ? theme.colors.pink01 : theme.colors.background,
     borderWidth: 1,
@@ -19,7 +19,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     flex: 0.9,
     textAlignVertical: props.multiline === true ? 'top' : 'center',
     height: '100%',
-    color: theme.colors.black,
+    color: props.error ? theme.colors.pink01 : theme.colors.black,
     minHeight:
       props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,
   },
