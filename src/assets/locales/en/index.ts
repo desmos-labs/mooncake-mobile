@@ -8,10 +8,11 @@ import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settings.json';
 import confirmModal from './confirmModal.json';
-import profile from './profile.json'
+import profile from './profile.json';
 import mnemonicInput from './mnemonicInput.json';
 import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
+import welcomePage from './welcomePage.json';
 
 const en = {
     common,
@@ -27,7 +28,9 @@ const en = {
     profile,
     mnemonicInput,
     consentAgreement,
-    signup
+    signup,
+    welcomePage
+  
 };
 
 export default en;
