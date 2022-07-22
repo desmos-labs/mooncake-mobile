@@ -5,5 +5,8 @@
   "confirm": "Confirm",
   "settings": "Settings",
   "next": "Next",
-  "addressCopied" : "Address copied!"
+  "addressCopied" : "Address copied!",
+  "continue": "Continue",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy"
 }
