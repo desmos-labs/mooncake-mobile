@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
+import BackupSuccessful from 'screens/BackupSuccessful';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
@@ -52,6 +53,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
+  [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
 
   // only for dev
@@ -67,7 +69,12 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        name={ROUTES.BACKUP_SUCCESSFUL}
+        component={BackupSuccessful}
+      />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
