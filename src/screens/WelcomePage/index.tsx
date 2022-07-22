@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {modalSuccess} from 'assets/images';
 import Button from 'components/Button';
@@ -5,6 +6,7 @@ import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
@@ -15,6 +17,7 @@ declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const WelcomePage: React.FC<Props> = props => {
   const {t} = useTranslation('common');
+  const {navigate} = useNavigation<Props['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
 
@@ -24,6 +27,18 @@ const WelcomePage: React.FC<Props> = props => {
 
   const navigateToBackupPhrase = useCallback(() => {
     console.log('navToBackup');
+  }, []);
+
+  const navigateToBackupPhraseExplanation = useCallback(() => {
+    navigate({
+      name: ROUTES.BOTTOM_MODAL,
+      params: {
+        title: t('welcomePage:why backup'),
+        body: t('welcomePage:backup explanation'),
+        primaryButtonLabel: t('common:i understand'),
+        onPressPrimary: () => console.log('primary'),
+      },
+    });
   }, []);
 
   return (
@@ -48,7 +63,7 @@ const WelcomePage: React.FC<Props> = props => {
       </Button>
       <Button
         mode="text"
-        onPress={() => console.log('press')}
+        onPress={navigateToBackupPhraseExplanation}
         style={{marginTop: theme.spacing.m}}>
         <Typography.Subtitle4>{t('backup explanation')}</Typography.Subtitle4>
       </Button>
