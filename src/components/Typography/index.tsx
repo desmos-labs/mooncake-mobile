@@ -123,7 +123,7 @@ const Typography = {
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 20,
+    lineHeight: 16,
     textAlign: 'left',
   })),
   Body1: createTextComponent(() => ({

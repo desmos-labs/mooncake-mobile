@@ -11,17 +11,17 @@ type Props = React.ComponentProps<typeof MaterialButton>;
  * @param rest Every other param of the MaterialButton
  */
 const Button: React.FC<Props> = ({onPress, ...rest}: Props) => {
-  return Platform.OS === 'ios' ? (
-    rest.mode === 'text' ? (
+  if (Platform.OS === 'ios') {
+    return rest.mode === 'text' ? (
       <MaterialButton onPress={onPress} {...rest} />
     ) : (
       <TouchableOpacity disabled={rest.disabled} onPress={onPress}>
         <MaterialButton {...rest} />
       </TouchableOpacity>
-    )
-  ) : (
-    <MaterialButton onPress={onPress} {...rest} />
-  );
+    );
+  }
+
+  return <MaterialButton onPress={onPress} {...rest} />;
 };
 
 export default Button;
