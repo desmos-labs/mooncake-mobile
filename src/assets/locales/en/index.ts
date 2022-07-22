@@ -13,24 +13,25 @@ import mnemonicInput from './mnemonicInput.json';
 import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 import welcomePage from './welcomePage.json';
+import checkMnemonic from './checkMnemonic.json';
 
 const en = {
-    common,
-    manageChains,
-    home,
-    enterPassword,
-    error,
-    passwordManipulation,
-    resultModal,
-    confirmModal,
-    lookingForDevices,
-    settings,
-    profile,
-    mnemonicInput,
-    consentAgreement,
-    signup,
-    welcomePage
-  
+  common,
+  manageChains,
+  home,
+  enterPassword,
+  error,
+  passwordManipulation,
+  resultModal,
+  confirmModal,
+  lookingForDevices,
+  settings,
+  profile,
+  mnemonicInput,
+  consentAgreement,
+  signup,
+  welcomePage,
+  checkMnemonic,
 };
 
 export default en;
