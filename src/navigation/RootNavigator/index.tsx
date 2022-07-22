@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
+import BackupSuccessful from 'screens/BackupSuccessful';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -54,6 +55,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
+  [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
 
   // only for dev
@@ -70,6 +72,10 @@ const RootNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
+        name={ROUTES.BACKUP_SUCCESSFUL}
+        component={BackupSuccessful}
+      />
+      <Stack.Screen
         initialParams={{
           mnemonic:
             'test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo',
@@ -78,10 +84,10 @@ const RootNavigator = () => {
         component={CheckMnemonic}
       />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
+
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
-
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{
