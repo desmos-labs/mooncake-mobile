@@ -88,7 +88,6 @@ const RootNavigator = () => {
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
-
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{
