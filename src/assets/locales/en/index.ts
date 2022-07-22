@@ -11,6 +11,7 @@ import confirmModal from './confirmModal.json';
 import profile from './profile.json'
 import mnemonicInput from './mnemonicInput.json';
 import consentAgreement from './consentAgreement.json';
+import signup from './signup.json';
 
 const en = {
     common,
@@ -25,7 +26,8 @@ const en = {
     settings,
     profile,
     mnemonicInput,
-    consentAgreement
+    consentAgreement,
+    signup
 };
 
 export default en;
