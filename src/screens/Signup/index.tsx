@@ -22,11 +22,11 @@ import useStyles from './useStyles';
 
 const MIN_PW_LENGTH = 10;
 
-const PasswordManipulation = () => {
+const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
   const theme = useTheme();
   const styles = useStyles();
-  const [availableDag, setAvailableDag] = React.useState<boolean>(true);
+  const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
   const {data} = useQuery(GetProfileParams);
@@ -51,10 +51,10 @@ const PasswordManipulation = () => {
   const checkAvailability = useCallback(async (newDtag: string) => {
     const result = await getDTagAvailability({variables: {dTag: newDtag}});
     if (result.data.profile.length !== 0) {
-      setAvailableDag(false);
+      setAvailableDTag(false);
       return;
     }
-    setAvailableDag(true);
+    setAvailableDTag(true);
   }, []);
 
   const validationSchema = useMemo(() => {
@@ -132,7 +132,6 @@ const PasswordManipulation = () => {
           validationSchema={validationSchema}
           validate={validateForm}>
           {({handleSubmit, values, errors, setFieldValue}) => {
-            console.log(errors);
             return (
               <>
                 <ScrollView>
@@ -155,7 +154,7 @@ const PasswordManipulation = () => {
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
-                      error={!!errors.dTag || !availableDag}
+                      error={!!errors.dTag || !availableDTag}
                     />
                     {errors.dTag && (
                       <Typography.Caption1 style={styles.errorText}>
@@ -163,7 +162,7 @@ const PasswordManipulation = () => {
                       </Typography.Caption1>
                     )}
                     <Typography.Caption1 style={styles.errorTextDtag}>
-                      {availableDag ? '' : t('signup:dtag taken')}
+                      {availableDTag ? '' : t('signup:dtag taken')}
                     </Typography.Caption1>
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
@@ -267,7 +266,7 @@ const PasswordManipulation = () => {
                     !values.confirmPassword ||
                     !values.newPassword ||
                     !values.consent ||
-                    !availableDag ||
+                    !availableDTag ||
                     _.flatten(Object.values(errors)).length > 0
                   }
                   containerStyle={{marginTop: 10}}
@@ -285,4 +284,4 @@ const PasswordManipulation = () => {
   );
 };
 
-export default PasswordManipulation;
+export default Signup;
