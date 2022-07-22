@@ -8,7 +8,7 @@ import resultModal from './resultModal.json';
 import lookingForDevices from './lookingForDevices.json';
 import settings from './settings.json';
 import confirmModal from './confirmModal.json';
-import profile from './profile.json'
+import profile from './profile.json';
 import mnemonicInput from './mnemonicInput.json';
 import selectDtag from './selectDtag.json';
 import consentAgreement from './consentAgreement.json';
