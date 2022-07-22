@@ -3,8 +3,9 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   root: {
     backgroundColor: theme.colors.white,
-    borderRadius: 4,
-    padding: theme.spacing.s,
+    borderRadius: 8,
+    paddingHorizontal: theme.spacing.s,
+    paddingVertical: theme.spacing.xs,
     minWidth: 24,
   },
   index: {
