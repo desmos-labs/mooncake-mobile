@@ -1,5 +1,6 @@
 {
   "header": "Looking for devices",
   "description": "Please make sure your Ledger Nano X is unlocked and Bluetooth is enabled.",
-  "noDeviceFound": "Sorry, no devices found"
+  "noDeviceFound": "Sorry, no devices found",
+  "permissionsDialog": "Please grant permissions to pair your ledger device."
 }

@@ -66,9 +66,13 @@ export const validCheck = require('./images/validCheck.png');
 
 export const eyeClosed = require('./images/eyeClosed.png');
 
+export const noLedgerFound = require('./images/noLedgerFound.png');
+
 export const checkboxChecked = require('./images/checkboxChecked.png');
 
 export const checkboxUnchecked = require('./images/checkbox.png');
+
+export const arrowRight = require('./images/arrowRight.png');
 
 //Socials
 
