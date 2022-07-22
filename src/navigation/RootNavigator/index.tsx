@@ -5,6 +5,7 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import EnterPassword from 'screens/EnterPassword';
+import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
@@ -27,6 +28,7 @@ import MnemonicInput, {
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 import DevScreen from 'screens/DEV';
+import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
 
 export type RootNavigatorParamList = {
@@ -49,6 +51,8 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
+  [ROUTES.WELCOME_PAGE]: undefined;
+  [ROUTES.BOTTOM_MODAL]: BottomModalParams;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -63,6 +67,7 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
@@ -129,6 +134,15 @@ const RootNavigator = () => {
           }}
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}
+        />
+        <Stack.Screen
+          initialParams={{
+            title: t('confirmModal:removeProfile'),
+            body: t('confirmModal:backupSeedphrase'),
+            primaryButtonLabel: t('confirmModal:goToBackup'),
+          }}
+          name={ROUTES.BOTTOM_MODAL}
+          component={BottomModal}
         />
         <Stack.Screen
           initialParams={{
