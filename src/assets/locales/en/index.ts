@@ -10,6 +10,7 @@ import settings from './settings.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json'
 import mnemonicInput from './mnemonicInput.json';
+import consentAgreement from './consentAgreement.json';
 
 const en = {
     common,
@@ -23,7 +24,8 @@ const en = {
     lookingForDevices,
     settings,
     profile,
-    mnemonicInput
+    mnemonicInput,
+    consentAgreement
 };
 
 export default en;

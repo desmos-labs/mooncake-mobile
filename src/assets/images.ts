@@ -72,6 +72,8 @@ export const checkboxChecked = require('./images/checkboxChecked.png');
 
 export const checkboxUnchecked = require('./images/checkbox.png');
 
+export const arrowRight = require('./images/arrowRight.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

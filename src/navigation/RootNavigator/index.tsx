@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -24,6 +24,7 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -42,6 +43,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.CONSENT_AGREEMENT]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -100,7 +102,12 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
+          ...TransitionPresets.BottomSheetAndroid,
         }}>
+        <Stack.Screen
+          name={ROUTES.CONSENT_AGREEMENT}
+          component={ConsentAgreement}
+        />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
