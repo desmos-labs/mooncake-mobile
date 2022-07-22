@@ -5,14 +5,23 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import Spacer from 'components/Spacer';
 import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CONSENT_AGREEMENT
+>;
 
 const ConsentAgreement = () => {
   const {t} = useTranslation('consentAgreement');
   const styles = useStyles();
 
-  const {goBack} = useNavigation();
+  const {goBack} = useNavigation<NavProps['navigation']>();
 
   const handlePressTOS = React.useCallback(() => {
     // implementation
@@ -23,7 +32,10 @@ const ConsentAgreement = () => {
   }, []);
 
   const handlePressContinue = React.useCallback(() => {
-    // implementation
+    // Looking for device screen will show this consent screen if consent is not
+    // already given, so we can just go back once the user accepts
+    goBack();
+    setMMKV(MMKVKEYS.CONSENT_GIVEN, true);
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {btDevice, ledgerIcon, noLedgerFound} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
@@ -50,26 +51,37 @@ const LookingForDevices = () => {
 
   const [screenReady, setScreenReady] = React.useState(false);
 
+  const isFocused = useIsFocused();
+
   React.useLayoutEffect(() => {
-    checkPermissions()
-      .then(permissions => {
-        if (permissions) return scan();
-        else {
-          Alert.alert(t('permissionsDialog'), '', [
-            {
-              text: 'Go Back',
-              onPress: () => {},
-            },
-          ]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      .finally(() => {
-        setScreenReady(true);
-      });
-  }, []);
+    // user will get stuck in an infinite loop if they never give consent
+    if (!isFocused) return;
+
+    const consentGiven = getMMKV(MMKVKEYS.CONSENT_GIVEN);
+
+    if (!consentGiven) {
+      navigate(ROUTES.CONSENT_AGREEMENT);
+    } else {
+      checkPermissions()
+        .then(permissions => {
+          if (permissions) return scan();
+          else {
+            Alert.alert(t('permissionsDialog'), '', [
+              {
+                text: 'Go Back',
+                onPress: () => {},
+              },
+            ]);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setScreenReady(true);
+        });
+    }
+  }, [isFocused]);
 
   const onPressRetry = React.useCallback(() => {
     scan().then();

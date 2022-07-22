@@ -2,8 +2,9 @@ import React from 'react';
 import {FlatList, Text, TouchableOpacity} from 'react-native';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import Spacer from 'components/Spacer';
 
-const routesToRender = [ROUTES.CONSENT_AGREEMENT];
+const routesToRender = [ROUTES.CONSENT_AGREEMENT, ROUTES.LOOKING_FOR_DEVICES];
 
 const DevScreen = () => {
   const {navigate} = useNavigation();
@@ -20,6 +21,11 @@ const DevScreen = () => {
     );
   };
 
+  const ItemSeparatorComponent = React.useCallback(
+    () => <Spacer paddingVertical={8} />,
+    [],
+  );
+
   return (
     <FlatList
       contentContainerStyle={{
@@ -27,6 +33,7 @@ const DevScreen = () => {
       }}
       data={routesToRender}
       renderItem={renderItem}
+      ItemSeparatorComponent={ItemSeparatorComponent}
     />
   );
 };
