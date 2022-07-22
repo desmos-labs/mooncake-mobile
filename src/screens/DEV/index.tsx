@@ -4,6 +4,7 @@ import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 
+// Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [ROUTES.CONSENT_AGREEMENT, ROUTES.LOOKING_FOR_DEVICES];
 
 const DevScreen = () => {

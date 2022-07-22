@@ -53,7 +53,7 @@ const LookingForDevices = () => {
 
   const isFocused = useIsFocused();
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     // user will get stuck in an infinite loop if they never give consent
     if (!isFocused) return;
 
