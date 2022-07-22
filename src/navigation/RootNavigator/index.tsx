@@ -24,6 +24,7 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import SelectDtag from 'screens/SelectDtag';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -42,6 +43,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.SELECT_DTAG]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -53,6 +55,8 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
+
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,

@@ -1,4 +1,5 @@
 {
   "header": "Select a Profile dTag",
-  "description": "Select a dTag to start"
+  "description": "Select a dTag to start",
+  "noNickname": "[No nickname set]"
 }
