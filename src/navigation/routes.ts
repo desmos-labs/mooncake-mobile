@@ -48,6 +48,8 @@ enum ROUTES {
   BOTTOM_MODAL = 'BOTTOM_MODAL',
 
   DEV_SCREEN = 'DEV_SCREEN',
+
+  NO_DTAG_FOUND = 'NO_DTAG_FOUND',
 }
 
 export default ROUTES;
