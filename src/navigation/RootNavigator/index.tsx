@@ -28,6 +28,7 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import SelectDtag from 'screens/SelectDtag';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
@@ -52,6 +53,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.SELECT_DTAG]: undefined;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
@@ -71,6 +73,8 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
+
       <Stack.Screen
         name={ROUTES.BACKUP_SUCCESSFUL}
         component={BackupSuccessful}
