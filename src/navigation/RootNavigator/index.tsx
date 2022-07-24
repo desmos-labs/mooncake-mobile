@@ -72,7 +72,9 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      initialRouteName={ROUTES.LOOKING_FOR_DEVICES}
+      screenOptions={{headerShown: false}}>
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
       <Stack.Screen
@@ -114,6 +116,12 @@ const RootNavigator = () => {
         component={LookingForDevices}
       />
       <Stack.Screen
+        initialParams={{
+          bleLedger: {
+            id: '123',
+            name: 'hello world',
+          },
+        }}
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />

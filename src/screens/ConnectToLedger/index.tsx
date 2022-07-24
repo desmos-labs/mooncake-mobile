@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -8,7 +8,12 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator} from 'react-native';
+import {Image, View} from 'react-native';
+import ConnectingAnimation from 'screens/ConnectToLedger/components/ConnectingAnimation';
+import {ledgerConnectionError, ledgerDevice} from 'assets/images';
+import Spacer from 'components/Spacer';
+import {useTheme} from 'react-native-paper';
+import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
 export type ConnectToLedgerParams = {
@@ -26,49 +31,103 @@ const ConnectToLedger = () => {
   const {
     params: {bleLedger, ledgerApp},
   } = useRoute<NavProps['route']>();
-  const {t} = useTranslation();
+  const {t} = useTranslation('connectToLedger');
+  const theme = useTheme();
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
-  const {connecting, connected, connectionError, transport, retry} =
+  const {connecting, connected, connectionError, transport, retry, paired} =
     useConnectToLedger(bleLedger, ledgerApp);
 
-  const status = connected ? t('connected') : t('error');
+  const isFocused = useIsFocused();
+
   const statusButton = connected ? t('next') : t('retry');
 
-  const handleButtonPressed = React.useCallback(() => {
-    console.log('connection success', transport, connectionError);
+  const {instruction, instructionsIndex} = useConnectInstructions(
+    paired && !connected && isFocused,
+  );
+
+  React.useEffect(() => {
+    if (paired && connected) {
+      // check for desmos profiles and then proceed
+    }
+  }, [paired, connected, transport]);
+
+  const handlePressHowToDL = React.useCallback(() => {
+    navigate(ROUTES.BOTTOM_MODAL, {
+      title: t('modalTitle'),
+      body: t('modalDescription'),
+      primaryButtonLabel: t('modalButton'),
+    });
+  }, []);
+
+  const content = React.useMemo(() => {
+    if (!paired) {
+      return (
+        <>
+          <Spacer paddingBottom={theme.spacing.l}>
+            <ConnectingAnimation />
+          </Spacer>
+
+          <View style={styles.centeredGroup}>
+            <Typography.H4 style={styles.headerText}>
+              {t('pairYourDevices')}
+            </Typography.H4>
+            <Typography.Body6>
+              {t('followInstructionOnLedger')}
+            </Typography.Body6>
+          </View>
+        </>
+      );
+    }
 
     if (connectionError) {
-      retry();
-    } else {
-      // handle success
-      // whole point of this screen is to get the transport object below, which
-      // serves as the entry point to do ledger related things in code
-      console.log('connection success', transport);
+      return (
+        <>
+          <Image source={ledgerConnectionError} style={styles.errorImage} />
+
+          <View
+            style={[styles.centeredGroup, {marginBottom: theme.spacing.xl}]}>
+            <Typography.H4 style={styles.headerText}>
+              {t('sorryConnectionFailed')}
+            </Typography.H4>
+            <Typography.Body6>{connectionError}</Typography.Body6>
+          </View>
+
+          <Button
+            mode="gradientFilled"
+            onPress={retry}
+            disabled={connecting}
+            loading={connecting}>
+            {connecting ? t('connecting') : statusButton}
+          </Button>
+        </>
+      );
     }
-  }, [connectionError, transport]);
+    if (paired && !connected) {
+      return (
+        <View style={styles.centeredGroup}>
+          <Spacer paddingBottom={54}>
+            <Image source={ledgerDevice} style={styles.ledgerImage} />
+          </Spacer>
+          <Typography.H4 style={{textAlign: 'center'}}>
+            {instruction}
+          </Typography.H4>
 
-  return (
-    <DView>
-      {connecting && <ActivityIndicator size="small" />}
+          {instructionsIndex % 2 !== 0 && (
+            <Typography.H4
+              onPress={handlePressHowToDL}
+              style={[styles.howToDLText, {textAlign: 'center'}]}>
+              {t('howToDL')}
+            </Typography.H4>
+          )}
+        </View>
+      );
+    }
+  }, [connected, paired, connectionError, transport, instructionsIndex]);
 
-      <Typography.Subtitle1 style={styles.status}>
-        {connecting ? t('connecting') : status}
-      </Typography.Subtitle1>
-
-      <Typography.Body1 style={styles.errorMessage}>
-        {connectionError}
-      </Typography.Body1>
-
-      <Button
-        mode="contained"
-        onPress={handleButtonPressed}
-        disabled={connecting}
-        loading={connecting}>
-        {connecting ? t('connecting') : statusButton}
-      </Button>
-    </DView>
-  );
+  return <DView style={styles.container}>{content}</DView>;
 };
 
 export default ConnectToLedger;

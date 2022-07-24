@@ -6,6 +6,7 @@ export default function useConnectToLedger(
   ledger: BleLedger,
   ledgerApp: LedgerApp,
 ) {
+  const [paired, setPaired] = useState(false);
   const [connecting, setConnecting] = useState(true);
   const [connected, setConnected] = useState(false);
   const [transport, setTransport] = useState<BluetoothTransport | undefined>();
@@ -13,6 +14,7 @@ export default function useConnectToLedger(
 
   const connectToLedger = useCallback(
     async (ledgerToConnect: BleLedger, ledgerAppToUse: LedgerApp) => {
+      setPaired(false);
       setConnecting(true);
       setConnected(false);
       setConnectionError(undefined);
@@ -21,6 +23,8 @@ export default function useConnectToLedger(
       try {
         const transportToUse: BluetoothTransport =
           await BluetoothTransport.open(ledgerToConnect.id);
+
+        setPaired(true);
         const launchpad = new LedgerConnector(transportToUse, {
           ledgerAppName: ledgerAppToUse.name,
         });
@@ -53,5 +57,6 @@ export default function useConnectToLedger(
     transport,
     connectionError,
     retry,
+    paired,
   };
 }

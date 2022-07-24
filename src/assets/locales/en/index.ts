@@ -15,6 +15,8 @@ import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 import welcomePage from './welcomePage.json';
 import checkMnemonic from './checkMnemonic.json';
+import connectToLedger from './connectToLedger.json';
+
 
 const en = {
     common,
@@ -34,6 +36,7 @@ const en = {
     signup,
     welcomePage,
     checkMnemonic,
+    connectToLedger
 };
 
 export default en;

@@ -35,6 +35,8 @@
     "formik": "^2.2.9",
     "graphql": "^16.5.0",
     "i18next": "^21.8.10",
+    "lottie-ios": "3.2.3",
+    "lottie-react-native": "^5.0.1",
     "numeral": "^2.0.6",
     "patch-package": "^6.4.7",
     "path-browserify": "^0.0.0",
