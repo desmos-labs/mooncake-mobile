@@ -3,6 +3,29 @@
 export {};
 
 declare global {
+  interface ProfileParams {
+    bio: {
+      max_length: string;
+    };
+    dtag: {
+      reg_ex: string;
+      max_length: string;
+      min_length: string;
+    };
+    oracle: {
+      ask_count: number;
+      min_count: number;
+      script_id: number;
+      fee_amount: [];
+      execute_gas: number;
+      prepare_gas: number;
+    };
+    nickname: {
+      max_length: string;
+      min_length: string;
+    };
+  }
+
   interface CounterParty {
     dtag: string;
     nickname: string;

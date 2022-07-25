@@ -66,6 +66,7 @@
     "react-native-vector-icons": "^9.2.0",
     "readable-stream": "^1.0.33",
     "recoil": "^0.7.4",
+    "recoil-relay": "^0.1.0",
     "rn-nodeify": "^10.3.0",
     "stream-browserify": "^1.0.0",
     "util": "^0.12.4",
