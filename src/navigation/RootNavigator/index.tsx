@@ -117,6 +117,12 @@ const RootNavigator = () => {
         component={LookingForDevices}
       />
       <Stack.Screen
+        initialParams={{
+          bleLedger: {
+            id: '123',
+            name: 'hello world',
+          },
+        }}
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />

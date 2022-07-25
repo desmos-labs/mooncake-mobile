@@ -15,6 +15,7 @@ import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 import welcomePage from './welcomePage.json';
 import checkMnemonic from './checkMnemonic.json';
+import connectToLedger from './connectToLedger.json';
 import noDtagFound from './noDtagFound.json';
 
 const en = {
@@ -35,6 +36,7 @@ const en = {
     signup,
     welcomePage,
     checkMnemonic,
+    connectToLedger,
     noDtagFound
 };
 
