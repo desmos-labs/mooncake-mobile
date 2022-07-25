@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Typography from 'components/Typography';
-import ProfileHeaderButton from 'screens/Home/components/ProfileHeaderButton';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import {blogDetails, followIcon} from 'assets/images';
 import {useTheme} from 'react-native-paper';
