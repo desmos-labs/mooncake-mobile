@@ -9,6 +9,7 @@ const routesToRender = [
   ROUTES.CONSENT_AGREEMENT,
   ROUTES.LOOKING_FOR_DEVICES,
   ROUTES.NO_DTAG_FOUND,
+  ROUTES.CONNECT_TO_LEDGER,
 ];
 
 const DevScreen = () => {

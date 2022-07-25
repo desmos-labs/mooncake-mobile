@@ -1,7 +1,7 @@
-import {broadcastingAnimation} from 'assets/animations/animations';
 import LottieView from 'lottie-react-native';
 import React, {useMemo} from 'react';
 import {useTheme} from 'react-native-paper';
+import {broadcastAnim, pairDevicesAnim} from 'assets/animations';
 
 export type DesmosAnimations =
   | 'broadcast-tx'
@@ -17,10 +17,17 @@ type Props = Omit<React.ComponentProps<typeof LottieView>, 'source'> & {
 const ThemedLottieView: React.FC<Props> = props => {
   const {source} = props;
   const theme = useTheme();
+
+  const themeMode = React.useMemo(() => {
+    return theme.dark ? 'dark' : 'light';
+  }, [theme.dark]);
+
   const animation = useMemo(() => {
     switch (source) {
       case 'broadcast-tx':
-        return broadcastingAnimation;
+        return broadcastAnim[themeMode];
+      case 'connect-to-ledger':
+        return pairDevicesAnim[themeMode];
       default:
         throw new Error(`Unknown animation ${source}`);
     }

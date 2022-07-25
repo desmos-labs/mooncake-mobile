@@ -9,10 +9,10 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
-import ConnectingAnimation from 'screens/ConnectToLedger/components/ConnectingAnimation';
 import {ledgerConnectionError, ledgerDevice} from 'assets/images';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
+import ThemedLottieView from 'components/ThemedLottieView';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -67,7 +67,12 @@ const ConnectToLedger = () => {
       return (
         <>
           <Spacer paddingBottom={theme.spacing.l}>
-            <ConnectingAnimation />
+            <ThemedLottieView
+              source="connect-to-ledger"
+              style={styles.lottieAnimation}
+              autoPlay
+              loop
+            />
           </Spacer>
 
           <View style={styles.centeredGroup}>

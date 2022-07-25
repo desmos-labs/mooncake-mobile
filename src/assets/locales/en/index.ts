@@ -38,8 +38,8 @@ const en = {
   welcomePage,
   checkMnemonic,
   accountCreation,
-    connectToLedger,
-    noDtagFound
+  connectToLedger,
+  noDtagFound
 };
 
 export default en;

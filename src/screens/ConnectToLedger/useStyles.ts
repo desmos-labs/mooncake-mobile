@@ -15,6 +15,11 @@ const useStyles = makeStyle(theme => ({
     height: '30%',
     alignSelf: 'center',
   },
+  lottieAnimation: {
+    width: '100%',
+    height: verticalScale(150),
+    alignSelf: 'center',
+  },
   centeredGroup: {
     alignSelf: 'center',
   },
