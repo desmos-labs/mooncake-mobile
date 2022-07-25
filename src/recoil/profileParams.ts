@@ -1,8 +1,7 @@
 import React from 'react';
-import {atom, useRecoilState, useRecoilValue} from 'recoil';
-import {useQuery} from '@apollo/client';
+import {atom, useRecoilState} from 'recoil';
+import {useLazyQuery} from '@apollo/client';
 import GetProfileParams from 'services/graphql/queries/GetProfileParams';
-import appSettingsState from '@recoil/settings';
 
 export const profileParamsState = atom<ProfileParams>({
   key: 'profileParams',
@@ -31,12 +30,13 @@ export const profileParamsState = atom<ProfileParams>({
 });
 
 export const useGetProfileParams = () => {
-  const appSettings = useRecoilValue(appSettingsState);
   const [params, setParams] = useRecoilState(profileParamsState);
 
-  const {data} = useQuery(GetProfileParams, {
-    skip: appSettings.dataInitialized,
-  });
+  const [getProfileParams, {data}] = useLazyQuery(GetProfileParams);
+
+  React.useEffect(() => {
+    getProfileParams();
+  }, []);
 
   React.useEffect(() => {
     if (data) {
