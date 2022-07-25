@@ -15,29 +15,31 @@ import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 import welcomePage from './welcomePage.json';
 import checkMnemonic from './checkMnemonic.json';
+import accountCreation from './accountCreation.json';
 import connectToLedger from './connectToLedger.json';
 import noDtagFound from './noDtagFound.json';
 
 const en = {
-    common,
-    manageChains,
-    home,
-    enterPassword,
-    error,
-    passwordManipulation,
-    resultModal,
-    confirmModal,
-    lookingForDevices,
-    settings,
-    profile,
-    mnemonicInput,
-    selectDtag,
-    consentAgreement,
-    signup,
-    welcomePage,
-    checkMnemonic,
-    connectToLedger,
-    noDtagFound
+  common,
+  manageChains,
+  home,
+  enterPassword,
+  error,
+  passwordManipulation,
+  resultModal,
+  confirmModal,
+  lookingForDevices,
+  settings,
+  profile,
+  mnemonicInput,
+  selectDtag,
+  consentAgreement,
+  signup,
+  welcomePage,
+  checkMnemonic,
+  accountCreation,
+  connectToLedger,
+  noDtagFound
 };
 
 export default en;
