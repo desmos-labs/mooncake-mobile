@@ -85,6 +85,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
+      {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
+      {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen
         name={ROUTES.GENERATE_ACCOUNT}
         component={GenerateAccount}
