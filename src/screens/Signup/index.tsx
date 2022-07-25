@@ -5,26 +5,28 @@ import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
-import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import _ from 'lodash';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
-import {IconButton, useTheme} from 'react-native-paper';
-import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordTooltip';
+import {IconButton} from 'react-native-paper';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import GetProfileParams from 'services/graphql/queries/GetProfileParams';
 import * as Yup from 'yup';
+import {
+  MIN_PW_LENGTH,
+  validateMin1Lowercase,
+  validateMin1SpecialChar,
+  validateMin1Uppercase,
+} from 'lib/ValidationUtils';
+import PasswordReqGroup from 'components/PasswordReqGroup';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-const MIN_PW_LENGTH = 10;
-
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
-  const theme = useTheme();
   const styles = useStyles();
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
@@ -67,15 +69,9 @@ const Signup = () => {
           }),
         )
         .required(t('error:required'))
-        .test('at least one lowercase', '', value =>
-          /(?=.*[a-z])/.test(value as string),
-        )
-        .test('at least one uppercase', '', value =>
-          /(?=.*[A-Z])/.test(value as string),
-        )
-        .test('at least one special', '', value =>
-          /(?=.*\W)/.test(value as string),
-        ),
+        .test('at least one lowercase', '', validateMin1Lowercase)
+        .test('at least one uppercase', '', validateMin1Uppercase)
+        .test('at least one special', '', validateMin1SpecialChar),
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
@@ -192,29 +188,7 @@ const Signup = () => {
                       </Typography.Caption1>
                     )}
 
-                    <PasswordTooltip
-                      label={t('atLeastChar', {
-                        length: MIN_PW_LENGTH,
-                      })}
-                      isSatisfied={values.newPassword.length >= MIN_PW_LENGTH}
-                    />
-
-                    <PasswordTooltip
-                      label={t('atLeastLower')}
-                      isSatisfied={/(?=.*[a-z])/.test(values.newPassword)}
-                    />
-
-                    <PasswordTooltip
-                      label={t('atLeastUpper')}
-                      isSatisfied={/(?=.*[A-Z])/.test(values.newPassword)}
-                    />
-
-                    <Spacer paddingBottom={theme.spacing.m}>
-                      <PasswordTooltip
-                        label={t('atLeastSpecial')}
-                        isSatisfied={/(?=.*\W)/.test(values.newPassword)}
-                      />
-                    </Spacer>
+                    <PasswordReqGroup passwordToCheck={values.newPassword} />
 
                     <Typography.Subtitle2 style={styles.inputLabel}>
                       {t('confirmPw')}
