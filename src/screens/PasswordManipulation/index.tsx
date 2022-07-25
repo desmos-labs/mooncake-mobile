@@ -12,10 +12,9 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useTranslation} from 'react-i18next';
 import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import * as Yup from 'yup';
-import PasswordTooltip from './components/PasswordTooltip';
+import PasswordReqGroup from 'components/PasswordReqGroup';
 import useStyles from './useStyles';
 import useHooks from './useHooks';
 
@@ -42,8 +41,6 @@ const PasswordManipulation = () => {
   const {top} = useSafeAreaInsets();
 
   const styles = useStyles();
-
-  const theme = useTheme();
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -124,29 +121,7 @@ const PasswordManipulation = () => {
                 </Typography.Caption1>
               )}
 
-              <PasswordTooltip
-                label={t('atLeastChar', {
-                  length: MIN_PW_LENGTH,
-                })}
-                isSatisfied={values.newPassword.length >= MIN_PW_LENGTH}
-              />
-
-              <PasswordTooltip
-                label={t('atLeastLower')}
-                isSatisfied={/(?=.*[a-z])/.test(values.newPassword)}
-              />
-
-              <PasswordTooltip
-                label={t('atLeastUpper')}
-                isSatisfied={/(?=.*[A-Z])/.test(values.newPassword)}
-              />
-
-              <Spacer paddingBottom={theme.spacing.m}>
-                <PasswordTooltip
-                  label={t('atLeastSpecial')}
-                  isSatisfied={/(?=.*\W)/.test(values.newPassword)}
-                />
-              </Spacer>
+              <PasswordReqGroup passwordToCheck={values.newPassword} />
 
               <Typography.Subtitle2 style={styles.inputLabel}>
                 {t('confirmPw')}
