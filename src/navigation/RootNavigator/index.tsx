@@ -35,7 +35,7 @@ import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
 import NoDtagFound from 'screens/NoDtagFound';
-import {useGetProfileParams} from '@recoil/profileParams';
+import useInitializeAppData from 'hooks/useInitializeAppData';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -76,7 +76,7 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
-  useGetProfileParams();
+  useInitializeAppData();
   // End initialization
 
   const {t} = useTranslation();

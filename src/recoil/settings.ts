@@ -9,6 +9,8 @@ export const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
   notifications: false,
+
+  dataInitialized: false,
 };
 
 /**
