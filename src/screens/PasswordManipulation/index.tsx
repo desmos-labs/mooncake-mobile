@@ -15,6 +15,12 @@ import Spacer from 'components/Spacer';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import * as Yup from 'yup';
 import PasswordReqGroup from 'components/PasswordReqGroup';
+import {
+  MIN_PW_LENGTH,
+  validateMin1Lowercase,
+  validateMin1SpecialChar,
+  validateMin1Uppercase,
+} from 'lib/ValidationUtils';
 import useStyles from './useStyles';
 import useHooks from './useHooks';
 
@@ -33,8 +39,6 @@ export type NavProps = StackScreenProps<
   ROUTES.PASSWORD_MANIPULATION
 >;
 
-const MIN_PW_LENGTH = 10;
-
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
 
@@ -52,15 +56,9 @@ const PasswordManipulation = () => {
           }),
         )
         .required(t('error:required'))
-        .test('at least one lowercase', '', value =>
-          /(?=.*[a-z])/.test(value as string),
-        )
-        .test('at least one uppercase', '', value =>
-          /(?=.*[A-Z])/.test(value as string),
-        )
-        .test('at least one special', '', value =>
-          /(?=.*\W)/.test(value as string),
-        ),
+        .test('at least one lowercase', '', validateMin1Lowercase)
+        .test('at least one uppercase', '', validateMin1Uppercase)
+        .test('at least one special', '', validateMin1SpecialChar),
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
@@ -92,7 +90,6 @@ const PasswordManipulation = () => {
         onSubmit={handleFormSubmit}
         validationSchema={validationSchema}>
         {({handleSubmit, values, errors, setFieldValue}) => {
-          console.log(errors);
           return (
             <View style={styles.formContainer}>
               <View style={styles.labelGroup}>
