@@ -36,7 +36,7 @@ const en = {
     signup,
     welcomePage,
     checkMnemonic,
-    connectToLedger
+    connectToLedger,
     noDtagFound
 };
 
