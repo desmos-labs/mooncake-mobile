@@ -1,5 +1,4 @@
 import React from 'react';
-import PasswordTooltip from 'screens/PasswordManipulation/components/PasswordTooltip';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
@@ -10,6 +9,7 @@ import {
   validateMin1Uppercase,
   validateMinPwLength,
 } from 'lib/ValidationUtils';
+import PasswordTooltip from './PasswordTooltip';
 
 type Props = {
   passwordToCheck: string;
