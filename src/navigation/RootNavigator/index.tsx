@@ -34,6 +34,7 @@ import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
+import NoDtagFound from 'screens/NoDtagFound';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -61,6 +62,8 @@ export type RootNavigatorParamList = {
   [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
+  [ROUTES.NO_DTAG_FOUND]: undefined;
+  [ROUTES.GENERATE_ACCOUNT]: undefined;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -75,11 +78,17 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
+
+      <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
+      <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
+
       <Stack.Screen
         name={ROUTES.GENERATE_ACCOUNT}
         component={GenerateAccount}
       />
-      <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
       <Stack.Screen
         name={ROUTES.BACKUP_SUCCESSFUL}
@@ -94,10 +103,6 @@ const RootNavigator = () => {
         component={CheckMnemonic}
       />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
-
-      {__DEV__ && (
-        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
-      )}
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen
         initialParams={{
@@ -120,6 +125,12 @@ const RootNavigator = () => {
         component={LookingForDevices}
       />
       <Stack.Screen
+        initialParams={{
+          bleLedger: {
+            id: '123',
+            name: 'hello world',
+          },
+        }}
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />

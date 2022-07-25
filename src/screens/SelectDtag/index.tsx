@@ -74,6 +74,7 @@ const SelectDtag = () => {
         ItemSeparatorComponent={ItemSeparatorComponent}
         contentContainerStyle={{
           padding: 16,
+          flexGrow: 1,
         }}
       />
     </DView>

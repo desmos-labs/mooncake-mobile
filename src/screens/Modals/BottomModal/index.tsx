@@ -26,7 +26,7 @@ export type BottomModalParams = {
   /**
    * What to do when the user presses the primary (main) modal button.
    */
-  onPressPrimary: () => void;
+  onPressPrimary?: () => void;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BOTTOM_MODAL>;
@@ -40,7 +40,7 @@ const BottomModal = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();
 
   const onPressButton = useCallback(() => {
-    onPressPrimary();
+    onPressPrimary && onPressPrimary();
     goBack();
   }, []);
 

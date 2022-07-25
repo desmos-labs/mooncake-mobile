@@ -74,6 +74,10 @@ export const checkboxUnchecked = require('./images/checkbox.png');
 
 export const arrowRight = require('./images/arrowRight.png');
 
+export const ledgerConnectionError = require('./images/ledgerConnectionError.png');
+
+export const ledgerDevice = require('./images/ledgerDevice.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
