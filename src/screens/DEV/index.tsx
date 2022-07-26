@@ -3,6 +3,7 @@ import {FlatList, Text, TouchableOpacity} from 'react-native';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
+import DView from 'components/DView';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -10,6 +11,7 @@ const routesToRender = [
   ROUTES.LOOKING_FOR_DEVICES,
   ROUTES.NO_DTAG_FOUND,
   ROUTES.CONNECT_TO_LEDGER,
+  ROUTES.LANDING,
 ];
 
 const DevScreen = () => {
@@ -33,14 +35,16 @@ const DevScreen = () => {
   );
 
   return (
-    <FlatList
-      contentContainerStyle={{
-        padding: 16,
-      }}
-      data={routesToRender}
-      renderItem={renderItem}
-      ItemSeparatorComponent={ItemSeparatorComponent}
-    />
+    <DView>
+      <FlatList
+        contentContainerStyle={{
+          padding: 16,
+        }}
+        data={routesToRender}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+      />
+    </DView>
   );
 };
 

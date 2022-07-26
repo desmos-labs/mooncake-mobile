@@ -23,10 +23,13 @@ export type Props = SafeAreaViewProps & {
    * Image that will be displayed as background
    */
   background?: React.ComponentProps<typeof ImageBackground>['source'];
+
+  statusBarProps?: React.ComponentProps<typeof StatusBar>;
 };
 // TODO fix statusBarStyle accordingly with the theme
 const DView: React.FC<Props> = props => {
-  const {scrollable, topBar, background, children, style} = props;
+  const {scrollable, topBar, background, children, style, statusBarProps} =
+    props;
   const styles = useStyles(props);
 
   return (
@@ -34,7 +37,7 @@ const DView: React.FC<Props> = props => {
       touchSoundDisabled
       onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={styles.root}>
-        <StatusBar backgroundColor="transparent" />
+        <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (
           <ImageBackground style={styles.background} source={background} />
         )}

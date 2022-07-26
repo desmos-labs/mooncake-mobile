@@ -78,6 +78,12 @@ export const ledgerConnectionError = require('./images/ledgerConnectionError.png
 
 export const ledgerDevice = require('./images/ledgerDevice.png');
 
+export const landingBG = require('./images/landingBG.png');
+
+export const dummyAvatar = require('./images/dummyAvatar.png');
+
+export const ledgerLIcon = require('./images/ledgerLetterIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
