@@ -85,14 +85,13 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
       />
-      {__DEV__ && (
-        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
-      )}
-
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 

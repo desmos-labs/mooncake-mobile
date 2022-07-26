@@ -10,6 +10,7 @@ const routesToRender = [
   ROUTES.LOOKING_FOR_DEVICES,
   ROUTES.NO_DTAG_FOUND,
   ROUTES.CONNECT_TO_LEDGER,
+  ROUTES.CREATE_DESMOS_PROFILE,
 ];
 
 const DevScreen = () => {
