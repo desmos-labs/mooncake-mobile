@@ -11,6 +11,8 @@ const useInitializeAppData = () => {
   /**
    * Check if the initialization queries have produced a value and mark
    * initialization as finished.
+   *
+   * This is a naive solution. There is most likely a better way to do this.
    */
   React.useEffect(() => {
     if (profileParams) {
