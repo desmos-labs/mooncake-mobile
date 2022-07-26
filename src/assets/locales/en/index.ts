@@ -19,6 +19,7 @@ import accountCreation from './accountCreation.json';
 import connectToLedger from './connectToLedger.json';
 import noDtagFound from './noDtagFound.json';
 import landing from './landing.json';
+import welcomeBack from './welcomeBack.json';
 
 const en = {
   common,
@@ -41,7 +42,8 @@ const en = {
   accountCreation,
   connectToLedger,
   noDtagFound,
-  landing
+  landing,
+  welcomeBack
 };
 
 export default en;

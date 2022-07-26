@@ -12,6 +12,7 @@ const routesToRender = [
   ROUTES.NO_DTAG_FOUND,
   ROUTES.CONNECT_TO_LEDGER,
   ROUTES.LANDING,
+  ROUTES.WELCOME_BACK,
 ];
 
 const DevScreen = () => {

@@ -35,6 +35,7 @@ import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
 import NoDtagFound from 'screens/NoDtagFound';
+import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -64,6 +65,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.GENERATE_ACCOUNT]: undefined;
+  [ROUTES.WELCOME_BACK]: undefined;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -82,6 +84,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
