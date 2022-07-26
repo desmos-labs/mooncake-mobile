@@ -81,7 +81,7 @@ const RootNavigator = () => {
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
-
+      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
@@ -203,7 +203,6 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
-      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
     </Stack.Navigator>
   );
 };
