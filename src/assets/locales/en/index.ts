@@ -18,6 +18,7 @@ import checkMnemonic from './checkMnemonic.json';
 import accountCreation from './accountCreation.json';
 import connectToLedger from './connectToLedger.json';
 import noDtagFound from './noDtagFound.json';
+import createProfile from './createProfile.json';
 
 const en = {
   common,
@@ -39,7 +40,8 @@ const en = {
   checkMnemonic,
   accountCreation,
   connectToLedger,
-  noDtagFound
+  noDtagFound,
+  createProfile
 };
 
 export default en;

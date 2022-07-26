@@ -18,7 +18,7 @@ const ProfileHeaderButton = ({imageSrc, onPress}: Props) => {
     <TouchableOpacity onPress={onPress}>
       <Image
         source={imageSrc}
-        style={{width: 40, height: 40, resizeMode: 'contain', borderRadius: 20}}
+        style={{width: 32, height: 32, resizeMode: 'contain', borderRadius: 20}}
       />
     </TouchableOpacity>
   );
