@@ -86,6 +86,8 @@ export const editProfilePic = require('./images/editProfilePic.png');
 
 export const backButton = require('./images/backButton.png');
 
+export const cameraButton = require('./images/cameraButton.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

@@ -38,6 +38,11 @@ const useStyles = makeStyle(theme => ({
   descriptionText: {
     marginBottom: theme.spacing.m,
   },
+  cameraButton: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+  },
 }));
 
 export default useStyles;

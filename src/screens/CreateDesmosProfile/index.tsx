@@ -7,7 +7,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {backButton, createProfileBanner, homeButton} from 'assets/images';
+import {backButton, cameraButton, createProfileBanner} from 'assets/images';
 import Typography from 'components/Typography';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -47,6 +47,11 @@ const CreateDesmosProfile = () => {
   const {goBack} = useNavigation<NavProp['navigation']>();
 
   const profileParams = useRecoilValue(profileParamsState);
+
+  const nicknameInputRef = React.useRef<any>();
+
+  const dTagInputRef = React.useRef<any>();
+  const bioInputRef = React.useRef<any>();
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -89,7 +94,10 @@ const CreateDesmosProfile = () => {
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton imageSrc={backButton} onPress={goBack} />
 
-        <ProfileHeaderButton imageSrc={homeButton} />
+        <ProfileHeaderButton
+          imageSrc={cameraButton}
+          style={styles.cameraButton}
+        />
       </View>
 
       <CreateAvatar handlePressEdit={() => {}} />
@@ -109,17 +117,22 @@ const CreateDesmosProfile = () => {
                 {t('nickname')}
               </Typography.Subtitle2>
               <DTextInput
+                inputRef={nicknameInputRef}
                 value={values.nickname}
                 placeholder={t('enterNickname')}
                 onChangeText={value => {
-                  setFieldValue('nickname', value);
+                  setFieldValue('nickname', value, true);
                 }}
                 error={!!errors.nickname}
               />
-              <TextCounter
-                maxChar={parseInt(profileParams.nickname.max_length, 10)}
-                textToCount={values.nickname}
-              />
+              {nicknameInputRef.current && (
+                <View style={{opacity: nicknameInputRef.current.isFocused()}}>
+                  <TextCounter
+                    maxChar={parseInt(profileParams.nickname.max_length, 10)}
+                    textToCount={values.nickname}
+                  />
+                </View>
+              )}
 
               <Typography.Subtitle2 style={styles.inputLabel}>
                 {t('dTag')}
@@ -128,23 +141,29 @@ const CreateDesmosProfile = () => {
                 value={values.dTag}
                 placeholder={t('enterDTag')}
                 onChangeText={value => {
-                  setFieldValue('dTag', value);
+                  setFieldValue('dTag', value, true);
                 }}
                 error={!!errors.dTag}
+                inputRef={dTagInputRef}
               />
-              <TextCounter
-                maxChar={parseInt(profileParams.dtag.max_length, 10)}
-                textToCount={values.dTag}
-              />
+              {dTagInputRef.current && (
+                <View style={{opacity: dTagInputRef.current.isFocused()}}>
+                  <TextCounter
+                    maxChar={parseInt(profileParams.dtag.max_length, 10)}
+                    textToCount={values.dTag}
+                  />
+                </View>
+              )}
 
               <Typography.Subtitle2 style={styles.inputLabel}>
                 {t('bio')}
               </Typography.Subtitle2>
               <DTextInput
+                inputRef={bioInputRef}
                 value={values.bio}
                 placeholder={t('addBio')}
                 onChangeText={value => {
-                  setFieldValue('bio', value);
+                  setFieldValue('bio', value, true);
                 }}
                 error={!!errors.bio}
                 multiline
@@ -152,10 +171,14 @@ const CreateDesmosProfile = () => {
                   height: 120,
                 }}
               />
-              <TextCounter
-                maxChar={parseInt(profileParams.bio.max_length, 10)}
-                textToCount={values.bio}
-              />
+              {bioInputRef.current && (
+                <View style={{opacity: bioInputRef.current.isFocused()}}>
+                  <TextCounter
+                    maxChar={parseInt(profileParams.bio.max_length, 10)}
+                    textToCount={values.bio}
+                  />
+                </View>
+              )}
 
               <KeyboardAvoidingView
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 200}
