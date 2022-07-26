@@ -61,19 +61,18 @@ const CreateDesmosProfile = () => {
   const profileParams = useRecoilValue(profileParamsState);
 
   const nicknameInputRef = React.useRef<any>();
-
   const dTagInputRef = React.useRef<any>();
   const bioInputRef = React.useRef<any>();
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
-        .min(parseInt(profileParams.nickname.min_length, 10), '')
-        .max(parseInt(profileParams.nickname.max_length, 10), ''),
+        .min(profileParams.nickname.min_length)
+        .max(profileParams.nickname.max_length),
       dTag: Yup.string()
         .required(t('error:required'))
-        .min(parseInt(profileParams.dtag.min_length, 10), '')
-        .max(parseInt(profileParams.dtag.max_length, 10), '')
+        .min(profileParams.dtag.min_length)
+        .max(profileParams.dtag.max_length)
         .test(
           'respect reg_ex',
           t('Only _ is allowed as special character'),
@@ -86,7 +85,7 @@ const CreateDesmosProfile = () => {
       bio: Yup.string().max(
         parseInt(profileParams.bio.max_length, 10),
         t('error:maxLength', {
-          numChars: parseInt(profileParams.bio.max_length),
+          numChars: profileParams.bio.max_length,
         }),
       ),
     });
@@ -99,7 +98,6 @@ const CreateDesmosProfile = () => {
     [],
   );
 
-  console.log(profileImage, 'iam profile image');
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white}>
       <Image
@@ -151,7 +149,7 @@ const CreateDesmosProfile = () => {
                     opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
                   }}>
                   <TextCounter
-                    maxChar={parseInt(profileParams.nickname.max_length, 10)}
+                    maxChar={profileParams.nickname.max_length}
                     textToCount={values.nickname}
                   />
                 </View>
@@ -173,7 +171,7 @@ const CreateDesmosProfile = () => {
                 <View
                   style={{opacity: dTagInputRef.current.isFocused() ? 1 : 0}}>
                   <TextCounter
-                    maxChar={parseInt(profileParams.dtag.max_length, 10)}
+                    maxChar={profileParams.dtag.max_length}
                     textToCount={values.dTag}
                   />
                 </View>
@@ -199,7 +197,7 @@ const CreateDesmosProfile = () => {
                 <View
                   style={{opacity: bioInputRef.current.isFocused() ? 1 : 0}}>
                   <TextCounter
-                    maxChar={parseInt(profileParams.bio.max_length, 10)}
+                    maxChar={profileParams.bio.max_length}
                     textToCount={values.bio}
                   />
                 </View>
