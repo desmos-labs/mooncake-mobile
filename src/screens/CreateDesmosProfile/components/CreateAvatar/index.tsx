@@ -1,10 +1,10 @@
 import React from 'react';
 import {Image, ImageSourcePropType, View} from 'react-native';
-import {defaultProfilePic, editProfilePic} from 'assets/images';
+import {editProfilePic} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 
 type Props = {
-  avatar?: ImageSourcePropType;
+  avatar: ImageSourcePropType;
 
   handlePressEdit: () => void;
 };
@@ -19,7 +19,7 @@ const CreateAvatar = ({avatar, handlePressEdit}: Props) => {
           width: 100,
           borderRadius: 50,
         }}
-        source={avatar || defaultProfilePic}
+        source={avatar}
       />
 
       <ImageButton

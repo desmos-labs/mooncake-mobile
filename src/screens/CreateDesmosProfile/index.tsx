@@ -7,7 +7,12 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {backButton, cameraButton, createProfileBanner} from 'assets/images';
+import {
+  backButton,
+  cameraButton,
+  createProfileBanner,
+  defaultProfilePic,
+} from 'assets/images';
 import Typography from 'components/Typography';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -24,6 +29,7 @@ import DTextInput from 'components/DTextInput';
 import TextCounter from 'components/TextCounter';
 import Button from 'components/Button';
 import {useTheme} from 'react-native-paper';
+import useImageGallery from 'hooks/useImageGallery';
 import useStyles from './useStyles';
 
 type NavProp = StackScreenProps<
@@ -45,6 +51,12 @@ const CreateDesmosProfile = () => {
   const {t} = useTranslation('createProfile');
 
   const {goBack} = useNavigation<NavProp['navigation']>();
+
+  const {image: bannerImage, imageFromLibrary: selectBannerImage} =
+    useImageGallery();
+
+  const {image: profileImage, imageFromLibrary: selectProfileImage} =
+    useImageGallery();
 
   const profileParams = useRecoilValue(profileParamsState);
 
@@ -87,9 +99,13 @@ const CreateDesmosProfile = () => {
     [],
   );
 
+  console.log(profileImage, 'iam profile image');
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white}>
-      <Image source={createProfileBanner} style={styles.bannerImage} />
+      <Image
+        source={bannerImage ? {uri: bannerImage.uri} : createProfileBanner}
+        style={styles.bannerImage}
+      />
 
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton imageSrc={backButton} onPress={goBack} />
@@ -97,10 +113,14 @@ const CreateDesmosProfile = () => {
         <ProfileHeaderButton
           imageSrc={cameraButton}
           style={styles.cameraButton}
+          onPress={selectBannerImage}
         />
       </View>
 
-      <CreateAvatar handlePressEdit={() => {}} />
+      <CreateAvatar
+        avatar={profileImage ? {uri: profileImage.uri} : defaultProfilePic}
+        handlePressEdit={selectProfileImage}
+      />
       <ScrollView style={styles.scrollview} contentContainerStyle={styles.card}>
         <Typography.H4>{t('header')}</Typography.H4>
         <Typography.Body6 style={styles.descriptionText}>
@@ -126,7 +146,10 @@ const CreateDesmosProfile = () => {
                 error={!!errors.nickname}
               />
               {nicknameInputRef.current && (
-                <View style={{opacity: nicknameInputRef.current.isFocused()}}>
+                <View
+                  style={{
+                    opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
+                  }}>
                   <TextCounter
                     maxChar={parseInt(profileParams.nickname.max_length, 10)}
                     textToCount={values.nickname}
@@ -147,7 +170,8 @@ const CreateDesmosProfile = () => {
                 inputRef={dTagInputRef}
               />
               {dTagInputRef.current && (
-                <View style={{opacity: dTagInputRef.current.isFocused()}}>
+                <View
+                  style={{opacity: dTagInputRef.current.isFocused() ? 1 : 0}}>
                   <TextCounter
                     maxChar={parseInt(profileParams.dtag.max_length, 10)}
                     textToCount={values.dTag}
@@ -172,7 +196,8 @@ const CreateDesmosProfile = () => {
                 }}
               />
               {bioInputRef.current && (
-                <View style={{opacity: bioInputRef.current.isFocused()}}>
+                <View
+                  style={{opacity: bioInputRef.current.isFocused() ? 1 : 0}}>
                   <TextCounter
                     maxChar={parseInt(profileParams.bio.max_length, 10)}
                     textToCount={values.bio}
