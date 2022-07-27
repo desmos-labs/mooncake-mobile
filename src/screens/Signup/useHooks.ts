@@ -21,6 +21,8 @@ const useHooks = () => {
   const handleFormSubmit = React.useCallback(
     (formValues: typeof initialFormValues) => {
       console.log(formValues);
+
+      navigate(ROUTES.BROADCAST_TX);
     },
     [],
   );

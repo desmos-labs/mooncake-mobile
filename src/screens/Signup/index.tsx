@@ -63,7 +63,7 @@ const Signup = () => {
     return Yup.object().shape({
       newPassword: Yup.string()
         .min(
-          MIN_PW_LENGTH,
+          MIN_PW_LENGTH - 1,
           t('error:minChar', {
             numChar: MIN_PW_LENGTH,
           }),
@@ -114,7 +114,11 @@ const Signup = () => {
   }, []);
 
   return (
-    <DView style={styles.container}>
+    <DView
+      style={styles.container}
+      statusBarProps={{
+        barStyle: 'dark-content',
+      }}>
       <Typography.H3 style={styles.headerText}>
         {t('signup:signup')}
       </Typography.H3>
@@ -128,6 +132,7 @@ const Signup = () => {
           validationSchema={validationSchema}
           validate={validateForm}>
           {({handleSubmit, values, errors, setFieldValue}) => {
+            console.log(errors);
             return (
               <>
                 <ScrollView>
@@ -174,9 +179,9 @@ const Signup = () => {
 
                     <DSecureTextInput
                       value={values.newPassword}
-                      onChangeText={(value: string) =>
-                        setFieldValue('newPassword', value, true)
-                      }
+                      onChangeText={(value: string) => {
+                        setFieldValue('newPassword', value);
+                      }}
                       style={styles.inputLabel}
                       placeholder={t('newPw')}
                       error={!!errors.newPassword}
@@ -195,9 +200,9 @@ const Signup = () => {
                     </Typography.Subtitle2>
                     <DSecureTextInput
                       placeholder={t('pw')}
-                      onChangeText={(value: string) =>
-                        setFieldValue('confirmPassword', value, true)
-                      }
+                      onChangeText={(value: string) => {
+                        setFieldValue('confirmPassword', value);
+                      }}
                       error={!!errors.confirmPassword}
                     />
                     {errors.confirmPassword && (

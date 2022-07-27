@@ -10,7 +10,7 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const GenerateAccount: React.FC<Props> = () => {
+const BroadcastTx: React.FC<Props> = () => {
   const {t} = useTranslation('accountCreation');
   const styles = useStyles();
 
@@ -25,4 +25,4 @@ const GenerateAccount: React.FC<Props> = () => {
   );
 };
 
-export default GenerateAccount;
+export default BroadcastTx;
