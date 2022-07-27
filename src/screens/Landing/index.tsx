@@ -7,11 +7,19 @@ import {useTheme} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import Spacer from 'components/Spacer';
 import Button from 'components/Button';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
 const Landing = () => {
   const theme = useTheme();
   const {t} = useTranslation('landing');
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
 
@@ -27,7 +35,8 @@ const Landing = () => {
         <Button
           mode="contained"
           style={{backgroundColor: theme.colors.white}}
-          labelStyle={{color: theme.colors.desmosOrange01}}>
+          labelStyle={{color: theme.colors.desmosOrange01}}
+          onPress={() => navigate(ROUTES.SIGNUP)}>
           {t('signUp')}
         </Button>
 
