@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply plugin: 'kotlin-android'
 
 import com.android.build.OutputFile
 
@@ -291,6 +292,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation "org.web3j:crypto:4.5.17"
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
 }
 
 if (isNewArchitectureEnabled()) {

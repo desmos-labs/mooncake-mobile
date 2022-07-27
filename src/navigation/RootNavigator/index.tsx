@@ -31,7 +31,7 @@ import MnemonicInput, {
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import SelectDtag from 'screens/SelectDtag';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
-// import DevScreen from 'screens/DEV';
+import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
 import NoDtagFound from 'screens/NoDtagFound';
@@ -79,9 +79,9 @@ const RootNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {/* {__DEV__ && ( */}
-      {/*  <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} /> */}
-      {/* )} */}
+      {__DEV__ && (
+        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
+      )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
