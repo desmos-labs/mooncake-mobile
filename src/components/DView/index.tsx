@@ -1,5 +1,6 @@
 import React, {ReactElement} from 'react';
 import {
+  ColorValue,
   ImageBackground,
   Keyboard,
   ScrollView,
@@ -24,19 +25,32 @@ export type Props = SafeAreaViewProps & {
    */
   background?: React.ComponentProps<typeof ImageBackground>['source'];
 
+  /**
+   * Override themed background color
+   */
+  backgroundColor?: ColorValue;
+
   statusBarProps?: React.ComponentProps<typeof StatusBar>;
 };
 // TODO fix statusBarStyle accordingly with the theme
 const DView: React.FC<Props> = props => {
-  const {scrollable, topBar, background, children, style, statusBarProps} =
-    props;
+  const {
+    scrollable,
+    topBar,
+    background,
+    children,
+    backgroundColor,
+    style,
+    statusBarProps,
+  } = props;
   const styles = useStyles(props);
 
   return (
     <TouchableWithoutFeedback
       touchSoundDisabled
       onPress={() => Keyboard.dismiss()}>
-      <SafeAreaView style={styles.root}>
+      <SafeAreaView
+        style={[styles.root, backgroundColor ? {backgroundColor} : {}]}>
         <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (
           <ImageBackground style={styles.background} source={background} />

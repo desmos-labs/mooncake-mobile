@@ -35,6 +35,8 @@ import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
 import Signup from 'screens/Signup';
 import NoDtagFound from 'screens/NoDtagFound';
+import useInitializeAppData from 'hooks/useInitializeAppData';
+import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
@@ -65,6 +67,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.GENERATE_ACCOUNT]: undefined;
+  [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
 
   // only for dev
@@ -76,6 +79,10 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
+  // Initialization. Move to Landing page once ready.
+  useInitializeAppData();
+  // End initialization
+
   const {t} = useTranslation();
 
   return (
@@ -83,6 +90,10 @@ const RootNavigator = () => {
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
+      <Stack.Screen
+        name={ROUTES.CREATE_DESMOS_PROFILE}
+        component={CreateDesmosProfile}
+      />
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
