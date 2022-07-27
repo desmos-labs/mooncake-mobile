@@ -88,6 +88,12 @@ export const backButton = require('./images/backButton.png');
 
 export const cameraButton = require('./images/cameraButton.png');
 
+export const landingBG = require('./images/landingBG.png');
+
+export const dummyAvatar = require('./images/dummyAvatar.png');
+
+export const ledgerLIcon = require('./images/ledgerLetterIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

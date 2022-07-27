@@ -1,5 +1,6 @@
 import {Props} from 'components/DView/index';
 import {makeStyleWithProps} from 'config/theme';
+import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => ({
   root: {
@@ -8,9 +9,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     backgroundColor: theme.colors.background,
   },
   background: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
   content: {
     flex: 1,

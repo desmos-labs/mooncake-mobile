@@ -37,6 +37,7 @@ import Signup from 'screens/Signup';
 import NoDtagFound from 'screens/NoDtagFound';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -67,6 +68,7 @@ export type RootNavigatorParamList = {
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
+  [ROUTES.WELCOME_BACK]: undefined;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -92,6 +94,8 @@ const RootNavigator = () => {
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
       />
+      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
@@ -213,7 +217,6 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
-      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
     </Stack.Navigator>
   );
 };

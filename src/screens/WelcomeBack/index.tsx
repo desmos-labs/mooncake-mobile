@@ -1,19 +1,22 @@
 import DView from 'components/DView';
 import React from 'react';
-import {dummyAvatar, landingBG, ledgerLIcon} from 'assets/images';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {dummyAvatar, landingBG} from 'assets/images';
+import {Image, View} from 'react-native';
 import Typography from 'components/Typography';
 import {useTheme} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
 import Spacer from 'components/Spacer';
 import Button from 'components/Button';
+import DSecureTextInput from 'components/DSecureTextInput';
 import useStyles from './useStyles';
 
-const Landing = () => {
+const WelcomeBack = () => {
   const theme = useTheme();
-  const {t} = useTranslation('landing');
+  const {t} = useTranslation('welcomeBack');
 
   const styles = useStyles();
+
+  const [password, setPassword] = React.useState('');
 
   return (
     <DView
@@ -23,33 +26,41 @@ const Landing = () => {
       <Image source={dummyAvatar} style={styles.dummyAvatar} />
 
       <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
+
+      <Typography.Body6 style={styles.descriptionStyle}>
+        {t('description')}
+      </Typography.Body6>
+
       <View style={{alignSelf: 'stretch'}}>
-        <Button
-          mode="contained"
-          style={{backgroundColor: theme.colors.white}}
-          labelStyle={{color: theme.colors.desmosOrange01}}>
-          {t('signUp')}
-        </Button>
+        <Typography.Subtitle2 style={{color: theme.colors.white}}>
+          {t('inputLabel')}
+        </Typography.Subtitle2>
+
+        <DSecureTextInput
+          placeholder={t('inputPlaceholder')}
+          value={password}
+          onChangeText={setPassword}
+        />
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
             style={{borderColor: theme.colors.white}}
             labelStyle={{color: theme.colors.white}}
             mode="outlined">
-            {t('importMnemonic')}
+            {t('common:confirm')}
           </Button>
         </Spacer>
       </View>
 
-      <TouchableOpacity style={styles.connectLedgerButton}>
-        <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
-
-        <Typography.Button1 style={{color: theme.colors.white}}>
-          {t('connectLedger')}
-        </Typography.Button1>
-      </TouchableOpacity>
+      <View style={styles.forgotPwGroup}>
+        <Button
+          mode="text"
+          labelStyle={{color: theme.colors.white, textAlign: 'center'}}>
+          {t('forgotPw')}
+        </Button>
+      </View>
     </DView>
   );
 };
 
-export default Landing;
+export default WelcomeBack;

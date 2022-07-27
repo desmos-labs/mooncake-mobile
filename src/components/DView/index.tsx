@@ -29,11 +29,20 @@ export type Props = SafeAreaViewProps & {
    * Override themed background color
    */
   backgroundColor?: ColorValue;
+
+  statusBarProps?: React.ComponentProps<typeof StatusBar>;
 };
 // TODO fix statusBarStyle accordingly with the theme
 const DView: React.FC<Props> = props => {
-  const {scrollable, topBar, background, children, style, backgroundColor} =
-    props;
+  const {
+    scrollable,
+    topBar,
+    background,
+    children,
+    backgroundColor,
+    style,
+    statusBarProps,
+  } = props;
   const styles = useStyles(props);
 
   return (
@@ -42,7 +51,7 @@ const DView: React.FC<Props> = props => {
       onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
         style={[styles.root, backgroundColor ? {backgroundColor} : {}]}>
-        <StatusBar backgroundColor="transparent" />
+        <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (
           <ImageBackground style={styles.background} source={background} />
         )}
