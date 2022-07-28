@@ -24,6 +24,8 @@
 		61D2D9094E44458A8648C2BC /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CF5145EDC344869B2980391 /* Poppins-Light.ttf */; };
 		71611866BA564636AC7EAE6D /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C24A273F5EFF4EE28DF44B89 /* Poppins-Medium.ttf */; };
 		76E4D67960504E0580FDCB68 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27F515919BBB4E91A0374EB0 /* Poppins-ExtraBold.ttf */; };
+		7A38CB9528922EAA00DA2465 /* RCTCryptoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */; };
+		7A38CB9728922F4500DA2465 /* RCTCryptoUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A38CB9628922F4500DA2465 /* RCTCryptoUtils.m */; };
 		7EE07B9D1CF643A5AACCD534 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C2E4A36C58B4563A8FA86C4 /* Poppins-Thin.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		87586BFCE2ED4EFDB604E8E0 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98355F2B15D8489FAF2BFDE8 /* Poppins-Black.ttf */; };
@@ -69,6 +71,9 @@
 		6552104BB2ED423EA2F0E67E /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		66894290B5FF12F54F432E2C /* Pods-desmosFlagship.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.debug.xcconfig"; sourceTree = "<group>"; };
 		69B182EB5875409AB43795DE /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
+		7A38CB9328922EAA00DA2465 /* desmosFlagship-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "desmosFlagship-Bridging-Header.h"; sourceTree = "<group>"; };
+		7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCTCryptoUtils.swift; sourceTree = "<group>"; };
+		7A38CB9628922F4500DA2465 /* RCTCryptoUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTCryptoUtils.m; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = desmosFlagship/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98355F2B15D8489FAF2BFDE8 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		9C2E4A36C58B4563A8FA86C4 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
@@ -146,6 +151,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */,
+				7A38CB9328922EAA00DA2465 /* desmosFlagship-Bridging-Header.h */,
+				7A38CB9628922F4500DA2465 /* RCTCryptoUtils.m */,
 			);
 			name = desmosFlagship;
 			sourceTree = "<group>";
@@ -304,7 +312,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1330;
 					};
 				};
 			};
@@ -529,6 +537,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				7A38CB9528922EAA00DA2465 /* RCTCryptoUtils.swift in Sources */,
+				7A38CB9728922F4500DA2465 /* RCTCryptoUtils.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -548,6 +558,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 088A39D13FFAC4AC72575F2E /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -575,6 +586,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3C6C3EC9DA817CC9D7E9293 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = desmosFlagshipTests/Info.plist;
@@ -615,6 +627,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = desmosFlagship;
+				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -640,6 +653,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = desmosFlagship;
+				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

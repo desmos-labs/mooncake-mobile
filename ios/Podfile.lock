@@ -427,6 +427,7 @@ PODS:
   - RNVectorIcons (9.2.0):
     - React-Core
   - SocketRocket (0.6.0)
+  - TrezorCrypto (0.0.9)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -506,6 +507,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TrezorCrypto
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -527,6 +529,7 @@ SPEC REPOS:
     - MultiplatformBleAdapter
     - OpenSSL-Universal
     - SocketRocket
+    - TrezorCrypto
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -701,9 +704,10 @@ SPEC CHECKSUMS:
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  TrezorCrypto: bfeea47a052dca2c77d4a39e1e183865e52de14d
   Yoga: 4935173923cabaa830e195be3e8e4cac045a8f90
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 3077aa9ddf670639e7f9ccac3cc4cddcffd4f653
+PODFILE CHECKSUM: 7ba4f782099e950dc2d84a805dff7a8957324851
 
 COCOAPODS: 1.11.3
