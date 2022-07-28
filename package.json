@@ -18,6 +18,7 @@
     "@apollo/client": "^3.6.9",
     "@cosmjs/crypto": "^0.28.11",
     "@cosmjs/ledger-amino": "^0.28.10",
+    "@cosmjs/stargate": "^0.28.11",
     "@desmoslabs/desmjs": "^3.0.1",
     "@desmoslabs/desmjs-types": "^3.0.1",
     "@habx/apollo-multi-endpoint-link": "^2.7.0",

@@ -7,6 +7,7 @@ const EnvConfig = {
     desmos: Config.DESMOS_GQL,
   },
   CHAIN_ID: Config.CHAIN_ID,
+  FEE_GRANTER: Config.FEE_GRANTER,
 };
 
 export default EnvConfig;
