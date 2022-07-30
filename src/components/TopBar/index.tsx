@@ -24,6 +24,9 @@ export type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
+/**
+ * TODO: use react-navigation's header prop on navigator instead
+ */
 export const TopBar: React.FC<Props> = props => {
   const {stackProps, rightElement, style} = props;
   const theme = useTheme();

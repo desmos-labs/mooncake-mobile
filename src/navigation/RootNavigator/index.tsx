@@ -3,7 +3,7 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import BackupSuccessful from 'screens/BackupSuccessful';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
-import GenerateAccount from 'screens/BroadcastTx';
+import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
@@ -63,7 +63,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
-  [ROUTES.BROADCAST_TX]: undefined;
+  [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.WELCOME_BACK]: undefined;
 
   // only for dev

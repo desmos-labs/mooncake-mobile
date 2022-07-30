@@ -1,6 +1,6 @@
 import {StdFee} from '@cosmjs/amino';
-import {EncodeObject} from '@cosmjs/proto-signing';
-import {isDeliverTxFailure} from '@cosmjs/stargate';
+import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
+import {isBroadcastTxFailure} from '@cosmjs/stargate';
 import {DesmosClient} from '@desmoslabs/desmjs';
 import {Coin} from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import {SignMode} from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
@@ -8,7 +8,7 @@ import {AuthInfo, SignerInfo, TxRaw} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {Any} from 'cosmjs-types/google/protobuf/any';
 import Long from 'long';
 import {useCallback} from 'react';
-import {Signer} from '@desmoslabs/desmjs/build/signers';
+import OfflineSignerAdapter from '@desmoslabs/desmjs/build/signers/adapter';
 
 function makeSignerInfo(
   signer: {readonly pubkey: Any; readonly sequence: number},
@@ -52,16 +52,22 @@ export function makeAuthInfoBytes(
 export default function useBroadcastMessages() {
   return useCallback(
     async (
-      signer: Signer,
+      signer: OfflineSigner,
       messages: EncodeObject[],
       fee: StdFee,
       memo?: string,
       granter?: string,
     ) => {
-      const client = await DesmosClient.connect('');
+      console.log('connect');
+      const _signer = new OfflineSignerAdapter(signer);
 
-      client.setSigner(signer);
-      const signerAddress = await signer.getAccounts();
+      const client = await DesmosClient.connectWithSigner(
+        'https://rpc.morpheus.desmos.network',
+        _signer,
+      );
+
+      const signerAddress = await _signer.getAccounts();
+
       const signed = await client.signTx(
         signerAddress[0].address,
         messages,
@@ -70,10 +76,15 @@ export default function useBroadcastMessages() {
         undefined,
         granter,
       );
+
+      console.log('signed tx', signed.txRaw);
+
       const broadcastResult = await client.broadcastTx(
         TxRaw.encode(signed.txRaw).finish(),
       );
-      if (isDeliverTxFailure(broadcastResult)) {
+
+      console.log('broadcast result', broadcastResult);
+      if (isBroadcastTxFailure(broadcastResult)) {
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }
     },
