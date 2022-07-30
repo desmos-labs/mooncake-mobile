@@ -25,16 +25,13 @@ const useHooks = () => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
-      console.log(formValues);
-
       // First time user, create new wallet
-
       const mnemonic = randomMnemonic();
 
       const {confirmPassword, dTag} = formValues;
       const newWallet = await LocalWallet.fromMnemonic(mnemonic, {
         // TODO: dev only, remove before pushing
-        hdPath: {coinType: 852, account: 1, change: 0, addressIndex: 0},
+        // hdPath: {coinType: 852, account: 1, change: 0, addressIndex: 0},
       });
       const address = newWallet.bech32Address;
 

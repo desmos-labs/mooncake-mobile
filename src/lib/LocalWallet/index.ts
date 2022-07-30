@@ -57,9 +57,6 @@ export default class LocalWallet
     this.prefix = prefix;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
-    console.log(Platform.OS, 'public key', publicKey, '\n\n');
-    console.log(Platform.OS, `PREFIX:|${prefix}|`);
-    console.log(Platform.OS, toBase64(publicKey));
     this._address = toBech32(prefix, rawSecp256k1PubkeyToRawAddress(publicKey));
   }
 

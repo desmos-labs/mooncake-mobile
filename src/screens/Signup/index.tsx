@@ -180,7 +180,7 @@ const Signup = () => {
                     <DSecureTextInput
                       value={values.newPassword}
                       onChangeText={(value: string) => {
-                        setFieldValue('newPassword', value);
+                        setFieldValue('newPassword', value, true);
                       }}
                       style={styles.inputLabel}
                       placeholder={t('newPw')}
@@ -201,7 +201,7 @@ const Signup = () => {
                     <DSecureTextInput
                       placeholder={t('pw')}
                       onChangeText={(value: string) => {
-                        setFieldValue('confirmPassword', value);
+                        setFieldValue('confirmPassword', value, true);
                       }}
                       error={!!errors.confirmPassword}
                     />
