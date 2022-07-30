@@ -3,7 +3,7 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import BackupSuccessful from 'screens/BackupSuccessful';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
-import GenerateAccount from 'screens/GenerateAccount';
+import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
@@ -62,10 +62,10 @@ export type RootNavigatorParamList = {
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
-  [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.BACKUP_SUCCESSFUL]: undefined;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
+  [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
@@ -101,10 +101,7 @@ const RootNavigator = () => {
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
-      <Stack.Screen
-        name={ROUTES.GENERATE_ACCOUNT}
-        component={GenerateAccount}
-      />
+      <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
 
       <Stack.Screen
         name={ROUTES.BACKUP_SUCCESSFUL}

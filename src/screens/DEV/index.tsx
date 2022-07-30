@@ -4,6 +4,7 @@ import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import DView from 'components/DView';
+import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -18,6 +19,22 @@ const routesToRender = [
 
 const DevScreen = () => {
   const {navigate} = useNavigation();
+
+  React.useEffect(() => {
+    const generateWallet = async () => {
+      const mnemonic = randomMnemonic();
+
+      console.log('i am mnemonic');
+
+      const wallet = await LocalWallet.fromMnemonic(mnemonic);
+
+      console.log(wallet.publicKey);
+    };
+
+    setTimeout(() => {
+      generateWallet();
+    }, 3000);
+  }, []);
 
   const renderItem = ({item}: any) => {
     return (

@@ -1,5 +1,8 @@
 {
   "success": "Success",
   "passwordWasChanged": "Your password was changed",
-  "goToProfile": "Go to Profile"
+  "goToProfile": "Go to Profile",
+  "congrats": "Congratulations!",
+  "profileCreated": "Your Desmos profile was created",
+  "enterApp": "Enter App"
 }

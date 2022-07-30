@@ -7,7 +7,7 @@ import {
   StdSignDoc,
 } from '@cosmjs/amino';
 import {Secp256k1, sha256} from '@cosmjs/crypto';
-import {Bech32, fromBase64, fromHex, toBase64} from '@cosmjs/encoding';
+import {toBech32, fromBase64, fromHex, toBase64} from '@cosmjs/encoding';
 import {
   AccountData,
   DirectSignResponse,
@@ -18,6 +18,7 @@ import * as bip39 from 'bip39';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {CryptoUtils} from 'types/cryptoUtils';
 import {DesmosHdPath, HdPath} from 'types/hdpath';
+import {Platform} from 'react-native';
 
 export interface LocalWalletOptions {
   /**
@@ -56,10 +57,7 @@ export default class LocalWallet
     this.prefix = prefix;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
-    this._address = Bech32.encode(
-      prefix,
-      rawSecp256k1PubkeyToRawAddress(publicKey),
-    );
+    this._address = toBech32(prefix, rawSecp256k1PubkeyToRawAddress(publicKey));
   }
 
   static async fromMnemonic(
@@ -76,6 +74,7 @@ export default class LocalWallet
     );
     const privkeyBytes = fromHex(privkey);
     const pubkeyBytes = fromHex(pubkey);
+    console.log(Platform.OS, 'public key', pubkey);
     const compressedPubKey = await Secp256k1.compressPubkey(pubkeyBytes);
     return new LocalWallet(prefix, privkeyBytes, compressedPubKey);
   }
