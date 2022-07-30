@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Files permission is required to select an avatar/banner.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>Bluetooth permissions is required for Ledger pairing.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>

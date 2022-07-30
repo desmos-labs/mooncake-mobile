@@ -1,4 +1,4 @@
-import {useLazyQuery, useQuery} from '@apollo/client';
+import {useLazyQuery} from '@apollo/client';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
@@ -13,7 +13,6 @@ import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
-import GetProfileParams from 'services/graphql/queries/GetProfileParams';
 import * as Yup from 'yup';
 import {
   MIN_PW_LENGTH,
@@ -22,6 +21,7 @@ import {
   validateMin1Uppercase,
 } from 'lib/ValidationUtils';
 import PasswordReqGroup from 'components/PasswordReqGroup';
+import {useGetProfileParams} from '@recoil/profileParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -31,7 +31,6 @@ const Signup = () => {
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
-  const {data} = useQuery(GetProfileParams);
   const {
     handlePressPP,
     handlePressTOS,
@@ -41,11 +40,11 @@ const Signup = () => {
     initialFormValues,
   } = useHooks();
 
+  const {profileParams} = useGetProfileParams();
+
   useEffect(() => {
-    if (data) {
-      setDtagParams(data.profiles_params[0].params.dtag);
-    }
-  }, [data]);
+    setDtagParams(profileParams.dtag);
+  }, []);
 
   /**
    * Check with a query if the dTag is available

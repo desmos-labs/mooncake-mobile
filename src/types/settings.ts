@@ -13,4 +13,6 @@ export type AppSettings = {
   theme: AppTheme;
   biometrics: boolean;
   notifications: boolean;
+
+  dataInitialized: boolean;
 };

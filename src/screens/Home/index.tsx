@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dimensions, View, LogBox} from 'react-native';
-import ProfileHeaderButton from 'screens/Home/components/ProfileHeaderButton';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
