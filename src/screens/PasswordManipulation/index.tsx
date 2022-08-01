@@ -32,6 +32,12 @@ export enum PASSWORD_MANIPULATION_MODE {
 
 export type PasswordManipulationParams = {
   mode: PASSWORD_MANIPULATION_MODE;
+
+  /**
+   * If a mnemonic is passed with mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
+   * it means the user is importing an account using a recovery phrase
+   */
+  mnemonic?: string;
 };
 
 export type NavProps = StackScreenProps<
@@ -125,6 +131,7 @@ const PasswordManipulation = () => {
               </Typography.Subtitle2>
               <DSecureTextInput
                 placeholder={t('pw')}
+                value={values.confirmPassword}
                 onChangeText={(value: string) =>
                   setFieldValue('confirmPassword', value, true)
                 }
@@ -147,7 +154,7 @@ const PasswordManipulation = () => {
                     values.newPassword.length === 0 ||
                     _.flatten(Object.values(errors)).length > 0
                   }
-                  mode="text">
+                  mode="gradientFilled">
                   <Typography.Button2 style={styles.confirmButtonText}>
                     {t(buttonLabel)}
                   </Typography.Button2>

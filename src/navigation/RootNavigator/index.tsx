@@ -29,7 +29,7 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
-import SelectDtag from 'screens/SelectDtag';
+import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
@@ -58,7 +58,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
-  [ROUTES.SELECT_DTAG]: undefined;
+  [ROUTES.SELECT_DTAG]: SelectDtagParamList;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
@@ -66,7 +66,6 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
 

@@ -2,11 +2,14 @@ import React from 'react';
 import ROUTES from 'navigation/routes';
 import {passwordStrength} from 'check-password-strength';
 import {
-  PASSWORD_MANIPULATION_MODE,
   NavProps,
+  PASSWORD_MANIPULATION_MODE,
 } from 'screens/PasswordManipulation/index';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import LocalWallet from 'lib/LocalWallet';
+import {DesmosClient} from '@desmoslabs/desmjs';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
 /**
@@ -18,7 +21,7 @@ const useHooks = () => {
   const {t} = useTranslation('passwordManipulation');
 
   const {
-    params: {mode},
+    params: {mode, mnemonic},
   } = useRoute<NavProps['route']>();
 
   const initialFormValues = React.useMemo(
@@ -72,17 +75,59 @@ const useHooks = () => {
   }, [mode]);
 
   const handleFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      console.log(formValues);
+    async (formValues: typeof initialFormValues) => {
+      if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
+        navigate(ROUTES.RESULT_MODAL, {
+          title: t('resultModal:success'),
+          subtitle: t('resultModal:passwordWasChanged'),
+          primaryButtonLabel: t('resultModal:goToProfile'),
+          onDismiss: () => {
+            // finish implementation when change pw feature is added
+          },
+        });
+      }
+      if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
+        const ACCOUNT_SEARCH_LIMIT = 10;
+        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
-      navigate(ROUTES.RESULT_MODAL, {
-        title: t('resultModal:success'),
-        subtitle: t('resultModal:passwordWasChanged'),
-        primaryButtonLabel: t('resultModal:goToProfile'),
-        onDismiss: () => {
-          // finish implementation when change pw feature is added
-        },
-      });
+        const {confirmPassword} = formValues;
+
+        const accountsToSearch = new Array(ACCOUNT_SEARCH_LIMIT)
+          .fill(0)
+          .map(async (_, idx) => {
+            const wallet = await LocalWallet.fromMnemonic(mnemonic, {
+              hdPath: {
+                coinType: 852,
+                change: 0,
+                account: 0,
+                addressIndex: idx,
+              },
+            });
+
+            return {
+              wallet: wallet.serialize(),
+              account: await client.getAccount(wallet.bech32Address),
+            };
+          });
+
+        const results = await Promise.allSettled(accountsToSearch);
+
+        const accountsWithWalletData = results
+          .filter(x => x.status === 'fulfilled')
+          .map((y: any) => ({
+            address: y.value.account.address,
+            wallet: y.value.wallet,
+          }));
+
+        if (accountsWithWalletData.length === 0) {
+          navigate(ROUTES.NO_DTAG_FOUND);
+        } else {
+          navigate(ROUTES.SELECT_DTAG, {
+            accountsWithWalletData,
+            password: confirmPassword,
+          });
+        }
+      }
     },
     [mode],
   );

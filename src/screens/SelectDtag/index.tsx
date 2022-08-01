@@ -7,25 +7,54 @@ import {ActivityIndicator, FlatList, ListRenderItemInfo} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import Typography from 'components/Typography';
 import Spacer from 'components/Spacer';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {setItem} from 'lib/SecureStorage';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
-// This should be replaced by a list of addressese retrieved from the account
-const DUMMY_ADDRESSES = [
-  'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-  'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
-];
+export type SelectDtagParamList = {
+  accountsWithWalletData: {
+    address: string;
+    /**
+     * serialized wallet data
+     */
+    wallet: string;
+  }[];
+
+  /**
+   * Ledger imports may not have an account
+   */
+  password?: string;
+};
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
 
 const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
 
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const {
+    params: {accountsWithWalletData, password},
+  } = useRoute<NavProps['route']>();
+
   const {loading, data} = useQuery(GetProfileSummaryForAddresses, {
     variables: {
-      addresses: DUMMY_ADDRESSES,
+      addresses: accountsWithWalletData.map((x: any) => x.address),
     },
   });
 
-  const handlePressProfileItem = React.useCallback((address: string) => {
+  const handlePressProfileItem = React.useCallback(async (address: string) => {
     // implementation
-    console.log(address);
+    const walletData = accountsWithWalletData.find(x => x.address === address);
+
+    await setItem(`${address}_key`, walletData!.wallet, {password});
+    setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
+
+    // TODO: refactor with reset
+    navigate(ROUTES.HOME);
   }, []);
 
   const renderItem = ({
