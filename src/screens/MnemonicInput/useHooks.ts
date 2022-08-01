@@ -57,8 +57,6 @@ const useHooks = () => {
 
   const onSubmit = React.useCallback(
     (values: typeof initialFormFields) => {
-      console.log(values);
-
       if (mode === MNEMONIC_INPUT_MODE.RESET_PASSWORD) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
@@ -67,7 +65,7 @@ const useHooks = () => {
       if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
-          mnemonic: values.mnemonic,
+          mnemonic: values.mnemonic.trim(),
         });
       }
     },

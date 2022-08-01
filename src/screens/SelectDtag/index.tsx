@@ -41,7 +41,9 @@ const SelectDtag = () => {
 
   const {loading, data} = useQuery(GetProfileSummaryForAddresses, {
     variables: {
-      addresses: accountsWithWalletData.map((x: any) => x.address),
+      addresses: accountsWithWalletData.map(
+        (x: {chainAccount: ChainAccount}) => x.chainAccount.address,
+      ),
     },
   });
 
