@@ -11,22 +11,21 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {setItem} from 'lib/SecureStorage';
+import {saveLocalWallet, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {ChainAccount} from 'types/chains';
+import LocalWallet from 'lib/LocalWallet';
 
 export type SelectDtagParamList = {
   accountsWithWalletData: {
-    address: string;
+    chainAccount: ChainAccount;
     /**
      * serialized wallet data
      */
     wallet: string;
   }[];
 
-  /**
-   * Ledger imports may not have an account
-   */
-  password?: string;
+  password: string;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
@@ -48,9 +47,16 @@ const SelectDtag = () => {
 
   const handlePressProfileItem = React.useCallback(async (address: string) => {
     // implementation
-    const walletData = accountsWithWalletData.find(x => x.address === address);
+    const walletData = accountsWithWalletData.find(
+      x => x.chainAccount.address === address,
+    );
+    if (!walletData) return;
+    const {wallet, chainAccount} = walletData;
 
-    await setItem(`${address}_key`, walletData!.wallet, {password});
+    const deserializedWallet = await LocalWallet.deserialize(wallet);
+
+    await saveLocalWallet(deserializedWallet, password);
+    await saveNewAccount(chainAccount);
     setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
 
     // TODO: refactor with reset

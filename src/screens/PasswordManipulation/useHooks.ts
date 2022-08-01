@@ -10,6 +10,8 @@ import {useTranslation} from 'react-i18next';
 import LocalWallet from 'lib/LocalWallet';
 import {DesmosClient} from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {toBase64} from '@cosmjs/encoding';
 import useStyles from './useStyles';
 
 /**
@@ -104,9 +106,23 @@ const useHooks = () => {
               },
             });
 
+            const chainAccount: ChainAccount = {
+              address: wallet.bech32Address,
+              type: ChainAccountType.Local,
+              pubKey: toBase64(wallet.publicKey),
+              hdPath: {
+                coinType: 852,
+                change: 0,
+                account: 0,
+                addressIndex: idx,
+              },
+              signAlgorithm: 'secp256k1',
+            };
+
             return {
               wallet: wallet.serialize(),
               account: await client.getAccount(wallet.bech32Address),
+              chainAccount,
             };
           });
 
@@ -115,8 +131,8 @@ const useHooks = () => {
         const accountsWithWalletData = results
           .filter(x => x.status === 'fulfilled')
           .map((y: any) => ({
-            address: y.value.account.address,
             wallet: y.value.wallet,
+            chainAccount: y.value.chainAccount,
           }));
 
         if (accountsWithWalletData.length === 0) {
