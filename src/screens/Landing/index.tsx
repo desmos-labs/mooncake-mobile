@@ -11,6 +11,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -44,7 +45,12 @@ const Landing = () => {
           <Button
             style={{borderColor: theme.colors.white}}
             labelStyle={{color: theme.colors.white}}
-            mode="outlined">
+            mode="outlined"
+            onPress={() =>
+              navigate(ROUTES.MNEMONIC_INPUT, {
+                mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
+              })
+            }>
             {t('importMnemonic')}
           </Button>
         </Spacer>
