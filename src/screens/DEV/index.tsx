@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import DView from 'components/DView';
 import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
+import Button from 'components/Button';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -18,7 +19,7 @@ const routesToRender = [
 ];
 
 const DevScreen = () => {
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<any>();
 
   React.useEffect(() => {
     const generateWallet = async () => {
@@ -63,6 +64,10 @@ const DevScreen = () => {
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
+
+      <Button mode="gradientFilled" onPress={() => navigate(ROUTES.LANDING)}>
+        Continue to Landing screen
+      </Button>
     </DView>
   );
 };

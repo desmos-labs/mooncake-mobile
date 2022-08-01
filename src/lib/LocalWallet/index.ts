@@ -18,7 +18,6 @@ import * as bip39 from 'bip39';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {CryptoUtils} from 'types/cryptoUtils';
 import {DesmosHdPath, HdPath} from 'types/hdpath';
-import {Platform} from 'react-native';
 
 export interface LocalWalletOptions {
   /**
@@ -74,7 +73,6 @@ export default class LocalWallet
     );
     const privkeyBytes = fromHex(privkey);
     const pubkeyBytes = fromHex(pubkey);
-    console.log(Platform.OS, 'public key', pubkey);
     const compressedPubKey = await Secp256k1.compressPubkey(pubkeyBytes);
     return new LocalWallet(prefix, privkeyBytes, compressedPubKey);
   }
