@@ -5,6 +5,9 @@ import {
 } from 'react-native-keychain';
 import * as Keychain from 'react-native-keychain';
 
+import LocalWallet from 'lib/LocalWallet';
+import {ChainAccount} from 'types/chains';
+
 const defaultOptions: Keychain.Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
@@ -12,6 +15,13 @@ const defaultOptions: Keychain.Options = {
   accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
   accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
 };
+
+enum SECURE_STORAGE_KEYS {
+  WALLET_SUFFIX = '_KEY',
+  MNEMONIC_SUFFIX = '_MNEMONIC',
+  WALLET_PASSWORD = 'WALLET_PASSWORD',
+  ACCOUNTS = 'ACCOUNTS',
+}
 
 /**
  * Options used to configure how the data will be stored into the device.
@@ -32,17 +42,17 @@ export interface StoreOptions {
  * @param key An item key to identify the item stored.
  * @param options Options to describe how the data are stored into the device storage.
  */
-export async function getItem(
+async function getItem<T>(
   key: string,
-  options: StoreOptions | undefined = undefined,
-): Promise<string | null> {
+  options?: StoreOptions | undefined,
+): Promise<T | undefined> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
   const value = await Keychain.getGenericPassword({
     service: key,
     ...moreOptions,
   });
   if (!value) {
-    return null;
+    return undefined;
   }
   return JSON.parse(value.password);
 }
@@ -53,10 +63,10 @@ export async function getItem(
  * @param value Value to insert into the storage.
  * @param options Options to describe how the data will be stored into the device storage.
  */
-export async function setItem(
+async function setItem(
   key: string,
-  value: string,
-  options: StoreOptions | undefined = undefined,
+  value: any,
+  options?: StoreOptions | undefined,
 ): Promise<false | Result> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
   return Keychain.setGenericPassword('secureValue', JSON.stringify(value), {
@@ -69,7 +79,7 @@ export async function setItem(
  * Delete an item from the storage.
  * @param key The item key to delete.
  */
-export async function deleteItem(key: string): Promise<boolean> {
+async function deleteItem(key: string): Promise<boolean> {
   return resetGenericPassword({service: key});
 }
 
@@ -82,3 +92,92 @@ export async function resetSecureStorage(): Promise<void> {
     keys.map(async key => resetGenericPassword({service: key})),
   );
 }
+
+export const saveNewAccount = async (_account: ChainAccount) => {
+  const oldAccounts = await getItem<ChainAccount[]>(
+    SECURE_STORAGE_KEYS.ACCOUNTS,
+  );
+
+  if (oldAccounts) {
+    const filteredAccounts = oldAccounts.filter(
+      x => x.address !== _account.address,
+    );
+    const newAccounts = [...filteredAccounts, _account];
+
+    await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, newAccounts);
+  } else await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, [_account]);
+};
+
+export const getAccounts = async () => getItem(SECURE_STORAGE_KEYS.ACCOUNTS);
+
+export const saveLocalWallet = async (
+  _wallet: LocalWallet,
+  password: string,
+  useBiometrics?: boolean,
+) => {
+  const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
+
+  if (useBiometrics) {
+    await setItem(SECURE_STORAGE_KEYS.WALLET_PASSWORD, password, {
+      biometrics: true,
+    });
+  }
+
+  await setItem(walletKey, _wallet.serialize(), {password});
+};
+
+export const getLocalWallet = async (
+  address: string,
+  password?: string,
+  useBiometrics?: boolean,
+) => {
+  let walletPassword = password;
+
+  if (!walletPassword && useBiometrics) {
+    walletPassword = await getItem<string>(
+      SECURE_STORAGE_KEYS.WALLET_PASSWORD,
+      {
+        biometrics: true,
+      },
+    );
+  }
+
+  await getItem(`${address}_key`, {password: walletPassword});
+};
+
+/**
+ * Save a wallet's mnemonic to secure storage
+ * @param address The bech32 address of the wallet that the mnemonic belongs to
+ * @param mnemonic The mnemonic to save
+ * @param password The password to encrypt the data with
+ */
+export const saveMnemonic = async (
+  address: string,
+  mnemonic: string,
+  password: string,
+) => {
+  const mnemonicKey = `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`;
+
+  await setItem(mnemonicKey, mnemonic, {password});
+};
+
+export const getMnemonic = async (
+  address: string,
+  password?: string,
+  useBiometrics?: boolean,
+) => {
+  let _password = password;
+  if (!password && useBiometrics) {
+    _password = await getItem<string>(SECURE_STORAGE_KEYS.WALLET_PASSWORD, {
+      biometrics: true,
+    });
+  }
+
+  return getItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`, {
+    password: _password,
+  });
+};
+
+export const deleteMnemonic = async (address: string) => {
+  return deleteItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`);
+};
