@@ -123,7 +123,7 @@ export const saveLocalWallet = async (
     });
   }
 
-  await setItem(walletKey, _wallet.serialize(), {password});
+  return setItem(walletKey, _wallet.serialize(), {password});
 };
 
 export const getLocalWallet = async (
@@ -132,8 +132,9 @@ export const getLocalWallet = async (
   useBiometrics?: boolean,
 ) => {
   let walletPassword = password;
+  const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
-  if (!walletPassword && useBiometrics) {
+  if (useBiometrics) {
     walletPassword = await getItem<string>(
       SECURE_STORAGE_KEYS.WALLET_PASSWORD,
       {
@@ -142,7 +143,9 @@ export const getLocalWallet = async (
     );
   }
 
-  await getItem(`${address}_key`, {password: walletPassword});
+  return getItem(walletKey, {
+    password: walletPassword,
+  });
 };
 
 /**
@@ -158,7 +161,7 @@ export const saveMnemonic = async (
 ) => {
   const mnemonicKey = `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`;
 
-  await setItem(mnemonicKey, mnemonic, {password});
+  return setItem(mnemonicKey, mnemonic, {password});
 };
 
 export const getMnemonic = async (
