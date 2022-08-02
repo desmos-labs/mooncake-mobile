@@ -9,6 +9,7 @@ import {Any} from 'cosmjs-types/google/protobuf/any';
 import Long from 'long';
 import {useCallback} from 'react';
 import OfflineSignerAdapter from '@desmoslabs/desmjs/build/signers/adapter';
+import EnvConfig from 'config/EnvConfig';
 
 function makeSignerInfo(
   signer: {readonly pubkey: Any; readonly sequence: number},
@@ -58,11 +59,10 @@ export default function useBroadcastMessages() {
       memo?: string,
       granter?: string,
     ) => {
-      console.log('connect');
       const _signer = new OfflineSignerAdapter(signer);
 
       const client = await DesmosClient.connectWithSigner(
-        'https://rpc.morpheus.desmos.network',
+        EnvConfig.DESMOS_RPC,
         _signer,
       );
 
@@ -77,13 +77,10 @@ export default function useBroadcastMessages() {
         granter,
       );
 
-      console.log('signed tx', signed.txRaw);
-
       const broadcastResult = await client.broadcastTx(
         TxRaw.encode(signed.txRaw).finish(),
       );
 
-      console.log('broadcast result', broadcastResult);
       if (isBroadcastTxFailure(broadcastResult)) {
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }

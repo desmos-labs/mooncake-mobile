@@ -21,6 +21,8 @@ import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {DesmosClient} from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
+import {useSetRecoilState} from 'recoil';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -44,6 +46,8 @@ const ConnectToLedger = () => {
 
   const {navigate} = useNavigation<NavProps['navigation']>();
 
+  const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
+
   const styles = useStyles();
   const {connecting, connected, connectionError, transport, retry, paired} =
     useConnectToLedger(bleLedger, ledgerApp);
@@ -58,7 +62,7 @@ const ConnectToLedger = () => {
 
   React.useEffect(() => {
     const generateAccounts = async () => {
-      const hdPaths: HdPath[] = new Array(10).fill(0).map((_, idx) => ({
+      const hdPaths: HdPath[] = new Array(1).fill(0).map((_hdpath, idx) => ({
         coinType: 852,
         account: 0,
         change: 0,
@@ -82,18 +86,18 @@ const ConnectToLedger = () => {
 
       const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
-      const accountsToSearch = accounts.map(async (acc, idx) => {
-        const chainAccount: ChainAccount = {
-          address: acc.address,
-          signAlgorithm: acc.algo,
-          hdPath: hdPaths[idx],
-          type: ChainAccountType.Ledger,
-          pubKey: toBase64(acc.pubkey),
-        };
+      const chainAccounts: ChainAccount[] = accounts.map((acc, idx) => ({
+        address: acc.address,
+        signAlgorithm: acc.algo,
+        hdPath: hdPaths[idx],
+        type: ChainAccountType.Ledger,
+        pubKey: toBase64(acc.pubkey),
+      }));
 
+      const accountsToSearch = accounts.map(async (acc, idx) => {
         return {
           desmosProfile: await client.getAccount(acc.address),
-          chainAccount,
+          chainAccount: chainAccounts[idx],
         };
       });
 
@@ -107,6 +111,9 @@ const ConnectToLedger = () => {
         }));
 
       if (accountsWithWalletData.length === 0) {
+        // Register the first account retrieved from ledger
+        setCreateLedgerAccount({account: chainAccounts[0]});
+        console.log(chainAccounts[0]);
         navigate(ROUTES.NO_DTAG_FOUND);
       } else {
         navigate(ROUTES.SELECT_DTAG, {
@@ -158,7 +165,7 @@ const ConnectToLedger = () => {
       );
     }
 
-    if (connectionError) {
+    if (connectionError && !connectionError.includes('Please close BOLOS')) {
       return (
         <>
           <Image source={ledgerConnectionError} style={styles.errorImage} />
@@ -201,6 +208,19 @@ const ConnectToLedger = () => {
         </View>
       );
     }
+
+    return (
+      <View style={styles.centeredGroup}>
+        <Spacer paddingBottom={theme.spacing.l}>
+          <ThemedLottieView
+            source="connect-to-ledger"
+            style={styles.lottieAnimation}
+            autoPlay
+            loop
+          />
+        </Spacer>
+      </View>
+    );
   }, [connected, paired, connectionError, transport, instructionsIndex]);
 
   return <DView style={styles.container}>{content}</DView>;

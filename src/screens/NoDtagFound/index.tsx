@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.NO_DTAG_FOUND>;
@@ -21,12 +22,14 @@ const NoDtagFound = () => {
   const {t} = useTranslation('noDtagFound');
   const styles = useStyles();
   const accountCreation = useRecoilValue(accountCreationState);
+  const createLedgerAccountAtom = useRecoilValue(createLedgerAccountState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const handlePress = React.useCallback(() => {
     if (
-      accountCreation &&
-      accountCreation.creationMode === AccountCreationMode.IMPORT_MNEMONIC
+      (accountCreation &&
+        accountCreation.creationMode === AccountCreationMode.IMPORT_MNEMONIC) ||
+      createLedgerAccountAtom.account
     ) {
       navigate(ROUTES.CREATE_DESMOS_PROFILE);
     }
