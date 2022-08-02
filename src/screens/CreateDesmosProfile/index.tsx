@@ -119,7 +119,7 @@ const CreateDesmosProfile = () => {
       await saveLocalWallet(newWallet, password!);
       await saveNewAccount(newAccount);
       await saveMnemonic(newWallet.bech32Address, mnemonic, password!);
-      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, newWallet.bech32Address);
+      setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, newWallet.bech32Address);
 
       // images are placeholders. They should be uploaded and the link
       // be passed as parameters to the save profile message

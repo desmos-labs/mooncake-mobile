@@ -13,6 +13,14 @@ import {ledgerConnectionError, ledgerDevice} from 'assets/images';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import ThemedLottieView from 'components/ThemedLottieView';
+import {LedgerSigner} from '@cosmjs/ledger-amino';
+import {DesmosLedgerApp} from 'config/LedgerApps';
+import {HdPath} from 'types/hdpath';
+import {Slip10RawIndex} from '@cosmjs/crypto';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {toBase64} from '@cosmjs/encoding';
+import {DesmosClient} from '@desmoslabs/desmjs';
+import EnvConfig from 'config/EnvConfig';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -47,6 +55,69 @@ const ConnectToLedger = () => {
   const {instruction, instructionsIndex} = useConnectInstructions(
     paired && !connected && isFocused,
   );
+
+  React.useEffect(() => {
+    const generateAccounts = async () => {
+      const hdPaths: HdPath[] = new Array(10).fill(0).map((_, idx) => ({
+        coinType: 852,
+        account: 0,
+        change: 0,
+        addressIndex: idx,
+      }));
+      const ledgerSigner = new LedgerSigner(transport!, {
+        minLedgerAppVersion: DesmosLedgerApp.minVersion,
+        ledgerAppName: DesmosLedgerApp.name,
+        prefix: 'desmos',
+        ledgerApp: undefined,
+        hdPaths: hdPaths.map(_hdPath => [
+          Slip10RawIndex.hardened(44),
+          Slip10RawIndex.hardened(_hdPath.coinType),
+          Slip10RawIndex.hardened(_hdPath.account),
+          Slip10RawIndex.normal(_hdPath.change),
+          Slip10RawIndex.normal(_hdPath.addressIndex),
+        ]),
+      });
+
+      const accounts = await ledgerSigner.getAccounts();
+
+      const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+
+      const accountsToSearch = accounts.map(async (acc, idx) => {
+        const chainAccount: ChainAccount = {
+          address: acc.address,
+          signAlgorithm: acc.algo,
+          hdPath: hdPaths[idx],
+          type: ChainAccountType.Ledger,
+          pubKey: toBase64(acc.pubkey),
+        };
+
+        return {
+          desmosProfile: await client.getAccount(acc.address),
+          chainAccount,
+        };
+      });
+
+      const results = await Promise.allSettled(accountsToSearch);
+
+      const accountsWithWalletData = results
+        .filter(x => x.status === 'fulfilled')
+        .map((y: any) => ({
+          wallet: y.value.wallet,
+          chainAccount: y.value.chainAccount,
+        }));
+
+      if (accountsWithWalletData.length === 0) {
+        navigate(ROUTES.NO_DTAG_FOUND);
+      } else {
+        navigate(ROUTES.SELECT_DTAG, {
+          accountsWithWalletData,
+        });
+      }
+    };
+
+    if (!transport) return;
+    generateAccounts();
+  }, [transport]);
 
   React.useEffect(() => {
     if (paired && connected) {

@@ -5,7 +5,7 @@ import {getItem} from 'lib/SecureStorage';
 
 const useActiveWallet = ({password}: {password: string}) => {
   const [wallet, setWallet] = React.useState<LocalWallet | undefined>();
-  const walletAddr = getMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR);
+  const walletAddr = getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
   const getWalletFromSecureStorage = React.useCallback(async () => {
     const _wallet = await getItem(`${walletAddr}_key`, {password});
