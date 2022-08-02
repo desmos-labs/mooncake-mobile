@@ -12,6 +12,8 @@ import {DesmosClient} from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
+import {useSetRecoilState} from 'recoil';
+import accountCreationState from '@recoil/accountCreation';
 import useStyles from './useStyles';
 
 /**
@@ -21,6 +23,7 @@ const useHooks = () => {
   const styles = useStyles();
 
   const {t} = useTranslation('passwordManipulation');
+  const setAccountCreationState = useSetRecoilState(accountCreationState);
 
   const {
     params: {mode, mnemonic},
@@ -134,6 +137,11 @@ const useHooks = () => {
             wallet: y.value.wallet,
             chainAccount: y.value.chainAccount,
           }));
+
+        setAccountCreationState(prev => ({
+          ...prev,
+          password: confirmPassword,
+        }));
 
         if (accountsWithWalletData.length === 0) {
           navigate(ROUTES.NO_DTAG_FOUND);

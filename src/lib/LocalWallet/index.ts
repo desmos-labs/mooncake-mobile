@@ -30,7 +30,7 @@ export interface LocalWalletOptions {
   prefix?: string;
 }
 
-const DEFAULT_OPTIONS = {
+export const DEFAULT_WALLET_OPTIONS = {
   hdPath: DesmosHdPath,
   prefix: 'desmos',
 };
@@ -63,7 +63,7 @@ export default class LocalWallet
     mnemonic: string,
     options?: LocalWalletOptions,
   ): Promise<LocalWallet> {
-    const {hdPath, prefix} = {...DEFAULT_OPTIONS, ...options};
+    const {hdPath, prefix} = {...DEFAULT_WALLET_OPTIONS, ...options};
     const {privkey, pubkey} = await CryptoUtils.deriveKeyPairFromMnemonic(
       mnemonic,
       hdPath.coinType,
@@ -119,7 +119,7 @@ export default class LocalWallet
       publicKey = fromBase64(json.publicKey);
     }
     // Handle case of old wallets.
-    const prefix = json.prefix ?? DEFAULT_OPTIONS.prefix;
+    const prefix = json.prefix ?? DEFAULT_WALLET_OPTIONS.prefix;
 
     return new LocalWallet(prefix, privateKey, publicKey);
   }
