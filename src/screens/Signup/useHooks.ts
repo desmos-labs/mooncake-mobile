@@ -16,7 +16,8 @@ import {toBase64} from '@cosmjs/encoding';
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 const useHooks = () => {
-  const {navigate, reset, goBack} = useNavigation<NavProps['navigation']>();
+  const {navigate, reset, goBack, push} =
+    useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
 
   const initialFormValues = {
@@ -73,13 +74,20 @@ const useHooks = () => {
         messages,
         serializedWallet: newWallet.serialize(),
         successAction: () => {
-          reset({
-            index: 0,
-            routes: [
-              {
-                name: ROUTES.HOME,
-              },
-            ],
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('common:congratulations'),
+            subtitle: t('common:dtag created'),
+            buttonLabel: t('resultModal:enterApp'),
+            handleButtonPress: () => {
+              reset({
+                index: 0,
+                routes: [
+                  {
+                    name: ROUTES.HOME,
+                  },
+                ],
+              });
+            },
           });
         },
         failureAction: () => {

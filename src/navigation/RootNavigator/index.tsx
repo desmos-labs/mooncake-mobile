@@ -1,7 +1,9 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
-import BackupSuccessful from 'screens/BackupSuccessful';
+import FullscreenStatusScreen, {
+  FullscreenStatusScreenParams,
+} from 'screens/FullscreenStatusScreen';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
@@ -62,7 +64,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
-  [ROUTES.BACKUP_SUCCESSFUL]: undefined;
+  [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
@@ -104,8 +106,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
 
       <Stack.Screen
-        name={ROUTES.BACKUP_SUCCESSFUL}
-        component={BackupSuccessful}
+        name={ROUTES.FULLSCREEN_STATUS_SCREEN}
+        component={FullscreenStatusScreen}
       />
       <Stack.Screen
         initialParams={{

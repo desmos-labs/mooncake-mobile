@@ -58,7 +58,8 @@ const CreateDesmosProfile = () => {
 
   const {t} = useTranslation('createProfile');
 
-  const {goBack, navigate, reset} = useNavigation<NavProp['navigation']>();
+  const {goBack, navigate, reset, push} =
+    useNavigation<NavProp['navigation']>();
 
   const {image: bannerImage, imageFromLibrary: selectBannerImage} =
     useImageGallery();
@@ -145,13 +146,20 @@ const CreateDesmosProfile = () => {
         messages,
         serializedWallet: newWallet.serialize(),
         successAction: () => {
-          reset({
-            index: 0,
-            routes: [
-              {
-                name: ROUTES.HOME,
-              },
-            ],
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('common:congratulations'),
+            subtitle: t('common:dtag created'),
+            buttonLabel: t('resultModal:enterApp'),
+            handleButtonPress: () => {
+              reset({
+                index: 0,
+                routes: [
+                  {
+                    name: ROUTES.HOME,
+                  },
+                ],
+              });
+            },
           });
         },
         failureAction: () => {
