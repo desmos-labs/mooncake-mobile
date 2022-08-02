@@ -84,7 +84,7 @@ const Signup = () => {
         )
         .max(
           dtagParams.max_length,
-          t('error:minChar', {
+          t('error:maxChar', {
             numChar: dtagParams.max_length,
           }),
         )
@@ -216,7 +216,7 @@ const Signup = () => {
                   <CustomCheckbox
                     checked={values.consent}
                     handlePress={() =>
-                      setFieldValue('consent', !values.consent, false)
+                      setFieldValue('consent', !values.consent, true)
                     }
                     error={!!errors.consent}
                   />
