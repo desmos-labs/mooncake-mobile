@@ -33,7 +33,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
 const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {reset} = useNavigation<NavProps['navigation']>();
 
   const {
     params: {accountsWithWalletData, password},
@@ -66,8 +66,14 @@ const SelectDtag = () => {
     await saveNewAccount(chainAccount);
     setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-    // TODO: refactor with reset
-    navigate(ROUTES.HOME);
+    reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.HOME,
+        },
+      ],
+    });
   }, []);
 
   const renderItem = ({
