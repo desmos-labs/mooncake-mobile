@@ -5,15 +5,19 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
-import {setItem} from 'lib/SecureStorage';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import MsgTypes from 'lib/desmos/msgtypes';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {DesmosHdPath} from 'types/hdpath';
+import {toBase64} from '@cosmjs/encoding';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 const useHooks = () => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, reset, goBack, push} =
+    useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
 
   const initialFormValues = {
@@ -35,17 +39,22 @@ const useHooks = () => {
       });
       const address = newWallet.bech32Address;
 
-      // save mnemonic and wallet to local storage
-      // mnemonic is saved for future "back up" feature
-      await Promise.all([
-        setItem(`${address}_key`, newWallet.serialize(), {
-          password: confirmPassword,
-        }),
-        setItem(`${address}_mnemonic`, mnemonic, {password: confirmPassword}),
-      ]);
+      const account: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: newWallet.bech32Address,
+        hdPath: {
+          ...DesmosHdPath,
+        },
+        pubKey: toBase64(newWallet.publicKey),
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveNewAccount(account);
+      await saveLocalWallet(newWallet, confirmPassword);
+      await saveMnemonic(newWallet.bech32Address, confirmPassword, mnemonic);
+      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
 
       // Save new wallet as last selected wallet
-      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
       // Build save profile message
       const saveProfileMessage: MsgSaveProfileEncodeObject = {
         typeUrl: MsgTypes.MsgSaveProfile,
@@ -64,6 +73,26 @@ const useHooks = () => {
       navigate(ROUTES.BROADCAST_TX, {
         messages,
         serializedWallet: newWallet.serialize(),
+        successAction: () => {
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('common:congratulations'),
+            subtitle: t('common:dtag created'),
+            buttonLabel: t('resultModal:enterApp'),
+            handleButtonPress: () => {
+              reset({
+                index: 0,
+                routes: [
+                  {
+                    name: ROUTES.HOME,
+                  },
+                ],
+              });
+            },
+          });
+        },
+        failureAction: () => {
+          goBack();
+        },
       });
     },
     [],

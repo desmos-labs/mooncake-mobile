@@ -8,18 +8,40 @@ import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {EncodeObject} from '@cosmjs/proto-signing';
 import ROUTES from 'navigation/routes';
-import useBroadcastMessages from 'hooks/useBroadcastMessages';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
+import {useRoute} from '@react-navigation/native';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import LocalWallet from 'lib/LocalWallet';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
+  /**
+   * The messages to be broadcast on chain.
+   */
   messages: EncodeObject[];
 
+  /**
+   * The serialized version of the wallet that will sign the transaction.
+   * This should only be passed as a navigation param (i.e do not refactor
+   * to use a wallet from recoil) as the wallet should only be exposed after
+   * proper user authentication.
+   */
   serializedWallet: string;
 
+  /**
+   * Optional fee granter for the transaction.
+   */
   granter?: string;
+
+  /**
+   * Optional function to run if the transaction is successful
+   */
+  successAction?: () => void;
+
+  /**
+   * Optional function to run if the transaction has failed
+   */
+  failureAction?: () => void;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX>;
@@ -27,7 +49,6 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX>;
 const BroadcastTx: React.FC = () => {
   const {t} = useTranslation('accountCreation');
   const styles = useStyles();
-  const {push} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const [error, setError] = React.useState('');
   const broadcastMessages = useBroadcastMessages();
@@ -46,15 +67,12 @@ const BroadcastTx: React.FC = () => {
 
       // success
 
-      push(ROUTES.RESULT_MODAL, {
-        title: t('resultModal:congrats'),
-        subtitle: t('resultModal:profileCreated'),
-        primaryButtonLabel: t('resultModal:enterApp'),
-        onPressPrimary: () => {},
-      });
+      params.successAction && params.successAction();
     } catch (err: any) {
       setError(err.message);
       console.log(error);
+
+      params.failureAction && params.failureAction();
     }
   }, [params]);
 

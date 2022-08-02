@@ -18,7 +18,6 @@ import * as bip39 from 'bip39';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {CryptoUtils} from 'types/cryptoUtils';
 import {DesmosHdPath, HdPath} from 'types/hdpath';
-import {Platform} from 'react-native';
 
 export interface LocalWalletOptions {
   /**
@@ -31,7 +30,7 @@ export interface LocalWalletOptions {
   prefix?: string;
 }
 
-const DEFAULT_OPTIONS = {
+export const DEFAULT_WALLET_OPTIONS = {
   hdPath: DesmosHdPath,
   prefix: 'desmos',
 };
@@ -64,7 +63,7 @@ export default class LocalWallet
     mnemonic: string,
     options?: LocalWalletOptions,
   ): Promise<LocalWallet> {
-    const {hdPath, prefix} = {...DEFAULT_OPTIONS, ...options};
+    const {hdPath, prefix} = {...DEFAULT_WALLET_OPTIONS, ...options};
     const {privkey, pubkey} = await CryptoUtils.deriveKeyPairFromMnemonic(
       mnemonic,
       hdPath.coinType,
@@ -74,7 +73,6 @@ export default class LocalWallet
     );
     const privkeyBytes = fromHex(privkey);
     const pubkeyBytes = fromHex(pubkey);
-    console.log(Platform.OS, 'public key', pubkey);
     const compressedPubKey = await Secp256k1.compressPubkey(pubkeyBytes);
     return new LocalWallet(prefix, privkeyBytes, compressedPubKey);
   }
@@ -121,7 +119,7 @@ export default class LocalWallet
       publicKey = fromBase64(json.publicKey);
     }
     // Handle case of old wallets.
-    const prefix = json.prefix ?? DEFAULT_OPTIONS.prefix;
+    const prefix = json.prefix ?? DEFAULT_WALLET_OPTIONS.prefix;
 
     return new LocalWallet(prefix, privateKey, publicKey);
   }

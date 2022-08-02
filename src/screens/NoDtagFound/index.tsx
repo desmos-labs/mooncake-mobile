@@ -5,14 +5,31 @@ import Typography from 'components/Typography';
 import {Image, View} from 'react-native';
 import Button from 'components/Button';
 import {errorImage} from 'assets/images';
+import {useRecoilValue} from 'recoil';
+import accountCreationState, {
+  AccountCreationMode,
+} from '@recoil/accountCreation';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.NO_DTAG_FOUND>;
 
 const NoDtagFound = () => {
   const {t} = useTranslation('noDtagFound');
   const styles = useStyles();
+  const accountCreation = useRecoilValue(accountCreationState);
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const handlePress = React.useCallback(() => {
-    // implementation
+    if (
+      accountCreation &&
+      accountCreation.creationMode === AccountCreationMode.IMPORT_MNEMONIC
+    ) {
+      navigate(ROUTES.CREATE_DESMOS_PROFILE);
+    }
   }, []);
 
   return (

@@ -6,6 +6,11 @@ import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 import {MNEMONIC_INPUT_MODE, NavProps} from 'screens/MnemonicInput';
 import {useTranslation} from 'react-i18next';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useSetRecoilState} from 'recoil';
+import accountCreationState, {
+  AccountCreationMode,
+} from '@recoil/accountCreation';
+import {ChainAccountType} from 'types/chains';
 
 /**
  * Hooks for the MnemonicInput screen
@@ -15,6 +20,7 @@ const useHooks = () => {
     params: {mode},
   } = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const setAccountCreationState = useSetRecoilState(accountCreationState);
 
   const {t} = useTranslation('mnemonicInput');
 
@@ -57,11 +63,21 @@ const useHooks = () => {
 
   const onSubmit = React.useCallback(
     (values: typeof initialFormFields) => {
-      console.log(values);
-
       if (mode === MNEMONIC_INPUT_MODE.RESET_PASSWORD) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
+        });
+      }
+      if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
+        setAccountCreationState({
+          mnemonic: values.mnemonic.trim(),
+          type: ChainAccountType.Local,
+          creationMode: AccountCreationMode.IMPORT_MNEMONIC,
+        });
+
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
+          mnemonic: values.mnemonic.trim(),
         });
       }
     },

@@ -1,7 +1,9 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
-import BackupSuccessful from 'screens/BackupSuccessful';
+import FullscreenStatusScreen, {
+  FullscreenStatusScreenParams,
+} from 'screens/FullscreenStatusScreen';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
@@ -29,7 +31,7 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
-import SelectDtag from 'screens/SelectDtag';
+import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
 import DevScreen from 'screens/DEV';
 import WelcomePage from 'screens/WelcomePage';
@@ -58,15 +60,14 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
-  [ROUTES.SELECT_DTAG]: undefined;
+  [ROUTES.SELECT_DTAG]: SelectDtagParamList;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
   [ROUTES.WELCOME_PAGE]: undefined;
-  [ROUTES.BACKUP_SUCCESSFUL]: undefined;
+  [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.GENERATE_ACCOUNT]: undefined;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
 
@@ -90,11 +91,12 @@ const RootNavigator = () => {
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
+      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
       />
-      <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
@@ -104,8 +106,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
 
       <Stack.Screen
-        name={ROUTES.BACKUP_SUCCESSFUL}
-        component={BackupSuccessful}
+        name={ROUTES.FULLSCREEN_STATUS_SCREEN}
+        component={FullscreenStatusScreen}
       />
       <Stack.Screen
         initialParams={{

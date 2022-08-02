@@ -30,6 +30,14 @@ import TextCounter from 'components/TextCounter';
 import Button from 'components/Button';
 import {useTheme} from 'react-native-paper';
 import useImageGallery from 'hooks/useImageGallery';
+import accountCreationState from '@recoil/accountCreation';
+import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
+import {ChainAccount} from 'types/chains';
+import {toBase64} from '@cosmjs/encoding';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
+import MsgTypes from 'lib/desmos/msgtypes';
 import useStyles from './useStyles';
 
 type NavProp = StackScreenProps<
@@ -50,7 +58,8 @@ const CreateDesmosProfile = () => {
 
   const {t} = useTranslation('createProfile');
 
-  const {goBack} = useNavigation<NavProp['navigation']>();
+  const {goBack, navigate, reset, push} =
+    useNavigation<NavProp['navigation']>();
 
   const {image: bannerImage, imageFromLibrary: selectBannerImage} =
     useImageGallery();
@@ -59,6 +68,7 @@ const CreateDesmosProfile = () => {
     useImageGallery();
 
   const profileParams = useRecoilValue(profileParamsState);
+  const accountCreation = useRecoilValue(accountCreationState);
 
   const nicknameInputRef = React.useRef<any>();
   const dTagInputRef = React.useRef<any>();
@@ -92,8 +102,70 @@ const CreateDesmosProfile = () => {
   }, [profileParams]);
 
   const handleFormSubmit = React.useCallback(
-    (values: typeof initialFormState) => {
-      console.log(values);
+    async (formValues: typeof initialFormState) => {
+      const {dTag, nickname, bio} = formValues;
+      const {password, mnemonic, type} = accountCreation;
+
+      const newWallet = await LocalWallet.fromMnemonic(mnemonic);
+
+      const newAccount: ChainAccount = {
+        address: newWallet.bech32Address,
+        pubKey: toBase64(newWallet.publicKey),
+        type,
+        hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveLocalWallet(newWallet, password!);
+      await saveNewAccount(newAccount);
+      await saveMnemonic(newWallet.bech32Address, mnemonic, password!);
+      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, newWallet.bech32Address);
+
+      // images are placeholders. They should be uploaded and the link
+      // be passed as parameters to the save profile message
+      console.log(profileImage);
+      console.log(bannerImage);
+
+      // Save new wallet as last selected wallet
+      // Build save profile message
+      const saveProfileMessage: MsgSaveProfileEncodeObject = {
+        typeUrl: MsgTypes.MsgSaveProfile,
+        value: {
+          creator: newWallet.bech32Address,
+          dtag: dTag,
+          nickname: nickname || '[do-not-modify]',
+          bio: bio || '[do-not-modify]',
+          profilePicture: '[do-not-modify]',
+          coverPicture: '[do-not-modify]',
+        },
+      };
+
+      const messages = [saveProfileMessage];
+
+      navigate(ROUTES.BROADCAST_TX, {
+        messages,
+        serializedWallet: newWallet.serialize(),
+        successAction: () => {
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('common:congratulations'),
+            subtitle: t('common:dtag created'),
+            buttonLabel: t('resultModal:enterApp'),
+            handleButtonPress: () => {
+              reset({
+                index: 0,
+                routes: [
+                  {
+                    name: ROUTES.HOME,
+                  },
+                ],
+              });
+            },
+          });
+        },
+        failureAction: () => {
+          goBack();
+        },
+      });
     },
     [],
   );

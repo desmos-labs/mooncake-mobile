@@ -8,6 +8,7 @@ const EnvConfig = {
   },
   CHAIN_ID: Config.CHAIN_ID,
   FEE_GRANTER: Config.FEE_GRANTER,
+  DESMOS_RPC: Config.DESMOS_RPC,
 };
 
 export default EnvConfig;
