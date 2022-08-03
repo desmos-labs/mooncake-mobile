@@ -5,7 +5,6 @@ import LookingForDevices, {
 } from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
 import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
 
 export type AuthorizeWalletParams = {
@@ -18,15 +17,16 @@ export type AuthorizeWalletParams = {
 
 const Stack = createStackNavigator<AuthorizeWalletParams>();
 
+/**
+ * Navigation stack for authorizing and unlocking the user's stored wallets
+ * and/or accounts
+ */
 const AuthorizeWalletStack = () => {
-  const {params} = useRoute<any>();
-
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
         name={ROUTES.AUTH_LOOKING_FOR_DEVICES}
         component={LookingForDevices}
-        initialParams={params}
       />
 
       <Stack.Screen
@@ -37,7 +37,6 @@ const AuthorizeWalletStack = () => {
       <Stack.Screen
         name={ROUTES.AUTH_UNLOCK_LOCAL_WALLET}
         component={EnterPassword}
-        initialParams={params}
       />
     </Stack.Navigator>
   );

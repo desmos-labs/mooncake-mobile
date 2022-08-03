@@ -11,7 +11,7 @@ type CreateLedgerAccountAtom = {
  */
 const createLedgerAccountState = atom<CreateLedgerAccountAtom>({
   key: 'createLedgerAccount',
-  default: {},
+  default: undefined,
 });
 
 export default createLedgerAccountState;

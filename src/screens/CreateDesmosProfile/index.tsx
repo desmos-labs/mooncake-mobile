@@ -30,9 +30,9 @@ import TextCounter from 'components/TextCounter';
 import Button from 'components/Button';
 import {useTheme} from 'react-native-paper';
 import useImageGallery from 'hooks/useImageGallery';
-import accountCreationState from '@recoil/accountCreation';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
-import {ChainAccount} from 'types/chains';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
@@ -70,7 +70,7 @@ const CreateDesmosProfile = () => {
     useImageGallery();
 
   const profileParams = useRecoilValue(profileParamsState);
-  const accountCreation = useRecoilValue(accountCreationState);
+  const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
   const unlockWallet = useUnlockWallet();
 
@@ -109,18 +109,16 @@ const CreateDesmosProfile = () => {
     async (formValues: typeof initialFormState) => {
       const {dTag, nickname, bio} = formValues;
 
-      const {account: ledgerAccount} = createLedgerAccount;
-
       let wallet: LocalWallet;
 
       if (accountCreation && accountCreation.mnemonic) {
-        const {password, mnemonic, type} = accountCreation;
+        const {password, mnemonic} = accountCreation;
         wallet = await LocalWallet.fromMnemonic(mnemonic);
 
         const newAccount: ChainAccount = {
           address: wallet.bech32Address,
           pubKey: toBase64(wallet.publicKey),
-          type,
+          type: ChainAccountType.Local,
           hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
           signAlgorithm: 'secp256k1',
         };
@@ -129,7 +127,9 @@ const CreateDesmosProfile = () => {
         await saveNewAccount(newAccount);
         await saveMnemonic(wallet.bech32Address, mnemonic, password!);
         setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-      } else if (ledgerAccount) {
+      } else if (createLedgerAccount && createLedgerAccount.account) {
+        const {account: ledgerAccount} = createLedgerAccount;
+
         wallet = (await unlockWallet(ledgerAccount)) as LocalWallet;
         await saveNewAccount(ledgerAccount);
         console.log('unlocked wallet', wallet);
