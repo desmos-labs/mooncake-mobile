@@ -16,13 +16,14 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import {LedgerSigner} from '@cosmjs/ledger-amino';
 import {DesmosLedgerApp} from 'config/LedgerApps';
 import {HdPath} from 'types/hdpath';
-import {Slip10RawIndex} from '@cosmjs/crypto';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {DesmosClient} from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
 import {useSetRecoilState} from 'recoil';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import {toCosmjsHdPath} from 'lib/FormatUtils';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -30,6 +31,12 @@ export type ConnectToLedgerParams = {
   bleLedger: BleLedger;
 
   ledgerApp: LedgerApp;
+
+  autoClose?: boolean;
+
+  onConnectionEstablished?: (transport: BluetoothTransport) => void;
+
+  onCancel?: () => void;
 };
 
 type NavProps = StackScreenProps<
@@ -44,7 +51,11 @@ const ConnectToLedger = () => {
   const {t} = useTranslation('connectToLedger');
   const theme = useTheme();
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, goBack, addListener} =
+    useNavigation<NavProps['navigation']>();
+  const {
+    params: {autoClose, onCancel, onConnectionEstablished},
+  } = useRoute<NavProps['route']>();
 
   const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
 
@@ -61,6 +72,27 @@ const ConnectToLedger = () => {
   );
 
   React.useEffect(() => {
+    if (autoClose && transport) {
+      onConnectionEstablished!(transport);
+      goBack();
+    }
+  }, [transport]);
+
+  React.useEffect(() => {
+    if (autoClose) {
+      addListener('beforeRemove', e => {
+        if (
+          e.data.action.type === 'GO_BACK' &&
+          !connected &&
+          onCancel !== undefined
+        ) {
+          onCancel();
+        }
+      });
+    }
+  }, []);
+
+  React.useEffect(() => {
     const generateAccounts = async () => {
       const hdPaths: HdPath[] = new Array(1).fill(0).map((_hdpath, idx) => ({
         coinType: 852,
@@ -73,13 +105,7 @@ const ConnectToLedger = () => {
         ledgerAppName: DesmosLedgerApp.name,
         prefix: 'desmos',
         ledgerApp: undefined,
-        hdPaths: hdPaths.map(_hdPath => [
-          Slip10RawIndex.hardened(44),
-          Slip10RawIndex.hardened(_hdPath.coinType),
-          Slip10RawIndex.hardened(_hdPath.account),
-          Slip10RawIndex.normal(_hdPath.change),
-          Slip10RawIndex.normal(_hdPath.addressIndex),
-        ]),
+        hdPaths: hdPaths.map(toCosmjsHdPath),
       });
 
       const accounts = await ledgerSigner.getAccounts();
@@ -122,7 +148,9 @@ const ConnectToLedger = () => {
       }
     };
 
-    if (!transport) return;
+    // do not run generate account logic if transport object does not exist
+    // or the autoClose override is passed as param.
+    if (!transport || autoClose) return;
     generateAccounts();
   }, [transport]);
 

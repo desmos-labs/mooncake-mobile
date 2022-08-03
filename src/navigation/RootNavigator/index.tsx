@@ -9,7 +9,7 @@ import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
-import EnterPassword from 'screens/EnterPassword';
+import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
@@ -23,7 +23,9 @@ import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
 import Community from 'screens/Community';
 import Profiles from 'screens/Profiles';
-import LookingForDevices from 'screens/LookingForDevices';
+import LookingForDevices, {
+  LookingForDevicesParams,
+} from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import Profile from 'screens/Profile';
 import MnemonicInput, {
@@ -43,7 +45,7 @@ import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.ENTER_PASSWORD]: undefined;
+  [ROUTES.ENTER_PASSWORD]: EnterPasswordParams;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -51,7 +53,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
-  [ROUTES.LOOKING_FOR_DEVICES]: undefined;
+  [ROUTES.LOOKING_FOR_DEVICES]: LookingForDevicesParams;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
   [ROUTES.USER_PROFILE]: undefined;

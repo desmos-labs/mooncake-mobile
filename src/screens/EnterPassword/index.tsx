@@ -13,20 +13,66 @@ import {
   View,
 } from 'react-native';
 import * as Yup from 'yup';
+import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
+import {getLocalWallet} from 'lib/SecureStorage';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import useStyles from './useStyles';
 
 const initialFormValues = {
   password: '',
 };
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_PASSWORD>;
+
+/**
+ * These optional params are for unlocking a specific wallet
+ */
+export type EnterPasswordParams = {
+  address?: string;
+
+  provideWallet?: boolean;
+
+  onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
+
+  onFailedAuthentication?: () => void;
+};
+
 const EnterPassword = () => {
   const {t} = useTranslation('enterPassword');
+  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {
+    params: {
+      address,
+      provideWallet,
+      onSuccessfulAuthentication,
+      onFailedAuthentication,
+    },
+  } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
 
   const onFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      console.log(formValues);
+    async (formValues: typeof initialFormValues) => {
+      const {password} = formValues;
+      const useBiometrics = getMMKV(MMKVKEYS.USE_BIOMETRICS);
+
+      if (address) {
+        const wallet = await getLocalWallet(address, password, useBiometrics);
+
+        if (wallet && onSuccessfulAuthentication) {
+          onSuccessfulAuthentication({
+            wallet: provideWallet ? wallet : undefined,
+            authorized: true,
+          });
+        }
+      }
+
+      onFailedAuthentication && onFailedAuthentication();
+      goBack();
     },
     [],
   );
