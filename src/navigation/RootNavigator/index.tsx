@@ -9,7 +9,6 @@ import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
-import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
@@ -23,9 +22,7 @@ import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
 import Community from 'screens/Community';
 import Profiles from 'screens/Profiles';
-import LookingForDevices, {
-  LookingForDevicesParams,
-} from 'screens/LookingForDevices';
+import LookingForDevices from 'screens/LookingForDevices';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import Profile from 'screens/Profile';
 import MnemonicInput, {
@@ -42,11 +39,13 @@ import NoDtagFound from 'screens/NoDtagFound';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
-import AuthorizeViaLedgerStack from 'navigation/RootNavigator/AuthorizeViaLedgerStack';
+import AuthorizeWalletStack, {
+  AuthorizeWalletParams,
+} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import {NavigatorScreenParams} from '@react-navigation/native';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.ENTER_PASSWORD]: EnterPasswordParams;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -54,7 +53,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
-  [ROUTES.LOOKING_FOR_DEVICES]: LookingForDevicesParams;
+  [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
   [ROUTES.USER_PROFILE]: undefined;
@@ -74,7 +73,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
 
-  [ROUTES.AUTHORIZE_VIA_LEDGER]: LookingForDevicesParams;
+  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -169,7 +168,6 @@ const RootNavigator = () => {
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
       />
-      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -223,8 +221,8 @@ const RootNavigator = () => {
       </Stack.Group>
 
       <Stack.Screen
-        name={ROUTES.AUTHORIZE_VIA_LEDGER}
-        component={AuthorizeViaLedgerStack}
+        name={ROUTES.AUTHORIZE_WALLET}
+        component={AuthorizeWalletStack}
       />
     </Stack.Navigator>
   );

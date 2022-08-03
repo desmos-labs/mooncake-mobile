@@ -93,7 +93,7 @@ const useHooks = () => {
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
         // perhaps move this into global config
-        const ACCOUNT_SEARCH_LIMIT = 10;
+        const ACCOUNT_SEARCH_LIMIT = 1;
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const {confirmPassword} = formValues;

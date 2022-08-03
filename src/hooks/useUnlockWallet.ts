@@ -11,7 +11,10 @@ import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, any>;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.AUTHORIZE_WALLET
+>;
 
 export type LocalAccountAuthenticationArgs = {
   authorized: boolean;
@@ -31,8 +34,8 @@ export default function useUnlockWallet(): (
     async (account: ChainAccount) => {
       if (account.type === ChainAccountType.Local) {
         return new Promise((resolve, reject) => {
-          navigation.navigate({
-            name: ROUTES.ENTER_PASSWORD,
+          navigation.navigate(ROUTES.AUTHORIZE_WALLET, {
+            screen: ROUTES.AUTH_UNLOCK_LOCAL_WALLET,
             params: {
               address: account.address,
               provideWallet: true,
@@ -47,8 +50,8 @@ export default function useUnlockWallet(): (
         });
       }
       return new Promise(resolve => {
-        navigation.navigate({
-          name: ROUTES.AUTHORIZE_VIA_LEDGER,
+        navigation.navigate(ROUTES.AUTHORIZE_WALLET, {
+          screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
           params: {
             ledgerApp: DesmosLedgerApp,
             autoClose: true,

@@ -94,12 +94,14 @@ const ConnectToLedger = () => {
 
   React.useEffect(() => {
     const generateAccounts = async () => {
+      // originally planned to iterate over address index to generate some accounts, hence the Array.map
       const hdPaths: HdPath[] = new Array(1).fill(0).map((_hdpath, idx) => ({
         coinType: 852,
         account: 0,
         change: 0,
         addressIndex: idx,
       }));
+
       const ledgerSigner = new LedgerSigner(transport!, {
         minLedgerAppVersion: DesmosLedgerApp.minVersion,
         ledgerAppName: DesmosLedgerApp.name,

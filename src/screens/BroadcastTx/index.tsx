@@ -19,14 +19,9 @@ export type BroadcastTxParams = {
    */
   messages: EncodeObject[];
 
-  // /**
-  //  * The serialized version of the wallet that will sign the transaction.
-  //  * This should only be passed as a navigation param (i.e do not refactor
-  //  * to use a wallet from recoil) as the wallet should only be exposed after
-  //  * proper user authentication.
-  //  */
-  // serializedWallet: string;
-
+  /**
+   * Signer used to sign the transaction
+   */
   offlineSigner: OfflineSigner;
 
   /**
@@ -51,13 +46,10 @@ const BroadcastTx: React.FC = () => {
   const {t} = useTranslation('accountCreation');
   const styles = useStyles();
   const {params} = useRoute<NavProps['route']>();
-  // const [error, setError] = React.useState('');
   const broadcastMessages = useBroadcastMessages();
 
   const broadcastTx = React.useCallback(async () => {
     const {messages, granter, offlineSigner} = params;
-
-    // const wallet = await LocalWallet.deserialize(serializedWallet);
 
     const gas = messagesGas(messages);
     // hardcoded denom for now
@@ -66,11 +58,8 @@ const BroadcastTx: React.FC = () => {
     try {
       await broadcastMessages(offlineSigner, messages, txFee, '', granter);
 
-      // success
-
       params.successAction && params.successAction();
     } catch (err: any) {
-      // setError(err.message);
       console.log(err.message);
 
       params.failureAction && params.failureAction();
