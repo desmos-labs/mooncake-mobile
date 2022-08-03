@@ -1,16 +1,7 @@
 import {atom} from 'recoil';
-import {ChainAccountType} from 'types/chains';
-
-export enum AccountCreationMode {
-  IMPORT_MNEMONIC,
-}
 
 type AccountCreationAtom = {
   mnemonic: string;
-
-  type: ChainAccountType;
-
-  creationMode: AccountCreationMode;
 
   password?: string;
 };
@@ -21,9 +12,9 @@ type AccountCreationAtom = {
  * no accounts found for the mnemonic, as other flows do not require persisting
  * the account creation data
  */
-const accountCreationState = atom<AccountCreationAtom>({
+const createLocalWalletState = atom<AccountCreationAtom>({
   key: 'accountCreation',
   default: undefined,
 });
 
-export default accountCreationState;
+export default createLocalWalletState;

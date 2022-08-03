@@ -13,7 +13,7 @@ import EnvConfig from 'config/EnvConfig';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {useSetRecoilState} from 'recoil';
-import accountCreationState from '@recoil/accountCreation';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 import useStyles from './useStyles';
 
 /**
@@ -23,7 +23,7 @@ const useHooks = () => {
   const styles = useStyles();
 
   const {t} = useTranslation('passwordManipulation');
-  const setAccountCreationState = useSetRecoilState(accountCreationState);
+  const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
 
   const {
     params: {mode, mnemonic},
@@ -92,7 +92,8 @@ const useHooks = () => {
         });
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
-        const ACCOUNT_SEARCH_LIMIT = 10;
+        // perhaps move this into global config
+        const ACCOUNT_SEARCH_LIMIT = 1;
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const {confirmPassword} = formValues;
@@ -138,7 +139,7 @@ const useHooks = () => {
             chainAccount: y.value.chainAccount,
           }));
 
-        setAccountCreationState(prev => ({
+        setCreateLocalWalletState(prev => ({
           ...prev,
           password: confirmPassword,
         }));

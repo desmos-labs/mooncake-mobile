@@ -1,4 +1,4 @@
-import {LedgerConnector} from '@cosmjs/ledger-amino';
+import {LaunchpadLedger} from '@cosmjs/ledger-amino';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -25,7 +25,7 @@ export default function useConnectToLedger(
           await BluetoothTransport.open(ledgerToConnect.id);
 
         setPaired(true);
-        const launchpad = new LedgerConnector(transportToUse, {
+        const launchpad = new LaunchpadLedger(transportToUse, {
           ledgerAppName: ledgerAppToUse.name,
         });
         await launchpad.getCosmosAppVersion().catch(async ex => {

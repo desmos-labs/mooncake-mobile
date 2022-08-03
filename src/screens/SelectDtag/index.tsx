@@ -22,10 +22,10 @@ export type SelectDtagParamList = {
     /**
      * serialized wallet data
      */
-    wallet: string;
+    wallet?: string;
   }[];
 
-  password: string;
+  password?: string;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
@@ -33,7 +33,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
 const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {reset} = useNavigation<NavProps['navigation']>();
 
   const {
     params: {accountsWithWalletData, password},
@@ -55,14 +55,25 @@ const SelectDtag = () => {
     if (!walletData) return;
     const {wallet, chainAccount} = walletData;
 
-    const deserializedWallet = await LocalWallet.deserialize(wallet);
+    // ledger accounts won't have wallet data
+    // if a wallet is passed, then there will be a password as well
+    if (wallet) {
+      const deserializedWallet = await LocalWallet.deserialize(wallet);
 
-    await saveLocalWallet(deserializedWallet, password);
+      await saveLocalWallet(deserializedWallet, password!);
+    }
+
     await saveNewAccount(chainAccount);
-    setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
+    setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-    // TODO: refactor with reset
-    navigate(ROUTES.HOME);
+    reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.HOME,
+        },
+      ],
+    });
   }, []);
 
   const renderItem = ({

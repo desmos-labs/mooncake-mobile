@@ -52,7 +52,7 @@ const useHooks = () => {
       await saveNewAccount(account);
       await saveLocalWallet(newWallet, confirmPassword);
       await saveMnemonic(newWallet.bech32Address, confirmPassword, mnemonic);
-      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, address);
+      setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
       // Save new wallet as last selected wallet
       // Build save profile message

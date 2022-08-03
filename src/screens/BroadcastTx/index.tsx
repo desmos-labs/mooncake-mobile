@@ -6,12 +6,11 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import {EncodeObject} from '@cosmjs/proto-signing';
+import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
 import ROUTES from 'navigation/routes';
 import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
-import LocalWallet from 'lib/LocalWallet';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -21,12 +20,9 @@ export type BroadcastTxParams = {
   messages: EncodeObject[];
 
   /**
-   * The serialized version of the wallet that will sign the transaction.
-   * This should only be passed as a navigation param (i.e do not refactor
-   * to use a wallet from recoil) as the wallet should only be exposed after
-   * proper user authentication.
+   * Signer used to sign the transaction
    */
-  serializedWallet: string;
+  offlineSigner: OfflineSigner;
 
   /**
    * Optional fee granter for the transaction.
@@ -50,27 +46,21 @@ const BroadcastTx: React.FC = () => {
   const {t} = useTranslation('accountCreation');
   const styles = useStyles();
   const {params} = useRoute<NavProps['route']>();
-  const [error, setError] = React.useState('');
   const broadcastMessages = useBroadcastMessages();
 
   const broadcastTx = React.useCallback(async () => {
-    const {messages, granter, serializedWallet} = params;
-
-    const wallet = await LocalWallet.deserialize(serializedWallet);
+    const {messages, granter, offlineSigner} = params;
 
     const gas = messagesGas(messages);
     // hardcoded denom for now
     const txFee = computeTxFees(gas, 'udaric').average;
 
     try {
-      await broadcastMessages(wallet, messages, txFee, '', granter);
-
-      // success
+      await broadcastMessages(offlineSigner, messages, txFee, '', granter);
 
       params.successAction && params.successAction();
     } catch (err: any) {
-      setError(err.message);
-      console.log(error);
+      console.log(err.message);
 
       params.failureAction && params.failureAction();
     }

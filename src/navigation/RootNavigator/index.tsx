@@ -9,7 +9,6 @@ import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
-import EnterPassword from 'screens/EnterPassword';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
@@ -40,10 +39,13 @@ import NoDtagFound from 'screens/NoDtagFound';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
+import AuthorizeWalletStack, {
+  AuthorizeWalletParams,
+} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import {NavigatorScreenParams} from '@react-navigation/native';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.ENTER_PASSWORD]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -70,6 +72,8 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+
+  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -164,7 +168,6 @@ const RootNavigator = () => {
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
       />
-      <Stack.Screen name={ROUTES.ENTER_PASSWORD} component={EnterPassword} />
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -216,6 +219,11 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
+
+      <Stack.Screen
+        name={ROUTES.AUTHORIZE_WALLET}
+        component={AuthorizeWalletStack}
+      />
     </Stack.Navigator>
   );
 };

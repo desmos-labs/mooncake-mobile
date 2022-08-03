@@ -30,14 +30,16 @@ import TextCounter from 'components/TextCounter';
 import Button from 'components/Button';
 import {useTheme} from 'react-native-paper';
 import useImageGallery from 'hooks/useImageGallery';
-import accountCreationState from '@recoil/accountCreation';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
-import {ChainAccount} from 'types/chains';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import MsgTypes from 'lib/desmos/msgtypes';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import useStyles from './useStyles';
 
 type NavProp = StackScreenProps<
@@ -68,7 +70,9 @@ const CreateDesmosProfile = () => {
     useImageGallery();
 
   const profileParams = useRecoilValue(profileParamsState);
-  const accountCreation = useRecoilValue(accountCreationState);
+  const accountCreation = useRecoilValue(createLocalWalletState);
+  const createLedgerAccount = useRecoilValue(createLedgerAccountState);
+  const unlockWallet = useUnlockWallet();
 
   const nicknameInputRef = React.useRef<any>();
   const dTagInputRef = React.useRef<any>();
@@ -104,22 +108,32 @@ const CreateDesmosProfile = () => {
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
       const {dTag, nickname, bio} = formValues;
-      const {password, mnemonic, type} = accountCreation;
 
-      const newWallet = await LocalWallet.fromMnemonic(mnemonic);
+      let wallet: LocalWallet;
 
-      const newAccount: ChainAccount = {
-        address: newWallet.bech32Address,
-        pubKey: toBase64(newWallet.publicKey),
-        type,
-        hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-        signAlgorithm: 'secp256k1',
-      };
+      if (accountCreation && accountCreation.mnemonic) {
+        const {password, mnemonic} = accountCreation;
+        wallet = await LocalWallet.fromMnemonic(mnemonic);
 
-      await saveLocalWallet(newWallet, password!);
-      await saveNewAccount(newAccount);
-      await saveMnemonic(newWallet.bech32Address, mnemonic, password!);
-      setMMKV(MMKVKEYS.ACTIVE_WALLET_ADDR, newWallet.bech32Address);
+        const newAccount: ChainAccount = {
+          address: wallet.bech32Address,
+          pubKey: toBase64(wallet.publicKey),
+          type: ChainAccountType.Local,
+          hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+          signAlgorithm: 'secp256k1',
+        };
+
+        await saveLocalWallet(wallet, password!);
+        await saveNewAccount(newAccount);
+        await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+      } else if (createLedgerAccount && createLedgerAccount.account) {
+        const {account: ledgerAccount} = createLedgerAccount;
+
+        wallet = (await unlockWallet(ledgerAccount)) as LocalWallet;
+        await saveNewAccount(ledgerAccount);
+        console.log('unlocked wallet', wallet);
+      }
 
       // images are placeholders. They should be uploaded and the link
       // be passed as parameters to the save profile message
@@ -131,7 +145,7 @@ const CreateDesmosProfile = () => {
       const saveProfileMessage: MsgSaveProfileEncodeObject = {
         typeUrl: MsgTypes.MsgSaveProfile,
         value: {
-          creator: newWallet.bech32Address,
+          creator: wallet!.bech32Address,
           dtag: dTag,
           nickname: nickname || '[do-not-modify]',
           bio: bio || '[do-not-modify]',
@@ -144,7 +158,7 @@ const CreateDesmosProfile = () => {
 
       navigate(ROUTES.BROADCAST_TX, {
         messages,
-        serializedWallet: newWallet.serialize(),
+        offlineSigner: wallet!,
         successAction: () => {
           push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
             title: t('common:congratulations'),

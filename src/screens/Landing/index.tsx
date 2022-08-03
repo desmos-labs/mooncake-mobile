@@ -56,7 +56,11 @@ const Landing = () => {
         </Spacer>
       </View>
 
-      <TouchableOpacity style={styles.connectLedgerButton}>
+      <TouchableOpacity
+        style={styles.connectLedgerButton}
+        onPress={() => {
+          navigate(ROUTES.LOOKING_FOR_DEVICES);
+        }}>
         <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
 
         <Typography.Button1 style={{color: theme.colors.white}}>

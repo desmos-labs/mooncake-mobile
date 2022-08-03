@@ -19,7 +19,7 @@ const defaultOptions: Keychain.Options = {
 enum SECURE_STORAGE_KEYS {
   WALLET_SUFFIX = '_KEY',
   MNEMONIC_SUFFIX = '_MNEMONIC',
-  WALLET_PASSWORD = 'WALLET_PASSWORD',
+  WALLET_PASSWORD_SUFFIX = '_WALLET_PASSWORD',
   ACCOUNTS = 'ACCOUNTS',
 }
 
@@ -108,7 +108,8 @@ export const saveNewAccount = async (_account: ChainAccount) => {
   } else await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, [_account]);
 };
 
-export const getAccounts = async () => getItem(SECURE_STORAGE_KEYS.ACCOUNTS);
+export const getAccounts = async () =>
+  getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
 
 export const saveLocalWallet = async (
   _wallet: LocalWallet,
@@ -118,9 +119,13 @@ export const saveLocalWallet = async (
   const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
   if (useBiometrics) {
-    await setItem(SECURE_STORAGE_KEYS.WALLET_PASSWORD, password, {
-      biometrics: true,
-    });
+    await setItem(
+      `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+      password,
+      {
+        biometrics: true,
+      },
+    );
   }
 
   return setItem(walletKey, _wallet.serialize(), {password});
@@ -130,13 +135,13 @@ export const getLocalWallet = async (
   address: string,
   password?: string,
   useBiometrics?: boolean,
-) => {
+): Promise<LocalWallet | undefined> => {
   let walletPassword = password;
   const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
   if (useBiometrics) {
     walletPassword = await getItem<string>(
-      SECURE_STORAGE_KEYS.WALLET_PASSWORD,
+      `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
       {
         biometrics: true,
       },
@@ -171,9 +176,12 @@ export const getMnemonic = async (
 ) => {
   let _password = password;
   if (!password && useBiometrics) {
-    _password = await getItem<string>(SECURE_STORAGE_KEYS.WALLET_PASSWORD, {
-      biometrics: true,
-    });
+    _password = await getItem<string>(
+      `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+      {
+        biometrics: true,
+      },
+    );
   }
 
   return getItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`, {

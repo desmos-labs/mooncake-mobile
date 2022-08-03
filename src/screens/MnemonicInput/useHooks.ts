@@ -7,10 +7,7 @@ import {MNEMONIC_INPUT_MODE, NavProps} from 'screens/MnemonicInput';
 import {useTranslation} from 'react-i18next';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useSetRecoilState} from 'recoil';
-import accountCreationState, {
-  AccountCreationMode,
-} from '@recoil/accountCreation';
-import {ChainAccountType} from 'types/chains';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 
 /**
  * Hooks for the MnemonicInput screen
@@ -20,7 +17,7 @@ const useHooks = () => {
     params: {mode},
   } = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const setAccountCreationState = useSetRecoilState(accountCreationState);
+  const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
 
   const {t} = useTranslation('mnemonicInput');
 
@@ -69,10 +66,8 @@ const useHooks = () => {
         });
       }
       if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
-        setAccountCreationState({
+        setCreateLocalWalletState({
           mnemonic: values.mnemonic.trim(),
-          type: ChainAccountType.Local,
-          creationMode: AccountCreationMode.IMPORT_MNEMONIC,
         });
 
         navigate(ROUTES.PASSWORD_MANIPULATION, {

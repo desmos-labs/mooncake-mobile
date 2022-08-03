@@ -1,4 +1,4 @@
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {btDevice, ledgerIcon, noLedgerFound} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -21,10 +21,15 @@ import {
 import {useTheme} from 'react-native-paper';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {AuthorizeWalletParams} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
 
+// refactor into hook
 const checkPermissions = async () => {
   const permission = Platform.select({
     android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
@@ -38,11 +43,32 @@ const checkPermissions = async () => {
   return grantedPermissions[permission] === 'granted';
 };
 
+export type LookingForDevicesParams = {
+  ledgerApp?: LedgerApp;
+
+  autoClose?: boolean;
+
+  onConnectionEstablished?: (transport: BluetoothTransport) => void;
+
+  onCancel?: () => void;
+};
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.LOOKING_FOR_DEVICES
+>;
+
+type AuthNavProps = StackScreenProps<
+  AuthorizeWalletParams,
+  ROUTES.AUTH_LOOKING_FOR_DEVICES
+>;
+
 /**
  * Screen where users can search for Nano X devices via Bluetooth.
  */
 const LookingForDevices = () => {
-  const {navigate} = useNavigation<any>();
+  const {navigate, replace} = useNavigation<any>();
+  const {params} = useRoute<NavProps['route'] | AuthNavProps['route']>();
   const {t} = useTranslation('lookingForDevices');
   const styles = useStyles();
 
@@ -93,18 +119,29 @@ const LookingForDevices = () => {
         <LedgerDeviceItem
           name={item.name || 'UNKNOWN LEDGER DEVICE'}
           onPress={async () => {
-            navigate(ROUTES.CONNECT_TO_LEDGER, {
-              bleLedger: {
-                id: item.id,
-                name: item.name,
-              },
-              ledgerApp: DesmosLedgerApp,
-            });
+            if (params && params.autoClose) {
+              replace(ROUTES.AUTH_CONNECT_TO_LEDGER, {
+                bleLedger: {
+                  id: item.id,
+                  name: item.name,
+                },
+                ledgerApp: DesmosLedgerApp,
+                ...params,
+              });
+            } else {
+              navigate(ROUTES.CONNECT_TO_LEDGER, {
+                bleLedger: {
+                  id: item.id,
+                  name: item.name,
+                },
+                ledgerApp: DesmosLedgerApp,
+              });
+            }
           }}
         />
       );
     },
-    [],
+    [params],
   );
 
   const screenContent = React.useMemo(() => {
