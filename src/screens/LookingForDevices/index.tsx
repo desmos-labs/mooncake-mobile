@@ -60,7 +60,7 @@ type NavProps = StackScreenProps<
  * Screen where users can search for Nano X devices via Bluetooth.
  */
 const LookingForDevices = () => {
-  const {navigate, replace} = useNavigation<NavProps['navigation']>();
+  const {navigate, replace} = useNavigation<any>();
   const {params} = useRoute<NavProps['route']>();
   const {t} = useTranslation('lookingForDevices');
   const styles = useStyles();
@@ -73,6 +73,7 @@ const LookingForDevices = () => {
   const isFocused = useIsFocused();
 
   React.useEffect(() => {
+    console.log(params);
     // user will get stuck in an infinite loop if they never give consent
     if (!isFocused) return;
 
@@ -112,8 +113,10 @@ const LookingForDevices = () => {
         <LedgerDeviceItem
           name={item.name || 'UNKNOWN LEDGER DEVICE'}
           onPress={async () => {
+            console.log(params);
             if (params && params.autoClose) {
-              replace(ROUTES.CONNECT_TO_LEDGER, {
+              console.log('help');
+              replace(ROUTES.AUTH_CONNECT_TO_LEDGER, {
                 bleLedger: {
                   id: item.id,
                   name: item.name,
@@ -134,7 +137,7 @@ const LookingForDevices = () => {
         />
       );
     },
-    [],
+    [params],
   );
 
   const screenContent = React.useMemo(() => {

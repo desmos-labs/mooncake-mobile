@@ -76,7 +76,7 @@ const ConnectToLedger = () => {
       onConnectionEstablished!(transport);
       goBack();
     }
-  }, [transport]);
+  }, [transport, autoClose]);
 
   React.useEffect(() => {
     if (autoClose) {
@@ -90,7 +90,7 @@ const ConnectToLedger = () => {
         }
       });
     }
-  }, []);
+  }, [autoClose]);
 
   React.useEffect(() => {
     const generateAccounts = async () => {

@@ -42,6 +42,7 @@ import NoDtagFound from 'screens/NoDtagFound';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
+import AuthorizeViaLedgerStack from 'navigation/RootNavigator/AuthorizeViaLedgerStack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -72,6 +73,8 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+
+  [ROUTES.AUTHORIZE_VIA_LEDGER]: LookingForDevicesParams;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -218,6 +221,11 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
+
+      <Stack.Screen
+        name={ROUTES.AUTHORIZE_VIA_LEDGER}
+        component={AuthorizeViaLedgerStack}
+      />
     </Stack.Navigator>
   );
 };

@@ -11,7 +11,7 @@ import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
 
-type NavProps = StackScreenProps<RootNavigatorParamList>;
+type NavProps = StackScreenProps<RootNavigatorParamList, any>;
 
 export type LocalAccountAuthenticationArgs = {
   authorized: boolean;
@@ -48,7 +48,7 @@ export default function useUnlockWallet(): (
       }
       return new Promise(resolve => {
         navigation.navigate({
-          name: ROUTES.LOOKING_FOR_DEVICES,
+          name: ROUTES.AUTHORIZE_VIA_LEDGER,
           params: {
             ledgerApp: DesmosLedgerApp,
             autoClose: true,
