@@ -94,6 +94,8 @@ export const dummyAvatar = require('./images/dummyAvatar.png');
 
 export const ledgerLIcon = require('./images/ledgerLetterIcon.png');
 
+export const disconnectIcon = require('./images/disconnectIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
