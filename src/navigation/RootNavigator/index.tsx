@@ -43,6 +43,7 @@ import AuthorizeWalletStack, {
   AuthorizeWalletParams,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
+import ConnectChainMethod from 'screens/ConnectChainMethod';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -72,6 +73,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
 
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
 
@@ -219,6 +221,11 @@ const RootNavigator = () => {
           component={ResultModal}
         />
       </Stack.Group>
+
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_METHOD}
+        component={ConnectChainMethod}
+      />
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
