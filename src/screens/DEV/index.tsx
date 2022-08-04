@@ -17,6 +17,7 @@ const routesToRender = [
   ROUTES.LANDING,
   ROUTES.WELCOME_BACK,
   ROUTES.CONNECT_CHAIN_METHOD,
+  ROUTES.DISCONNECT_CHAIN_MODAL,
 ];
 
 const DevScreen = () => {
