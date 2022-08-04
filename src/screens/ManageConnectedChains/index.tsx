@@ -17,7 +17,7 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const ManageConnectedChains: React.FC<Props> = props => {
+const ManageConnectedChains: React.FC<Props> = () => {
   const {t} = useTranslation('manageChains');
   const styles = useStyles();
 
@@ -64,7 +64,7 @@ const ManageConnectedChains: React.FC<Props> = props => {
   // a pleasant scrolling experience while on ios. Without it, the dropshadow would
   // appear cut off during overscroll
   return (
-    <DView topBar={<TopBar stackProps={props} />}>
+    <DView topBar={<TopBar />}>
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
           <Typography.H3>{t('connectedAddresses')}</Typography.H3>

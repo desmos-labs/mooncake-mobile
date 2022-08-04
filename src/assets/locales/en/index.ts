@@ -22,6 +22,8 @@ import createProfile from './createProfile.json';
 import landing from './landing.json';
 import welcomeBack from './welcomeBack.json';
 import confirmAddress from './confirmAddress.json';
+import connectChain from './connectChain.json';
+import disconnectChain from './disconnectChain.json';
 
 const en = {
   common,
@@ -47,7 +49,9 @@ const en = {
   createProfile,
   landing,
   welcomeBack,
-  confirmAddress
+  confirmAddress,
+  connectChain,
+  disconnectChain
 };
 
 export default en;

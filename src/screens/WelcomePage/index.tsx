@@ -15,7 +15,7 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const WelcomePage: React.FC<Props> = props => {
+const WelcomePage: React.FC<Props> = () => {
   const {t} = useTranslation('common');
   const {navigate} = useNavigation<Props['navigation']>();
   const styles = useStyles();
@@ -42,7 +42,7 @@ const WelcomePage: React.FC<Props> = props => {
   }, []);
 
   return (
-    <DView style={[styles.root]} topBar={<TopBar stackProps={props} />}>
+    <DView style={[styles.root]} topBar={<TopBar />}>
       <Image source={modalSuccess} style={styles.image} />
       <View style={styles.textContainer}>
         <Typography.H4>{t('congratulations')}</Typography.H4>

@@ -4,5 +4,6 @@
   "goToProfile": "Go to Profile",
   "congrats": "Congratulations!",
   "profileCreated": "Your Desmos profile was created",
-  "enterApp": "Enter App"
+  "enterApp": "Enter App",
+  "yourChainLinkDisconnected": "Your {{chainLink}} address was disconnected"
 }
