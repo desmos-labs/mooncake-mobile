@@ -16,6 +16,7 @@ const routesToRender = [
   ROUTES.CREATE_DESMOS_PROFILE,
   ROUTES.LANDING,
   ROUTES.WELCOME_BACK,
+  ROUTES.CONFIRM_ADDRESS,
 ];
 
 const DevScreen = () => {

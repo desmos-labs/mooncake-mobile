@@ -21,6 +21,7 @@ import noDtagFound from './noDtagFound.json';
 import createProfile from './createProfile.json';
 import landing from './landing.json';
 import welcomeBack from './welcomeBack.json';
+import confirmAddress from './confirmAddress.json';
 
 const en = {
   common,
@@ -45,7 +46,8 @@ const en = {
   noDtagFound,
   createProfile,
   landing,
-  welcomeBack
+  welcomeBack,
+  confirmAddress
 };
 
 export default en;
