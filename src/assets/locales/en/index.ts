@@ -21,6 +21,7 @@ import noDtagFound from './noDtagFound.json';
 import createProfile from './createProfile.json';
 import landing from './landing.json';
 import welcomeBack from './welcomeBack.json';
+import connectChain from './connectChain.json';
 
 const en = {
   common,
@@ -45,7 +46,8 @@ const en = {
   noDtagFound,
   createProfile,
   landing,
-  welcomeBack
+  welcomeBack,
+  connectChain
 };
 
 export default en;
