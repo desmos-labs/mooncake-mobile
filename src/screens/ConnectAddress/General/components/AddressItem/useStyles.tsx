@@ -4,7 +4,7 @@ import {scale} from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     backgroundColor: theme.colors.white,
-    paddingVertical: theme.spacing.l,
+    paddingVertical: theme.spacing.m,
     paddingHorizontal: theme.spacing.m,
     borderRadius: 12,
   },
