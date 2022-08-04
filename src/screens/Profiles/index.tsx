@@ -73,7 +73,7 @@ const Profiles: React.FC<Props> = props => {
   }, [profiles, userOptions.selectedProfile]);
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView style={styles.root} topBar={<TopBar />}>
       <View style={styles.titleBar}>
         <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity

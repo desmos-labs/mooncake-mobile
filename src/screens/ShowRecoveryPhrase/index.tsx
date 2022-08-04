@@ -11,13 +11,13 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const ShowRecoveryPhrase: React.FC<Props> = props => {
+const ShowRecoveryPhrase: React.FC<Props> = () => {
   const {t} = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3 style={{marginBottom: theme.spacing.m}}>
         {t('settings:secret recovery phrase')}
       </Typography.H3>

@@ -68,10 +68,7 @@ const Settings: React.FC<Props> = props => {
   }, []);
 
   return (
-    <DView
-      scrollable
-      style={styles.root}
-      topBar={<TopBar stackProps={props} />}>
+    <DView scrollable style={styles.root} topBar={<TopBar />}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
       <Section style={styles.spacer} title={t('account')}>
