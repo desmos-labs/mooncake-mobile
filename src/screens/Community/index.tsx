@@ -20,7 +20,7 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
-const Community: React.FC<Props> = props => {
+const Community: React.FC<Props> = () => {
   const {t} = useTranslation('settings');
   const styles = useStyles();
 
@@ -37,7 +37,7 @@ const Community: React.FC<Props> = props => {
   }, []);
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3 style={styles.title}>{t('community')}</Typography.H3>
       <ScrollView
         style={styles.scrollViewOuter}

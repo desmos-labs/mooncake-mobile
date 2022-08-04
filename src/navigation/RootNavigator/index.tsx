@@ -44,6 +44,11 @@ import AuthorizeWalletStack, {
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import ConnectAddressGeneral from 'screens/ConnectAddress/General';
+import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
+import ConnectChainMethod from 'screens/ConnectChainMethod';
+import DisconnectChainModal, {
+  DisconnectChainParams,
+} from 'screens/Modals/DisconnectChainModal';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -74,7 +79,11 @@ export type RootNavigatorParamList = {
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
+  [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
+  [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
+  [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
 
+  // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
 
   // only for dev
@@ -176,6 +185,14 @@ const RootNavigator = () => {
         component={ConnectAddressGeneral}
       />
 
+      <Stack.Screen
+        initialParams={{
+          address: 'testAddress123123',
+        }}
+        name={ROUTES.CONFIRM_ADDRESS}
+        component={ConfirmAddress}
+      />
+
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -226,7 +243,25 @@ const RootNavigator = () => {
           name={ROUTES.RESULT_MODAL}
           component={ResultModal}
         />
+
+        <Stack.Screen
+          name={ROUTES.DISCONNECT_CHAIN_MODAL}
+          component={DisconnectChainModal}
+          initialParams={{
+            chainLink: {
+              userAddress: 'userAddress',
+              chainName: 'Cosmos Hub',
+              creationTime: new Date(),
+              externalAddress: 'externalAddress',
+            },
+          }}
+        />
       </Stack.Group>
+
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_METHOD}
+        component={ConnectChainMethod}
+      />
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}

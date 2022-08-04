@@ -21,7 +21,7 @@ type NavProps = StackScreenProps<
   ROUTES.SETTINGS_REVEAL_SECRET_PHRASE
 >;
 
-const RevealRecoveryPhrase: React.FC<NavProps> = props => {
+const RevealRecoveryPhrase: React.FC<NavProps> = () => {
   const navigation = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation();
   const styles = useStyles();
@@ -47,7 +47,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = props => {
   }, []);
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3>{t('settings:reveal secret phrase')}</Typography.H3>
       <Typography.Body6 style={styles.bodyText}>
         <Trans
