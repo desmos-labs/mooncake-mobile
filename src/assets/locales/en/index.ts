@@ -21,6 +21,7 @@ import noDtagFound from './noDtagFound.json';
 import createProfile from './createProfile.json';
 import landing from './landing.json';
 import welcomeBack from './welcomeBack.json';
+import connectChain from './connectChain.json';
 import disconnectChain from './disconnectChain.json';
 
 const en = {
@@ -47,6 +48,7 @@ const en = {
   createProfile,
   landing,
   welcomeBack,
+  connectChain,
   disconnectChain
 };
 

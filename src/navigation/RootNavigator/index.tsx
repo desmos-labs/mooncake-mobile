@@ -43,6 +43,7 @@ import AuthorizeWalletStack, {
   AuthorizeWalletParams,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
+import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
@@ -75,6 +76,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
 
   // Nested navigators
@@ -237,6 +239,11 @@ const RootNavigator = () => {
           }}
         />
       </Stack.Group>
+
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_METHOD}
+        component={ConnectChainMethod}
+      />
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
