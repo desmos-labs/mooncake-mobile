@@ -1,4 +1,7 @@
 enum ROUTES {
+  /**
+   * Root navigator start
+   */
   LANDING = 'LANDING',
 
   SIGNUP = 'SIGNUP',
@@ -55,6 +58,15 @@ enum ROUTES {
 
   WELCOME_BACK = 'WELCOME_BACK',
 
+  DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
+
+  /**
+   * Root navigator end
+   */
+
+  /**
+   * Authorize wallet stack start
+   */
   AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
 
   AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
@@ -62,6 +74,9 @@ enum ROUTES {
   AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
 
   AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
+  /**
+   * Authorize wallet stack end
+   */
 }
 
 export default ROUTES;
