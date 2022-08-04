@@ -43,6 +43,7 @@ import AuthorizeWalletStack, {
   AuthorizeWalletParams,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
+import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
@@ -76,6 +77,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
 
@@ -175,6 +177,15 @@ const RootNavigator = () => {
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
       />
+
+      <Stack.Screen
+        initialParams={{
+          address: 'testAddress123123',
+        }}
+        name={ROUTES.CONFIRM_ADDRESS}
+        component={ConfirmAddress}
+      />
+
       <Stack.Group
         screenOptions={{
           cardStyle: {
