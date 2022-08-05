@@ -4,6 +4,7 @@ import {
   BitsongHdPath,
   CosmosHdPath,
   CroHdPath,
+  DesmosHdPath,
   IrisNetHdPath,
   IXOHdPath,
   KavaHdPath,
@@ -21,6 +22,7 @@ import {
   bitsongIcon,
   cosmosIcon,
   cryptoComIcon,
+  desmosIcon,
   eMoneyIcon,
   irisnetIcon,
   ixoIcon,
@@ -92,6 +94,15 @@ const LinkableChains: LinkableChain[] = [
     icon: cryptoComIcon,
     chainConfig: ChainConfig.fromPartial({
       name: 'crypto.org',
+    }),
+  },
+  {
+    name: 'Desmos',
+    prefix: 'desmos',
+    hdPath: DesmosHdPath,
+    icon: desmosIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'desmos',
     }),
   },
   {
