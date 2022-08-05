@@ -36,6 +36,7 @@ const SendTips = () => {
 
   const handlePressConfirm = React.useCallback(() => {
     goBack();
+    // implementation
   }, []);
 
   return (
