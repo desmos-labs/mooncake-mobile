@@ -48,6 +48,7 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import SelectChainConnection from 'screens/SelectChainConnection';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -80,6 +81,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.SELECT_CHAIN]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
@@ -184,6 +186,11 @@ const RootNavigator = () => {
         }}
         name={ROUTES.CONFIRM_ADDRESS}
         component={ConfirmAddress}
+      />
+
+      <Stack.Screen
+        name={ROUTES.SELECT_CHAIN}
+        component={SelectChainConnection}
       />
 
       <Stack.Group

@@ -120,6 +120,8 @@ export const useLedgerIcon = require('./images/useLedger.png');
 
 export const disconnectIcon = require('./images/disconnectIcon.png');
 
+export const magnifyingGlass = require('./images/magnifyingGlass.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

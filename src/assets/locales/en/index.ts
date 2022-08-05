@@ -24,6 +24,7 @@ import welcomeBack from './welcomeBack.json';
 import confirmAddress from './confirmAddress.json';
 import connectChain from './connectChain.json';
 import disconnectChain from './disconnectChain.json';
+import selectChain from './selectChain.json';
 
 const en = {
   common,
@@ -51,7 +52,8 @@ const en = {
   welcomeBack,
   confirmAddress,
   connectChain,
-  disconnectChain
+  disconnectChain,
+  selectChain
 };
 
 export default en;

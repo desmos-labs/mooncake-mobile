@@ -1,4 +1,5 @@
 import {DenomUnit} from '@desmoslabs/desmjs';
+import LinkableChains from 'config/LinkableChains';
 
 declare global {
   type ChainAsset = {
@@ -12,6 +13,41 @@ declare global {
     type_asset?: string;
   };
 }
+
+/**
+ * Returns a chain's default asset. Currently, it just returns the first ChainAsset.
+ */
+export const getDefaultChainAsset = (chainName: string): ChainAsset => {
+  const chain = LinkableChains.find(_chain => _chain.name === chainName);
+  if (chain && chain.assets) {
+    return chain.assets[0];
+  }
+  if (!chain) {
+    throw new Error(`Chain with name ${chainName} not found in LinkableChains`);
+  } else throw new Error('Chain has no assets');
+};
+
+/**
+ * Get an asset's denom symbol, as well as exponent data.
+ */
+export const getDenomSymbol = (
+  chainName: string,
+): {
+  symbol: string;
+  denom: {
+    denom: string;
+    exponent: number;
+  };
+} => {
+  const chainAsset = getDefaultChainAsset(chainName);
+
+  return {
+    symbol: chainAsset.symbol,
+    denom: chainAsset.denom_units.find(
+      x => x.denom === chainAsset.symbol.toLowerCase(),
+    ) as {denom: string; exponent: number},
+  };
+};
 
 export const DesmosAssets: ChainAsset[] = [
   {

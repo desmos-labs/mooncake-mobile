@@ -69,6 +69,16 @@ import {
 
 const LinkableChains: LinkableChain[] = [
   {
+    name: 'Desmos',
+    prefix: 'desmos',
+    hdPath: DesmosHdPath,
+    icon: desmosIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'desmos',
+    }),
+    assets: DesmosAssets,
+  },
+  {
     name: 'Akash',
     prefix: 'akash',
     hdPath: CosmosHdPath,
@@ -127,16 +137,6 @@ const LinkableChains: LinkableChain[] = [
       name: 'crypto.org',
     }),
     assets: CryptoOrgAssets,
-  },
-  {
-    name: 'Desmos',
-    prefix: 'desmos',
-    hdPath: DesmosHdPath,
-    icon: desmosIcon,
-    chainConfig: ChainConfig.fromPartial({
-      name: 'desmos',
-    }),
-    assets: DesmosAssets,
   },
   {
     name: 'e-Money',

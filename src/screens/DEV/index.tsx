@@ -9,6 +9,7 @@ import Button from 'components/Button';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.SELECT_CHAIN,
   ROUTES.CONSENT_AGREEMENT,
   ROUTES.LOOKING_FOR_DEVICES,
   ROUTES.NO_DTAG_FOUND,
