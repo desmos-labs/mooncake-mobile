@@ -50,6 +50,7 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import SelectChainConnection from 'screens/SelectChainConnection';
 import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
 
 export type RootNavigatorParamList = {
@@ -85,6 +86,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
 
   // Nested navigators
@@ -200,6 +202,11 @@ const RootNavigator = () => {
         }}
         name={ROUTES.CONFIRM_ADDRESS}
         component={ConfirmAddress}
+      />
+
+      <Stack.Screen
+        name={ROUTES.SELECT_CHAIN}
+        component={SelectChainConnection}
       />
 
       <Stack.Group
