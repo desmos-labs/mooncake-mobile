@@ -49,7 +49,7 @@ const DisconnectChainModal = () => {
       subtitle: t('resultModal:yourChainLinkDisconnected', {
         chainLink: chain!.name,
       }),
-      primaryButtonLabel: t('resultModal:goToProfile'),
+      primaryButtonLabel: t('resultModal:goToProfile') as string,
       onPressPrimary: () => {
         // Remove result modal and this modal from stack
         pop(2);
