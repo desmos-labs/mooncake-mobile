@@ -92,7 +92,6 @@ const Signup = () => {
           'respect reg_ex',
           t('Only _ is allowed as special character'),
           value => {
-            console.log(value);
             return new RegExp(dtagParams.reg_ex, 'g').test(value as string);
           },
         ),
@@ -131,7 +130,6 @@ const Signup = () => {
           validationSchema={validationSchema}
           validate={validateForm}>
           {({handleSubmit, values, errors, setFieldValue}) => {
-            console.log(errors);
             return (
               <>
                 <ScrollView>
@@ -199,6 +197,7 @@ const Signup = () => {
                     </Typography.Subtitle2>
                     <DSecureTextInput
                       placeholder={t('pw')}
+                      value={values.confirmPassword}
                       onChangeText={(value: string) => {
                         setFieldValue('confirmPassword', value, true);
                       }}

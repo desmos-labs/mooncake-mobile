@@ -85,7 +85,7 @@ const useHooks = () => {
         navigate(ROUTES.RESULT_MODAL, {
           title: t('resultModal:success'),
           subtitle: t('resultModal:passwordWasChanged'),
-          primaryButtonLabel: t('resultModal:goToProfile'),
+          primaryButtonLabel: t('resultModal:goToProfile') as string,
           onDismiss: () => {
             // finish implementation when change pw feature is added
           },
@@ -101,14 +101,16 @@ const useHooks = () => {
         const accountsToSearch = new Array(ACCOUNT_SEARCH_LIMIT)
           .fill(0)
           .map(async (_, idx) => {
-            const wallet = await LocalWallet.fromMnemonic(mnemonic, {
+            const wallet = await LocalWallet.fromMnemonic(mnemonic.trim(), {
               hdPath: {
                 coinType: 852,
                 change: 0,
-                account: 0,
+                account: 1,
                 addressIndex: idx,
               },
             });
+
+            console.log(wallet.bech32Address);
 
             const chainAccount: ChainAccount = {
               address: wallet.bech32Address,
