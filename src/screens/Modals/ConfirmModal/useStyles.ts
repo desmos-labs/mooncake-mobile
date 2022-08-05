@@ -11,13 +11,12 @@ const useStyles = makeStyle(theme => ({
     marginHorizontal: theme.spacing.m,
   },
   innerContainer: {
-    alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingTop: theme.spacing.m,
     paddingBottom: theme.spacing.l,
     backgroundColor: theme.colors.background,
-    borderRadius: 8,
+    borderRadius: 12,
   },
   dismissButton: {
     alignSelf: 'flex-end',

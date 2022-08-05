@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {useTheme} from 'react-native-paper';
+import {IconButton, useTheme} from 'react-native-paper';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import {View} from 'react-native';
@@ -30,8 +30,7 @@ type NavProps = StackScreenProps<
 >;
 
 const ConnectAddressAdvanced = () => {
-  // placeholder
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
 
@@ -110,6 +109,23 @@ const ConnectAddressAdvanced = () => {
             {t('enterDerivPath')}
           </Typography.Body6>
         </Spacer>
+
+        <View style={styles.tooltipGroup}>
+          <Typography.Body6 style={styles.textStyle}>
+            {t('hdDerivPath')}
+          </Typography.Body6>
+          <IconButton
+            icon="information-outline"
+            onPress={() => {
+              navigate(ROUTES.CONFIRM_MODAL, {
+                title: t('hdDerivPath'),
+                subtitle: t('hdDerivPathModal'),
+                primaryButtonLabel: t('common:ok'),
+                onPressPrimary: () => goBack(),
+              });
+            }}
+          />
+        </View>
 
         <Formik
           initialValues={initialFormValues}
