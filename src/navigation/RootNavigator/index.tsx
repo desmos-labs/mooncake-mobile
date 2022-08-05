@@ -50,6 +50,7 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import SelectChainConnection from 'screens/SelectChainConnection';
 import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
 
 export type RootNavigatorParamList = {
@@ -85,6 +86,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
 
   // Nested navigators
@@ -202,6 +204,11 @@ const RootNavigator = () => {
         component={ConfirmAddress}
       />
 
+      <Stack.Screen
+        name={ROUTES.SELECT_CHAIN}
+        component={SelectChainConnection}
+      />
+
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -217,16 +224,6 @@ const RootNavigator = () => {
         />
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
-        <Stack.Screen
-          initialParams={{
-            title: t('confirmModal:removeProfile'),
-            subtitle: t('confirmModal:backupSeedphrase'),
-            primaryButtonLabel: t('confirmModal:goToBackup'),
-            secondaryButtonLabel: t('confirmModal:remove'),
-          }}
-          name={ROUTES.CONFIRM_MODAL}
-          component={ConfirmModal}
-        />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
