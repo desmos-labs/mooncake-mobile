@@ -227,16 +227,6 @@ const RootNavigator = () => {
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
-            subtitle: t('confirmModal:backupSeedphrase'),
-            primaryButtonLabel: t('confirmModal:goToBackup'),
-            secondaryButtonLabel: t('confirmModal:remove'),
-          }}
-          name={ROUTES.CONFIRM_MODAL}
-          component={ConfirmModal}
-        />
-        <Stack.Screen
-          initialParams={{
-            title: t('confirmModal:removeProfile'),
             body: t('confirmModal:backupSeedphrase'),
             primaryButtonLabel: t('confirmModal:goToBackup'),
           }}
