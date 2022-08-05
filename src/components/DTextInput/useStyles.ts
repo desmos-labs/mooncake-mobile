@@ -27,7 +27,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     padding: 0,
     margin: 0,
     paddingRight: 11,
-    flex: 0.1,
+    flex: 0.12,
   },
 }));
 
