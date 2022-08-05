@@ -1,5 +1,9 @@
 export const akashIcon = require('./images/akash.png');
 
+export const bitcannaIcon = require('./images/bitcannaIcon.png');
+
+export const bitsongIcon = require('./images/bitsongIcon.png');
+
 export const bandIcon = require('./images/band.png');
 
 export const cosmosIcon = require('./images/cosmos.png');
@@ -9,6 +13,10 @@ export const cryptoComIcon = require('./images/crypto_com.png');
 export const desmosIcon = require('./images/desmosIcon.png');
 
 export const eMoneyIcon = require('./images/e_money.png');
+
+export const irisnetIcon = require('./images/iris.png');
+
+export const ixoIcon = require('./images/ixo.png');
 
 export const junoIcon = require('./images/juno.png');
 
@@ -20,7 +28,19 @@ export const osmosisIcon = require('./images/osmosis.png');
 
 export const regenIcon = require('./images/regen.png');
 
+export const rowanIcon = require('./images/rowan.png');
+
+export const tgradeIcon = require('./images/tgradeGradient.png');
+
+export const secretIcon = require('./images/scrt.png');
+
+export const sentinelIcon = require('./images/dvpn.png');
+
+export const stargazeIcon = require('./images/stars.png');
+
 export const terraIcon = require('./images/terra.png');
+
+export const xprtIcon = require('./images/xprt.png');
 
 export const copyIcon = require('./images/copy.png');
 

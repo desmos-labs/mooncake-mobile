@@ -1,22 +1,40 @@
 import {
   BandHdPath,
+  BitcannaHdPath,
+  BitsongHdPath,
   CosmosHdPath,
   CroHdPath,
+  IrisNetHdPath,
+  IXOHdPath,
   KavaHdPath,
   LunaHdPath,
+  SCRTHdPath,
+  SENTHdPath,
+  STARSHdPath,
+  TGDHdPath,
+  XPRTHdPath,
 } from 'types/hdpath';
 import {
   akashIcon,
   bandIcon,
+  bitcannaIcon,
+  bitsongIcon,
   cosmosIcon,
   cryptoComIcon,
   eMoneyIcon,
+  irisnetIcon,
+  ixoIcon,
   junoIcon,
   kavaIcon,
   likecoinIcon,
   osmosisIcon,
   regenIcon,
+  secretIcon,
+  sentinelIcon,
+  stargazeIcon,
   terraIcon,
+  tgradeIcon,
+  xprtIcon,
 } from 'assets/images';
 import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {LinkableChain} from 'types/chains';
@@ -38,6 +56,24 @@ const LinkableChains: LinkableChain[] = [
     icon: bandIcon,
     chainConfig: ChainConfig.fromPartial({
       name: 'band',
+    }),
+  },
+  {
+    name: 'Bitcanna',
+    prefix: 'bcna',
+    hdPath: BitcannaHdPath,
+    icon: bitcannaIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'bitcanna',
+    }),
+  },
+  {
+    name: 'Bitsong',
+    prefix: 'bitsong',
+    hdPath: BitsongHdPath,
+    icon: bitsongIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'bitsong',
     }),
   },
   {
@@ -65,6 +101,24 @@ const LinkableChains: LinkableChain[] = [
     icon: eMoneyIcon,
     chainConfig: ChainConfig.fromPartial({
       name: 'emoney',
+    }),
+  },
+  {
+    name: 'Impact Hub',
+    prefix: 'ixo',
+    hdPath: IXOHdPath,
+    icon: ixoIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'impacthub',
+    }),
+  },
+  {
+    name: 'IRISnet',
+    prefix: 'iaa',
+    hdPath: IrisNetHdPath,
+    icon: irisnetIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'irisnet',
     }),
   },
   {
@@ -119,6 +173,51 @@ const LinkableChains: LinkableChain[] = [
     icon: terraIcon,
     chainConfig: ChainConfig.fromPartial({
       name: 'terra',
+    }),
+  },
+  {
+    name: 'Persistence',
+    prefix: 'persistence',
+    hdPath: XPRTHdPath,
+    icon: xprtIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'persistence',
+    }),
+  },
+  {
+    name: 'Secret Network',
+    prefix: 'secret',
+    hdPath: SCRTHdPath,
+    icon: secretIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'secretnetwork',
+    }),
+  },
+  {
+    name: 'Sentinel',
+    prefix: 'sent',
+    hdPath: SENTHdPath,
+    icon: sentinelIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'sentinel',
+    }),
+  },
+  {
+    name: 'Tgrade',
+    prefix: 'tgrade',
+    hdPath: TGDHdPath,
+    icon: tgradeIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'tgrade',
+    }),
+  },
+  {
+    name: 'Stargaze',
+    prefix: 'stars',
+    hdPath: STARSHdPath,
+    icon: stargazeIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'stargaze',
     }),
   },
 ];
