@@ -10,6 +10,7 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
+import SendTips from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
@@ -84,6 +85,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.SEND_TIPS]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
@@ -214,6 +216,17 @@ const RootNavigator = () => {
           component={ConsentAgreement}
         />
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+        <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
+        <Stack.Screen
+          initialParams={{
+            title: t('confirmModal:removeProfile'),
+            subtitle: t('confirmModal:backupSeedphrase'),
+            primaryButtonLabel: t('confirmModal:goToBackup'),
+            secondaryButtonLabel: t('confirmModal:remove'),
+          }}
+          name={ROUTES.CONFIRM_MODAL}
+          component={ConfirmModal}
+        />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),
