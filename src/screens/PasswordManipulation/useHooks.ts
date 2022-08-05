@@ -101,16 +101,14 @@ const useHooks = () => {
         const accountsToSearch = new Array(ACCOUNT_SEARCH_LIMIT)
           .fill(0)
           .map(async (_, idx) => {
-            const wallet = await LocalWallet.fromMnemonic(mnemonic.trim(), {
+            const wallet = await LocalWallet.fromMnemonic(mnemonic, {
               hdPath: {
                 coinType: 852,
                 change: 0,
-                account: 1,
+                account: 0,
                 addressIndex: idx,
               },
             });
-
-            console.log(wallet.bech32Address);
 
             const chainAccount: ChainAccount = {
               address: wallet.bech32Address,
