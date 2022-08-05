@@ -486,3 +486,21 @@ export const StargazeAssets: ChainAsset[] = [
     coingecko_id: 'stargaze',
   },
 ];
+
+export const SifchainAssets: ChainAsset[] = [
+  {
+    description:
+      "Rowan Token (ROWAN) is the Sifchain Network's native utility token, used as the primary means to govern, provide liquidity, secure the blockchain, incentivize participants, and provide a default mechanism to store and exchange value.",
+    denom_units: [
+      {
+        denom: 'rowan',
+        exponent: 18,
+      },
+    ],
+    base: 'rowan',
+    name: 'Sifchain Rowan',
+    display: 'rowan',
+    symbol: 'ROWAN',
+    coingecko_id: 'sifchain',
+  },
+];

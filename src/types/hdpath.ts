@@ -14,6 +14,7 @@ export const SCRT_COIN_TYPE = 529;
 export const SENT_COIN_TYPE = 118;
 export const TGD_COIN_TYPE = 118;
 export const STARS_COIN_TYPE = 118;
+export const ROWAN_COIN_TYPE = 118;
 
 export type HdPath = {
   coinType: number;
@@ -122,6 +123,13 @@ export const TGDHdPath: HdPath = {
 
 export const STARSHdPath: HdPath = {
   coinType: STARS_COIN_TYPE,
+  account: 0,
+  change: 0,
+  addressIndex: 0,
+};
+
+export const ROWANHdPath: HdPath = {
+  coinType: ROWAN_COIN_TYPE,
   account: 0,
   change: 0,
   addressIndex: 0,

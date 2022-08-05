@@ -9,6 +9,7 @@ import {
   IXOHdPath,
   KavaHdPath,
   LunaHdPath,
+  ROWANHdPath,
   SCRTHdPath,
   SENTHdPath,
   STARSHdPath,
@@ -31,6 +32,7 @@ import {
   likecoinIcon,
   osmosisIcon,
   regenIcon,
+  rowanIcon,
   secretIcon,
   sentinelIcon,
   stargazeIcon,
@@ -58,6 +60,7 @@ import {
   RegenAssets,
   SecretnetworkAssets,
   SentinelAssets,
+  SifchainAssets,
   StargazeAssets,
   TerraAssets,
   TgradeAssets,
@@ -274,6 +277,16 @@ const LinkableChains: LinkableChain[] = [
       name: 'stargaze',
     }),
     assets: StargazeAssets,
+  },
+  {
+    name: 'Sifchain',
+    prefix: 'sif',
+    hdPath: ROWANHdPath,
+    icon: rowanIcon,
+    chainConfig: ChainConfig.fromPartial({
+      name: 'sifchain',
+    }),
+    assets: SifchainAssets,
   },
 ];
 
