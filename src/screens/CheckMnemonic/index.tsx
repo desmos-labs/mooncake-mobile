@@ -85,7 +85,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
   }, [navigation, receivedMnemonic, selectedWords, t, words.length]);
 
   return (
-    <DView style={styles.root} topBar={<TopBar stackProps={props} />}>
+    <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3>Backup Secret Recovery Phrase</Typography.H3>
       <Typography.Body6 style={{marginTop: theme.spacing.m}}>
         {t('tap to order')}
