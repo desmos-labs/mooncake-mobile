@@ -40,6 +40,29 @@ import {
 } from 'assets/images';
 import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {LinkableChain} from 'types/chains';
+import {
+  AkashAssets,
+  BandAssets,
+  BitcannaAssets,
+  BitsongAssets,
+  CosmosHubAssets,
+  CryptoOrgAssets,
+  DesmosAssets,
+  EMoneyAssets,
+  IrisnetAssets,
+  IXOAssets,
+  JunoAssets,
+  KavaAssets,
+  LikecoinAssets,
+  OsmosisAssets,
+  RegenAssets,
+  SecretnetworkAssets,
+  SentinelAssets,
+  StargazeAssets,
+  TerraAssets,
+  TgradeAssets,
+  XPRTAssets,
+} from 'config/ChainAssets';
 
 const LinkableChains: LinkableChain[] = [
   {
@@ -50,6 +73,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'akash',
     }),
+    assets: AkashAssets,
   },
   {
     name: 'Band',
@@ -59,6 +83,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'band',
     }),
+    assets: BandAssets,
   },
   {
     name: 'Bitcanna',
@@ -68,6 +93,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'bitcanna',
     }),
+    assets: BitcannaAssets,
   },
   {
     name: 'Bitsong',
@@ -77,6 +103,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'bitsong',
     }),
+    assets: BitsongAssets,
   },
   {
     name: 'Cosmos Hub',
@@ -86,6 +113,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'cosmos',
     }),
+    assets: CosmosHubAssets,
   },
   {
     name: 'Crypto.org',
@@ -95,6 +123,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'crypto.org',
     }),
+    assets: CryptoOrgAssets,
   },
   {
     name: 'Desmos',
@@ -104,6 +133,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'desmos',
     }),
+    assets: DesmosAssets,
   },
   {
     name: 'e-Money',
@@ -113,6 +143,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'emoney',
     }),
+    assets: EMoneyAssets,
   },
   {
     name: 'Impact Hub',
@@ -122,6 +153,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'impacthub',
     }),
+    assets: IXOAssets,
   },
   {
     name: 'IRISnet',
@@ -131,6 +163,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'irisnet',
     }),
+    assets: IrisnetAssets,
   },
   {
     name: 'Juno',
@@ -140,6 +173,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'juno',
     }),
+    assets: JunoAssets,
   },
   {
     name: 'Kava',
@@ -149,6 +183,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'kava',
     }),
+    assets: KavaAssets,
   },
   {
     name: 'Likecoin',
@@ -158,6 +193,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'likecoin',
     }),
+    assets: LikecoinAssets,
   },
   {
     name: 'Osmosis',
@@ -167,6 +203,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'osmosis',
     }),
+    assets: OsmosisAssets,
   },
   {
     name: 'Regen',
@@ -176,6 +213,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'regen',
     }),
+    assets: RegenAssets,
   },
   {
     name: 'Terra',
@@ -185,6 +223,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'terra',
     }),
+    assets: TerraAssets,
   },
   {
     name: 'Persistence',
@@ -194,6 +233,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'persistence',
     }),
+    assets: XPRTAssets,
   },
   {
     name: 'Secret Network',
@@ -203,6 +243,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'secretnetwork',
     }),
+    assets: SecretnetworkAssets,
   },
   {
     name: 'Sentinel',
@@ -212,6 +253,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'sentinel',
     }),
+    assets: SentinelAssets,
   },
   {
     name: 'Tgrade',
@@ -221,6 +263,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'tgrade',
     }),
+    assets: TgradeAssets,
   },
   {
     name: 'Stargaze',
@@ -230,6 +273,7 @@ const LinkableChains: LinkableChain[] = [
     chainConfig: ChainConfig.fromPartial({
       name: 'stargaze',
     }),
+    assets: StargazeAssets,
   },
 ];
 
