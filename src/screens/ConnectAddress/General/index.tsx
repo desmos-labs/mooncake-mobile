@@ -7,6 +7,9 @@ import TopBar from 'components/TopBar';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {FlatList, View} from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -14,9 +17,14 @@ import useStyles from '../useStyles';
 const DEBUG_MNEMONIC =
   'chef embody loan celery magnet replace refuse subway treat arena party purity lift estate afford shallow monitor vapor torch farm message kid cheap seed';
 
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CONNECT_ADDRESS_GENERAL
+>;
+
 const ConnectAddressGeneral = () => {
   // placeholder
-  const navigation = useNavigation<any>();
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
 
@@ -40,7 +48,11 @@ const ConnectAddressGeneral = () => {
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
-        <Typography.Button2 style={styles.modeButtonText} onPress={() => {}}>
+        <Typography.Button2
+          style={styles.modeButtonText}
+          onPress={() => {
+            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+          }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
@@ -66,13 +78,7 @@ const ConnectAddressGeneral = () => {
   );
 
   return (
-    <DView
-      topBar={
-        <TopBar
-          stackProps={{navigation}}
-          rightElement={SwitchToAdvancedButton}
-        />
-      }>
+    <DView topBar={<TopBar rightElement={SwitchToAdvancedButton} />}>
       <View style={styles.container}>
         <Typography.H5 style={styles.textStyle}>{t('header')}</Typography.H5>
 
