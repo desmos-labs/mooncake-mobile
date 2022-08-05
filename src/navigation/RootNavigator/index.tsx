@@ -50,6 +50,7 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -80,6 +81,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
+  [ROUTES.CONNECT_ADDRESS_ADVANCED]: undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
@@ -188,6 +190,11 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen
+        name={ROUTES.CONNECT_ADDRESS_ADVANCED}
+        component={ConnectAddressAdvanced}
+      />
+
+      <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
         }}
@@ -208,6 +215,7 @@ const RootNavigator = () => {
           name={ROUTES.CONSENT_AGREEMENT}
           component={ConsentAgreement}
         />
+        <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen
           initialParams={{

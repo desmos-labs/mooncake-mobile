@@ -35,3 +35,9 @@ export const toCosmjsHdPath = (hdPath: HdPath) => {
     Slip10RawIndex.normal(hdPath.addressIndex),
   ];
 };
+
+/**
+ * Removes all non number characters from a string
+ */
+export const removeNonNumbers = (value: string) =>
+  value.replace(/[^0-9.]/g, '');
