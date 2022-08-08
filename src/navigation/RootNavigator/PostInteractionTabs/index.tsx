@@ -1,6 +1,6 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import Animated from 'react-native-reanimated';
 import {GestureDetector} from 'react-native-gesture-handler';
@@ -12,14 +12,9 @@ import CustomTabBar from 'navigation/RootNavigator/PostInteractionTabs/component
 import Spacer from 'components/Spacer';
 import PostComments from 'screens/PostInteraction/PostComments';
 import PostReactions from 'screens/PostInteraction/PostReactions';
+import PostTips from 'screens/PostInteraction/PostTips';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
-
-const DummyScreen = () => (
-  <View style={{flex: 1}}>
-    <Text>Hello world</Text>
-  </View>
-);
 
 export type PostInteractionTabsParamList = {
   [ROUTES.POST_TIPS]: PostInteractionTabsParams;
@@ -89,7 +84,7 @@ const PostInteractionTabs = () => {
             options={{
               tabBarLabel: 'Tips 1k',
             }}
-            component={DummyScreen}
+            component={PostTips}
           />
         </Tab.Navigator>
       </Animated.View>

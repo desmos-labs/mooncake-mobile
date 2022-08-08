@@ -91,7 +91,13 @@ const Home = () => {
   }, []);
 
   const handlePressTip = React.useCallback(() => {
-    // TODO: implementation
+    navigate(ROUTES.POST_INTERACTION, {
+      screen: ROUTES.POST_TIPS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+      },
+    });
   }, []);
 
   return (
