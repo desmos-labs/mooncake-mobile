@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {errorImage} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -8,14 +9,14 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
-  const balance = 0; // fetch the balance
+  const balance = 1; // fetch the balance
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
@@ -40,7 +41,7 @@ const SendTips = () => {
     // implementation
   }, []);
 
-  return balance < 0 ? (
+  return balance <= 0 ? (
     <TouchableOpacity
       activeOpacity={1}
       onPress={goBack}
@@ -50,9 +51,25 @@ const SendTips = () => {
       <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
         <View style={styles.tabIcon} />
         <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-        <Typography.Body6>{t('description')}</Typography.Body6>
+        <Typography.Body6 style={styles.centerText}>
+          {t('description')}
+        </Typography.Body6>
         <Spacer paddingBottom={30} />
-        <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+        <Image source={errorImage} style={styles.errorImage} />
+        <Spacer paddingBottom={20} />
+        <Typography.H5 style={styles.centerText}>{t('oops')}</Typography.H5>
+        <Spacer paddingBottom={10} />
+        <Typography.Body5 style={styles.centerText}>
+          {t('no dsm')}
+        </Typography.Body5>
+        <Spacer paddingBottom={30} />
+        <Button mode="text">
+          <Typography.H5
+            style={{color: theme.colors.desmosOrange01, textTransform: 'none'}}>
+            {t('how to buy dsm')}
+          </Typography.H5>
+        </Button>
+        <Spacer paddingBottom={100} />
       </TouchableOpacity>
     </TouchableOpacity>
   ) : (
