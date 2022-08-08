@@ -47,36 +47,39 @@ const PostInteractionTabs = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <Spacer paddingTop={60} />
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={[animatedStyle, styles.animatedContainer]}>
-          <View style={styles.bar} />
-          <Tab.Navigator
-            sceneContainerStyle={styles.sceneContainerStyle}
-            tabBar={CustomTabBar}>
-            <Tab.Screen
-              name={ROUTES.POST_COMMENTS}
-              options={{
-                tabBarLabel: 'Comments 1k',
-              }}
-              component={PostComments}
-            />
-            <Tab.Screen
-              name={ROUTES.POST_REACTIONS}
-              options={{
-                tabBarLabel: 'Reactions 1k',
-              }}
-              component={DummyScreen}
-            />
-            <Tab.Screen
-              name={ROUTES.POST_TIPS}
-              options={{
-                tabBarLabel: 'Tips 1k',
-              }}
-              component={DummyScreen}
-            />
-          </Tab.Navigator>
-        </Animated.View>
-      </GestureDetector>
+      <Animated.View style={[animatedStyle, styles.animatedContainer]}>
+        <GestureDetector gesture={panGesture}>
+          <View style={styles.barContainer}>
+            <View style={styles.bar} />
+          </View>
+        </GestureDetector>
+
+        <Tab.Navigator
+          sceneContainerStyle={styles.sceneContainerStyle}
+          tabBar={CustomTabBar}>
+          <Tab.Screen
+            name={ROUTES.POST_COMMENTS}
+            options={{
+              tabBarLabel: 'Comments 1k',
+            }}
+            component={PostComments}
+          />
+          <Tab.Screen
+            name={ROUTES.POST_REACTIONS}
+            options={{
+              tabBarLabel: 'Reactions 1k',
+            }}
+            component={DummyScreen}
+          />
+          <Tab.Screen
+            name={ROUTES.POST_TIPS}
+            options={{
+              tabBarLabel: 'Tips 1k',
+            }}
+            component={DummyScreen}
+          />
+        </Tab.Navigator>
+      </Animated.View>
     </View>
   );
 };

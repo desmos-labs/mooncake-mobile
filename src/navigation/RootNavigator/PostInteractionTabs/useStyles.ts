@@ -23,7 +23,9 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 4,
     // design calls for foundation/grey03, but it does not exist on the color table
     backgroundColor: '#DEDEDE',
-    marginBottom: theme.spacing.s,
+  },
+  barContainer: {
+    paddingVertical: theme.spacing.s,
   },
   sceneContainerStyle: {
     backgroundColor: theme.colors.white,

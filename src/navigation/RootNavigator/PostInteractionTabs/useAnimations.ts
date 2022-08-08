@@ -32,7 +32,7 @@ const useAnimations = () => {
       // TODO: these threshold values should be tweaked
       // also handle swipe action
       const newValue = yOffset.value + changeY;
-      if (newValue < 800 && newValue > -500) {
+      if (newValue < 800 && newValue > 50) {
         yOffset.value = newValue;
       }
     })
