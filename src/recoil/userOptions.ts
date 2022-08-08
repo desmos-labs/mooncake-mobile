@@ -10,7 +10,7 @@ const userOptionsState = atom<UserOptions>({
   default: (() => {
     return (
       getMMKV(MMKVKEYS.USER_OPTIONS) || {
-        address: '123',
+        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
         nickname: 'Donatello',
         dtag: '@don',
         bio: 'Ninja turtles to the moon!',
