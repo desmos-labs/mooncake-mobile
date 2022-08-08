@@ -27,6 +27,11 @@ const useStyles = makeStyle(theme => ({
   carousel: {
     alignItems: 'center',
   },
+  createPostButton: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
 }));
 
 export default useStyles;

@@ -13,8 +13,8 @@ const useStyles = makeStyle(theme => ({
     overflow: 'hidden',
   },
   icon: {
-    width: 32,
-    height: 32,
+    width: 24,
+    height: 24,
     resizeMode: 'contain',
   },
   countText: {

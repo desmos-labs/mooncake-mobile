@@ -40,6 +40,8 @@ const PostTypeTab = ({selectedIndex, setSelectedIndex, postTypes}: Props) => {
             ]}>
             {post}
           </Typography.Button2>
+
+          {selectedIndex === idx && <View style={styles.selectedIndicator} />}
         </TouchableOpacity>
       ))}
     </View>

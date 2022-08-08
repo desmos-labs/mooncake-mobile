@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
+import {commentIcon, createPost, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
@@ -70,9 +70,10 @@ const Home = () => {
         </View>
 
         <ProfileHeaderButton
-          imageSrc={moreIcon}
+          style={styles.createPostButton}
+          imageSrc={createPost}
           onPress={() => {
-            console.log('more');
+            console.log('create post');
           }}
         />
       </View>
