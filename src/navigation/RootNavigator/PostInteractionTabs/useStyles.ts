@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 /**
  * Style hook for the PostInteractionTabs tab navigator
@@ -11,10 +11,10 @@ const useStyles = makeStyle(theme => ({
   animatedContainer: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: theme.colors.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderRadius: 24,
     paddingHorizontal: theme.spacing.m,
     paddingVertical: theme.spacing.s,
+    height: Dimensions.get('window').height * 0.9,
   },
   bar: {
     alignSelf: 'center',
@@ -22,7 +22,11 @@ const useStyles = makeStyle(theme => ({
     height: 4,
     borderRadius: 4,
     // design calls for foundation/grey03, but it does not exist on the color table
-    backgroundColor: theme.colors.grey02,
+    backgroundColor: '#DEDEDE',
+    marginBottom: theme.spacing.s,
+  },
+  sceneContainerStyle: {
+    backgroundColor: theme.colors.white,
   },
 }));
 

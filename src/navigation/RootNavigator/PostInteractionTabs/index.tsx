@@ -1,12 +1,6 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Animated from 'react-native-reanimated';
 import {GestureDetector} from 'react-native-gesture-handler';
@@ -14,6 +8,8 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import CustomTabBar from 'navigation/RootNavigator/PostInteractionTabs/components/CustomTabBar';
+import Spacer from 'components/Spacer';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
@@ -41,17 +37,18 @@ const PostInteractionTabs = () => {
         onPress={goBack}
         style={StyleSheet.absoluteFillObject}
       />
+      <Spacer paddingTop={60} />
       <GestureDetector gesture={panGesture}>
-        <View style={{height: Dimensions.get('window').height * 0.8}}>
-          <Animated.View style={[animatedStyle, styles.animatedContainer]}>
-            <View style={styles.bar} />
-            <Tab.Navigator>
-              <Tab.Screen name="one" component={DummyScreen} />
-              <Tab.Screen name="two" component={DummyScreen} />
-              <Tab.Screen name="three" component={DummyScreen} />
-            </Tab.Navigator>
-          </Animated.View>
-        </View>
+        <Animated.View style={[animatedStyle, styles.animatedContainer]}>
+          <View style={styles.bar} />
+          <Tab.Navigator
+            sceneContainerStyle={styles.sceneContainerStyle}
+            tabBar={CustomTabBar}>
+            <Tab.Screen name="one" component={DummyScreen} />
+            <Tab.Screen name="two" component={DummyScreen} />
+            <Tab.Screen name="three" component={DummyScreen} />
+          </Tab.Navigator>
+        </Animated.View>
       </GestureDetector>
     </View>
   );
