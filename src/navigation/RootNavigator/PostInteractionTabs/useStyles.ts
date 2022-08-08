@@ -12,7 +12,7 @@ const useStyles = makeStyle(theme => ({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: theme.colors.white,
     borderRadius: 24,
-    paddingHorizontal: theme.spacing.m,
+    // paddingHorizontal: theme.spacing.m,
     paddingVertical: theme.spacing.s,
     height: Dimensions.get('window').height * 0.9,
   },
