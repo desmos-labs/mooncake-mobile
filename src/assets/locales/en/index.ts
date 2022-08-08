@@ -25,6 +25,8 @@ import connectAddress from './connectAddress.json';
 import confirmAddress from './confirmAddress.json';
 import connectChain from './connectChain.json';
 import disconnectChain from './disconnectChain.json';
+import selectChain from './selectChain.json';
+import sendTips from './sendTips.json';
 
 const en = {
   common,
@@ -53,7 +55,9 @@ const en = {
   connectAddress,
   confirmAddress,
   connectChain,
-  disconnectChain
+  disconnectChain,
+  selectChain,
+  sendTips,
 };
 
 export default en;

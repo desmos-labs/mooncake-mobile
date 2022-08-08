@@ -17,6 +17,10 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     justifyContent: 'center',
   },
+  tooltipGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 }));
 
 export default useStyles;

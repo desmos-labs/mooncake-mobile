@@ -59,4 +59,9 @@ export type LinkableChain = {
    * Chain configurations.
    */
   chainConfig: ChainConfig;
+
+  /**
+   * The chain's related assets
+   */
+  assets?: ChainAsset[];
 };

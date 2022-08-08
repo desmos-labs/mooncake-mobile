@@ -10,6 +10,7 @@ import Landing from 'screens/Landing';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
+import SendTips from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
@@ -49,6 +50,8 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import SelectChainConnection from 'screens/SelectChainConnection';
+import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -79,9 +82,12 @@ export type RootNavigatorParamList = {
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
+  [ROUTES.CONNECT_ADDRESS_ADVANCED]: undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.SELECT_CHAIN]: undefined;
+  [ROUTES.SEND_TIPS]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
@@ -186,11 +192,21 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen
+        name={ROUTES.CONNECT_ADDRESS_ADVANCED}
+        component={ConnectAddressAdvanced}
+      />
+
+      <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
         }}
         name={ROUTES.CONFIRM_ADDRESS}
         component={ConfirmAddress}
+      />
+
+      <Stack.Screen
+        name={ROUTES.SELECT_CHAIN}
+        component={SelectChainConnection}
       />
 
       <Stack.Group
@@ -206,16 +222,8 @@ const RootNavigator = () => {
           name={ROUTES.CONSENT_AGREEMENT}
           component={ConsentAgreement}
         />
-        <Stack.Screen
-          initialParams={{
-            title: t('confirmModal:removeProfile'),
-            subtitle: t('confirmModal:backupSeedphrase'),
-            primaryButtonLabel: t('confirmModal:goToBackup'),
-            secondaryButtonLabel: t('confirmModal:remove'),
-          }}
-          name={ROUTES.CONFIRM_MODAL}
-          component={ConfirmModal}
-        />
+        <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+        <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),

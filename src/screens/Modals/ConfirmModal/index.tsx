@@ -23,11 +23,11 @@ export type ConfirmModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel: string;
+  primaryButtonLabel?: string;
   /**
    * Label of the secondary button.
    */
-  secondaryButtonLabel: string;
+  secondaryButtonLabel?: string;
   /**
    * What to do when the user presses the close button.
    */
@@ -70,35 +70,26 @@ const ConfirmModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        {/* newest design no longer has the dismiss button */}
-        {/* It can be deleted if it is not brought back before production release */}
-
-        {/* <TouchableOpacity */}
-        {/*  style={styles.dismissButton} */}
-        {/*  hitSlop={{top: 20, bottom: 20, right: 20, left: 20}} */}
-        {/*  onPress={onDismiss || goBack}> */}
-        {/*  <Image style={styles.dismissButtonImage} source={iconCross} /> */}
-        {/* </TouchableOpacity> */}
-        <Typography.H5>{title}</Typography.H5>
+        <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         <Typography.Body5 style={styles.subtitleText}>
           {subtitle}
         </Typography.Body5>
-        <Button
-          style={styles.primaryButton}
-          mode="contained"
-          onPress={onPressPrimary}>
-          <Typography.Subtitle1 style={styles.primaryButtonText}>
+        {primaryButtonLabel && (
+          <Button
+            containerStyle={styles.primaryButton}
+            mode="gradientFilled"
+            onPress={onPressPrimary}>
             {primaryButtonLabel}
-          </Typography.Subtitle1>
-        </Button>
-        <Button
-          style={styles.secondaryButton}
-          mode="text"
-          onPress={onPressSecondary}>
-          <Typography.Subtitle1 style={styles.secondaryButtonText}>
+          </Button>
+        )}
+        {secondaryButtonLabel && (
+          <Button
+            containerStyle={styles.secondaryButton}
+            mode="text"
+            onPress={onPressSecondary}>
             {secondaryButtonLabel}
-          </Typography.Subtitle1>
-        </Button>
+          </Button>
+        )}
       </View>
     </View>
   );
