@@ -1,6 +1,7 @@
 import React from 'react';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {FlatList, ListRenderItemInfo} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import NoComments from './components/NoComments';
 import CommentItem from './components/CommentItem';
 
@@ -35,20 +36,6 @@ const PostComments = () => {
       <NoComments
         handlePress={() => {
           console.log('add comment');
-        }}
-      />
-    );
-  }, []);
-
-  const ItemSeparatorComponent = React.useCallback(() => {
-    return (
-      <View
-        style={{
-          alignSelf: 'center',
-          width: 335,
-          height: 1,
-          backgroundColor: theme.colors.surfaceGrey,
-          marginVertical: theme.spacing.m,
         }}
       />
     );
