@@ -10,6 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import CustomTabBar from 'navigation/RootNavigator/PostInteractionTabs/components/CustomTabBar';
 import Spacer from 'components/Spacer';
+import PostComments from 'screens/PostInteraction/PostComments';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
@@ -57,7 +58,7 @@ const PostInteractionTabs = () => {
               options={{
                 tabBarLabel: 'Comments 1k',
               }}
-              component={DummyScreen}
+              component={PostComments}
             />
             <Tab.Screen
               name={ROUTES.POST_REACTIONS}

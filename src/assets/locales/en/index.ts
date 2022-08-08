@@ -27,6 +27,7 @@ import connectChain from './connectChain.json';
 import disconnectChain from './disconnectChain.json';
 import selectChain from './selectChain.json';
 import sendTips from './sendTips.json';
+import postInteraction from './postInteraction.json';
 
 const en = {
   common,
@@ -58,6 +59,7 @@ const en = {
   disconnectChain,
   selectChain,
   sendTips,
+  postInteraction
 };
 
 export default en;
