@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {commentIcon, moreIcon, optionsIcon, tipIcon} from 'assets/images';
+import {commentIcon, createPost, optionsIcon, tipIcon} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
@@ -9,6 +9,7 @@ import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import {verticalScale} from 'react-native-size-matters';
 import useHooks from 'screens/Home/useHooks';
+import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -39,16 +40,22 @@ const Home = () => {
     postData,
   } = useHooks();
 
-  const renderPost = React.useCallback((info: CarouselRenderItemInfo<any>) => {
-    return (
-      <PostCard
-        postData={info.item}
-        onPressAuthor={() => handlePressAuthor('')}
-        onPressDetails={() => handlePressDetails('')}
-        onPressFollow={() => handlePressFollow('')}
-      />
-    );
-  }, []);
+  const renderPost = React.useCallback(
+    (info: CarouselRenderItemInfo<any>) => {
+      if (info.index === postData.length) {
+        return <NoMorePosts />;
+      }
+      return (
+        <PostCard
+          postData={info.item}
+          onPressAuthor={() => handlePressAuthor('')}
+          onPressDetails={() => handlePressDetails('')}
+          onPressFollow={() => handlePressFollow('')}
+        />
+      );
+    },
+    [postData],
+  );
 
   return (
     <DView style={styles.container}>
@@ -70,9 +77,10 @@ const Home = () => {
         </View>
 
         <ProfileHeaderButton
-          imageSrc={moreIcon}
+          style={styles.createPostButton}
+          imageSrc={createPost}
           onPress={() => {
-            console.log('more');
+            console.log('create post');
           }}
         />
       </View>
@@ -89,21 +97,21 @@ const Home = () => {
         width={Dimensions.get('window').width}
         height={verticalScale(500)}
         style={styles.carousel}
-        data={postData}
+        data={[...postData, 0 as any]}
         renderItem={renderPost}
       />
 
       <View style={styles.interactionButtonGroup}>
         <InteractionButton
-          onPress={handlePressOptions}
-          interactionCount={100}
-          icon={optionsIcon}
-        />
-
-        <InteractionButton
           onPress={handlePressComments}
           interactionCount={10500}
           icon={commentIcon}
+        />
+
+        <InteractionButton
+          onPress={handlePressOptions}
+          interactionCount={100}
+          icon={optionsIcon}
         />
 
         <InteractionButton

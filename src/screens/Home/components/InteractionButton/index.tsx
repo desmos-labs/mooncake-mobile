@@ -8,6 +8,7 @@ import {
 import Typography from 'components/Typography';
 import LinearGradient from 'react-native-linear-gradient';
 import {formatNumShorthand} from 'lib/FormatUtils';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -29,16 +30,12 @@ type Props = {
 
 const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
   const styles = useStyles();
+  const theme = useTheme();
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <LinearGradient
-        colors={[
-          'rgba(255, 199, 91, 1)',
-          'rgba(255, 132, 79, 1)',
-          'rgba(255, 132, 79, 1)',
-          'rgba(255, 132, 79, 1)',
-        ]}
+        colors={theme.colors.dOrangeGradient01}
         style={StyleSheet.absoluteFillObject}
       />
       <Image source={icon} style={styles.icon} />

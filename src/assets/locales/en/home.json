@@ -1,4 +1,5 @@
 {
   "DISCOVER_POSTS": "Discover",
-  "FOLLOWING_POSTS": "Following"
+  "FOLLOWING_POSTS": "Following",
+  "noMorePosts": "You have read the most\nrecent post!"
 }

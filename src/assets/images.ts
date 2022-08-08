@@ -122,6 +122,10 @@ export const disconnectIcon = require('./images/disconnectIcon.png');
 
 export const magnifyingGlass = require('./images/magnifyingGlass.png');
 
+export const createPost = require('./images/createPost.png');
+
+export const noMorePosts = require('./images/noMorePosts.png');
+
 export const connectIcon = require('./images/connectIcon.png');
 
 //Socials
