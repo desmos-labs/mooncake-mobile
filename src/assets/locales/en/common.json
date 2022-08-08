@@ -20,5 +20,6 @@
   "atLeastUpper": "At least 1 uppercase",
   "atLeastSpecial": "At least 1 special character (~|!’,;\\/@#$%^&+=)",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "n/a": "N/A"
 }

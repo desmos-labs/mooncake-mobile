@@ -44,3 +44,6 @@ Promise.allSettled =
           })),
       ),
     ));
+
+// bigint polyfill
+if (typeof BigInt === 'undefined') global.BigInt = require('big-integer');
