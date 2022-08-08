@@ -81,7 +81,7 @@ const CustomSnackbar = ({
     }
   }
 
-  const testFunction = useCallback(
+  const handleSwipe = useCallback(
     (event: GestureResponderEvent) => {
       if (event.nativeEvent.locationY <= 0) {
         swipeUpAction();
@@ -93,7 +93,7 @@ const CustomSnackbar = ({
   return (
     <Animated.View
       onStartShouldSetResponder={() => true}
-      onResponderRelease={event => testFunction(event)}
+      onResponderRelease={event => handleSwipe(event)}
       style={[
         styles.commonToastStyle,
         position === 'top' ? styles.topToastStyle : styles.bottomToastStyle,
