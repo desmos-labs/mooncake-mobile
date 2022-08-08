@@ -16,14 +16,14 @@ import Animated, {
 } from 'react-native-reanimated';
 import {RadioButtonInput} from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/Feather';
-import {RadioValue} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
+import {ProfileRadioValue} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
    * Values to be displayed as radio buttons.
    */
-  value: RadioValue;
+  value: ProfileRadioValue;
   index: number;
   /**
    * Callback when the user click a button.
