@@ -9,20 +9,29 @@ import DView from 'components/DView';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import {verticalScale} from 'react-native-size-matters';
 import useHooks from 'screens/Home/useHooks';
-import PostTypeTab from './components/PostTypeTab';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
+import PostTypeTab from './components/PostTypeTab';
+
+// This warning is emitted from react-native-reanimated-carousel, but it
+// does not affect operation
+LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
 export enum POST_TYPE {
   DISCOVER = 'DISCOVER_POSTS',
   FOLLOWING = 'FOLLOWING_POSTS',
 }
 
-// This warning is emitted from react-native-reanimated-carousel, but it
-// does not affect operation
-LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 
 const Home = () => {
   const styles = useStyles();
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
     handlePressTip,
@@ -50,69 +59,89 @@ const Home = () => {
     );
   }, []);
 
-  return (
-    <DView style={styles.container}>
-      <View style={styles.headerGroup}>
-        <ProfileHeaderButton
-          // TODO: replace this with user's image
-          imageSrc={{uri: 'https://i.imgur.com/aih9snA.png'}}
-          onPress={() => {
-            console.log('shrek');
-          }}
-        />
+  const swipeUpGesture = React.useMemo(
+    () =>
+      Gesture.Pan()
+        .runOnJS(true)
+        .onEnd(event => {
+          const {velocityX, velocityY} = event;
 
-        <View style={styles.tabContainer}>
-          <PostTypeTab
-            selectedIndex={selectedIndex}
-            setSelectedIndex={setSelectedIndex}
-            postTypes={postTypes}
+          if (Math.abs(velocityX) < 1000 && velocityY < -500) {
+            navigate(ROUTES.POST_INTERACTION, {screen: 'one'});
+          }
+        }),
+    [],
+  );
+
+  return (
+    <GestureDetector gesture={swipeUpGesture}>
+      <DView style={styles.container}>
+        <View style={styles.headerGroup}>
+          <ProfileHeaderButton
+            // TODO: replace this with user's image
+            imageSrc={{uri: 'https://i.imgur.com/aih9snA.png'}}
+            onPress={() => {
+              console.log('shrek');
+            }}
+          />
+
+          <View style={styles.tabContainer}>
+            <PostTypeTab
+              selectedIndex={selectedIndex}
+              setSelectedIndex={setSelectedIndex}
+              postTypes={postTypes}
+            />
+          </View>
+
+          <ProfileHeaderButton
+            imageSrc={moreIcon}
+            onPress={() => {
+              console.log('more');
+            }}
           />
         </View>
 
-        <ProfileHeaderButton
-          imageSrc={moreIcon}
-          onPress={() => {
-            console.log('more');
+        <Carousel
+          onProgressChange={onCarouselProgressChange}
+          onSnapToItem={onPostChanged}
+          mode="parallax"
+          loop={false}
+          modeConfig={{
+            parallaxScrollingScale: 0.9,
+            parallaxScrollingOffset: 60,
+          }}
+          width={Dimensions.get('window').width}
+          height={verticalScale(500)}
+          style={styles.carousel}
+          data={postData}
+          renderItem={renderPost}
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+            failOffsetY: [-10, 10],
           }}
         />
-      </View>
 
-      <Carousel
-        onProgressChange={onCarouselProgressChange}
-        onSnapToItem={onPostChanged}
-        mode="parallax"
-        loop={false}
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 60,
-        }}
-        width={Dimensions.get('window').width}
-        height={verticalScale(500)}
-        style={styles.carousel}
-        data={postData}
-        renderItem={renderPost}
-      />
+        <View style={styles.interactionButtonGroup}>
+          <InteractionButton
+            onPress={handlePressOptions}
+            interactionCount={100}
+            icon={optionsIcon}
+          />
 
-      <View style={styles.interactionButtonGroup}>
-        <InteractionButton
-          onPress={handlePressOptions}
-          interactionCount={100}
-          icon={optionsIcon}
-        />
+          <InteractionButton
+            onPress={handlePressComments}
+            interactionCount={10500}
+            icon={commentIcon}
+          />
 
-        <InteractionButton
-          onPress={handlePressComments}
-          interactionCount={10500}
-          icon={commentIcon}
-        />
-
-        <InteractionButton
-          onPress={handlePressTip}
-          interactionCount={100000000}
-          icon={tipIcon}
-        />
-      </View>
-    </DView>
+          <InteractionButton
+            onPress={handlePressTip}
+            interactionCount={100000000}
+            icon={tipIcon}
+          />
+        </View>
+      </DView>
+    </GestureDetector>
   );
 };
 

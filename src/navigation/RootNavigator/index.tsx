@@ -52,6 +52,7 @@ import DisconnectChainModal, {
 } from 'screens/Modals/DisconnectChainModal';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
+import PostInteractionTabs from 'navigation/RootNavigator/PostInteractionTabs';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -91,6 +92,9 @@ export type RootNavigatorParamList = {
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
+
+  // Post interaction tabs
+  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<any>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -263,6 +267,11 @@ const RootNavigator = () => {
               externalAddress: 'externalAddress',
             },
           }}
+        />
+
+        <Stack.Screen
+          name={ROUTES.POST_INTERACTION}
+          component={PostInteractionTabs}
         />
       </Stack.Group>
 
