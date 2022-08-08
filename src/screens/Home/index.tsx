@@ -123,15 +123,15 @@ const Home = () => {
 
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
-            onPress={handlePressOptions}
-            interactionCount={100}
-            icon={optionsIcon}
-          />
-
-          <InteractionButton
             onPress={handlePressComments}
             interactionCount={10500}
             icon={commentIcon}
+          />
+
+          <InteractionButton
+            onPress={handlePressOptions}
+            interactionCount={100}
+            icon={optionsIcon}
           />
 
           <InteractionButton
