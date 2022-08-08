@@ -1,14 +1,13 @@
 import {StdFee} from '@cosmjs/amino';
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
 import {isBroadcastTxFailure} from '@cosmjs/stargate';
-import {DesmosClient} from '@desmoslabs/desmjs';
+import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import {Coin} from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import {SignMode} from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
 import {AuthInfo, SignerInfo, TxRaw} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {Any} from 'cosmjs-types/google/protobuf/any';
 import Long from 'long';
 import {useCallback} from 'react';
-import OfflineSignerAdapter from '@desmoslabs/desmjs/build/signers/adapter';
 import EnvConfig from 'config/EnvConfig';
 
 function makeSignerInfo(

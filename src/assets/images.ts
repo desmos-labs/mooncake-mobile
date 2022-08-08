@@ -126,6 +126,8 @@ export const createPost = require('./images/createPost.png');
 
 export const noMorePosts = require('./images/noMorePosts.png');
 
+export const connectIcon = require('./images/connectIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

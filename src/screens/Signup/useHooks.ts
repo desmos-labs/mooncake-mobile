@@ -72,7 +72,7 @@ const useHooks = () => {
 
       navigate(ROUTES.BROADCAST_TX, {
         messages,
-        serializedWallet: newWallet.serialize(),
+        offlineSigner: newWallet,
         successAction: () => {
           push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
             title: t('common:congratulations'),
