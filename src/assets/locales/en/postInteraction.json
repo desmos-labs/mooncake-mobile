@@ -1,4 +1,7 @@
 {
   "noComments": "No comments yet",
-  "comment": "Comment"
+  "comment": "Comment",
+  "follow": "Follow",
+  "unfollow": "Unfollow",
+  "noReactions": "No reactions yet"
 }

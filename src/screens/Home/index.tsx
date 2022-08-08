@@ -70,8 +70,14 @@ const Home = () => {
     [],
   );
 
-  const handlePressOptions = React.useCallback(() => {
-    // TODO: implementation
+  const handlePressReactions = React.useCallback(() => {
+    navigate(ROUTES.POST_INTERACTION, {
+      screen: ROUTES.POST_REACTIONS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+      },
+    });
   }, []);
 
   const handlePressComments = React.useCallback(() => {
@@ -144,7 +150,7 @@ const Home = () => {
           />
 
           <InteractionButton
-            onPress={handlePressOptions}
+            onPress={handlePressReactions}
             interactionCount={100}
             icon={optionsIcon}
           />

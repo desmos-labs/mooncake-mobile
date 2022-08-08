@@ -214,6 +214,15 @@ const Typography = {
     letterSpacing: 0.015,
     textAlign: 'left',
   })),
+  Button3: createTextComponent(() => ({
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 16,
+    letterSpacing: 0.04,
+    textAlign: 'left',
+  })),
   Caption1: createTextComponent(() => ({
     fontFamily: 'Poppins-Regular',
     fontSize: 12,
