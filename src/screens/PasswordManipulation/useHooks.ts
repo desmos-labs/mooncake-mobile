@@ -85,7 +85,7 @@ const useHooks = () => {
         navigate(ROUTES.RESULT_MODAL, {
           title: t('resultModal:success'),
           subtitle: t('resultModal:passwordWasChanged'),
-          primaryButtonLabel: t('resultModal:goToProfile'),
+          primaryButtonLabel: t('resultModal:goToProfile') as string,
           onDismiss: () => {
             // finish implementation when change pw feature is added
           },

@@ -55,6 +55,7 @@ import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
 import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
+import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -91,6 +92,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
+  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
@@ -213,6 +215,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.SELECT_CHAIN}
         component={SelectChainConnection}
+      />
+
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_TX_DETAIL}
+        component={ConnectChainTxDetail}
       />
 
       <Stack.Group
