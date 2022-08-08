@@ -72,6 +72,8 @@ enum ROUTES {
 
   DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
 
+  CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
+
   /**
    * Root navigator end
    */
