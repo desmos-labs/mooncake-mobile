@@ -83,6 +83,12 @@ enum ROUTES {
 
   // Post Interaction start
   POST_INTERACTION = 'POST_INTERACTION',
+
+  POST_REACTIONS = 'POST_REACTIONS',
+
+  POST_COMMENTS = 'POST_COMMENTS',
+
+  POST_TIPS = 'POST_TIPS',
   // Post interaction end
 }
 

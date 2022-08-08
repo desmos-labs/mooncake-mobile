@@ -13,13 +13,21 @@ import Spacer from 'components/Spacer';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
-const Tab = createMaterialTopTabNavigator();
-
 const DummyScreen = () => (
   <View style={{flex: 1}}>
     <Text>Hello world</Text>
   </View>
 );
+
+export type PostInteractionTabsParams = {
+  [ROUTES.POST_TIPS]: undefined;
+
+  [ROUTES.POST_COMMENTS]: undefined;
+
+  [ROUTES.POST_REACTIONS]: undefined;
+};
+
+const Tab = createMaterialTopTabNavigator<PostInteractionTabsParams>();
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -44,9 +52,27 @@ const PostInteractionTabs = () => {
           <Tab.Navigator
             sceneContainerStyle={styles.sceneContainerStyle}
             tabBar={CustomTabBar}>
-            <Tab.Screen name="one" component={DummyScreen} />
-            <Tab.Screen name="two" component={DummyScreen} />
-            <Tab.Screen name="three" component={DummyScreen} />
+            <Tab.Screen
+              name={ROUTES.POST_COMMENTS}
+              options={{
+                tabBarLabel: 'Comments 1k',
+              }}
+              component={DummyScreen}
+            />
+            <Tab.Screen
+              name={ROUTES.POST_REACTIONS}
+              options={{
+                tabBarLabel: 'Reactions 1k',
+              }}
+              component={DummyScreen}
+            />
+            <Tab.Screen
+              name={ROUTES.POST_TIPS}
+              options={{
+                tabBarLabel: 'Tips 1k',
+              }}
+              component={DummyScreen}
+            />
           </Tab.Navigator>
         </Animated.View>
       </GestureDetector>
