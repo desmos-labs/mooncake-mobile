@@ -15,6 +15,7 @@ import useStyles from './useStyles';
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
+  const balance = 0; // fetch the balance
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
@@ -39,7 +40,22 @@ const SendTips = () => {
     // implementation
   }, []);
 
-  return (
+  return balance < 0 ? (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={goBack}
+      style={styles.container}>
+      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+      {/* parts of the modal content are pressed */}
+      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+        <View style={styles.tabIcon} />
+        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+        <Typography.Body6>{t('description')}</Typography.Body6>
+        <Spacer paddingBottom={30} />
+        <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  ) : (
     <TouchableOpacity
       activeOpacity={1}
       onPress={goBack}
