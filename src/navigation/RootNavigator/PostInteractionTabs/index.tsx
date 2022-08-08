@@ -20,20 +20,32 @@ const DummyScreen = () => (
   </View>
 );
 
-export type PostInteractionTabsParams = {
-  [ROUTES.POST_TIPS]: undefined;
+export type PostInteractionTabsParamList = {
+  [ROUTES.POST_TIPS]: PostInteractionTabsParams;
 
-  [ROUTES.POST_COMMENTS]: undefined;
+  [ROUTES.POST_COMMENTS]: PostInteractionTabsParams;
 
-  [ROUTES.POST_REACTIONS]: undefined;
+  [ROUTES.POST_REACTIONS]: PostInteractionTabsParams;
 };
 
-const Tab = createMaterialTopTabNavigator<PostInteractionTabsParams>();
+const Tab = createMaterialTopTabNavigator<PostInteractionTabsParamList>();
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.POST_INTERACTION
 >;
+
+export type PostInteractionTabsParams = {
+  /**
+   * Fully expand the post interaction tab window on open
+   */
+  expandOnOpen: boolean;
+
+  /**
+   * Should the user be able to drag the tab window in and out?
+   */
+  allowPanning: boolean;
+};
 
 const PostInteractionTabs = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();

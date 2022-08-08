@@ -34,12 +34,9 @@ const Home = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
-    handlePressTip,
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
-    handlePressOptions,
-    handlePressComments,
     selectedIndex,
     setSelectedIndex,
     postTypes,
@@ -67,11 +64,29 @@ const Home = () => {
           const {velocityX, velocityY} = event;
 
           if (Math.abs(velocityX) < 1000 && velocityY < -500) {
-            navigate(ROUTES.POST_INTERACTION, {screen: 'one'});
+            handlePressComments();
           }
         }),
     [],
   );
+
+  const handlePressOptions = React.useCallback(() => {
+    // TODO: implementation
+  }, []);
+
+  const handlePressComments = React.useCallback(() => {
+    navigate(ROUTES.POST_INTERACTION, {
+      screen: ROUTES.POST_COMMENTS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+      },
+    });
+  }, []);
+
+  const handlePressTip = React.useCallback(() => {
+    // TODO: implementation
+  }, []);
 
   return (
     <GestureDetector gesture={swipeUpGesture}>

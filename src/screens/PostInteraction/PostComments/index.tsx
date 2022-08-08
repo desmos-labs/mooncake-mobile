@@ -8,7 +8,6 @@ const PostComments = () => {
   const theme = useTheme();
 
   const renderItem = React.useCallback((info: ListRenderItemInfo<any>) => {
-    console.log(info);
     return (
       <CommentItem
         handlePressMore={() => {

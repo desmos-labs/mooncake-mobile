@@ -1,10 +1,11 @@
 import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
 import {Dimensions} from 'react-native';
 import {Gesture} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import _ from 'lodash';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -15,10 +16,13 @@ type NavProps = StackScreenProps<
  */
 const useAnimations = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();
+  const {params} = useRoute<NavProps['route']>();
 
+  const expandOnOpen = _.get(params, 'params.expandOnOpen');
+  const allowPanning = _.get(params, 'params.allowPanning');
   // use shared values as calling Dimensions.get in gesture handler causes it
   // to crash
-  const yOffset = useSharedValue(500);
+  const yOffset = useSharedValue(expandOnOpen ? 50 : 500);
   const hideThreshold = useSharedValue(Dimensions.get('window').height * 0.8);
 
   /**
@@ -32,7 +36,7 @@ const useAnimations = () => {
       // TODO: these threshold values should be tweaked
       // also handle swipe action
       const newValue = yOffset.value + changeY;
-      if (newValue < 800 && newValue > 50) {
+      if (allowPanning && newValue < 800 && newValue > 50) {
         yOffset.value = newValue;
       }
     })

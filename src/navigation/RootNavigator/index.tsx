@@ -52,7 +52,9 @@ import DisconnectChainModal, {
 } from 'screens/Modals/DisconnectChainModal';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
-import PostInteractionTabs from 'navigation/RootNavigator/PostInteractionTabs';
+import PostInteractionTabs, {
+  PostInteractionTabsParamList,
+} from 'navigation/RootNavigator/PostInteractionTabs';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -94,7 +96,7 @@ export type RootNavigatorParamList = {
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
 
   // Post interaction tabs
-  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<any>;
+  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
