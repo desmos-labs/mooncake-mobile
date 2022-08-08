@@ -42,6 +42,9 @@ const PostReactions = () => {
       keyExtractor={item => item.address}
       data={DUMMY_REACTIONS}
       renderItem={renderItem}
+      contentContainerStyle={{
+        flexGrow: 1,
+      }}
       ItemSeparatorComponent={ItemSeparatorComponent}
       ListEmptyComponent={ListEmptyComponent}
     />

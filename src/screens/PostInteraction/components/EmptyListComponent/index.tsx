@@ -17,7 +17,7 @@ const EmptyListComponent = ({handleButtonPress, label, buttonLabel}: Props) => {
   const styles = useStyles();
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.contentContainer}>
         <Image source={errorImage} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
@@ -36,6 +36,10 @@ const EmptyListComponent = ({handleButtonPress, label, buttonLabel}: Props) => {
 };
 
 const useStyles = makeStyle(theme => ({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   contentContainer: {
     alignItems: 'center',
   },

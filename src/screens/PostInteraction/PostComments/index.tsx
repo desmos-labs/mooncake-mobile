@@ -1,12 +1,15 @@
 import React from 'react';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import {useTranslation} from 'react-i18next';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
-import NoComments from './components/NoComments';
 import CommentItem from './components/CommentItem';
 
 const PostComments = () => {
   const theme = useTheme();
+
+  const {t} = useTranslation('postInteraction');
 
   const renderItem = React.useCallback((info: ListRenderItemInfo<any>) => {
     return (
@@ -33,10 +36,12 @@ const PostComments = () => {
 
   const ListEmptyComponent = React.useCallback(() => {
     return (
-      <NoComments
-        handlePress={() => {
-          console.log('add comment');
+      <EmptyListComponent
+        label={t('noComments')}
+        handleButtonPress={() => {
+          // add comment
         }}
+        buttonLabel={t('comment')}
       />
     );
   }, []);
@@ -47,6 +52,7 @@ const PostComments = () => {
       renderItem={renderItem}
       contentContainerStyle={{
         paddingHorizontal: theme.spacing.m,
+        flexGrow: 1,
       }}
       ListEmptyComponent={ListEmptyComponent}
       ItemSeparatorComponent={ItemSeparatorComponent}
