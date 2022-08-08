@@ -10,7 +10,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.desmosOrange01,
     justifyContent: 'flex-end',
     overflow: 'hidden',
-    padding: theme.spacing.m,
     width: '95%',
     height: '100%',
     alignSelf: 'center',
@@ -23,9 +22,9 @@ const useStyles = makeStyle(theme => ({
   },
   bottomGroup: {
     flexDirection: 'row',
-    paddingVertical: theme.spacing.m,
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    padding: theme.spacing.m,
   },
   profileGroup: {
     flexDirection: 'row',
@@ -37,6 +36,11 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
     fontSize: 32,
   },
+  imagePostText: {
+    marginTop: theme.spacing.s,
+    color: theme.colors.white,
+    marginRight: theme.spacing.s,
+  },
   blankAvatar: {
     width: 40,
     height: 40,
@@ -47,6 +51,10 @@ const useStyles = makeStyle(theme => ({
   nameGroup: {
     marginLeft: theme.spacing.s,
     justifyContent: 'center',
+  },
+  textGradient: {
+    ...StyleSheet.absoluteFillObject,
+    top: -25,
   },
 }));
 

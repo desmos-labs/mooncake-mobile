@@ -28,6 +28,22 @@ const textPostData: PostItem = {
 
 const imagePostData: PostItem = {
   ...textPostData,
+  text: '',
+  attachments: [
+    {
+      id: 1,
+      content: {
+        uri: 'https://i.imgur.com/aih9snA.png',
+        '@type': '/desmos.posts.v1.Media',
+        mime_type: 'image/png',
+      },
+    },
+  ],
+};
+
+const imageAndTextPostData: PostItem = {
+  ...textPostData,
+  text: 'Shrek is my favorite anime.Shrek is my favorite anime.Shrek is my favorite anime.',
   attachments: [
     {
       id: 1,
@@ -56,6 +72,11 @@ const imagePost: CompType = {
   postData: imagePostData,
 };
 
+const textAndImagePost: CompType = {
+  ...textPost,
+  postData: imageAndTextPostData,
+};
+
 // These dimensions are not the same as the ones found on the
 // home screen, but they are good enough to preview the component
 storiesOf('component/PostCard', module)
@@ -71,4 +92,5 @@ storiesOf('component/PostCard', module)
     </SbContainer>
   ))
   .add('Text Post', () => <PostCard {...textPost} />)
-  .add('Image Post', () => <PostCard {...imagePost} />);
+  .add('Image Post', () => <PostCard {...imagePost} />)
+  .add('Image and text post', () => <PostCard {...textAndImagePost} />);
