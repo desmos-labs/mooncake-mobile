@@ -63,18 +63,6 @@ const useHooks = () => {
     console.log(postId);
   }, []);
 
-  const handlePressOptions = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
-
-  const handlePressComments = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
-
-  const handlePressTip = React.useCallback(() => {
-    // TODO: implementation
-  }, []);
-
   const onCarouselProgressChange = React.useCallback(
     (_temp: number, __: number, value: number) => {
       const offsetValue = value;
@@ -90,12 +78,9 @@ const useHooks = () => {
   );
 
   return {
-    handlePressTip,
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
-    handlePressOptions,
-    handlePressComments,
     selectedIndex,
     setSelectedIndex,
     postTypes,

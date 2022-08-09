@@ -23,7 +23,7 @@ const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
     overflow: 'hidden',
   },
   tabButton: {
-    flex: 1,
+    // flex: 1,
     marginHorizontal: 8,
     height: '100%',
     padding: 10,
@@ -32,13 +32,22 @@ const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
     textAlign: 'center',
   },
   unselected: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.surfaceBlack,
+    opacity: 0.5,
   },
   selected: {
-    color: theme.colors.white,
+    color: theme.colors.surfaceBlack,
   },
   gradient: {
     flex: 1,
+  },
+  selectedIndicator: {
+    top: theme.spacing.s,
+    width: 4,
+    height: 4,
+    alignSelf: 'center',
+    borderRadius: 4,
+    backgroundColor: '#FF844F',
   },
 }));
 
