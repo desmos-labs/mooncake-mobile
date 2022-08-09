@@ -74,6 +74,8 @@ enum ROUTES {
 
   CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
 
+  ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
+
   /**
    * Root navigator end
    */
