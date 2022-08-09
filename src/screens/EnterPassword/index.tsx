@@ -19,7 +19,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {AuthorizeWalletParams} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -27,7 +27,7 @@ const initialFormValues = {
 };
 
 type NavProps = StackScreenProps<
-  AuthorizeWalletParams,
+  AuthorizeWalletParamList,
   ROUTES.AUTH_UNLOCK_LOCAL_WALLET
 >;
 
