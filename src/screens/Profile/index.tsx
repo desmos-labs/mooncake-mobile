@@ -18,7 +18,6 @@ import {useTranslation} from 'react-i18next';
 import {useQuery} from '@apollo/client';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
-import _ from 'lodash';
 import {scale} from 'react-native-size-matters';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
@@ -83,12 +82,16 @@ const Profile = () => {
 
   const [userProfile] = profileData.profile as any;
 
-  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
-    userProfile as ProfileData;
-
-  const followers = _.get(userProfile, 'followage_aggregate.aggregate.count');
-
-  const following = _.get(userProfile, 'following_aggregate.aggregate.count');
+  const {
+    address,
+    bio,
+    dtag,
+    cover_pic,
+    profile_pic,
+    nickname,
+    following,
+    followage,
+  } = userProfile as ProfileData;
 
   const {post} = postData;
 
@@ -176,11 +179,17 @@ const Profile = () => {
                 <UserBio content={bio} />
 
                 <View style={styles.socialCounterGroup}>
-                  <SocialCounter count={following} label={t('following')} />
+                  <SocialCounter
+                    count={following.length}
+                    label={t('following')}
+                  />
 
                   <View style={styles.separator} />
 
-                  <SocialCounter count={followers} label={t('followers')} />
+                  <SocialCounter
+                    count={followage.length}
+                    label={t('followers')}
+                  />
                 </View>
 
                 <View style={styles.connectButtonGroup}>

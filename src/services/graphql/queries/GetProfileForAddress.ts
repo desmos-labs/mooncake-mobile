@@ -3,23 +3,22 @@ import {gql} from '@apollo/client';
 const GetProfileForAddress =
   gql(`query GetProfileForAddress($address: String) @api(name: desmos) {
   profile(where: {address: {_eq: $address}}) {
-    address
-    bio
-    cover_pic
-    dtag
-    profile_pic
-    nickname
-    followage_aggregate {
-      aggregate {
-        count
+      address
+      bio
+      dtag
+      creation_time
+      cover_pic
+      nickname
+      profile_pic
+      followage {
+        counterparty_address
+        subspace_id
       }
-    }
-    following_aggregate {
-      aggregate {
-        count
+      following {
+        counterparty_address
+        subspace_id
       }
-    }
-  }
+}
 }
 `);
 

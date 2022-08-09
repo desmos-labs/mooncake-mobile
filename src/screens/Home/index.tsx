@@ -1,7 +1,13 @@
 import React from 'react';
 import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {commentIcon, createPost, optionsIcon, tipIcon} from 'assets/images';
+import {
+  commentIcon,
+  createPost,
+  defaultProfilePic,
+  optionsIcon,
+  tipIcon,
+} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
@@ -10,6 +16,8 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import {verticalScale} from 'react-native-size-matters';
 import useHooks from 'screens/Home/useHooks';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
+import useActiveAccount from 'hooks/useActiveAccount';
+import _ from 'lodash';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -40,6 +48,8 @@ const Home = () => {
     postData,
   } = useHooks();
 
+  const {profileData} = useActiveAccount();
+
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<any>) => {
       if (info.index === postData.length) {
@@ -57,12 +67,13 @@ const Home = () => {
     [postData],
   );
 
+  const profilePic = _.get(profileData, 'profile_pic');
+
   return (
     <DView style={styles.container}>
       <View style={styles.headerGroup}>
         <ProfileHeaderButton
-          // TODO: replace this with user's image
-          imageSrc={{uri: 'https://i.imgur.com/aih9snA.png'}}
+          imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
           onPress={() => {
             console.log('shrek');
           }}

@@ -1,6 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
-import userOptionsState from '@recoil/userOptions';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -24,7 +23,6 @@ declare type Props = StackScreenProps<RootNavigatorParamList>;
 const Profiles: React.FC<Props> = props => {
   const {navigation} = props;
   const [profiles] = useRecoilState(profilesState);
-  const [userOptions, setUserOptions] = useRecoilState(userOptionsState);
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
@@ -56,7 +54,7 @@ const Profiles: React.FC<Props> = props => {
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {
       if (index === i) {
-        setUserOptions({...userOptions, selectedProfile: profile});
+        // setUserOptions({selectedProfile: profile});
       }
     });
   };
@@ -67,10 +65,10 @@ const Profiles: React.FC<Props> = props => {
         nickname: profile.nickname,
         dTag: profile.dtag,
         profilePicture: {uri: profile.profilePicture},
-        isSelected: profile.address === userOptions.selectedProfile.address,
+        isSelected: true,
       } as RadioValue;
     });
-  }, [profiles, userOptions.selectedProfile]);
+  }, [profiles]);
 
   return (
     <DView style={styles.root} topBar={<TopBar />}>
