@@ -9,6 +9,7 @@ export enum MMKVKEYS {
   CONSENT_GIVEN = 'CONSENT_GIVEN',
   ACTIVE_ACCOUNT_ADDR = 'ACTIVE_ACCOUNT_ADDR',
   USE_BIOMETRICS = 'USE_BIOMETRICS',
+  APP_AUTHORIZATION = 'APP_AUTHORIZATION',
 }
 
 const MMKVStorage = new MMKV({
@@ -19,7 +20,7 @@ const MMKVStorage = new MMKV({
  * Retrieve a value from MMKV and attempts to parse it into a json value.
  * If invalid, it will return undefined or the stored raw value.
  */
-export const getMMKV = (key: MMKVKEYS) => {
+export const getMMKV = <T>(key: MMKVKEYS): T | string | undefined => {
   const mmkvValue = MMKVStorage.getString(key);
 
   if (!mmkvValue) return undefined;
