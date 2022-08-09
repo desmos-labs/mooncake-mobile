@@ -4,7 +4,9 @@ import {useQuery} from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 
 /**
- * Recoil atom for profiles
+ * An atom to hold account data of the user's selected profile
+ * This should not be confused with the profiles atom, which contains data
+ * for ALL of the profiles stored on the user's device
  */
 const activeProfileState = atom<ProfileData | undefined>({
   key: 'activeProfile',

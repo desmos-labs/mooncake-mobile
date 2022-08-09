@@ -20,6 +20,9 @@ const profilesState = atom<ProfileData[]>({
   ],
 });
 
+/**
+ * A hook that fetches the account data of every stored account on the device
+ */
 export const useLoadProfiles = () => {
   const [storedAccountAddrs, setStoredAccountAddrs] = React.useState<string[]>(
     [],
@@ -31,6 +34,7 @@ export const useLoadProfiles = () => {
     variables: {addresses: storedAccountAddrs},
   });
 
+  // First, map an array of each address stored on the device
   React.useEffect(() => {
     const loadAddrsIntoState = async () => {
       const _accounts = await getAccounts();
@@ -42,6 +46,8 @@ export const useLoadProfiles = () => {
     loadAddrsIntoState();
   }, []);
 
+  // If data is not yet available, load accounts data from MMKV,
+  // update the value in MMKV and atom once the data is ready
   React.useEffect(() => {
     // use cached values if data cannot be loaded
     if (!data) {
