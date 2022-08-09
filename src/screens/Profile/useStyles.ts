@@ -58,7 +58,7 @@ const useStyles = makeStyle(theme => ({
   connectButtonGroup: {
     marginTop: theme.spacing.m,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
   },
   bannerImage: {
     position: 'absolute',

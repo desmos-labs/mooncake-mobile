@@ -3,8 +3,8 @@ import {Platform} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   connectButton: {
-    flexGrow: 1,
     height: 40,
+    width: 300,
   },
   connectButtonText: {
     color: theme.colors.desmosOrange01,

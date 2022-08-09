@@ -11,11 +11,12 @@ const useActiveAccount = () => {
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
 
-  const {profileData} = useGetProfileData(activeAddress || '');
+  const {profileData, loading} = useGetProfileData(activeAddress || '');
 
   return {
     activeAddress,
     profileData,
+    loading,
   };
 };
 

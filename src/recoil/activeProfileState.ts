@@ -14,7 +14,9 @@ const activeProfileState = atom<ProfileData | undefined>({
 export default activeProfileState;
 
 export const useGetProfileData = (address: string) => {
-  const {data} = useQuery(GetProfileForAddress, {variables: {address}});
+  const {data, loading} = useQuery(GetProfileForAddress, {
+    variables: {address},
+  });
 
   const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);
 
@@ -28,5 +30,6 @@ export const useGetProfileData = (address: string) => {
 
   return {
     profileData: activeProfile,
+    loading,
   };
 };

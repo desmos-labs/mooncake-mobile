@@ -117,6 +117,10 @@ const Home = () => {
     });
   }, []);
 
+  const handlePressProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE);
+  }, []);
+
   const profilePic = _.get(profileData, 'profile_pic');
 
   return (
@@ -125,9 +129,7 @@ const Home = () => {
         <View style={styles.headerGroup}>
           <ProfileHeaderButton
             imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
-            onPress={() => {
-              console.log('shrek');
-            }}
+            onPress={handlePressProfile}
           />
 
           <View style={styles.tabContainer}>
