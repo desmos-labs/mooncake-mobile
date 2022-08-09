@@ -5,10 +5,24 @@ import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import {useTheme} from 'react-native-paper';
+import Button from 'components/Button';
+import {StackScreenProps} from '@react-navigation/stack';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
+import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
+import ROUTES from 'navigation/routes';
+
+type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, any>,
+  MaterialTopTabScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>
+>;
 
 const PostTips = () => {
   const {t} = useTranslation('postInteraction');
   const theme = useTheme();
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
     return (
@@ -20,6 +34,10 @@ const PostTips = () => {
         timestamp={item.timestamp}
       />
     );
+  }, []);
+
+  const handlePressTip = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
   }, []);
 
   const ListEmptyComponent = React.useCallback(() => {
@@ -34,6 +52,14 @@ const PostTips = () => {
     );
   }, []);
 
+  const ListFooterComponent = React.useCallback(() => {
+    return (
+      <Button mode="gradientFilled" onPress={handlePressTip}>
+        {t('tip')}
+      </Button>
+    );
+  }, []);
+
   return (
     <FlatList
       data={DUMMY_TIPS}
@@ -44,6 +70,10 @@ const PostTips = () => {
         flexGrow: 1,
         paddingHorizontal: theme.spacing.m,
       }}
+      ListFooterComponentStyle={{
+        marginTop: theme.spacing.xl,
+      }}
+      ListFooterComponent={ListFooterComponent}
     />
   );
 };
