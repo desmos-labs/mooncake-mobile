@@ -39,7 +39,6 @@ export const useGetFollowing = () => {
 
   // refetch following list if userAddress has changed
   React.useEffect(() => {
-    console.log('refetch');
     refetch({userAddress});
   }, [userAddress]);
 
