@@ -1,7 +1,5 @@
 enum ROUTES {
-  /**
-   * Root navigator start
-   */
+  // Root Navigator start
   LANDING = 'LANDING',
 
   SIGNUP = 'SIGNUP',
@@ -75,14 +73,9 @@ enum ROUTES {
   CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
 
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
+  // Root navigation end
 
-  /**
-   * Root navigator end
-   */
-
-  /**
-   * Authorize wallet stack start
-   */
+  // Authorize wallet stack start
   AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
 
   AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
@@ -90,9 +83,17 @@ enum ROUTES {
   AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
 
   AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
-  /**
-   * Authorize wallet stack end
-   */
+  // Authorize wallet stack end
+
+  // Post Interaction start
+  POST_INTERACTION = 'POST_INTERACTION',
+
+  POST_REACTIONS = 'POST_REACTIONS',
+
+  POST_COMMENTS = 'POST_COMMENTS',
+
+  POST_TIPS = 'POST_TIPS',
+  // Post interaction end
 }
 
 export default ROUTES;
