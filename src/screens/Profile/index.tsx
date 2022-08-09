@@ -1,5 +1,4 @@
 import React from 'react';
-import DView from 'components/DView';
 import {View, Image, ActivityIndicator, FlatList} from 'react-native';
 import {
   defaultBanner,
@@ -23,6 +22,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -54,7 +54,7 @@ const Profile = () => {
 
   const styles = useStyles();
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
@@ -117,18 +117,22 @@ const Profile = () => {
   );
 
   return (
-    <DView>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={cover_pic ? {uri: cover_pic} : defaultBanner}
+        style={styles.bannerImage}
+      />
       <FlatList
         ListHeaderComponent={
           <>
-            <Image
-              source={cover_pic ? {uri: cover_pic} : defaultBanner}
-              style={styles.bannerImage}
-            />
             {/* top buttons start */}
             <View style={styles.topButtonContainer}>
               <View>
-                <ImageButton image={homeButton} style={styles.buttonStyle} />
+                <ImageButton
+                  image={homeButton}
+                  style={styles.buttonStyle}
+                  onPress={() => goBack()}
+                />
               </View>
 
               <View>
@@ -234,6 +238,9 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: scale(20),
         }}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
         ListEmptyComponent={EmptyPostComponent}
       />
 
@@ -247,7 +254,7 @@ const Profile = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </DView>
+    </SafeAreaView>
   );
 };
 

@@ -2,6 +2,10 @@ import {makeStyle} from 'config/theme';
 import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.backgroundGrey,
+  },
   topButtonContainer: {
     padding: theme.spacing.m,
     flexDirection: 'row',
