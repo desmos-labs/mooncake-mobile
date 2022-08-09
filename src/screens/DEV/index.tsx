@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import DView from 'components/DView';
 import Button from 'components/Button';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {clearMMKV, getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {getAccounts, resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -74,6 +74,7 @@ const DevScreen = () => {
         Continue to Landing screen
       </Button>
 
+      <Spacer paddingVertical={16} />
       <Button
         mode="gradientFilled"
         onPress={() => {
@@ -94,6 +95,24 @@ const DevScreen = () => {
           );
         }}>
         Reset Secure storage
+      </Button>
+
+      <Button
+        mode="gradientFilled"
+        onPress={() => {
+          Alert.alert('Are you sure?', 'This will delete all values in MMKV', [
+            {
+              text: 'Yes',
+              onPress: () => {
+                clearMMKV();
+              },
+            },
+            {
+              text: 'Cancel',
+            },
+          ]);
+        }}>
+        Reset MMKV storage
       </Button>
     </DView>
   );
