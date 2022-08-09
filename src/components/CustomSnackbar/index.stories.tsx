@@ -5,35 +5,25 @@ import {storiesOf} from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 
 const RenderComponent = () => {
-  const [state, setState] = React.useState(false);
-  const [state1, setState1] = React.useState(false);
+  const [messages, setMessages] = React.useState<{label: string}[]>([]);
 
   return (
     <>
-      <Button mode="text" onPress={() => setState(!state)}>
-        failure top
+      <Button
+        mode="text"
+        onPress={() =>
+          setMessages([...messages, {label: `test${Math.random()}`}])
+        }>
+        add toast
       </Button>
-      <Button mode="text" onPress={() => setState1(!state1)}>
-        success top
+      <Button
+        mode="text"
+        onPress={() => {
+          setMessages(messages.slice(0, -1));
+        }}>
+        remove toast
       </Button>
-      <CustomSnackbar
-        showSnackbar={state}
-        snackBarMode="failure"
-        position="top"
-        title="Oops!"
-        message="Reaction failed to add"
-        buttonLabel="Retry"
-        buttonAction={() => console.log('pressed')}
-        swipeUpAction={() => setState(!state)}
-      />
-      <CustomSnackbar
-        showSnackbar={state1}
-        snackBarMode="success"
-        position="top"
-        message="Success"
-        buttonAction={() => console.log('pressed')}
-        swipeUpAction={() => setState1(!state1)}
-      />
+      <CustomSnackbar transactions={messages} />
     </>
   );
 };

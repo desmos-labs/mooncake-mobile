@@ -2,24 +2,15 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   commonToastStyle: {
+    top: 10,
     height: 60,
     borderRadius: 8,
     margin: 8,
     padding: 16,
-    /*    elevation: 4,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8, */
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    zIndex: 100,
     flexDirection: 'row',
     justifyContent: 'center',
     borderWidth: 1,
+    backgroundColor: 'red',
   },
   topToastStyle: {
     top: 0,
