@@ -62,7 +62,12 @@ const DView: React.FC<Props> = props => {
               showsVerticalScrollIndicator={false}
               style={styles.scrollViewOuter}
               contentContainerStyle={styles.scrollViewInner}>
-              {children}
+              {/*
+              this View will save the world (ScrollView behavior back to work normally as intended on iOS)
+              */}
+              <View onStartShouldSetResponder={() => true} style={{flex: 1}}>
+                {children}
+              </View>
             </ScrollView>
           ) : (
             children

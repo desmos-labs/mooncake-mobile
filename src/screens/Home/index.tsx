@@ -171,18 +171,21 @@ const Home = () => {
 
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
+            mode="gradient"
             onPress={handlePressComments}
             interactionCount={10500}
             icon={commentIcon}
           />
 
           <InteractionButton
+            mode="gradient"
             onPress={handlePressReactions}
             interactionCount={100}
             icon={optionsIcon}
           />
 
           <InteractionButton
+            mode="gradient"
             onPress={handlePressTip}
             interactionCount={100000000}
             icon={tipIcon}

@@ -12,6 +12,7 @@ import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
+  mode: 'text' | 'gradient';
   /**
    * What to do if the button is pressed.
    */
@@ -28,11 +29,11 @@ type Props = {
   icon: ImageSourcePropType;
 };
 
-const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
+const InteractionButton = ({mode, onPress, interactionCount, icon}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  return (
+  return mode === 'gradient' ? (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <LinearGradient
         colors={theme.colors.dOrangeGradient01}
@@ -40,6 +41,14 @@ const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
       />
       <Image source={icon} style={styles.icon} />
       <Typography.Subtitle3 style={styles.countText}>
+        {formatNumShorthand(interactionCount)}
+      </Typography.Subtitle3>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <Image source={icon} style={styles.iconBlack} />
+      <Typography.Subtitle3
+        style={[styles.countText, {color: theme.colors.desmosOrange01}]}>
         {formatNumShorthand(interactionCount)}
       </Typography.Subtitle3>
     </TouchableOpacity>
