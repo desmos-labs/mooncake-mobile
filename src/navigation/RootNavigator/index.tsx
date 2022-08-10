@@ -1,65 +1,66 @@
-import React from 'react';
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import useInitializeAppData from 'hooks/useInitializeAppData';
+import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
+import AuthorizeWalletStack, {
+  AuthorizeWalletParamList,
+} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import PostInteractionTabs, {
+  PostInteractionTabsParamList,
+} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import ActionAuthorization, {
+  ActionAuthorizationParams,
+} from 'screens/ActionAuthorization';
+import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
+import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
+import Community from 'screens/Community';
+import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
+import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
+import ConnectAddressGeneral from 'screens/ConnectAddress/General';
+import ConnectChainMethod from 'screens/ConnectChainMethod';
+import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
+import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
+import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import DevScreen from 'screens/DEV';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
-import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
-import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
-import Landing from 'screens/Landing';
-import ManageConnectedChains from 'screens/ManageConnectedChains';
 import Home from 'screens/Home';
-import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
-import SendTips from 'screens/Modals/SendTips';
-import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
-import ChangePassword, {
-  PASSWORD_MANIPULATION_MODE,
-  PasswordManipulationParams,
-} from 'screens/PasswordManipulation';
-import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
-import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
-import {useTranslation} from 'react-i18next';
-import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
-import Settings from 'screens/Settings';
-import Community from 'screens/Community';
-import Profiles from 'screens/Profiles';
+import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
-import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import Profile from 'screens/Profile';
+import ManageConnectedChains from 'screens/ManageConnectedChains';
 import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
-import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
-import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
+import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement from 'screens/Modals/ConsentAgreement';
-import DevScreen from 'screens/DEV';
-import WelcomePage from 'screens/WelcomePage';
-import Signup from 'screens/Signup';
-import NoDtagFound from 'screens/NoDtagFound';
-import useInitializeAppData from 'hooks/useInitializeAppData';
-import CreateDesmosProfile from 'screens/CreateDesmosProfile';
-import WelcomeBack from 'screens/WelcomeBack';
-import AuthorizeWalletStack, {
-  AuthorizeWalletParamList,
-} from 'navigation/RootNavigator/AuthorizeWalletStack';
-import {NavigatorScreenParams} from '@react-navigation/native';
-import ConnectAddressGeneral from 'screens/ConnectAddress/General';
-import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
-import ConnectChainMethod from 'screens/ConnectChainMethod';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import ReportPost from 'screens/Modals/ReportPost';
+import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
+import SendTips from 'screens/Modals/SendTips';
+import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
+import NoDtagFound from 'screens/NoDtagFound';
+import ChangePassword, {
+  PASSWORD_MANIPULATION_MODE,
+  PasswordManipulationParams,
+} from 'screens/PasswordManipulation';
+import Profile from 'screens/Profile';
+import Profiles from 'screens/Profiles';
+import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
-import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
-import PostInteractionTabs, {
-  PostInteractionTabsParamList,
-} from 'navigation/RootNavigator/PostInteractionTabs';
-import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
-import ActionAuthorization, {
-  ActionAuthorizationParams,
-} from 'screens/ActionAuthorization';
-import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
+import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import Settings from 'screens/Settings';
+import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import Signup from 'screens/Signup';
+import WelcomeBack from 'screens/WelcomeBack';
+import WelcomePage from 'screens/WelcomePage';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -96,6 +97,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
+  [ROUTES.REPORT_POST]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
 
@@ -242,6 +244,7 @@ const RootNavigator = () => {
         />
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
+        <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
         <Stack.Screen
           initialParams={{
             title: t('confirmModal:removeProfile'),

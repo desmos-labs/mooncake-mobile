@@ -48,19 +48,21 @@ const ReportPost = () => {
   }, [selectedReport]);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={goBack}
-      style={styles.container}>
-      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-      {/* parts of the modal content are pressed */}
-      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-        <View style={styles.tabIcon} />
-        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-        <Spacer paddingBottom={10} />
-        <KeyboardAvoidingView
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 260 : 0}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={goBack}
+        style={styles.container}>
+        {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+        {/* parts of the modal content are pressed */}
+        <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+          <View style={styles.tabIcon} />
+          <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+          <Spacer paddingBottom={10} />
+
           <View>
             <CustomRadioGroup
               values={initialiRadioValues}
@@ -84,9 +86,9 @@ const ReportPost = () => {
             {t('submit')}
           </Button>
           <Spacer paddingBottom={30} />
-        </KeyboardAvoidingView>
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </KeyboardAvoidingView>
   );
 };
 
