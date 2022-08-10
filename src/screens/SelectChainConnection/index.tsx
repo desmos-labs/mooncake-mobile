@@ -11,9 +11,21 @@ import {getDenomSymbol} from 'config/ChainAssets';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import SearchBar from 'screens/SelectChainConnection/components/SearchBar';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
+import {useSetRecoilState} from 'recoil';
+import {selectedChainState} from '@recoil/connectChainState';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_CHAIN>;
 
 const SelectChainConnection = () => {
   const {t} = useTranslation('selectChain');
+
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const setSelectedChain = useSetRecoilState(selectedChainState);
 
   const theme = useTheme();
 
@@ -21,7 +33,8 @@ const SelectChainConnection = () => {
 
   const handlePressChainItem = React.useCallback(
     (chain: LinkableChain) => () => {
-      console.log(chain);
+      setSelectedChain(chain);
+      navigate(ROUTES.CONNECT_CHAIN_METHOD);
     },
     [],
   );

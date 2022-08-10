@@ -2,13 +2,16 @@ import {ChainLink} from 'types/link';
 import {useQuery} from '@apollo/client';
 import {useRecoilState} from 'recoil';
 import GetChainLinkByAddressDocument from 'services/graphql/queries/GetChainLinkAddressDocument';
+import useActiveAccount from 'hooks/useActiveAccount';
 import chainLinkState from '../recoil/chainLinks';
 
-export default function useChainLinks(address: string) {
+export default function useChainLinks() {
   const [chainLinks, setChainLinks] = useRecoilState(chainLinkState);
 
+  const {activeAddress} = useActiveAccount();
+
   useQuery(GetChainLinkByAddressDocument, {
-    variables: {address},
+    variables: {address: activeAddress},
     onCompleted: ({chain_link}) => {
       const cLinks = chain_link.map(
         (link: any) =>

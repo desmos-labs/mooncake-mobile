@@ -130,7 +130,7 @@ const CreateDesmosProfile = () => {
       } else if (createLedgerAccount && createLedgerAccount.account) {
         const {account: ledgerAccount} = createLedgerAccount;
 
-        wallet = (await unlockWallet(ledgerAccount)) as LocalWallet;
+        wallet = (await unlockWallet(ledgerAccount))?.signer as LocalWallet;
         await saveNewAccount(ledgerAccount);
         console.log('unlocked wallet', wallet);
       }

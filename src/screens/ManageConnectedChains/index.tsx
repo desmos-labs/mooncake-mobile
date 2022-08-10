@@ -13,18 +13,22 @@ import {Snackbar} from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import {ChainLink} from 'types/link';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.MANAGE_CONNECTED_CHAINS
+>;
 
-const ManageConnectedChains: React.FC<Props> = () => {
+const ManageConnectedChains = () => {
   const {t} = useTranslation('manageChains');
   const styles = useStyles();
 
-  // TODO: replace with user's address, or any address for testing
-  const chainLinks = useChainLinks(
-    'desmos1rqpjh38ssmu5wqxqvelttmg9wv4mupkxvr3je4',
-  );
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const chainLinks = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const renderChainLinks = React.useCallback(
@@ -50,7 +54,7 @@ const ManageConnectedChains: React.FC<Props> = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            onPress={() => {}}
+            onPress={() => navigate(ROUTES.SELECT_CHAIN)}
             mode="gradientFilled"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}

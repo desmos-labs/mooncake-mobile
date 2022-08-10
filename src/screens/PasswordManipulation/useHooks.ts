@@ -139,10 +139,10 @@ const useHooks = () => {
             chainAccount: y.value.chainAccount,
           }));
 
-        setCreateLocalWalletState(prev => ({
-          ...prev,
+        setCreateLocalWalletState({
+          mnemonic,
           password: confirmPassword,
-        }));
+        });
 
         if (accountsWithWalletData.length === 0) {
           navigate(ROUTES.NO_DTAG_FOUND);
