@@ -11,8 +11,12 @@ export type AppTheme = 'light' | 'dark' | 'auto';
  */
 export type AppSettings = {
   theme: AppTheme;
+
+  // use MMKV to control these as they need to be persisted across
+  // app sessions
   biometrics: boolean;
   notifications: boolean;
 
+  // Has app data been initialized yet?
   dataInitialized: boolean;
 };

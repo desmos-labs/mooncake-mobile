@@ -1,5 +1,4 @@
 import React from 'react';
-import DView from 'components/DView';
 import {View, Image, ActivityIndicator, FlatList} from 'react-native';
 import {
   defaultBanner,
@@ -17,9 +16,13 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {useQuery} from '@apollo/client';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
-import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
-import _ from 'lodash';
 import {scale} from 'react-native-size-matters';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -30,11 +33,16 @@ import useStyles from './useStyles';
 import ContentTabs from './components/ContentTab';
 import EmptyPostComponent from './components/EmptyPostComponent';
 
-// Replace this with an address from recoil
-const DUMMY_ADDRESS = 'desmos16c60y8t8vra27zjg2arlcd58dck9cwn7p6fwtd';
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
 
 const Profile = () => {
   const theme = useTheme();
+
+  const {
+    activeAddress,
+    profileData,
+    loading: profileLoading,
+  } = useActiveAccount();
 
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
@@ -46,18 +54,11 @@ const Profile = () => {
 
   const styles = useStyles();
 
-  const {data: profileData, loading: profileLoading} = useQuery(
-    GetProfileForAddress,
-    {
-      variables: {
-        address: DUMMY_ADDRESS,
-      },
-    },
-  );
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
-      address: DUMMY_ADDRESS,
+      address: activeAddress,
     },
   });
 
@@ -77,18 +78,28 @@ const Profile = () => {
     [],
   );
 
+  const handlePressConnectAddress = React.useCallback(() => {
+    navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
+  }, []);
+
+  const handlePressSettings = React.useCallback(() => {
+    navigate(ROUTES.SETTINGS);
+  }, []);
+
   if (profileLoading || postsLoading) {
     return <ActivityIndicator />;
   }
 
-  const [userProfile] = profileData.profile as any;
-
-  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
-    userProfile as ProfileData;
-
-  const followers = _.get(userProfile, 'followage_aggregate.aggregate.count');
-
-  const following = _.get(userProfile, 'following_aggregate.aggregate.count');
+  const {
+    address,
+    bio,
+    dtag,
+    cover_pic,
+    profile_pic,
+    nickname,
+    following,
+    followage,
+  } = profileData as ProfileData;
 
   const {post} = postData;
 
@@ -106,18 +117,22 @@ const Profile = () => {
   );
 
   return (
-    <DView>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={cover_pic ? {uri: cover_pic} : defaultBanner}
+        style={styles.bannerImage}
+      />
       <FlatList
         ListHeaderComponent={
           <>
-            <Image
-              source={cover_pic ? {uri: cover_pic} : defaultBanner}
-              style={styles.bannerImage}
-            />
             {/* top buttons start */}
             <View style={styles.topButtonContainer}>
               <View>
-                <ImageButton image={homeButton} style={styles.buttonStyle} />
+                <ImageButton
+                  image={homeButton}
+                  style={styles.buttonStyle}
+                  onPress={() => goBack()}
+                />
               </View>
 
               <View>
@@ -140,6 +155,7 @@ const Profile = () => {
                   <ImageButton
                     image={settingsButton}
                     style={styles.buttonStyle}
+                    onPress={handlePressSettings}
                   />
                 </Spacer>
               </View>
@@ -158,8 +174,9 @@ const Profile = () => {
               <View style={{paddingHorizontal: theme.spacing.m}}>
                 <ImageButton image={editButton} style={styles.editButton} />
 
-                <Typography.H3 style={styles.nameText}>
-                  {nickname || dtag}
+                <Typography.H3
+                  style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
+                  {nickname}
                 </Typography.H3>
 
                 <Typography.Body7 style={styles.dTagText}>
@@ -176,17 +193,23 @@ const Profile = () => {
                 <UserBio content={bio} />
 
                 <View style={styles.socialCounterGroup}>
-                  <SocialCounter count={following} label={t('following')} />
+                  <SocialCounter
+                    count={following.length}
+                    label={t('following')}
+                  />
 
                   <View style={styles.separator} />
 
-                  <SocialCounter count={followers} label={t('followers')} />
+                  <SocialCounter
+                    count={followage.length}
+                    label={t('followers')}
+                  />
                 </View>
 
                 <View style={styles.connectButtonGroup}>
                   <ProfileConnectButton
                     label={t('connectAddress')}
-                    handlePress={() => {}}
+                    handlePress={handlePressConnectAddress}
                   />
 
                   {/* hidden on MVP */}
@@ -215,6 +238,9 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: scale(20),
         }}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
         ListEmptyComponent={EmptyPostComponent}
       />
 
@@ -228,7 +254,7 @@ const Profile = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </DView>
+    </SafeAreaView>
   );
 };
 

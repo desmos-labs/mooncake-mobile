@@ -41,7 +41,7 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
 import AuthorizeWalletStack, {
-  AuthorizeWalletParams,
+  AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import ConnectAddressGeneral from 'screens/ConnectAddress/General';
@@ -100,7 +100,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
 
   // Nested navigators
-  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
+  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;

@@ -1,7 +1,13 @@
 import React from 'react';
 import {Dimensions, View, LogBox} from 'react-native';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {commentIcon, createPost, optionsIcon, tipIcon} from 'assets/images';
+import {
+  commentIcon,
+  createPost,
+  defaultProfilePic,
+  optionsIcon,
+  tipIcon,
+} from 'assets/images';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import PostCard from 'screens/Home/components/PostCard';
@@ -15,6 +21,8 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import useActiveAccount from 'hooks/useActiveAccount';
+import _ from 'lodash';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -45,6 +53,8 @@ const Home = () => {
     onPostChanged,
     postData,
   } = useHooks();
+
+  const {profileData} = useActiveAccount();
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<any>) => {
@@ -107,16 +117,19 @@ const Home = () => {
     });
   }, []);
 
+  const handlePressProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE);
+  }, []);
+
+  const profilePic = _.get(profileData, 'profile_pic');
+
   return (
     <GestureDetector gesture={swipeUpGesture}>
       <DView style={styles.container}>
         <View style={styles.headerGroup}>
           <ProfileHeaderButton
-            // TODO: replace this with user's image
-            imageSrc={{uri: 'https://i.imgur.com/aih9snA.png'}}
-            onPress={() => {
-              console.log('shrek');
-            }}
+            imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
+            onPress={handlePressProfile}
           />
 
           <View style={styles.tabContainer}>

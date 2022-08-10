@@ -1,6 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import profilesState from '@recoil/profiles';
-import userOptionsState from '@recoil/userOptions';
+import {useLoadProfiles} from '@recoil/profiles';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -12,23 +11,41 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
-import {useRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup, {
   RadioValue,
 } from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import {useTheme} from 'react-native-paper';
+import {getAccounts} from 'lib/SecureStorage';
+import {defaultProfilePic} from 'assets/images';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const Profiles: React.FC<Props> = props => {
   const {navigation} = props;
-  const [profiles] = useRecoilState(profilesState);
-  const [userOptions, setUserOptions] = useRecoilState(userOptionsState);
+  const {profiles} = useLoadProfiles();
+  const [activeAddress] = useMMKVStorage<string | undefined>(
+    MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
+  );
+
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();
+
+  React.useEffect(() => {
+    const loadProfiles = async () => {
+      const _profiles = await getAccounts();
+      if (_profiles) {
+        const addresses = _profiles.map(x => x.address);
+
+        console.log(addresses);
+      }
+    };
+
+    loadProfiles();
+  }, []);
 
   const navigateToConfirmModal = useCallback((index: number) => {
     navigation.navigate({
@@ -56,21 +73,24 @@ const Profiles: React.FC<Props> = props => {
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {
       if (index === i) {
-        setUserOptions({...userOptions, selectedProfile: profile});
+        // setUserOptions({selectedProfile: profile});
       }
     });
   };
 
   const values = useMemo(() => {
+    if (profiles.length === 0) return [];
     return profiles.map(profile => {
       return {
         nickname: profile.nickname,
         dTag: profile.dtag,
-        profilePicture: {uri: profile.profilePicture},
-        isSelected: profile.address === userOptions.selectedProfile.address,
+        profilePicture: profile.profile_pic
+          ? {uri: profile.profile_pic}
+          : defaultProfilePic,
+        isSelected: activeAddress === profile.address,
       } as RadioValue;
     });
-  }, [profiles, userOptions.selectedProfile]);
+  }, [profiles]);
 
   return (
     <DView style={styles.root} topBar={<TopBar />}>

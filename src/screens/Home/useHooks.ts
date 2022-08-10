@@ -16,7 +16,6 @@ const useHooks = () => {
   const {following} = useGetFollowing();
   const maxOffset = React.useRef<number>(0);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
 

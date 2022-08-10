@@ -24,7 +24,7 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {AuthorizeWalletParams} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
@@ -59,7 +59,7 @@ type NavProps = StackScreenProps<
 >;
 
 type AuthNavProps = StackScreenProps<
-  AuthorizeWalletParams,
+  AuthorizeWalletParamList,
   ROUTES.AUTH_LOOKING_FOR_DEVICES
 >;
 

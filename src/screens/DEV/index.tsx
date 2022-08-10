@@ -1,11 +1,12 @@
 import React from 'react';
-import {FlatList, Text, TouchableOpacity} from 'react-native';
+import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import DView from 'components/DView';
-import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
 import Button from 'components/Button';
+import {clearMMKV, getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {getAccounts, resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -32,19 +33,14 @@ const DevScreen = () => {
   const {navigate} = useNavigation<any>();
 
   React.useEffect(() => {
-    const generateWallet = async () => {
-      const mnemonic = randomMnemonic();
+    const devAsyncFunction = async () => {
+      const activeAccountAddr = getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+      const storedAccounts = await getAccounts();
 
-      console.log('i am mnemonic');
-
-      const wallet = await LocalWallet.fromMnemonic(mnemonic);
-
-      console.log(wallet.publicKey);
+      console.log(activeAccountAddr, storedAccounts);
     };
 
-    setTimeout(() => {
-      generateWallet();
-    }, 3000);
+    devAsyncFunction();
   }, []);
 
   const renderItem = ({item}: any) => {
@@ -77,6 +73,47 @@ const DevScreen = () => {
 
       <Button mode="gradientFilled" onPress={() => navigate(ROUTES.LANDING)}>
         Continue to Landing screen
+      </Button>
+
+      <Spacer paddingVertical={16} />
+      <Button
+        mode="gradientFilled"
+        onPress={() => {
+          Alert.alert(
+            'Are you sure?',
+            'This will delete all values in secure storage',
+            [
+              {
+                text: 'Yes',
+                onPress: () => {
+                  resetSecureStorage();
+                },
+              },
+              {
+                text: 'Cancel',
+              },
+            ],
+          );
+        }}>
+        Reset Secure storage
+      </Button>
+
+      <Button
+        mode="gradientFilled"
+        onPress={() => {
+          Alert.alert('Are you sure?', 'This will delete all values in MMKV', [
+            {
+              text: 'Yes',
+              onPress: () => {
+                clearMMKV();
+              },
+            },
+            {
+              text: 'Cancel',
+            },
+          ]);
+        }}>
+        Reset MMKV storage
       </Button>
     </DView>
   );

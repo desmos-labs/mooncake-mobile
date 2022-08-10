@@ -16,17 +16,20 @@ import * as Yup from 'yup';
 import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
 import {getLocalWallet} from 'lib/SecureStorage';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import useStyles from './useStyles';
 
 const initialFormValues = {
   password: '',
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_PASSWORD>;
+type NavProps = StackScreenProps<
+  AuthorizeWalletParamList,
+  ROUTES.AUTH_UNLOCK_LOCAL_WALLET
+>;
 
 /**
  * These optional params are for unlocking a specific wallet
