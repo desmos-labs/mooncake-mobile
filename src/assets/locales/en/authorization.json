@@ -1,0 +1,11 @@
+{
+  "header": "Authorization",
+  "authorizeToAction": "You are going to authorize [Produce] to {{action}} on behalf of your profile.",
+  "avoidRepetitiveActions": "This is to avoid using your major wallet to execute daily repetitive actions.",
+  "post": "post",
+  "like": "like",
+  "followUnfollow":"follow / unfollow",
+  "blockUnblock": "block / unblock",
+  "report": "report",
+  "tip": "tip"
+}

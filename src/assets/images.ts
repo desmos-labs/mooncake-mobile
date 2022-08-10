@@ -128,6 +128,8 @@ export const noMorePosts = require('./images/noMorePosts.png');
 
 export const connectIcon = require('./images/connectIcon.png');
 
+export const authorizationImage = require('./images/authorizationImage.png');
+
 export const commentMore = require('./images/commentMore.png');
 
 export const commentTip = require('./images/commentTip.png');

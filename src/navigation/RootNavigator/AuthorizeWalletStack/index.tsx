@@ -7,7 +7,7 @@ import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import ROUTES from 'navigation/routes';
 import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
 
-export type AuthorizeWalletParams = {
+export type AuthorizeWalletParamList = {
   [ROUTES.AUTH_LOOKING_FOR_DEVICES]: LookingForDevicesParams;
 
   [ROUTES.AUTH_CONNECT_TO_LEDGER]: ConnectToLedgerParams;
@@ -15,7 +15,7 @@ export type AuthorizeWalletParams = {
   [ROUTES.AUTH_UNLOCK_LOCAL_WALLET]: EnterPasswordParams;
 };
 
-const Stack = createStackNavigator<AuthorizeWalletParams>();
+const Stack = createStackNavigator<AuthorizeWalletParamList>();
 
 /**
  * Navigation stack for authorizing and unlocking the user's stored wallets

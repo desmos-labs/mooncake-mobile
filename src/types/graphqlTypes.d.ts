@@ -34,6 +34,11 @@ declare global {
     address: string;
   }
 
+  interface FollowerType {
+    counterparty_address: string;
+    subspace_id: number;
+  }
+
   interface ProfileData {
     address: string;
     bio: string;
@@ -41,15 +46,7 @@ declare global {
     dtag: string;
     profile_pic: string;
     nickname: string;
-    followage_aggregate: {
-      aggregate: {
-        count: number;
-      };
-    };
-    following_aggregate: {
-      aggregate: {
-        count: number;
-      };
-    };
+    followage: FollowerType[];
+    following: FollowerType[];
   }
 }

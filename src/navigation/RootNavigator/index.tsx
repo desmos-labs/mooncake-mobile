@@ -41,7 +41,7 @@ import useInitializeAppData from 'hooks/useInitializeAppData';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import WelcomeBack from 'screens/WelcomeBack';
 import AuthorizeWalletStack, {
-  AuthorizeWalletParams,
+  AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import ConnectAddressGeneral from 'screens/ConnectAddress/General';
@@ -56,6 +56,10 @@ import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
+import ActionAuthorization, {
+  ActionAuthorizationParams,
+} from 'screens/ActionAuthorization';
+import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -93,9 +97,10 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
+  [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
 
   // Nested navigators
-  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParams>;
+  [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
@@ -276,6 +281,14 @@ const RootNavigator = () => {
               externalAddress: 'externalAddress',
             },
           }}
+        />
+
+        <Stack.Screen
+          initialParams={{
+            authType: APP_AUTHORIZATIONS.TIP,
+          }}
+          name={ROUTES.ACTION_AUTHORIZATION}
+          component={ActionAuthorization}
         />
 
         <Stack.Screen

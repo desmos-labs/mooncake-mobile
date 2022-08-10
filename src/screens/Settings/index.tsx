@@ -74,7 +74,7 @@ const Settings: React.FC<Props> = props => {
       <Section style={styles.spacer} title={t('account')}>
         <SectionButton
           label={t('profiles')}
-          onPress={() => navigation.navigate(ROUTES.CONSENT_AGREEMENT)}
+          onPress={() => navigation.navigate(ROUTES.SETTINGS_PROFILES)}
         />
         <SectionButton
           label={t('manage connected addresses')}
