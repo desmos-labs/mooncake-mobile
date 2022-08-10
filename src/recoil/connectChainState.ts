@@ -22,6 +22,11 @@ export const mnemonicState = atom<string>({
   default: undefined,
 });
 
+export const selectedExternalAccountState = atom<string>({
+  key: 'selectedExternalAccount',
+  default: undefined,
+});
+
 /**
  * An atom to keep track of the data used to create a new chain
  * connection
@@ -33,6 +38,7 @@ export const connectChainState = selector({
       selectedChain: get(selectedChainState),
       connectMethod: get(connectMethodState),
       mnemonic: get(mnemonicState),
+      selectedExternalAccount: get(selectedExternalAccountState),
     };
   },
   set: ({set}, value) => {
@@ -40,10 +46,12 @@ export const connectChainState = selector({
       set(selectedChainState, value);
       set(connectMethodState, value);
       set(mnemonicState, value);
+      set(selectedExternalAccountState, value);
       return;
     }
     set(selectedChainState, value.selectedChain);
     set(connectMethodState, value.connectMethod);
     set(mnemonicState, value.mnemonic);
+    set(selectedExternalAccountState, value.selectedExternalAccount);
   },
 });
