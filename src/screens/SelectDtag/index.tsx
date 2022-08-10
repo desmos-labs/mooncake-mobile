@@ -11,10 +11,12 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {saveLocalWallet, saveNewAccount} from 'lib/SecureStorage';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {ChainAccount} from 'types/chains';
 import LocalWallet from 'lib/LocalWallet';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 
 export type SelectDtagParamList = {
   accountsWithWalletData: {
@@ -39,6 +41,11 @@ const SelectDtag = () => {
     params: {accountsWithWalletData, password},
   } = useRoute<NavProps['route']>();
 
+  const createLocalWalletValues = useRecoilValue(createLocalWalletState);
+  const resetCreateLocalWalletAtom = useResetRecoilState(
+    createLocalWalletState,
+  );
+
   const {loading, data} = useQuery(GetProfileSummaryForAddresses, {
     variables: {
       addresses: accountsWithWalletData.map(
@@ -61,10 +68,16 @@ const SelectDtag = () => {
       const deserializedWallet = await LocalWallet.deserialize(wallet);
 
       await saveLocalWallet(deserializedWallet, password!);
+      await saveMnemonic(
+        deserializedWallet.bech32Address,
+        createLocalWalletValues.mnemonic,
+        password!,
+      );
     }
-
     await saveNewAccount(chainAccount);
     setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+
+    resetCreateLocalWalletAtom();
 
     reset({
       index: 0,
