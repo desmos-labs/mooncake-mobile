@@ -64,9 +64,8 @@ const en = {
   sendTips,
   connectChainTxDetail,
   reportPost,
-  connectChainTxDetail,
   authorization,
-  postInteraction
+  postInteraction,
 };
 
 export default en;
