@@ -1,55 +1,94 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
+
 import useStyles from './useStyles';
 
 interface Props {
-  transactions: {label: string}[];
+  label: string;
+  onSwipeUp: () => void;
+  onHide: () => void;
+  autoHide: boolean;
+  autoHideMs?: number;
 }
 
-const CustomSnackbarGroup = ({transactions}: Props): JSX.Element => {
+const CustomSnackbar = ({
+  label,
+  onSwipeUp,
+  onHide,
+  autoHide,
+  autoHideMs,
+}: Props): JSX.Element => {
   const styles = useStyles();
+  const opacity = useSharedValue(0);
   const positionY = useSharedValue(-120);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{translateY: withSpring(positionY.value)}],
+      opacity: opacity.value,
+      transform: [{translateY: positionY.value}],
     };
   });
 
   useEffect(() => {
-    return () => {
-      positionY.value = 0;
-    };
+    opacity.value = withTiming(1, {duration: 1000});
+    positionY.value = withSpring(20);
   }, []);
 
+  useEffect(() => {
+    if (autoHide && autoHideMs) {
+      setTimeout(() => {
+        opacity.value = withTiming(0, {duration: 500});
+        positionY.value = withTiming(-1000, {
+          duration: 4000,
+        });
+        setTimeout(() => onHide(), 500);
+      }, autoHideMs);
+    }
+  }, []);
+
+  const swipeUpGesture = React.useMemo(
+    () =>
+      Gesture.Pan()
+        .runOnJS(true)
+        .onEnd(event => {
+          const {velocityX, velocityY} = event;
+
+          if (Math.abs(velocityX) < 1000 && velocityY < -500) {
+            opacity.value = withTiming(0, {duration: 500});
+            positionY.value = withTiming(-1000, {
+              duration: 4000,
+            });
+            setTimeout(() => onSwipeUp(), 500);
+          }
+        }),
+    [],
+  );
+
   return (
-    <View style={{position: 'absolute', right: 0, left: 0, top: 10}}>
-      {transactions.map(value => {
-        return (
-          <Animated.View
-            style={[styles.commonToastStyle, animatedStyle]}
-            key={value.label}>
-            <Typography.Body6 style={{alignSelf: 'center'}}>
-              {value.label}
-            </Typography.Body6>
-            <Button
-              style={styles.button}
-              mode="text"
-              onPress={() => console.log('test')}>
-              <Typography.Subtitle3>test</Typography.Subtitle3>
-            </Button>
-          </Animated.View>
-        );
-      })}
-    </View>
+    <GestureDetector gesture={swipeUpGesture}>
+      <Animated.View
+        style={[styles.commonToastStyle, animatedStyle]}
+        key={label}>
+        <Typography.Body6 style={{alignSelf: 'center'}}>
+          {label}
+        </Typography.Body6>
+        <Button
+          style={styles.button}
+          mode="text"
+          onPress={() => console.log('test')}>
+          <Typography.Subtitle3>test</Typography.Subtitle3>
+        </Button>
+      </Animated.View>
+    </GestureDetector>
   );
 };
 
-export default CustomSnackbarGroup;
+export default CustomSnackbar;

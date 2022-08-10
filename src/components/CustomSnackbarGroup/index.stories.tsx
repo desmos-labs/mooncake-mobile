@@ -1,7 +1,7 @@
-import Button from 'components/Button';
-import CustomSnackbar from 'components/CustomSnackbar/index';
-import React from 'react';
 import {storiesOf} from '@storybook/react-native';
+import Button from 'components/Button';
+import CustomSnackbarGroup from 'components/CustomSnackbarGroup/index';
+import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
 
 const RenderComponent = () => {
@@ -23,12 +23,17 @@ const RenderComponent = () => {
         }}>
         remove toast
       </Button>
-      <CustomSnackbar transactions={messages} />
+      <CustomSnackbarGroup
+        transactions={messages}
+        autoHide={true}
+        autoHideMs={500}
+        onHide={() => setMessages(messages.slice(0, -1))}
+      />
     </>
   );
 };
 
-storiesOf('component/CustomSnackbar', module)
+storiesOf('component/CustomSnackbarGroup', module)
   .addDecorator(s => (
     <SbContainer justifyContent="center" alignItems="center">
       {s()}
