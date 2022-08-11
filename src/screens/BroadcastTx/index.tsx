@@ -11,6 +11,7 @@ import ROUTES from 'navigation/routes';
 import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -53,7 +54,7 @@ const BroadcastTx: React.FC = () => {
 
     const gas = messagesGas(messages);
     // hardcoded denom for now
-    const txFee = computeTxFees(gas, 'udaric').average;
+    const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
 
     try {
       await broadcastMessages(offlineSigner, messages, txFee, '', granter);

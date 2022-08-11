@@ -21,6 +21,7 @@ import {formatFeeWithDenoms} from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
 import MsgTypes from 'lib/desmos/msgtypes';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -40,7 +41,7 @@ const ConnectChainTxDetail = () => {
   const {selectedChain, selectedExternalAccount} =
     useRecoilValue(connectChainState);
 
-  const activeAddr = getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
   const styles = useStyles();
 
@@ -64,18 +65,6 @@ const ConnectChainTxDetail = () => {
 
       setDeserializedExternalWallet(externalWallet);
 
-      console.info(
-        JSON.stringify({
-          typeUrl: MsgTypes.MsgLinkChainAccount,
-          value: MsgLinkChainAccount.fromPartial({
-            signer: activeAddr,
-            proof: proof.proof,
-            chainConfig: proof.chainConfig,
-            chainAddress: proof.chainAddress,
-          }),
-        }),
-      );
-
       setMessage({
         typeUrl: MsgTypes.MsgLinkChainAccount,
         value: MsgLinkChainAccount.fromPartial({
@@ -95,7 +84,7 @@ const ConnectChainTxDetail = () => {
 
     const gas = messagesGas([message]);
 
-    return computeTxFees(gas, 'udaric').average;
+    return computeTxFees(gas, EnvConfig.BASE_DENOM).average;
   }, [message]);
 
   const feeString = React.useMemo(() => {
