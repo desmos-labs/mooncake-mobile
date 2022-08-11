@@ -13,16 +13,14 @@ import ROUTES from 'navigation/routes';
 import {Formik, isNaN} from 'formik';
 import Button from 'components/Button';
 import {removeNonNumbers} from 'lib/FormatUtils';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {
+  connectChainState,
+  selectedExternalAccountState,
+} from '@recoil/connectChainState';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
-
-const DEBUG_MNEMONIC =
-  'chef embody loan celery magnet replace refuse subway treat arena party purity lift estate afford shallow monitor vapor torch farm message kid cheap seed';
-
-const DUMMY_COIN = 852;
-
-const DUMMY_PREFIX = 'desmos';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -33,6 +31,12 @@ const ConnectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
+
+  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+
+  const setSelectedExternalAccount = useSetRecoilState(
+    selectedExternalAccountState,
+  );
 
   const styles = useStyles();
 
@@ -86,9 +90,9 @@ const ConnectAddressAdvanced = () => {
       }
 
       generateAccountFromHDPath({
-        mnemonic: DEBUG_MNEMONIC,
-        coin: DUMMY_COIN,
-        prefix: DUMMY_PREFIX,
+        mnemonic,
+        coin: selectedChain.hdPath.coinType,
+        prefix: selectedChain.prefix,
         change: parseInt(change, 10),
         account: parseInt(account, 10),
         addressIndex: parseInt(addressIndex, 10),
@@ -98,6 +102,13 @@ const ConnectAddressAdvanced = () => {
     },
     [],
   );
+
+  const handlePressConfirm = React.useCallback(() => {
+    if (generatedAccount) {
+      setSelectedExternalAccount(generatedAccount.serialize);
+      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+    }
+  }, []);
 
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>
@@ -135,7 +146,7 @@ const ConnectAddressAdvanced = () => {
             return (
               <View>
                 <HDDerivPathInputGroup
-                  coin={DUMMY_COIN}
+                  coin={selectedChain.hdPath.coinType}
                   values={values}
                   handleChangeAccount={(value: string) => {
                     setFieldValue('account', removeNonNumbers(value));
@@ -171,7 +182,8 @@ const ConnectAddressAdvanced = () => {
         <Button
           mode="gradientFilled"
           loading={generating || !generatedAccount}
-          disabled={invalidField}>
+          disabled={invalidField}
+          onPress={handlePressConfirm}>
           {t('common:next')}
         </Button>
       </View>

@@ -67,6 +67,7 @@ import {
   XPRTAssets,
 } from 'config/ChainAssets';
 
+// see https://github.com/cosmos/chain-registry
 const LinkableChains: LinkableChain[] = [
   {
     name: 'Desmos',

@@ -29,7 +29,7 @@ export type LocalAccountAuthenticationArgs = {
  */
 export default function useUnlockWallet(): (
   account: ChainAccount,
-) => Promise<{signer?: OfflineSigner; mnemonic?: string} | undefined> {
+) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   return useCallback(async (account: ChainAccount) => {
@@ -45,7 +45,7 @@ export default function useUnlockWallet(): (
               result: LocalAccountAuthenticationArgs,
             ) => {
               resolve({
-                signer: result.wallet,
+                wallet: result.wallet,
                 mnemonic: result.mnemonic,
               });
             },
@@ -62,12 +62,12 @@ export default function useUnlockWallet(): (
           autoClose: true,
           onConnectionEstablished: (transport: BluetoothTransport) => {
             resolve({
-              signer: new LedgerSigner(transport!, {
+              wallet: new LedgerSigner(transport!, {
                 minLedgerAppVersion: DesmosLedgerApp!.minVersion,
                 ledgerAppName: DesmosLedgerApp!.name,
                 hdPaths: [toCosmjsHdPath(account.hdPath)],
                 prefix: 'desmos',
-              }),
+              }) as OfflineSigner,
             });
           },
           onCancel: () => {

@@ -35,7 +35,6 @@ const ManageConnectedChains = () => {
   const {refetch, chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  // disconnect chain - (remove once merged)
   const {chainAccount} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
   const disconnectChainLink = useDisconnectChainLink();
@@ -59,7 +58,6 @@ const ManageConnectedChains = () => {
     },
     [chainAccount],
   );
-  // end disconnect chain
 
   const renderChainLinks = React.useCallback(
     (info: ListRenderItemInfo<ChainLink>) => {

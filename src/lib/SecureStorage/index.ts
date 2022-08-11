@@ -148,9 +148,15 @@ export const getLocalWallet = async (
     );
   }
 
-  return getItem(walletKey, {
+  const serializedWallet = await getItem<string>(walletKey, {
     password: walletPassword,
   });
+
+  if (!serializedWallet) {
+    throw new Error(`No wallet found with address ${address}`);
+  }
+
+  return LocalWallet.deserialize(serializedWallet);
 };
 
 /**

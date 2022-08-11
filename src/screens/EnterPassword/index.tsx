@@ -64,10 +64,14 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
       const {password} = formValues;
-      const useBiometrics = getMMKV(MMKVKEYS.USE_BIOMETRICS);
+      const useBiometrics = getMMKV<boolean>(
+        MMKVKEYS.USE_BIOMETRICS,
+      ) as boolean;
 
       if (address) {
         const wallet = await getLocalWallet(address, password, useBiometrics);
+
+        if (!wallet) return;
 
         const mnemonic = await getMnemonic(address, password);
 

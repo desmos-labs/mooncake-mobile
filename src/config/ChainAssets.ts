@@ -68,6 +68,24 @@ export const DesmosAssets: ChainAsset[] = [
     symbol: 'DSM',
     coingecko_id: 'desmos',
   },
+  {
+    description: 'The native testnet token of Desmos',
+    denom_units: [
+      {
+        denom: 'udaric',
+        exponent: 0,
+      },
+      {
+        denom: 'daric',
+        exponent: 6,
+      },
+    ],
+    base: 'udaric',
+    name: 'Daric',
+    display: 'daric',
+    symbol: 'DARIC',
+    coingecko_id: 'desmos',
+  },
 ];
 
 export const AkashAssets: ChainAsset[] = [

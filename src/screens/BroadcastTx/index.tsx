@@ -11,6 +11,7 @@ import ROUTES from 'navigation/routes';
 import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -37,7 +38,7 @@ export type BroadcastTxParams = {
   /**
    * Optional function to run if the transaction has failed
    */
-  failureAction?: () => void;
+  failureAction?: (errorMessage?: string) => void;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX>;
@@ -53,7 +54,7 @@ const BroadcastTx: React.FC = () => {
 
     const gas = messagesGas(messages);
     // hardcoded denom for now
-    const txFee = computeTxFees(gas, 'udaric').average;
+    const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
 
     try {
       await broadcastMessages(offlineSigner, messages, txFee, '', granter);
@@ -62,7 +63,7 @@ const BroadcastTx: React.FC = () => {
     } catch (err: any) {
       console.log(err.message);
 
-      params.failureAction && params.failureAction();
+      params.failureAction && params.failureAction(err.message);
     }
   }, [params]);
 
