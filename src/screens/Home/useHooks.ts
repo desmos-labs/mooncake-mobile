@@ -1,20 +1,22 @@
-import React from 'react';
-import {useGetPosts} from '@recoil/posts';
+import {useNavigation} from '@react-navigation/native';
 import {useGetFollowing} from '@recoil/following';
+import {useGetPosts} from '@recoil/posts';
 import _ from 'lodash';
-import {Dimensions} from 'react-native';
-import {POST_TYPE} from 'screens/Home/index';
+import ROUTES from 'navigation/routes';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {Dimensions} from 'react-native';
+import {NavProps, POST_TYPE} from 'screens/Home/index';
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
   const {t} = useTranslation('home');
-
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
   const maxOffset = React.useRef<number>(0);
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
@@ -58,8 +60,8 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressDetails = React.useCallback((postId: string) => {
-    console.log(postId);
+  const handlePressDetails = React.useCallback((post: PostItem) => {
+    navigate(ROUTES.POST_DETAILS, {post});
   }, []);
 
   const onCarouselProgressChange = React.useCallback(

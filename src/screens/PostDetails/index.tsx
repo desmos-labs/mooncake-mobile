@@ -6,17 +6,17 @@ import React from 'react';
 import {Text} from 'react-native';
 import useStyles from './useStyles';
 
-interface Props {
+export interface PostDetailsParams {
   post: PostItem;
 }
 
-const PostDetails: React.FC<Props> = () => {
+const PostDetails: React.FC<PostDetailsParams> = ({post}) => {
   const styles = useStyles();
 
   return (
     <>
       <DView scrollable style={styles.root} topBar={<TopBar />}>
-        <Typography.H1>PostDetails</Typography.H1>
+        <Typography.H1>{post.id}</Typography.H1>
         <Typography.H1>PostDetails</Typography.H1>
         <Typography.H1>PostDetails</Typography.H1>
         <Typography.H1>PostDetails</Typography.H1>

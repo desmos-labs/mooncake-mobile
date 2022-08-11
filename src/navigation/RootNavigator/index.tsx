@@ -19,7 +19,7 @@ import ChangePassword, {
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import {useTranslation} from 'react-i18next';
-import PostDetails from 'screens/PostDetails';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import Settings from 'screens/Settings';
 import Community from 'screens/Community';
@@ -99,7 +99,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SEND_TIPS]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
-  [ROUTES.POST_DETAILS]: undefined;
+  [ROUTES.POST_DETAILS]: PostDetailsParams;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
