@@ -38,7 +38,7 @@ export type BroadcastTxParams = {
   /**
    * Optional function to run if the transaction has failed
    */
-  failureAction?: () => void;
+  failureAction?: (errorMessage?: string) => void;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX>;
@@ -63,7 +63,7 @@ const BroadcastTx: React.FC = () => {
     } catch (err: any) {
       console.log(err.message);
 
-      params.failureAction && params.failureAction();
+      params.failureAction && params.failureAction(err.message);
     }
   }, [params]);
 

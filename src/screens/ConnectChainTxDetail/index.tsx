@@ -4,7 +4,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, View} from 'react-native';
-import {connectIcon, desmosIcon} from 'assets/images';
+import {connectIcon, desmosIcon, errorImage, modalSuccess} from 'assets/images';
 import Button from 'components/Button';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -107,10 +107,28 @@ const ConnectChainTxDetail = () => {
       messages: [message],
       offlineSigner: deserializedWallet!,
       successAction: () => {
-        console.log('chain linked');
+        navigate(ROUTES.RESULT_MODAL, {
+          image: modalSuccess,
+          title: t('resultModal:success'),
+          subtitle: t('chainLinked', {
+            interpolation: {
+              chain: selectedChain.name.toUpperCase(),
+            },
+          }),
+          onPressPrimary: () => {
+            navigate(ROUTES.USER_PROFILE);
+          },
+          primaryButtonLabel: t('resultModal:goToProfile') as string,
+        });
       },
-      failureAction: () => {
-        goBack();
+      failureAction: (errorMessage?: string) => {
+        navigate(ROUTES.RESULT_MODAL, {
+          image: errorImage,
+          title: t('resultModal:fail'),
+          subtitle: errorMessage,
+          onPressPrimary: () => goBack(),
+          primaryButtonLabel: t('common:retry') as string,
+        });
       },
     });
   }, [chainAccount, message, fee, deserializedExternalWallet]);
