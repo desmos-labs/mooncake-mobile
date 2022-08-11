@@ -1,6 +1,7 @@
-import CustomSnackbar from 'components/CustomSnackbar';
+import CustomSnackbar from 'components/CustomSnackbarGroup/components/CustomSnackbar';
 import React from 'react';
 import {View} from 'react-native';
+import useStyles from './useStyles';
 
 interface Props {
   transactions: {label: string}[];
@@ -15,8 +16,9 @@ const CustomSnackbarGroup = ({
   autoHide,
   autoHideMs,
 }: Props): JSX.Element => {
+  const styles = useStyles();
   return (
-    <View style={{position: 'absolute', right: 0, left: 0, top: 10}}>
+    <View style={styles.absolutePositionedWrapper}>
       {transactions.map(value => {
         return (
           <CustomSnackbar
