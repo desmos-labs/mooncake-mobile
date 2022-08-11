@@ -21,5 +21,6 @@
   "atLeastSpecial": "At least 1 special character (~|!’,;\\/@#$%^&+=)",
   "yes": "Yes",
   "no": "No",
-  "n/a": "N/A"
+  "n/a": "N/A",
+  "submit": "Submit"
 }

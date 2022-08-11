@@ -1,7 +1,11 @@
 {
   "header": "Send Tips",
+  "available": "Available",
   "description": "Support your favorite creator through tipping",
   "subtitle": "How many token wanna tip?",
   "insert amount": "Insert amount",
-  "message": "Message for Author"
+  "message": "Message for Author",
+  "oops": "Oops!",
+  "no dsm": "You don’t have DSM",
+  "how to buy dsm": "How to buy DSM?"
 }

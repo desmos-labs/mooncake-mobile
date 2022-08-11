@@ -6,7 +6,7 @@ import SettingsProfileBadge from 'screens/Profiles/components/SettingsProfileBad
 /**
  * Simple interface to display a radio button as a profile
  */
-export interface RadioValue {
+export interface ProfileRadioValue {
   /**
    * The nickname to display over the dTag
    */
@@ -29,7 +29,7 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
    * Values to be displayed as radio buttons.
    */
-  values: RadioValue[];
+  values: ProfileRadioValue[];
   /**
    * Callback when the user click a button.
    * @param index the values[index] on the clicked button.

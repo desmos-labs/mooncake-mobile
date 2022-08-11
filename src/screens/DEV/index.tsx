@@ -28,6 +28,7 @@ const routesToRender = [
   ROUTES.CONNECT_CHAIN_METHOD,
   ROUTES.DISCONNECT_CHAIN_MODAL,
   ROUTES.POST_DETAILS,
+  ROUTES.REPORT_POST,
 ];
 
 const DevScreen = () => {

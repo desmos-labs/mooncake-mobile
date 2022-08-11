@@ -25,29 +25,15 @@ const useStyles = makeStyle(theme => ({
     borderTopRightRadius: 24,
     padding: theme.spacing.l,
   },
-  buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  tipButton: {minWidth: 106},
-  tipButtonContent: {height: 42},
-  textInput: {
-    backgroundColor: theme.colors.background,
-    borderColor: theme.colors.lightGrey01,
-  },
   messageInput: {
     minHeight: 80,
     paddingTop: theme.spacing.s,
     paddingBottom: theme.spacing.s,
   },
-  /*  errorImage: {
-    width: 230,
-    height: 116,
-    alignSelf: 'center',
+  textInput: {
+    backgroundColor: theme.colors.background,
+    borderColor: theme.colors.lightGrey01,
   },
-  centerText: {
-    textAlign: 'center',
-  }, */
 }));
 
 export default useStyles;
