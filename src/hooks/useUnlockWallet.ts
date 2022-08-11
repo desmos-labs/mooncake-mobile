@@ -9,6 +9,7 @@ import {ChainAccount, ChainAccountType} from 'types/chains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
+import LocalWallet from 'lib/LocalWallet';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -18,7 +19,7 @@ type NavProps = StackScreenProps<
 export type LocalAccountAuthenticationArgs = {
   authorized: boolean;
 
-  wallet?: OfflineSigner;
+  wallet?: LocalWallet;
 
   mnemonic?: string;
 };
