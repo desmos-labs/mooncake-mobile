@@ -73,7 +73,7 @@ const EnterPassword = () => {
 
         if (wallet && onSuccessfulAuthentication) {
           onSuccessfulAuthentication({
-            wallet: provideWallet ? wallet : undefined,
+            serializedWallet: provideWallet ? wallet : undefined,
             mnemonic: provideMnemonic ? mnemonic : undefined,
             authorized: true,
           });

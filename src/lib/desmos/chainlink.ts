@@ -64,6 +64,7 @@ export async function generateProof(
 
   const proof = Proof.fromPartial({
     signature: {
+      typeUrl: '/desmos.profiles.v3.SingleSignature',
       value: signature,
     },
     plainText: toHex(plainTextBytes),
@@ -78,7 +79,7 @@ export async function generateProof(
   });
   const {chainConfig} = chain;
   const chainAddress = Any.fromPartial({
-    typeUrl: '/desmos.profiles.v1beta1.Bech32Address',
+    typeUrl: '/desmos.profiles.v3.Bech32Address',
     value: Bech32Address.encode(
       Bech32Address.fromPartial({
         value: signerAddress,

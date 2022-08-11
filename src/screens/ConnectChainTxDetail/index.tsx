@@ -45,9 +45,8 @@ const ConnectChainTxDetail = () => {
   const styles = useStyles();
 
   const [message, setMessage] = React.useState<any>(undefined);
-  const [deserializedWallet, setDeserializedWallet] = React.useState<
-    LocalWallet | undefined
-  >(undefined);
+  const [deserializedExternalWallet, setDeserializedExternalWallet] =
+    React.useState<LocalWallet | undefined>(undefined);
 
   React.useEffect(() => {
     const generateMessage = async () => {
@@ -63,13 +62,27 @@ const ConnectChainTxDetail = () => {
         chain: selectedChain,
       });
 
-      setDeserializedWallet(externalWallet);
+      setDeserializedExternalWallet(externalWallet);
+
+      console.info(
+        JSON.stringify({
+          typeUrl: MsgTypes.MsgLinkChainAccount,
+          value: MsgLinkChainAccount.fromPartial({
+            signer: activeAddr,
+            proof: proof.proof,
+            chainConfig: proof.chainConfig,
+            chainAddress: proof.chainAddress,
+          }),
+        }),
+      );
 
       setMessage({
         typeUrl: MsgTypes.MsgLinkChainAccount,
         value: MsgLinkChainAccount.fromPartial({
           signer: activeAddr,
-          ...proof,
+          proof: proof.proof,
+          chainConfig: proof.chainConfig,
+          chainAddress: proof.chainAddress,
         }),
       });
     };
@@ -95,13 +108,15 @@ const ConnectChainTxDetail = () => {
     const unlockResponse = await unlockWallet(chainAccount!);
 
     // handle case here
-    if (!unlockResponse) return;
+    if (!unlockResponse || !unlockResponse.serializedWallet) return;
 
-    console.log(unlockResponse);
+    const deserializedWallet = await LocalWallet.deserialize(
+      unlockResponse.serializedWallet,
+    );
 
     navigate(ROUTES.BROADCAST_TX, {
       messages: [message],
-      offlineSigner: unlockResponse.signer!,
+      offlineSigner: deserializedWallet!,
       successAction: () => {
         console.log('chain linked');
       },
@@ -109,7 +124,7 @@ const ConnectChainTxDetail = () => {
         goBack();
       },
     });
-  }, [chainAccount, message, fee, deserializedWallet]);
+  }, [chainAccount, message, fee, deserializedExternalWallet]);
 
   return (
     <DView scrollable style={styles.container} topBar={<TopBar />}>
@@ -132,8 +147,8 @@ const ConnectChainTxDetail = () => {
         {t('connectTo')}
       </Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        {deserializedWallet ? (
-          deserializedWallet.bech32Address
+        {deserializedExternalWallet ? (
+          deserializedExternalWallet.bech32Address
         ) : (
           <ActivityIndicator />
         )}
@@ -156,7 +171,9 @@ const ConnectChainTxDetail = () => {
 
       <View style={styles.buttonContainer}>
         <Button
-          disabled={!chainAccount || !message || !fee || !deserializedWallet}
+          disabled={
+            !chainAccount || !message || !fee || !deserializedExternalWallet
+          }
           mode="gradientFilled"
           onPress={handlePressNext}>
           {t('common:next')}

@@ -9,7 +9,6 @@ import {ChainAccount, ChainAccountType} from 'types/chains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
-import LocalWallet from 'lib/LocalWallet';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -19,7 +18,7 @@ type NavProps = StackScreenProps<
 export type LocalAccountAuthenticationArgs = {
   authorized: boolean;
 
-  wallet?: LocalWallet;
+  serializedWallet?: string | OfflineSigner;
 
   mnemonic?: string;
 };
@@ -29,7 +28,7 @@ export type LocalAccountAuthenticationArgs = {
  */
 export default function useUnlockWallet(): (
   account: ChainAccount,
-) => Promise<{signer?: OfflineSigner; mnemonic?: string} | undefined> {
+) => Promise<{serializedWallet?: string; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   return useCallback(async (account: ChainAccount) => {
@@ -45,7 +44,7 @@ export default function useUnlockWallet(): (
               result: LocalAccountAuthenticationArgs,
             ) => {
               resolve({
-                signer: result.wallet,
+                serializedWallet: result.serializedWallet as string,
                 mnemonic: result.mnemonic,
               });
             },
@@ -62,12 +61,12 @@ export default function useUnlockWallet(): (
           autoClose: true,
           onConnectionEstablished: (transport: BluetoothTransport) => {
             resolve({
-              signer: new LedgerSigner(transport!, {
+              serializedWallet: new LedgerSigner(transport!, {
                 minLedgerAppVersion: DesmosLedgerApp!.minVersion,
                 ledgerAppName: DesmosLedgerApp!.name,
                 hdPaths: [toCosmjsHdPath(account.hdPath)],
                 prefix: 'desmos',
-              }),
+              }) as OfflineSigner,
             });
           },
           onCancel: () => {
