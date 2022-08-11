@@ -1,4 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
+import {useQuery} from '@apollo/client';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -6,10 +7,11 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
+import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
@@ -18,12 +20,19 @@ const SendTips = () => {
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
+  const {refetch, loading, data} = useQuery(getAccountBalance, {
+    variables: {address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n'},
+  });
   const styles = useStyles();
   const theme = useTheme();
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
-  const handlePressSetTip = React.useCallback(
+  const editable = useMemo(() => {
+    return !(loading || data.action_account_balance.coins[0].amount <= 0);
+  }, [data, loading]);
+
+  const handlePressSetTip = useCallback(
     (amount: string) => {
       if (amount === tipAmount) {
         setTipAmount('');
@@ -32,6 +41,12 @@ const SendTips = () => {
       }
     },
     [tipAmount],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch({address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n'});
+    }, []),
   );
 
   const handlePressConfirm = React.useCallback(() => {
@@ -55,6 +70,7 @@ const SendTips = () => {
         <Spacer paddingBottom={14} />
         <View style={styles.buttonGroup}>
           <Button
+            disabled={!editable}
             mode={tipAmount === '1' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -71,6 +87,7 @@ const SendTips = () => {
             </Typography.Subtitle3>
           </Button>
           <Button
+            disabled={!editable}
             mode={tipAmount === '5' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -87,6 +104,7 @@ const SendTips = () => {
             </Typography.Subtitle3>
           </Button>
           <Button
+            disabled={!editable}
             mode={tipAmount === '10' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -105,6 +123,7 @@ const SendTips = () => {
         </View>
         <Spacer paddingBottom={20} />
         <DTextInput
+          editable={editable}
           value={tipAmount}
           onChangeText={text => setTipAmount(text)}
           keyboardType="numeric"
@@ -114,14 +133,27 @@ const SendTips = () => {
           rightElement={<Typography.Subtitle3>DSM</Typography.Subtitle3>}
         />
         <Spacer paddingBottom={10} />
-        <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
-          {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
-          {t('available')}
-        </Typography.Body7>
-        <Spacer paddingBottom={20} />
-        <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
-        <Spacer paddingBottom={14} />
+
+        {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
+        {loading ? (
+          <ActivityIndicator
+            style={{left: 0, marginRight: 'auto'}}
+            size="small"
+            color={theme.colors.desmosOrange01}
+          />
+        ) : (
+          <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
+            {/* we will need to format accordingly this number */}
+            {t('available')} {data.action_account_balance.coins[0].amount}{' '}
+            {data.action_account_balance.coins[0].denom}
+          </Typography.Body7>
+        )}
+
+        <Spacer paddingVertical={20}>
+          <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
+        </Spacer>
         <DTextInput
+          editable={editable}
           inputStyle={styles.messageInput}
           value={message}
           onChangeText={text => setMessage(text)}
