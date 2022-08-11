@@ -7,7 +7,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
@@ -28,7 +28,7 @@ const SendTips = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
-  const editable = useCallback(() => {
+  const editable = useMemo(() => {
     return !(loading || data.action_account_balance.coins[0].amount <= 0);
   }, [data, loading]);
 
@@ -70,7 +70,7 @@ const SendTips = () => {
         <Spacer paddingBottom={14} />
         <View style={styles.buttonGroup}>
           <Button
-            disabled={!editable()}
+            disabled={!editable}
             mode={tipAmount === '1' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -87,7 +87,7 @@ const SendTips = () => {
             </Typography.Subtitle3>
           </Button>
           <Button
-            disabled={!editable()}
+            disabled={!editable}
             mode={tipAmount === '5' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -104,7 +104,7 @@ const SendTips = () => {
             </Typography.Subtitle3>
           </Button>
           <Button
-            disabled={!editable()}
+            disabled={!editable}
             mode={tipAmount === '10' ? 'gradientFilled' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
@@ -123,7 +123,7 @@ const SendTips = () => {
         </View>
         <Spacer paddingBottom={20} />
         <DTextInput
-          editable={editable()}
+          editable={editable}
           value={tipAmount}
           onChangeText={text => setTipAmount(text)}
           keyboardType="numeric"
@@ -149,11 +149,11 @@ const SendTips = () => {
           </Typography.Body7>
         )}
 
-        <Spacer paddingBottom={20} />
-        <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
-        <Spacer paddingBottom={14} />
+        <Spacer paddingVertical={20}>
+          <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
+        </Spacer>
         <DTextInput
-          editable={editable()}
+          editable={editable}
           inputStyle={styles.messageInput}
           value={message}
           onChangeText={text => setMessage(text)}

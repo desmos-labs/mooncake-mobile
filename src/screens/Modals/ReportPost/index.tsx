@@ -81,11 +81,11 @@ const ReportPost = () => {
               placeholder={t('message')}
             />
           </View>
-          <Spacer paddingBottom={30} />
-          <Button mode="gradientFilled" onPress={onSubmit}>
-            {t('submit')}
-          </Button>
-          <Spacer paddingBottom={30} />
+          <Spacer paddingVertical={30}>
+            <Button mode="gradientFilled" onPress={onSubmit}>
+              {t('submit')}
+            </Button>
+          </Spacer>
         </TouchableOpacity>
       </TouchableOpacity>
     </KeyboardAvoidingView>
