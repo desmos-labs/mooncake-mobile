@@ -40,6 +40,14 @@ const useStyles = makeStyle(theme => ({
     paddingTop: theme.spacing.s,
     paddingBottom: theme.spacing.s,
   },
+  /*  errorImage: {
+    width: 230,
+    height: 116,
+    alignSelf: 'center',
+  },
+  centerText: {
+    textAlign: 'center',
+  }, */
 }));
 
 export default useStyles;
