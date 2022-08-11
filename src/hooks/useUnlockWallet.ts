@@ -18,7 +18,7 @@ type NavProps = StackScreenProps<
 export type LocalAccountAuthenticationArgs = {
   authorized: boolean;
 
-  serializedWallet?: string | OfflineSigner;
+  wallet?: OfflineSigner;
 
   mnemonic?: string;
 };
@@ -28,7 +28,7 @@ export type LocalAccountAuthenticationArgs = {
  */
 export default function useUnlockWallet(): (
   account: ChainAccount,
-) => Promise<{serializedWallet?: string; mnemonic?: string} | undefined> {
+) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   return useCallback(async (account: ChainAccount) => {
@@ -44,7 +44,7 @@ export default function useUnlockWallet(): (
               result: LocalAccountAuthenticationArgs,
             ) => {
               resolve({
-                serializedWallet: result.serializedWallet as string,
+                wallet: result.wallet,
                 mnemonic: result.mnemonic,
               });
             },
@@ -61,7 +61,7 @@ export default function useUnlockWallet(): (
           autoClose: true,
           onConnectionEstablished: (transport: BluetoothTransport) => {
             resolve({
-              serializedWallet: new LedgerSigner(transport!, {
+              wallet: new LedgerSigner(transport!, {
                 minLedgerAppVersion: DesmosLedgerApp!.minVersion,
                 ledgerAppName: DesmosLedgerApp!.name,
                 hdPaths: [toCosmjsHdPath(account.hdPath)],
