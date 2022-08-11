@@ -15,6 +15,10 @@ import NoConnections from 'screens/ManageConnectedChains/components/NoConnection
 import {ChainLink} from 'types/link';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useDisconnectChainLink from 'hooks/useDisconnectChainlink';
+import {modalSuccess} from 'assets/images';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -28,8 +32,34 @@ const ManageConnectedChains = () => {
 
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const chainLinks = useChainLinks();
+  const {refetch, chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
+
+  // disconnect chain - (remove once merged)
+  const {chainAccount} = useActiveAccount();
+  const unlockWallet = useUnlockWallet();
+  const disconnectChainLink = useDisconnectChainLink();
+
+  const handlePressDisconnectChainLink = React.useCallback(
+    (chainLink: ChainLink) => async () => {
+      if (!chainAccount) return;
+
+      const unlockResponse = await unlockWallet(chainAccount);
+
+      if (!unlockResponse || !unlockResponse.signer) return;
+      await disconnectChainLink(unlockResponse.signer, chainLink);
+      // we want the refetch call to run while the user is shown the sucess dialog.
+      refetch();
+
+      navigate(ROUTES.RESULT_MODAL, {
+        image: modalSuccess,
+        primaryButtonLabel: t('resultModal:goToProfile') as string,
+        onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
+      });
+    },
+    [chainAccount],
+  );
+  // end disconnect chain
 
   const renderChainLinks = React.useCallback(
     (info: ListRenderItemInfo<ChainLink>) => {
@@ -37,9 +67,7 @@ const ManageConnectedChains = () => {
         <ChainLinkItem
           chainName={info.item.chainName}
           address={info.item.externalAddress}
-          onPressDisconnect={() => {
-            // TODO: implementation
-          }}
+          onPressDisconnect={handlePressDisconnectChainLink(info.item)}
           showSnackBar={() => setShowSnackbar(true)}
         />
       );

@@ -10,7 +10,7 @@ export default function useChainLinks() {
 
   const {activeAddress} = useActiveAccount();
 
-  useQuery(GetChainLinkByAddressDocument, {
+  const {refetch} = useQuery(GetChainLinkByAddressDocument, {
     variables: {address: activeAddress},
     onCompleted: ({chain_link}) => {
       const cLinks = chain_link.map(
@@ -28,5 +28,8 @@ export default function useChainLinks() {
     onError: () => {},
   });
 
-  return chainLinks;
+  return {
+    chainLinks,
+    refetch,
+  };
 }
