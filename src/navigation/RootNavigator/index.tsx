@@ -164,7 +164,13 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
-      <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
+      <Stack.Screen
+        initialParams={{
+          postId: 1,
+        }}
+        name={ROUTES.POST_DETAILS}
+        component={PostDetails}
+      />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}

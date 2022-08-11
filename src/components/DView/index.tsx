@@ -3,6 +3,7 @@ import {
   ColorValue,
   ImageBackground,
   Keyboard,
+  RefreshControl,
   ScrollView,
   StatusBar,
   TouchableWithoutFeedback,
@@ -30,6 +31,10 @@ export type Props = SafeAreaViewProps & {
    */
   backgroundColor?: ColorValue;
 
+  enableRefreshControl?: boolean;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+
   statusBarProps?: React.ComponentProps<typeof StatusBar>;
 };
 // TODO fix statusBarStyle accordingly with the theme
@@ -42,6 +47,9 @@ const DView: React.FC<Props> = props => {
     backgroundColor,
     style,
     statusBarProps,
+    refreshing,
+    onRefresh,
+    enableRefreshControl,
   } = props;
   const styles = useStyles(props);
 
@@ -59,6 +67,15 @@ const DView: React.FC<Props> = props => {
         <View style={[styles.content, style]}>
           {scrollable ? (
             <ScrollView
+              refreshControl={
+                enableRefreshControl ? (
+                  <RefreshControl
+                    enabled={enableRefreshControl || false}
+                    onRefresh={onRefresh}
+                    refreshing={refreshing || false}
+                  />
+                ) : undefined
+              }
               showsVerticalScrollIndicator={false}
               style={styles.scrollViewOuter}
               contentContainerStyle={styles.scrollViewInner}>
