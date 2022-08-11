@@ -35,7 +35,7 @@ const DevScreen = () => {
 
   React.useEffect(() => {
     const devAsyncFunction = async () => {
-      const activeAccountAddr = getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+      const activeAccountAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
       const storedAccounts = await getAccounts();
 
       console.log(activeAccountAddr, storedAccounts);

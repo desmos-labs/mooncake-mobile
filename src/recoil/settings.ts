@@ -18,7 +18,7 @@ export const DefaultAppSettings: AppSettings = {
 const appSettingsState = atom<AppSettings>({
   key: 'appSettings',
   default: (() => {
-    const savedSettings = getMMKV(MMKVKEYS.APP_SETTINGS);
+    const savedSettings = getMMKV<AppSettings>(MMKVKEYS.APP_SETTINGS);
 
     return savedSettings || DefaultAppSettings;
   })(),

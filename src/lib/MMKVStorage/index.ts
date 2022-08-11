@@ -20,15 +20,15 @@ const MMKVStorage = new MMKV({
  * Retrieve a value from MMKV and attempts to parse it into a json value.
  * If invalid, it will return undefined or the stored raw value.
  */
-export const getMMKV = <T>(key: MMKVKEYS): T | string | undefined => {
+export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
   const mmkvValue = MMKVStorage.getString(key);
 
   if (!mmkvValue) return undefined;
   try {
     return JSON.parse(mmkvValue);
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
-    return mmkvValue;
+    throw new Error(err.message);
   }
 };
 
