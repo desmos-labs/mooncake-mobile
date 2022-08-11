@@ -3,6 +3,10 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {Asset} from 'react-native-image-picker/src/types';
 import {Alert} from 'react-native';
 
+/**
+ * A hook that wraps react-native-image-picker logic and stores the selected
+ * image in a useState hook.
+ */
 const useImageGallery = () => {
   const [image, setImage] = React.useState<Asset>();
 
