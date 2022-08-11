@@ -21,8 +21,11 @@ import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 const Settings: React.FC<Props> = props => {
-  const {navigation} = props;
+  const {
+    navigation: {navigate},
+  } = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
+
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
@@ -32,7 +35,7 @@ const Settings: React.FC<Props> = props => {
   }, []); */
 
   const navigateToConfirmModal = useCallback(() => {
-    navigation.navigate({
+    navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:removeProfile'),
@@ -74,11 +77,13 @@ const Settings: React.FC<Props> = props => {
       <Section style={styles.spacer} title={t('account')}>
         <SectionButton
           label={t('profiles')}
-          onPress={() => navigation.navigate(ROUTES.SETTINGS_PROFILES)}
+          onPress={() => navigate(ROUTES.SETTINGS_PROFILES)}
         />
         <SectionButton
           label={t('manage connected addresses')}
-          onPress={() => console.log('manage connected addresses')}
+          onPress={() => {
+            navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
+          }}
         />
         <SectionButton
           label={t('manage connected apps')}
@@ -88,14 +93,12 @@ const Settings: React.FC<Props> = props => {
       <Section style={styles.spacer} title={t('security')}>
         <SectionButton
           label={t('reveal secret phrase')}
-          onPress={() =>
-            navigation.navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)
-          }
+          onPress={() => navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)}
         />
         <SectionButton
           label={t('change password')}
           onPress={() =>
-            navigation.navigate(ROUTES.PASSWORD_MANIPULATION, {
+            navigate(ROUTES.PASSWORD_MANIPULATION, {
               mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
             })
           }
@@ -121,7 +124,7 @@ const Settings: React.FC<Props> = props => {
         <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
         <SectionButton
           label={t('community')}
-          onPress={() => navigation.navigate(ROUTES.SETTINGS_COMMUNITY)}
+          onPress={() => navigate(ROUTES.SETTINGS_COMMUNITY)}
         />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton

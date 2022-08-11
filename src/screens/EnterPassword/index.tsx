@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import * as Yup from 'yup';
 import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
-import {getLocalWallet} from 'lib/SecureStorage';
+import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import {StackScreenProps} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -39,6 +39,8 @@ export type EnterPasswordParams = {
 
   provideWallet?: boolean;
 
+  provideMnemonic?: boolean;
+
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
 
   onFailedAuthentication?: () => void;
@@ -53,6 +55,7 @@ const EnterPassword = () => {
       provideWallet,
       onSuccessfulAuthentication,
       onFailedAuthentication,
+      provideMnemonic,
     },
   } = useRoute<NavProps['route']>();
 
@@ -66,9 +69,12 @@ const EnterPassword = () => {
       if (address) {
         const wallet = await getLocalWallet(address, password, useBiometrics);
 
+        const mnemonic = await getMnemonic(address, password);
+
         if (wallet && onSuccessfulAuthentication) {
           onSuccessfulAuthentication({
             wallet: provideWallet ? wallet : undefined,
+            mnemonic: provideMnemonic ? mnemonic : undefined,
             authorized: true,
           });
         }

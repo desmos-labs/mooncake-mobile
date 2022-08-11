@@ -173,7 +173,7 @@ export const getMnemonic = async (
   address: string,
   password?: string,
   useBiometrics?: boolean,
-) => {
+): Promise<string | undefined> => {
   let _password = password;
   if (!password && useBiometrics) {
     _password = await getItem<string>(
