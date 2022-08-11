@@ -60,8 +60,13 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressDetails = React.useCallback((post: PostItem) => {
-    navigate(ROUTES.POST_DETAILS, {post});
+  const handlePressDetails = React.useCallback((id: number) => {
+    navigate({
+      name: ROUTES.POST_DETAILS,
+      params: {
+        postId: id,
+      },
+    });
   }, []);
 
   const onCarouselProgressChange = React.useCallback(

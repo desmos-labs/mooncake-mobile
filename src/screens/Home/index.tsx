@@ -65,7 +65,7 @@ const Home = () => {
         <PostCard
           postData={info.item}
           onPressAuthor={() => handlePressAuthor('')}
-          onPressDetails={() => handlePressDetails(info.item)}
+          onPressDetails={() => handlePressDetails(info.item.id)}
           onPressFollow={() => handlePressFollow('')}
         />
       );
