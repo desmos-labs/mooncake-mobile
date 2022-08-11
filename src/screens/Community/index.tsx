@@ -15,7 +15,7 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import SettingsCommunityButton from 'screens/Settings/components/SettingsCommunityButton';
+import SettingsCommunityButton from './components/SettingsCommunityButton';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;

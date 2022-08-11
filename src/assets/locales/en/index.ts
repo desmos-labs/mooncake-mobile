@@ -29,6 +29,7 @@ import selectChain from './selectChain.json';
 import sendTips from './sendTips.json';
 import postInteraction from './postInteraction.json';
 import connectChainTxDetail from './connectChainTxDetail.json';
+import reportPost from './reportPost.json';
 import authorization from './authorization.json';
 
 const en = {
@@ -62,8 +63,9 @@ const en = {
   selectChain,
   sendTips,
   connectChainTxDetail,
+  reportPost,
   authorization,
-  postInteraction
+  postInteraction,
 };
 
 export default en;
