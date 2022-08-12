@@ -9,7 +9,7 @@ export enum MMKVKEYS {
   CONSENT_GIVEN = 'CONSENT_GIVEN',
   ACTIVE_ACCOUNT_ADDR = 'ACTIVE_ACCOUNT_ADDR',
   USE_BIOMETRICS = 'USE_BIOMETRICS',
-  APP_AUTHORIZATION = 'APP_AUTHORIZATION',
+  APP_AUTHORIZATION_SUFFIX = '_APP_AUTHORIZATION',
 }
 
 const MMKVStorage = new MMKV({
@@ -49,3 +49,24 @@ export const clearMMKV = () => MMKVStorage.clearAll();
 export const useMMKVStorage = <T>(key: MMKVKEYS) => {
   return useMMKVObject<T>(key, MMKVStorage);
 };
+
+// Custom getter/setters only add if you need it, otherwise use the get/sets above
+export const getAppAuthorizations = (address: string): AppAuthorizationType => {
+  const authorizations = MMKVStorage.getString(
+    `${address}${MMKVKEYS.APP_AUTHORIZATION_SUFFIX}`,
+  );
+
+  if (authorizations) {
+    return JSON.parse(authorizations);
+  }
+  return {};
+};
+
+export const setAppAuthorizations = (address: string, authorizations: any) =>
+  MMKVStorage.set(
+    `${address}${MMKVKEYS.APP_AUTHORIZATION_SUFFIX}`,
+    JSON.stringify(authorizations),
+  );
+
+export const removeAppAuthorizationsForAddress = (address: string) =>
+  MMKVStorage.delete(`${address}${MMKVKEYS.APP_AUTHORIZATION_SUFFIX}`);

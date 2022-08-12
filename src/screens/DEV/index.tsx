@@ -5,8 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import DView from 'components/DView';
 import Button from 'components/Button';
-import {clearMMKV, getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {getAccounts, resetSecureStorage} from 'lib/SecureStorage';
+import {clearMMKV} from 'lib/MMKVStorage';
+import {resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -32,17 +32,6 @@ const routesToRender = [
 
 const DevScreen = () => {
   const {navigate} = useNavigation<any>();
-
-  React.useEffect(() => {
-    const devAsyncFunction = async () => {
-      const activeAccountAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-      const storedAccounts = await getAccounts();
-
-      console.log(activeAccountAddr, storedAccounts);
-    };
-
-    devAsyncFunction();
-  }, []);
 
   const renderItem = ({item}: any) => {
     return (
