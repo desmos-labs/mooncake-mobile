@@ -70,7 +70,7 @@ const Home = () => {
         />
       );
     },
-    [postData],
+    [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
   const swipeUpGesture = React.useMemo(

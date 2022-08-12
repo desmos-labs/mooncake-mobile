@@ -191,7 +191,7 @@ const PostCard = ({
         </View>
       );
     }
-  }, [followed, postType]);
+  }, [followed, postType, onPressFollow]);
 
   return (
     <View style={styles.container}>

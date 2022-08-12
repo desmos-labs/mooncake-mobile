@@ -1,5 +1,5 @@
 import React from 'react';
-import {atom, useRecoilState} from 'recoil';
+import {atom, useRecoilState, useResetRecoilState} from 'recoil';
 import {
   getAppAuthorizations,
   getMMKV,
@@ -44,9 +44,12 @@ export const useAppAuthorization = () => {
     appAuthorizationState,
   );
 
+  const resetAuthorizations = useResetRecoilState(appAuthorizationState);
+
   const requestAuthorization = React.useCallback(
     async (authorization: APP_AUTHORIZATIONS) => {
       // only show authorization dialog if user has not already allowed authorization
+
       if (authorizations && authorizations[authorization]) return;
 
       return new Promise(resolve => {
@@ -67,7 +70,7 @@ export const useAppAuthorization = () => {
         });
       });
     },
-    [],
+    [authorizations],
   );
 
   // TODO: Show dialog for remove authorization flow
@@ -85,5 +88,6 @@ export const useAppAuthorization = () => {
     authorizations,
     requestAuthorization,
     removeAuthorization,
+    resetAuthorizations,
   };
 };

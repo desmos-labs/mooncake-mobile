@@ -58,11 +58,15 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressFollow = React.useCallback(async (address: string) => {
-    await requestAuthorization(APP_AUTHORIZATIONS.FOLLOW_UNFOLLOW);
+  const handlePressFollow = React.useCallback(
+    async (address: string) => {
+      await requestAuthorization(APP_AUTHORIZATIONS.FOLLOW_UNFOLLOW);
+      const followedAddresses = following.map(x => x.address);
 
-    console.log(address);
-  }, []);
+      console.log(followedAddresses, address);
+    },
+    [requestAuthorization],
+  );
 
   const handlePressDetails = React.useCallback((postId: string) => {
     console.log(postId);
