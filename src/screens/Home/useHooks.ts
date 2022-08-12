@@ -5,12 +5,16 @@ import _ from 'lodash';
 import {Dimensions} from 'react-native';
 import {POST_TYPE} from 'screens/Home/index';
 import {useTranslation} from 'react-i18next';
+import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
+import {useAppAuthorization} from '@recoil/appAuthorizationState';
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
   const {t} = useTranslation('home');
+
+  const {requestAuthorization} = useAppAuthorization();
 
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
@@ -54,7 +58,9 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressFollow = React.useCallback((address: string) => {
+  const handlePressFollow = React.useCallback(async (address: string) => {
+    await requestAuthorization(APP_AUTHORIZATIONS.FOLLOW_UNFOLLOW);
+
     console.log(address);
   }, []);
 

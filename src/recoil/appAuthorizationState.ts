@@ -38,7 +38,7 @@ const appAuthorizationState = atom<AppAuthorizationType | undefined>({
 
 // eslint-disable-next-line import/prefer-default-export
 export const useAppAuthorization = () => {
-  const {navigate, pop} = useNavigation<any>();
+  const {navigate} = useNavigation<any>();
 
   const [authorizations, setAuthorizations] = useRecoilState(
     appAuthorizationState,
@@ -54,7 +54,6 @@ export const useAppAuthorization = () => {
           authType: authorization,
 
           onCancel: () => {
-            pop();
             resolve(false);
           },
 
@@ -63,7 +62,6 @@ export const useAppAuthorization = () => {
               ...prev,
               [authorization]: true,
             }));
-            pop();
             resolve(true);
           },
         });
