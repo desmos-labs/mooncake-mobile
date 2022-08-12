@@ -60,7 +60,6 @@ const PostInteractionTabs = () => {
             <View style={styles.bar} />
           </View>
         </GestureDetector>
-
         <Tab.Navigator
           sceneContainerStyle={styles.sceneContainerStyle}
           tabBar={CustomTabBar}>

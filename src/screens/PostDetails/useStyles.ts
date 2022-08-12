@@ -5,8 +5,10 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
-    overflow: 'visible',
-    padding: theme.spacing.m,
+    backgroundColor: theme.colors.white,
+  },
+  sceneContainerStyle: {
+    backgroundColor: theme.colors.white,
   },
 }));
 

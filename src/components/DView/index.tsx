@@ -9,7 +9,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context';
+import {
+  Edge,
+  SafeAreaView,
+  SafeAreaViewProps,
+} from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -34,7 +38,7 @@ export type Props = SafeAreaViewProps & {
   enableRefreshControl?: boolean;
   refreshing?: boolean;
   onRefresh?: () => void;
-
+  edges?: Edge[];
   statusBarProps?: React.ComponentProps<typeof StatusBar>;
 };
 // TODO fix statusBarStyle accordingly with the theme
@@ -50,6 +54,7 @@ const DView: React.FC<Props> = props => {
     refreshing,
     onRefresh,
     enableRefreshControl,
+    edges,
   } = props;
   const styles = useStyles(props);
 
@@ -58,6 +63,7 @@ const DView: React.FC<Props> = props => {
       touchSoundDisabled
       onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
+        edges={edges ?? ['bottom', 'left', 'right', 'top']}
         style={[styles.root, backgroundColor ? {backgroundColor} : {}]}>
         <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (

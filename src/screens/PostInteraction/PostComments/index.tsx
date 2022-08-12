@@ -48,6 +48,7 @@ const PostComments = () => {
 
   return (
     <FlatList
+      scrollEnabled={false}
       data={DUMMY_COMMENTS}
       renderItem={renderItem}
       contentContainerStyle={{

@@ -3,16 +3,15 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
+    width: '100%',
+    paddingBottom: 40,
     justifyContent: 'space-around',
-    zIndex: 100,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: theme.colors.background,
   },
   shadow: {
     flexDirection: 'row',
-    zIndex: 100,
+    bottom: 0,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'space-around',
   },
 }));
 
