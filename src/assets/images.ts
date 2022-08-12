@@ -138,6 +138,10 @@ export const commentComment = require('./images/commentComment.png');
 
 export const commentLiked = require('./images/commentLiked.png');
 
+export const followBlackIcon = require('./images/followBlackIcon.png');
+
+export const moreBlackIcon = require('./images/moreBlackIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

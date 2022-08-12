@@ -21,6 +21,10 @@ export type Props = {
   /**
    * Element to display on the top right corner.
    */
+  centerElement?: ReactElement;
+  /**
+   * Element to display on the top right corner.
+   */
   rightElement?: ReactElement;
   style?: StyleProp<ViewStyle>;
 };
@@ -31,6 +35,7 @@ export type Props = {
 export const TopBar: React.FC<Props> = props => {
   const {
     // stackProps,
+    centerElement,
     rightElement,
     style,
   } = props;
@@ -57,6 +62,9 @@ export const TopBar: React.FC<Props> = props => {
     <View style={[styles.root, style]}>
       <View style={[styles.container, styles.containerLeft]}>
         {navigationGoBack}
+      </View>
+      <View style={[styles.container, styles.containerCenter]}>
+        {centerElement}
       </View>
       <View style={[styles.container, styles.containerRight]}>
         {rightElement}

@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
   },
   textContainer: {
     backgroundColor: theme.colors.desmosOrange01,
-    height: 640,
+    height: 630,
     alignItems: 'center',
     justifyContent: 'center',
   },

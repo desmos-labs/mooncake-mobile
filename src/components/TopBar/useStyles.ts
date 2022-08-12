@@ -13,12 +13,15 @@ const useStyles = makeStyle(theme => ({
   },
   containerLeft: {
     alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    zIndex: 1,
+    justifyContent: 'center',
+  },
+  containerCenter: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   containerRight: {
     alignItems: 'flex-end',
-    zIndex: 1,
+    justifyContent: 'center',
   },
 }));
 
