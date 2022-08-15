@@ -12,7 +12,7 @@ const EnvConfig = {
   // temporary way to keep track of base denoms for transactions on the
   // desmos chain
   BASE_DENOM: Config.BASE_DENOM,
-  MAX_COMMENT_LENGTH: 20,
+  MAX_COMMENT_LENGTH: 500,
 };
 
 export default EnvConfig;

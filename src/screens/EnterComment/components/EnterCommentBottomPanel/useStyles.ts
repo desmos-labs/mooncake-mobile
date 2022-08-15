@@ -1,5 +1,8 @@
 import {makeStyle} from 'config/theme';
 
+/**
+ * Style hook for the EnterCommentBottom panel component
+ */
 const useStyles = makeStyle(theme => ({
   container: {
     backgroundColor: theme.colors.white,

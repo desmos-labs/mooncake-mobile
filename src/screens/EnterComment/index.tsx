@@ -6,9 +6,9 @@ import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
-import {useTheme} from 'react-native-paper';
-import EnterCommentBottomPanel from 'components/EnterComment/components/EnterCommentBottomPanel';
 import EnvConfig from 'config/EnvConfig';
+import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
+import useStyles from './useStyles';
 
 export type EnterCommentParams = {
   /**
@@ -25,9 +25,9 @@ export type EnterCommentParams = {
 const EnterComment = () => {
   const {t} = useTranslation('postInteraction');
 
-  const {profileData} = useActiveAccount();
+  const styles = useStyles();
 
-  const theme = useTheme();
+  const {profileData} = useActiveAccount();
 
   const [reply, setReply] = React.useState('');
 
@@ -40,11 +40,7 @@ const EnterComment = () => {
       <Button
         mode="gradientFilled"
         onPress={handlePress}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 35,
-        }}>
+        style={styles.postButton}>
         {t('post')}
       </Button>
     );
@@ -54,37 +50,27 @@ const EnterComment = () => {
     <>
       <DView
         scrollable
-        style={{flex: 1}}
+        style={styles.container}
         topBar={
           <TopBar
-            style={{alignItems: 'center'}}
+            style={styles.topBar}
             centerText="hello world"
             rightElement={TopBarRightElement}
           />
         }>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            padding: 16,
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              alignSelf: 'flex-start',
-              paddingTop: theme.spacing.s,
-              marginRight: theme.spacing.m,
-            }}>
+        <View style={styles.contentContainer}>
+          <View style={styles.avatarGroup}>
             {profileData ? (
               <Image
                 source={profileData.profile_pic || defaultProfilePic}
-                style={{width: 40, height: 40, borderRadius: 20}}
+                style={styles.avatar}
               />
             ) : (
-              <ActivityIndicator style={{width: 40, height: 40}} />
+              <ActivityIndicator style={styles.avatar} />
             )}
           </View>
 
+          {/* this may get refactored into its own custom component */}
           <TextInput
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
             placeholder={t('yourReply')}

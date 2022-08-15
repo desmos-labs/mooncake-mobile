@@ -61,7 +61,7 @@ import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import EnterComment, {EnterCommentParams} from 'components/EnterComment';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;

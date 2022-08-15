@@ -3,8 +3,8 @@ import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import ImageButton from 'components/ImageButton';
 import {cameraIcon, galleryIcon, tagIcon} from 'assets/images';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import RadialTextCounter from 'components/EnterComment/components/EnterCommentBottomPanel/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
+import RadialTextCounter from './RadialTextCounter';
 import useStyles from './useStyles';
 
 type Props = {
