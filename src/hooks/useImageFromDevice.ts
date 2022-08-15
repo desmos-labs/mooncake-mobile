@@ -16,7 +16,7 @@ const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
  * A hook that wraps react-native-image-picker logic and stores the selected
  * image in a useState hook.
  */
-const useImageGallery = () => {
+const useImageFromDevice = () => {
   const [image, setImage] = React.useState<Asset>();
 
   // selecting webp images on ios will return an error code
@@ -58,4 +58,4 @@ const useImageGallery = () => {
   };
 };
 
-export default useImageGallery;
+export default useImageFromDevice;
