@@ -61,6 +61,7 @@ import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
+import EnterComment, {EnterCommentParams} from 'components/EnterComment';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -100,6 +101,7 @@ export type RootNavigatorParamList = {
   [ROUTES.REPORT_POST]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
+  [ROUTES.ENTER_COMMENT]: EnterCommentParams;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -229,6 +231,14 @@ const RootNavigator = () => {
         component={ConnectChainTxDetail}
       />
 
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_METHOD}
+        component={ConnectChainMethod}
+      />
+
+      <Stack.Screen name={ROUTES.ENTER_COMMENT} component={EnterComment} />
+
+      {/* modals */}
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -300,10 +310,7 @@ const RootNavigator = () => {
         />
       </Stack.Group>
 
-      <Stack.Screen
-        name={ROUTES.CONNECT_CHAIN_METHOD}
-        component={ConnectChainMethod}
-      />
+      {/* modals end */}
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
