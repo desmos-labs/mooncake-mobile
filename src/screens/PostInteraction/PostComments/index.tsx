@@ -90,6 +90,10 @@ const PostComments = () => {
     );
   }, []);
 
+  const ListFooterComponent = React.useMemo(() => {
+    return <Button mode="gradientFilled">{t('comment')}</Button>;
+  }, []);
+
   return (
     <FlatList
       data={DUMMY_COMMENTS}
