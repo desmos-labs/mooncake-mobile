@@ -3,6 +3,7 @@ import {FlatList, ListRenderItemInfo} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import {useTranslation} from 'react-i18next';
+import Button from 'components/Button';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import CommentItem from './components/CommentItem';
 
@@ -34,7 +35,7 @@ const PostComments = () => {
     );
   }, []);
 
-  const ListEmptyComponent = React.useCallback(() => {
+  const ListEmptyComponent = React.useMemo(() => {
     return (
       <EmptyListComponent
         label={t('noComments')}
@@ -46,6 +47,10 @@ const PostComments = () => {
     );
   }, []);
 
+  const ListFooterComponent = React.useMemo(() => {
+    return <Button mode="gradientFilled">{t('comment')}</Button>;
+  }, []);
+
   return (
     <FlatList
       data={DUMMY_COMMENTS}
@@ -55,6 +60,7 @@ const PostComments = () => {
         flexGrow: 1,
       }}
       ListEmptyComponent={ListEmptyComponent}
+      ListFooterComponent={ListFooterComponent}
       ItemSeparatorComponent={ItemSeparatorComponent}
     />
   );
