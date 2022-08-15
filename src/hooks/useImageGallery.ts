@@ -34,6 +34,7 @@ const useImageGallery = () => {
   }, []);
 
   const imageFromCamera = React.useCallback(async () => {
+    // ios simulator returns error, possible permission problem
     const result = await launchCamera(DEFAULT_OPTIONS);
     if (result.errorCode) {
       Alert.alert(
