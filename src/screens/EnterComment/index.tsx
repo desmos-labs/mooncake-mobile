@@ -9,6 +9,10 @@ import {defaultProfilePic} from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommentImage';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useRoute} from '@react-navigation/native';
 import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
 import useStyles from './useStyles';
 
@@ -24,12 +28,18 @@ export type EnterCommentParams = {
   postId: string;
 };
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_COMMENT>;
+
 const EnterComment = () => {
   const {t} = useTranslation('postInteraction');
 
   const styles = useStyles();
 
   const {profileData} = useActiveAccount();
+
+  const {
+    params: {author},
+  } = useRoute<NavProps['route']>();
 
   const {image, clearImage, imageFromCamera, imageFromLibrary} =
     useImageFromDevice();
@@ -38,7 +48,8 @@ const EnterComment = () => {
 
   const TopBarRightElement = React.useMemo(() => {
     const handlePress = () => {
-      console.log('pressed');
+      // these values will probably be useful in constructing the comment message
+      console.log(image, reply, author);
     };
 
     return (
@@ -49,7 +60,7 @@ const EnterComment = () => {
         {t('post')}
       </Button>
     );
-  }, []);
+  }, [image, reply]);
 
   return (
     <>
