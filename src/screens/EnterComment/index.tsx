@@ -7,6 +7,8 @@ import {useTranslation} from 'react-i18next';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
+import useImageGallery from 'hooks/useImageGallery';
+import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommentImage';
 import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
 import useStyles from './useStyles';
 
@@ -29,6 +31,9 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
+  const {image, clearImage, imageFromCamera, imageFromLibrary} =
+    useImageGallery();
+
   const [reply, setReply] = React.useState('');
 
   const TopBarRightElement = React.useMemo(() => {
@@ -49,7 +54,6 @@ const EnterComment = () => {
   return (
     <>
       <DView
-        scrollable
         style={styles.container}
         topBar={
           <TopBar
@@ -80,14 +84,16 @@ const EnterComment = () => {
             style={{flex: 1, alignSelf: 'flex-start'}}
           />
         </View>
+
+        <SelectedCommentImage
+          handlePress={clearImage}
+          source={image ? {uri: image.uri} : ('' as any)}
+        />
       </DView>
       <EnterCommentBottomPanel
-        handlePressGallery={() => {
-          console.log('placeholder');
-        }}
-        handlePressCamera={() => {
-          console.log('placeholder');
-        }}
+        imageSelected={!!image}
+        handlePressGallery={imageFromLibrary}
+        handlePressCamera={imageFromCamera}
         handlePressMention={() => {
           console.log('placeholder');
         }}
