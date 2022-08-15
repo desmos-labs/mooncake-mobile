@@ -29,7 +29,7 @@ import DTextInput from 'components/DTextInput';
 import TextCounter from 'components/TextCounter';
 import Button from 'components/Button';
 import {useTheme} from 'react-native-paper';
-import useImageGallery from 'hooks/useImageGallery';
+import useImageFromDevice from 'hooks/useImageFromDevice';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
 import {ChainAccount, ChainAccountType} from 'types/chains';
@@ -64,10 +64,10 @@ const CreateDesmosProfile = () => {
     useNavigation<NavProp['navigation']>();
 
   const {image: bannerImage, imageFromLibrary: selectBannerImage} =
-    useImageGallery();
+    useImageFromDevice();
 
   const {image: profileImage, imageFromLibrary: selectProfileImage} =
-    useImageGallery();
+    useImageFromDevice();
 
   const profileParams = useRecoilValue(profileParamsState);
   const accountCreation = useRecoilValue(createLocalWalletState);

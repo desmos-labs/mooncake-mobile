@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
-import useImageGallery from 'hooks/useImageGallery';
+import useImageFromDevice from 'hooks/useImageFromDevice';
 import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommentImage';
 import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
 import useStyles from './useStyles';
@@ -32,7 +32,7 @@ const EnterComment = () => {
   const {profileData} = useActiveAccount();
 
   const {image, clearImage, imageFromCamera, imageFromLibrary} =
-    useImageGallery();
+    useImageFromDevice();
 
   const [reply, setReply] = React.useState('');
 
