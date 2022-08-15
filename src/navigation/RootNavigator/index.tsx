@@ -236,7 +236,14 @@ const RootNavigator = () => {
         component={ConnectChainMethod}
       />
 
-      <Stack.Screen name={ROUTES.ENTER_COMMENT} component={EnterComment} />
+      <Stack.Screen
+        initialParams={{
+          author: {} as any,
+          postId: '123123',
+        }}
+        name={ROUTES.ENTER_COMMENT}
+        component={EnterComment}
+      />
 
       {/* modals */}
       <Stack.Group

@@ -10,6 +10,7 @@ import {getAccounts, resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.ENTER_COMMENT,
   ROUTES.ACTION_AUTHORIZATION,
   ROUTES.HOME,
   ROUTES.CONNECT_CHAIN_TX_DETAIL,
