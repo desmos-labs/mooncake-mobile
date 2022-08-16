@@ -41,8 +41,14 @@ const likedCommentProps: CompProps = {
   liked: true,
 };
 
+const loadingCommentProps: CompProps = {
+  ...defaultProps,
+  loading: true,
+};
+
 storiesOf('components/CommentItem', module)
   .addDecorator(s => <SbContainer justifyContent="center">{s()}</SbContainer>)
   .add('text comment', () => <CommentItem {...defaultProps} />)
   .add('image comment', () => <CommentItem {...imageCommentProps} />)
-  .add('liked comment', () => <CommentItem {...likedCommentProps} />);
+  .add('liked comment', () => <CommentItem {...likedCommentProps} />)
+  .add('loading comment', () => <CommentItem {...loadingCommentProps} />);

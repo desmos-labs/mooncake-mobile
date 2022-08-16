@@ -11,10 +11,11 @@ import {
 } from 'assets/images';
 import {format} from 'date-fns';
 import {formatNumShorthand} from 'lib/FormatUtils';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {buildingBlockAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
 // note: props are not final
-// TODO: figure out what the loading indicator is for
 type Props = {
   handlePressMore: () => void;
 
@@ -45,6 +46,8 @@ type Props = {
   attachments?: PostAttachment[];
 
   liked?: boolean;
+
+  loading?: boolean;
 };
 
 const CommentItem = ({
@@ -63,6 +66,7 @@ const CommentItem = ({
   text,
   attachments,
   liked,
+  loading,
 }: Props) => {
   const styles = useStyles();
 
@@ -114,11 +118,20 @@ const CommentItem = ({
             {/* loading indicator would go here */}
           </View>
 
-          <ImageButton
-            onPress={handlePressMore}
-            image={commentMore}
-            style={styles.buttonImage}
-          />
+          {loading ? (
+            <ThemedLottieView
+              loop
+              autoPlay
+              source={buildingBlockAnim}
+              style={styles.loadingAnim}
+            />
+          ) : (
+            <ImageButton
+              onPress={handlePressMore}
+              image={commentMore}
+              style={styles.buttonImage}
+            />
+          )}
         </View>
         {content}
 

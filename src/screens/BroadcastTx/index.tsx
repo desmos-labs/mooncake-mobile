@@ -12,6 +12,7 @@ import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import EnvConfig from 'config/EnvConfig';
+import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -74,7 +75,7 @@ const BroadcastTx: React.FC = () => {
   return (
     <DView>
       <View style={styles.container}>
-        <ThemedLottieView autoSize autoPlay loop source="broadcast-tx" />
+        <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
         <Typography.H4>{t('transaction broadcasting')}</Typography.H4>
         <Typography.Body6>{t('please wait')}</Typography.Body6>
       </View>
