@@ -1,64 +1,190 @@
 import React from 'react';
-import LinkableChains from 'config/LinkableChains';
-import {LinkableChain} from 'types/chains';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
-import {Image, View} from 'react-native';
-import {connectIcon} from 'assets/images';
+import {ActivityIndicator, Image, View} from 'react-native';
+import {connectIcon, desmosIcon, errorImage, modalSuccess} from 'assets/images';
 import Button from 'components/Button';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
+import {useRecoilValue} from 'recoil';
+import {connectChainState} from '@recoil/connectChainState';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {MsgLinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
+import {generateProof} from 'lib/desmos/chainlink';
+import LocalWallet from 'lib/LocalWallet';
+import {computeTxFees, messagesGas} from 'lib/desmos/fees';
+import {formatFeeWithDenoms} from 'lib/FormatUtils';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import useActiveAccount from 'hooks/useActiveAccount';
+import MsgTypes from 'lib/desmos/msgtypes';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
-const DUMMY_CHAIN = LinkableChains.find(
-  x => x.name === 'Likecoin',
-) as LinkableChain;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CONNECT_CHAIN_TX_DETAIL
+>;
 
 const ConnectChainTxDetail = () => {
   const {t} = useTranslation('connectChainTxDetail');
 
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+
+  const {chainAccount} = useActiveAccount();
+
+  const unlockWallet = useUnlockWallet();
+
+  const {selectedChain, selectedExternalAccount} =
+    useRecoilValue(connectChainState);
+
+  const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
   const styles = useStyles();
+
+  const [message, setMessage] = React.useState<any>(undefined);
+  const [deserializedExternalWallet, setDeserializedExternalWallet] =
+    React.useState<LocalWallet | undefined>(undefined);
+
+  React.useEffect(() => {
+    const generateMessage = async () => {
+      if (!selectedChain) return;
+
+      const externalWallet = await LocalWallet.deserialize(
+        selectedExternalAccount,
+      );
+
+      const proof = await generateProof({
+        signerAddress: externalWallet.bech32Address,
+        externalChainWallet: externalWallet,
+        chain: selectedChain,
+      });
+
+      setDeserializedExternalWallet(externalWallet);
+
+      setMessage({
+        typeUrl: MsgTypes.MsgLinkChainAccount,
+        value: MsgLinkChainAccount.fromPartial({
+          signer: activeAddr,
+          proof: proof.proof,
+          chainConfig: proof.chainConfig,
+          chainAddress: proof.chainAddress,
+        }),
+      });
+    };
+
+    generateMessage();
+  }, []);
+
+  const fee = React.useMemo(() => {
+    if (!message) return undefined;
+
+    const gas = messagesGas([message]);
+
+    return computeTxFees(gas, EnvConfig.BASE_DENOM).average;
+  }, [message]);
+
+  const feeString = React.useMemo(() => {
+    if (fee) {
+      return formatFeeWithDenoms(fee).formattedString;
+    }
+  }, [fee]);
+
+  const handlePressNext = React.useCallback(async () => {
+    const unlockResponse = await unlockWallet(chainAccount!);
+
+    // handle case here
+    if (!unlockResponse || !unlockResponse.serializedWallet) return;
+
+    const deserializedWallet = await LocalWallet.deserialize(
+      unlockResponse.serializedWallet,
+    );
+
+    navigate(ROUTES.BROADCAST_TX, {
+      messages: [message],
+      offlineSigner: deserializedWallet!,
+      successAction: () => {
+        navigate(ROUTES.RESULT_MODAL, {
+          image: modalSuccess,
+          title: t('resultModal:success'),
+          subtitle: t('chainLinked', {
+            interpolation: {
+              chain: selectedChain.name.toUpperCase(),
+            },
+          }),
+          onPressPrimary: () => {
+            navigate(ROUTES.USER_PROFILE);
+          },
+          primaryButtonLabel: t('resultModal:goToProfile') as string,
+        });
+      },
+      failureAction: (errorMessage?: string) => {
+        navigate(ROUTES.RESULT_MODAL, {
+          image: errorImage,
+          title: t('resultModal:fail'),
+          subtitle: errorMessage,
+          onPressPrimary: () => goBack(),
+          primaryButtonLabel: t('common:retry') as string,
+        });
+      },
+    });
+  }, [chainAccount, message, fee, deserializedExternalWallet]);
 
   return (
     <DView scrollable style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t('header')}</Typography.H3>
 
       <View style={styles.chainImageGroup}>
-        <Image source={DUMMY_CHAIN.icon} style={styles.chainIcon} />
+        <Image source={desmosIcon} style={styles.chainIcon} />
         <Image source={connectIcon} style={styles.connectIcon} />
-        <Image source={DUMMY_CHAIN.icon} style={styles.chainIcon} />
+        <Image source={selectedChain.icon} style={styles.chainIcon} />
       </View>
 
       <Typography.Subtitle2 style={styles.textStyle}>
         {t('from')}
       </Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        desmos1x42esddfje95frgo53edbb5vep0
+        {activeAddr}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>
         {t('connectTo')}
       </Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        desmos1x42esddfje95frgo53edbb5vep0
+        {deserializedExternalWallet ? (
+          deserializedExternalWallet.bech32Address
+        ) : (
+          <ActivityIndicator />
+        )}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>
         {t('fee')}
       </Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        0.001 DSM
+        {feeString || <ActivityIndicator />}
       </Typography.Body6>
 
-      <Typography.Subtitle2 style={styles.textStyle}>
-        {t('note')}
-      </Typography.Subtitle2>
-      <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        {t('common:n/a')}
-      </Typography.Body6>
+      {/* Aug 10 2022: note/memo is hidden as user never gets to enter a memo */}
+      {/* <Typography.Subtitle2 style={styles.textStyle}> */}
+      {/*  {t('note')} */}
+      {/* </Typography.Subtitle2> */}
+      {/* <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}> */}
+      {/*  {t('common:n/a')} */}
+      {/* </Typography.Body6> */}
 
       <View style={styles.buttonContainer}>
-        <Button mode="gradientFilled">{t('common:next')}</Button>
+        <Button
+          disabled={
+            !chainAccount || !message || !fee || !deserializedExternalWallet
+          }
+          mode="gradientFilled"
+          onPress={handlePressNext}>
+          {t('common:next')}
+        </Button>
       </View>
     </DView>
   );

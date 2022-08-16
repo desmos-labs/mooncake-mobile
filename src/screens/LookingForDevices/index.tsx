@@ -83,7 +83,7 @@ const LookingForDevices = () => {
     // user will get stuck in an infinite loop if they never give consent
     if (!isFocused) return;
 
-    const consentGiven = getMMKV(MMKVKEYS.CONSENT_GIVEN);
+    const consentGiven = getMMKV<boolean>(MMKVKEYS.CONSENT_GIVEN);
 
     if (!consentGiven) {
       navigate(ROUTES.CONSENT_AGREEMENT);

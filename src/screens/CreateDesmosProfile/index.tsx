@@ -130,9 +130,8 @@ const CreateDesmosProfile = () => {
       } else if (createLedgerAccount && createLedgerAccount.account) {
         const {account: ledgerAccount} = createLedgerAccount;
 
-        wallet = (await unlockWallet(ledgerAccount)) as LocalWallet;
+        wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
         await saveNewAccount(ledgerAccount);
-        console.log('unlocked wallet', wallet);
       }
 
       // images are placeholders. They should be uploaded and the link

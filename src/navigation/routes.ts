@@ -75,6 +75,8 @@ enum ROUTES {
   CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
 
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
+
+  ENTER_COMMENT = 'ENTER_COMMENT',
   // Root navigation end
 
   // Authorize wallet stack start

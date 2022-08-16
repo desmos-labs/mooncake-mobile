@@ -9,6 +9,10 @@ const EnvConfig = {
   CHAIN_ID: Config.CHAIN_ID,
   FEE_GRANTER: Config.FEE_GRANTER,
   DESMOS_RPC: Config.DESMOS_RPC,
+  // temporary way to keep track of base denoms for transactions on the
+  // desmos chain
+  BASE_DENOM: Config.BASE_DENOM,
+  MAX_COMMENT_LENGTH: 500,
 };
 
 export default EnvConfig;

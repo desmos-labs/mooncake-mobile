@@ -41,6 +41,8 @@ type Props = {
     bottom?: number;
     right?: number;
   };
+
+  hitSlopValue?: number;
 };
 
 const ImageButton = ({
@@ -49,9 +51,19 @@ const ImageButton = ({
   onPress,
   overlayComponent,
   overlayPosition,
+  hitSlopValue,
 }: Props) => {
+  const hitSlop = hitSlopValue
+    ? {
+        top: hitSlopValue,
+        bottom: hitSlopValue,
+        right: hitSlopValue,
+        left: hitSlopValue,
+      }
+    : undefined;
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity hitSlop={hitSlop} onPress={onPress}>
       <Image style={style} source={image} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>

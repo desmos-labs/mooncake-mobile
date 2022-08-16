@@ -13,19 +13,51 @@ import {Snackbar} from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import {ChainLink} from 'types/link';
+import ROUTES from 'navigation/routes';
+import {useNavigation} from '@react-navigation/native';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useDisconnectChainLink from 'hooks/useDisconnectChainlink';
+import {modalSuccess} from 'assets/images';
 import useStyles from './useStyles';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.MANAGE_CONNECTED_CHAINS
+>;
 
-const ManageConnectedChains: React.FC<Props> = () => {
+const ManageConnectedChains = () => {
   const {t} = useTranslation('manageChains');
   const styles = useStyles();
 
-  // TODO: replace with user's address, or any address for testing
-  const chainLinks = useChainLinks(
-    'desmos1rqpjh38ssmu5wqxqvelttmg9wv4mupkxvr3je4',
-  );
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const {refetch, chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
+
+  const {chainAccount} = useActiveAccount();
+  const unlockWallet = useUnlockWallet();
+  const disconnectChainLink = useDisconnectChainLink();
+
+  const handlePressDisconnectChainLink = React.useCallback(
+    (chainLink: ChainLink) => async () => {
+      if (!chainAccount) return;
+
+      const unlockResponse = await unlockWallet(chainAccount);
+
+      if (!unlockResponse || !unlockResponse.signer) return;
+      await disconnectChainLink(unlockResponse.signer, chainLink);
+      // we want the refetch call to run while the user is shown the sucess dialog.
+      refetch();
+
+      navigate(ROUTES.RESULT_MODAL, {
+        image: modalSuccess,
+        primaryButtonLabel: t('resultModal:goToProfile') as string,
+        onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
+      });
+    },
+    [chainAccount],
+  );
 
   const renderChainLinks = React.useCallback(
     (info: ListRenderItemInfo<ChainLink>) => {
@@ -33,9 +65,7 @@ const ManageConnectedChains: React.FC<Props> = () => {
         <ChainLinkItem
           chainName={info.item.chainName}
           address={info.item.externalAddress}
-          onPressDisconnect={() => {
-            // TODO: implementation
-          }}
+          onPressDisconnect={handlePressDisconnectChainLink(info.item)}
           showSnackBar={() => setShowSnackbar(true)}
         />
       );
@@ -50,7 +80,7 @@ const ManageConnectedChains: React.FC<Props> = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            onPress={() => {}}
+            onPress={() => navigate(ROUTES.SELECT_CHAIN)}
             mode="gradientFilled"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}

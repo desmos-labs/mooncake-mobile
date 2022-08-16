@@ -142,6 +142,12 @@ export const followBlackIcon = require('./images/followBlackIcon.png');
 
 export const moreBlackIcon = require('./images/moreBlackIcon.png');
 
+export const galleryIcon = require('./images/galleryIcon.png');
+
+export const cameraIcon = require('./images/cameraIcon.png');
+
+export const tagIcon = require('./images/tagIcon.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');

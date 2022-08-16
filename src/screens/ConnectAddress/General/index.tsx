@@ -10,12 +10,14 @@ import {FlatList, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {
+  connectChainState,
+  selectedExternalAccountState,
+} from '@recoil/connectChainState';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
-
-const DEBUG_MNEMONIC =
-  'chef embody loan celery magnet replace refuse subway treat arena party purity lift estate afford shallow monitor vapor torch farm message kid cheap seed';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -25,6 +27,12 @@ type NavProps = StackScreenProps<
 const ConnectAddressGeneral = () => {
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+
+  const setSelectedExternalAccount = useSetRecoilState(
+    selectedExternalAccountState,
+  );
 
   const {t} = useTranslation('connectAddress');
 
@@ -37,8 +45,9 @@ const ConnectAddressGeneral = () => {
    * prefix with the correct prefix of the account to be connected
    */
   const {accounts, generateAccountsFromMnemonic} = useGenerateAccounts({
-    mnemonic: DEBUG_MNEMONIC,
-    prefix: 'desmos',
+    mnemonic,
+    prefix: selectedChain.prefix,
+    coinType: selectedChain.hdPath.coinType,
   });
 
   React.useEffect(() => {
@@ -66,7 +75,8 @@ const ConnectAddressGeneral = () => {
         index={index}
         address={item.bech32Address}
         handlePress={() => {
-          console.log('hello world');
+          setSelectedExternalAccount(item.serialize());
+          navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
         }}
       />
     );

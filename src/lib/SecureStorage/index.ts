@@ -148,9 +148,15 @@ export const getLocalWallet = async (
     );
   }
 
-  return getItem(walletKey, {
+  const serializedWallet = await getItem<string>(walletKey, {
     password: walletPassword,
   });
+
+  if (!serializedWallet) {
+    throw new Error(`No wallet found with address ${address}`);
+  }
+
+  return LocalWallet.deserialize(serializedWallet);
 };
 
 /**
@@ -173,7 +179,7 @@ export const getMnemonic = async (
   address: string,
   password?: string,
   useBiometrics?: boolean,
-) => {
+): Promise<string | undefined> => {
   let _password = password;
   if (!password && useBiometrics) {
     _password = await getItem<string>(

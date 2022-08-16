@@ -51,7 +51,7 @@ export const useLoadProfiles = () => {
   React.useEffect(() => {
     // use cached values if data cannot be loaded
     if (!data) {
-      const mmkvProfiles = getMMKV(MMKVKEYS.PROFILES);
+      const mmkvProfiles = getMMKV<ProfileData[]>(MMKVKEYS.PROFILES);
 
       setProfiles(mmkvProfiles || []);
 
