@@ -1,6 +1,7 @@
 import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useGetPost} from '@recoil/selectedPost';
+import appSettingsState from '@recoil/settings';
 import {defaultProfilePic, followBlackIcon, moreBlackIcon} from 'assets/images';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
@@ -14,6 +15,8 @@ import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useRecoilState} from 'recoil';
+import {utcToZonedTime} from 'date-fns-tz';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -29,6 +32,7 @@ const PostDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {params} = useRoute<NavProps['route']>();
+  const [settings] = useRecoilState(appSettingsState);
   const {post, loading, refetchPost} = useGetPost(params.postId);
 
   useEffect(() => {
@@ -36,6 +40,11 @@ const PostDetails = () => {
       console.log(post);
     }
   }, [post]);
+
+  const formattedDate = useMemo(
+    () => utcToZonedTime(post?.creation_date!, settings.currentTimezone),
+    [post],
+  );
 
   const Avatar = React.useMemo(() => {
     if (post?.author.profile_pic) {
@@ -58,7 +67,8 @@ const PostDetails = () => {
           <Typography.Subtitle3 numberOfLines={1}>
             {post?.author.nickname || `@${post?.author.dtag}`}
           </Typography.Subtitle3>
-          <Typography.Body7>18 Feb, 18:18</Typography.Body7>
+          {/* temporary */}
+          <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
         </View>
       </View>
     ),

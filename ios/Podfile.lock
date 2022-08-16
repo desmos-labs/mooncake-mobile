@@ -394,6 +394,8 @@ PODS:
     - React-Core
   - RNKeychain (8.1.0):
     - React-Core
+  - RNLocalize (2.2.3):
+    - React-Core
   - RNPermissions (3.4.0):
     - React-Core
   - RNReanimated (2.9.1):
@@ -508,6 +510,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -633,6 +636,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -710,6 +715,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNKeychain: c442b8512802a20cab4db3e3a1cf53e4731615bc
+  RNLocalize: a64514b46a01375fdfae9349036b4dc7130333b5
   RNPermissions: eac721f71748c4472d6e876038270b75397d6ee7
   RNReanimated: 2cf7451318bb9cc430abeec8d67693f9cf4e039c
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
