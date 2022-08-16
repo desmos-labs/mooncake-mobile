@@ -1,7 +1,9 @@
 import Typography from 'components/Typography';
-import React, {useEffect} from 'react';
-import {Image, View} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import useStyles from './useStyles';
+
+// TODO: refactor this component to handle images and text + image shareable between home and post details
 
 type Props = {
   /**
@@ -18,14 +20,8 @@ enum POST_TYPE {
 
 const PostComponent = ({postData}: Props) => {
   const styles = useStyles();
-
+  /*
   const {attachments} = postData;
-
-  useEffect(() => {
-    console.log(postData);
-    console.log(postData.attachments);
-    console.log(postData.text);
-  }, [postData]);
 
   const AttachmentImage = React.useMemo(() => {
     const [attachment] = attachments;
@@ -43,7 +39,7 @@ const PostComponent = ({postData}: Props) => {
       }
     }
     return undefined;
-  }, []);
+  }, []); */
 
   const postType: POST_TYPE = React.useMemo(() => {
     if (postData.text && postData.attachments.length === 0) {
@@ -60,10 +56,10 @@ const PostComponent = ({postData}: Props) => {
     // validity
     console.log('Default post behavior for post id', postData.id);
     return POST_TYPE.TEXT;
-  }, []);
+  }, [postData]);
 
   const content = React.useMemo(() => {
-    if (postType === POST_TYPE.TEXT || postType === POST_TYPE.IMAGE) {
+    if (postType === POST_TYPE.TEXT) {
       return (
         <View style={styles.textContainer}>
           <Typography.H2 style={styles.textStyle}>
@@ -72,23 +68,9 @@ const PostComponent = ({postData}: Props) => {
         </View>
       );
     }
-    if (postType === POST_TYPE.IMAGE_TEXT) {
-      return (
-        <View>
-          <Typography.Body6 style={styles.imagePostText}>
-            {postData.text}
-          </Typography.Body6>
-        </View>
-      );
-    }
-  }, [postType]);
+  }, [postType, postData]);
 
-  return (
-    <View style={styles.container}>
-      {AttachmentImage}
-      {content}
-    </View>
-  );
+  return <View style={styles.container}>{content}</View>;
 };
 
 export default PostComponent;

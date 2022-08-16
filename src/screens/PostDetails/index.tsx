@@ -6,7 +6,6 @@ import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import Spacer from 'components/Spacer';
 import StickyBottomMenu from 'components/StickyBottomMenu';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -38,13 +37,17 @@ const PostDetails = () => {
     }
   }, [post]);
 
+  const Avatar = React.useMemo(() => {
+    if (post?.author.profile_pic) {
+      return <ProfileHeaderButton imageSrc={{uri: post.author.profile_pic}} />;
+    }
+    return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
+  }, [post?.author.profile_pic]);
+
   const MiddleElement = useMemo(
     () => (
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <ProfileHeaderButton
-          imageSrc={defaultProfilePic}
-          onPress={() => console.log('press')}
-        />
+        {Avatar}
         <View
           style={{
             flexDirection: 'column',
@@ -53,13 +56,13 @@ const PostDetails = () => {
             minWidth: 160,
           }}>
           <Typography.Subtitle3 numberOfLines={1}>
-            Ashlynn Siphron
+            {post?.author.nickname || `@${post?.author.dtag}`}
           </Typography.Subtitle3>
           <Typography.Body7>18 Feb, 18:18</Typography.Body7>
         </View>
       </View>
     ),
-    [],
+    [post],
   );
 
   const RightElement = useMemo(
@@ -67,7 +70,7 @@ const PostDetails = () => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ImageButton
           onPress={() => console.log('follow')}
-          style={{width: 37, height: 37, backgroundColor: 'red'}}
+          style={{width: 37, height: 37}}
           image={followBlackIcon}
         />
         <ImageButton
@@ -76,7 +79,6 @@ const PostDetails = () => {
             width: 24,
             height: 24,
             marginLeft: theme.spacing.s,
-            backgroundColor: 'red',
           }}
           image={moreBlackIcon}
         />
@@ -85,7 +87,9 @@ const PostDetails = () => {
     [],
   );
 
-  return post ? (
+  return !post || loading ? (
+    <ActivityIndicator />
+  ) : (
     <>
       <DView
         scrollable
@@ -97,12 +101,15 @@ const PostDetails = () => {
         style={styles.root}
         topBar={
           <TopBar
-            style={{backgroundColor: theme.colors.white}}
+            style={{
+              backgroundColor: theme.colors.white,
+              zIndex: 2,
+              paddingBottom: 10,
+            }}
             centerElement={MiddleElement}
             rightElement={RightElement}
           />
         }>
-        <Spacer paddingTop={10} />
         <View onStartShouldSetResponder={() => true} style={{flex: 1}}>
           <PostComponent postData={post} />
           <View
@@ -113,9 +120,7 @@ const PostDetails = () => {
             }}
           />
         </View>
-        <Typography.H1>Test</Typography.H1>
-        <Typography.H1>Test</Typography.H1>
-        <Typography.H1>Test</Typography.H1>
+        {/* Interaction component */}
       </DView>
       <StickyBottomMenu
         leftButtonAction={() => console.log('left')}
@@ -123,8 +128,6 @@ const PostDetails = () => {
         rightButtonAction={() => console.log('right')}
       />
     </>
-  ) : (
-    <ActivityIndicator />
   );
 };
 

@@ -19,7 +19,7 @@ export type Props = {
    */
   // stackProps: ScreenProps;
   /**
-   * Element to display on the top right corner.
+   * Element to display on the center of the bar.
    */
   centerElement?: ReactElement;
   /**

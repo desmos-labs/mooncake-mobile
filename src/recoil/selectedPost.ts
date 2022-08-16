@@ -33,7 +33,7 @@ export const useGetPost = (ID: number) => {
     if (data) {
       setPost(data.posts[0]);
     }
-  }, [data]);
+  }, [data, ID]);
 
   return {post, loading, refetchPost};
 };
