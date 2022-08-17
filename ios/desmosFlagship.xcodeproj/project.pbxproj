@@ -14,7 +14,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1905289C868DA39A65170187 /* libPods-desmosFlagship.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E2D14A9B41CB3C0EF419EA3 /* libPods-desmosFlagship.a */; };
+		1C5E122C1059876BD8AC3D66 /* libPods-desmosFlagship.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F003FA2173C3EE1786C8B80 /* libPods-desmosFlagship.a */; };
 		1C977A4C7DEF4359AA8697FD /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6552104BB2ED423EA2F0E67E /* Poppins-Italic.ttf */; };
 		1CF9C76965F747F3ABF8CB6A /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69B182EB5875409AB43795DE /* Poppins-ExtraLight.ttf */; };
 		22536F68B29546F780893B06 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 101AFE5F356D4CD39F4F8CAB /* Poppins-MediumItalic.ttf */; };
@@ -22,6 +22,7 @@
 		3467656104D44DEE9A7A16A0 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4A592062D494F4C96E236AB /* Poppins-ExtraLightItalic.ttf */; };
 		600923F5200042B58AB6D901 /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E55071F4561E487E8CDE7ED7 /* Poppins-LightItalic.ttf */; };
 		61D2D9094E44458A8648C2BC /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CF5145EDC344869B2980391 /* Poppins-Light.ttf */; };
+		71462424FE993F367539E102 /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5660E2F827A2594634A8446 /* libPods-desmosFlagship-desmosFlagshipTests.a */; };
 		71611866BA564636AC7EAE6D /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C24A273F5EFF4EE28DF44B89 /* Poppins-Medium.ttf */; };
 		76E4D67960504E0580FDCB68 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27F515919BBB4E91A0374EB0 /* Poppins-ExtraBold.ttf */; };
 		7A38CB9528922EAA00DA2465 /* RCTCryptoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */; };
@@ -29,7 +30,6 @@
 		7EE07B9D1CF643A5AACCD534 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C2E4A36C58B4563A8FA86C4 /* Poppins-Thin.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		87586BFCE2ED4EFDB604E8E0 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98355F2B15D8489FAF2BFDE8 /* Poppins-Black.ttf */; };
-		88E0CE88B32D0224A687B97D /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D832F1D4F97ACCF73A1A0E30 /* libPods-desmosFlagship-desmosFlagshipTests.a */; };
 		D0A1FCFF45784CDE988A0238 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FD2A9566A5448C89182D510 /* Poppins-Bold.ttf */; };
 		E1363118C4D7492682419DF6 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5B3188922324AD4B373B161 /* Poppins-SemiBold.ttf */; };
 		F500CC4F61AF4B54A6186152 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6409401F0DA542718EF081E9 /* Poppins-ThinItalic.ttf */; };
@@ -52,9 +52,9 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* desmosFlagshipTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = desmosFlagshipTests.m; sourceTree = "<group>"; };
 		0739484DFD0546F69FD8B966 /* desmos.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = desmos.ttf; path = ../src/assets/fonts/desmos.ttf; sourceTree = "<group>"; };
-		088A39D13FFAC4AC72575F2E /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; sourceTree = "<group>"; };
 		101AFE5F356D4CD39F4F8CAB /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../src/assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
 		104995B1B52E4D48A654B52A /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
+		129A8DC0B5518775F14B6769 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* desmosFlagship.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = desmosFlagship.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = desmosFlagship/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = desmosFlagship/AppDelegate.mm; sourceTree = "<group>"; };
@@ -65,11 +65,11 @@
 		21B82E501D764B3883E3B0DF /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		27F515919BBB4E91A0374EB0 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		2CF5145EDC344869B2980391 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
+		2F003FA2173C3EE1786C8B80 /* libPods-desmosFlagship.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FD2A9566A5448C89182D510 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
-		4E2D14A9B41CB3C0EF419EA3 /* libPods-desmosFlagship.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		324468202473E5AF361932E8 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; sourceTree = "<group>"; };
 		6409401F0DA542718EF081E9 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		6552104BB2ED423EA2F0E67E /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
-		66894290B5FF12F54F432E2C /* Pods-desmosFlagship.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.debug.xcconfig"; sourceTree = "<group>"; };
 		69B182EB5875409AB43795DE /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
 		7A38CB9328922EAA00DA2465 /* desmosFlagship-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "desmosFlagship-Bridging-Header.h"; sourceTree = "<group>"; };
 		7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCTCryptoUtils.swift; sourceTree = "<group>"; };
@@ -98,11 +98,11 @@
 		D219986C286B0B83003AD3D3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		D219986D286B0B83003AD3D3 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		D2D327619F544AA78FC55E2F /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
-		D832F1D4F97ACCF73A1A0E30 /* libPods-desmosFlagship-desmosFlagshipTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship-desmosFlagshipTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E3C6C3EC9DA817CC9D7E9293 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; sourceTree = "<group>"; };
+		D5660E2F827A2594634A8446 /* libPods-desmosFlagship-desmosFlagshipTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship-desmosFlagshipTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D939A4AAC374948AB4AEC6F9 /* Pods-desmosFlagship.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.debug.xcconfig"; sourceTree = "<group>"; };
 		E55071F4561E487E8CDE7ED7 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F97729414B409040C9BF1A10 /* Pods-desmosFlagship.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.release.xcconfig"; sourceTree = "<group>"; };
+		F9050B4E0F1BA5C9C1243B9A /* Pods-desmosFlagship.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88E0CE88B32D0224A687B97D /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */,
+				71462424FE993F367539E102 /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1905289C868DA39A65170187 /* libPods-desmosFlagship.a in Frameworks */,
+				1C5E122C1059876BD8AC3D66 /* libPods-desmosFlagship.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,8 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4E2D14A9B41CB3C0EF419EA3 /* libPods-desmosFlagship.a */,
-				D832F1D4F97ACCF73A1A0E30 /* libPods-desmosFlagship-desmosFlagshipTests.a */,
+				2F003FA2173C3EE1786C8B80 /* libPods-desmosFlagship.a */,
+				D5660E2F827A2594634A8446 /* libPods-desmosFlagship-desmosFlagshipTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -245,10 +245,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				66894290B5FF12F54F432E2C /* Pods-desmosFlagship.debug.xcconfig */,
-				F97729414B409040C9BF1A10 /* Pods-desmosFlagship.release.xcconfig */,
-				088A39D13FFAC4AC72575F2E /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */,
-				E3C6C3EC9DA817CC9D7E9293 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */,
+				D939A4AAC374948AB4AEC6F9 /* Pods-desmosFlagship.debug.xcconfig */,
+				F9050B4E0F1BA5C9C1243B9A /* Pods-desmosFlagship.release.xcconfig */,
+				129A8DC0B5518775F14B6769 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */,
+				324468202473E5AF361932E8 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -260,12 +260,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "desmosFlagshipTests" */;
 			buildPhases = (
-				A63BA4DD3C4638C87EDF4B10 /* [CP] Check Pods Manifest.lock */,
+				6A007619887464CEB9C782DA /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				67D9E74BB39069597EACD1F8 /* [CP] Embed Pods Frameworks */,
-				F1465086CF3A9683280DECB0 /* [CP] Copy Pods Resources */,
+				ED844777AA86DF24128FC22C /* [CP] Embed Pods Frameworks */,
+				617CC9030107C3408403A3D3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -281,14 +281,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "desmosFlagship" */;
 			buildPhases = (
-				FCB58D741856255B1B6C8609 /* [CP] Check Pods Manifest.lock */,
+				6A2BC3DD478A76992BAEA3BF /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				3949088943A04ABB5B1B4D03 /* [CP] Embed Pods Frameworks */,
-				8F5762A4C72D52B455D19E83 /* [CP] Copy Pods Resources */,
+				70F587913A85C2E89BD7608B /* [CP] Embed Pods Frameworks */,
+				95A2DE6D2D8570C3A01B14DE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -390,58 +390,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3949088943A04ABB5B1B4D03 /* [CP] Embed Pods Frameworks */ = {
+		617CC9030107C3408403A3D3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		67D9E74BB39069597EACD1F8 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8F5762A4C72D52B455D19E83 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A63BA4DD3C4638C87EDF4B10 /* [CP] Check Pods Manifest.lock */ = {
+		6A007619887464CEB9C782DA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -463,24 +429,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F1465086CF3A9683280DECB0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FCB58D741856255B1B6C8609 /* [CP] Check Pods Manifest.lock */ = {
+		6A2BC3DD478A76992BAEA3BF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -500,6 +449,57 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		70F587913A85C2E89BD7608B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95A2DE6D2D8570C3A01B14DE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED844777AA86DF24128FC22C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -556,7 +556,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 088A39D13FFAC4AC72575F2E /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */;
+			baseConfigurationReference = 129A8DC0B5518775F14B6769 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -584,7 +584,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E3C6C3EC9DA817CC9D7E9293 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */;
+			baseConfigurationReference = 324468202473E5AF361932E8 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -609,7 +609,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66894290B5FF12F54F432E2C /* Pods-desmosFlagship.debug.xcconfig */;
+			baseConfigurationReference = D939A4AAC374948AB4AEC6F9 /* Pods-desmosFlagship.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -636,7 +636,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F97729414B409040C9BF1A10 /* Pods-desmosFlagship.release.xcconfig */;
+			baseConfigurationReference = F9050B4E0F1BA5C9C1243B9A /* Pods-desmosFlagship.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

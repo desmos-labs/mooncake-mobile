@@ -113,6 +113,38 @@ const PostDetails = () => {
     [],
   );
 
+  const textPostData: PostItem = {
+    creation_date: '2022-06-30T17:06:47.475817',
+    author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
+    attachments: [],
+    author: {
+      address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
+      bio: '',
+      dtag: 'Donatello',
+      profile_pic: 'https://i.imgur.com/aih9snA.png',
+      nickname: 'Nickname',
+    },
+    subspace_id: 5,
+    reactions: [],
+    text: "I'm a ninja turtle that is a teenager. I'm a ninja turtle that is a teenager. ",
+    conversation: null,
+    id: 3,
+  };
+
+  const imagePostData: PostItem = {
+    ...textPostData,
+    attachments: [
+      {
+        id: 1,
+        content: {
+          uri: 'https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?w=1480&t=st=1660739347~exp=1660739947~hmac=a5b2dafae9c087fb414785c0bbf1f253147fe07756b2289aedae4478fb8ef231',
+          '@type': '/desmos.posts.v1.Media',
+          mime_type: 'image/png',
+        },
+      },
+    ],
+  };
+
   return !post || loading ? (
     <ActivityIndicator />
   ) : (
@@ -123,7 +155,7 @@ const PostDetails = () => {
         refreshing={loading}
         onRefresh={refetchPost}
         backgroundColor={theme.colors.white}
-        edges={['top', 'right', 'left']}
+        edges={['top']}
         style={styles.root}
         topBar={
           <TopBar
@@ -137,15 +169,13 @@ const PostDetails = () => {
           />
         }>
         <View onStartShouldSetResponder={() => true} style={{flex: 1}}>
-          <PostComponent postData={post} />
-          <View
-            style={{
-              backgroundColor: 'rgba(247, 248, 250, 1)',
-              width: '100%',
-              height: 6,
-            }}
-          />
+          <PostComponent postData={imagePostData} />
         </View>
+        <Typography.H3>INTERACTION COMPONENT</Typography.H3>
+        <Typography.H3>INTERACTION COMPONENT</Typography.H3>
+        <Typography.H3>INTERACTION COMPONENT</Typography.H3>
+        <Typography.H3>INTERACTION COMPONENT</Typography.H3>
+        <Typography.H3>INTERACTION COMPONENT</Typography.H3>
         {/* Interaction component */}
       </DView>
       <StickyBottomMenu

@@ -1,28 +1,25 @@
 import {makeStyle} from 'config/theme';
+import {Dimensions} from 'react-native';
 
 /**
  * Theme hook for the PostCard component
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    alignSelf: 'center',
     justifyContent: 'center',
-    width: '100%',
+    alignItems: 'center',
   },
   textContainer: {
     backgroundColor: theme.colors.desmosOrange01,
+    width: Dimensions.get('window').width,
     height: 630,
+    paddingHorizontal: theme.spacing.m,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textStyle: {
-    color: theme.colors.black,
+    color: theme.colors.white,
     fontSize: 32,
-  },
-  imagePostText: {
-    marginVertical: theme.spacing.m,
-    color: theme.colors.black,
-    marginHorizontal: theme.spacing.m,
   },
 }));
 

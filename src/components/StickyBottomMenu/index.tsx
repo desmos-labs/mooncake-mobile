@@ -1,8 +1,8 @@
 import {commentIcon, optionsIcon, tipIcon} from 'assets/images';
+import MenuButton from 'components/StickyBottomMenu/components/MenuButton';
 import React from 'react';
 import {View} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
-import InteractionButton from 'screens/Home/components/InteractionButton';
 import useStyles from './useStyles';
 
 interface Props {
@@ -31,20 +31,17 @@ const StickyBottomMenu: React.FC<Props> = props => {
       distance={20}
       radius={0}>
       <View style={styles.container}>
-        <InteractionButton
-          mode="text"
+        <MenuButton
           onPress={leftButtonAction}
           interactionCount={10500}
           icon={commentIcon}
         />
-        <InteractionButton
-          mode="text"
+        <MenuButton
           onPress={middleButtonAction}
           interactionCount={10500}
           icon={optionsIcon}
         />
-        <InteractionButton
-          mode="text"
+        <MenuButton
           onPress={rightButtonAction}
           interactionCount={10500}
           icon={tipIcon}
