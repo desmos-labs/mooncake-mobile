@@ -13,7 +13,8 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo} from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import {utcToZonedTime} from 'date-fns-tz';
@@ -79,16 +80,31 @@ const PostDetails = () => {
     () => (
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ImageButton
-          onPress={() => console.log('follow')}
-          style={{width: 37, height: 37}}
+          style={{
+            zIndex: 1,
+            width: 36,
+            height: 36,
+            tintColor: theme.colors.white,
+          }}
+          overlayComponent={
+            <LinearGradient
+              style={{
+                flex: 1,
+                ...StyleSheet.absoluteFillObject,
+                borderRadius: 36,
+              }}
+              colors={theme.colors.dOrangeGradient01}
+            />
+          }
           image={followBlackIcon}
+          onPress={() => console.log('add')}
         />
         <ImageButton
           onPress={() => console.log('more')}
           style={{
             width: 24,
             height: 24,
-            marginLeft: theme.spacing.s,
+            marginLeft: theme.spacing.m,
           }}
           image={moreBlackIcon}
         />
