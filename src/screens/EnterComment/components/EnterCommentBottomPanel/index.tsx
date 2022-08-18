@@ -4,7 +4,7 @@ import ImageButton from 'components/ImageButton';
 import {cameraIcon, galleryIcon, tagIcon} from 'assets/images';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import EnvConfig from 'config/EnvConfig';
-import RadialTextCounter from './RadialTextCounter';
+import RadialTextCounter from 'components/RadialTextCounter';
 import useStyles from './useStyles';
 
 type Props = {

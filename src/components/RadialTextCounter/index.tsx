@@ -1,0 +1,93 @@
+import React from 'react';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import Typography from 'components/Typography';
+import {useTheme} from 'react-native-paper';
+import {ColorValue} from 'react-native';
+
+type Props = {
+  /**
+   * The maximum value used to calculate progress
+   */
+  max: number;
+
+  /**
+   * The current length of the string that the progress will be calculated for
+   */
+  current: number;
+
+  /**
+   * Override default filled color.
+   * @default theme.colors.iconGrey
+   */
+  customFillColor?: ColorValue;
+
+  /**
+   * Override default empty color.
+   * @default theme.colors.lightGrey01
+   */
+  customEmptyColor?: ColorValue;
+
+  /**
+   * Override default warn color.
+   * @default theme.colors.pink01
+   */
+  customWarnColor?: ColorValue;
+};
+
+const RadialTextCounter = ({
+  max,
+  current,
+  customFillColor,
+  customEmptyColor,
+  customWarnColor,
+}: Props) => {
+  const theme = useTheme();
+
+  const progress = React.useMemo(() => {
+    return (current / max) * 100;
+  }, [current, max]);
+
+  const remainingChars = React.useMemo(() => {
+    return max - current;
+  }, [current, max]);
+
+  const showWarning = React.useMemo(
+    () => remainingChars < 10,
+    [remainingChars],
+  );
+
+  const fillColor = React.useMemo(() => {
+    return customFillColor || theme.colors.iconGrey;
+  }, [customFillColor]);
+
+  const emptyColor = React.useMemo(() => {
+    return customEmptyColor || theme.colors.lightGrey01;
+  }, [customEmptyColor]);
+
+  const warnColor = React.useMemo(() => {
+    return customWarnColor || theme.colors.pink01;
+  }, [customWarnColor]);
+
+  return (
+    <AnimatedCircularProgress
+      rotation={0}
+      size={24}
+      width={2}
+      fill={progress}
+      tintColor={showWarning ? warnColor : fillColor}
+      backgroundColor={emptyColor}>
+      {() => {
+        return (
+          <Typography.Subtitle4
+            style={{
+              color: showWarning ? theme.colors.pink01 : theme.colors.iconGrey,
+            }}>
+            {remainingChars < 10 ? remainingChars : ''}
+          </Typography.Subtitle4>
+        );
+      }}
+    </AnimatedCircularProgress>
+  );
+};
+
+export default RadialTextCounter;
