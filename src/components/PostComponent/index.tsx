@@ -1,6 +1,7 @@
 import Typography from 'components/Typography';
 import React, {useEffect} from 'react';
 import {Dimensions, ImageBackground, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 // TODO: refactor this component to handle images and text + image shareable between home and post details
@@ -20,6 +21,7 @@ enum POST_TYPE {
 
 const PostComponent = ({postData}: Props) => {
   const styles = useStyles();
+  const theme = useTheme();
   const {attachments} = postData;
   const {width} = Dimensions.get('window');
 
@@ -78,13 +80,19 @@ const PostComponent = ({postData}: Props) => {
       return (
         <View>
           {AttachmentImage}
-          <Typography.Body7>{postData.text}</Typography.Body7>
+          <Typography.Body7 style={{margin: theme.spacing.m}}>
+            {postData.text}
+          </Typography.Body7>
         </View>
       );
     }
   }, [postType, postData]);
 
-  return <View style={styles.container}>{content}</View>;
+  return (
+    <View onStartShouldSetResponder={() => true} style={styles.container}>
+      {content}
+    </View>
+  );
 };
 
 export default PostComponent;

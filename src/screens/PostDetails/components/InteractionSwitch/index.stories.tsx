@@ -4,18 +4,18 @@ import i18next from 'i18next';
 
 import {storiesOf} from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import PostTypeTab from './index';
+import InteractionSwitch from './index';
 
 const RenderDefault = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   return (
-    <PostTypeTab
+    <InteractionSwitch
       selectedIndex={selectedIndex}
       setSelectedIndex={setSelectedIndex}
-      postTypes={[
-        i18next.t('home:DISCOVER_POSTS'),
-        i18next.t('home:FOLLOWING_POSTS'),
+      sections={[
+        {sectionName: i18next.t('home:DISCOVER_POSTS'), counter: 10},
+        {sectionName: i18next.t('home:FOLLOWING_POSTS'), counter: 5},
       ]}
     />
   );
@@ -25,13 +25,13 @@ const RenderMoreThan2 = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   return (
-    <PostTypeTab
+    <InteractionSwitch
       selectedIndex={selectedIndex}
       setSelectedIndex={setSelectedIndex}
-      postTypes={[
-        i18next.t('home:DISCOVER_POSTS'),
-        i18next.t('home:FOLLOWING_POSTS'),
-        'THIRD TYPE',
+      sections={[
+        {sectionName: i18next.t('home:DISCOVER_POSTS'), counter: 10},
+        {sectionName: i18next.t('home:FOLLOWING_POSTS'), counter: 5},
+        {sectionName: i18next.t('home:FOLLOWING_POSTS'), counter: 2},
       ]}
     />
   );

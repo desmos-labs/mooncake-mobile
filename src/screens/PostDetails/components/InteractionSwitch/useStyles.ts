@@ -9,8 +9,9 @@ export type StyleProp = {
  */
 const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
   container: {
+    marginVertical: theme.spacing.s,
     flexDirection: 'row',
-    backgroundColor: theme.colors.backgroundGrey,
+    backgroundColor: theme.colors.white,
     borderRadius: 14,
     overflow: 'hidden',
     justifyContent: 'center',
@@ -23,13 +24,15 @@ const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
     overflow: 'hidden',
   },
   tabButton: {
-    // flex: 1,
+    flex: 1,
     marginHorizontal: 8,
     height: '100%',
     padding: 10,
+    alignItems: 'center',
   },
   buttonText: {
     textAlign: 'center',
+    minWidth: 120,
   },
   unselected: {
     color: theme.colors.surfaceBlack,
