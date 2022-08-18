@@ -25,13 +25,16 @@ const CreateTextPost = () => {
 
   const {t} = useTranslation('createPost');
 
+  const [backgroundIndex, setBackgroundIndex] = React.useState(
+    _.random(0, postBG.length),
+  );
   const [text, setText] = React.useState('');
 
   const inputRef = useRef<any>();
 
-  const randomBgIdx = React.useMemo(() => {
-    return _.random(0, postBG.length);
-  }, []);
+  const handlePressBGButton = React.useCallback(() => {
+    setBackgroundIndex(prev => (prev < postBG.length ? prev + 1 : 0));
+  }, [backgroundIndex]);
 
   const inputOpacity = React.useMemo(() => {
     if (!inputRef.current || text.length === 0) return 0.8;
@@ -56,7 +59,7 @@ const CreateTextPost = () => {
           onPress={handlePostPressed}
           activeOpacity={1}
           style={styles.postContainer}>
-          <Image source={postBG[randomBgIdx]} style={styles.background} />
+          <Image source={postBG[backgroundIndex]} style={styles.background} />
 
           <View style={styles.headerGroup}>
             <Icon
@@ -66,9 +69,9 @@ const CreateTextPost = () => {
               allowFontScaling
             />
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handlePressBGButton}>
               <Image
-                source={postBG[randomBgIdx]}
+                source={postBG[backgroundIndex]}
                 style={styles.switchBgButton}
               />
             </TouchableOpacity>
