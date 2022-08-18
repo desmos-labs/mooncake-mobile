@@ -73,15 +73,20 @@ const CreateTextPost = () => {
               />
             </TouchableOpacity>
           </View>
-          <TextInput
-            ref={inputRef}
-            value={text}
-            multiline
-            onChangeText={setText}
-            placeholder={t('tapToType')}
-            style={[styles.inputStyle, {opacity: inputOpacity}]}
-            placeholderTextColor="#FFFFFF"
-          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+            keyboardVerticalOffset={50}>
+            <TextInput
+              maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+              ref={inputRef}
+              value={text}
+              multiline
+              onChangeText={setText}
+              placeholder={t('tapToType')}
+              style={[styles.inputStyle, {opacity: inputOpacity}]}
+              placeholderTextColor="#FFFFFF"
+            />
+          </KeyboardAvoidingView>
         </TouchableOpacity>
       </SafeAreaView>
 
@@ -97,6 +102,8 @@ const CreateTextPost = () => {
         <RadialTextCounter
           max={EnvConfig.MAX_COMMENT_LENGTH}
           current={text.length}
+          customEmptyColor="rgba(255,255,255,0.3)"
+          customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
     </View>

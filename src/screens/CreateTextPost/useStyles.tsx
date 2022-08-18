@@ -41,7 +41,7 @@ const useStyles = makeStyle(theme => ({
     fontWeight: '400',
     lineHeight: 27,
     letterSpacing: 0.0015,
-    textAlign: 'left',
+    textAlign: 'center',
   },
   headerGroup: {
     flexDirection: 'row',
