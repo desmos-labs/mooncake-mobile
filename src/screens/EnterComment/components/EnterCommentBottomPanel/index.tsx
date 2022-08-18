@@ -15,6 +15,8 @@ type Props = {
   handlePressMention: () => void;
 
   commentLength: number;
+
+  imageSelected: boolean;
 };
 
 const EnterCommentBottomPanel = ({
@@ -22,6 +24,7 @@ const EnterCommentBottomPanel = ({
   handlePressGallery,
   handlePressMention,
   commentLength,
+  imageSelected,
 }: Props) => {
   const styles = useStyles();
 
@@ -34,12 +37,14 @@ const EnterCommentBottomPanel = ({
         <View style={styles.leftGroup}>
           <ImageButton
             hitSlopValue={8}
+            disabled={imageSelected}
             onPress={handlePressGallery}
             image={galleryIcon}
             style={styles.imageButtonStyle}
           />
           <ImageButton
             hitSlopValue={8}
+            disabled={imageSelected}
             onPress={handlePressCamera}
             image={cameraIcon}
             style={styles.imageButtonStyle}

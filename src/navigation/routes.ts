@@ -77,6 +77,8 @@ enum ROUTES {
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 
   ENTER_COMMENT = 'ENTER_COMMENT',
+
+  SELECT_POST_TYPE = 'SELECT_POST_TYPE',
   // Root navigation end
 
   // Authorize wallet stack start

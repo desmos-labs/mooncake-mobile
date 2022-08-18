@@ -63,6 +63,7 @@ import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import PostTypeSelection from 'screens/PostTypeSelection';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -104,6 +105,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
+  [ROUTES.SELECT_POST_TYPE]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -252,6 +254,11 @@ const RootNavigator = () => {
         }}
         name={ROUTES.ENTER_COMMENT}
         component={EnterComment}
+      />
+
+      <Stack.Screen
+        name={ROUTES.SELECT_POST_TYPE}
+        component={PostTypeSelection}
       />
 
       {/* modals */}

@@ -148,6 +148,12 @@ export const cameraIcon = require('./images/cameraIcon.png');
 
 export const tagIcon = require('./images/tagIcon.png');
 
+export const imagePostIcon = require('./images/imagePost.png');
+
+export const textPostIcon = require('./images/textPost.png');
+
+export const whiteCross = require('./images/whiteCross.png');
+
 //Socials
 
 export const discordIcon = require('./images/discord.png');
