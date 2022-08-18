@@ -150,7 +150,22 @@ export const textPostIcon = require('./images/textPost.png');
 
 export const whiteCross = require('./images/whiteCross.png');
 
-//Socials
+// array of images
+export const postBG = [
+  require('./images/postBG/postBG1.png'),
+  require('./images/postBG/postBG2.png'),
+  require('./images/postBG/postBG3.png'),
+  require('./images/postBG/postBG4.png'),
+  require('./images/postBG/postBG5.png'),
+  require('./images/postBG/postBG6.png'),
+  require('./images/postBG/postBG7.png'),
+  require('./images/postBG/postBG8.png'),
+  require('./images/postBG/postBG9.png'),
+  require('./images/postBG/postBG10.png'),
+  require('./images/postBG/postBG11.png'),
+]
+
+// Socials
 
 export const discordIcon = require('./images/discord.png');
 
