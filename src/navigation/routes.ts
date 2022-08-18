@@ -79,6 +79,8 @@ enum ROUTES {
   ENTER_COMMENT = 'ENTER_COMMENT',
 
   SELECT_POST_TYPE = 'SELECT_POST_TYPE',
+
+  CREATE_TEXT_POST = 'CREATE_TEXT_POST',
   // Root navigation end
 
   // Authorize wallet stack start
