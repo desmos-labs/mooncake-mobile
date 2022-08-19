@@ -49,6 +49,7 @@ const Profile = () => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
+    // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   });
 
