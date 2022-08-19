@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Image, LayoutChangeEvent, View} from 'react-native';
+import {ActivityIndicator, Image, View} from 'react-native';
 import {defaultBanner, desmosIcon, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import {Snackbar, useTheme} from 'react-native-paper';
@@ -15,13 +15,11 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import Animated, {
-  Extrapolation,
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import ProfileTopButtons from 'screens/Profile/components/ProfileTopButtons';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -53,20 +51,6 @@ const Profile = () => {
     const numerator = contentOffset.y;
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   });
-
-  const animatedOpacity = useAnimatedStyle(() => {
-    const interpolatedOpacity = interpolate(
-      scrollProgress.value,
-      [0, 0.4],
-      [0, 1],
-      {extrapolateRight: Extrapolation.CLAMP},
-    );
-    return {opacity: interpolatedOpacity};
-  });
-
-  const onContentLayout = React.useCallback((event: LayoutChangeEvent) => {
-    console.log(event.nativeEvent.layout);
-  }, []);
 
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
@@ -110,6 +94,8 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
+  const {top} = useSafeAreaInsets();
+
   if (profileLoading || postsLoading) {
     return <ActivityIndicator />;
   }
@@ -146,23 +132,10 @@ const Profile = () => {
         source={cover_pic ? {uri: cover_pic} : defaultBanner}
         style={styles.bannerImage}
       />
-      <ProfileTopButtons
-        handlePressHome={goBack}
-        handlePressNotification={() => {
-          console.log('notifications');
-        }}
-        handlePressScan={() => {
-          console.log('scan');
-        }}
-        handlePressSettings={handlePressSettings}
-        hasNotification
-        animatedOpacity={animatedOpacity}
-      />
 
       <Animated.FlatList
         onScroll={scrollHandler}
-        style={{paddingTop: 64}}
-        onLayout={onContentLayout}
+        style={{paddingTop: 100 + top}}
         ListHeaderComponent={
           <>
             {/* top buttons start */}
@@ -246,6 +219,19 @@ const Profile = () => {
         }}
         contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={EmptyPostComponent}
+      />
+
+      <ProfileTopButtons
+        scrollProgress={scrollProgress}
+        handlePressHome={goBack}
+        handlePressNotification={() => {
+          console.log('notifications');
+        }}
+        handlePressScan={() => {
+          console.log('scan');
+        }}
+        handlePressSettings={handlePressSettings}
+        hasNotification
       />
 
       <Snackbar

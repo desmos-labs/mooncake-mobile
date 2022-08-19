@@ -8,10 +8,14 @@ import {
   profileSettings,
 } from 'assets/images';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
-import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+import {BlurView} from '@react-native-community/blur';
 import useStyles from './useStyles';
 
 type Props = {
@@ -25,7 +29,7 @@ type Props = {
 
   hasNotification?: boolean;
 
-  animatedOpacity: any;
+  scrollProgress: any;
 };
 
 /**
@@ -37,122 +41,125 @@ const ProfileTopButtons = ({
   hasNotification,
   handlePressScan,
   handlePressSettings,
-  animatedOpacity,
+  scrollProgress,
 }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
 
   const {top} = useSafeAreaInsets();
 
+  const animatedOpacity = useAnimatedStyle(() => {
+    const interpolatedOpacity = interpolate(
+      scrollProgress.value,
+      [0, 0.4],
+      [0, 1],
+      {extrapolateRight: Extrapolation.CLAMP},
+    );
+    return {opacity: interpolatedOpacity};
+  });
+
+  const animatedScanButtonStyle = useAnimatedStyle(() => {
+    const interpolatedOpacity = interpolate(
+      scrollProgress.value,
+      [0, 0.4],
+      [0, 1],
+      {extrapolateRight: Extrapolation.CLAMP},
+    );
+
+    if (interpolatedOpacity >= 0.3) return {zIndex: 0};
+
+    return {zIndex: 2};
+  });
+
   const bottomLayer = React.useMemo(() => {
     return (
       <View style={styles.container}>
-        <ImageButton
-          image={profileBack}
-          style={styles.buttonStyle}
-          onPress={handlePressHome}
-        />
+        <View
+          style={{
+            zIndex: 2,
+          }}>
+          <ImageButton
+            image={profileBack}
+            style={styles.buttonStyle}
+            onPress={handlePressHome}
+          />
+        </View>
 
-        <View style={styles.buttonRow}>
+        <Animated.View
+          style={[
+            animatedScanButtonStyle,
+            {
+              position: 'absolute',
+              top: 16,
+              right: 32 * 4,
+              zIndex: 2,
+            },
+          ]}>
           <ImageButton
             image={profileScan}
             style={styles.buttonStyle}
             onPress={handlePressScan}
           />
+        </Animated.View>
 
-          <Spacer paddingHorizontal={theme.spacing.m}>
-            <ImageButton
-              image={profileNotification}
-              style={styles.buttonStyle}
-              overlayComponent={
-                hasNotification ? (
-                  <PingAnimation
-                    size={10}
-                    color={theme.colors.desmosOrange01}
-                  />
-                ) : undefined
-              }
-              overlayPosition={{
-                top: 2,
-                left: 12,
-              }}
-              onPress={handlePressNotification}
-            />
-          </Spacer>
+        <View
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 32 * 2 + 16,
+            zIndex: 2,
+          }}>
+          <ImageButton
+            image={profileNotification}
+            style={styles.buttonStyle}
+            overlayComponent={
+              hasNotification ? (
+                <PingAnimation size={10} color={theme.colors.desmosOrange01} />
+              ) : undefined
+            }
+            overlayPosition={{
+              top: 2,
+              left: 12,
+            }}
+            onPress={handlePressNotification}
+          />
+        </View>
 
+        <View
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 32,
+            zIndex: 2,
+          }}>
           <ImageButton
             image={profileSettings}
             style={styles.buttonStyle}
             onPress={handlePressSettings}
           />
         </View>
+        <Animated.View style={[StyleSheet.absoluteFillObject, animatedOpacity]}>
+          <BlurView
+            style={{
+              // offset the safearea top margin so the background can cover
+              // the status bar
+              ...StyleSheet.absoluteFillObject,
+              top: -top,
+            }}
+            blurType="light"
+            blurAmount={8}
+            blurRadius={16}
+            pointerEvents="none"
+            reducedTransparencyFallbackColor="white"
+          />
+        </Animated.View>
       </View>
     );
   }, []);
 
-  const topLayer = React.useMemo(() => {
-    return (
-      <Animated.View
-        style={[
-          {marginTop: top},
-          styles.container,
-          styles.topLayer,
-          animatedOpacity,
-        ]}>
-        <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'red',
-            top: -top,
-          }}
-        />
-        <ImageButton
-          image={profileBack}
-          style={styles.buttonStyle}
-          onPress={handlePressHome}
-        />
-
-        <View style={styles.buttonRow}>
-          <ImageButton
-            image={profileScan}
-            style={styles.buttonStyle}
-            onPress={handlePressScan}
-          />
-
-          <Spacer paddingHorizontal={theme.spacing.m}>
-            <ImageButton
-              image={profileNotification}
-              style={styles.buttonStyle}
-              overlayComponent={
-                hasNotification ? (
-                  <PingAnimation
-                    size={10}
-                    color={theme.colors.desmosOrange01}
-                  />
-                ) : undefined
-              }
-              overlayPosition={{
-                top: 2,
-                left: 12,
-              }}
-              onPress={handlePressNotification}
-            />
-          </Spacer>
-
-          <ImageButton
-            image={profileSettings}
-            style={styles.buttonStyle}
-            onPress={handlePressSettings}
-          />
-        </View>
-      </Animated.View>
-    );
-  }, []);
-
   return (
-    <SafeAreaView edges={['top']}>
+    <SafeAreaView edges={['top']} style={{position: 'absolute', width: '100%'}}>
       {bottomLayer}
-      {topLayer}
     </SafeAreaView>
   );
 };

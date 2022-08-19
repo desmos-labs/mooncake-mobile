@@ -71,7 +71,7 @@ const useStyles = makeStyle(theme => ({
   },
   contentContainerStyle: {
     flexGrow: 1,
-    minHeight: Dimensions.get('screen').height,
+    minHeight: Dimensions.get('screen').height * 1.5,
     backgroundColor: theme.colors.background,
     borderTopRightRadius: 24,
     borderTopLeftRadius: 24,
