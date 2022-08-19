@@ -258,6 +258,7 @@ const PostDetails = () => {
         }
         ListHeaderComponent={<PostComponent postData={textPostData} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
+        keyExtractor={item => item.id}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         contentContainerStyle={{
