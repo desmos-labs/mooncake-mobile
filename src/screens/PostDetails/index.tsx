@@ -2,9 +2,15 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useGetPost} from '@recoil/selectedPost';
 import appSettingsState from '@recoil/settings';
-import {defaultProfilePic, followBlackIcon, moreBlackIcon} from 'assets/images';
+import {
+  defaultProfilePic,
+  followBlackIcon,
+  moreBlackIcon,
+  moreIcon,
+} from 'assets/images';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
+import PopupMenu from 'components/PopupMenu';
 import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import StickyBottomMenu from 'components/StickyBottomMenu';
@@ -50,6 +56,8 @@ const PostDetails = () => {
   const [settings] = useRecoilState(appSettingsState);
   const {post, loading, refetchPost} = useGetPost(params.postId);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [menuVisible, setMenuVisible] = React.useState(false);
+  const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
 
   const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
 
@@ -163,6 +171,13 @@ const PostDetails = () => {
             handlePress={() => {
               console.log('hello world');
             }}
+            handleLongPress={event => {
+              setAnchor({
+                x: event.nativeEvent.pageX,
+                y: event.nativeEvent.pageY,
+              });
+              setMenuVisible(true);
+            }}
             {...item}
           />
         );
@@ -255,6 +270,16 @@ const PostDetails = () => {
         leftButtonAction={() => console.log('left')}
         middleButtonAction={() => console.log('middle')}
         rightButtonAction={() => console.log('right')}
+      />
+      <PopupMenu
+        anchor={anchor}
+        visible={menuVisible}
+        closeMenu={() => setMenuVisible(false)}
+        menuItems={[
+          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+        ]}
       />
     </DView>
   );
