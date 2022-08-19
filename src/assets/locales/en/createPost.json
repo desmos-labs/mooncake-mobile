@@ -3,5 +3,6 @@
   "text": "Text",
   "accessYourPhotos": "Access your photos",
   "noAccess": "[Product] doesn't have access to your photos",
-  "allowAccess": "Allow Access"
+  "allowAccess": "Allow Access",
+  "tapToType": "Tap to type.."
 }

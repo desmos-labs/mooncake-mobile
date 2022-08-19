@@ -63,6 +63,7 @@ import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
+import CreateTextPost from 'screens/CreateTextPost';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -104,6 +105,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
   [ROUTES.SELECT_POST_TYPE]: undefined;
+  [ROUTES.CREATE_TEXT_POST]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -251,6 +253,8 @@ const RootNavigator = () => {
         name={ROUTES.SELECT_POST_TYPE}
         component={PostTypeSelection}
       />
+
+      <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
 
       {/* modals */}
       <Stack.Group
