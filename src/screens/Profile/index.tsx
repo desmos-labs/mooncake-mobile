@@ -1,15 +1,7 @@
 import React from 'react';
-import {View, Image, ActivityIndicator, FlatList} from 'react-native';
-import {
-  defaultBanner,
-  desmosIcon,
-  editButton,
-  homeButton,
-  notificationsButton,
-  settingsButton,
-} from 'assets/images';
+import {ActivityIndicator, Image, LayoutChangeEvent, View} from 'react-native';
+import {defaultBanner, desmosIcon, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import PingAnimation from 'screens/Profile/components/PingAnimation';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -22,7 +14,14 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import ProfileTopButtons from 'screens/Profile/components/ProfileTopButtons';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -43,6 +42,31 @@ const Profile = () => {
     profileData,
     loading: profileLoading,
   } = useActiveAccount();
+
+  // scroll handler start
+  const scrollProgress = useSharedValue(0);
+
+  // calculate the percentage of scroll and set it to shared value
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    const {contentOffset, contentSize, layoutMeasurement} = event;
+    const denominator = contentSize.height - layoutMeasurement.height;
+    const numerator = contentOffset.y;
+    scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
+  });
+
+  const animatedOpacity = useAnimatedStyle(() => {
+    const interpolatedOpacity = interpolate(
+      scrollProgress.value,
+      [0, 0.4],
+      [0, 1],
+      {extrapolateRight: Extrapolation.CLAMP},
+    );
+    return {opacity: interpolatedOpacity};
+  });
+
+  const onContentLayout = React.useCallback((event: LayoutChangeEvent) => {
+    console.log(event.nativeEvent.layout);
+  }, []);
 
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
@@ -117,49 +141,31 @@ const Profile = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Image
         source={cover_pic ? {uri: cover_pic} : defaultBanner}
         style={styles.bannerImage}
       />
-      <FlatList
+      <ProfileTopButtons
+        handlePressHome={goBack}
+        handlePressNotification={() => {
+          console.log('notifications');
+        }}
+        handlePressScan={() => {
+          console.log('scan');
+        }}
+        handlePressSettings={handlePressSettings}
+        hasNotification
+        animatedOpacity={animatedOpacity}
+      />
+
+      <Animated.FlatList
+        onScroll={scrollHandler}
+        style={{paddingTop: 64}}
+        onLayout={onContentLayout}
         ListHeaderComponent={
           <>
             {/* top buttons start */}
-            <View style={styles.topButtonContainer}>
-              <View>
-                <ImageButton
-                  image={homeButton}
-                  style={styles.buttonStyle}
-                  onPress={() => goBack()}
-                />
-              </View>
-
-              <View>
-                <ImageButton
-                  image={notificationsButton}
-                  style={styles.buttonStyle}
-                  overlayComponent={
-                    <PingAnimation
-                      size={10}
-                      color={theme.colors.desmosOrange01}
-                    />
-                  }
-                  overlayPosition={{
-                    top: 2,
-                    left: 12,
-                  }}
-                />
-
-                <Spacer paddingTop={theme.spacing.m}>
-                  <ImageButton
-                    image={settingsButton}
-                    style={styles.buttonStyle}
-                    onPress={handlePressSettings}
-                  />
-                </Spacer>
-              </View>
-            </View>
             {/* top buttons end */}
 
             {/* avatar needs to be in a view for positioning and ios zIndex compat */}
@@ -238,9 +244,7 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: scale(20),
         }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={EmptyPostComponent}
       />
 
@@ -254,7 +258,7 @@ const Profile = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </SafeAreaView>
+    </View>
   );
 };
 

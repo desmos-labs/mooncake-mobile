@@ -1,19 +1,10 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.backgroundGrey,
-  },
-  topButtonContainer: {
-    padding: theme.spacing.m,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonStyle: {
-    width: 32,
-    height: 32,
   },
   avatarContainer: {
     zIndex: 2,
@@ -28,10 +19,7 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
   },
   contentGroup: {
-    backgroundColor: theme.colors.background,
-    borderTopRightRadius: 24,
-    borderTopLeftRadius: 24,
-    marginTop: theme.spacing.m,
+    overflow: 'hidden',
     flexGrow: 1,
     paddingTop: theme.spacing.m,
     paddingBottom: theme.spacing.s,
@@ -67,8 +55,8 @@ const useStyles = makeStyle(theme => ({
   bannerImage: {
     position: 'absolute',
     width: '100%',
-    resizeMode: 'stretch',
-    height: 200,
+    resizeMode: 'cover',
+    height: Dimensions.get('window').height * 0.7,
   },
   tabContainer: {
     flexGrow: 1,
@@ -80,6 +68,13 @@ const useStyles = makeStyle(theme => ({
   snackbar: {
     zIndex: 2,
     backgroundColor: theme.colors.surface,
+  },
+  contentContainerStyle: {
+    flexGrow: 1,
+    minHeight: Dimensions.get('screen').height,
+    backgroundColor: theme.colors.background,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
   },
 }));
 

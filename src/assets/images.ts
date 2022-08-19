@@ -165,6 +165,14 @@ export const postBG = [
   require('./images/postBG/postBG11.png'),
 ]
 
+export const profileScan = require('./images/profileScan.png');
+
+export const profileNotification = require('./images/profileNotification.png');
+
+export const profileBack = require('./images/profileBack.png');
+
+export const profileSettings = require('./images/profileSettings.png');
+
 // Socials
 
 export const discordIcon = require('./images/discord.png');
