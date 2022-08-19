@@ -24,7 +24,7 @@ const TipItem = ({tipAmount, avatar, nickname, dTag, timestamp}: Props) => {
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => true}>
       <Image source={avatar} style={styles.avatarStyle} />
 
       <View style={styles.textGroup}>

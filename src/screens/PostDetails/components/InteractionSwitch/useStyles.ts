@@ -9,26 +9,19 @@ export type StyleProp = {
  */
 const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
   container: {
-    marginVertical: theme.spacing.s,
+    flex: 1,
+    marginVertical: theme.spacing.m,
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    borderRadius: 14,
-    overflow: 'hidden',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   tabIndicator: {
     height: '100%',
-    position: 'absolute',
-    left: '0%',
     borderRadius: 14,
-    overflow: 'hidden',
   },
   tabButton: {
-    flex: 1,
-    marginHorizontal: 8,
     height: '100%',
-    padding: 10,
-    alignItems: 'center',
+    alignContent: 'center',
   },
   buttonText: {
     textAlign: 'center',

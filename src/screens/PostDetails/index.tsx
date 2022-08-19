@@ -26,7 +26,11 @@ import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
+import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -46,6 +50,8 @@ const PostDetails = () => {
   const [settings] = useRecoilState(appSettingsState);
   const {post, loading, refetchPost} = useGetPost(params.postId);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
 
   useEffect(() => {
     if (!loading) {
@@ -124,39 +130,6 @@ const PostDetails = () => {
     [],
   );
 
-  const textPostData: PostItem = {
-    creation_date: '2022-06-30T17:06:47.475817',
-    author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-    attachments: [],
-    author: {
-      address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-      bio: '',
-      dtag: 'Donatello',
-      profile_pic: 'https://i.imgur.com/aih9snA.png',
-      nickname: 'Nickname',
-    },
-    subspace_id: 5,
-    reactions: [],
-    text: "I'm a ninja turtle that is a teenager. I'm a ninja turtle that is a teenager. ",
-    conversation: null,
-    id: 3,
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const imagePostData: PostItem = {
-    ...textPostData,
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?w=1480&t=st=1660739347~exp=1660739947~hmac=a5b2dafae9c087fb414785c0bbf1f253147fe07756b2289aedae4478fb8ef231',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-  };
-
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (index === 0) {
@@ -172,26 +145,53 @@ const PostDetails = () => {
           />
         );
       }
-      return (
-        <CommentItem
-          handlePressMore={() => {
-            console.log('hello world');
-          }}
-          handlePressComment={() => {
-            console.log('hello world');
-          }}
-          handlePressLike={() => {
-            console.log('hello world');
-          }}
-          handlePressTip={() => {
-            console.log('hello world');
-          }}
-          handlePress={() => {
-            console.log('hello world');
-          }}
-          {...item}
-        />
-      );
+      if (selectedIndex === 0) {
+        return (
+          <CommentItem
+            handlePressMore={() => {
+              console.log('hello world');
+            }}
+            handlePressComment={() => {
+              console.log('hello world');
+            }}
+            handlePressLike={() => {
+              console.log('hello world');
+            }}
+            handlePressTip={() => {
+              console.log('hello world');
+            }}
+            handlePress={() => {
+              console.log('hello world');
+            }}
+            {...item}
+          />
+        );
+      } else if (selectedIndex === 1) {
+        return (
+          <ReactionItem
+            nickname={item.nickname}
+            dTag={item.dTag}
+            avatar={item.avatar}
+            handlePressFollow={() => {
+              console.log('follow');
+            }}
+            handlePressUnfollow={() => {
+              console.log('unfollow');
+            }}
+            followed={item.followed}
+          />
+        );
+      } else {
+        return (
+          <TipItem
+            tipAmount={item.tipAmount}
+            avatar={item.avatar}
+            nickname={item.nickname}
+            dTag={item.dTag}
+            timestamp={item.timestamp}
+          />
+        );
+      }
     },
     [selectedIndex],
   );
@@ -241,9 +241,11 @@ const PostDetails = () => {
         refreshing={loading}
         onRefresh={refetchPost}
         ListHeaderComponent={<PostComponent postData={textPostData} />}
+        ItemSeparatorComponent={ItemSeparatorComponent}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         contentContainerStyle={{
+          paddingBottom: theme.spacing.l,
           paddingHorizontal: theme.spacing.m,
           flexGrow: 1,
         }}
@@ -257,50 +259,5 @@ const PostDetails = () => {
     </DView>
   );
 };
-
-const DUMMY_AUTHOR: PostAuthor = {
-  nickname: 'Shrek',
-  dtag: 'SwampyBoi',
-  address: '123test123',
-  bio: 'get out of my swamp',
-  profile_pic: '',
-};
-
-const defaultProps = {
-  avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-  nickname: 'Shrek',
-  dTag: 'Swampyboi',
-  numComments: 1,
-  numReactions: 2,
-  numTips: 0,
-  timestamp: '2022-07-03T16:00:40.08408',
-  text: 'Lorem ipsum dolor sit amet, rices in iaculis nunc sed augue lacus, viverra vitae congue eu, consequat ac felis donec et odio pellent',
-};
-
-const imageCommentProps = {
-  ...defaultProps,
-  attachments: [
-    {
-      id: 1,
-      content: {
-        uri: 'https://i.imgur.com/aih9snA.png',
-        '@type': '/desmos.posts.v1.Media',
-        mime_type: 'image/png',
-      },
-    },
-  ],
-};
-
-const likedCommentProps = {
-  ...defaultProps,
-  liked: true,
-};
-
-const DUMMY_COMMENTS = [
-  defaultProps,
-  likedCommentProps,
-  imageCommentProps,
-  defaultProps,
-];
 
 export default PostDetails;
