@@ -13,6 +13,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Animated, {
   Extrapolation,
   interpolate,
+  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {BlurView} from '@react-native-community/blur';
@@ -28,19 +29,32 @@ type Props = {
 
   handlePressScan: () => void;
 
+  /**
+   * Whether to show the pinging animation on the notification button.
+   */
   hasNotification?: boolean;
 
+  /**
+   * The string that will fade-in on the center of the header.
+   */
   username: string;
 
+  /**
+   * The user's banner image which will be used as fill-color for the blur.
+   */
   bannerImage: ImageSourcePropType;
 
-  scrollProgress: any;
+  /**
+   * The animation driver. It should be a progress calculated from the y-offset
+   * of a scrollview on the parent component.
+   */
+  scrollProgress: SharedValue<number>;
 };
 
 /**
  * The Back, scan, notification, and settings button found on the profile screen.
  */
-const ProfileTopButtons = ({
+const ProfileHeader = ({
   handlePressHome,
   handlePressNotification,
   hasNotification,
@@ -63,6 +77,9 @@ const ProfileTopButtons = ({
     return {opacity: interpolatedOpacity};
   });
 
+  // The scan button is the only button that gets covered by the blurred
+  // background, so we need to switch out the z-index before the background
+  // has completely faded-in
   const animatedScanButtonStyle = useAnimatedStyle(() => {
     const interpolatedOpacity = interpolate(
       scrollProgress.value,
@@ -90,6 +107,9 @@ const ProfileTopButtons = ({
           />
         </View>
 
+        {/* each of the buttons are have position:'absolute' as wrapping them in */}
+        {/* a horizontal flexbox would not work as only the scanButton will get */}
+        {/* hidden by the blurred background (zIndex issues) */}
         <Animated.View
           style={[
             animatedScanButtonStyle,
@@ -154,4 +174,4 @@ const ProfileTopButtons = ({
   );
 };
 
-export default ProfileTopButtons;
+export default ProfileHeader;
