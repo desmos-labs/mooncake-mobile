@@ -18,8 +18,8 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import ProfileTopButtons from 'screens/Profile/components/ProfileTopButtons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ProfileHeader from './components/ProfileHeader';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -96,10 +96,6 @@ const Profile = () => {
 
   const {top} = useSafeAreaInsets();
 
-  if (profileLoading || postsLoading) {
-    return <ActivityIndicator />;
-  }
-
   const {
     address,
     bio,
@@ -110,6 +106,18 @@ const Profile = () => {
     following,
     followage,
   } = profileData as ProfileData;
+
+  const bannerImage = React.useMemo(() => {
+    return cover_pic ? {uri: cover_pic} : defaultBanner;
+  }, [cover_pic]);
+
+  const profileImage = React.useMemo(() => {
+    return profile_pic ? {uri: profile_pic} : desmosIcon;
+  }, [profile_pic]);
+
+  if (profileLoading || postsLoading) {
+    return <ActivityIndicator />;
+  }
 
   const {post} = postData;
 
@@ -128,10 +136,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={cover_pic ? {uri: cover_pic} : defaultBanner}
-        style={styles.bannerImage}
-      />
+      <Image source={bannerImage} style={styles.bannerImage} />
 
       <Animated.FlatList
         onScroll={scrollHandler}
@@ -143,10 +148,7 @@ const Profile = () => {
 
             {/* avatar needs to be in a view for positioning and ios zIndex compat */}
             <View style={styles.avatarContainer}>
-              <Image
-                style={styles.avatar}
-                source={profile_pic ? {uri: profile_pic} : desmosIcon}
-              />
+              <Image style={styles.avatar} source={profileImage} />
             </View>
 
             <View style={styles.contentGroup}>
@@ -221,7 +223,7 @@ const Profile = () => {
         ListEmptyComponent={EmptyPostComponent}
       />
 
-      <ProfileTopButtons
+      <ProfileHeader
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
         handlePressNotification={() => {
@@ -232,6 +234,8 @@ const Profile = () => {
         }}
         handlePressSettings={handlePressSettings}
         hasNotification
+        username={nickname || `@${dtag}`}
+        bannerImage={bannerImage}
       />
 
       <Snackbar

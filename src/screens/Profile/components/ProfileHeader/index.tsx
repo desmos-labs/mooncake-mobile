@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, ImageSourcePropType, StyleSheet, View} from 'react-native';
 import ImageButton from 'components/ImageButton';
 import {
   profileBack,
@@ -9,13 +9,14 @@ import {
 } from 'assets/images';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import {useTheme} from 'react-native-paper';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {BlurView} from '@react-native-community/blur';
+import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
 type Props = {
@@ -28,6 +29,10 @@ type Props = {
   handlePressScan: () => void;
 
   hasNotification?: boolean;
+
+  username: string;
+
+  bannerImage: ImageSourcePropType;
 
   scrollProgress: any;
 };
@@ -42,13 +47,13 @@ const ProfileTopButtons = ({
   handlePressScan,
   handlePressSettings,
   scrollProgress,
+  bannerImage,
+  username,
 }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
 
-  const {top} = useSafeAreaInsets();
-
-  const animatedOpacity = useAnimatedStyle(() => {
+  const animatedOpacityStyle = useAnimatedStyle(() => {
     const interpolatedOpacity = interpolate(
       scrollProgress.value,
       [0, 0.4],
@@ -71,8 +76,8 @@ const ProfileTopButtons = ({
     return {zIndex: 2};
   });
 
-  const bottomLayer = React.useMemo(() => {
-    return (
+  return (
+    <SafeAreaView edges={['top']} style={styles.safeAreaView}>
       <View style={styles.container}>
         <View
           style={{
@@ -88,12 +93,8 @@ const ProfileTopButtons = ({
         <Animated.View
           style={[
             animatedScanButtonStyle,
-            {
-              position: 'absolute',
-              top: 16,
-              right: 32 * 4,
-              zIndex: 2,
-            },
+            styles.buttonWrapper,
+            {right: 32 * 4},
           ]}>
           <ImageButton
             image={profileScan}
@@ -102,13 +103,7 @@ const ProfileTopButtons = ({
           />
         </Animated.View>
 
-        <View
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 32 * 2 + 16,
-            zIndex: 2,
-          }}>
+        <View style={[styles.buttonWrapper, {right: 32 * 2 + 16}]}>
           <ImageButton
             image={profileNotification}
             style={styles.buttonStyle}
@@ -125,27 +120,21 @@ const ProfileTopButtons = ({
           />
         </View>
 
-        <View
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 32,
-            zIndex: 2,
-          }}>
+        <View style={[styles.buttonWrapper, {right: 32}]}>
           <ImageButton
             image={profileSettings}
             style={styles.buttonStyle}
             onPress={handlePressSettings}
           />
         </View>
-        <Animated.View style={[StyleSheet.absoluteFillObject, animatedOpacity]}>
+        <Animated.View style={[styles.blurContainer, animatedOpacityStyle]}>
+          <Image
+            source={bannerImage}
+            resizeMode="contain"
+            style={[StyleSheet.absoluteFillObject, {opacity: 0.5}]}
+          />
           <BlurView
-            style={{
-              // offset the safearea top margin so the background can cover
-              // the status bar
-              ...StyleSheet.absoluteFillObject,
-              top: -top,
-            }}
+            style={StyleSheet.absoluteFillObject}
             blurType="light"
             blurAmount={8}
             blurRadius={16}
@@ -153,13 +142,14 @@ const ProfileTopButtons = ({
             reducedTransparencyFallbackColor="white"
           />
         </Animated.View>
-      </View>
-    );
-  }, []);
 
-  return (
-    <SafeAreaView edges={['top']} style={{position: 'absolute', width: '100%'}}>
-      {bottomLayer}
+        <Animated.View
+          style={[animatedOpacityStyle, styles.usernameContainerStyle]}>
+          <Typography.Subtitle2 style={styles.usernameStyle}>
+            {username}
+          </Typography.Subtitle2>
+        </Animated.View>
+      </View>
     </SafeAreaView>
   );
 };
