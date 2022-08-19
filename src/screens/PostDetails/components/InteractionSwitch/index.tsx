@@ -1,3 +1,4 @@
+import {formatNumShorthand} from 'lib/FormatUtils';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Typography from 'components/Typography';
@@ -42,7 +43,7 @@ const InteractionSwitch = ({
               styles.buttonText,
               idx === selectedIndex ? styles.selected : styles.unselected,
             ]}>
-            {section.sectionName} {section.counter}
+            {section.sectionName} {formatNumShorthand(section.counter)}
           </Typography.Button2>
 
           {selectedIndex === idx && <View style={styles.selectedIndicator} />}

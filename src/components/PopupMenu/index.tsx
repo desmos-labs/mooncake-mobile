@@ -22,10 +22,7 @@ const PopupMenu: React.FC<Props> = ({
   return (
     <Menu visible={visible} onDismiss={closeMenu} anchor={anchor}>
       {menuItems.map((item, index) => {
-        let last = false;
-        if (index === menuItems.length - 1) {
-          last = true;
-        }
+        const last = index === menuItems.length - 1;
         return (
           <>
             <TouchableOpacity style={styles.item}>

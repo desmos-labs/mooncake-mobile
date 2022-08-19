@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   containerCenter: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   containerRight: {

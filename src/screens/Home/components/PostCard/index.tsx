@@ -126,13 +126,6 @@ const PostCard = ({
                 imageSrc={followIcon}
                 onPress={onPressFollow}
               />
-
-              <Spacer paddingTop={theme.spacing.m}>
-                <ProfileHeaderButton
-                  imageSrc={blogDetails}
-                  onPress={onPressDetails}
-                />
-              </Spacer>
             </View>
           </View>
         </>
@@ -188,10 +181,10 @@ const PostCard = ({
   }, [postType]);
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPressDetails}>
       {AttachmentImage}
       {content}
-    </View>
+    </TouchableOpacity>
   );
 };
 

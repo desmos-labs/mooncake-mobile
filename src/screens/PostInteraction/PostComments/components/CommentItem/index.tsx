@@ -109,7 +109,7 @@ const CommentItem = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      onLongPress={event => handleLongPress(event)}
+      onLongPress={handleLongPress}
       activeOpacity={0.8}
       style={[styles.container, styles.flexRow]}>
       <Image source={avatar} style={styles.avatar} />

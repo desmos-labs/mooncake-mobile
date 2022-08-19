@@ -1,3 +1,4 @@
+import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
 import {View, Image, ActivityIndicator, TextInput} from 'react-native';
@@ -62,6 +63,14 @@ const EnterComment = () => {
     );
   }, [image, reply]);
 
+  const TopBarCenterElement = React.useMemo(() => {
+    return (
+      <Typography.Body7 style={{flex: 1, textAlign: 'center'}}>
+        hello world
+      </Typography.Body7>
+    );
+  }, []);
+
   return (
     <>
       <DView
@@ -69,7 +78,7 @@ const EnterComment = () => {
         topBar={
           <TopBar
             style={styles.topBar}
-            centerText="hello world"
+            centerElement={TopBarCenterElement}
             rightElement={TopBarRightElement}
           />
         }>

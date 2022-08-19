@@ -1,10 +1,10 @@
+import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useGetPost} from '@recoil/selectedPost';
 import appSettingsState from '@recoil/settings';
 import {
   defaultProfilePic,
-  followBlackIcon,
+  followOrangeIcon,
   moreBlackIcon,
   moreIcon,
 } from 'assets/images';
@@ -24,10 +24,8 @@ import {
   ActivityIndicator,
   FlatList,
   ListRenderItemInfo,
-  StyleSheet,
   View,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
@@ -36,6 +34,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
+import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -46,6 +45,7 @@ export type NavProps = StackScreenProps<
 
 export type PostDetailsParams = {
   postId: number;
+  subspaceID: number;
 };
 
 const PostDetails = () => {
@@ -54,7 +54,12 @@ const PostDetails = () => {
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [settings] = useRecoilState(appSettingsState);
-  const {post, loading, refetchPost} = useGetPost(params.postId);
+  const {data, loading, refetch} = useQuery(GetPostBySubspaceIDandPostID, {
+    variables: {
+      ID: params.postId,
+      subspaceID: params.subspaceID,
+    },
+  });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
@@ -63,21 +68,26 @@ const PostDetails = () => {
 
   useEffect(() => {
     if (!loading) {
-      console.log(post);
+      console.log(data.posts[0]);
     }
-  }, [post]);
+  }, [data]);
 
   const formattedDate = useMemo(
-    () => utcToZonedTime(post?.creation_date!, settings.currentTimezone),
-    [post],
+    () =>
+      utcToZonedTime(data?.posts[0].creation_date!, settings.currentTimezone),
+    [data],
   );
 
   const Avatar = React.useMemo(() => {
-    if (post?.author.profile_pic) {
-      return <ProfileHeaderButton imageSrc={{uri: post.author.profile_pic}} />;
+    if (data?.posts[0].author.profile_pic) {
+      return (
+        <ProfileHeaderButton
+          imageSrc={{uri: data?.posts[0].author.profile_pic}}
+        />
+      );
     }
     return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
-  }, [post?.author.profile_pic]);
+  }, [data?.posts[0].author.profile_pic]);
 
   const MiddleElement = useMemo(
     () => (
@@ -91,14 +101,14 @@ const PostDetails = () => {
             minWidth: 160,
           }}>
           <Typography.Subtitle3 numberOfLines={1}>
-            {post?.author.nickname || `@${post?.author.dtag}`}
+            {data?.posts[0].author.nickname || `@${data?.posts[0].author.dtag}`}
           </Typography.Subtitle3>
           {/* temporary */}
           <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
         </View>
       </View>
     ),
-    [post],
+    [data?.posts[0]],
   );
 
   const RightElement = useMemo(
@@ -107,21 +117,10 @@ const PostDetails = () => {
         <ImageButton
           style={{
             zIndex: 1,
-            width: 36,
-            height: 36,
-            tintColor: theme.colors.white,
+            width: 24,
+            height: 24,
           }}
-          overlayComponent={
-            <LinearGradient
-              style={{
-                flex: 1,
-                ...StyleSheet.absoluteFillObject,
-                borderRadius: 36,
-              }}
-              colors={theme.colors.dOrangeGradient01}
-            />
-          }
-          image={followBlackIcon}
+          image={followOrangeIcon}
           onPress={() => console.log('add')}
         />
         <ImageButton
@@ -233,7 +232,7 @@ const PostDetails = () => {
     );
   }, []);
 
-  return !post || loading ? (
+  return !data?.posts[0] || loading ? (
     <ActivityIndicator />
   ) : (
     <DView
@@ -254,7 +253,9 @@ const PostDetails = () => {
       <FlatList
         scrollEnabled={true}
         refreshing={loading}
-        onRefresh={refetchPost}
+        onRefresh={() =>
+          refetch({ID: params.postId, subspaceID: params.subspaceID})
+        }
         ListHeaderComponent={<PostComponent postData={textPostData} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         ListEmptyComponent={ListEmptyComponent}

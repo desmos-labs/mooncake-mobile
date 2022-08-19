@@ -140,6 +140,8 @@ export const commentLiked = require('./images/commentLiked.png');
 
 export const followBlackIcon = require('./images/followBlackIcon.png');
 
+export const followOrangeIcon = require('./images/followOrangeIcon.png');
+
 export const moreBlackIcon = require('./images/moreBlackIcon.png');
 
 export const galleryIcon = require('./images/galleryIcon.png');

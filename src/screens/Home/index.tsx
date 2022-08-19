@@ -65,7 +65,9 @@ const Home = () => {
         <PostCard
           postData={info.item}
           onPressAuthor={() => handlePressAuthor('')}
-          onPressDetails={() => handlePressDetails(info.item.id)}
+          onPressDetails={() =>
+            handlePressDetails(info.item.id, info.item.subspace_id)
+          }
           onPressFollow={() => handlePressFollow('')}
         />
       );

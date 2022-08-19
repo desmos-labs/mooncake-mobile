@@ -1,7 +1,7 @@
 import {makeStyle} from 'config/theme';
 
 /**
- * Style hook for the InteractionButton component
+ * Style hook for the MenuButton component
  */
 const useStyles = makeStyle(theme => ({
   container: {
