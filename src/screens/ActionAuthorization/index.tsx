@@ -49,6 +49,7 @@ const ActionAuthorization = () => {
 
   const handleApprove = React.useCallback(() => {
     // do approve things here
+    goBack();
 
     // run onApprove last
     onApprove && onApprove();

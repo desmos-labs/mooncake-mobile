@@ -8,9 +8,9 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: theme.spacing.m,
   },
   innerContainer: {
-    alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: theme.spacing.l,
     paddingTop: theme.spacing.m,
@@ -36,10 +36,15 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.l,
+    alignSelf: 'center',
   },
   subtitleText: {
     marginTop: theme.spacing.s,
     marginBottom: theme.spacing.xl,
+  },
+  textStyle: {
+    color: theme.colors.surfaceBlack,
+    textAlign: 'center',
   },
   primaryButtonText: {
     color: theme.colors.white,

@@ -137,7 +137,7 @@ const EnterPassword = () => {
                   _.flatten(Object.values(errors)).length > 0
                 }
                 onPress={handleSubmit}
-                mode="contained">
+                mode="gradientFilled">
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:confirm')}
                 </Typography.Button1>

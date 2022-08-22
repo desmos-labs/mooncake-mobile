@@ -138,6 +138,8 @@ export const commentComment = require('./images/commentComment.png');
 
 export const commentLiked = require('./images/commentLiked.png');
 
+export const followedButton = require('./images/followedIcon.png');
+
 export const followBlackIcon = require('./images/followBlackLight.png');
 
 export const reportIcon = require('./images/report.png');
@@ -158,7 +160,30 @@ export const textPostIcon = require('./images/textPost.png');
 
 export const whiteCross = require('./images/whiteCross.png');
 
-//Socials
+// array of images
+export const postBG = [
+  require('./images/postBG/postBG1.png'),
+  require('./images/postBG/postBG2.png'),
+  require('./images/postBG/postBG3.png'),
+  require('./images/postBG/postBG4.png'),
+  require('./images/postBG/postBG5.png'),
+  require('./images/postBG/postBG6.png'),
+  require('./images/postBG/postBG7.png'),
+  require('./images/postBG/postBG8.png'),
+  require('./images/postBG/postBG9.png'),
+  require('./images/postBG/postBG10.png'),
+  require('./images/postBG/postBG11.png'),
+]
+
+export const profileScan = require('./images/profileScan.png');
+
+export const profileNotification = require('./images/profileNotification.png');
+
+export const profileBack = require('./images/profileBack.png');
+
+export const profileSettings = require('./images/profileSettings.png');
+
+// Socials
 
 export const discordIcon = require('./images/discord.png');
 

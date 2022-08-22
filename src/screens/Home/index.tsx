@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, View, LogBox} from 'react-native';
+import {Dimensions, LogBox, View} from 'react-native';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import {
   commentIcon,
@@ -57,7 +57,7 @@ const Home = () => {
   const {profileData} = useActiveAccount();
 
   const renderPost = React.useCallback(
-    (info: CarouselRenderItemInfo<any>) => {
+    (info: CarouselRenderItemInfo<PostItem>) => {
       if (info.index === postData.length) {
         return <NoMorePosts />;
       }
@@ -68,11 +68,11 @@ const Home = () => {
           onPressDetails={() =>
             handlePressDetails(info.item.id, info.item.subspace_id)
           }
-          onPressFollow={() => handlePressFollow('')}
+          onPressFollow={() => handlePressFollow(info.item.author_address)}
         />
       );
     },
-    [postData],
+    [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
   const swipeUpGesture = React.useMemo(
