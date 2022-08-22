@@ -52,7 +52,7 @@ const PostTips = () => {
     );
   }, []);
 
-  const ListFooterComponent = React.useCallback(() => {
+  const ListFooterComponent = React.useMemo(() => {
     return (
       <Button mode="gradientFilled" onPress={handlePressTip}>
         {t('tip')}

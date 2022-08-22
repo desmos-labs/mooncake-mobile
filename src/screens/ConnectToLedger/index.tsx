@@ -24,6 +24,7 @@ import {useSetRecoilState} from 'recoil';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import {pairDevicesAnim} from 'assets/animations';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -176,7 +177,7 @@ const ConnectToLedger = () => {
         <>
           <Spacer paddingBottom={theme.spacing.l}>
             <ThemedLottieView
-              source="connect-to-ledger"
+              source={pairDevicesAnim}
               style={styles.lottieAnimation}
               autoPlay
               loop
@@ -243,7 +244,7 @@ const ConnectToLedger = () => {
       <View style={styles.centeredGroup}>
         <Spacer paddingBottom={theme.spacing.l}>
           <ThemedLottieView
-            source="connect-to-ledger"
+            source={pairDevicesAnim}
             style={styles.lottieAnimation}
             autoPlay
             loop

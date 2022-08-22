@@ -17,3 +17,8 @@ export const broadcastAnim: LottieAnimation = {
   // TODO: REPLACE WITH DARK ANIMATION ONCE READY
   dark: require('./animations/broadcast-tx-light.json'),
 }
+
+export const buildingBlockAnim: LottieAnimation = {
+  light: require('./animations/buildingBlocks.json'),
+  dark: require('./animations/buildingBlocks.json')
+}

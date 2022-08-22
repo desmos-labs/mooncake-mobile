@@ -75,6 +75,10 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     flex: 0.75,
   },
+  loadingAnim: {
+    width: 24,
+    height: 24,
+  },
 }));
 
 export default useStyles;

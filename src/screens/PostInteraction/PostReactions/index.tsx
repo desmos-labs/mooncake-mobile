@@ -33,7 +33,7 @@ const PostReactions = () => {
     );
   }, []);
 
-  const ListEmptyComponent = React.useCallback(() => {
+  const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label={t('noReactions')} />;
   }, []);
 

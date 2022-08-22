@@ -65,18 +65,16 @@ const ResultModal = () => {
           onPress={onDismiss || goBack}>
           <Image style={styles.dismissButtonImage} source={iconCross} />
         </TouchableOpacity>
-        <Typography.H5>{title}</Typography.H5>
+        <Typography.H5 style={styles.textStyle}>{title}</Typography.H5>
         <Image style={styles.image} source={image || modalSuccess} />
-        <Typography.Body5 style={styles.subtitleText}>
+        <Typography.Body5 style={[styles.textStyle, styles.subtitleText]}>
           {subtitle}
         </Typography.Body5>
         <Button
           style={styles.primaryButton}
-          mode="contained"
+          mode="gradientFilled"
           onPress={onPressPrimary || goBack}>
-          <Typography.Subtitle1 style={styles.primaryButtonText}>
-            {primaryButtonLabel}
-          </Typography.Subtitle1>
+          {primaryButtonLabel}
         </Button>
       </View>
     </View>

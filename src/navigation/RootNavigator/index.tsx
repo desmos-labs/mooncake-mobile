@@ -61,6 +61,9 @@ import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import PostTypeSelection from 'screens/PostTypeSelection';
+import CreateTextPost from 'screens/CreateTextPost';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -100,6 +103,9 @@ export type RootNavigatorParamList = {
   [ROUTES.REPORT_POST]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
+  [ROUTES.ENTER_COMMENT]: EnterCommentParams;
+  [ROUTES.SELECT_POST_TYPE]: undefined;
+  [ROUTES.CREATE_TEXT_POST]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -229,6 +235,28 @@ const RootNavigator = () => {
         component={ConnectChainTxDetail}
       />
 
+      <Stack.Screen
+        name={ROUTES.CONNECT_CHAIN_METHOD}
+        component={ConnectChainMethod}
+      />
+
+      <Stack.Screen
+        initialParams={{
+          author: {} as any,
+          postId: '123123',
+        }}
+        name={ROUTES.ENTER_COMMENT}
+        component={EnterComment}
+      />
+
+      <Stack.Screen
+        name={ROUTES.SELECT_POST_TYPE}
+        component={PostTypeSelection}
+      />
+
+      <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+
+      {/* modals */}
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -300,10 +328,7 @@ const RootNavigator = () => {
         />
       </Stack.Group>
 
-      <Stack.Screen
-        name={ROUTES.CONNECT_CHAIN_METHOD}
-        component={ConnectChainMethod}
-      />
+      {/* modals end */}
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}

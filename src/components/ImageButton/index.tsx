@@ -7,9 +7,10 @@ import {
   Image,
   StyleProp,
   ImageStyle,
+  TouchableOpacityProps,
 } from 'react-native';
 
-type Props = {
+interface Props extends TouchableOpacityProps {
   /**
    * The source of the image.
    */
@@ -19,11 +20,6 @@ type Props = {
    * The image's style.
    */
   style?: StyleProp<ImageStyle>;
-
-  /**
-   * What to do when the button is pressed.
-   */
-  onPress?: () => void;
 
   /**
    * A component that will be rendered on top of the image.
@@ -41,17 +37,32 @@ type Props = {
     bottom?: number;
     right?: number;
   };
-};
+
+  hitSlopValue?: number;
+}
 
 const ImageButton = ({
   image,
   style,
-  onPress,
   overlayComponent,
   overlayPosition,
+  hitSlopValue,
+  ...rest
 }: Props) => {
+  const hitSlop = hitSlopValue
+    ? {
+        top: hitSlopValue,
+        bottom: hitSlopValue,
+        right: hitSlopValue,
+        left: hitSlopValue,
+      }
+    : undefined;
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      style={{opacity: rest.disabled ? 0.3 : 1}}
+      hitSlop={hitSlop}
+      {...rest}>
       <Image style={style} source={image} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>
