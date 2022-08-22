@@ -6,9 +6,7 @@ declare global {
   /**
    * Typings for the App Authorizations that are stored on device
    */
-  type MMKVAppAuthorization = {
-    [index: string]: {
-      [key in APP_AUTHORIZATIONS]?: boolean;
-    };
+  type AppAuthorizationType = {
+    [key in APP_AUTHORIZATIONS]?: boolean;
   };
 }

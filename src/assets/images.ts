@@ -138,6 +138,9 @@ export const commentComment = require('./images/commentComment.png');
 
 export const commentLiked = require('./images/commentLiked.png');
 
+export const followedButton = require('./images/followedIcon.png');
+
+//Socials
 export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');

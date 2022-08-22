@@ -6,6 +6,7 @@ import {getAccounts} from 'lib/SecureStorage';
 
 /**
  * WIP hook to retrieve the user's most recent active account
+ *
  */
 const useActiveAccount = () => {
   const [chainAccount, setChainAccount] = React.useState<ChainAccount>();
@@ -21,11 +22,14 @@ const useActiveAccount = () => {
         const _currentChainAccount = _chainAccounts.find(
           x => x.address === activeAddress,
         );
+        console.log(_currentChainAccount);
         setChainAccount(_currentChainAccount);
       }
     };
 
-    loadChainAccount();
+    if (activeAddress) {
+      loadChainAccount();
+    }
   }, [activeAddress]);
 
   const {profileData, loading} = useGetProfileData(activeAddress || '');

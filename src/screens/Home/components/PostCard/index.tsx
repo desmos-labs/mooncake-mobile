@@ -3,7 +3,7 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Typography from 'components/Typography';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
-import {blogDetails, followIcon} from 'assets/images';
+import {blogDetails, followedButton, followIcon} from 'assets/images';
 import {useTheme} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import useStyles from './useStyles';
@@ -28,6 +28,11 @@ type Props = {
    * What to do if the post details button is pressed.
    */
   onPressDetails: () => void;
+
+  /**
+   * Is the user following the author?
+   */
+  followed?: boolean;
 };
 
 enum POST_TYPE {
@@ -42,6 +47,7 @@ const PostCard = ({
   onPressAuthor,
   onPressFollow,
   onPressDetails,
+  followed,
 }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
@@ -123,7 +129,7 @@ const PostCard = ({
 
             <View>
               <ProfileHeaderButton
-                imageSrc={followIcon}
+                imageSrc={followed ? followedButton : followIcon}
                 onPress={onPressFollow}
               />
 
@@ -185,7 +191,7 @@ const PostCard = ({
         </View>
       );
     }
-  }, [postType]);
+  }, [followed, postType, onPressFollow]);
 
   return (
     <View style={styles.container}>

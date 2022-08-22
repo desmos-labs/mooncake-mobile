@@ -54,8 +54,10 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressFollow = React.useCallback((address: string) => {
-    console.log(address);
+  const handlePressFollow = React.useCallback(async (address: string) => {
+    const followedAddresses = following.map(x => x.address);
+
+    console.log(followedAddresses, address);
   }, []);
 
   const handlePressDetails = React.useCallback((postId: string) => {
