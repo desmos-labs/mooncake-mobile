@@ -114,7 +114,7 @@ const ProfileHeader = ({
           style={[
             animatedScanButtonStyle,
             styles.buttonWrapper,
-            {right: 32 * 4},
+            {right: (theme.spacing.m as number) * 7},
           ]}>
           <ImageButton
             image={profileScan}
@@ -123,7 +123,11 @@ const ProfileHeader = ({
           />
         </Animated.View>
 
-        <View style={[styles.buttonWrapper, {right: 32 * 2 + 16}]}>
+        <View
+          style={[
+            styles.buttonWrapper,
+            {right: (theme.spacing.m as number) * 4},
+          ]}>
           <ImageButton
             image={profileNotification}
             style={styles.buttonStyle}
@@ -140,7 +144,7 @@ const ProfileHeader = ({
           />
         </View>
 
-        <View style={[styles.buttonWrapper, {right: 32}]}>
+        <View style={[styles.buttonWrapper, {right: theme.spacing.m}]}>
           <ImageButton
             image={profileSettings}
             style={styles.buttonStyle}
