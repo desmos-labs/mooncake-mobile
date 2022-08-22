@@ -14,19 +14,34 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 type Props = {
+  /**
+   * Action to execute when the gallery icon is pressed
+   */
   handlePressGallery: () => void;
-
+  /**
+   * Action to execute when the camera icon is pressed
+   */
   handlePressCamera: () => void;
-
+  /**
+   * Action to execute when the mention icon is pressed
+   */
   handlePressMention: () => void;
-
+  /**
+   * Actual length of the comment
+   */
   commentLength: number;
-
+  /**
+   * If the image is selected
+   */
   imageSelected: boolean;
-
+  /**
+   * Optional style
+   */
   style?: StyleProp<ImageStyle>;
-
-  rightButton?: React.ReactNode;
+  /**
+   * Optional right component (usefull for the EnterCommentBottomBar)
+   */
+  rightComponent?: React.ReactNode;
 };
 
 const MediaBottomPanel = ({
@@ -35,7 +50,7 @@ const MediaBottomPanel = ({
   handlePressMention,
   commentLength,
   imageSelected,
-  rightButton,
+  rightComponent,
   style,
 }: Props) => {
   const styles = useStyles();
@@ -75,7 +90,7 @@ const MediaBottomPanel = ({
             max={EnvConfig.MAX_COMMENT_LENGTH}
             current={commentLength}
           />
-          {rightButton}
+          {rightComponent}
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>

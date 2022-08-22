@@ -20,7 +20,13 @@ import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
 export type Props = {
+  /**
+   * Source of the image to display
+   */
   profileImage: React.ComponentProps<typeof ProfileHeaderButton>['imageSrc'];
+  /**
+   * Action to execute when the right icon is pressed
+   */
   onIconPress: () => void;
 };
 
@@ -79,7 +85,7 @@ const EnterCommentBottomBar: React.FC<Props> = props => {
           handlePressMention={() => {
             console.log('placeholder');
           }}
-          rightButton={rightButtonComponent}
+          rightComponent={rightButtonComponent}
           commentLength={comment.length}
         />
       </Shadow>
