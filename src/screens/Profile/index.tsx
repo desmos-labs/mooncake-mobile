@@ -1,15 +1,7 @@
 import React from 'react';
-import {View, Image, ActivityIndicator, FlatList} from 'react-native';
-import {
-  defaultBanner,
-  desmosIcon,
-  editButton,
-  homeButton,
-  notificationsButton,
-  settingsButton,
-} from 'assets/images';
+import {ActivityIndicator, Image, View} from 'react-native';
+import {defaultBanner, desmosIcon, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import PingAnimation from 'screens/Profile/components/PingAnimation';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -22,7 +14,12 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ProfileHeader from './components/ProfileHeader';
 import ProfileConnectButton from './components/ProfileConnectButton';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
@@ -44,6 +41,21 @@ const Profile = () => {
     loading: profileLoading,
   } = useActiveAccount();
 
+  // animations start
+  // These hooks act as the animation driver for the ProfileHeader component
+  // The actual animations are created in the component itself.
+  const scrollProgress = useSharedValue(0);
+
+  // calculate the percentage of scroll and set it to shared value
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    const {contentOffset, contentSize, layoutMeasurement} = event;
+    const denominator = contentSize.height - layoutMeasurement.height;
+    const numerator = contentOffset.y;
+    // clamp value between 0 and 1
+    scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
+  });
+  // animations end
+
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
@@ -55,6 +67,8 @@ const Profile = () => {
   const styles = useStyles();
 
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+
+  const {top} = useSafeAreaInsets();
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
@@ -86,10 +100,6 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
-  if (profileLoading || postsLoading) {
-    return <ActivityIndicator />;
-  }
-
   const {
     address,
     bio,
@@ -100,6 +110,84 @@ const Profile = () => {
     following,
     followage,
   } = profileData as ProfileData;
+
+  const bannerImage = React.useMemo(() => {
+    return cover_pic ? {uri: cover_pic} : defaultBanner;
+  }, [cover_pic]);
+
+  const profileImage = React.useMemo(() => {
+    return profile_pic ? {uri: profile_pic} : desmosIcon;
+  }, [profile_pic]);
+
+  const ListHeaderComponent = React.useMemo(() => {
+    return (
+      <>
+        {/* top buttons start */}
+        {/* top buttons end */}
+
+        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+        <View style={styles.avatarContainer}>
+          <Image style={styles.avatar} source={profileImage} />
+        </View>
+
+        <View style={styles.contentGroup}>
+          <View style={{paddingHorizontal: theme.spacing.m}}>
+            <ImageButton image={editButton} style={styles.editButton} />
+
+            <Typography.H3
+              style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
+              {nickname}
+            </Typography.H3>
+
+            <Typography.Body7 style={styles.dTagText}>@{dtag}</Typography.Body7>
+
+            <Spacer paddingVertical={theme.spacing.s}>
+              <AddressCopy
+                address={address}
+                externalCallback={() => setShowSnackbar(true)}
+              />
+            </Spacer>
+
+            <UserBio content={bio} />
+
+            <View style={styles.socialCounterGroup}>
+              <SocialCounter count={following.length} label={t('following')} />
+
+              <View style={styles.separator} />
+
+              <SocialCounter count={followage.length} label={t('followers')} />
+            </View>
+
+            <View style={styles.connectButtonGroup}>
+              <ProfileConnectButton
+                label={t('connectAddress')}
+                handlePress={handlePressConnectAddress}
+              />
+
+              {/* hidden on MVP */}
+              {/* <ProfileConnectButton */}
+              {/*  label={t('connectApp')} */}
+              {/*  handlePress={() => {}} */}
+              {/* /> */}
+            </View>
+          </View>
+        </View>
+
+        <FakeDropShadow />
+        <View style={styles.tabContainer}>
+          <ContentTabs
+            tabs={tabs}
+            selectedIndex={selectedTabIndex}
+            handleTabPressed={setSelectedTabIndex}
+          />
+        </View>
+      </>
+    );
+  }, [selectedTabIndex, nickname, dtag]);
+
+  if (profileLoading || postsLoading) {
+    return <ActivityIndicator />;
+  }
 
   const {post} = postData;
 
@@ -117,120 +205,14 @@ const Profile = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Image
-        source={cover_pic ? {uri: cover_pic} : defaultBanner}
-        style={styles.bannerImage}
-      />
-      <FlatList
-        ListHeaderComponent={
-          <>
-            {/* top buttons start */}
-            <View style={styles.topButtonContainer}>
-              <View>
-                <ImageButton
-                  image={homeButton}
-                  style={styles.buttonStyle}
-                  onPress={() => goBack()}
-                />
-              </View>
+    <View style={styles.container}>
+      <Image source={bannerImage} style={styles.bannerImage} />
 
-              <View>
-                <ImageButton
-                  image={notificationsButton}
-                  style={styles.buttonStyle}
-                  overlayComponent={
-                    <PingAnimation
-                      size={10}
-                      color={theme.colors.desmosOrange01}
-                    />
-                  }
-                  overlayPosition={{
-                    top: 2,
-                    left: 12,
-                  }}
-                />
-
-                <Spacer paddingTop={theme.spacing.m}>
-                  <ImageButton
-                    image={settingsButton}
-                    style={styles.buttonStyle}
-                    onPress={handlePressSettings}
-                  />
-                </Spacer>
-              </View>
-            </View>
-            {/* top buttons end */}
-
-            {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-            <View style={styles.avatarContainer}>
-              <Image
-                style={styles.avatar}
-                source={profile_pic ? {uri: profile_pic} : desmosIcon}
-              />
-            </View>
-
-            <View style={styles.contentGroup}>
-              <View style={{paddingHorizontal: theme.spacing.m}}>
-                <ImageButton image={editButton} style={styles.editButton} />
-
-                <Typography.H3
-                  style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
-                  {nickname}
-                </Typography.H3>
-
-                <Typography.Body7 style={styles.dTagText}>
-                  @{dtag}
-                </Typography.Body7>
-
-                <Spacer paddingVertical={theme.spacing.s}>
-                  <AddressCopy
-                    address={address}
-                    externalCallback={() => setShowSnackbar(true)}
-                  />
-                </Spacer>
-
-                <UserBio content={bio} />
-
-                <View style={styles.socialCounterGroup}>
-                  <SocialCounter
-                    count={following.length}
-                    label={t('following')}
-                  />
-
-                  <View style={styles.separator} />
-
-                  <SocialCounter
-                    count={followage.length}
-                    label={t('followers')}
-                  />
-                </View>
-
-                <View style={styles.connectButtonGroup}>
-                  <ProfileConnectButton
-                    label={t('connectAddress')}
-                    handlePress={handlePressConnectAddress}
-                  />
-
-                  {/* hidden on MVP */}
-                  {/* <ProfileConnectButton */}
-                  {/*  label={t('connectApp')} */}
-                  {/*  handlePress={() => {}} */}
-                  {/* /> */}
-                </View>
-              </View>
-            </View>
-
-            <FakeDropShadow />
-            <View style={styles.tabContainer}>
-              <ContentTabs
-                tabs={tabs}
-                selectedIndex={selectedTabIndex}
-                handleTabPressed={setSelectedTabIndex}
-              />
-            </View>
-          </>
-        }
+      <Animated.FlatList
+        ListHeaderComponent={ListHeaderComponent}
+        onScroll={scrollHandler}
+        // Hardcoded value to avoid overlapping with header
+        style={{paddingTop: 100 + top}}
         data={post}
         renderItem={renderPosts}
         numColumns={3}
@@ -238,10 +220,23 @@ const Profile = () => {
           // slight adjustment so column items appear centered
           left: scale(20),
         }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={EmptyPostComponent}
+      />
+
+      <ProfileHeader
+        scrollProgress={scrollProgress}
+        handlePressHome={goBack}
+        handlePressNotification={() => {
+          console.log('notifications');
+        }}
+        handlePressScan={() => {
+          console.log('scan');
+        }}
+        handlePressSettings={handlePressSettings}
+        hasNotification
+        username={nickname || `@${dtag}`}
+        bannerImage={bannerImage}
       />
 
       <Snackbar
@@ -254,7 +249,7 @@ const Profile = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </SafeAreaView>
+    </View>
   );
 };
 
