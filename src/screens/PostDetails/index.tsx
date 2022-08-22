@@ -229,6 +229,7 @@ const PostDetails = () => {
     <ActivityIndicator />
   ) : (
     <DView
+      disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
