@@ -41,7 +41,9 @@ const Profile = () => {
     loading: profileLoading,
   } = useActiveAccount();
 
-  // scroll handler start
+  // animations start
+  // These hooks act as the animation driver for the ProfileHeader component
+  // The actual animations are created in the component itself.
   const scrollProgress = useSharedValue(0);
 
   // calculate the percentage of scroll and set it to shared value
@@ -52,6 +54,7 @@ const Profile = () => {
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   });
+  // animations end
 
   const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
 
@@ -64,6 +67,8 @@ const Profile = () => {
   const styles = useStyles();
 
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+
+  const {top} = useSafeAreaInsets();
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
@@ -95,8 +100,6 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
-  const {top} = useSafeAreaInsets();
-
   const {
     address,
     bio,
@@ -115,6 +118,72 @@ const Profile = () => {
   const profileImage = React.useMemo(() => {
     return profile_pic ? {uri: profile_pic} : desmosIcon;
   }, [profile_pic]);
+
+  const ListHeaderComponent = React.useMemo(() => {
+    return (
+      <>
+        {/* top buttons start */}
+        {/* top buttons end */}
+
+        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+        <View style={styles.avatarContainer}>
+          <Image style={styles.avatar} source={profileImage} />
+        </View>
+
+        <View style={styles.contentGroup}>
+          <View style={{paddingHorizontal: theme.spacing.m}}>
+            <ImageButton image={editButton} style={styles.editButton} />
+
+            <Typography.H3
+              style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
+              {nickname}
+            </Typography.H3>
+
+            <Typography.Body7 style={styles.dTagText}>@{dtag}</Typography.Body7>
+
+            <Spacer paddingVertical={theme.spacing.s}>
+              <AddressCopy
+                address={address}
+                externalCallback={() => setShowSnackbar(true)}
+              />
+            </Spacer>
+
+            <UserBio content={bio} />
+
+            <View style={styles.socialCounterGroup}>
+              <SocialCounter count={following.length} label={t('following')} />
+
+              <View style={styles.separator} />
+
+              <SocialCounter count={followage.length} label={t('followers')} />
+            </View>
+
+            <View style={styles.connectButtonGroup}>
+              <ProfileConnectButton
+                label={t('connectAddress')}
+                handlePress={handlePressConnectAddress}
+              />
+
+              {/* hidden on MVP */}
+              {/* <ProfileConnectButton */}
+              {/*  label={t('connectApp')} */}
+              {/*  handlePress={() => {}} */}
+              {/* /> */}
+            </View>
+          </View>
+        </View>
+
+        <FakeDropShadow />
+        <View style={styles.tabContainer}>
+          <ContentTabs
+            tabs={tabs}
+            selectedIndex={selectedTabIndex}
+            handleTabPressed={setSelectedTabIndex}
+          />
+        </View>
+      </>
+    );
+  }, [selectedTabIndex, nickname, dtag]);
 
   if (profileLoading || postsLoading) {
     return <ActivityIndicator />;
@@ -140,79 +209,10 @@ const Profile = () => {
       <Image source={bannerImage} style={styles.bannerImage} />
 
       <Animated.FlatList
+        ListHeaderComponent={ListHeaderComponent}
         onScroll={scrollHandler}
+        // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
-        ListHeaderComponent={
-          <>
-            {/* top buttons start */}
-            {/* top buttons end */}
-
-            {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-            <View style={styles.avatarContainer}>
-              <Image style={styles.avatar} source={profileImage} />
-            </View>
-
-            <View style={styles.contentGroup}>
-              <View style={{paddingHorizontal: theme.spacing.m}}>
-                <ImageButton image={editButton} style={styles.editButton} />
-
-                <Typography.H3
-                  style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
-                  {nickname}
-                </Typography.H3>
-
-                <Typography.Body7 style={styles.dTagText}>
-                  @{dtag}
-                </Typography.Body7>
-
-                <Spacer paddingVertical={theme.spacing.s}>
-                  <AddressCopy
-                    address={address}
-                    externalCallback={() => setShowSnackbar(true)}
-                  />
-                </Spacer>
-
-                <UserBio content={bio} />
-
-                <View style={styles.socialCounterGroup}>
-                  <SocialCounter
-                    count={following.length}
-                    label={t('following')}
-                  />
-
-                  <View style={styles.separator} />
-
-                  <SocialCounter
-                    count={followage.length}
-                    label={t('followers')}
-                  />
-                </View>
-
-                <View style={styles.connectButtonGroup}>
-                  <ProfileConnectButton
-                    label={t('connectAddress')}
-                    handlePress={handlePressConnectAddress}
-                  />
-
-                  {/* hidden on MVP */}
-                  {/* <ProfileConnectButton */}
-                  {/*  label={t('connectApp')} */}
-                  {/*  handlePress={() => {}} */}
-                  {/* /> */}
-                </View>
-              </View>
-            </View>
-
-            <FakeDropShadow />
-            <View style={styles.tabContainer}>
-              <ContentTabs
-                tabs={tabs}
-                selectedIndex={selectedTabIndex}
-                handleTabPressed={setSelectedTabIndex}
-              />
-            </View>
-          </>
-        }
         data={post}
         renderItem={renderPosts}
         numColumns={3}
