@@ -32,6 +32,7 @@ import connectChainTxDetail from './connectChainTxDetail.json';
 import reportPost from './reportPost.json';
 import authorization from './authorization.json';
 import createPost from './createPost.json';
+import postDetails from './postDetails.json';
 
 const en = {
   common,
@@ -67,7 +68,8 @@ const en = {
   reportPost,
   authorization,
   postInteraction,
-  createPost
+  createPost,
+  postDetails,
 };
 
 export default en;

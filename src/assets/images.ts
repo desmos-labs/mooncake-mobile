@@ -138,7 +138,9 @@ export const commentComment = require('./images/commentComment.png');
 
 export const commentLiked = require('./images/commentLiked.png');
 
-export const followBlackIcon = require('./images/followBlackIcon.png');
+export const followBlackIcon = require('./images/followBlackLight.png');
+
+export const reportIcon = require('./images/report.png');
 
 export const followOrangeIcon = require('./images/followOrangeIcon.png');
 

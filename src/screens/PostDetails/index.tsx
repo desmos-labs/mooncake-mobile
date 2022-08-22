@@ -4,9 +4,10 @@ import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import {
   defaultProfilePic,
+  followBlackIcon,
   followOrangeIcon,
   moreBlackIcon,
-  moreIcon,
+  reportIcon,
 } from 'assets/images';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
@@ -20,6 +21,7 @@ import {utcToZonedTime} from 'date-fns-tz';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -51,6 +53,7 @@ export type PostDetailsParams = {
 const PostDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
+  const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [settings] = useRecoilState(appSettingsState);
@@ -66,70 +69,57 @@ const PostDetails = () => {
 
   const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
 
-  useEffect(() => {
-    if (!loading) {
-      console.log(data.posts[0]);
-    }
+  const post = React.useMemo(() => {
+    if (!data) return undefined;
+
+    return data.posts[0];
   }, [data]);
 
+  useEffect(() => {
+    if (!loading) {
+      console.log(post);
+    }
+  }, [post]);
+
   const formattedDate = useMemo(
-    () =>
-      utcToZonedTime(data?.posts[0].creation_date!, settings.currentTimezone),
-    [data],
+    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
+    [post],
   );
 
   const Avatar = React.useMemo(() => {
-    if (data?.posts[0].author.profile_pic) {
-      return (
-        <ProfileHeaderButton
-          imageSrc={{uri: data?.posts[0].author.profile_pic}}
-        />
-      );
+    if (post?.author.profile_pic) {
+      return <ProfileHeaderButton imageSrc={{uri: post?.author.profile_pic}} />;
     }
     return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
-  }, [data?.posts[0].author.profile_pic]);
+  }, [post?.author.profile_pic]);
 
   const MiddleElement = useMemo(
     () => (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.rightContainer}>
         {Avatar}
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            marginLeft: theme.spacing.s,
-            minWidth: 160,
-          }}>
+        <View style={styles.middleTextContainer}>
           <Typography.Subtitle3 numberOfLines={1}>
-            {data?.posts[0].author.nickname || `@${data?.posts[0].author.dtag}`}
+            {post?.author.nickname || `@${post?.author.dtag}`}
           </Typography.Subtitle3>
           {/* temporary */}
           <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
         </View>
       </View>
     ),
-    [data?.posts[0]],
+    [post],
   );
 
   const RightElement = useMemo(
     () => (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.rightContainer}>
         <ImageButton
-          style={{
-            zIndex: 1,
-            width: 24,
-            height: 24,
-          }}
+          style={styles.followIcon}
           image={followOrangeIcon}
           onPress={() => console.log('add')}
         />
         <ImageButton
           onPress={() => console.log('more')}
-          style={{
-            width: 24,
-            height: 24,
-            marginLeft: theme.spacing.m,
-          }}
+          style={styles.moreIcon}
           image={moreBlackIcon}
         />
       </View>
@@ -145,9 +135,9 @@ const PostDetails = () => {
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             sections={[
-              {sectionName: 'Comments', counter: 10},
-              {sectionName: 'Reactions', counter: 5},
-              {sectionName: 'Tips', counter: 0},
+              {sectionName: t('comments'), counter: 1000},
+              {sectionName: t('reactions'), counter: 5670},
+              {sectionName: t('tips'), counter: 507},
             ]}
           />
         );
@@ -232,7 +222,7 @@ const PostDetails = () => {
     );
   }, []);
 
-  return !data?.posts[0] || loading ? (
+  return loading ? (
     <ActivityIndicator />
   ) : (
     <DView
@@ -241,11 +231,7 @@ const PostDetails = () => {
       style={styles.root}
       topBar={
         <TopBar
-          style={{
-            backgroundColor: theme.colors.white,
-            zIndex: 2,
-            paddingBottom: 10,
-          }}
+          style={styles.topBar}
           centerElement={MiddleElement}
           rightElement={RightElement}
         />
@@ -261,11 +247,7 @@ const PostDetails = () => {
         keyExtractor={item => item.id}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
-        contentContainerStyle={{
-          paddingBottom: theme.spacing.l,
-          paddingHorizontal: theme.spacing.m,
-          flexGrow: 1,
-        }}
+        contentContainerStyle={styles.flatListContainer}
         data={[0 as any, ...DUMMY_COMMENTS]}
       />
       <StickyBottomMenu
@@ -278,9 +260,16 @@ const PostDetails = () => {
         visible={menuVisible}
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+          {
+            label: t('follow'),
+            onPress: () => console.log('test'),
+            icon: followBlackIcon,
+          },
+          {
+            label: t('report'),
+            onPress: () => console.log('test'),
+            icon: reportIcon,
+          },
         ]}
       />
     </DView>
