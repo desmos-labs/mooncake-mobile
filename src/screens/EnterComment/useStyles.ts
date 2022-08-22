@@ -31,6 +31,7 @@ const useStyles = makeStyle(theme => ({
     height: 40,
     borderRadius: 20,
   },
+  bottomPanel: {paddingHorizontal: theme.spacing.m},
 }));
 
 export default useStyles;

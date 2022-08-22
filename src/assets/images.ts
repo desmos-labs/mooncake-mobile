@@ -160,6 +160,8 @@ export const textPostIcon = require('./images/textPost.png');
 
 export const whiteCross = require('./images/whiteCross.png');
 
+export const expandCommentIcon = require('./images/expandComment.png');
+
 // array of images
 export const postBG = [
   require('./images/postBG/postBG1.png'),
@@ -173,7 +175,7 @@ export const postBG = [
   require('./images/postBG/postBG9.png'),
   require('./images/postBG/postBG10.png'),
   require('./images/postBG/postBG11.png'),
-]
+];
 
 export const profileScan = require('./images/profileScan.png');
 

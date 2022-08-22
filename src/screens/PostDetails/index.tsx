@@ -10,6 +10,7 @@ import {
   reportIcon,
 } from 'assets/images';
 import DView from 'components/DView';
+import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
 import PostComponent from 'components/PostComponent';
@@ -66,6 +67,7 @@ const PostDetails = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
+  const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
   const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
 
@@ -202,6 +204,7 @@ const PostDetails = () => {
 
   const handlePressComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
+      console.log('press enter comment');
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -250,11 +253,19 @@ const PostDetails = () => {
         contentContainerStyle={styles.flatListContainer}
         data={[0 as any, ...DUMMY_COMMENTS]}
       />
-      <StickyBottomMenu
-        leftButtonAction={() => console.log('left')}
-        middleButtonAction={() => console.log('middle')}
-        rightButtonAction={() => console.log('right')}
-      />
+      {mode === 'view' ? (
+        <StickyBottomMenu
+          leftButtonAction={() => setMode('comment')}
+          middleButtonAction={() => console.log('middle')}
+          rightButtonAction={() => console.log('right')}
+        />
+      ) : (
+        <EnterCommentBottomBar
+          profileImage={{uri: post?.author.profile_pic}}
+          onIconPress={() => handlePressComment}
+        />
+      )}
+
       <PopupMenu
         anchor={anchor}
         visible={menuVisible}

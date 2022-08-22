@@ -14,7 +14,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useRoute} from '@react-navigation/native';
-import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
+import MediaBottomPanel from 'components/MediaBottomPanel';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -110,7 +110,7 @@ const EnterComment = () => {
           source={image ? {uri: image.uri} : ('' as any)}
         />
       </DView>
-      <EnterCommentBottomPanel
+      <MediaBottomPanel
         imageSelected={!!image}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
@@ -118,6 +118,7 @@ const EnterComment = () => {
           console.log('placeholder');
         }}
         commentLength={reply.length}
+        style={styles.bottomPanel}
       />
     </>
   );
