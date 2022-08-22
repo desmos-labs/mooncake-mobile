@@ -316,6 +316,7 @@ const RootNavigator = () => {
 
         <Stack.Screen
           initialParams={{
+            // TODO: remove when going production
             authType: APP_AUTHORIZATIONS.TIP,
           }}
           name={ROUTES.ACTION_AUTHORIZATION}

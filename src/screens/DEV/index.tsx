@@ -10,6 +10,7 @@ import {resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.ACTION_AUTHORIZATION,
   ROUTES.CREATE_TEXT_POST,
   ROUTES.SELECT_POST_TYPE,
   ROUTES.ENTER_COMMENT,
