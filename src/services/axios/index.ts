@@ -14,9 +14,10 @@ export const initializeAxiosInstance = () => {
   // Load previous auth token
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
-  if (bearerToken) {
-    axiosInstance.defaults.headers.common.Authorization = `bearer ${bearerToken}`;
-  }
+  // Don't do anything if bearerToken is not found
+  if (!bearerToken) return;
+
+  axiosInstance.defaults.headers.common.Authorization = `bearer ${bearerToken}`;
 };
 
 /**
