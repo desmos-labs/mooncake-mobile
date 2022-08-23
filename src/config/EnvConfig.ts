@@ -13,6 +13,7 @@ const EnvConfig = {
   // desmos chain
   BASE_DENOM: Config.BASE_DENOM,
   MAX_COMMENT_LENGTH: 500,
+  DESMOS_REST: Config.DESMOS_REST,
 };
 
 export default EnvConfig;
