@@ -1,0 +1,76 @@
+import React from 'react';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import {getAccounts} from 'lib/SecureStorage';
+import Long from 'long';
+import {fromBase64} from '@cosmjs/encoding';
+import {SignDoc, TxBody} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
+import GetNonce from 'services/axios/requests/GetNonce';
+import {OfflineDirectSigner} from '@cosmjs/proto-signing';
+import Login from 'services/axios/requests/Login/index';
+import {updateAuthToken} from 'services/axios';
+
+const useLogin = () => {
+  const [curAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
+  const unlockWallet = useUnlockWallet();
+
+  const login = React.useCallback(async () => {
+    if (!curAddress) return;
+
+    const accounts = await getAccounts();
+
+    const activeAccount = accounts?.find(x => x.address === curAddress);
+
+    if (!activeAccount) {
+      throw new Error(`[LOGIN] No account found for address ${curAddress}`);
+    }
+
+    const unlockResult = await unlockWallet(activeAccount!);
+
+    if (!unlockResult || !unlockResult.wallet) {
+      throw new Error('[LOGIN] Unable to resolve wallet from unlock request');
+    }
+
+    const {wallet} = unlockResult;
+
+    const {nonce} = await GetNonce({address: curAddress});
+
+    const signDoc = SignDoc.fromPartial({
+      accountNumber: Long.ZERO,
+      authInfoBytes: new Uint8Array(),
+      bodyBytes: TxBody.encode(
+        TxBody.fromPartial({
+          memo: nonce,
+        }),
+      ).finish(),
+      chainId: '',
+    });
+    const result = await (wallet as OfflineDirectSigner).signDirect(
+      curAddress,
+      signDoc,
+    );
+    const signatureBytes = fromBase64(result.signature.signature);
+    const pubkeyBytes = fromBase64(result.signature.pub_key.value);
+    const signedBytes = SignDoc.encode(signDoc).finish();
+
+    const {token} = await Login({
+      address: curAddress,
+      signatureBytes,
+      pubkeyBytes,
+      signedBytes,
+    });
+
+    if (!token) {
+      throw new Error('[LOGIN] No token received from Login request');
+    }
+
+    updateAuthToken(token);
+  }, [curAddress]);
+
+  return {
+    login,
+  };
+};
+
+export default useLogin;

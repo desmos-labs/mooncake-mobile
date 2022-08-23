@@ -1,6 +1,6 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
 const axiosInstance = axios.create({
   baseURL: EnvConfig.DESMOS_REST,
@@ -17,6 +17,15 @@ export const initializeAxiosInstance = () => {
   if (bearerToken) {
     axiosInstance.defaults.headers.common.Authorization = `bearer ${bearerToken}`;
   }
+};
+
+/**
+ * Updates the bearer token of the axios instance and also saves it to MMKV storage.
+ */
+export const updateAuthToken = (newToken: string) => {
+  setMMKV(MMKVKEYS.REST_AUTH_TOKEN, newToken);
+
+  axiosInstance.defaults.headers.common.Authorization = `bearer ${newToken}`;
 };
 
 export default axiosInstance;
