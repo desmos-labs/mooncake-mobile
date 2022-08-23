@@ -147,8 +147,12 @@ const PostDetails = () => {
       if (selectedIndex === 0) {
         return (
           <CommentItem
-            handlePressMore={() => {
-              console.log('hello world');
+            handlePressMore={event => {
+              setAnchor({
+                x: event.nativeEvent.pageX,
+                y: event.nativeEvent.pageY,
+              });
+              setMenuVisible(true);
             }}
             handlePressComment={() => {
               console.log('hello world');

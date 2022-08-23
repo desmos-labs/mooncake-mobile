@@ -23,7 +23,7 @@ import useStyles from './useStyles';
 
 // note: props are not final
 type Props = {
-  handlePressMore: () => void;
+  handlePressMore: (event: GestureResponderEvent) => void;
 
   handlePressComment: () => void;
 
