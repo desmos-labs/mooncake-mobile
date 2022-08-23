@@ -21,14 +21,17 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     },
   });
 
-  const {data: postComments} = useQuery(GetPostComments, {
-    variables: {
-      postID: id,
-      subspaceID: sId,
-      limit: 3,
-      offset: 0,
+  const {data: postComments, loading: commentsLoading} = useQuery(
+    GetPostComments,
+    {
+      variables: {
+        postID: id,
+        subspaceID: sId,
+        limit: 3,
+        offset: 0,
+      },
     },
-  });
+  );
 
   const {data: postReactions} = useQuery(GetPostReactions, {
     variables: {
@@ -72,6 +75,7 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     postLoading,
     postRefetch,
     comments,
+    commentsLoading,
     reactions,
     formattedDate,
   };

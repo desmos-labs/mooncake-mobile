@@ -105,9 +105,7 @@ const CommentItem = ({
   );
 
   const content = React.useMemo(() => {
-    console.log('useMemo');
     if (text && attachments?.length === 0) {
-      console.log('text');
       return (
         <View>
           <Typography.Body6 style={styles.contentText}>{text}</Typography.Body6>
@@ -117,7 +115,6 @@ const CommentItem = ({
 
     if (attachments && attachments.length > 0) {
       const [attachment] = attachments;
-      console.log('attachment');
 
       if (attachment) {
         if (attachment.content['@type'] === '/desmos.posts.v1.Media') {

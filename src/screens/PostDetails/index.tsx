@@ -28,7 +28,6 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
-import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
@@ -57,11 +56,24 @@ const PostDetails = () => {
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
-  const {post, postLoading, postRefetch, comments, reactions, formattedDate} =
-    useHooks({
-      id: params.postId,
-      sId: params.subspaceID,
-    });
+  const {
+    post,
+    postLoading,
+    postRefetch,
+    comments,
+    commentsLoading,
+    reactions,
+    formattedDate,
+  } = useHooks({
+    id: params.postId,
+    sId: params.subspaceID,
+  });
+
+  const flatListData = useMemo(() => {
+    if (selectedIndex === 0) return comments;
+    else if (selectedIndex === 1) return reactions;
+    else return [];
+  }, [selectedIndex, comments, reactions]);
 
   const Avatar = React.useMemo(() => {
     if (post?.author.profile_pic) {
@@ -107,26 +119,6 @@ const PostDetails = () => {
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (index === 0) {
-        // FIXME: I DONT LIKE THIS THING AT ALL
-        if (comments.length === 0 && selectedIndex === 0) {
-          return (
-            <>
-              <InteractionSwitch
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-                sections={[
-                  {sectionName: t('comments'), counter: comments.length},
-                  {
-                    sectionName: t('reactions'),
-                    counter: reactions.length,
-                  },
-                  {sectionName: t('tips'), counter: 0},
-                ]}
-              />
-              {ListEmptyComponent}
-            </>
-          );
-        }
         return (
           <InteractionSwitch
             selectedIndex={selectedIndex}
@@ -167,6 +159,7 @@ const PostDetails = () => {
               });
               setMenuVisible(true);
             }}
+            loading={commentsLoading}
             {...item}
           />
         );
@@ -194,12 +187,11 @@ const PostDetails = () => {
         );
       }
     },
-    [selectedIndex],
+    [selectedIndex, comments, reactions],
   );
 
   const handlePressComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
-      console.log('press enter comment');
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -208,7 +200,7 @@ const PostDetails = () => {
     [],
   );
 
-  const ListEmptyComponent = React.useMemo(() => {
+  /*  const ListEmptyComponent = React.useMemo(() => {
     return (
       <EmptyListComponent
         label="no comments"
@@ -218,13 +210,7 @@ const PostDetails = () => {
         buttonLabel="comment"
       />
     );
-  }, []);
-
-  const flatListData = useMemo(() => {
-    if (selectedIndex === 0) return comments;
-    else if (selectedIndex === 1) return reactions;
-    else return [];
-  }, [selectedIndex]);
+  }, []); */
 
   return postLoading ? (
     <ActivityIndicator />
