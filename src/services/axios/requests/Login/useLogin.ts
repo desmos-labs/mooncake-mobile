@@ -50,15 +50,19 @@ const useLogin = () => {
 
   const unlockWallet = useUnlockWallet();
 
-  const login = React.useCallback(async () => {
+  React.useEffect(() => {
     if (!curAddress) return;
 
+    login(curAddress).then();
+  }, [curAddress]);
+
+  const login = React.useCallback(async (activeAddress: string) => {
     const accounts = await getAccounts();
 
-    const activeAccount = accounts?.find(x => x.address === curAddress);
+    const activeAccount = accounts?.find(x => x.address === activeAddress);
 
     if (!activeAccount) {
-      throw new Error(`[LOGIN] No account found for address ${curAddress}`);
+      throw new Error(`[LOGIN] No account found for address ${activeAddress}`);
     }
 
     const unlockResult = await unlockWallet(activeAccount!);
@@ -71,11 +75,11 @@ const useLogin = () => {
 
     const {signatureBytes, pubkeyBytes, signedBytes} = await generateLoginData({
       wallet: wallet as OfflineDirectSigner,
-      address: curAddress,
+      address: activeAddress,
     });
 
     const {token} = await Login({
-      address: curAddress,
+      address: activeAddress,
       signatureBytes,
       pubkeyBytes,
       signedBytes,
@@ -86,7 +90,7 @@ const useLogin = () => {
     }
 
     updateAuthToken(token);
-  }, [curAddress]);
+  }, []);
 
   return {
     login,
