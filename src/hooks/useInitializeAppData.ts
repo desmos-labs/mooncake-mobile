@@ -2,11 +2,15 @@ import React from 'react';
 import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
 import {useGetProfileParams} from '@recoil/profileParams';
+import {initializeAxiosInstance} from 'services/axios';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
 
   const profileParams = useGetProfileParams();
+
+  // initialize axios
+  initializeAxiosInstance();
 
   /**
    * Check if the initialization queries have produced a value and mark
