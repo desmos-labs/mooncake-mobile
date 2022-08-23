@@ -213,6 +213,10 @@ const PostDetails = () => {
     [],
   );
 
+  const handlePressSendTips = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
   const ListEmptyComponent = React.useMemo(() => {
     return (
       <EmptyListComponent
@@ -258,7 +262,7 @@ const PostDetails = () => {
         <StickyBottomMenu
           leftButtonAction={() => setMode('comment')}
           middleButtonAction={() => console.log('middle')}
-          rightButtonAction={() => console.log('right')}
+          rightButtonAction={handlePressSendTips}
         />
       ) : (
         <EnterCommentBottomBar
