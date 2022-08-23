@@ -10,6 +10,41 @@ import {OfflineDirectSigner} from '@cosmjs/proto-signing';
 import Login from 'services/axios/requests/Login/index';
 import {updateAuthToken} from 'services/axios';
 
+const generateLoginData = async ({
+  wallet,
+  address,
+}: {
+  wallet: OfflineDirectSigner;
+  address: string;
+}): Promise<{
+  signatureBytes: Uint8Array;
+  pubkeyBytes: Uint8Array;
+  signedBytes: Uint8Array;
+}> => {
+  const {nonce} = await GetNonce({address});
+
+  const signDoc = SignDoc.fromPartial({
+    accountNumber: Long.ZERO,
+    authInfoBytes: new Uint8Array(),
+    bodyBytes: TxBody.encode(
+      TxBody.fromPartial({
+        memo: nonce,
+      }),
+    ).finish(),
+    chainId: '',
+  });
+  const result = await (wallet as OfflineDirectSigner).signDirect(
+    address,
+    signDoc,
+  );
+
+  return {
+    signatureBytes: fromBase64(result.signature.signature),
+    pubkeyBytes: fromBase64(result.signature.pub_key.value),
+    signedBytes: SignDoc.encode(signDoc).finish(),
+  };
+};
+
 const useLogin = () => {
   const [curAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
@@ -34,25 +69,10 @@ const useLogin = () => {
 
     const {wallet} = unlockResult;
 
-    const {nonce} = await GetNonce({address: curAddress});
-
-    const signDoc = SignDoc.fromPartial({
-      accountNumber: Long.ZERO,
-      authInfoBytes: new Uint8Array(),
-      bodyBytes: TxBody.encode(
-        TxBody.fromPartial({
-          memo: nonce,
-        }),
-      ).finish(),
-      chainId: '',
+    const {signatureBytes, pubkeyBytes, signedBytes} = await generateLoginData({
+      wallet: wallet as OfflineDirectSigner,
+      address: curAddress,
     });
-    const result = await (wallet as OfflineDirectSigner).signDirect(
-      curAddress,
-      signDoc,
-    );
-    const signatureBytes = fromBase64(result.signature.signature);
-    const pubkeyBytes = fromBase64(result.signature.pub_key.value);
-    const signedBytes = SignDoc.encode(signDoc).finish();
 
     const {token} = await Login({
       address: curAddress,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {atom, useRecoilState} from 'recoil';
+import {atom, useRecoilState, useSetRecoilState} from 'recoil';
 import GetConfig from 'services/axios/requests/GetConfig';
 
 export interface ButterConfigState {
@@ -18,14 +18,18 @@ const butterConfigState = atom<ButterConfigState>({
   },
 });
 
-const useButterConfig = () => {
+/**
+ * A hook that exposes the butterConfig recoil state, as well as an update function
+ * to manually update the atom.
+ */
+export const useButterConfig = () => {
   const [butterConfig, setButterConfig] = useRecoilState(butterConfigState);
 
   const updateButterConfig = React.useCallback(async () => {
     const _butterConfig = await GetConfig();
 
     setButterConfig(_butterConfig);
-  }, [butterConfig]);
+  }, []);
 
   return {
     updateButterConfig,
@@ -33,4 +37,16 @@ const useButterConfig = () => {
   };
 };
 
-export default useButterConfig;
+export const useInitializeButterConfig = () => {
+  const setButterConfig = useSetRecoilState(butterConfigState);
+
+  React.useEffect(() => {
+    const initializeButterConfig = async () => {
+      const _butterConfig = await GetConfig();
+
+      setButterConfig(_butterConfig);
+    };
+
+    initializeButterConfig().then();
+  }, []);
+};
