@@ -23,5 +23,7 @@
   "no": "No",
   "n/a": "N/A",
   "submit": "Submit",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "no nickname": "nickname-not-set",
+  "no dtag": "dtag-not-set"
 }

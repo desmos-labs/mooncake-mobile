@@ -10,18 +10,28 @@ interface Props {
    * Action for the left button
    */
   leftButtonAction: () => void;
+  leftButtonInteractions: number;
   /**
    * Action for the middle button
    */
   middleButtonAction: () => void;
+  middleButtonInteractions: number;
   /**
    * Action for the right button
    */
   rightButtonAction: () => void;
+  rightButtonInteractions: number;
 }
 
 const StickyBottomMenu: React.FC<Props> = props => {
-  const {leftButtonAction, middleButtonAction, rightButtonAction} = props;
+  const {
+    leftButtonAction,
+    middleButtonAction,
+    rightButtonAction,
+    leftButtonInteractions,
+    middleButtonInteractions,
+    rightButtonInteractions,
+  } = props;
   const styles = useStyles();
 
   return (
@@ -33,17 +43,17 @@ const StickyBottomMenu: React.FC<Props> = props => {
       <View style={styles.container}>
         <MenuButton
           onPress={leftButtonAction}
-          interactionCount={10500}
+          interactionCount={leftButtonInteractions}
           icon={commentIcon}
         />
         <MenuButton
           onPress={middleButtonAction}
-          interactionCount={10500}
+          interactionCount={middleButtonInteractions}
           icon={optionsIcon}
         />
         <MenuButton
           onPress={rightButtonAction}
-          interactionCount={10500}
+          interactionCount={rightButtonInteractions}
           icon={tipIcon}
         />
       </View>

@@ -1,7 +1,5 @@
-import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
 import {
   defaultProfilePic,
   followBlackIcon,
@@ -18,10 +16,9 @@ import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import StickyBottomMenu from 'components/StickyBottomMenu';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {utcToZonedTime} from 'date-fns-tz';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -30,14 +27,12 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -57,36 +52,16 @@ const PostDetails = () => {
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [settings] = useRecoilState(appSettingsState);
-  const {data, loading, refetch} = useQuery(GetPostBySubspaceIDandPostID, {
-    variables: {
-      ID: params.postId,
-      subspaceID: params.subspaceID,
-    },
-  });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
-  const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
-
-  const post = React.useMemo(() => {
-    if (!data) return undefined;
-
-    return data.posts[0];
-  }, [data]);
-
-  useEffect(() => {
-    if (!loading) {
-      console.log(post);
-    }
-  }, [post]);
-
-  const formattedDate = useMemo(
-    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
-    [post],
-  );
+  const {post, postLoading, postRefetch, comments, reactions, formattedDate} =
+    useHooks({
+      id: params.postId,
+      sId: params.subspaceID,
+    });
 
   const Avatar = React.useMemo(() => {
     if (post?.author.profile_pic) {
@@ -132,14 +107,37 @@ const PostDetails = () => {
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (index === 0) {
+        // FIXME: I DONT LIKE THIS THING AT ALL
+        if (comments.length === 0 && selectedIndex === 0) {
+          return (
+            <>
+              <InteractionSwitch
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                sections={[
+                  {sectionName: t('comments'), counter: comments.length},
+                  {
+                    sectionName: t('reactions'),
+                    counter: reactions.length,
+                  },
+                  {sectionName: t('tips'), counter: 0},
+                ]}
+              />
+              {ListEmptyComponent}
+            </>
+          );
+        }
         return (
           <InteractionSwitch
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             sections={[
-              {sectionName: t('comments'), counter: 1000},
-              {sectionName: t('reactions'), counter: 5670},
-              {sectionName: t('tips'), counter: 507},
+              {sectionName: t('comments'), counter: comments.length},
+              {
+                sectionName: t('reactions'),
+                counter: reactions.length,
+              },
+              {sectionName: t('tips'), counter: 0},
             ]}
           />
         );
@@ -175,16 +173,13 @@ const PostDetails = () => {
       } else if (selectedIndex === 1) {
         return (
           <ReactionItem
-            nickname={item.nickname}
-            dTag={item.dTag}
-            avatar={item.avatar}
+            reaction={item}
             handlePressFollow={() => {
               console.log('follow');
             }}
             handlePressUnfollow={() => {
               console.log('unfollow');
             }}
-            followed={item.followed}
           />
         );
       } else {
@@ -218,14 +213,20 @@ const PostDetails = () => {
       <EmptyListComponent
         label="no comments"
         handleButtonPress={() => {
-          handlePressComment({author: DUMMY_AUTHOR, postId: 'DUMMYID'});
+          handlePressComment({author: post.author, postId: post.id});
         }}
         buttonLabel="comment"
       />
     );
   }, []);
 
-  return loading ? (
+  const flatListData = useMemo(() => {
+    if (selectedIndex === 0) return comments;
+    else if (selectedIndex === 1) return reactions;
+    else return [];
+  }, [selectedIndex]);
+
+  return postLoading ? (
     <ActivityIndicator />
   ) : (
     <DView
@@ -241,27 +242,33 @@ const PostDetails = () => {
       }>
       <FlatList
         scrollEnabled={true}
-        refreshing={loading}
+        refreshing={postLoading}
         onRefresh={() =>
-          refetch({ID: params.postId, subspaceID: params.subspaceID})
+          postRefetch({ID: params.postId, subspaceID: params.subspaceID})
         }
-        ListHeaderComponent={<PostComponent postData={textPostData} />}
+        ListHeaderComponent={<PostComponent postData={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.id}
-        ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[0 as any, ...DUMMY_COMMENTS]}
+        data={[0 as any, ...flatListData]}
       />
       {mode === 'view' ? (
         <StickyBottomMenu
+          leftButtonInteractions={comments.length}
+          middleButtonInteractions={reactions.length}
+          rightButtonInteractions={0}
           leftButtonAction={() => setMode('comment')}
           middleButtonAction={() => console.log('middle')}
           rightButtonAction={() => console.log('right')}
         />
       ) : (
         <EnterCommentBottomBar
-          profileImage={{uri: post?.author.profile_pic}}
+          profileImage={
+            post.author.profile_pic
+              ? {uri: post?.author.profile_pic}
+              : defaultProfilePic
+          }
           onIconPress={() => handlePressComment}
         />
       )}

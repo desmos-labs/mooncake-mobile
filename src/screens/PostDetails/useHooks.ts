@@ -1,86 +1,79 @@
-const useHooks = () => {
-  const textPostData: PostItem = {
-    creation_date: '2022-06-30T17:06:47.475817',
-    author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-    attachments: [],
-    author: {
-      address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-      bio: '',
-      dtag: 'Donatello',
-      profile_pic: 'https://i.imgur.com/aih9snA.png',
-      nickname: 'Nickname',
+import {useQuery} from '@apollo/client';
+import appSettingsState from '@recoil/settings';
+import {utcToZonedTime} from 'date-fns-tz';
+import React, {useEffect, useMemo} from 'react';
+import {useRecoilState} from 'recoil';
+import {GetPostComments} from 'services/graphql/queries/GetComments';
+import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
+import GetPostReactions from 'services/graphql/queries/GetReactions';
+
+const useHooks = ({id, sId}: {id: number; sId: number}) => {
+  const [settings] = useRecoilState(appSettingsState);
+
+  const {
+    data: originalPost,
+    loading: postLoading,
+    refetch: postRefetch,
+  } = useQuery(GetPostBySubspaceIDandPostID, {
+    variables: {
+      ID: id,
+      subspaceID: sId,
     },
-    subspace_id: 5,
-    reactions: [],
-    text: "I'm a ninja turtle that is a teenager. I'm a ninja turtle that is a teenager. ",
-    conversation: null,
-    id: 3,
-  };
+  });
 
-  const imagePostData: PostItem = {
-    ...textPostData,
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?w=1480&t=st=1660739347~exp=1660739947~hmac=a5b2dafae9c087fb414785c0bbf1f253147fe07756b2289aedae4478fb8ef231',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-  };
+  const {data: postComments} = useQuery(GetPostComments, {
+    variables: {
+      postID: id,
+      subspaceID: sId,
+      limit: 3,
+      offset: 0,
+    },
+  });
 
-  const defaultProps = {
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'Swampyboi',
-    numComments: 1,
-    numReactions: 2,
-    numTips: 0,
-    timestamp: '2022-07-03T16:00:40.08408',
-    text: 'Lorem ipsum dolor sit amet, rices in iaculis nunc sed augue lacus, viverra vitae congue eu, consequat ac felis donec et odio pellent',
-  };
+  const {data: postReactions} = useQuery(GetPostReactions, {
+    variables: {
+      postID: id,
+      subspaceID: sId,
+    },
+  });
 
-  const imageCommentProps = {
-    ...defaultProps,
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://i.imgur.com/aih9snA.png',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-  };
+  const post = React.useMemo(() => {
+    if (!originalPost) return undefined;
+    return originalPost.posts[0];
+  }, [originalPost]);
 
-  const likedCommentProps = {
-    ...defaultProps,
-    liked: true,
-  };
+  const comments = useMemo(() => {
+    if (!postComments) return [];
+    return postComments.post;
+  }, [postComments]);
 
-  const DUMMY_AUTHOR: PostAuthor = {
-    nickname: 'Shrek',
-    dtag: 'SwampyBoi',
-    address: '123test123',
-    bio: 'get out of my swamp',
-    profile_pic: '',
-  };
+  const reactions = useMemo(() => {
+    if (!postReactions) return [];
+    return postReactions.reaction.filter(
+      (reaction: any) =>
+        reaction.value['@type'] ===
+        '/desmos.reactions.v1.RegisteredReactionValue',
+    );
+  }, [postReactions]);
 
-  const DUMMY_COMMENTS = [
-    defaultProps,
-    likedCommentProps,
-    imageCommentProps,
-    defaultProps,
-  ];
+  const formattedDate = useMemo(
+    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
+    [post],
+  );
+
+  useEffect(() => {
+    console.log('POST', post);
+    console.log('COMMENTS', comments);
+    console.log('REACTIONS', reactions);
+  }, [post, comments, postReactions]);
 
   return {
-    DUMMY_AUTHOR,
-    DUMMY_COMMENTS,
-    textPostData,
-    imagePostData,
+    post,
+    postLoading,
+    postRefetch,
+    comments,
+    reactions,
+    formattedDate,
   };
 };
 

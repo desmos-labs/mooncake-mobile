@@ -30,6 +30,7 @@ const PostTypeTab = ({selectedIndex, setSelectedIndex, postTypes}: Props) => {
     <View style={styles.container}>
       {postTypes.map((post, idx) => (
         <TouchableOpacity
+          key={post}
           onPress={() => setSelectedIndex(idx)}
           style={styles.tabButton}>
           <Typography.Button2
