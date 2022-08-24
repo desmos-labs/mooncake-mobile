@@ -4,6 +4,8 @@ import * as RNLocalize from 'react-native-localize';
 import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
 import {useGetProfileParams} from '@recoil/profileParams';
+import {initializeAxiosInstance} from 'services/axios';
+import {useInitializeButterConfig} from '@recoil/butterConfigState';
 import GetRegisteredReactions from 'services/graphql/queries/GetRegisteredReactions';
 
 const useInitializeAppData = () => {
@@ -17,6 +19,14 @@ const useInitializeAppData = () => {
   });
   const profileParams = useGetProfileParams();
 
+  // initialize butter config
+  useInitializeButterConfig();
+
+  React.useEffect(() => {
+    // initialize axios
+    initializeAxiosInstance();
+  }, []);
+
   /**
    * Check if the initialization queries have produced a value and mark
    * initialization as finished.
@@ -29,11 +39,11 @@ const useInitializeAppData = () => {
         ...prev,
         // temporary timezone setting
         currentTimezone: RNLocalize.getTimeZone(),
-        dataInitialized: true,
         registeredReactions: data.subspace_registered_reaction,
+        dataInitialized: true,
       }));
     }
-  }, [profileParams]);
+  }, [profileParams, data]);
 };
 
 export default useInitializeAppData;

@@ -29,6 +29,7 @@ export const profileParamsState = atom<ProfileParams>({
   },
 });
 
+// TODO: refactor this into a useProfileParams and useInitializeProfileParams hooks
 export const useGetProfileParams = () => {
   const [params, setParams] = useRecoilState(profileParamsState);
 
