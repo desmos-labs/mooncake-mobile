@@ -1,5 +1,4 @@
 import React from 'react';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {getAccounts} from 'lib/SecureStorage';
 import {OfflineDirectSigner} from '@cosmjs/proto-signing';
@@ -8,15 +7,7 @@ import {updateAuthToken} from 'services/axios';
 import {generateLoginData} from 'services/axios/requests/Login/utils';
 
 const useLogin = () => {
-  const [curAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-
   const unlockWallet = useUnlockWallet();
-
-  React.useEffect(() => {
-    if (!curAddress) return;
-
-    login(curAddress).then();
-  }, [curAddress]);
 
   const login = React.useCallback(async (activeAddress: string) => {
     const accounts = await getAccounts();
