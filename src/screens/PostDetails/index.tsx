@@ -8,6 +8,7 @@ import {
   followOrangeIcon,
   moreBlackIcon,
   reportIcon,
+  shareBlackIcon,
 } from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
@@ -66,6 +67,11 @@ const PostDetails = () => {
   });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
+  const [profileMenuVisible, setProfileMenuVisible] = React.useState(false);
+  const [profileMenuAnchor, setProfileMenuAnchor] = React.useState<{
+    x: number;
+    y: number;
+  }>();
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
@@ -120,7 +126,13 @@ const PostDetails = () => {
           onPress={() => console.log('add')}
         />
         <ImageButton
-          onPress={() => console.log('more')}
+          onPress={event => {
+            setProfileMenuAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setProfileMenuVisible(true);
+          }}
           style={styles.moreIcon}
           image={moreBlackIcon}
         />
@@ -147,13 +159,7 @@ const PostDetails = () => {
       if (selectedIndex === 0) {
         return (
           <CommentItem
-            handlePressMore={event => {
-              setAnchor({
-                x: event.nativeEvent.pageX,
-                y: event.nativeEvent.pageY,
-              });
-              setMenuVisible(true);
-            }}
+            handlePressMore={() => console.log('test')}
             handlePressComment={() => {
               console.log('hello world');
             }}
@@ -284,6 +290,23 @@ const PostDetails = () => {
             label: t('follow'),
             onPress: () => console.log('test'),
             icon: followBlackIcon,
+          },
+          {
+            label: t('report'),
+            onPress: () => console.log('test'),
+            icon: reportIcon,
+          },
+        ]}
+      />
+      <PopupMenu
+        anchor={profileMenuAnchor}
+        visible={profileMenuVisible}
+        closeMenu={() => setProfileMenuVisible(false)}
+        menuItems={[
+          {
+            label: t('share'),
+            onPress: () => console.log('test'),
+            icon: shareBlackIcon,
           },
           {
             label: t('report'),

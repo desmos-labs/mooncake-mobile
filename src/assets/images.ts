@@ -162,6 +162,8 @@ export const whiteCross = require('./images/whiteCross.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');
 
+export const shareBlackIcon = require('./images/shareBlackIcon.png');
+
 // array of images
 export const postBG = [
   require('./images/postBG/postBG1.png'),
