@@ -140,7 +140,14 @@ export const commentLiked = require('./images/commentLiked.png');
 
 export const followedButton = require('./images/followedIcon.png');
 
-//Socials
+export const followBlackIcon = require('./images/followBlackLight.png');
+
+export const reportIcon = require('./images/report.png');
+
+export const followOrangeIcon = require('./images/followOrangeIcon.png');
+
+export const moreBlackIcon = require('./images/moreBlackIcon.png');
+
 export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');
@@ -152,6 +159,10 @@ export const imagePostIcon = require('./images/imagePost.png');
 export const textPostIcon = require('./images/textPost.png');
 
 export const whiteCross = require('./images/whiteCross.png');
+
+export const expandCommentIcon = require('./images/expandComment.png');
+
+export const shareBlackIcon = require('./images/shareBlackIcon.png');
 
 // array of images
 export const postBG = [
@@ -166,7 +177,7 @@ export const postBG = [
   require('./images/postBG/postBG9.png'),
   require('./images/postBG/postBG10.png'),
   require('./images/postBG/postBG11.png'),
-]
+];
 
 export const profileScan = require('./images/profileScan.png');
 

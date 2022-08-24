@@ -53,6 +53,7 @@ import ChangePassword, {
 } from 'screens/PasswordManipulation';
 import Profile from 'screens/Profile';
 import Profiles from 'screens/Profiles';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
@@ -103,6 +104,7 @@ export type RootNavigatorParamList = {
   [ROUTES.REPORT_POST]: undefined;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
+  [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
   [ROUTES.SELECT_POST_TYPE]: undefined;
   [ROUTES.CREATE_TEXT_POST]: undefined;
@@ -170,6 +172,13 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME} component={Home} />
+      <Stack.Screen
+        initialParams={{
+          postId: 1,
+        }}
+        name={ROUTES.POST_DETAILS}
+        component={PostDetails}
+      />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}

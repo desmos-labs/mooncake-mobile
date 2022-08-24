@@ -5,6 +5,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
     alignItems: 'center',
+    paddingHorizontal: theme.spacing.m,
   },
   avatarStyle: {
     width: 40,

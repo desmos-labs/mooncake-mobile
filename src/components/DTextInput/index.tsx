@@ -38,7 +38,7 @@ const DTextInput: React.FC<Props> = props => {
       <TextInput
         ref={inputRef}
         {...props}
-        style={[styles.input, inputStyle]}
+        style={[inputStyle, styles.input]}
         placeholderTextColor={placeHolderColor || theme.colors.grey01}
       />
       <View style={styles.right}>{rightElement}</View>

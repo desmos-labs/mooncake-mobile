@@ -1,10 +1,9 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {ReactElement} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
-import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
 // type ScreenProps = {
@@ -20,20 +19,25 @@ export type Props = {
    */
   // stackProps: ScreenProps;
   /**
+   * Element to display on the center of the bar.
+   */
+  centerElement?: ReactElement;
+  /**
    * Element to display on the top right corner.
    */
   rightElement?: ReactElement;
   style?: StyleProp<ViewStyle>;
-
-  centerText?: string;
 };
 
+/**
+ * TODO: use react-navigation's header prop on navigator instead
+ */
 export const TopBar: React.FC<Props> = props => {
   const {
     // stackProps,
+    centerElement,
     rightElement,
     style,
-    centerText,
   } = props;
   const theme = useTheme();
   const styles = useStyles();
@@ -59,13 +63,9 @@ export const TopBar: React.FC<Props> = props => {
       <View style={[styles.container, styles.containerLeft]}>
         {navigationGoBack}
       </View>
-
-      {centerText && (
-        <Typography.Body7 style={{flex: 1, textAlign: 'center'}}>
-          {centerText}
-        </Typography.Body7>
-      )}
-
+      <View style={[styles.container, styles.containerCenter]}>
+        {centerElement}
+      </View>
       <View style={[styles.container, styles.containerRight]}>
         {rightElement}
       </View>

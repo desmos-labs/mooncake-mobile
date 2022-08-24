@@ -1,0 +1,23 @@
+import {makeStyle} from 'config/theme';
+
+const useStyles = makeStyle(theme => ({
+  icon: {
+    marginRight: theme.spacing.s,
+    height: 32,
+    width: 32,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: theme.spacing.m,
+    marginRight: theme.spacing.m,
+    paddingVertical: theme.spacing.s,
+  },
+  divider: {
+    borderColor: theme.colors.lightGrey01,
+    borderWidth: 0.5,
+  },
+}));
+
+export default useStyles;

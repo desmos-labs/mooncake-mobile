@@ -10,6 +10,7 @@ export const DefaultAppSettings: AppSettings = {
   biometrics: false,
   notifications: false,
   dataInitialized: false,
+  currentTimezone: '',
 };
 
 /**

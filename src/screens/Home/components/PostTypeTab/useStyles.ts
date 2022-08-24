@@ -5,7 +5,7 @@ export type StyleProp = {
 };
 
 /**
- * Style hook for the PostTypeTab component
+ * Style hook for the InteractionSwitch component
  */
 const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
   container: {

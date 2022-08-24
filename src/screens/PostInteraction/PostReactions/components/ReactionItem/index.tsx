@@ -35,7 +35,7 @@ const ReactionItem = ({
   const {t} = useTranslation('postInteraction');
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => true}>
       <Image source={avatar} style={styles.avatarStyle} />
       <View style={styles.textGroup}>
         <View>
