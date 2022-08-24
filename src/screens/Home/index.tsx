@@ -44,15 +44,21 @@ const Home = () => {
 
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
 
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
 
   React.useEffect(() => {
-    if (!activeAddress) return;
+    // If there is already a bearer token, then there's no need to login.
+    if (bearerToken) return;
 
-    login(activeAddress).then();
-  }, [activeAddress]);
+    // placeholder to avoid eslint error
+    console.log(activeAddress, login);
+
+    // uncomment when ready
+    // login(activeAddress!).then();
+  }, []);
 
   const {
     handlePressDetails,
