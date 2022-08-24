@@ -35,10 +35,10 @@ const ProfileHeaderButton = ({imageSrc, onPress, style}: Props) => {
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    borderRadius: 20,
-    height: 32,
+    borderRadius: 36,
+    height: 36,
     resizeMode: 'contain',
-    width: 32,
+    width: 36,
   },
 });
 

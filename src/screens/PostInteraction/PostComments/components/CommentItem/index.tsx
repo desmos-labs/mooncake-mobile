@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Image, ImageSourcePropType, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from 'react-native';
 import Typography from 'components/Typography';
 import ImageButton from 'components/ImageButton';
 import {
@@ -26,6 +32,8 @@ type Props = {
   handlePressTip: () => void;
 
   handlePress: () => void;
+
+  handleLongPress: (event: GestureResponderEvent) => void;
 
   nickname: string;
 
@@ -56,6 +64,7 @@ const CommentItem = ({
   handlePressMore,
   handlePressTip,
   handlePress,
+  handleLongPress,
   avatar,
   nickname,
   dTag,
@@ -100,6 +109,7 @@ const CommentItem = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
+      onLongPress={handleLongPress}
       activeOpacity={0.8}
       style={[styles.container, styles.flexRow]}>
       <Image source={avatar} style={styles.avatar} />

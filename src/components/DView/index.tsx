@@ -3,12 +3,17 @@ import {
   ColorValue,
   ImageBackground,
   Keyboard,
+  RefreshControl,
   ScrollView,
   StatusBar,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {SafeAreaView, SafeAreaViewProps} from 'react-native-safe-area-context';
+import {
+  Edge,
+  SafeAreaView,
+  SafeAreaViewProps,
+} from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -30,6 +35,10 @@ export type Props = SafeAreaViewProps & {
    */
   backgroundColor?: ColorValue;
 
+  enableRefreshControl?: boolean;
+  refreshing?: boolean;
+  onRefresh?: () => void;
+  edges?: Edge[];
   statusBarProps?: React.ComponentProps<typeof StatusBar>;
 
   disableHideKeyboardTouchable?: boolean;
@@ -45,6 +54,10 @@ const DView: React.FC<Props> = props => {
     style,
     statusBarProps,
     disableHideKeyboardTouchable,
+    refreshing,
+    onRefresh,
+    enableRefreshControl,
+    edges,
   } = props;
   const styles = useStyles(props);
 
@@ -54,6 +67,7 @@ const DView: React.FC<Props> = props => {
       disabled={disableHideKeyboardTouchable}
       onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
+        edges={edges ?? ['bottom', 'left', 'right', 'top']}
         style={[styles.root, backgroundColor ? {backgroundColor} : {}]}>
         <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (
@@ -63,10 +77,24 @@ const DView: React.FC<Props> = props => {
         <View style={[styles.content, style]}>
           {scrollable ? (
             <ScrollView
+              refreshControl={
+                enableRefreshControl ? (
+                  <RefreshControl
+                    enabled={enableRefreshControl || false}
+                    onRefresh={onRefresh}
+                    refreshing={refreshing || false}
+                  />
+                ) : undefined
+              }
               showsVerticalScrollIndicator={false}
               style={styles.scrollViewOuter}
               contentContainerStyle={styles.scrollViewInner}>
-              {children}
+              {/*
+              this View will save the world (ScrollView behavior back to work normally as intended on iOS)
+              */}
+              <View onStartShouldSetResponder={() => true} style={{flex: 1}}>
+                {children}
+              </View>
             </ScrollView>
           ) : (
             children

@@ -35,7 +35,7 @@ export enum POST_TYPE {
   FOLLOWING = 'FOLLOWING_POSTS',
 }
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
+export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 
 const Home = () => {
   const styles = useStyles();
@@ -65,7 +65,9 @@ const Home = () => {
         <PostCard
           postData={info.item}
           onPressAuthor={() => handlePressAuthor('')}
-          onPressDetails={() => handlePressDetails('')}
+          onPressDetails={() =>
+            handlePressDetails(info.item.id, info.item.subspace_id)
+          }
           onPressFollow={() => handlePressFollow(info.item.author_address)}
         />
       );

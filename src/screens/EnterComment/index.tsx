@@ -1,3 +1,4 @@
+import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
 import {View, Image, ActivityIndicator, TextInput} from 'react-native';
@@ -13,7 +14,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useRoute} from '@react-navigation/native';
-import EnterCommentBottomPanel from './components/EnterCommentBottomPanel';
+import MediaBottomPanel from 'components/MediaBottomPanel';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -62,6 +63,14 @@ const EnterComment = () => {
     );
   }, [image, reply]);
 
+  const TopBarCenterElement = React.useMemo(() => {
+    return (
+      <Typography.Body7 style={{flex: 1, textAlign: 'center'}}>
+        hello world
+      </Typography.Body7>
+    );
+  }, []);
+
   return (
     <>
       <DView
@@ -69,7 +78,7 @@ const EnterComment = () => {
         topBar={
           <TopBar
             style={styles.topBar}
-            centerText="hello world"
+            centerElement={TopBarCenterElement}
             rightElement={TopBarRightElement}
           />
         }>
@@ -101,7 +110,7 @@ const EnterComment = () => {
           source={image ? {uri: image.uri} : ('' as any)}
         />
       </DView>
-      <EnterCommentBottomPanel
+      <MediaBottomPanel
         imageSelected={!!image}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
@@ -109,6 +118,7 @@ const EnterComment = () => {
           console.log('placeholder');
         }}
         commentLength={reply.length}
+        style={styles.bottomPanel}
       />
     </>
   );

@@ -93,6 +93,10 @@ enum ROUTES {
   AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
   // Authorize wallet stack end
 
+  // Post details start
+  POST_DETAILS = 'POST_DETAILS',
+  // Post details end
+
   // Post Interaction start
   POST_INTERACTION = 'POST_INTERACTION',
 
