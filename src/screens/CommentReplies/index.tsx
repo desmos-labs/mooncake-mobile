@@ -1,25 +1,12 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
-import {
-  defaultProfilePic,
-  followBlackIcon,
-  followOrangeIcon,
-  moreBlackIcon,
-  reportIcon,
-  shareBlackIcon,
-} from 'assets/images';
+import {followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
-import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
-import PostComponent from 'components/PostComponent';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import StickyBottomMenu from 'components/StickyBottomMenu';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {utcToZonedTime} from 'date-fns-tz';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo} from 'react';
@@ -30,8 +17,7 @@ import {
   ListRenderItemInfo,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
+import {Divider, useTheme} from 'react-native-paper';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
@@ -47,18 +33,17 @@ export type NavProps = StackScreenProps<
   ROUTES.POST_DETAILS
 >;
 
-export type PostDetailsParams = {
-  postId: number;
-  subspaceID: number;
+export type CommentRepliesParams = {
+  commentId: number;
+  subspaceId: number;
 };
 
-const PostDetails = () => {
+const CommentReplies = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [settings] = useRecoilState(appSettingsState);
   const {data, loading, refetch} = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
       ID: params.postId,
@@ -67,15 +52,9 @@ const PostDetails = () => {
   });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
-  const [profileMenuVisible, setProfileMenuVisible] = React.useState(false);
-  const [profileMenuAnchor, setProfileMenuAnchor] = React.useState<{
-    x: number;
-    y: number;
-  }>();
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
-  const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
-  const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
+  const {DUMMY_COMMENTS, DUMMY_AUTHOR} = useHooks();
 
   const post = React.useMemo(() => {
     if (!data) return undefined;
@@ -89,66 +68,15 @@ const PostDetails = () => {
     }
   }, [post]);
 
-  const formattedDate = useMemo(
-    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
-    [post],
-  );
-
-  const Avatar = React.useMemo(() => {
-    if (post?.author.profile_pic) {
-      return <ProfileHeaderButton imageSrc={{uri: post?.author.profile_pic}} />;
-    }
-    return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
-  }, [post?.author.profile_pic]);
-
   const MiddleElement = useMemo(
     () => (
       <View style={styles.rightContainer}>
-        {Avatar}
-        <View style={styles.middleTextContainer}>
-          <Typography.Subtitle3 numberOfLines={1}>
-            {post?.author.nickname || `@${post?.author.dtag}`}
-          </Typography.Subtitle3>
-          {/* temporary */}
-          <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
-        </View>
+        <Typography.Subtitle3 numberOfLines={1}>
+          {DUMMY_COMMENTS.length} {t('replies')}
+        </Typography.Subtitle3>
       </View>
     ),
     [post],
-  );
-
-  const RightElement = useMemo(
-    () => (
-      <View style={styles.rightContainer}>
-        <ImageButton
-          style={styles.followIcon}
-          image={followOrangeIcon}
-          onPress={() => console.log('add')}
-        />
-        <ImageButton
-          onPress={event => {
-            setProfileMenuAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setProfileMenuVisible(true);
-          }}
-          style={styles.moreIcon}
-          image={moreBlackIcon}
-        />
-      </View>
-    ),
-    [],
-  );
-
-  const handlePressSelectedComment = React.useCallback(
-    ({commentId, subspaceId}: {commentId: number; subspaceId: number}) => {
-      navigate(ROUTES.COMMENT_REPLIES, {
-        commentId,
-        subspaceId,
-      });
-    },
-    [],
   );
 
   const renderItem = React.useCallback(
@@ -179,7 +107,9 @@ const PostDetails = () => {
             handlePressTip={() => {
               console.log('hello world');
             }}
-            handlePress={() => handlePressSelectedComment(item)}
+            handlePress={() => {
+              console.log('hello world');
+            }}
             handleLongPress={event => {
               setAnchor({
                 x: event.nativeEvent.pageX,
@@ -231,8 +161,35 @@ const PostDetails = () => {
     [],
   );
 
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
+  const headerComponent = React.useMemo(() => {
+    return (
+      <>
+        <CommentItem
+          handlePressMore={() => console.log('test')}
+          handlePressComment={() => {
+            console.log('hello world');
+          }}
+          handlePressLike={() => {
+            console.log('hello world');
+          }}
+          handlePressTip={() => {
+            console.log('hello world');
+          }}
+          handlePress={() => {
+            console.log('hello world');
+          }}
+          handleLongPress={event => {
+            setAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setMenuVisible(true);
+          }}
+          {...DUMMY_COMMENTS[0]}
+        />
+        <Divider style={styles.divider} />
+      </>
+    );
   }, []);
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -255,20 +212,14 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={
-        <TopBar
-          style={styles.topBar}
-          centerElement={MiddleElement}
-          rightElement={RightElement}
-        />
-      }>
+      topBar={<TopBar style={styles.topBar} centerElement={MiddleElement} />}>
       <FlatList
         scrollEnabled={true}
         refreshing={loading}
         onRefresh={() =>
           refetch({ID: params.postId, subspaceID: params.subspaceID})
         }
-        ListHeaderComponent={<PostComponent postData={textPostData} />}
+        ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.id}
         ListEmptyComponent={ListEmptyComponent}
@@ -276,19 +227,10 @@ const PostDetails = () => {
         contentContainerStyle={styles.flatListContainer}
         data={[0 as any, ...DUMMY_COMMENTS]}
       />
-      {mode === 'view' ? (
-        <StickyBottomMenu
-          leftButtonAction={() => setMode('comment')}
-          middleButtonAction={() => console.log('middle')}
-          rightButtonAction={handlePressSendTips}
-        />
-      ) : (
-        <EnterCommentBottomBar
-          profileImage={{uri: post?.author.profile_pic}}
-          onIconPress={() => handlePressComment}
-        />
-      )}
-
+      <EnterCommentBottomBar
+        profileImage={{uri: post?.author.profile_pic}}
+        onIconPress={() => handlePressComment}
+      />
       <PopupMenu
         anchor={anchor}
         visible={menuVisible}
@@ -306,25 +248,8 @@ const PostDetails = () => {
           },
         ]}
       />
-      <PopupMenu
-        anchor={profileMenuAnchor}
-        visible={profileMenuVisible}
-        closeMenu={() => setProfileMenuVisible(false)}
-        menuItems={[
-          {
-            label: t('share'),
-            onPress: () => console.log('test'),
-            icon: shareBlackIcon,
-          },
-          {
-            label: t('report'),
-            onPress: () => console.log('test'),
-            icon: reportIcon,
-          },
-        ]}
-      />
     </DView>
   );
 };
 
-export default PostDetails;
+export default CommentReplies;
