@@ -23,6 +23,8 @@ import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
+import useLogin from 'services/axios/requests/Login/useLogin';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -41,6 +43,16 @@ const Home = () => {
   const styles = useStyles();
 
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
+  // useLogin is called here instead of useHooks for better visibility.
+  const {login} = useLogin();
+
+  React.useEffect(() => {
+    if (!activeAddress) return;
+
+    login(activeAddress).then();
+  }, [activeAddress]);
 
   const {
     handlePressDetails,
