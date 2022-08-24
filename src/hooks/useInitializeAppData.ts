@@ -12,9 +12,11 @@ const useInitializeAppData = () => {
 
   const {getButterConfig} = useGetButterConfig();
 
+  // Not the most elegant way, but it will do for now
   React.useEffect(() => {
-    initializeAxiosInstance();
-    getButterConfig();
+    Promise.all([initializeAxiosInstance(), getButterConfig()]).then(() => {
+      console.log('app initialized');
+    });
   }, []);
 
   /**
