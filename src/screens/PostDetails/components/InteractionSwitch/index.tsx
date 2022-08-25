@@ -35,6 +35,7 @@ const InteractionSwitch = ({
     <View style={styles.container}>
       {sections.map((section, idx) => (
         <TouchableOpacity
+          key={section.sectionName}
           onPress={() => setSelectedIndex(idx)}
           style={styles.tabButton}>
           <Typography.Button2

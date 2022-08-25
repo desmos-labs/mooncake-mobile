@@ -1,24 +1,29 @@
-import React from 'react';
-import {
-  View,
-  Image,
-  ImageSourcePropType,
-  TouchableOpacity,
-  GestureResponderEvent,
-} from 'react-native';
-import Typography from 'components/Typography';
-import ImageButton from 'components/ImageButton';
+import {useQuery} from '@apollo/client';
+import appSettingsState from '@recoil/settings';
+import {buildingBlockAnim} from 'assets/animations';
 import {
   commentComment,
   commentLiked,
   commentMore,
   commentTip,
+  defaultProfilePic,
   optionsIcon,
 } from 'assets/images';
-import {format} from 'date-fns';
-import {formatNumShorthand} from 'lib/FormatUtils';
+import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
-import {buildingBlockAnim} from 'assets/animations';
+import Typography from 'components/Typography';
+import {utcToZonedTime} from 'date-fns-tz';
+import {formatNumShorthand} from 'lib/FormatUtils';
+import React, {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import {
+  GestureResponderEvent,
+  Image,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {useRecoilState} from 'recoil';
+import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -35,19 +40,21 @@ type Props = {
 
   handleLongPress: (event: GestureResponderEvent) => void;
 
-  nickname: string;
+  id: number;
 
-  dTag: string;
+  subspace_id: number;
 
-  numComments: number;
+  author: {
+    address: string;
+    dtag: string;
+    nickname: string;
+    profile_pic: string;
+  };
 
-  numReactions: number;
+  // not final
+  reactions: {}[];
 
-  numTips: number;
-
-  avatar: ImageSourcePropType;
-
-  timestamp: string;
+  creation_date: string;
 
   text?: string;
 
@@ -65,22 +72,40 @@ const CommentItem = ({
   handlePressTip,
   handlePress,
   handleLongPress,
-  avatar,
-  nickname,
-  dTag,
-  numComments,
-  numReactions,
-  numTips,
-  timestamp,
+  author,
+  reactions,
+  creation_date,
   text,
   attachments,
   liked,
   loading,
+  id,
+  subspace_id,
 }: Props) => {
   const styles = useStyles();
+  const {t} = useTranslation();
+  const [settings] = useRecoilState(appSettingsState);
+  const {data} = useQuery(GetPostCommentsCount, {
+    variables: {
+      subspaceID: subspace_id,
+      postID: id,
+    },
+  });
+
+  const commentsCount = useMemo(() => {
+    if (!data) return 0;
+
+    return data.post_aggregate.aggregate.count;
+  }, [data]);
+
+  const formattedDate = useMemo(
+    () =>
+      utcToZonedTime(creation_date, settings.currentTimezone).toDateString(),
+    [creation_date, settings.currentTimezone],
+  );
 
   const content = React.useMemo(() => {
-    if (text && !attachments) {
+    if (text && attachments?.length === 0) {
       return (
         <View>
           <Typography.Body6 style={styles.contentText}>{text}</Typography.Body6>
@@ -104,7 +129,7 @@ const CommentItem = ({
         }
       }
     }
-  }, []);
+  }, [attachments, text]);
 
   return (
     <TouchableOpacity
@@ -112,19 +137,23 @@ const CommentItem = ({
       onLongPress={handleLongPress}
       activeOpacity={0.8}
       style={[styles.container, styles.flexRow]}>
-      <Image source={avatar} style={styles.avatar} />
+      <Image
+        source={
+          author.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
+        }
+        style={styles.avatar}
+      />
       <View style={styles.flex}>
         <View style={styles.contentContainer}>
           <View style={styles.flexRow}>
             <View>
               <Typography.Subtitle3 style={styles.textStyle}>
-                {nickname}
+                {author.nickname ? author.nickname : t('no nickname')}
               </Typography.Subtitle3>
               <Typography.Body7 style={styles.subTextStyle}>
-                @{dTag}
+                @{author.dtag}
               </Typography.Body7>
             </View>
-
             {/* loading indicator would go here */}
           </View>
 
@@ -144,11 +173,10 @@ const CommentItem = ({
           )}
         </View>
         {content}
-
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {format(new Date(timestamp), 'd LLL, HH:mm')}
+              {formattedDate}
             </Typography.Body7>
           </View>
 
@@ -161,7 +189,7 @@ const CommentItem = ({
                 style={[styles.buttonImage, styles.interactionImage]}
               />
               <Typography.Subtitle3 style={styles.textStyle}>
-                {formatNumShorthand(numComments)}
+                {formatNumShorthand(commentsCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
 
@@ -178,7 +206,7 @@ const CommentItem = ({
               />
               <Typography.Subtitle3
                 style={liked ? styles.likedStyle : styles.textStyle}>
-                {formatNumShorthand(numReactions)}
+                {formatNumShorthand(reactions.length)}
               </Typography.Subtitle3>
             </TouchableOpacity>
 
@@ -190,7 +218,8 @@ const CommentItem = ({
                 style={[styles.buttonImage, styles.interactionImage]}
               />
               <Typography.Subtitle3 style={styles.textStyle}>
-                {formatNumShorthand(numTips)}
+                {/* not implemented yet */}
+                {formatNumShorthand(0)}
               </Typography.Subtitle3>
             </TouchableOpacity>
           </View>
