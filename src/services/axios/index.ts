@@ -15,6 +15,14 @@ export const initializeAxiosInstance = async () => {
   // Load previous auth token
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
+  axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+      console.warn(`[AXIOS]: ${error}`);
+      return error;
+    },
+  );
+
   // Don't do anything if bearerToken is not found
   if (!bearerToken) return;
 
