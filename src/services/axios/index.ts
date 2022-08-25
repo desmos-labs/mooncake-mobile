@@ -13,6 +13,7 @@ const axiosInstance = axios.create({
  */
 export const initializeAxiosInstance = async () => {
   // Load previous auth token
+
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
   axiosInstance.interceptors.response.use(
@@ -22,7 +23,6 @@ export const initializeAxiosInstance = async () => {
       return error;
     },
   );
-
   // Don't do anything if bearerToken is not found
   if (!bearerToken) return;
 
