@@ -60,8 +60,12 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
   }, [postReactions]);
 
   const formattedDate = useMemo(
-    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
-    [post],
+    () =>
+      utcToZonedTime(
+        post?.creation_date,
+        settings.currentTimezone,
+      ).toDateString(),
+    [post?.creation_date, settings.currentTimezone],
   );
 
   useEffect(() => {

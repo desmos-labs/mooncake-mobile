@@ -97,7 +97,7 @@ const PostDetails = () => {
             {post?.author.nickname || `@${post?.author.dtag}`}
           </Typography.Subtitle3>
           {/* temporary */}
-          <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
+          <Typography.Body7>{formattedDate}</Typography.Body7>
         </View>
       </View>
     ),
@@ -267,7 +267,7 @@ const PostDetails = () => {
       ) : (
         <EnterCommentBottomBar
           profileImage={
-            post.author.profile_pic
+            post?.author.profile_pic
               ? {uri: post?.author.profile_pic}
               : defaultProfilePic
           }

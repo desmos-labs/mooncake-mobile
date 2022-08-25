@@ -46,7 +46,6 @@ type Props = {
 
   author: {
     address: string;
-    bio: string;
     dtag: string;
     nickname: string;
     profile_pic: string;
@@ -100,8 +99,9 @@ const CommentItem = ({
   }, [data]);
 
   const formattedDate = useMemo(
-    () => utcToZonedTime(creation_date, settings.currentTimezone),
-    [creation_date],
+    () =>
+      utcToZonedTime(creation_date, settings.currentTimezone).toDateString(),
+    [creation_date, settings.currentTimezone],
   );
 
   const content = React.useMemo(() => {
@@ -176,7 +176,7 @@ const CommentItem = ({
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {formattedDate.toDateString()}
+              {formattedDate}
             </Typography.Body7>
           </View>
 
