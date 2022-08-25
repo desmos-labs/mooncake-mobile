@@ -12,7 +12,9 @@ jest.mock('lib/MMKVStorage', () => ({
 jest.mock('services/axios/requests/RefreshSession', () => jest.fn());
 
 describe('services: axios', () => {
-  beforeAll(() => {});
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('refreshes auth token if there is a bearer token in MMKV', async () => {
     (getMMKV as jest.Mock).mockReturnValue('im-a-bearer-token');
