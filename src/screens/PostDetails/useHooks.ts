@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client';
 import appSettingsState from '@recoil/settings';
 import {utcToZonedTime} from 'date-fns-tz';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useRecoilState} from 'recoil';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
@@ -68,11 +68,11 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     [post?.creation_date, settings.currentTimezone],
   );
 
-  useEffect(() => {
+  /*  useEffect(() => {
     console.log('POST', post);
     console.log('COMMENTS', comments);
     console.log('REACTIONS', reactions);
-  }, [post, comments, postReactions]);
+  }, [post, comments, postReactions]); */
 
   return {
     post,

@@ -1,7 +1,6 @@
-import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {followBlackIcon, reportIcon} from 'assets/images';
+import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import PopupMenu from 'components/PopupMenu';
@@ -9,7 +8,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -19,21 +18,20 @@ import {
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
-import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
-  ROUTES.POST_DETAILS
+  ROUTES.COMMENT_REPLIES
 >;
 
 export type CommentRepliesParams = {
+  postId: number;
   commentId: number;
   subspaceId: number;
 };
@@ -44,39 +42,30 @@ const CommentReplies = () => {
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const {data, loading, refetch} = useQuery(GetPostBySubspaceIDandPostID, {
-    variables: {
-      ID: params.postId,
-      subspaceID: params.subspaceID,
-    },
-  });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
 
-  const {DUMMY_COMMENTS, DUMMY_AUTHOR} = useHooks();
-
-  const post = React.useMemo(() => {
-    if (!data) return undefined;
-
-    return data.posts[0];
-  }, [data]);
-
-  useEffect(() => {
-    if (!loading) {
-      console.log(post);
-    }
-  }, [post]);
+  const {
+    mainComment,
+    mainCommentLoading,
+    mainCommentRefetch,
+    comments,
+    reactions,
+  } = useHooks({
+    subspaceID: params.subspaceId,
+    commentID: params.commentId,
+  });
 
   const MiddleElement = useMemo(
     () => (
       <View style={styles.rightContainer}>
         <Typography.Subtitle3 numberOfLines={1}>
-          {DUMMY_COMMENTS.length} {t('replies')}
+          {comments?.length} {t('replies')}
         </Typography.Subtitle3>
       </View>
     ),
-    [post],
+    [comments?.length],
   );
 
   const renderItem = React.useCallback(
@@ -87,9 +76,9 @@ const CommentReplies = () => {
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             sections={[
-              {sectionName: t('comments'), counter: 1000},
-              {sectionName: t('reactions'), counter: 5670},
-              {sectionName: t('tips'), counter: 507},
+              {sectionName: t('comments'), counter: comments.length},
+              {sectionName: t('reactions'), counter: reactions.length},
+              {sectionName: t('tips'), counter: 0},
             ]}
           />
         );
@@ -97,6 +86,7 @@ const CommentReplies = () => {
       if (selectedIndex === 0) {
         return (
           <CommentItem
+            disableInnerComment={true}
             handlePressMore={() => console.log('test')}
             handlePressComment={() => {
               console.log('hello world');
@@ -117,22 +107,19 @@ const CommentReplies = () => {
               });
               setMenuVisible(true);
             }}
-            {...item}
+            {...item.post}
           />
         );
       } else if (selectedIndex === 1) {
         return (
           <ReactionItem
-            nickname={item.nickname}
-            dTag={item.dTag}
-            avatar={item.avatar}
+            reaction={item}
             handlePressFollow={() => {
               console.log('follow');
             }}
             handlePressUnfollow={() => {
               console.log('unfollow');
             }}
-            followed={item.followed}
           />
         );
       } else {
@@ -185,26 +172,20 @@ const CommentReplies = () => {
             });
             setMenuVisible(true);
           }}
-          {...DUMMY_COMMENTS[0]}
+          {...mainComment}
         />
         <Divider style={styles.divider} />
       </>
     );
-  }, []);
+  }, [mainComment]);
 
-  const ListEmptyComponent = React.useMemo(() => {
-    return (
-      <EmptyListComponent
-        label="no comments"
-        handleButtonPress={() => {
-          handlePressComment({author: DUMMY_AUTHOR, postId: 'DUMMYID'});
-        }}
-        buttonLabel="comment"
-      />
-    );
-  }, []);
+  const flatListData = useMemo(() => {
+    if (selectedIndex === 0) return comments;
+    else if (selectedIndex === 1) return reactions;
+    else return [];
+  }, [selectedIndex, comments, reactions]);
 
-  return loading ? (
+  return mainCommentLoading ? (
     <ActivityIndicator />
   ) : (
     <DView
@@ -215,20 +196,26 @@ const CommentReplies = () => {
       topBar={<TopBar style={styles.topBar} centerElement={MiddleElement} />}>
       <FlatList
         scrollEnabled={true}
-        refreshing={loading}
+        refreshing={mainCommentLoading}
         onRefresh={() =>
-          refetch({ID: params.postId, subspaceID: params.subspaceID})
+          mainCommentRefetch({
+            ID: params.commentId,
+            subspaceID: params.subspaceId,
+          })
         }
+        keyExtractor={item => item.id}
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        keyExtractor={item => item.id}
-        ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[0 as any, ...DUMMY_COMMENTS]}
+        data={[0 as any, ...flatListData]}
       />
       <EnterCommentBottomBar
-        profileImage={{uri: post?.author.profile_pic}}
+        profileImage={
+          mainComment?.author.profile_pic
+            ? {uri: mainComment?.author.profile_pic}
+            : defaultProfilePic
+        }
         onIconPress={() => handlePressComment}
       />
       <PopupMenu

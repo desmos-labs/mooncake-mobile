@@ -1,9 +1,9 @@
-import {makeStyle} from 'config/theme';
+import {makeStyleWithProps} from 'config/theme';
 
 /**
  * Style hook for the CommentItem component
  */
-const useStyles = makeStyle(theme => ({
+const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
   flex: {
     flex: 1,
   },
@@ -73,7 +73,7 @@ const useStyles = makeStyle(theme => ({
   },
   interactionButtonGroup: {
     flexDirection: 'row',
-    flex: 0.75,
+    flex: disableInnerComment ? 0.5 : 0.75,
   },
   loadingAnim: {
     width: 24,

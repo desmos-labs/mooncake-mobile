@@ -1,86 +1,80 @@
-const useHooks = () => {
-  const textPostData: PostItem = {
-    creation_date: '2022-06-30T17:06:47.475817',
-    author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-    attachments: [],
-    author: {
-      address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
-      bio: '',
-      dtag: 'Donatello',
-      profile_pic: 'https://i.imgur.com/aih9snA.png',
-      nickname: 'Nickname',
+import {useQuery} from '@apollo/client';
+import React, {useMemo} from 'react';
+import {GetCommentReplies} from 'services/graphql/queries/GetComments';
+import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
+import GetPostReactions from 'services/graphql/queries/GetReactions';
+
+const useHooks = ({
+  subspaceID,
+  commentID,
+}: {
+  subspaceID: number;
+  commentID: number;
+}) => {
+  const {
+    data: originalComment,
+    loading: mainCommentLoading,
+    refetch: mainCommentRefetch,
+  } = useQuery(GetPostBySubspaceIDandPostID, {
+    variables: {
+      ID: commentID,
+      subspaceID,
     },
-    subspace_id: 5,
-    reactions: [],
-    text: "I'm a ninja turtle that is a teenager. I'm a ninja turtle that is a teenager. ",
-    conversation: null,
-    id: 3,
-  };
+  });
 
-  const imagePostData: PostItem = {
-    ...textPostData,
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?w=1480&t=st=1660739347~exp=1660739947~hmac=a5b2dafae9c087fb414785c0bbf1f253147fe07756b2289aedae4478fb8ef231',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
+  const {data: commentReplies, loading: commentsLoading} = useQuery(
+    GetCommentReplies,
+    {
+      variables: {
+        postID: commentID,
+        subspaceID,
+        limit: 3,
+        offset: 0,
       },
-    ],
-  };
+    },
+  );
 
-  const defaultProps = {
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'Swampyboi',
-    numComments: 1,
-    numReactions: 2,
-    numTips: 0,
-    timestamp: '2022-07-03T16:00:40.08408',
-    text: 'Lorem ipsum dolor sit amet, rices in iaculis nunc sed augue lacus, viverra vitae congue eu, consequat ac felis donec et odio pellent',
-  };
+  const {data: commentReactions} = useQuery(GetPostReactions, {
+    variables: {
+      postID: commentID,
+      subspaceID,
+    },
+  });
 
-  const imageCommentProps = {
-    ...defaultProps,
-    attachments: [
-      {
-        id: 1,
-        content: {
-          uri: 'https://i.imgur.com/aih9snA.png',
-          '@type': '/desmos.posts.v1.Media',
-          mime_type: 'image/png',
-        },
-      },
-    ],
-  };
+  const mainComment = React.useMemo(() => {
+    if (!originalComment) return undefined;
+    return originalComment.posts[0];
+  }, [originalComment]);
 
-  const likedCommentProps = {
-    ...defaultProps,
-    liked: true,
-  };
+  const comments = useMemo(() => {
+    if (!commentReplies) return [];
+    return commentReplies.post_reference;
+  }, [commentReplies]);
 
-  const DUMMY_AUTHOR: PostAuthor = {
-    nickname: 'Shrek',
-    dtag: 'SwampyBoi',
-    address: '123test123',
-    bio: 'get out of my swamp',
-    profile_pic: '',
-  };
+  const reactions = useMemo(() => {
+    if (!commentReactions) return [];
+    return commentReactions.reaction.filter(
+      (reaction: any) =>
+        reaction.value['@type'] ===
+        '/desmos.reactions.v1.RegisteredReactionValue',
+    );
+  }, [commentReactions]);
 
-  const DUMMY_COMMENTS = [
-    defaultProps,
-    likedCommentProps,
-    imageCommentProps,
-    defaultProps,
-  ];
+  /*  useEffect(() => {
+    console.log('postID', postID);
+    console.log('commentID', commentID);
+    console.log('MAINCOMMENT', mainComment);
+    console.log('MAINCOMMENT_COMMENTS', comments);
+    console.log('MAINCOMMENT_REACTIONS', reactions);
+  }, [mainComment, comments, originalComment]); */
 
   return {
-    DUMMY_AUTHOR,
-    DUMMY_COMMENTS,
-    textPostData,
-    imagePostData,
+    mainComment,
+    mainCommentLoading,
+    mainCommentRefetch,
+    comments,
+    commentsLoading,
+    reactions,
   };
 };
 

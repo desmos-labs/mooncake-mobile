@@ -26,10 +26,6 @@ export const POST_FIELDS = gql`
         count
       }
     }
-    references {
-      type
-      reference_id
-    }
     text
     conversation {
       author {

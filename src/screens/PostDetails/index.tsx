@@ -129,8 +129,17 @@ const PostDetails = () => {
   );
 
   const handlePressSelectedComment = React.useCallback(
-    ({commentId, subspaceId}: {commentId: number; subspaceId: number}) => {
+    ({
+      postId,
+      commentId,
+      subspaceId,
+    }: {
+      postId: number;
+      commentId: number;
+      subspaceId: number;
+    }) => {
       navigate(ROUTES.COMMENT_REPLIES, {
+        postId,
         commentId,
         subspaceId,
       });
@@ -169,7 +178,13 @@ const PostDetails = () => {
             handlePressTip={() => {
               console.log('hello world');
             }}
-            handlePress={() => handlePressSelectedComment(item)}
+            handlePress={() =>
+              handlePressSelectedComment({
+                postId: post.id,
+                commentId: item.id,
+                subspaceId: item.subspace_id,
+              })
+            }
             handleLongPress={event => {
               setAnchor({
                 x: event.nativeEvent.pageX,
