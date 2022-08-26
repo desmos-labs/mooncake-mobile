@@ -4,19 +4,20 @@ import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
 import {useGetProfileParams} from '@recoil/profileParams';
 import {initializeAxiosInstance} from 'services/axios';
-import {useInitializeButterConfig} from '@recoil/butterConfigState';
+import {useGetButterConfig} from '@recoil/butterConfigState';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
 
   const profileParams = useGetProfileParams();
 
-  // initialize butter config
-  useInitializeButterConfig();
+  const {getButterConfig} = useGetButterConfig();
 
+  // Not the most elegant way, but it will do for now
   React.useEffect(() => {
-    // initialize axios
-    initializeAxiosInstance();
+    Promise.all([initializeAxiosInstance(), getButterConfig()]).then(() => {
+      console.log('app initialized');
+    });
   }, []);
 
   /**

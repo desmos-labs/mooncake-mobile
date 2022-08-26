@@ -37,16 +37,16 @@ export const useButterConfig = () => {
   };
 };
 
-export const useInitializeButterConfig = () => {
+export const useGetButterConfig = () => {
   const setButterConfig = useSetRecoilState(butterConfigState);
 
-  React.useEffect(() => {
-    const initializeButterConfig = async () => {
-      const _butterConfig = await GetConfig();
+  const getButterConfig = React.useCallback(async () => {
+    const _butterConfig = await GetConfig();
 
-      setButterConfig(_butterConfig);
-    };
-
-    initializeButterConfig().then();
+    setButterConfig(_butterConfig);
   }, []);
+
+  return {
+    getButterConfig,
+  };
 };
