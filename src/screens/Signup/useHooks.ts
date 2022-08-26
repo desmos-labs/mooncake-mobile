@@ -8,7 +8,7 @@ import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import MsgTypes from 'lib/desmos/msgtypes';
+import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
 import {toBase64} from '@cosmjs/encoding';
@@ -57,7 +57,7 @@ const useHooks = () => {
       // Save new wallet as last selected wallet
       // Build save profile message
       const saveProfileMessage: MsgSaveProfileEncodeObject = {
-        typeUrl: MsgTypes.MsgSaveProfile,
+        typeUrl: GenericMsgEnums.MsgSaveProfile,
         value: {
           creator: address,
           dtag: dTag,

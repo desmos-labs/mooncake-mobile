@@ -1,6 +1,6 @@
 import {StdFee} from '@cosmjs/amino';
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {isBroadcastTxFailure} from '@cosmjs/stargate';
+import {isDeliverTxFailure} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import {Coin} from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import {SignMode} from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
@@ -80,9 +80,11 @@ export default function useBroadcastMessages() {
         TxRaw.encode(signed.txRaw).finish(),
       );
 
-      if (isBroadcastTxFailure(broadcastResult)) {
+      if (isDeliverTxFailure(broadcastResult)) {
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }
+
+      return true;
     },
     [],
   );

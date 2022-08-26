@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@cosmjs/crypto": "0.26.5",
-    "@cosmjs/ledger-amino": "0.26.5",
-    "@cosmjs/stargate": "0.26.5",
+    "@cosmjs/crypto": "0.28.11",
+    "@cosmjs/ledger-amino": "0.28.11",
+    "@cosmjs/stargate": "0.28.11",
     "@desmoslabs/desmjs": "4.3.2",
     "@desmoslabs/desmjs-types": "4.3.2",
     "@habx/apollo-multi-endpoint-link": "^2.7.0",

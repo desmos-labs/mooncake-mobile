@@ -20,7 +20,7 @@ import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import {formatFeeWithDenoms} from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
-import MsgTypes from 'lib/desmos/msgtypes';
+import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
@@ -66,7 +66,7 @@ const ConnectChainTxDetail = () => {
       setDeserializedExternalWallet(externalWallet);
 
       setMessage({
-        typeUrl: MsgTypes.MsgLinkChainAccount,
+        typeUrl: GenericMsgEnums.MsgLinkChainAccount,
         value: MsgLinkChainAccount.fromPartial({
           signer: activeAddr,
           proof: proof.proof,
@@ -97,11 +97,9 @@ const ConnectChainTxDetail = () => {
     const unlockResponse = await unlockWallet(chainAccount!);
 
     // handle case here
-    if (!unlockResponse || !unlockResponse.serializedWallet) return;
+    if (!unlockResponse || !unlockResponse.wallet) return;
 
-    const deserializedWallet = await LocalWallet.deserialize(
-      unlockResponse.serializedWallet,
-    );
+    const deserializedWallet = unlockResponse.wallet;
 
     navigate(ROUTES.BROADCAST_TX, {
       messages: [message],
