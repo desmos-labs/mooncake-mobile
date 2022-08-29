@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {defaultBanner, desmosIcon, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
@@ -13,7 +13,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useLinkProps} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -76,7 +76,7 @@ const Profile = () => {
     },
   });
 
-  const handlePostPressed = React.useCallback(
+  const handlePostPressed = useCallback(
     ({
       subspaceID,
       authorAddress,
@@ -92,11 +92,11 @@ const Profile = () => {
     [],
   );
 
-  const handlePressConnectAddress = React.useCallback(() => {
+  const handlePressConnectAddress = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
   }, []);
 
-  const handlePressSettings = React.useCallback(() => {
+  const handlePressSettings = useCallback(() => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
@@ -124,29 +124,27 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const followingLinkProps = useLinkProps({
-    to: {
-      screen: ROUTES.FOLLOWING_AND_FOLLOWERS,
-      params: {
+  const handleFollowingPressd = useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initSubspaceID: subspaceID,
-        initUserAddress: activeAddress,
+        initUserAddress: activeAddress ?? '',
         username: nickname || `@${dtag}`,
         initialTabIndex: 0,
-      },
-    },
-  });
+      }),
+    [],
+  );
 
-  const followersLinkProps = useLinkProps({
-    to: {
-      screen: ROUTES.FOLLOWING_AND_FOLLOWERS,
-      params: {
+  const handleFollowersPressd = useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initSubspaceID: subspaceID,
-        initUserAddress: activeAddress,
+        initUserAddress: activeAddress ?? '',
         username: nickname || `@${dtag}`,
         initialTabIndex: 1,
-      },
-    },
-  });
+      }),
+    [subspaceID, activeAddress, nickname, dtag],
+  );
 
   const ListHeaderComponent = React.useMemo(() => {
     return (
@@ -180,7 +178,7 @@ const Profile = () => {
             <UserBio content={bio} />
 
             <View style={styles.socialCounterGroup}>
-              <TouchableOpacity {...followingLinkProps}>
+              <TouchableOpacity onPress={handleFollowingPressd}>
                 <SocialCounter
                   count={following.length}
                   label={t('following')}
@@ -189,7 +187,7 @@ const Profile = () => {
 
               <View style={styles.separator} />
 
-              <TouchableOpacity {...followersLinkProps}>
+              <TouchableOpacity onPress={handleFollowersPressd}>
                 <SocialCounter
                   count={followage.length}
                   label={t('followers')}
