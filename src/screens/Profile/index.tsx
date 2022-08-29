@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Image, View} from 'react-native';
+import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {defaultBanner, desmosIcon, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import {Snackbar, useTheme} from 'react-native-paper';
@@ -13,7 +13,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useLinkProps} from '@react-navigation/native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -119,6 +119,35 @@ const Profile = () => {
     return profile_pic ? {uri: profile_pic} : desmosIcon;
   }, [profile_pic]);
 
+  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
+  const subspaceID = 5;
+
+  /* A hook that returns a props object that can be used to pass to a component that will navigate to
+  the following and followers screen. */
+  const followingLinkProps = useLinkProps({
+    to: {
+      screen: ROUTES.FOLLOWING_AND_FOLLOWERS,
+      params: {
+        initSubspaceID: subspaceID,
+        initUserAddress: activeAddress,
+        username: nickname || `@${dtag}`,
+        initialTabIndex: 0,
+      },
+    },
+  });
+
+  const followersLinkProps = useLinkProps({
+    to: {
+      screen: ROUTES.FOLLOWING_AND_FOLLOWERS,
+      params: {
+        initSubspaceID: subspaceID,
+        initUserAddress: activeAddress,
+        username: nickname || `@${dtag}`,
+        initialTabIndex: 1,
+      },
+    },
+  });
+
   const ListHeaderComponent = React.useMemo(() => {
     return (
       <>
@@ -151,11 +180,21 @@ const Profile = () => {
             <UserBio content={bio} />
 
             <View style={styles.socialCounterGroup}>
-              <SocialCounter count={following.length} label={t('following')} />
+              <TouchableOpacity {...followingLinkProps}>
+                <SocialCounter
+                  count={following.length}
+                  label={t('following')}
+                />
+              </TouchableOpacity>
 
               <View style={styles.separator} />
 
-              <SocialCounter count={followage.length} label={t('followers')} />
+              <TouchableOpacity {...followersLinkProps}>
+                <SocialCounter
+                  count={followage.length}
+                  label={t('followers')}
+                />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.connectButtonGroup}>

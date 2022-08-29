@@ -65,6 +65,9 @@ import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
+import FollowingAndFollowers from 'screens/FollowingAndFollowers';
+import FollowersParams from 'screens/FollowingAndFollowers/FollowersParams';
+import {Dimensions} from 'react-native';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -117,6 +120,9 @@ export type RootNavigatorParamList = {
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
+
+  /* Following and followers route. */
+  [ROUTES.FOLLOWING_AND_FOLLOWERS]: FollowersParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -129,6 +135,8 @@ const RootNavigator = () => {
   // End initialization
 
   const {t} = useTranslation();
+  const {height, width} = Dimensions.get('window');
+  const gestureResponseDistance = Math.max(height, width);
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -343,6 +351,12 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
         component={AuthorizeWalletStack}
+      />
+
+      <Stack.Screen
+        name={ROUTES.FOLLOWING_AND_FOLLOWERS}
+        component={FollowingAndFollowers}
+        options={{gestureResponseDistance}}
       />
     </Stack.Navigator>
   );
