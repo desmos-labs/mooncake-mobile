@@ -38,6 +38,7 @@ type NavProps = StackScreenProps<
   ROUTES.FOLLOWING_AND_FOLLOWERS
 >;
 
+/* A map of the following and followers tab. */
 const renderScene = SceneMap({
   following: FollowingTab,
   followers: FollowersTab,
