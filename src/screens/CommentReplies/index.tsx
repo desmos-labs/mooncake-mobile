@@ -134,12 +134,11 @@ const CommentReplies = () => {
         );
       }
     },
-    [selectedIndex],
+    [selectedIndex, comments, reactions],
   );
 
-  const handlePressComment = React.useCallback(
+  const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
-      console.log('press enter comment');
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -216,7 +215,12 @@ const CommentReplies = () => {
             ? {uri: mainComment?.author.profile_pic}
             : defaultProfilePic
         }
-        onIconPress={() => handlePressComment}
+        onIconPress={() =>
+          handleExpandComment({
+            author: mainComment.author,
+            postId: mainComment.id,
+          })
+        }
       />
       <PopupMenu
         anchor={anchor}

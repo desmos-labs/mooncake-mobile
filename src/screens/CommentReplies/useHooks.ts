@@ -28,7 +28,7 @@ const useHooks = ({
       variables: {
         postID: commentID,
         subspaceID,
-        limit: 3,
+        limit: 99,
         offset: 0,
       },
     },
@@ -38,6 +38,8 @@ const useHooks = ({
     variables: {
       postID: commentID,
       subspaceID,
+      limit: 99,
+      offset: 0,
     },
   });
 
@@ -53,16 +55,10 @@ const useHooks = ({
 
   const reactions = useMemo(() => {
     if (!commentReactions) return [];
-    return commentReactions.reaction.filter(
-      (reaction: any) =>
-        reaction.value['@type'] ===
-        '/desmos.reactions.v1.RegisteredReactionValue',
-    );
+    return commentReactions.reaction;
   }, [commentReactions]);
 
   /*  useEffect(() => {
-    console.log('postID', postID);
-    console.log('commentID', commentID);
     console.log('MAINCOMMENT', mainComment);
     console.log('MAINCOMMENT_COMMENTS', comments);
     console.log('MAINCOMMENT_REACTIONS', reactions);

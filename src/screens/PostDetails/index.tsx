@@ -19,7 +19,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -74,6 +74,10 @@ const PostDetails = () => {
     id: params.postId,
     sId: params.subspaceID,
   });
+
+  useEffect(() => {
+    console.log('reactionsDEntroAlPostDetails', reactions);
+  }, [reactions]);
 
   const flatListData = useMemo(() => {
     if (selectedIndex === 0) return comments;
@@ -225,7 +229,7 @@ const PostDetails = () => {
     [selectedIndex, comments, reactions],
   );
 
-  const handlePressComment = React.useCallback(
+  const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
@@ -294,7 +298,9 @@ const PostDetails = () => {
               ? {uri: post?.author.profile_pic}
               : defaultProfilePic
           }
-          onIconPress={() => handlePressComment}
+          onIconPress={() =>
+            handleExpandComment({author: post.author, postId: post.id})
+          }
         />
       )}
 

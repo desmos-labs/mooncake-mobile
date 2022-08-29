@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client';
 import appSettingsState from '@recoil/settings';
 import {utcToZonedTime} from 'date-fns-tz';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {useRecoilState} from 'recoil';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
@@ -27,7 +27,7 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       variables: {
         postID: id,
         subspaceID: sId,
-        limit: 3,
+        limit: 99,
         offset: 0,
       },
     },
@@ -37,6 +37,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     variables: {
       postID: id,
       subspaceID: sId,
+      limit: 99,
+      offset: 0,
     },
   });
 
@@ -51,12 +53,9 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
   }, [postComments]);
 
   const reactions = useMemo(() => {
+    console.log('reactionsToFilter', postReactions?.length);
     if (!postReactions) return [];
-    return postReactions.reaction.filter(
-      (reaction: any) =>
-        reaction.value['@type'] ===
-        '/desmos.reactions.v1.RegisteredReactionValue',
-    );
+    return postReactions.reaction;
   }, [postReactions]);
 
   const formattedDate = useMemo(
@@ -68,11 +67,13 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     [post?.creation_date, settings.currentTimezone],
   );
 
-  /*  useEffect(() => {
+  useEffect(() => {
+    /*    console.log('ID', id);
+    console.log('subspaceID', sId);
     console.log('POST', post);
     console.log('COMMENTS', comments);
-    console.log('REACTIONS', reactions);
-  }, [post, comments, postReactions]); */
+    console.log('REACTIONS', reactions); */
+  }, [post, comments, postReactions]);
 
   return {
     post,
