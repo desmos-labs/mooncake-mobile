@@ -103,11 +103,14 @@ const FollowingAndFollowers = () => {
     [selectedTabIndex, setSwipeEnabled],
   );
 
+  /* A callback function that is called when the user touches the screen.
+  It enables the swipe handler of tab view, and prevent the swipe event from bubbling to parent. */
   const disableParentSwipeLeft = useCallback(
     () => setSwipeEnabled(true),
     [setSwipeEnabled],
   );
 
+  /* To allow going back to previous screen via swipe left. */
   const panResponder = React.useMemo(
     () =>
       PanResponder.create({
