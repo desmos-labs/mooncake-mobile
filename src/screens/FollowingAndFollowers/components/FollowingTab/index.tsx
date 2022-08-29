@@ -2,7 +2,6 @@ import React from 'react';
 import {FlatList} from 'react-native';
 import {useRecoilCallback, useRecoilValue} from 'recoil';
 import dataOfFollowingState from '@recoil/followingAndFollowers/pagesOfFollowingState';
-import hasNextPageOfFollowingState from '@recoil/followingAndFollowers/hasNextPageOfFollowingState';
 import pageLimitOfFollowingState from '@recoil/followingAndFollowers/pageLimitOfFollowingState';
 import EmptyFollowingComponent from '../EmptyFollowingComponent';
 import useStyles from './useStyles';
@@ -16,15 +15,11 @@ import ListItemOfFollowing from '../ListItemOfFollowing';
 export const FollowingTab = () => {
   const styles = useStyles();
   const pages = useRecoilValue(dataOfFollowingState);
-  const hasNextPage = useRecoilValue(hasNextPageOfFollowingState);
   const fetchNext = useRecoilCallback(
     ({set}) =>
-      () => {
-        if (hasNextPage) {
-          set(pageLimitOfFollowingState, prev => prev + 1);
-        }
-      },
-    [hasNextPage],
+      () =>
+        set(pageLimitOfFollowingState, prev => prev + 1),
+    [],
   );
   return (
     <FlatList
