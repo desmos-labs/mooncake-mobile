@@ -34,6 +34,13 @@ declare global {
     address: string;
   }
 
+  interface FollowersData {
+    dtag: string;
+    nickname: string;
+    profile_pic: string;
+    address: string;
+  }
+
   interface FollowerType {
     counterparty_address: string;
     subspace_id: number;
