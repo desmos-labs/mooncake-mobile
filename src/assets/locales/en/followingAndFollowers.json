@@ -1,0 +1,9 @@
+{
+  "noFollowingDTags": "No following dTags",
+  "noFollowers": "No followers",
+  "failedToFollow": "Failed to follow <0>{{userName}}</0>",
+  "oops": "Oops!",
+  "retry": "Retry",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
+}

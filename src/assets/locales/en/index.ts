@@ -34,6 +34,7 @@ import authorization from './authorization.json';
 import createPost from './createPost.json';
 import postDetails from './postDetails.json';
 import comment from './comment.json';
+import followingAndFollowers from './followingAndFollowers.json';
 
 const en = {
   common,
@@ -72,6 +73,7 @@ const en = {
   createPost,
   postDetails,
   comment,
+  followingAndFollowers,
 };
 
 export default en;
