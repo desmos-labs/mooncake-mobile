@@ -1,6 +1,12 @@
 import {Loadable} from 'recoil';
 import {PaginatedData, PAGINATION_LIMIT} from '.';
 
+/**
+ * It find and return the `aggregate.count` from the last succeed API result.
+ * @param {number} currentPageLimit - The current page limit of the query.
+ * @param query - (page: number) => Loadable<PaginatedData<T>>
+ * @returns A function that takes two arguments and returns a number.
+ */
 function getCount<T>(
   currentPageLimit: number,
   query: (page: number) => Loadable<PaginatedData<T>>,
