@@ -13,9 +13,10 @@ function getPages<T>(
       break;
     }
     const {data} = loadable.getValue();
-    if (data.length > 0) {
-      pages.push(page);
+    if (data.length === 0) {
+      break;
     }
+    pages.push(page);
     if (data.length < PAGINATION_LIMIT) {
       break;
     }
