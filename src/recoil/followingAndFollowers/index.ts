@@ -4,8 +4,10 @@ import {atom} from 'recoil';
 export const PAGINATION_LIMIT = 100;
 
 /**
- * @property {string} userAddress - The user's address.
- * @property {string} cacheKey - Changing the cacheKey will reload the state.
+ * @property {number} subspaceID - The subspace ID of the app.
+ * @property {string} userAddress - The address of the user whose following and followers you want to
+ * fetch.
+ * @property {string} cacheKey - Passing the diff cacheKey from upstream will load data without cache.
  */
 export type FollowingAndFollowersState = {
   subspaceID: number;
@@ -23,9 +25,10 @@ export type PaginatedData<T> = {
 };
 
 /**
- * @property {string} userAddress - The user's address.
+ * @property {number} subspaceID - The ID of the subspace you want to query.
+ * @property {string} userAddress - The address of the user who is viewing the page.
  * @property {string} cacheKey - This is the key that will be used to store the data in the cache.
- * @property {number} page - The page number of the results to fetch.
+ * @property {number} page - The page number of the results to return.
  */
 export type QueryParam = {
   subspaceID: number;
@@ -34,7 +37,7 @@ export type QueryParam = {
   page: number;
 };
 
-/* Creating a state object. */
+/* The state of the following and followers screen. */
 const followingAndFollowersState = atom<FollowingAndFollowersState>({
   key: 'followingAndFollowers',
   default: {subspaceID: 0, userAddress: '', cacheKey: ''},
