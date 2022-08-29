@@ -47,12 +47,15 @@ const renderTabBar: ComponentProps<typeof TabView>['renderTabBar'] = props => {
   return <TabBarWithDotIndicator {...TabBar.defaultProps} {...props} />;
 };
 
+/* A React component that renders the left arrow icon for the go back button. */
 const Icon = () => <AntDesignIcon name="left" size={20} />;
 
+/* A React component for the following and followers screen. */
 const FollowingAndFollowers = () => {
   const {params} = useRoute<NavProps['route']>();
   const {initialTabIndex, initSubspaceID, initUserAddress, username} = params;
 
+  /* Invalid the cache data when the subspaceId or initUserAddress changed. */
   const setParamTab = useSetRecoilState(followingAndFollowersState);
   useEffect(
     () =>
@@ -73,6 +76,7 @@ const FollowingAndFollowers = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  /* Creating a route array with the following and followers count. */
   const routes: Route[] = useMemo(
     () => [
       {
@@ -90,10 +94,15 @@ const FollowingAndFollowers = () => {
     ],
     [countOfFollowing, countOfFollowers],
   );
+
+  /* Getting the width of the screen. */
   const {width} = Dimensions.get('window');
 
+  /* To allow going back to previous screen via swipe left. */
   const [swipeEnabled, setSwipeEnabled] = useState(true);
 
+  /* A callback function that is called when the user start to swipe left.
+  It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent. */
   const enableParentSwipeLeft = useCallback(
     (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
@@ -110,7 +119,7 @@ const FollowingAndFollowers = () => {
     [setSwipeEnabled],
   );
 
-  /* To allow going back to previous screen via swipe left. */
+  /* create a pan responder for the root container. */
   const panResponder = React.useMemo(
     () =>
       PanResponder.create({
