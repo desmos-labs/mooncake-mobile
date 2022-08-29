@@ -168,7 +168,9 @@ const PostDetails = () => {
       if (selectedIndex === 0) {
         return (
           <CommentItem
-            handlePressMore={() => console.log('test')}
+            handlePressMore={() => {
+              console.log('hello world');
+            }}
             handlePressComment={() => {
               console.log('hello world');
             }}
@@ -253,7 +255,6 @@ const PostDetails = () => {
     <ActivityIndicator />
   ) : (
     <DView
-      disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
