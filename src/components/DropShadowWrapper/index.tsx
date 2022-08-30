@@ -12,6 +12,8 @@ export type Props = ViewProps & {
    */
   customColor?: ColorValue;
 
+  customDistance?: number;
+
   /**
    * Override the overlay shadow color. The Overlay shadow is a secondary
    * shadow that can be used to make the shadow effect appear darker or to put
@@ -31,6 +33,7 @@ const DropShadowWrapper: React.FC<Props> = props => {
     style,
     innerStyle,
     customColor,
+    customDistance,
     customOverlayColor,
     disableInnerWrapper,
   } = props;
@@ -59,7 +62,7 @@ const DropShadowWrapper: React.FC<Props> = props => {
       <Shadow
         viewStyle={[innerStyle, styles.innerShadow]}
         startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.05)'}
-        distance={10}
+        distance={customDistance || 10}
         offset={[0, 1]}
         // fix for android crash
         // nested shadows can't have the same radius, it seems
