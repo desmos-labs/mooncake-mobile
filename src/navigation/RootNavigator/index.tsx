@@ -1,7 +1,6 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
@@ -65,6 +64,7 @@ import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -326,7 +326,7 @@ const RootNavigator = () => {
         <Stack.Screen
           initialParams={{
             // TODO: remove when going production
-            authType: APP_AUTHORIZATIONS.TIP,
+            grantType: GrantEnums.MsgCreateReport,
           }}
           name={ROUTES.ACTION_AUTHORIZATION}
           component={ActionAuthorization}

@@ -7,6 +7,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 
 /**
  * Hooks for the Home screen.
@@ -56,11 +57,18 @@ const useHooks = () => {
     console.log(address);
   }, []);
 
-  const handlePressFollow = React.useCallback(async (address: string) => {
-    const followedAddresses = following.map(x => x.address);
+  const handlePressFollow = React.useCallback(
+    async (address: string) => {
+      const followedAddresses = following.map(x => x.address);
 
-    console.log(followedAddresses, address);
-  }, []);
+      console.log(followedAddresses, address);
+
+      navigate(ROUTES.ACTION_AUTHORIZATION, {
+        grantType: GrantEnums.MsgCreateRelationship,
+      });
+    },
+    [following],
+  );
 
   const handlePressDetails = React.useCallback(
     (id: number, subspaceID: number) => {
