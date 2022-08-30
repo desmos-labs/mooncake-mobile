@@ -24,9 +24,7 @@ const GetFollowingForAddress = gql`
         address
       }
     }
-    user_relationship_aggregate(
-      where: {counterparty_address: {_eq: $userAddress}}
-    ) {
+    user_relationship_aggregate(where: {creator_address: {_eq: $userAddress}}) {
       aggregate {
         count
       }
