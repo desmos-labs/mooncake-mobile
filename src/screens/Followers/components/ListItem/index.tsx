@@ -2,7 +2,6 @@ import {followingState} from '@recoil/following';
 import {PaginatedData} from '@recoil/followingAndFollowers';
 import routeState from '@recoil/followingAndFollowers/routeState';
 import queryState from '@recoil/followingAndFollowers/queryState';
-import getRowsFromLoadable from '@recoil/followingAndFollowers/getRowsFromLoadable';
 import React, {FC, Fragment} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, ListRenderItem, Text, View} from 'react-native';
@@ -155,7 +154,15 @@ const ListItem: ListRenderItem<number> = ({item: page}) => {
     page,
   });
   const loadable = useRecoilValueLoadable(query);
-  const rows = getRowsFromLoadable(loadable);
+  const dedup = new Set<string>();
+  const rows = loadable
+    .valueMaybe()
+    ?.data.map(d => {
+      if (dedup.has(d.dtag)) return undefined;
+      dedup.add(d.dtag);
+      return d;
+    })
+    .filter((d): d is FollowersData => d !== undefined);
 
   switch (loadable.state) {
     case 'hasValue': {
