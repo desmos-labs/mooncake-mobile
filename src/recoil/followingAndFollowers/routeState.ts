@@ -14,7 +14,7 @@ export type RouteState = {
 
 /* The state of the following and followers screen. */
 const routeState = atom<RouteState>({
-  key: 'keysState',
+  key: 'routeState',
   default: {subspaceID: 0, userAddress: '', cacheKey: ''},
 });
 
