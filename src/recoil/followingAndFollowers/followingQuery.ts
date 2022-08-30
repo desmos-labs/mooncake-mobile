@@ -1,5 +1,5 @@
 import {selectorFamily} from 'recoil';
-import {GetFollowingForAddress} from 'services/graphql/queries/GetFollowingAndFollowers';
+import GetFollowers from 'services/graphql/queries/GetFollowers';
 import {QueryParam, PaginatedData} from '.';
 import getQueryData from './getQueryData';
 
@@ -8,7 +8,7 @@ const followingQuery = selectorFamily<PaginatedData<FollowersData>, QueryParam>(
   {
     key: 'followingQuery',
     get: ({subspaceID, userAddress, page}) =>
-      getQueryData(GetFollowingForAddress, subspaceID, userAddress, page),
+      getQueryData(GetFollowers, subspaceID, userAddress, page),
     cachePolicy_UNSTABLE: {eviction: 'lru', maxSize: 100},
   },
 );

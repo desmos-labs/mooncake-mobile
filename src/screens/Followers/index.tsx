@@ -32,15 +32,15 @@ import {
 } from '@react-navigation/material-top-tabs';
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import useStyles from './useStyles';
-import FollowingTab from './components/TabView';
-import FollowersTab from '../Followers/components/TabView';
+import FollowingTab from '../Following/components/TabView';
+import FollowersTab from './components/TabView';
 
 /**
  * @property {number} initSubspaceID - The subspace ID of the app.
  * @property {string} initUserAddress - The address of the user we want to display.
  * @property {string} username - The username of the user whose followers you want to see.
  */
-export type FollowingParams = {
+export type FollowersParams = {
   initSubspaceID: number;
   initUserAddress: string;
   username: string;
@@ -50,13 +50,13 @@ export type FollowingParams = {
 const Tab = createMaterialTopTabNavigator();
 const numOfTabs = 2;
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FOLLOWERS>;
 
 /* A React component that renders the left arrow icon for the go back button. */
 const Icon = () => <AntDesignIcon name="left" size={20} />;
 
 /* A React component for the following and followers screen. */
-const Following = () => {
+const Followers = () => {
   const {name, params} = useRoute<NavProps['route']>();
   const {initSubspaceID, initUserAddress, username} = params;
 
@@ -169,4 +169,4 @@ const Following = () => {
   );
 };
 
-export default Following;
+export default Followers;

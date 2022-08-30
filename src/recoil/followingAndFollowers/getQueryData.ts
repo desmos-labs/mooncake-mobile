@@ -1,5 +1,5 @@
 import {apolloClient} from 'services/graphql/useApolloClient';
-import {QueueData} from 'services/graphql/queries/GetFollowingAndFollowers';
+import {QueueData} from 'services/graphql/queries/GetFollowing';
 import {DocumentNode} from 'graphql';
 import {PAGINATION_LIMIT} from '.';
 

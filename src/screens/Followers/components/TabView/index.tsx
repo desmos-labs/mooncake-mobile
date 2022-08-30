@@ -3,9 +3,9 @@ import {FlatList} from 'react-native';
 import {useRecoilCallback, useRecoilValue} from 'recoil';
 import pagesOfFollowersState from '@recoil/followingAndFollowers/pagesOfFollowersState';
 import pageLimitOfFollowersState from '@recoil/followingAndFollowers/pageLimitOfFollowersState';
-import EmptyFollowersComponent from '../EmptyFollowersComponent';
+import EmptyFollowersComponent from '../EmptyComponent';
 import useStyles from './useStyles';
-import ListItemOfFollowers from '../ListItemOfFollowers';
+import ListItemOfFollowers from '../ListItem';
 
 /**
  * It renders a FlatList of followers
