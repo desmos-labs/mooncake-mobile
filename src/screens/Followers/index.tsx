@@ -20,9 +20,8 @@ import {
   View,
 } from 'react-native';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
-import followingAndFollowersState from '@recoil/followingAndFollowers';
-import countOfFollowersState from '@recoil/followingAndFollowers/countOfFollowersState';
-import countOfFollowingState from '@recoil/followingAndFollowers/countOfFollowingState';
+import routeState from '@recoil/followingAndFollowers/routeState';
+import countState from '@recoil/followingAndFollowers/countState';
 import {IconButton} from 'react-native-paper';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {
@@ -61,7 +60,7 @@ const Followers = () => {
   const {initSubspaceID, initUserAddress, username} = params;
 
   /* Invalid the cache data when the subspaceId or initUserAddress changed. */
-  const setParamTab = useSetRecoilState(followingAndFollowersState);
+  const setParamTab = useSetRecoilState(routeState);
   useEffect(
     () =>
       setParamTab({
@@ -77,13 +76,13 @@ const Followers = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
-  const countOfFollowing = useRecoilValue(countOfFollowingState);
+  const countOfFollowing = useRecoilValue(countState('following'));
   const nameOfFolowing = useMemo(
     () => `${formatNumShorthand(countOfFollowing)} ${t('profile:following')}`,
     [t, countOfFollowing],
   );
 
-  const countOfFollowers = useRecoilValue(countOfFollowersState);
+  const countOfFollowers = useRecoilValue(countState('followers'));
   const nameOfFolowers = useMemo(
     () => `${formatNumShorthand(countOfFollowers)} ${t('profile:followers')}`,
     [t, countOfFollowers],

@@ -1,6 +1,12 @@
 import {Loadable} from 'recoil';
 import {PaginatedData} from '.';
 
+/**
+ * It takes a `Loadable<PaginatedData<FollowersData>>` and returns an array of `FollowersData` with
+ * duplicates removed
+ * @param query - Loadable<PaginatedData<FollowersData>>
+ * @returns An array of FollowersData
+ */
 function getRowsFromLoadable(query: Loadable<PaginatedData<FollowersData>>) {
   const dedup = new Set<string>();
   return query

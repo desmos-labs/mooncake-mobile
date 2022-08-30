@@ -1,11 +1,11 @@
 import React from 'react';
 import {FlatList} from 'react-native';
 import {useRecoilCallback, useRecoilValue} from 'recoil';
-import dataOfFollowingState from '@recoil/followingAndFollowers/pagesOfFollowingState';
-import pageLimitOfFollowingState from '@recoil/followingAndFollowers/pageLimitOfFollowingState';
+import pagesState from '@recoil/followingAndFollowers/pagesState';
+import pageLimitState from '@recoil/followingAndFollowers/pageLimitState';
 import EmptyFollowingComponent from '../EmptyComponent';
 import useStyles from './useStyles';
-import ListItemOfFollowing from '../ListItem';
+import ListItem from '../ListItem';
 
 /**
  * It renders a FlatList of the user's following
@@ -14,17 +14,17 @@ import ListItemOfFollowing from '../ListItem';
  */
 export const FollowingTab = () => {
   const styles = useStyles();
-  const pages = useRecoilValue(dataOfFollowingState);
+  const pages = useRecoilValue(pagesState('following'));
   const fetchNext = useRecoilCallback(
     ({set}) =>
       () =>
-        set(pageLimitOfFollowingState, prev => prev + 1),
+        set(pageLimitState('following'), prev => prev + 1),
     [],
   );
   return (
     <FlatList
       data={pages}
-      renderItem={props => <ListItemOfFollowing {...props} />}
+      renderItem={props => <ListItem {...props} />}
       contentContainerStyle={styles.contentContainerStyle}
       ListEmptyComponent={EmptyFollowingComponent}
       onEndReachedThreshold={1}

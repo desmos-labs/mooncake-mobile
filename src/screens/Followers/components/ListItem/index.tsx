@@ -1,8 +1,7 @@
 import {followingState} from '@recoil/following';
-import followingAndFollowersState, {
-  PaginatedData,
-} from '@recoil/followingAndFollowers';
-import followersQuery from '@recoil/followingAndFollowers/followersQuery';
+import {PaginatedData} from '@recoil/followingAndFollowers';
+import routeState from '@recoil/followingAndFollowers/routeState';
+import queryState from '@recoil/followingAndFollowers/queryState';
 import getRowsFromLoadable from '@recoil/followingAndFollowers/getRowsFromLoadable';
 import React, {FC, Fragment} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -143,14 +142,18 @@ const Error: FC<{
 };
 
 /* A React component that renders a list of followers. */
-const ListItemOfFollowers: ListRenderItem<number> = ({item: page}) => {
-  /* Getting the subspaceID, userAddress, and cacheKey from the followingAndFollowersState. Then it is
+const ListItem: ListRenderItem<number> = ({item: page}) => {
+  /* Getting the subspaceID, userAddress, and cacheKey from the routeState. Then it is
   creating a query with the subspaceID, userAddress, cacheKey, and page. Then it is getting the
   loadable from the query. Then it is getting the rows from the loadable. */
-  const {subspaceID, userAddress, cacheKey} = useRecoilValue(
-    followingAndFollowersState,
-  );
-  const query = followersQuery({subspaceID, userAddress, cacheKey, page});
+  const {subspaceID, userAddress, cacheKey} = useRecoilValue(routeState);
+  const query = queryState({
+    stateType: 'followers',
+    subspaceID,
+    userAddress,
+    cacheKey,
+    page,
+  });
   const loadable = useRecoilValueLoadable(query);
   const rows = getRowsFromLoadable(loadable);
 
@@ -165,4 +168,4 @@ const ListItemOfFollowers: ListRenderItem<number> = ({item: page}) => {
   }
 };
 
-export default ListItemOfFollowers;
+export default ListItem;
