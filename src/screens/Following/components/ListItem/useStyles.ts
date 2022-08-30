@@ -31,6 +31,11 @@ const useStyles = () => {
   };
   const errorMessage: StyleProp<ViewStyle> = {
     padding: 16,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   };
   const errorTitle: StyleProp<TextStyle> = {
     fontWeight: 'bold',
