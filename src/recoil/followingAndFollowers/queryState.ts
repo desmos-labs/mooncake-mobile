@@ -3,7 +3,7 @@ import {selectorFamily} from 'recoil';
 import GetFollowers, {QueueData} from 'services/graphql/queries/GetFollowers';
 import GetFollowing from 'services/graphql/queries/GetFollowing';
 import {apolloClient} from 'services/graphql/useApolloClient';
-import {PAGINATION_LIMIT, QueryParam, PaginatedData} from '.';
+import {ITEMS_PER_FETCH, QueryParam, PaginatedData} from '.';
 
 // // debug mocking
 // let id = 1;
@@ -26,8 +26,8 @@ const queryState = selectorFamily<PaginatedData<FollowersData>, QueryParam>({
         variables: {
           subspaceID,
           userAddress,
-          limit: PAGINATION_LIMIT,
-          offset: PAGINATION_LIMIT * (page - 1),
+          limit: ITEMS_PER_FETCH,
+          offset: ITEMS_PER_FETCH * (page - 1),
         },
       });
 

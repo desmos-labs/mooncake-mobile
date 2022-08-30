@@ -1,5 +1,5 @@
 /* It's setting the limit of the number of items to be fetched. */
-export const PAGINATION_LIMIT = 100;
+export const ITEMS_PER_FETCH = 100;
 
 export type StateType = 'following' | 'followers';
 

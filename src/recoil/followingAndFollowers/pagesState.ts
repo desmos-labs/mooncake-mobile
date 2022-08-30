@@ -1,6 +1,6 @@
 import {noWait, selectorFamily} from 'recoil';
 import routeState from './routeState';
-import {PAGINATION_LIMIT, StateType} from '.';
+import {ITEMS_PER_FETCH, StateType} from '.';
 import queryState from './queryState';
 import pageLimitState from './pageLimitState';
 
@@ -44,14 +44,12 @@ const pagesState = selectorFamily<number[], StateType>({
         pages.push(page);
 
         /* If the data length is less than the pagination limit, then we break out of the loop. */
-        if (data.length < PAGINATION_LIMIT) {
+        if (data.length < ITEMS_PER_FETCH) {
           break;
         }
       }
       return pages;
     },
-  /* It's telling Recoil to evict the least recently used page of following accounts. */
-  cachePolicy_UNSTABLE: {eviction: 'most-recent'},
 });
 
 export default pagesState;
