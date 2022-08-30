@@ -22,7 +22,7 @@ import {
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import routeState from '@recoil/followingAndFollowers/routeState';
 import countState from '@recoil/followingAndFollowers/countState';
-import {IconButton} from 'react-native-paper';
+import {IconButton, useTheme} from 'react-native-paper';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {
   createMaterialTopTabNavigator,
@@ -126,18 +126,20 @@ const Following = () => {
     [tabNavigation],
   );
 
+  const theme = useTheme();
+
   /* A memoized version of the screen options for the tab navigator. */
   const screenOptions: MaterialTopTabNavigationOptions = useMemo(
     () => ({
       tabBarStyle: styles.tabBar,
       tabBarItemStyle: styles.tabBarItem,
       tabBarLabelStyle: styles.tabBarLabel,
-      tabBarActiveTintColor: styles.activeTintColor,
-      tabBarInactiveTintColor: styles.inactiveTintColor,
+      tabBarActiveTintColor: theme.colors.text,
+      tabBarInactiveTintColor: theme.colors.grey01,
       tabBarIndicatorStyle: styles.tabBarIndicator,
       swipeEnabled,
     }),
-    [swipeEnabled, styles],
+    [swipeEnabled, styles, theme],
   );
 
   return (

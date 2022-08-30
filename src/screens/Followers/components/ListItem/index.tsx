@@ -5,7 +5,7 @@ import queryState from '@recoil/followingAndFollowers/queryState';
 import React, {FC, Fragment} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, ListRenderItem, Text, View} from 'react-native';
-import {ActivityIndicator, Button} from 'react-native-paper';
+import {ActivityIndicator, Button, useTheme} from 'react-native-paper';
 import {
   Loadable,
   RecoilValueReadOnly,
@@ -123,6 +123,8 @@ const Error: FC<{
     [query],
   );
 
+  const theme = useTheme();
+
   return (
     <View style={styles.errorContainer}>
       <View style={styles.errorMessage}>
@@ -132,7 +134,7 @@ const Error: FC<{
       <Button
         mode="text"
         uppercase={false}
-        color={styles.retryButtonColor}
+        color={theme.colors.text}
         onPress={handleRetry}>
         {t('retry')}
       </Button>

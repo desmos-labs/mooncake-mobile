@@ -1,22 +1,20 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {makeStyle} from 'config/theme';
 
-const useStyles = () => {
-  const theme = useTheme();
-  const divider: StyleProp<ViewStyle> = {
+const useStyles = makeStyle(theme => ({
+  divider: {
     flexGrow: 1,
     margin: 10,
     height: 1,
     backgroundColor: 'rgb(239,239,239)',
-  };
-  const loadingContainer: StyleProp<ViewStyle> = {
+  },
+  loadingContainer: {
     flexGrow: 1,
     paddingTop: 50,
     paddingBottom: 50,
     justifyContent: 'center',
     alignContent: 'center',
-  };
-  const errorContainer: StyleProp<ViewStyle> = {
+  },
+  errorContainer: {
     marginLeft: 10,
     marginRight: 10,
     marginTop: 10,
@@ -28,24 +26,23 @@ const useStyles = () => {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  };
-  const errorMessage: StyleProp<ViewStyle> = {
+  },
+  errorMessage: {
     padding: 16,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 'auto',
     flexDirection: 'row',
     flexWrap: 'wrap',
-  };
-  const errorTitle: StyleProp<TextStyle> = {
+  },
+  errorTitle: {
     fontWeight: 'bold',
     fontSize: 15,
-  };
-  const errorText: StyleProp<TextStyle> = {
+  },
+  errorText: {
     fontSize: 13,
-  };
-  const retryButtonColor: string = theme.colors.text;
-  const contentContainer: StyleProp<ViewStyle> = {
+  },
+  contentContainer: {
     flexGrow: 1,
     paddingLeft: 20,
     paddingRight: 20,
@@ -53,64 +50,46 @@ const useStyles = () => {
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-  };
+  },
 
-  const pic: StyleProp<ViewStyle> = {
+  pic: {
     flexGrow: 0,
     flexBasis: 50,
     justifyContent: 'center',
-  };
-  const title: StyleProp<TextStyle> = {
+  },
+  title: {
     fontWeight: '700',
     fontSize: 15,
     flexBasis: '100%',
-  };
-  const subtitle: StyleProp<TextStyle> = {};
-  const followButton: TextStyle = {
+  },
+  subtitle: {},
+  followButton: {
     flexGrow: 0,
     flexBasis: 98,
     padding: 0,
     borderColor: theme.colors.primary,
-  };
-  const followButtonLabel: TextStyle = {
+  },
+  followButtonLabel: {
     fontSize: 12,
     color: '#ffffff',
-  };
-  const unfollowButton: TextStyle = {
+  },
+  unfollowButton: {
     flexGrow: 0,
     flexBasis: 98,
     padding: 0,
     borderColor: theme.colors.primary,
-  };
-  const unfollowButtonLabel: TextStyle = {
+  },
+  unfollowButtonLabel: {
     fontSize: 12,
     color: theme.colors.primary,
-  };
-  const names: StyleProp<ViewStyle> = {
+  },
+  names: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 'auto',
     flexDirection: 'row',
     flexWrap: 'wrap',
-  };
-  return {
-    divider,
-    loadingContainer,
-    errorContainer,
-    errorMessage,
-    errorTitle,
-    errorText,
-    retryButtonColor,
-    contentContainer,
-    pic,
-    title,
-    subtitle,
-    followButton,
-    followButtonLabel,
-    unfollowButton,
-    unfollowButtonLabel,
-    names,
-  };
-};
+  },
+}));
 
 export default useStyles;

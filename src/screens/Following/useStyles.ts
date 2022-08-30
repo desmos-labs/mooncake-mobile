@@ -1,20 +1,18 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {makeStyleWithProps} from 'config/theme';
 
-const useStyles = (numOfTabs: number) => {
-  const theme = useTheme();
-  const container: StyleProp<ViewStyle> = {
+const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
+  container: {
     flexGrow: 1,
     backgroundColor: 'transparent',
-  };
-  const navigationBar: StyleProp<ViewStyle> = {
+  },
+  navigationBar: {
     marginTop: 8,
     backgroundColor: 'transparent',
     flexDirection: 'row',
     flexWrap: 'nowrap',
     alignItems: 'center',
-  };
-  const backButton: ViewStyle | TextStyle = {
+  },
+  backButton: {
     color: theme.colors.text,
     backgroundColor: 'transparent',
     flexGrow: 0,
@@ -25,37 +23,35 @@ const useStyles = (numOfTabs: number) => {
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
-  };
-  const header: StyleProp<TextStyle> = {
+  },
+  header: {
     textAlign: 'center',
     flexGrow: 1,
     paddingRight: 74,
     fontWeight: '700',
-  };
-  const tabBar: StyleProp<ViewStyle> = {
+  },
+  tabBar: {
     margin: 0,
     marginBottom: 10,
     padding: 0,
     backgroundColor: 'transparent',
-  };
-  const tabBarItem: StyleProp<ViewStyle> = {
+  },
+  tabBarItem: {
     margin: 0,
     padding: 0,
     backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'flex-end',
     height: 52,
-  };
-  const tabBarLabel: StyleProp<TextStyle> = {
+  },
+  tabBarLabel: {
     marginBottom: 10,
     backgroundColor: 'transparent',
     fontSize: 15,
     fontWeight: '600',
     textTransform: 'none',
-  };
-  const activeTintColor: string = theme.colors.text;
-  const inactiveTintColor: string = theme.colors.grey01;
-  const tabBarIndicator: TextStyle = {
+  },
+  tabBarIndicator: {
     backgroundColor: theme.colors.primary,
     width: 4,
     maxWidth: 4,
@@ -63,19 +59,7 @@ const useStyles = (numOfTabs: number) => {
     maxHeight: 4,
     borderRadius: 4,
     marginLeft: `${100 / numOfTabs / 2}%`,
-  };
-  return {
-    container,
-    navigationBar,
-    backButton,
-    header,
-    tabBar,
-    tabBarItem,
-    tabBarLabel,
-    activeTintColor,
-    inactiveTintColor,
-    tabBarIndicator,
-  };
-};
+  },
+}));
 
 export default useStyles;

@@ -1,28 +1,25 @@
-import {ImageStyle, StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {makeStyle} from 'config/theme';
 
-const useStyles = () => {
-  const theme = useTheme();
-  const view: StyleProp<ViewStyle> = {
+const useStyles = makeStyle(theme => ({
+  view: {
     flexGrow: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignContent: 'center',
     marginBottom: 140,
-  };
-  const image: StyleProp<ImageStyle> = {
+  },
+  image: {
     width: 230,
     height: 116,
     resizeMode: 'contain',
     marginVertical: theme.spacing.m,
     alignSelf: 'center',
-  };
-  const subtitle1: StyleProp<TextStyle> = {
+  },
+  subtitle1: {
     width: '100%',
     textAlign: 'center',
-  };
-  return {view, image, subtitle1};
-};
+  },
+}));
 
 export default useStyles;

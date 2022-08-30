@@ -1,10 +1,9 @@
-import {StyleProp, ViewStyle} from 'react-native';
+import {makeStyle} from 'config/theme';
 
-const useStyles = () => {
-  const contentContainerStyle: StyleProp<ViewStyle> = {
+const useStyles = makeStyle(() => ({
+  contentContainerStyle: {
     flexGrow: 1,
-  };
-  return {contentContainerStyle};
-};
+  },
+}));
 
 export default useStyles;
