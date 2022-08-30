@@ -158,7 +158,7 @@ const ListItem: ListRenderItem<number> = ({item: page}) => {
   const rows = loadable
     .valueMaybe()
     ?.data.map(d => {
-      if (dedup.has(d.dtag)) return undefined;
+      if (!d || dedup.has(d.dtag)) return undefined;
       dedup.add(d.dtag);
       return d;
     })

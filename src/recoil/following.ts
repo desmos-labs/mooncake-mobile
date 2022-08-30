@@ -30,7 +30,9 @@ export const useGetFollowing = () => {
       onCompleted: result => {
         const {user_relationship} = result;
 
-        const mapped = user_relationship.map(x => x.counterparty);
+        const mapped = user_relationship
+          .map(x => x.counterparty)
+          .filter(d => !!d);
 
         setFollowing(mapped);
       },
