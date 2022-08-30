@@ -39,9 +39,8 @@ function getQueryData(
     if (response.error) {
       throw response.error;
     }
-
     // const response = await new Promise<{data: QueueData}>((resolve, reject) => {
-    //   if (Math.random() > 0.5) {
+    //   if (Math.random() > 0.9) {
     //     reject(new Error('random error'));
     //     return;
     //   }
@@ -101,7 +100,7 @@ function getQueryData(
     //           },
     //         },
     //       }),
-    //     Math.random() > 0.999 ? 600000 : 0,
+    //     Math.random() > 0.9 ? 600000 : 0,
     //   );
     // });
 
