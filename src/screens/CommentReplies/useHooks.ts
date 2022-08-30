@@ -58,12 +58,6 @@ const useHooks = ({
     return commentReactions.reaction;
   }, [commentReactions]);
 
-  /*  useEffect(() => {
-    console.log('MAINCOMMENT', mainComment);
-    console.log('MAINCOMMENT_COMMENTS', comments);
-    console.log('MAINCOMMENT_REACTIONS', reactions);
-  }, [mainComment, comments, originalComment]); */
-
   return {
     mainComment,
     mainCommentLoading,

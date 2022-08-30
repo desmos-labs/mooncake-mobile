@@ -19,7 +19,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -74,10 +74,6 @@ const PostDetails = () => {
     id: params.postId,
     sId: params.subspaceID,
   });
-
-  useEffect(() => {
-    console.log('reactionsDEntroAlPostDetails', reactions);
-  }, [reactions]);
 
   const flatListData = useMemo(() => {
     if (selectedIndex === 0) return comments;
