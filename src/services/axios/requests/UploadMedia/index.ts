@@ -2,6 +2,8 @@ import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
 import {AxiosError} from 'axios';
 
+// This can be manually constructed or passed the
+// imageAsset from useImageFromDevice hook.
 type ImageMedia = {
   uri?: string;
   type?: string;
@@ -10,9 +12,7 @@ type ImageMedia = {
 
 export type Params = {
   /**
-   * The image asset to be uploaded. This can be manually constructed or passed the
-   * imageAsset from useImageFromDevice hook.
-   *
+   * The media asset to be uploaded.
    * In the future, additional media types should be added here.
    */
   mediaFile: ImageMedia;
