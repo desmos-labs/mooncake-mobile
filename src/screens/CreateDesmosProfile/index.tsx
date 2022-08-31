@@ -63,10 +63,10 @@ const CreateDesmosProfile = () => {
   const {goBack, navigate, reset, push} =
     useNavigation<NavProp['navigation']>();
 
-  const {image: bannerImage, imageFromLibrary: selectBannerImage} =
+  const {imageAsset: bannerImage, imageFromLibrary: selectBannerImage} =
     useImageFromDevice();
 
-  const {image: profileImage, imageFromLibrary: selectProfileImage} =
+  const {imageAsset: profileImage, imageFromLibrary: selectProfileImage} =
     useImageFromDevice();
 
   const profileParams = useRecoilValue(profileParamsState);
