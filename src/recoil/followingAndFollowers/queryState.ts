@@ -1,17 +1,23 @@
 import {DocumentNode} from '@apollo/client';
 import {selectorFamily} from 'recoil';
-import GetFollowers, {QueueData} from 'services/graphql/queries/GetFollowers';
-import GetFollowing from 'services/graphql/queries/GetFollowing';
+import GetFollowers, {
+  QueueData as QueueDataOfFollowers,
+} from 'services/graphql/queries/GetFollowers';
+import GetFollowing, {
+  QueueData as QueueDataOfFollowing,
+} from 'services/graphql/queries/GetFollowing';
 import {apolloClient} from 'services/graphql/useApolloClient';
 import {ITEMS_PER_FETCH, QueryParam, PaginatedData} from '.';
 
 // // debug mocking
-// let id = 1;
+// const id = 1;
 
 const queryMap: {[stateType: string]: DocumentNode} = {
   following: GetFollowing,
   followers: GetFollowers,
 };
+
+type QueueData = QueueDataOfFollowing | QueueDataOfFollowers;
 
 /* It's creating a selector that fetches the following accounts for a given page. */
 const queryState = selectorFamily<PaginatedData<FollowersData>, QueryParam>({
