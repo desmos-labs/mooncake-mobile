@@ -82,7 +82,7 @@ const Home = () => {
       return (
         <PostCard
           postData={info.item}
-          onPressAuthor={() => handlePressAuthor('')}
+          onPressAuthor={() => handlePressAuthor(info.item.author_address)}
           onPressDetails={() =>
             handlePressDetails(info.item.id, info.item.subspace_id)
           }
@@ -138,7 +138,7 @@ const Home = () => {
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE);
+    navigate(ROUTES.USER_PROFILE, {mode: 'myProfile'});
   }, []);
 
   const profilePic = _.get(profileData, 'profile_pic');

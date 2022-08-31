@@ -1,11 +1,17 @@
 import {useQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {defaultBanner, defaultProfilePic, editButton} from 'assets/images';
+import {
+  defaultBanner,
+  defaultProfilePic,
+  editButton,
+  followOrangeFilledIcon,
+} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -32,14 +38,14 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
 
+export interface UserProfileParams {
+  mode: 'myProfile' | 'visitingProfile';
+  visitingProfileAddress?: string;
+}
+
 const Profile = () => {
   const theme = useTheme();
-
-  const {
-    activeAddress,
-    profileData,
-    loading: profileLoading,
-  } = useActiveAccount();
+  const {activeAddress, profileData, loading} = useActiveAccount();
 
   // animations start
   // These hooks act as the animation driver for the ProfileHeader component
@@ -57,17 +63,17 @@ const Profile = () => {
   // animations end
 
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
-
   const [showSnackbar, setShowSnackbar] = React.useState(false);
-
   const {t} = useTranslation('profile');
-
   const styles = useStyles();
-
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
-
+  const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
-
+  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
+    params.visitingProfileAddress || '',
+  );
+  const profileLoading =
+    params.mode === 'myProfile' ? loading : visitingProfileLoading;
   const tabs = React.useMemo(
     () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
     [t],
@@ -75,7 +81,10 @@ const Profile = () => {
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
-      address: activeAddress,
+      address:
+        params.mode === 'myProfile'
+          ? activeAddress
+          : params.visitingProfileAddress,
     },
   });
 
@@ -112,7 +121,9 @@ const Profile = () => {
     nickname,
     following,
     followage,
-  } = profileData as ProfileData;
+  } = (
+    params.mode === 'myProfile' ? profileData : visitingProfileData
+  ) as ProfileData;
 
   const bannerImage = React.useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
@@ -121,6 +132,11 @@ const Profile = () => {
   const profileImage = React.useMemo(() => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
+
+  // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
+  const followButton = React.useMemo(() => {
+    return followOrangeFilledIcon;
+  }, []);
 
   const ListHeaderComponent = React.useMemo(() => {
     return (
@@ -135,7 +151,10 @@ const Profile = () => {
 
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
-            <ImageButton image={editButton} style={styles.editButton} />
+            <ImageButton
+              image={params.mode === 'myProfile' ? editButton : followButton}
+              style={styles.editButton}
+            />
 
             <Typography.H3
               style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
@@ -154,25 +173,27 @@ const Profile = () => {
             <UserBio content={bio} />
 
             <View style={styles.socialCounterGroup}>
-              <SocialCounter count={following.length} label={t('following')} />
+              <SocialCounter count={following?.length} label={t('following')} />
 
               <View style={styles.separator} />
 
-              <SocialCounter count={followage.length} label={t('followers')} />
+              <SocialCounter count={followage?.length} label={t('followers')} />
             </View>
 
-            <View style={styles.connectButtonGroup}>
-              <ProfileConnectButton
-                label={t('connectAddress')}
-                handlePress={handlePressConnectAddress}
-              />
+            {params.mode === 'myProfile' && (
+              <View style={styles.connectButtonGroup}>
+                <ProfileConnectButton
+                  label={t('connectAddress')}
+                  handlePress={handlePressConnectAddress}
+                />
 
-              {/* hidden on MVP */}
-              {/* <ProfileConnectButton */}
-              {/*  label={t('connectApp')} */}
-              {/*  handlePress={() => {}} */}
-              {/* /> */}
-            </View>
+                {/* hidden on MVP */}
+                {/* <ProfileConnectButton */}
+                {/*  label={t('connectApp')} */}
+                {/*  handlePress={() => {}} */}
+                {/* /> */}
+              </View>
+            )}
           </View>
         </View>
 
@@ -228,6 +249,7 @@ const Profile = () => {
       />
 
       <ProfileHeader
+        disableRightButtons={params.mode === 'visitingProfile'}
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
         handlePressNotification={() => {

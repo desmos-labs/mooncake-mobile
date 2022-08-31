@@ -146,6 +146,8 @@ export const reportIcon = require('./images/report.png');
 
 export const followOrangeIcon = require('./images/followOrangeIcon.png');
 
+export const followOrangeFilledIcon = require('./images/followOrangeFilledIcon.png');
+
 export const moreBlackIcon = require('./images/moreBlackIcon.png');
 
 export const galleryIcon = require('./images/galleryIcon.png');

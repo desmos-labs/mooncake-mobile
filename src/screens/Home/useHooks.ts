@@ -3,7 +3,7 @@ import {useGetFollowing} from '@recoil/following';
 import {useGetPosts} from '@recoil/posts';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
@@ -52,8 +52,12 @@ const useHooks = () => {
     return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
   }, []);
 
-  const handlePressAuthor = React.useCallback((address: string) => {
+  const handlePressAuthor = useCallback((address: string) => {
     console.log(address);
+    navigate(ROUTES.USER_PROFILE, {
+      mode: 'visitingProfile',
+      visitingProfileAddress: address,
+    });
   }, []);
 
   const handlePressFollow = React.useCallback(async (address: string) => {
