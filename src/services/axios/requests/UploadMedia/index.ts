@@ -4,21 +4,13 @@ import {AxiosError} from 'axios';
 
 export type Params = {
   /**
-   * The URI to the file being uploaded.
-   * Ideally, it should be the result of the <Asset> type from
-   * react-native-image-picker
+   * The image asset to be uploaded. These values are
    */
-  fileUri: string;
-
-  /**
-   * The type of the file being uploaded.
-   */
-  fileType: string;
-
-  /**
-   * The name of the file.
-   */
-  fileName: string;
+  imageAsset: {
+    uri?: string;
+    type?: string;
+    fileName?: string;
+  };
 
   /**
    * Optional callback to listen to the file upload progress.
@@ -58,20 +50,16 @@ type Response = {
 };
 
 /**
- * Refresh the user's token validity
+ * Upload images to web3 storage.
  */
-const UploadMedia = async ({
-  fileUri,
-  fileType,
-  fileName,
-  onUploadProgress,
-  onError,
-}: Params) => {
+const UploadMedia = async ({imageAsset, onUploadProgress, onError}: Params) => {
+  const {fileName, type, uri} = imageAsset;
+
   const formData = new FormData();
   formData.append('file', {
     name: fileName,
-    fileType,
-    uri: Platform.OS === 'android' ? fileUri : fileUri.replace('file://', ''),
+    fileType: type,
+    uri: Platform.OS === 'android' ? uri : uri!.replace('file://', ''),
   });
 
   try {
