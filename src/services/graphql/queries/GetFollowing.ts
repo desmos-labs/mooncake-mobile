@@ -1,5 +1,16 @@
 import {gql} from '@apollo/client';
 
+export type QueueData = {
+  user_relationship: Array<{
+    _: FollowersData;
+  }>;
+  user_relationship_aggregate: {
+    aggregate: {
+      count: number;
+    };
+  };
+};
+
 /* A GraphQL query. */
 const GetFollowingForAddress = gql`
   query GetFollowingForAddress(
