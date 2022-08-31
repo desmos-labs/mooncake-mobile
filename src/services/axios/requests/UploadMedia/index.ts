@@ -16,6 +16,11 @@ export type Params = {
   fileType: string;
 
   /**
+   * The name of the file.
+   */
+  fileName: string;
+
+  /**
    * Optional callback to listen to the file upload progress.
    */
   onUploadProgress?: (event: {
@@ -48,10 +53,15 @@ type Response = {
 /**
  * Refresh the user's token validity
  */
-const UploadMedia = async ({fileUri, fileType, onUploadProgress}: Params) => {
+const UploadMedia = async ({
+  fileUri,
+  fileType,
+  fileName,
+  onUploadProgress,
+}: Params) => {
   const formData = new FormData();
   formData.append('file', {
-    name: 'file',
+    name: fileName,
     fileType,
     uri: Platform.OS === 'android' ? fileUri : fileUri.replace('file://', ''),
   });
