@@ -10,12 +10,12 @@ const useStyles = makeStyle(theme => ({
     zIndex: 2,
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     resizeMode: 'contain',
     position: 'absolute',
-    top: -40,
+    top: -50,
     alignSelf: 'center',
   },
   contentGroup: {
@@ -61,8 +61,8 @@ const useStyles = makeStyle(theme => ({
   tabContainer: {
     flexGrow: 1,
     backgroundColor: theme.colors.background,
-    borderTopRightRadius: 24,
-    borderTopLeftRadius: 24,
+    borderTopRightRadius: 28,
+    borderTopLeftRadius: 28,
     padding: theme.spacing.m,
   },
   snackbar: {
