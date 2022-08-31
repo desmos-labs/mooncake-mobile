@@ -1,6 +1,6 @@
 import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
-import axios from 'axios';
+import {AxiosError} from 'axios';
 
 export type Params = {
   /**
@@ -22,6 +22,7 @@ export type Params = {
 
   /**
    * Optional callback to listen to the file upload progress.
+   * @params event - The progress update event from axios.
    */
   onUploadProgress?: (event: {
     isTrusted: boolean;
@@ -36,6 +37,12 @@ export type Params = {
      */
     total: number;
   }) => void;
+
+  /**
+   * Optional error handler.
+   * @params error - The AxiosError object.
+   */
+  onError?: (error: AxiosError) => void;
 };
 
 type Response = {
@@ -58,6 +65,7 @@ const UploadMedia = async ({
   fileType,
   fileName,
   onUploadProgress,
+  onError,
 }: Params) => {
   const formData = new FormData();
   formData.append('file', {
@@ -66,22 +74,26 @@ const UploadMedia = async ({
     uri: Platform.OS === 'android' ? fileUri : fileUri.replace('file://', ''),
   });
 
-  const _response = await axiosInstance.post<Response>('/media', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    onUploadProgress,
-  });
-
-  if (axios.isAxiosError(_response)) {
-    throw new Error((_response.response?.data as string) || _response.message);
-  } else {
-    const {cid, url} = _response.data;
+  try {
+    const _response = await axiosInstance.post<Response>('/media', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress,
+      // only resolves if returned status is 200
+      validateStatus: status => status === 200,
+    });
 
     return {
-      cid,
-      url,
+      cid: _response?.data?.cid,
+      url: _response?.data?.url,
     };
+  } catch (err: any | AxiosError) {
+    if (onError) {
+      onError(err as AxiosError);
+    } else {
+      throw new Error(err.message);
+    }
   }
 };
 
