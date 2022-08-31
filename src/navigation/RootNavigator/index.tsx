@@ -65,8 +65,9 @@ import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
-import Following, {FollowingParams} from 'screens/Following';
-import Followers, {FollowersParams} from 'screens/Followers';
+import FollowingAndFollowers, {
+  FollowingAndFollowersParams,
+} from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 
 export type RootNavigatorParamList = {
@@ -121,11 +122,14 @@ export type RootNavigatorParamList = {
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
 
-  /* Following route. */
-  [ROUTES.FOLLOWING]: FollowingParams;
+  /* Following and followers route. */
+  [ROUTES.FOLLOWING_AND_FOLLOWERS]: FollowingAndFollowersParams;
 
-  /* Followers route. */
-  [ROUTES.FOLLOWERS]: FollowersParams;
+  /* Following tab route. */
+  [ROUTES.FOLLOWING]: FollowingAndFollowersParams;
+
+  /* Followers tab route. */
+  [ROUTES.FOLLOWERS]: FollowingAndFollowersParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -359,14 +363,8 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen
-        name={ROUTES.FOLLOWING}
-        component={Following}
-        options={{gestureResponseDistance}}
-      />
-
-      <Stack.Screen
-        name={ROUTES.FOLLOWERS}
-        component={Followers}
+        name={ROUTES.FOLLOWING_AND_FOLLOWERS}
+        component={FollowingAndFollowers}
         options={{gestureResponseDistance}}
       />
     </Stack.Navigator>

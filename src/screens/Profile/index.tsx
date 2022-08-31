@@ -126,20 +126,22 @@ const Profile = () => {
   the following and followers screen. */
   const handleFollowingPressd = useCallback(
     () =>
-      navigate(ROUTES.FOLLOWING, {
-        initSubspaceID: subspaceID,
-        initUserAddress: activeAddress ?? '',
-        username: nickname || `@${dtag}`,
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWING,
+        initialSubspaceID: subspaceID,
+        initialUserAddress: activeAddress ?? '',
+        initialUsername: nickname || `@${dtag}`,
       }),
-    [],
+    [subspaceID, activeAddress, nickname, dtag],
   );
 
   const handleFollowersPressd = useCallback(
     () =>
-      navigate(ROUTES.FOLLOWERS, {
-        initSubspaceID: subspaceID,
-        initUserAddress: activeAddress ?? '',
-        username: nickname || `@${dtag}`,
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWERS,
+        initialSubspaceID: subspaceID,
+        initialUserAddress: activeAddress ?? '',
+        initialUsername: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
