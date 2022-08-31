@@ -1,8 +1,6 @@
 import {
   getFocusedRouteNameFromRoute,
-  Route,
   useNavigation,
-  useRoute,
 } from '@react-navigation/native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -19,8 +17,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
-import routeState from '@recoil/followingAndFollowers/routeState';
+import {useRecoilValue} from 'recoil';
 import countState from '@recoil/followingAndFollowers/countState';
 import {IconButton, useTheme} from 'react-native-paper';
 import {formatNumShorthand} from 'lib/FormatUtils';
@@ -30,54 +27,46 @@ import {
 } from '@react-navigation/material-top-tabs';
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import useStyles from './useStyles';
-import FollowingTab from './components/TabViewOfFollowing';
-import FollowersTab from './components/TabViewOfFollowers';
+import FollowingTab from '../Following';
+import FollowersTab from '../Followers';
 
 /**
  * @property {ROUTES.FOLLOWING | ROUTES.FOLLOWERS} initialTabRouteName - The initial tab route name.
- * @property {number} initialSubspaceID - The subspace ID of the user whose following/followers you
- * want to see.
- * @property {string} initialUserAddress - The address of the user whose following/followers you want
+ * @property {number} subspaceID - The subspace ID of the user whose following/followers you
+ * want to view.
+ * @property {string} userAddress - The address of the user whose following/followers you want
  * to see.
- * @property {string} initialUsername - The username of the user whose followers/following you want to
+ * @property {string} username - The username of the user whose followers/following you want to
  * see.
  */
 export type FollowingAndFollowersParams = {
   initialTabRouteName: ROUTES.FOLLOWING | ROUTES.FOLLOWERS;
-  initialSubspaceID: number;
-  initialUserAddress: string;
-  initialUsername: string;
+  subspaceID: number;
+  userAddress: string;
+  username: string;
 };
 
 /* Creating a new React component that is a tab navigator. */
 const Tab = createMaterialTopTabNavigator();
 const numOfTabs = 2;
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING>;
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.FOLLOWING_AND_FOLLOWERS
+>;
 
 /* A React component that renders the left arrow icon for the go back button. */
 const Icon = () => <AntDesignIcon name="left" size={20} />;
 
 /* A React component for the following and followers screen. */
-const Following: FC<{route: Route<string>}> = ({route}) => {
-  const {params} = useRoute<NavProps['route']>();
-  const {
-    initialTabRouteName,
-    initialSubspaceID,
-    initialUserAddress,
-    initialUsername,
-  } = params;
+const FollowingAndFollowers: FC<NavProps> = ({route}) => {
+  const {initialTabRouteName, subspaceID, userAddress, username} = route.params;
 
   /* Invalid the cache data when the subspaceId or userAddress changed. */
-  const setParamTab = useSetRecoilState(routeState);
+  const [cacheKey, setCacheKey] = useState('');
   useEffect(
-    () =>
-      setParamTab({
-        subspaceID: initialSubspaceID,
-        userAddress: initialUserAddress,
-        cacheKey: new Date().getTime().toString(),
-      }),
-    [initialSubspaceID, initialUserAddress],
+    () => setCacheKey(new Date().getTime().toString()),
+    [subspaceID, userAddress],
   );
 
   const {t} = useTranslation();
@@ -129,7 +118,7 @@ const Following: FC<{route: Route<string>}> = ({route}) => {
   const theme = useTheme();
 
   /* A memoized version of the screen options for the tab navigator. */
-  const screenOptions: MaterialTopTabNavigationOptions = useMemo(
+  const screenOptions = useMemo<MaterialTopTabNavigationOptions>(
     () => ({
       tabBarStyle: styles.tabBar,
       tabBarItemStyle: styles.tabBarItem,
@@ -149,7 +138,7 @@ const Following: FC<{route: Route<string>}> = ({route}) => {
       onTouchStart={disableParentSwipeLeft}>
       <View style={styles.navigationBar}>
         <IconButton icon={Icon} style={styles.backButton} onPress={goBack} />
-        <Text style={styles.header}>{initialUsername}</Text>
+        <Text style={styles.header}>{username}</Text>
       </View>
       <Tab.Navigator
         screenOptions={screenOptions}
@@ -159,15 +148,17 @@ const Following: FC<{route: Route<string>}> = ({route}) => {
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
           options={{tabBarLabel: nameOfFolowing}}
+          initialParams={{cacheKey, subspaceID, userAddress, username}}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowersTab}
           options={{tabBarLabel: nameOfFolowers}}
+          initialParams={{cacheKey, subspaceID, userAddress, username}}
         />
       </Tab.Navigator>
     </SafeAreaView>
   );
 };
 
-export default Following;
+export default FollowingAndFollowers;

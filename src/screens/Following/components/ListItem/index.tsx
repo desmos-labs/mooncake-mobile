@@ -4,7 +4,7 @@ import routeState from '@recoil/followingAndFollowers/routeState';
 import queryState from '@recoil/followingAndFollowers/queryState';
 import React, {FC, Fragment} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ListRenderItem, Text, View} from 'react-native';
+import {Image, ListRenderItemInfo, Text, View} from 'react-native';
 import {ActivityIndicator, Button, useTheme} from 'react-native-paper';
 import {
   Loadable,
@@ -125,11 +125,17 @@ const Error: FC<{
   );
 };
 
+export type ListItemProps = ListRenderItemInfo<number> & {
+  subspaceID: number;
+  userAddress: string;
+};
+
 /* A React component that renders a list of following accounts. */
-const ListItem: ListRenderItem<number> = ({item: page}) => {
-  /* Getting the subspaceID, userAddress, and cacheKey from the routeState. Then it is
-  creating a query with the subspaceID, userAddress, cacheKey, and page. Then it is getting the
-  loadable from the query. Then it is getting the rows from the loadable. */
+const ListItem: FC<ListItemProps> = ({
+  item: page,
+  subspaceID: _subspaceID,
+  userAddress: _userAddress,
+}) => {
   const {subspaceID, userAddress, cacheKey} = useRecoilValue(routeState);
   const query = queryState({
     stateType: 'following',

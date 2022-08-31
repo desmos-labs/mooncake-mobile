@@ -128,9 +128,9 @@ const Profile = () => {
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
-        initialSubspaceID: subspaceID,
-        initialUserAddress: activeAddress ?? '',
-        initialUsername: nickname || `@${dtag}`,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        username: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
@@ -139,9 +139,9 @@ const Profile = () => {
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,
-        initialSubspaceID: subspaceID,
-        initialUserAddress: activeAddress ?? '',
-        initialUsername: nickname || `@${dtag}`,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        username: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
