@@ -56,11 +56,6 @@ const Profile = () => {
   });
   // animations end
 
-  const tabs = React.useMemo(
-    () => ['Posts', 'Portfolio', 'POAP', 'Tipping'],
-    [],
-  );
-
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
 
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -72,6 +67,11 @@ const Profile = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {top} = useSafeAreaInsets();
+
+  const tabs = React.useMemo(
+    () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
+    [t],
+  );
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
