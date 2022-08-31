@@ -16,6 +16,7 @@ export const postParamsState = atom<PostParams>({
 
 /**
  * Initializes the post params atom.
+ * TODO: refactor this so it's an async selector instead of a hook
  */
 export const useInitializePostParams = () => {
   const setPostParams = useSetRecoilState(postParamsState);
