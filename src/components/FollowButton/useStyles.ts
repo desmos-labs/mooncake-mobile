@@ -26,22 +26,7 @@ const useStyles = makeStyle(() => {
       flexGrow: 0,
     },
     label: {
-      /* Text */
-      width: 39,
-      height: 16,
-
-      /* Button / Button 3 | Semibold 12 */
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: '600',
-      fontSize: 12,
-      lineHeight: 16,
-      /* identical to box height, or 133% */
-
-      letterSpacing: 0.004,
-
       /* Neutral Color/White */
-
       color: '#FFFFFF',
 
       /* Inside auto layout */

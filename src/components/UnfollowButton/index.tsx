@@ -1,8 +1,8 @@
 import React, {ComponentProps, FC, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import Button from 'components/Button';
-import {Text} from 'react-native-paper';
 import {TouchableOpacity} from 'react-native';
+import Typography from 'components/Typography';
 import useStyles from './useStyles';
 import SVGComponent from './background';
 
@@ -44,9 +44,9 @@ const UnfollowButton: FC<Props> = props => {
         width={styles.button.width}
         height={styles.button.height}
       />
-      <Text style={[styles.label, labelStyle]}>
+      <Typography.Button3 style={[styles.label, labelStyle]}>
         {children || t('unfollow')}
-      </Text>
+      </Typography.Button3>
     </TouchableOpacity>
   );
 };
