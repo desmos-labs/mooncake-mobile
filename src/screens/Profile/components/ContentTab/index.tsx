@@ -36,7 +36,10 @@ const ContentTabs = ({
           key={tab}
           style={styles.button}
           onPress={() => handleTabPressed(index)}>
-          <Typography.Button2>{tab}</Typography.Button2>
+          <Typography.Button2
+            style={{opacity: selectedIndex === index ? 1 : 0.5}}>
+            {tab}
+          </Typography.Button2>
 
           <View
             style={[

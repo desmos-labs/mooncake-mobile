@@ -1,7 +1,5 @@
-import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
 import {
   defaultProfilePic,
   followBlackIcon,
@@ -19,10 +17,9 @@ import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import StickyBottomMenu from 'components/StickyBottomMenu';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {utcToZonedTime} from 'date-fns-tz';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -31,14 +28,11 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
 import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
-import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -58,13 +52,6 @@ const PostDetails = () => {
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [settings] = useRecoilState(appSettingsState);
-  const {data, loading, refetch} = useQuery(GetPostBySubspaceIDandPostID, {
-    variables: {
-      ID: params.postId,
-      subspaceID: params.subspaceID,
-    },
-  });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [profileMenuVisible, setProfileMenuVisible] = React.useState(false);
@@ -75,24 +62,24 @@ const PostDetails = () => {
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
-  const {DUMMY_COMMENTS, DUMMY_AUTHOR, textPostData} = useHooks();
+  const {
+    post,
+    postLoading,
+    postRefetch,
+    comments,
+    commentsLoading,
+    reactions,
+    formattedDate,
+  } = useHooks({
+    id: params.postId,
+    sId: params.subspaceID,
+  });
 
-  const post = React.useMemo(() => {
-    if (!data) return undefined;
-
-    return data.posts[0];
-  }, [data]);
-
-  useEffect(() => {
-    if (!loading) {
-      console.log(post);
-    }
-  }, [post]);
-
-  const formattedDate = useMemo(
-    () => utcToZonedTime(post?.creation_date, settings.currentTimezone),
-    [post],
-  );
+  const flatListData = useMemo(() => {
+    if (selectedIndex === 0) return comments;
+    else if (selectedIndex === 1) return reactions;
+    else return [];
+  }, [selectedIndex, comments, reactions]);
 
   const Avatar = React.useMemo(() => {
     if (post?.author.profile_pic) {
@@ -110,7 +97,7 @@ const PostDetails = () => {
             {post?.author.nickname || `@${post?.author.dtag}`}
           </Typography.Subtitle3>
           {/* temporary */}
-          <Typography.Body7>{formattedDate.toDateString()}</Typography.Body7>
+          <Typography.Body7>{formattedDate}</Typography.Body7>
         </View>
       </View>
     ),
@@ -141,6 +128,25 @@ const PostDetails = () => {
     [],
   );
 
+  const handlePressSelectedComment = React.useCallback(
+    ({
+      postId,
+      commentId,
+      subspaceId,
+    }: {
+      postId: number;
+      commentId: number;
+      subspaceId: number;
+    }) => {
+      navigate(ROUTES.COMMENT_REPLIES, {
+        postId,
+        commentId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (index === 0) {
@@ -149,9 +155,12 @@ const PostDetails = () => {
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             sections={[
-              {sectionName: t('comments'), counter: 1000},
-              {sectionName: t('reactions'), counter: 5670},
-              {sectionName: t('tips'), counter: 507},
+              {sectionName: t('comments'), counter: comments.length},
+              {
+                sectionName: t('reactions'),
+                counter: reactions.length,
+              },
+              {sectionName: t('tips'), counter: 0},
             ]}
           />
         );
@@ -159,7 +168,9 @@ const PostDetails = () => {
       if (selectedIndex === 0) {
         return (
           <CommentItem
-            handlePressMore={() => console.log('test')}
+            handlePressMore={() => {
+              console.log('hello world');
+            }}
             handlePressComment={() => {
               console.log('hello world');
             }}
@@ -169,9 +180,13 @@ const PostDetails = () => {
             handlePressTip={() => {
               console.log('hello world');
             }}
-            handlePress={() => {
-              console.log('hello world');
-            }}
+            handlePress={() =>
+              handlePressSelectedComment({
+                postId: post.id,
+                commentId: item.id,
+                subspaceId: item.subspace_id,
+              })
+            }
             handleLongPress={event => {
               setAnchor({
                 x: event.nativeEvent.pageX,
@@ -179,22 +194,20 @@ const PostDetails = () => {
               });
               setMenuVisible(true);
             }}
+            loading={commentsLoading}
             {...item}
           />
         );
       } else if (selectedIndex === 1) {
         return (
           <ReactionItem
-            nickname={item.nickname}
-            dTag={item.dTag}
-            avatar={item.avatar}
+            reaction={item}
             handlePressFollow={() => {
               console.log('follow');
             }}
             handlePressUnfollow={() => {
               console.log('unfollow');
             }}
-            followed={item.followed}
           />
         );
       } else {
@@ -209,12 +222,11 @@ const PostDetails = () => {
         );
       }
     },
-    [selectedIndex],
+    [selectedIndex, comments, reactions],
   );
 
-  const handlePressComment = React.useCallback(
+  const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
-      console.log('press enter comment');
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -227,23 +239,22 @@ const PostDetails = () => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
 
-  const ListEmptyComponent = React.useMemo(() => {
+  /*  const ListEmptyComponent = React.useMemo(() => {
     return (
       <EmptyListComponent
         label="no comments"
         handleButtonPress={() => {
-          handlePressComment({author: DUMMY_AUTHOR, postId: 'DUMMYID'});
+          handlePressComment({author: post.author, postId: post.id});
         }}
         buttonLabel="comment"
       />
     );
-  }, []);
+  }, []); */
 
-  return loading ? (
+  return postLoading ? (
     <ActivityIndicator />
   ) : (
     <DView
-      disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
@@ -256,28 +267,36 @@ const PostDetails = () => {
       }>
       <FlatList
         scrollEnabled={true}
-        refreshing={loading}
+        refreshing={postLoading}
         onRefresh={() =>
-          refetch({ID: params.postId, subspaceID: params.subspaceID})
+          postRefetch({ID: params.postId, subspaceID: params.subspaceID})
         }
-        ListHeaderComponent={<PostComponent postData={textPostData} />}
+        ListHeaderComponent={<PostComponent postData={post} />}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.id}
-        ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[0 as any, ...DUMMY_COMMENTS]}
+        data={[0 as any, ...flatListData]}
       />
       {mode === 'view' ? (
         <StickyBottomMenu
+          leftButtonInteractions={comments.length}
+          middleButtonInteractions={reactions.length}
+          rightButtonInteractions={0}
           leftButtonAction={() => setMode('comment')}
           middleButtonAction={() => console.log('middle')}
           rightButtonAction={handlePressSendTips}
         />
       ) : (
         <EnterCommentBottomBar
-          profileImage={{uri: post?.author.profile_pic}}
-          onIconPress={() => handlePressComment}
+          profileImage={
+            post?.author.profile_pic
+              ? {uri: post?.author.profile_pic}
+              : defaultProfilePic
+          }
+          onIconPress={() =>
+            handleExpandComment({author: post.author, postId: post.id})
+          }
         />
       )}
 

@@ -12,11 +12,33 @@ const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   includeBase64: true,
 };
 
+type ReturnValue = {
+  /**
+   * Select an image from the user's library.
+   */
+  imageFromLibrary: () => void;
+
+  /**
+   * Select an image by allowing the user to take a photo.
+   */
+  imageFromCamera: () => void;
+
+  /**
+   * The user's selected image.
+   */
+  imageAsset: Asset | undefined;
+
+  /**
+   * Clears the selected image.
+   */
+  clearImage: () => void;
+};
+
 /**
  * A hook that wraps react-native-image-picker logic and stores the selected
  * image in a useState hook.
  */
-const useImageFromDevice = () => {
+const useImageFromDevice = (): ReturnValue => {
   const [image, setImage] = React.useState<Asset>();
 
   // selecting webp images on ios will return an error code
@@ -53,7 +75,7 @@ const useImageFromDevice = () => {
   return {
     imageFromLibrary,
     imageFromCamera,
-    image,
+    imageAsset: image,
     clearImage,
   };
 };

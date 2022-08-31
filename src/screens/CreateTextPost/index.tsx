@@ -16,6 +16,8 @@ import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from 'react-native-paper';
+import {useRecoilValue} from 'recoil';
+import {postParamsState} from '@recoil/postParamsState';
 import useStyles from './useStyles';
 import BottomBar from './components/BottomBar';
 
@@ -24,6 +26,7 @@ const CreateTextPost = () => {
   const theme = useTheme();
 
   const {t} = useTranslation('createPost');
+  const postParams = useRecoilValue(postParamsState);
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
@@ -80,7 +83,7 @@ const CreateTextPost = () => {
             behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
             keyboardVerticalOffset={50}>
             <TextInput
-              maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+              maxLength={postParams.max_text_length}
               ref={inputRef}
               value={text}
               multiline

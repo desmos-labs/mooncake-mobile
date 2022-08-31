@@ -95,6 +95,8 @@ enum ROUTES {
 
   // Post details start
   POST_DETAILS = 'POST_DETAILS',
+
+  COMMENT_REPLIES = 'COMMENT_REPLIES',
   // Post details end
 
   // Post Interaction start

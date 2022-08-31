@@ -97,11 +97,15 @@ const ActionAuthorization = () => {
             {t('common:confirm')}
           </Button>
 
-          <Spacer paddingTop={theme.spacing.m}>
-            <Typography.Body7 style={styles.textStyle}>
-              {t('avoidRepetitiveActions')}
-            </Typography.Body7>
+          <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
+            <Button mode="outlined" onPress={goBack}>
+              {t('common:refuse')}
+            </Button>
           </Spacer>
+
+          <Typography.Body7 style={styles.textStyle}>
+            {t('avoidRepetitiveActions')}
+          </Typography.Body7>
         </SafeAreaView>
       </View>
     </View>

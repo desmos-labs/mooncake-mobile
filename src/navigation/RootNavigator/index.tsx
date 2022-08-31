@@ -15,6 +15,7 @@ import ActionAuthorization, {
 } from 'screens/ActionAuthorization';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
+import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
 import Community from 'screens/Community';
 import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
 import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
@@ -108,6 +109,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
   [ROUTES.SELECT_POST_TYPE]: undefined;
   [ROUTES.CREATE_TEXT_POST]: undefined;
+  [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -178,6 +180,14 @@ const RootNavigator = () => {
         }}
         name={ROUTES.POST_DETAILS}
         component={PostDetails}
+      />
+      <Stack.Screen
+        initialParams={{
+          commentId: 1,
+          subspaceId: 5,
+        }}
+        name={ROUTES.COMMENT_REPLIES}
+        component={CommentReplies}
       />
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}

@@ -1,49 +1,50 @@
-import React from 'react';
-import {View, Image, ImageSourcePropType} from 'react-native';
-import Typography from 'components/Typography';
+import {defaultProfilePic} from 'assets/images';
 import Button from 'components/Button';
+import Typography from 'components/Typography';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {Image, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
-  nickname: string;
-
-  dTag: string;
-
-  followed?: boolean;
-
-  avatar: ImageSourcePropType;
-
+  reaction: {
+    value: any;
+    author: any;
+  };
   handlePressFollow: () => void;
-
   handlePressUnfollow: () => void;
 };
 
 const ReactionItem = ({
-  nickname,
-  dTag,
-  followed,
-  avatar,
   handlePressFollow,
   handlePressUnfollow,
+  reaction,
 }: Props) => {
   const styles = useStyles();
-
   const theme = useTheme();
-
   const {t} = useTranslation('postInteraction');
+  const followed = true;
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image source={avatar} style={styles.avatarStyle} />
+      <Image
+        source={
+          reaction.author.profile_pic
+            ? {uri: reaction.author.profile_pic}
+            : defaultProfilePic
+        }
+        style={styles.avatarStyle}
+      />
       <View style={styles.textGroup}>
         <View>
           <Typography.Subtitle3 style={styles.textStyle}>
-            {nickname}
+            {reaction.author.nickname
+              ? reaction.author.nickname
+              : t('common:no nickname')}
           </Typography.Subtitle3>
           <Typography.Body7 style={styles.subTextStyle}>
-            @{dTag}
+            @{reaction.author.dtag}
           </Typography.Body7>
         </View>
       </View>
