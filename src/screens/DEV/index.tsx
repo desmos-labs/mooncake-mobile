@@ -6,6 +6,7 @@ import Spacer from 'components/Spacer';
 import DView from 'components/DView';
 import Button from 'components/Button';
 import {clearMMKV} from 'lib/MMKVStorage';
+import _ from 'lodash';
 import {resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -37,6 +38,11 @@ const routesToRender = [
 
 const DevScreen = () => {
   const {navigate} = useNavigation<any>();
+
+  const a = [1, 2];
+  const b = [1, 2, 3];
+
+  console.log(_.includes(b, a));
 
   const renderItem = ({item}: any) => {
     return (

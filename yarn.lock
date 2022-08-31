@@ -1219,18 +1219,18 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.2.tgz#bca5ffca89bbb1881cc61165777a9b787b5a597d"
-  integrity sha512-kXhCr3jgkxNZnNlJd9ELOe2TvUvhmg0TaAUT0RXgUhR2zkV8gt+pWZC4CJ4/1JEBveGp5eQ2e4t/A3BqN0mFkA==
+"@desmoslabs/desmjs-types@4.3.4":
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.4.tgz#2779607b2d5673a20453ea9a0e0cc9ac3f6a054e"
+  integrity sha512-7bbx+R97MxxGyINmGbqtEUonktF64rRIygjTxLbHH5hmfc19SPvlH11qy+eJTouTuVXdxJVJ3DVcRVhDHYYNHA==
   dependencies:
     long "^4.0.0"
     protobufjs "^6.11.2"
 
-"@desmoslabs/desmjs@4.3.2":
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.2.tgz#e954fae987c62d3d732b8d70b0c95e76177075b4"
-  integrity sha512-AHsGlpxQV1ukyTcGksDl0dVo96DcBiBU2TNBp6FccQEgTrbOrWrF/9WIX5wf2404Vc3Rh60M2IalbJcZMi7MPg==
+"@desmoslabs/desmjs@4.3.4":
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.4.tgz#6dd9c139bd673053f4d3e178a9c4fcc72653cb33"
+  integrity sha512-kOh+VIeJ+y/06Kp/wg9GJL4RdDchVVlbGsj9mO7DEAfdShfdYhXtDlz65k4434QBujl3IEiMhhdKP/VAEpmucA==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"
@@ -1241,7 +1241,7 @@
     "@cosmjs/stargate" "^0.28.11"
     "@cosmjs/tendermint-rpc" "^0.28.11"
     "@cosmjs/utils" "^0.28.11"
-    "@desmoslabs/desmjs-types" "4.3.2"
+    "@desmoslabs/desmjs-types" "4.3.4"
     cosmjs-types "^0.4.1"
     cosmos-wallet "^1.1.0"
     long "^4.0.0"
@@ -4170,6 +4170,14 @@ cosmjs-types@^0.4.0, cosmjs-types@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/cosmjs-types/-/cosmjs-types-0.4.1.tgz#3b2a53ba60d33159dd075596ce8267cfa7027063"
   integrity sha512-I7E/cHkIgoJzMNQdFF0YVqPlaTqrqKHrskuSTIqlEyxfB5Lf3WKCajSXVK2yHOfOFfSux/RxEdpMzw/eO4DIog==
+  dependencies:
+    long "^4.0.0"
+    protobufjs "~6.11.2"
+
+cosmjs-types@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/cosmjs-types/-/cosmjs-types-0.5.1.tgz#f9bc35e78c32b687fb6018dc573eb454b3ae2587"
+  integrity sha512-NcC58xUIVLlKdIimWWQAmSlmCjiMrJnuHf4i3LiD8PCextfHR0fT3V5/WlXZZreyMgdmh6ML1zPUfGTbbo3Z5g==
   dependencies:
     long "^4.0.0"
     protobufjs "~6.11.2"

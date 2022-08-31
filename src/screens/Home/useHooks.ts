@@ -7,7 +7,6 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 
 /**
  * Hooks for the Home screen.
@@ -19,6 +18,7 @@ const useHooks = () => {
   const maxOffset = React.useRef<number>(0);
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
 
@@ -62,10 +62,6 @@ const useHooks = () => {
       const followedAddresses = following.map(x => x.address);
 
       console.log(followedAddresses, address);
-
-      navigate(ROUTES.ACTION_AUTHORIZATION, {
-        grantType: GrantEnums.MsgCreateRelationship,
-      });
     },
     [following],
   );

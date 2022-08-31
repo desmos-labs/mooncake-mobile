@@ -17,6 +17,8 @@ import useStyles from './useStyles';
 export type ActionAuthorizationParams = {
   grantType: GrantEnums;
 
+  hasFeeGrant?: boolean;
+
   onCancel?: () => void;
 
   onApprove?: () => void;
