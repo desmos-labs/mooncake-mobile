@@ -25,6 +25,8 @@ const GetFollowersForAddress = gql`
       where: {
         subspace_id: {_eq: $subspaceID}
         counterparty_address: {_eq: $userAddress}
+        counterparty: {}
+        creator: {}
       }
       order_by: {creator: {creation_time: asc}}
     ) {
