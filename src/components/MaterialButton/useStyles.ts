@@ -11,7 +11,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
       fontStyle: 'normal',
       fontWeight: '600',
       fontSize: 16,
-      lineHeight: 24,
+      lineHeight: 20,
       letterSpacing: 0.015,
       color:
         props.mode === 'contained' || props.mode === 'gradientFilled'

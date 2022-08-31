@@ -128,6 +128,25 @@ const PostDetails = () => {
     [],
   );
 
+  const handlePressSelectedComment = React.useCallback(
+    ({
+      postId,
+      commentId,
+      subspaceId,
+    }: {
+      postId: number;
+      commentId: number;
+      subspaceId: number;
+    }) => {
+      navigate(ROUTES.COMMENT_REPLIES, {
+        postId,
+        commentId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (index === 0) {
@@ -161,9 +180,13 @@ const PostDetails = () => {
             handlePressTip={() => {
               console.log('hello world');
             }}
-            handlePress={() => {
-              console.log('hello world');
-            }}
+            handlePress={() =>
+              handlePressSelectedComment({
+                postId: post.id,
+                commentId: item.id,
+                subspaceId: item.subspace_id,
+              })
+            }
             handleLongPress={event => {
               setAnchor({
                 x: event.nativeEvent.pageX,
@@ -202,7 +225,7 @@ const PostDetails = () => {
     [selectedIndex, comments, reactions],
   );
 
-  const handlePressComment = React.useCallback(
+  const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: string}) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
@@ -271,7 +294,9 @@ const PostDetails = () => {
               ? {uri: post?.author.profile_pic}
               : defaultProfilePic
           }
-          onIconPress={() => handlePressComment}
+          onIconPress={() =>
+            handleExpandComment({author: post.author, postId: post.id})
+          }
         />
       )}
 
