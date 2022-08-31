@@ -4,7 +4,8 @@ import {AxiosError} from 'axios';
 
 export type Params = {
   /**
-   * The image asset to be uploaded. These values are
+   * The image asset to be uploaded. This can be manually constructed or passed the
+   * imageAsset from useImageFromDevice hook.
    */
   imageAsset: {
     uri?: string;
