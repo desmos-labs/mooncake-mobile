@@ -7,6 +7,7 @@ import {useGetProfileParams} from '@recoil/profileParams';
 import {initializeAxiosInstance} from 'services/axios';
 import {useGetButterConfig} from '@recoil/butterConfigState';
 import GetRegisteredReactions from 'services/graphql/queries/GetRegisteredReactions';
+import {useInitializePostParams} from '@recoil/postParamsState';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
@@ -18,6 +19,7 @@ const useInitializeAppData = () => {
     },
   });
   const profileParams = useGetProfileParams();
+  useInitializePostParams();
 
   const {getButterConfig} = useGetButterConfig();
 
