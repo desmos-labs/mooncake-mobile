@@ -11,7 +11,7 @@ import {NavProps, POST_TYPE} from 'screens/Home/index';
 /**
  * Hooks for the Home screen.
  */
-const useHooks = () => {
+const useHooks = (activeAddress: string) => {
   const {t} = useTranslation('home');
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
@@ -53,11 +53,16 @@ const useHooks = () => {
   }, []);
 
   const handlePressAuthor = useCallback((address: string) => {
-    console.log(address);
-    navigate(ROUTES.USER_PROFILE, {
-      mode: 'visitingProfile',
-      visitingProfileAddress: address,
-    });
+    if (activeAddress === address) {
+      navigate(ROUTES.USER_PROFILE, {
+        mode: 'myProfile',
+      });
+    } else {
+      navigate(ROUTES.USER_PROFILE, {
+        mode: 'visitingProfile',
+        visitingProfileAddress: address,
+      });
+    }
   }, []);
 
   const handlePressFollow = React.useCallback(async (address: string) => {

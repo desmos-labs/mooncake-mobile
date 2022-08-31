@@ -70,7 +70,7 @@ const Home = () => {
     onCarouselProgressChange,
     onPostChanged,
     postData,
-  } = useHooks();
+  } = useHooks(activeAddress!);
 
   const {profileData} = useActiveAccount();
 
