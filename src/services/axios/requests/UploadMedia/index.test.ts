@@ -16,7 +16,7 @@ describe('services: axios/UploadMedia', () => {
     });
 
     const response = await UploadMedia({
-      imageAsset: {uri: '123', type: '123', fileName: '123'},
+      mediaFile: {uri: '123', type: '123', fileName: '123'},
     });
 
     expect(response).toEqual(MOCKED_DATA);
@@ -31,7 +31,7 @@ describe('services: axios/UploadMedia', () => {
     });
 
     await UploadMedia({
-      imageAsset: {uri: '123', type: '123', fileName: '123'},
+      mediaFile: {uri: '123', type: '123', fileName: '123'},
       onError: onErrorMock,
     });
 

@@ -2,16 +2,20 @@ import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
 import {AxiosError} from 'axios';
 
+type ImageMedia = {
+  uri?: string;
+  type?: string;
+  fileName?: string;
+};
+
 export type Params = {
   /**
    * The image asset to be uploaded. This can be manually constructed or passed the
    * imageAsset from useImageFromDevice hook.
+   *
+   * In the future, additional media types should be added here.
    */
-  imageAsset: {
-    uri?: string;
-    type?: string;
-    fileName?: string;
-  };
+  mediaFile: ImageMedia;
 
   /**
    * Optional callback to listen to the file upload progress.
@@ -53,8 +57,8 @@ type Response = {
 /**
  * Upload images to web3 storage.
  */
-const UploadMedia = async ({imageAsset, onUploadProgress, onError}: Params) => {
-  const {fileName, type, uri} = imageAsset;
+const UploadMedia = async ({mediaFile, onUploadProgress, onError}: Params) => {
+  const {fileName, type, uri} = mediaFile;
 
   const formData = new FormData();
   formData.append('file', {
