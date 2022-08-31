@@ -42,7 +42,7 @@ const EnterComment = () => {
     params: {author},
   } = useRoute<NavProps['route']>();
 
-  const {image, clearImage, imageFromCamera, imageFromLibrary} =
+  const {imageAsset, clearImage, imageFromCamera, imageFromLibrary} =
     useImageFromDevice();
 
   const [reply, setReply] = React.useState('');
@@ -50,7 +50,7 @@ const EnterComment = () => {
   const TopBarRightElement = React.useMemo(() => {
     const handlePress = () => {
       // these values will probably be useful in constructing the comment message
-      console.log(image, reply, author);
+      console.log(imageAsset, reply, author);
     };
 
     return (
@@ -61,7 +61,7 @@ const EnterComment = () => {
         {t('post')}
       </Button>
     );
-  }, [image, reply]);
+  }, [imageAsset, reply]);
 
   const TopBarCenterElement = React.useMemo(() => {
     return (
@@ -107,11 +107,11 @@ const EnterComment = () => {
 
         <SelectedCommentImage
           handlePress={clearImage}
-          source={image ? {uri: image.uri} : ('' as any)}
+          source={imageAsset ? {uri: imageAsset.uri} : ('' as any)}
         />
       </DView>
       <MediaBottomPanel
-        imageSelected={!!image}
+        imageSelected={!!imageAsset}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
         handlePressMention={() => {
