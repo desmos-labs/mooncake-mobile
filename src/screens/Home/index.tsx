@@ -16,7 +16,6 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import {verticalScale} from 'react-native-size-matters';
 import useHooks from 'screens/Home/useHooks';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -70,6 +69,7 @@ const Home = () => {
     onCarouselProgressChange,
     onPostChanged,
     postData,
+    selectedPostIndex,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -93,48 +93,23 @@ const Home = () => {
     [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
-  const swipeUpGesture = React.useMemo(
-    () =>
-      Gesture.Pan()
-        .runOnJS(true)
-        .onEnd(event => {
-          const {velocityX, velocityY} = event;
+  const handlePressReactions = React.useCallback(() => {
+    console.log('like');
+  }, []);
 
-          if (Math.abs(velocityX) < 1000 && velocityY < -500) {
-            handlePressComments();
-          }
-        }),
+  const handlePressComments = React.useCallback(
+    ({postId, subspaceID}: {postId: number; subspaceID: number}) => {
+      navigate(ROUTES.POST_DETAILS, {
+        focusCommentBox: true,
+        postId,
+        subspaceID,
+      });
+    },
     [],
   );
 
-  const handlePressReactions = React.useCallback(() => {
-    navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_REACTIONS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-      },
-    });
-  }, []);
-
-  const handlePressComments = React.useCallback(() => {
-    navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_COMMENTS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-      },
-    });
-  }, []);
-
   const handlePressTip = React.useCallback(() => {
-    navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_TIPS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-      },
-    });
+    console.log('tips');
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
@@ -144,72 +119,75 @@ const Home = () => {
   const profilePic = _.get(profileData, 'profile_pic');
 
   return (
-    <GestureDetector gesture={swipeUpGesture}>
-      <DView style={styles.container}>
-        <View style={styles.headerGroup}>
-          <ProfileHeaderButton
-            imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
-            onPress={handlePressProfile}
-          />
-
-          <View style={styles.tabContainer}>
-            <PostTypeTab
-              selectedIndex={selectedIndex}
-              setSelectedIndex={setSelectedIndex}
-              postTypes={postTypes}
-            />
-          </View>
-
-          <ProfileHeaderButton
-            style={styles.createPostButton}
-            imageSrc={createPost}
-            onPress={() => {
-              console.log('create post');
-            }}
-          />
-        </View>
-
-        <Carousel
-          onProgressChange={onCarouselProgressChange}
-          onSnapToItem={onPostChanged}
-          mode="parallax"
-          loop={false}
-          modeConfig={{
-            parallaxScrollingScale: 0.9,
-            parallaxScrollingOffset: 60,
-          }}
-          width={Dimensions.get('window').width}
-          height={verticalScale(500)}
-          style={styles.carousel}
-          data={[...postData, 0 as any]}
-          renderItem={renderPost}
-          panGestureHandlerProps={{
-            activeOffsetX: [-10, 10],
-            failOffsetY: [-10, 10],
-          }}
+    <DView style={styles.container}>
+      <View style={styles.headerGroup}>
+        <ProfileHeaderButton
+          imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
+          onPress={handlePressProfile}
         />
 
-        <View style={styles.interactionButtonGroup}>
-          <InteractionButton
-            onPress={handlePressComments}
-            interactionCount={10500}
-            icon={commentIcon}
-          />
-
-          <InteractionButton
-            onPress={handlePressReactions}
-            interactionCount={100}
-            icon={optionsIcon}
-          />
-
-          <InteractionButton
-            onPress={handlePressTip}
-            interactionCount={100000000}
-            icon={tipIcon}
+        <View style={styles.tabContainer}>
+          <PostTypeTab
+            selectedIndex={selectedIndex}
+            setSelectedIndex={setSelectedIndex}
+            postTypes={postTypes}
           />
         </View>
-      </DView>
-    </GestureDetector>
+
+        <ProfileHeaderButton
+          style={styles.createPostButton}
+          imageSrc={createPost}
+          onPress={() => {
+            console.log('create post');
+          }}
+        />
+      </View>
+
+      <Carousel
+        onProgressChange={onCarouselProgressChange}
+        onSnapToItem={onPostChanged}
+        mode="parallax"
+        loop={false}
+        modeConfig={{
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 60,
+        }}
+        width={Dimensions.get('window').width}
+        height={verticalScale(500)}
+        style={styles.carousel}
+        data={[...postData, 0 as any]}
+        renderItem={renderPost}
+        panGestureHandlerProps={{
+          activeOffsetX: [-10, 10],
+          failOffsetY: [-10, 10],
+        }}
+      />
+
+      <View style={styles.interactionButtonGroup}>
+        <InteractionButton
+          onPress={() =>
+            handlePressComments({
+              postId: postData[selectedPostIndex].id,
+              subspaceID: postData[selectedPostIndex].subspace_id,
+            })
+          }
+          interactionCount={10500}
+          icon={commentIcon}
+        />
+
+        <InteractionButton
+          onPress={handlePressReactions}
+          interactionCount={100}
+          icon={optionsIcon}
+        />
+
+        <InteractionButton
+          onPress={handlePressTip}
+          interactionCount={100000000}
+          icon={tipIcon}
+        />
+      </View>
+    </DView>
   );
 };
 

@@ -47,6 +47,7 @@ export type NavProps = StackScreenProps<
 export type PostDetailsParams = {
   postId: number;
   subspaceID: number;
+  focusCommentBox: boolean;
 };
 
 const PostDetails = () => {
@@ -285,6 +286,7 @@ const PostDetails = () => {
         ListEmptyComponent={ListEmptyComponent}
       />
       <EnterCommentBottomBar
+        focusTextInput={params.focusCommentBox}
         profileImage={
           profileData?.profile_pic
             ? {uri: profileData?.profile_pic}

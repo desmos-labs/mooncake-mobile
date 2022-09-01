@@ -30,11 +30,13 @@ export type Props = {
    * Action to execute when the right icon is pressed
    */
   onIconPress: () => void;
+  focusTextInput: boolean;
 };
 
 const EnterCommentBottomBar: React.FC<Props> = ({
   profileImage,
   onIconPress,
+  focusTextInput,
 }) => {
   const {t} = useTranslation('comment');
   const styles = useStyles();
@@ -79,7 +81,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
       behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       <Shadow
         viewStyle={[
@@ -96,6 +98,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
             <ActivityIndicator style={styles.profilePic} />
           )}
           <DTextInput
+            autoFocus={focusTextInput}
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
             value={comment}
             onChangeText={text => setComment(text)}

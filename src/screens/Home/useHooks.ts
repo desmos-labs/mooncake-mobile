@@ -18,6 +18,7 @@ const useHooks = () => {
   const maxOffset = React.useRef<number>(0);
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
 
@@ -41,6 +42,7 @@ const useHooks = () => {
   // will be enslaved by the app forever
   const onPostChanged = React.useCallback(
     (index: number) => {
+      setSelectedPostIndex(index);
       if (index >= posts.length - 2) {
         fetchNewPosts();
       }
@@ -67,6 +69,7 @@ const useHooks = () => {
       navigate({
         name: ROUTES.POST_DETAILS,
         params: {
+          focusCommentBox: false,
           postId: id,
           subspaceID,
         },
@@ -99,6 +102,7 @@ const useHooks = () => {
     onCarouselProgressChange,
     onPostChanged,
     postData,
+    selectedPostIndex,
   };
 };
 
