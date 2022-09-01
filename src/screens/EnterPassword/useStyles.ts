@@ -30,6 +30,7 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   errorText: {
+    marginTop: theme.spacing.s,
     color: theme.colors.error,
   },
 }));

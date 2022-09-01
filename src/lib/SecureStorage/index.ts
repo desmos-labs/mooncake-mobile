@@ -7,6 +7,8 @@ import * as Keychain from 'react-native-keychain';
 
 import LocalWallet from 'lib/LocalWallet';
 import {ChainAccount} from 'types/chains';
+import {decryptData, encryptData} from 'lib/EncryptionUtils';
+import _ from 'lodash';
 
 const defaultOptions: Keychain.Options = {
   authenticationPrompt: {
@@ -54,7 +56,12 @@ async function getItem<T>(
   if (!value) {
     return undefined;
   }
-  return JSON.parse(value.password);
+
+  const parsedData = JSON.parse(value.password);
+
+  return options?.password
+    ? decryptData(parsedData, options.password)
+    : parsedData;
 }
 
 /**
@@ -69,7 +76,12 @@ async function setItem(
   options?: StoreOptions | undefined,
 ): Promise<false | Result> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
-  return Keychain.setGenericPassword('secureValue', JSON.stringify(value), {
+
+  const data = options?.password
+    ? encryptData(value, options?.password)
+    : value;
+
+  return Keychain.setGenericPassword('secureValue', JSON.stringify(data), {
     service: key,
     ...moreOptions,
   });
@@ -152,6 +164,10 @@ export const getLocalWallet = async (
     password: walletPassword,
   });
 
+  if (_.isBoolean(serializedWallet) && !serializedWallet) {
+    throw new Error('Incorrect password');
+  }
+
   if (!serializedWallet) {
     throw new Error(`No wallet found with address ${address}`);
   }
@@ -190,9 +206,18 @@ export const getMnemonic = async (
     );
   }
 
-  return getItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`, {
-    password: _password,
-  });
+  const mnemonic = await getItem<string>(
+    `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`,
+    {
+      password: _password,
+    },
+  );
+
+  if (_.isBoolean(mnemonic) && !mnemonic) {
+    throw new Error('Incorrect password');
+  }
+
+  return mnemonic;
 };
 
 export const deleteMnemonic = async (address: string) => {
