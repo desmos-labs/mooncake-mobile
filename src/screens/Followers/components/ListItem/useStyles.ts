@@ -15,6 +15,12 @@ const useStyles = makeStyle(() => ({
     flexBasis: 50,
     justifyContent: 'center',
   },
+  emptyPic: {
+    backgroundColor: '#D9D9D9',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   title: {
     fontWeight: '700',
     fontSize: 15,

@@ -26,6 +26,7 @@ const ListItem: FC<
             borderRadius={40}
           />
         )}
+        {!profile_pic && <View style={styles.emptyPic} />}
       </View>
       <View style={styles.names}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
