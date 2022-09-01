@@ -10,9 +10,15 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import useGetActiveGrants from 'services/axios/requests/GetActiveGrants/useGetActiveGrants';
 import _ from 'lodash';
 import {
-  buildMessageGrantAllowance,
-  buildRevokeFeeGrantMsg,
-} from 'lib/MsgGrantUtils';
+  MsgGrantAllowanceEncodeObject,
+  MsgGrantEncodeObject,
+  MsgRevokeAllowanceEncodeObject,
+} from '@desmoslabs/desmjs';
+import {
+  AllowedMsgAllowance,
+  BasicAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import {Any} from 'cosmjs-types/google/protobuf/any';
 import {createAuthMsgEncode} from './utils';
 
 /**
@@ -46,20 +52,65 @@ const useCreateAuthGrant = () => {
       if (_.difference(grantsToRequest, grants).length === 0) return;
 
       // Need to revoke old fee grant if one exists
-      const revokeGrantMsg = has_fee_grant
-        ? buildRevokeFeeGrantMsg({
-            grantee: chainAccount.address,
-            granter: butterConfig.desmos_address,
-          })
+
+      const msgRevokeAllowanceEncode:
+        | MsgRevokeAllowanceEncodeObject
+        | undefined = has_fee_grant
+        ? {
+            typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
+            value: {
+              granter: butterConfig.desmos_address,
+              grantee: chainAccount.address,
+            },
+          }
         : undefined;
 
-      const feeGrantMsg = buildMessageGrantAllowance({
-        granter: butterConfig.desmos_address,
-        grantee: chainAccount.address,
-        grants: _.uniq([...grants, ...grantsToRequest]),
-      });
+      const grantsToBuild = _.uniq([...grants, ...grantsToRequest]);
 
-      console.log(revokeGrantMsg, feeGrantMsg);
+      const basicAllowance: BasicAllowance = {
+        spendLimit: [], // This is empty so that there are no limits
+        expiration: undefined, // This is null so that the allowance will never expire
+      };
+
+      const allowance: AllowedMsgAllowance = {
+        allowance: Any.fromPartial({
+          typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
+          value: BasicAllowance.encode(basicAllowance).finish(),
+        }),
+        allowedMessages: grantsToBuild,
+      };
+
+      const msgGrantAllowanceEncode: MsgGrantAllowanceEncodeObject = {
+        typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
+        value: {
+          granter: butterConfig.desmos_address,
+          grantee: chainAccount.address,
+          allowance: {
+            typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
+            value: AllowedMsgAllowance.encode(allowance).finish(),
+          },
+        },
+      };
+
+      const msgsGrantEncodes: MsgGrantEncodeObject[] = grantsToBuild.map(
+        grant => ({
+          typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+          value: {
+            granter: butterConfig.desmos_address,
+            grantee: chainAccount.address,
+            grant: {
+              authorization: grant,
+              expiration: undefined,
+            },
+          },
+        }),
+      );
+
+      console.log(
+        msgsGrantEncodes,
+        msgGrantAllowanceEncode,
+        msgRevokeAllowanceEncode,
+      );
     },
     [],
   );
