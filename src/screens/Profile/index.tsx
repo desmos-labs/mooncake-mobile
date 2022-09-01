@@ -124,7 +124,7 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressd = useCallback(
+  const handleFollowingPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
@@ -135,7 +135,7 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const handleFollowersPressd = useCallback(
+  const handleFollowersPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,
@@ -178,7 +178,7 @@ const Profile = () => {
             <UserBio content={bio} />
 
             <View style={styles.socialCounterGroup}>
-              <TouchableOpacity onPress={handleFollowingPressd}>
+              <TouchableOpacity onPress={handleFollowingPressed}>
                 <SocialCounter
                   count={following.length}
                   label={t('following')}
@@ -187,7 +187,7 @@ const Profile = () => {
 
               <View style={styles.separator} />
 
-              <TouchableOpacity onPress={handleFollowersPressd}>
+              <TouchableOpacity onPress={handleFollowersPressed}>
                 <SocialCounter
                   count={followage.length}
                   label={t('followers')}

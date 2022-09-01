@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {errorImage} from 'assets/images';
 import useStyles from './useStyles';
 
-const EmptyPostComponent = () => {
+const Empty = () => {
   const {t} = useTranslation('followingAndFollowers');
   const styles = useStyles();
 
@@ -14,10 +14,10 @@ const EmptyPostComponent = () => {
       <Image style={styles.image} source={errorImage} />
 
       <Typography.Subtitle1 style={styles.subtitle1}>
-        {t('noFollowingDTags')}
+        {t('noFollowers')}
       </Typography.Subtitle1>
     </View>
   );
 };
 
-export default React.memo(EmptyPostComponent);
+export default Empty;

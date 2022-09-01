@@ -1,25 +1,24 @@
-import {
-  getFocusedRouteNameFromRoute,
-  useNavigation,
-} from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import {StackScreenProps} from '@react-navigation/stack';
+import {
+  StackHeaderProps,
+  StackScreenProps,
+  Header,
+} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState, useCallback, FC} from 'react';
+import React, {useMemo, useState, useCallback, FC} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
   I18nManager,
   PanResponder,
   PanResponderGestureState,
-  SafeAreaView,
-  Text,
   View,
 } from 'react-native';
 import {useRecoilValue} from 'recoil';
-import countState from '@recoil/followingAndFollowers/countState';
-import {IconButton, useTheme} from 'react-native-paper';
+import numOfFollowerState from '@recoil/numOfFollowerState';
+import {useTheme} from 'react-native-paper';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {
   createMaterialTopTabNavigator,
@@ -55,32 +54,46 @@ type NavProps = StackScreenProps<
   ROUTES.FOLLOWING_AND_FOLLOWERS
 >;
 
-/* A React component that renders the left arrow icon for the go back button. */
-const Icon = () => <AntDesignIcon name="left" size={20} />;
+const HeaderBackImage = () => {
+  const styles = useStyles(numOfTabs);
+  return <AntDesignIcon name="left" size={20} style={styles.headerBackImage} />;
+};
+
+/* A React component that renders the header for the following and followers screen. */
+export const FollowingAndFollowersHeader: FC<StackHeaderProps> = ({
+  options,
+  ...rest
+}) => {
+  const {username} = rest.route.params as FollowingAndFollowersParams;
+  return (
+    <Header
+      {...rest}
+      options={{
+        ...options,
+        title: username,
+        headerShadowVisible: false,
+        headerStyle: {borderWidth: 0},
+        headerBackImage: HeaderBackImage,
+        headerBackTitleVisible: false,
+      }}
+    />
+  );
+};
 
 /* A React component for the following and followers screen. */
 const FollowingAndFollowers: FC<NavProps> = ({route}) => {
   const {initialTabRouteName, subspaceID, userAddress, username} = route.params;
 
-  /* Invalid the cache data when the subspaceId or userAddress changed. */
-  const [cacheKey, setCacheKey] = useState('');
-  useEffect(
-    () => setCacheKey(new Date().getTime().toString()),
-    [subspaceID, userAddress],
-  );
-
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
 
-  const {goBack} = useNavigation<NavProps['navigation']>();
-
-  const countOfFollowing = useRecoilValue(countState('following'));
+  const countOfFollowing = useRecoilValue(numOfFollowerState('following'));
   const nameOfFolowing = useMemo(
     () => `${formatNumShorthand(countOfFollowing)} ${t('profile:following')}`,
     [t, countOfFollowing],
   );
 
-  const countOfFollowers = useRecoilValue(countState('followers'));
+  const countOfFollowers = useRecoilValue(numOfFollowerState('followers'));
   const nameOfFolowers = useMemo(
     () => `${formatNumShorthand(countOfFollowers)} ${t('profile:followers')}`,
     [t, countOfFollowers],
@@ -105,7 +118,8 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
       gestureState: PanResponderGestureState,
     ) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
-      const focusedRouteName = getFocusedRouteNameFromRoute(route);
+      const focusedRouteName =
+        getFocusedRouteNameFromRoute(route) ?? ROUTES.FOLLOWING;
       setSwipeEnabled(focusedRouteName !== ROUTES.FOLLOWING || diffX < 0);
       return false;
     };
@@ -113,7 +127,7 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
       onStartShouldSetPanResponderCapture: enableParentSwipeLeft,
       onMoveShouldSetPanResponderCapture: enableParentSwipeLeft,
     });
-  }, [route, setSwipeEnabled]);
+  }, [route]);
 
   const theme = useTheme();
 
@@ -132,14 +146,10 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <SafeAreaView
+    <View
       style={styles.container}
       {...panResponder.panHandlers}
       onTouchStart={disableParentSwipeLeft}>
-      <View style={styles.navigationBar}>
-        <IconButton icon={Icon} style={styles.backButton} onPress={goBack} />
-        <Text style={styles.header}>{username}</Text>
-      </View>
       <Tab.Navigator
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
@@ -148,16 +158,16 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
           options={{tabBarLabel: nameOfFolowing}}
-          initialParams={{cacheKey, subspaceID, userAddress, username}}
+          initialParams={{subspaceID, userAddress, username}}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowersTab}
           options={{tabBarLabel: nameOfFolowers}}
-          initialParams={{cacheKey, subspaceID, userAddress, username}}
+          initialParams={{subspaceID, userAddress, username}}
         />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,13 +1,15 @@
-import React, {FC, useCallback} from 'react';
-import {FlatList, ListRenderItemInfo} from 'react-native';
-import {useRecoilCallback, useRecoilValue} from 'recoil';
-import pagesState from '@recoil/followingAndFollowers/pagesState';
-import pageLimitState from '@recoil/followingAndFollowers/pageLimitState';
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import EmptyFollowingComponent from './components/EmptyComponent';
+import React, {FC, useCallback} from 'react';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
+import useHooks from './useHooks';
+import Empty from './components/Empty';
 import useStyles from './useStyles';
+import ItemSeparator from './components/ItemSeparator';
+import Loading from './components/Loading/Loading';
+import Error from './components/Error';
 import ListItem from './components/ListItem';
 
 type NavProps = MaterialTopTabScreenProps<
@@ -16,54 +18,53 @@ type NavProps = MaterialTopTabScreenProps<
 >;
 
 /**
- * @property {string} cacheKey - A unique string that will be used to cache the data.
- * @property {number} subspaceID - The ID of the subspace you want to get the following list for.
- * @property {string} userAddress - The address of the user you want to get the following list for.
- * @property {string} username - The username of the user you want to get the following list for.
+ * @property {number} subspaceID - The ID of the subspace you want to get the following accounts for.
+ * @property {string} userAddress - The address of the user you want to get the following accounts for.
+ * @property {string} username - The username of the user you want to get the following accounts for.
  */
 export type FollowingParams = {
-  cacheKey: string;
   subspaceID: number;
   userAddress: string;
   username: string;
 };
 
 /**
- * It renders a FlatList of the user's following
- * @param  - userAddress: The address of the user whose following list we want to display.
- * @returns A list of users that the user is following.
+ * It renders a FlatList of the user's following accounts
+ * @param  - userAddress: The address of the user whose following accounts list we want to display.
+ * @returns A list of users that the user is following accounts.
  */
 export const FollowingTab: FC<NavProps> = ({route}) => {
   const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
-  const pages = useRecoilValue(pagesState('following'));
-  const fetchNext = useRecoilCallback(
-    ({set}) =>
-      () =>
-        set(pageLimitState('following'), prev => prev + 1),
-    [],
+
+  const {loading, error, data, fetchMore, refetch} = useHooks(
+    subspaceID,
+    userAddress,
   );
-  const RenderItem = useCallback(
-    (props: ListRenderItemInfo<number>) => {
-      return (
-        <ListItem
-          subspaceID={subspaceID}
-          userAddress={userAddress}
-          {...props}
-        />
-      );
+
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
+      return <ListItem {...props} />;
     },
     [subspaceID, userAddress],
   );
+
   return (
-    <FlatList
-      data={pages}
-      renderItem={RenderItem}
-      contentContainerStyle={styles.contentContainerStyle}
-      ListEmptyComponent={EmptyFollowingComponent}
-      onEndReachedThreshold={1}
-      onEndReached={fetchNext}
-    />
+    <View style={styles.contentContainer}>
+      {!!error && <Error error={error} onPress={fetchMore} />}
+      <FlatList
+        data={data?.paginatedFollowers}
+        style={styles.flatList}
+        refreshing={false}
+        onRefresh={refetch}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        ListEmptyComponent={loading ? null : Empty}
+        ListFooterComponent={loading ? Loading : undefined}
+        onEndReachedThreshold={1}
+        onEndReached={fetchMore}
+      />
+    </View>
   );
 };
 
