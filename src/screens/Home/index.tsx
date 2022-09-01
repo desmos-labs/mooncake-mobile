@@ -53,9 +53,6 @@ const Home = () => {
     // If there is already a bearer token, then there's no need to login.
     if (bearerToken) return;
 
-    // placeholder to avoid eslint error
-    console.log(activeAddress, login);
-
     // uncomment when ready
     login(activeAddress!).then();
   }, []);

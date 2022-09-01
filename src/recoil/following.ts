@@ -18,7 +18,7 @@ export const useGetFollowing = () => {
   // hardcoded for now, but it should be a recoil value in the future
   const userAddress = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
 
-  const {data, refetch, loading} = useQuery(GetFollowedUsersForAddress, {
+  const {refetch, loading} = useQuery(GetFollowedUsersForAddress, {
     pollInterval: 500,
     variables: {
       userAddress,
@@ -34,8 +34,6 @@ export const useGetFollowing = () => {
       console.log(error);
     },
   });
-
-  console.log(data);
 
   // refetch following list if userAddress has changed
   React.useEffect(() => {

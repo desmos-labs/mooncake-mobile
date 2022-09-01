@@ -42,12 +42,21 @@ const Login = async ({
     signatureBytes,
   });
 
+  console.log('test', {
+    desmos_address: address,
+    pubkey_bytes: pubkeyBytes,
+    signed_bytes: signedBytes,
+    signature_bytes: signatureBytes,
+  });
+
   const _response = await axiosInstance.post('/login', {
     desmos_address: address,
     pubkey_bytes: pubkeyBytes,
     signed_bytes: signedBytes,
     signature_bytes: signatureBytes,
   });
+
+  console.log(_response.response.data);
 
   return _response.data;
 };
