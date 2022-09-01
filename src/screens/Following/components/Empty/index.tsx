@@ -8,6 +8,7 @@ import useStyles from './useStyles';
 const Empty = () => {
   const {t} = useTranslation('followingAndFollowers');
   const styles = useStyles();
+
   return (
     <View style={styles.view}>
       <Image style={styles.image} source={errorImage} />

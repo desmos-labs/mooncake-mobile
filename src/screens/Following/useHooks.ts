@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import GetFollowing, {
+import GetPaginatedQuery, {
   QueueData,
 } from 'services/graphql/queries/GetPaginatedFollowing';
 import {useCallback, useEffect} from 'react';
@@ -39,7 +39,7 @@ export type PaginatedData<T> = {
 const useHooks = (subspaceID: number, userAddress: string) => {
   /* It's making a GraphQL query to the server. */
   const {loading, error, data, fetchMore, refetch} = useQuery<QueueData>(
-    GetFollowing,
+    GetPaginatedQuery,
     {
       variables: {
         subspaceID,

@@ -1,12 +1,12 @@
 import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
 import {storiesOf} from '@storybook/react-native';
-import EmptyFollowersComponent from './index';
+import Empty from './index';
 
-storiesOf('components/EmptyFollowersComponent', module)
+storiesOf('components/EmptyFollowers', module)
   .addDecorator(s => (
     <SbContainer justifyContent="center" alignItems="center">
       {s()}
     </SbContainer>
   ))
-  .add('default', () => <EmptyFollowersComponent />);
+  .add('default', () => <Empty />);
