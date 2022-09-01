@@ -3,15 +3,12 @@ import GetNonce from 'services/axios/requests/GetNonce';
 import {StdFee} from '@cosmjs/amino';
 import {
   DesmosClient,
-  MsgAuthenticateEncodeObject,
   OfflineSignerAdapter,
   getSignedBytes,
   getPubKeyBytes,
   getSignatureBytes,
 } from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
-// @ts-ignore
-import {TextEncoder} from 'text-encoding-polyfill';
 
 const toHex = (data: Uint8Array) => Buffer.from(data).toString('hex');
 
@@ -29,13 +26,14 @@ export const generateLoginData = async ({
 }> => {
   const {nonce} = await GetNonce({address});
 
-  const msg: MsgAuthenticateEncodeObject = {
-    value: {
-      user: address,
-      nonce: new TextEncoder().encode(nonce),
-    },
-    typeUrl: '/desmjs.v1.MsgAuthenticate',
-  };
+  // omitted as MsgAuthenticate is not a supported message type yet
+  // const msg: MsgAuthenticateEncodeObject = {
+  //   value: {
+  //     user: address,
+  //     nonce: new TextEncoder().encode(nonce),
+  //   },
+  //   typeUrl: '/desmjs.v1.MsgAuthenticate',
+  // };
 
   const fee: StdFee = {
     amount: [],
@@ -49,7 +47,9 @@ export const generateLoginData = async ({
     offlineSigner,
   );
 
-  const result = await desmosClient.signTx(address, [msg], fee, nonce);
+  // Pass an empty array as message, as we just need to sign something
+  // to grab the SignatureResult
+  const result = await desmosClient.signTx(address, [], fee, nonce);
 
   return {
     signatureBytes: toHex(getSignatureBytes(result)),
