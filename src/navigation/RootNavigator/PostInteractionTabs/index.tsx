@@ -1,26 +1,22 @@
-import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import Animated from 'react-native-reanimated';
-import {GestureDetector} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import CustomTabBar from 'navigation/RootNavigator/PostInteractionTabs/components/CustomTabBar';
 import Spacer from 'components/Spacer';
-import PostComments from 'screens/PostInteraction/PostComments';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import CustomTabBar from 'navigation/RootNavigator/PostInteractionTabs/components/CustomTabBar';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {GestureDetector} from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import PostReactions from 'screens/PostInteraction/PostReactions';
 import PostTips from 'screens/PostInteraction/PostTips';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
 export type PostInteractionTabsParamList = {
-  [ROUTES.POST_TIPS]: PostInteractionTabsParams;
-
-  [ROUTES.POST_COMMENTS]: PostInteractionTabsParams;
-
-  [ROUTES.POST_REACTIONS]: PostInteractionTabsParams;
+  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
+  [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
 };
 
 const Tab = createMaterialTopTabNavigator<PostInteractionTabsParamList>();
@@ -30,7 +26,7 @@ type NavProps = StackScreenProps<
   ROUTES.POST_INTERACTION
 >;
 
-export type PostInteractionTabsParams = {
+export type PostInteractionReactionsTabsParams = {
   /**
    * Fully expand the post interaction tab window on open
    */
@@ -40,6 +36,20 @@ export type PostInteractionTabsParams = {
    * Should the user be able to drag the tab window in and out?
    */
   allowPanning: boolean;
+  reactions: [];
+};
+
+export type PostInteractionTipsTabsParams = {
+  /**
+   * Fully expand the post interaction tab window on open
+   */
+  expandOnOpen: boolean;
+
+  /**
+   * Should the user be able to drag the tab window in and out?
+   */
+  allowPanning: boolean;
+  tips: [];
 };
 
 const PostInteractionTabs = () => {
@@ -64,23 +74,16 @@ const PostInteractionTabs = () => {
           sceneContainerStyle={styles.sceneContainerStyle}
           tabBar={CustomTabBar}>
           <Tab.Screen
-            name={ROUTES.POST_COMMENTS}
-            options={{
-              tabBarLabel: 'Comments 1k',
-            }}
-            component={PostComments}
-          />
-          <Tab.Screen
             name={ROUTES.POST_REACTIONS}
             options={{
-              tabBarLabel: 'Reactions 1k',
+              tabBarLabel: 'Reactions',
             }}
             component={PostReactions}
           />
           <Tab.Screen
             name={ROUTES.POST_TIPS}
             options={{
-              tabBarLabel: 'Tips 1k',
+              tabBarLabel: 'Tips',
             }}
             component={PostTips}
           />

@@ -199,6 +199,17 @@ const PostDetails = () => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
 
+  const handlePressCounters = React.useCallback(() => {
+    navigate(ROUTES.POST_INTERACTION, {
+      screen: ROUTES.POST_REACTIONS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+        reactions,
+      },
+    });
+  }, [reactions]);
+
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label="No comments yet" />;
   }, []);
@@ -231,7 +242,7 @@ const PostDetails = () => {
           <InteractionCountersBar
             likesCounter={reactions.length}
             tipsCounter={0}
-            handlePressCounters={() => console.log('test')}
+            handlePressCounters={() => handlePressCounters()}
             accountsHighlitedPics={likesImages}
           />
         </Spacer>

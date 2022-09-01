@@ -1,36 +1,25 @@
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
+import ROUTES from 'navigation/routes';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import {useTranslation} from 'react-i18next';
-import ReactionItem from './components/ReactionItem';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
+import ReactionItem from './components/ReactionItem';
+
+type NavProps = StackScreenProps<
+  PostInteractionTabsParamList,
+  ROUTES.POST_REACTIONS
+>;
 
 const PostReactions = () => {
   const {t} = useTranslation('postInteraction');
-
-  const handlePressFollow = React.useCallback((address: string) => {
-    console.log('follow', address);
-  }, []);
-
-  const handlePressUnfollow = React.useCallback((address: string) => {
-    console.log('unfollow', address);
-  }, []);
+  const {params} = useRoute<NavProps['route']>();
 
   const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
-    return (
-      <ReactionItem
-        nickname={item.nickname}
-        dTag={item.dTag}
-        avatar={item.avatar}
-        handlePressFollow={() => {
-          handlePressFollow(item.address);
-        }}
-        handlePressUnfollow={() => {
-          handlePressUnfollow(item.address);
-        }}
-        followed={item.followed}
-      />
-    );
+    return <ReactionItem reaction={item} />;
   }, []);
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -40,7 +29,7 @@ const PostReactions = () => {
   return (
     <FlatList
       keyExtractor={item => item.address}
-      data={DUMMY_REACTIONS}
+      data={params.reactions}
       renderItem={renderItem}
       contentContainerStyle={{
         flexGrow: 1,
@@ -50,39 +39,5 @@ const PostReactions = () => {
     />
   );
 };
-
-const DUMMY_REACTIONS = [
-  {
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    address: '123123g',
-  },
-  {
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    address: '123123f',
-  },
-  {
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    followed: true,
-    address: '123123d',
-  },
-  {
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    address: '123123s',
-  },
-  {
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    address: '123123a',
-  },
-];
 
 export default PostReactions;
