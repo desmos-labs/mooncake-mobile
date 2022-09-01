@@ -10,6 +10,4 @@ storiesOf('components/FollowButton', module)
       {getStories()}
     </SbContainer>
   ))
-  .add('Default', () => (
-    <FollowButton subspaceID={4} creatorAddrees="" counterPartyAddress="" />
-  ));
+  .add('Default', () => <FollowButton />);

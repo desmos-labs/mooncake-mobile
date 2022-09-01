@@ -10,6 +10,4 @@ storiesOf('components/UnfollowButton', module)
       {getStories()}
     </SbContainer>
   ))
-  .add('Default', () => (
-    <UnfollowButton subspaceID={4} creatorAddrees="" counterPartyAddress="" />
-  ));
+  .add('Default', () => <UnfollowButton />);
