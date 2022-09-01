@@ -51,7 +51,6 @@ export const FollowersTab: FC<NavProps> = ({route}) => {
 
   return (
     <View style={styles.contentContainer}>
-      {!!error && <Error error={error} onPress={fetchMore} />}
       <FlatList
         data={data?.paginatedFollowers}
         style={styles.flatList}
@@ -64,6 +63,7 @@ export const FollowersTab: FC<NavProps> = ({route}) => {
         onEndReachedThreshold={1}
         onEndReached={fetchMore}
       />
+      {!!error && <Error error={error} onPress={fetchMore} />}
     </View>
   );
 };
