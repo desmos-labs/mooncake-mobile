@@ -67,6 +67,7 @@ import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
 import FollowingAndFollowers, {
   FollowingAndFollowersParams,
+  FollowingAndFollowersHeader,
 } from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
@@ -367,7 +368,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.FOLLOWING_AND_FOLLOWERS}
         component={FollowingAndFollowers}
-        options={{gestureResponseDistance}}
+        options={{
+          gestureResponseDistance,
+          header: FollowingAndFollowersHeader,
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );
