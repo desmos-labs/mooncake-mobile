@@ -87,13 +87,17 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
 
-  const countOfFollowing = useRecoilValue(numOfFollowerState('following'));
+  const countOfFollowing = useRecoilValue(
+    numOfFollowerState({type: 'following', subspaceID, userAddress}),
+  );
   const nameOfFolowing = useMemo(
     () => `${formatNumShorthand(countOfFollowing)} ${t('profile:following')}`,
     [t, countOfFollowing],
   );
 
-  const countOfFollowers = useRecoilValue(numOfFollowerState('followers'));
+  const countOfFollowers = useRecoilValue(
+    numOfFollowerState({type: 'followers', subspaceID, userAddress}),
+  );
   const nameOfFolowers = useMemo(
     () => `${formatNumShorthand(countOfFollowers)} ${t('profile:followers')}`,
     [t, countOfFollowers],

@@ -51,7 +51,6 @@ const useHooks = (subspaceID: number, userAddress: string) => {
   );
 
   // // START debug
-  // console.log({subspaceID, userAddress});
   // const id = useRef(0);
   // const [data, setData] = useState<QueueData>();
   // const [loading, setLoading] = useState(false);
@@ -129,7 +128,9 @@ const useHooks = (subspaceID: number, userAddress: string) => {
   // useEffect(fetch, []);
   // // END debug
 
-  const setNumOfFollowers = useSetRecoilState(numOfFollowerState('following'));
+  const setNumOfFollowers = useSetRecoilState(
+    numOfFollowerState({type: 'following', subspaceID, userAddress}),
+  );
   useEffect(
     () =>
       setNumOfFollowers(

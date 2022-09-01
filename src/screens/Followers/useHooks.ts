@@ -42,7 +42,9 @@ const useHooks = (subspaceID: number, userAddress: string) => {
     },
   );
 
-  const setNumOfFollowers = useSetRecoilState(numOfFollowerState('followers'));
+  const setNumOfFollowers = useSetRecoilState(
+    numOfFollowerState({type: 'followers', subspaceID, userAddress}),
+  );
   useEffect(
     () =>
       setNumOfFollowers(

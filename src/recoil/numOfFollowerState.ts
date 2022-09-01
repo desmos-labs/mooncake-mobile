@@ -1,6 +1,12 @@
 import {atomFamily} from 'recoil';
 
-const numOfFollowerState = atomFamily<number, 'following' | 'followers'>({
+export type NumOfFollowerParam = {
+  type: 'following' | 'followers';
+  subspaceID: number;
+  userAddress: string;
+};
+
+const numOfFollowerState = atomFamily<number, NumOfFollowerParam>({
   key: 'numOfFollowerState',
   default: 0,
 });
