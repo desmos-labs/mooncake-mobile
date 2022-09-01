@@ -6,5 +6,8 @@
   "connectAddress": "Connect Address",
   "connectApp": "Connect App",
   "userNoPosts": "No posts yet",
-  "less": "less"
+  "posts": "Posts",
+  "portfolio": "Portfolio",
+  "poap": "POAP",
+  "tippings": "Tippings"
 }

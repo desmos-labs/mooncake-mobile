@@ -28,6 +28,8 @@ import useStyles from './useStyles';
 
 // note: props are not final
 type Props = {
+  disableInnerComment: boolean;
+
   handlePressMore: () => void;
 
   handlePressComment: () => void;
@@ -66,6 +68,7 @@ type Props = {
 };
 
 const CommentItem = ({
+  disableInnerComment,
   handlePressComment,
   handlePressLike,
   handlePressMore,
@@ -82,7 +85,7 @@ const CommentItem = ({
   id,
   subspace_id,
 }: Props) => {
-  const styles = useStyles();
+  const styles = useStyles(disableInnerComment);
   const {t} = useTranslation();
   const [settings] = useRecoilState(appSettingsState);
   const {data} = useQuery(GetPostCommentsCount, {
@@ -94,8 +97,7 @@ const CommentItem = ({
 
   const commentsCount = useMemo(() => {
     if (!data) return 0;
-
-    return data.post_aggregate.aggregate.count;
+    return data.post_reference_aggregate.aggregate.count;
   }, [data]);
 
   const formattedDate = useMemo(
@@ -139,7 +141,7 @@ const CommentItem = ({
       style={[styles.container, styles.flexRow]}>
       <Image
         source={
-          author.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
+          author?.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
         }
         style={styles.avatar}
       />
@@ -148,10 +150,10 @@ const CommentItem = ({
           <View style={styles.flexRow}>
             <View>
               <Typography.Subtitle3 style={styles.textStyle}>
-                {author.nickname ? author.nickname : t('no nickname')}
+                {author?.nickname ? author.nickname : t('no nickname')}
               </Typography.Subtitle3>
               <Typography.Body7 style={styles.subTextStyle}>
-                @{author.dtag}
+                @{author?.dtag}
               </Typography.Body7>
             </View>
             {/* loading indicator would go here */}
@@ -181,18 +183,19 @@ const CommentItem = ({
           </View>
 
           <View style={styles.interactionButtonGroup}>
-            <TouchableOpacity
-              onPress={handlePressComment}
-              style={styles.interactionButton}>
-              <Image
-                source={commentComment}
-                style={[styles.buttonImage, styles.interactionImage]}
-              />
-              <Typography.Subtitle3 style={styles.textStyle}>
-                {formatNumShorthand(commentsCount)}
-              </Typography.Subtitle3>
-            </TouchableOpacity>
-
+            {!disableInnerComment && (
+              <TouchableOpacity
+                onPress={handlePressComment}
+                style={styles.interactionButton}>
+                <Image
+                  source={commentComment}
+                  style={[styles.buttonImage, styles.interactionImage]}
+                />
+                <Typography.Subtitle3 style={styles.textStyle}>
+                  {formatNumShorthand(commentsCount)}
+                </Typography.Subtitle3>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={handlePressLike}
               style={styles.interactionButton}>

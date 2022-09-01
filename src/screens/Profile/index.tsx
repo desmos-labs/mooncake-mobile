@@ -1,34 +1,34 @@
-import React, {useCallback} from 'react';
-import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
-import {defaultBanner, desmosIcon, editButton} from 'assets/images';
+import {useQuery} from '@apollo/client';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {defaultBanner, defaultProfilePic, editButton} from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import {Snackbar, useTheme} from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {useQuery} from '@apollo/client';
-import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
-import {scale} from 'react-native-size-matters';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
+import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ProfileHeader from './components/ProfileHeader';
-import ProfileConnectButton from './components/ProfileConnectButton';
-import SocialCounter from './components/SocialCounter';
-import UserBio from './components/UserBio';
+import {scale} from 'react-native-size-matters';
+import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
 import AddressCopy from './components/AddressCopy';
-import ProfilePostCard from './components/ProfilePostCard';
-import FakeDropShadow from './components/FakeDropShadow';
-import useStyles from './useStyles';
 import ContentTabs from './components/ContentTab';
 import EmptyPostComponent from './components/EmptyPostComponent';
+import FakeDropShadow from './components/FakeDropShadow';
+import ProfileConnectButton from './components/ProfileConnectButton';
+import ProfileHeader from './components/ProfileHeader';
+import ProfilePostCard from './components/ProfilePostCard';
+import SocialCounter from './components/SocialCounter';
+import UserBio from './components/UserBio';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
 
@@ -56,8 +56,6 @@ const Profile = () => {
   });
   // animations end
 
-  const tabs = React.useMemo(() => ['Posts', 'Portfolio'], []);
-
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
 
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -70,13 +68,18 @@ const Profile = () => {
 
   const {top} = useSafeAreaInsets();
 
+  const tabs = React.useMemo(
+    () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
+    [t],
+  );
+
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
       address: activeAddress,
     },
   });
 
-  const handlePostPressed = useCallback(
+  const handlePostPressed = React.useCallback(
     ({
       subspaceID,
       authorAddress,
@@ -92,11 +95,11 @@ const Profile = () => {
     [],
   );
 
-  const handlePressConnectAddress = useCallback(() => {
+  const handlePressConnectAddress = React.useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
   }, []);
 
-  const handlePressSettings = useCallback(() => {
+  const handlePressSettings = React.useCallback(() => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
@@ -116,7 +119,7 @@ const Profile = () => {
   }, [cover_pic]);
 
   const profileImage = React.useMemo(() => {
-    return profile_pic ? {uri: profile_pic} : desmosIcon;
+    return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
   /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
@@ -124,7 +127,7 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressed = useCallback(
+  const handleFollowingPressed = React.useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
@@ -135,7 +138,7 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const handleFollowersPressed = useCallback(
+  const handleFollowersPressed = React.useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,

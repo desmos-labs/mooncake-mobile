@@ -6,9 +6,8 @@ import {
 } from '@apollo/client';
 import {MultiAPILink} from '@habx/apollo-multi-endpoint-link';
 import {FieldPolicy, StoreObject} from '@apollo/client/cache';
+import {useMemo} from 'react';
 import EnvConfig from 'config/EnvConfig';
-
-const endpoints = EnvConfig.GQL_ENDPOINT;
 
 /**
  * It merges the incoming data with the existing data in the cache, and it does so in a way that
@@ -53,25 +52,29 @@ function userRelationshipPagination() {
   };
 }
 
-export const apolloClient = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          user_relationship: userRelationshipPagination(),
-        },
-      },
-    },
-  }),
-  link: ApolloLink.from([
-    new MultiAPILink({
-      endpoints,
-      httpSuffix: '/v1/graphql',
-      createHttpLink,
-    }),
-  ]),
-});
-
 export default function useApolloClient() {
-  return apolloClient;
+  const endpoints = EnvConfig.GQL_ENDPOINT;
+
+  return useMemo(
+    () =>
+      new ApolloClient({
+        cache: new InMemoryCache({
+          typePolicies: {
+            Query: {
+              fields: {
+                user_relationship: userRelationshipPagination(),
+              },
+            },
+          },
+        }),
+        link: ApolloLink.from([
+          new MultiAPILink({
+            endpoints,
+            httpSuffix: '/v1/graphql',
+            createHttpLink,
+          }),
+        ]),
+      }),
+    [endpoints],
+  );
 }
