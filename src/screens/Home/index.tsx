@@ -57,7 +57,7 @@ const Home = () => {
     console.log(activeAddress, login);
 
     // uncomment when ready
-    // login(activeAddress!).then();
+    login(activeAddress!).then();
   }, []);
 
   const {
