@@ -43,7 +43,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
   });
 
   const post = React.useMemo(() => {
-    if (!originalPost) return undefined;
+    console.log(originalPost);
+    if (!originalPost) return {};
     return originalPost.posts[0];
   }, [originalPost]);
 

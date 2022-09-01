@@ -6,16 +6,18 @@ import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
@@ -30,12 +32,36 @@ export type Props = {
   onIconPress: () => void;
 };
 
-const EnterCommentBottomBar: React.FC<Props> = props => {
-  const {profileImage, onIconPress} = props;
+const EnterCommentBottomBar: React.FC<Props> = ({
+  profileImage,
+  onIconPress,
+}) => {
   const {t} = useTranslation('comment');
   const styles = useStyles();
+  const {bottom} = useSafeAreaInsets();
   const theme = useTheme();
-  const [comment, setComment] = React.useState<string>('');
+  const [comment, setComment] = useState<string>('');
+  const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardWillShow',
+      () => {
+        setKeyboardShow(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      () => {
+        setKeyboardShow(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const rightButtonComponent = useMemo(() => {
     return (
@@ -56,7 +82,10 @@ const EnterCommentBottomBar: React.FC<Props> = props => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       <Shadow
-        viewStyle={styles.shadow}
+        viewStyle={[
+          styles.shadow,
+          !keyboardShow ? {paddingBottom: bottom} : {},
+        ]}
         startColor="rgba(51, 51, 51, 0.15)"
         distance={30}
         radius={0}>
@@ -78,16 +107,18 @@ const EnterCommentBottomBar: React.FC<Props> = props => {
             }
           />
         </View>
-        <MediaBottomPanel
-          imageSelected={false}
-          handlePressGallery={() => console.log('test')}
-          handlePressCamera={() => console.log('test')}
-          handlePressMention={() => {
-            console.log('placeholder');
-          }}
-          rightComponent={rightButtonComponent}
-          commentLength={comment.length}
-        />
+        {keyboardShow && (
+          <MediaBottomPanel
+            imageSelected={false}
+            handlePressGallery={() => console.log('test')}
+            handlePressCamera={() => console.log('test')}
+            handlePressMention={() => {
+              console.log('placeholder');
+            }}
+            rightComponent={rightButtonComponent}
+            commentLength={comment.length}
+          />
+        )}
       </Shadow>
     </KeyboardAvoidingView>
   );

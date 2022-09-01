@@ -22,7 +22,7 @@ enum POST_TYPE {
 const PostComponent = ({postData}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {attachments} = postData;
+  const attachments = postData?.attachments ? postData.attachments : [];
   const {width} = Dimensions.get('window');
 
   useEffect(() => {
@@ -49,13 +49,13 @@ const PostComponent = ({postData}: Props) => {
   }, []);
 
   const postType: POST_TYPE = React.useMemo(() => {
-    if (postData.text && postData.attachments.length === 0) {
+    if (postData?.text && postData?.attachments?.length === 0) {
       return POST_TYPE.TEXT;
     }
-    if (postData.text && postData.attachments.length > 0) {
+    if (postData?.text && postData?.attachments?.length > 0) {
       return POST_TYPE.IMAGE_TEXT;
     }
-    if (!postData.text && postData.attachments.length > 0) {
+    if (!postData?.text && postData?.attachments?.length > 0) {
       return POST_TYPE.IMAGE;
     }
 
