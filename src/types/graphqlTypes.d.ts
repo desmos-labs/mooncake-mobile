@@ -34,11 +34,15 @@ declare global {
     address: string;
   }
 
-  interface FollowersData {
+  interface FollowerData {
     dtag: string;
     nickname: string;
     profile_pic: string;
     address: string;
+  }
+
+  interface PaginatedFollower {
+    _: FollowerData;
   }
 
   interface FollowerType {

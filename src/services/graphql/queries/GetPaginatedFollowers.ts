@@ -1,9 +1,8 @@
 import {gql} from '@apollo/client';
+import {PAGINATED_FOLLOWERS} from '../fragments';
 
 export type QueueData = {
-  user_relationship: Array<{
-    _: FollowersData;
-  }>;
+  paginatedFollowers: PaginatedFollower[];
   user_relationship_aggregate: {
     aggregate: {
       count: number;
@@ -12,14 +11,15 @@ export type QueueData = {
 };
 
 /* A GraphQL query. */
-const GetFollowersForAddress = gql`
-  query GetFollowersForAddress(
+const GetPaginatedFollowers = gql`
+  ${PAGINATED_FOLLOWERS}
+  query GetFollowers(
     $subspaceID: bigint!
     $userAddress: String!
     $limit: Int!
     $offset: Int!
   ) @api(name: desmos) {
-    user_relationship(
+    paginatedFollowers: user_relationship(
       limit: $limit
       offset: $offset
       where: {
@@ -28,17 +28,21 @@ const GetFollowersForAddress = gql`
         counterparty: {}
         creator: {}
       }
-      order_by: {creator: {creation_time: asc}}
-    ) {
-      _: creator {
-        dtag
-        nickname
-        profile_pic
-        address
-      }
+      order_by: {creator: {creation_time: desc}}
+    )
+      @connection(
+        key: "user_relationship"
+        filter: ["where", ["subspace_id", "counterparty_address"]]
+      ) {
+      ...PaginatedFollowersFields
     }
     user_relationship_aggregate(
-      where: {counterparty_address: {_eq: $userAddress}}
+      where: {
+        subspace_id: {_eq: $subspaceID}
+        counterparty_address: {_eq: $userAddress}
+        counterparty: {}
+        creator: {}
+      }
     ) {
       aggregate {
         count
@@ -47,4 +51,4 @@ const GetFollowersForAddress = gql`
   }
 `;
 
-export default GetFollowersForAddress;
+export default GetPaginatedFollowers;

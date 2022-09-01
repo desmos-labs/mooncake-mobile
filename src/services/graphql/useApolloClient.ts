@@ -5,12 +5,64 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import {MultiAPILink} from '@habx/apollo-multi-endpoint-link';
+import {FieldPolicy, StoreObject} from '@apollo/client/cache';
 import EnvConfig from 'config/EnvConfig';
 
 const endpoints = EnvConfig.GQL_ENDPOINT;
 
+/**
+ * It merges the incoming data with the existing data in the cache, and it does so in a way that
+ * respects the pagination variables
+ * @returns A FieldPolicy object.
+ */
+function userRelationshipPagination() {
+  const merge: FieldPolicy['merge'] = (
+    existing: Array<StoreObject & PaginatedFollower>,
+    incoming: Array<StoreObject & PaginatedFollower>,
+    {readField, mergeObjects, field},
+  ) => {
+    /* This is to make sure that the
+     merge function is only applied to the paginatedFollowers field. */
+    if (field?.alias?.value !== 'paginatedFollowers') {
+      /* Only cache the latest for when the field is not paginatedFollowers. */
+      return incoming;
+    }
+    const merged = existing ? existing.slice(0) : [];
+    const addressToIndex: Record<string, number> = Object.create(null);
+    if (existing) {
+      existing.forEach((item, index) => {
+        const address = readField<FollowerData>('_', item)?.address;
+        if (address) addressToIndex[address] = index;
+      });
+    }
+    incoming.forEach(item => {
+      const address = readField<FollowerData>('_', item)?.address ?? '';
+      const index = address ? addressToIndex[address] : undefined;
+      if (typeof index === 'number') {
+        merged[index] = mergeObjects(existing[index], item);
+      } else {
+        // First time we've seen this item in this array.
+        if (address) addressToIndex[address] = merged.length;
+        merged.push(item);
+      }
+    });
+  };
+
+  return {
+    merge,
+  };
+}
+
 export const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          user_relationship: userRelationshipPagination(),
+        },
+      },
+    },
+  }),
   link: ApolloLink.from([
     new MultiAPILink({
       endpoints,
