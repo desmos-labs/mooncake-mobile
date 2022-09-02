@@ -42,7 +42,7 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 const Home = () => {
   const styles = useStyles();
 
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
 
@@ -52,9 +52,13 @@ const Home = () => {
   React.useEffect(() => {
     // If there is already a bearer token, then there's no need to login.
     if (bearerToken) return;
-
     // uncomment when ready
-    login(activeAddress!).then();
+    login(activeAddress!).then(result => {
+      if (result) {
+        console.log('login successful');
+        pop();
+      }
+    });
   }, []);
 
   const {

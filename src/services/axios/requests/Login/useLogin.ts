@@ -43,6 +43,8 @@ const useLogin = () => {
     }
 
     updateAuthToken(token);
+
+    return true;
   }, []);
 
   return {
