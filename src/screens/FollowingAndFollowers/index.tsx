@@ -123,7 +123,7 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
     ) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
       const focusedRouteName =
-        getFocusedRouteNameFromRoute(route) ?? ROUTES.FOLLOWING;
+        getFocusedRouteNameFromRoute(route) ?? route.params.initialTabRouteName;
       setSwipeEnabled(focusedRouteName !== ROUTES.FOLLOWING || diffX < 0);
       return false;
     };
