@@ -14,7 +14,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
@@ -39,29 +39,11 @@ import useStyles from './useStyles';
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
 
 export interface UserProfileParams {
-  mode: 'myProfile' | 'visitingProfile';
   visitingProfileAddress?: string;
 }
 
 const Profile = () => {
   const theme = useTheme();
-  const {activeAddress, profileData, loading} = useActiveAccount();
-
-  // animations start
-  // These hooks act as the animation driver for the ProfileHeader component
-  // The actual animations are created in the component itself.
-  const scrollProgress = useSharedValue(0);
-
-  // calculate the percentage of scroll and set it to shared value
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    const {contentOffset, contentSize, layoutMeasurement} = event;
-    const denominator = contentSize.height - layoutMeasurement.height;
-    const numerator = contentOffset.y;
-    // clamp value between 0 and 1
-    scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  });
-  // animations end
-
   const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const {t} = useTranslation('profile');
@@ -69,12 +51,54 @@ const Profile = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
+
+  /** Animations start
+   * These hooks act as the animation driver for the ProfileHeader component
+   * The actual animations are created in the component itself.
+   * */
+  const scrollProgress = useSharedValue(0);
+
+  // Calculate the percentage of scroll and set it to shared value
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    const {contentOffset, contentSize, layoutMeasurement} = event;
+    const denominator = contentSize.height - layoutMeasurement.height;
+    const numerator = contentOffset.y;
+    // clamp value between 0 and 1
+    scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
+  });
+  /** Animations end * */
+
+  const screenMode = useMemo(() => {
+    if (activeAddress !== params.visitingProfileAddress) {
+      return 'guestProfile';
+    }
+    return 'myProfile';
+  }, [params.visitingProfileAddress]);
+
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
     params.visitingProfileAddress || '',
   );
+
+  const {activeAddress, profileData, loading} = useActiveAccount();
+
+  const {
+    address,
+    bio,
+    dtag,
+    cover_pic,
+    profile_pic,
+    nickname,
+    following,
+    followage,
+  } =
+    screenMode === 'guestProfile'
+      ? visitingProfileData
+      : (profileData as ProfileData);
+
   const profileLoading =
-    params.mode === 'myProfile' ? loading : visitingProfileLoading;
-  const tabs = React.useMemo(
+    screenMode === 'myProfile' ? loading : visitingProfileLoading;
+
+  const tabs = useMemo(
     () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
     [t],
   );
@@ -82,11 +106,16 @@ const Profile = () => {
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
       address:
-        params.mode === 'myProfile'
+        screenMode === 'myProfile'
           ? activeAddress
           : params.visitingProfileAddress,
     },
   });
+
+  const posts: [] = React.useMemo(() => {
+    if (!postData) return [];
+    return postData.post;
+  }, [postData, postsLoading]);
 
   const handlePostPressed = React.useCallback(
     ({
@@ -111,19 +140,6 @@ const Profile = () => {
   const handlePressSettings = React.useCallback(() => {
     navigate(ROUTES.SETTINGS);
   }, []);
-
-  const {
-    address,
-    bio,
-    dtag,
-    cover_pic,
-    profile_pic,
-    nickname,
-    following,
-    followage,
-  } = (
-    params.mode === 'myProfile' ? profileData : visitingProfileData
-  ) as ProfileData;
 
   const bannerImage = React.useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
@@ -152,7 +168,7 @@ const Profile = () => {
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
             <ImageButton
-              image={params.mode === 'myProfile' ? editButton : followButton}
+              image={screenMode === 'myProfile' ? editButton : followButton}
               style={styles.editButton}
             />
 
@@ -170,7 +186,7 @@ const Profile = () => {
               />
             </Spacer>
 
-            <UserBio content={bio} />
+            <UserBio content={bio || ''} />
 
             <View style={styles.socialCounterGroup}>
               <SocialCounter count={following?.length} label={t('following')} />
@@ -180,7 +196,7 @@ const Profile = () => {
               <SocialCounter count={followage?.length} label={t('followers')} />
             </View>
 
-            {params.mode === 'myProfile' && (
+            {screenMode === 'myProfile' && (
               <View style={styles.connectButtonGroup}>
                 <ProfileConnectButton
                   label={t('connectAddress')}
@@ -213,8 +229,6 @@ const Profile = () => {
     return <ActivityIndicator />;
   }
 
-  const {post} = postData;
-
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
       postData={item}
@@ -237,7 +251,7 @@ const Profile = () => {
         onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
-        data={post}
+        data={posts}
         renderItem={renderPosts}
         numColumns={3}
         columnWrapperStyle={{
@@ -249,7 +263,7 @@ const Profile = () => {
       />
 
       <ProfileHeader
-        disableRightButtons={params.mode === 'visitingProfile'}
+        disableRightButtons={screenMode === 'guestProfile'}
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
         handlePressNotification={() => {

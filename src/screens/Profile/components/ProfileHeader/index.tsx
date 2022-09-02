@@ -114,54 +114,52 @@ const ProfileHeader = ({
         {/* a horizontal flexbox would not work as only the scanButton will get */}
         {/* hidden by the blurred background (zIndex issues) */}
         {!disableRightButtons && (
-          <Animated.View
-            style={[
-              animatedScanButtonStyle,
-              styles.buttonWrapper,
-              {right: (theme.spacing.m as number) * 7},
-            ]}>
-            <ImageButton
-              image={profileScan}
-              style={styles.buttonStyle}
-              onPress={handlePressScan}
-            />
-          </Animated.View>
-        )}
+          <>
+            <Animated.View
+              style={[
+                animatedScanButtonStyle,
+                styles.buttonWrapper,
+                {right: (theme.spacing.m as number) * 7},
+              ]}>
+              <ImageButton
+                image={profileScan}
+                style={styles.buttonStyle}
+                onPress={handlePressScan}
+              />
+            </Animated.View>
 
-        {!disableRightButtons && (
-          <View
-            style={[
-              styles.buttonWrapper,
-              {right: (theme.spacing.m as number) * 4},
-            ]}>
-            <ImageButton
-              image={profileNotification}
-              style={styles.buttonStyle}
-              overlayComponent={
-                hasNotification ? (
-                  <PingAnimation
-                    size={10}
-                    color={theme.colors.desmosOrange01}
-                  />
-                ) : undefined
-              }
-              overlayPosition={{
-                top: 2,
-                left: 12,
-              }}
-              onPress={handlePressNotification}
-            />
-          </View>
-        )}
+            <View
+              style={[
+                styles.buttonWrapper,
+                {right: (theme.spacing.m as number) * 4},
+              ]}>
+              <ImageButton
+                image={profileNotification}
+                style={styles.buttonStyle}
+                overlayComponent={
+                  hasNotification ? (
+                    <PingAnimation
+                      size={10}
+                      color={theme.colors.desmosOrange01}
+                    />
+                  ) : undefined
+                }
+                overlayPosition={{
+                  top: 2,
+                  left: 12,
+                }}
+                onPress={handlePressNotification}
+              />
+            </View>
 
-        {!disableRightButtons && (
-          <View style={[styles.buttonWrapper, {right: theme.spacing.m}]}>
-            <ImageButton
-              image={profileSettings}
-              style={styles.buttonStyle}
-              onPress={handlePressSettings}
-            />
-          </View>
+            <View style={[styles.buttonWrapper, {right: theme.spacing.m}]}>
+              <ImageButton
+                image={profileSettings}
+                style={styles.buttonStyle}
+                onPress={handlePressSettings}
+              />
+            </View>
+          </>
         )}
         <Animated.View style={[styles.blurContainer, animatedOpacityStyle]}>
           <Image

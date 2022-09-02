@@ -1,35 +1,16 @@
 import {gql} from '@apollo/client';
+import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
-const GetPostsForAddress =
-  gql(`query GetPostsForAddress ($address: String)@api(name: desmos) {
-  post(order_by: {creation_date: desc}, where: {author_address: {_eq: $address}}) {
-    id
-    creation_date
-    author_address
-    attachments {
-      id
-      content
-    }
-    author {
-      address
-      bio
-      dtag
-      profile_pic
-      nickname
-    }
-    subspace_id
-    reactions {
-      id
-      value
-    }
-    text
-    conversation {
-      author {
-        address
-      }
+const GetPostsForAddress = gql`
+  ${POST_FIELDS}
+  query GetPostsForAddress($address: String) @api(name: desmos) {
+    post(
+      order_by: {creation_date: desc}
+      where: {author_address: {_eq: $address}, _not: {conversation: {}}}
+    ) {
+      ...PostFields
     }
   }
-}
-`);
+`;
 
 export default GetPostsForAddress;

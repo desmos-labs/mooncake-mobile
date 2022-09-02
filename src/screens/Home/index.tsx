@@ -138,7 +138,7 @@ const Home = () => {
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE, {mode: 'myProfile'});
+    navigate(ROUTES.USER_PROFILE, {});
   }, []);
 
   const profilePic = _.get(profileData, 'profile_pic');

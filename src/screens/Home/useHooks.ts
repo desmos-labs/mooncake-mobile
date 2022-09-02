@@ -54,12 +54,9 @@ const useHooks = (activeAddress: string) => {
 
   const handlePressAuthor = useCallback((address: string) => {
     if (activeAddress === address) {
-      navigate(ROUTES.USER_PROFILE, {
-        mode: 'myProfile',
-      });
+      navigate(ROUTES.USER_PROFILE, {});
     } else {
       navigate(ROUTES.USER_PROFILE, {
-        mode: 'visitingProfile',
         visitingProfileAddress: address,
       });
     }
