@@ -98,7 +98,7 @@ const ActionAuthorization = () => {
           </Button>
 
           <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-            <Button mode="outlined" onPress={goBack}>
+            <Button mode="outlined" onPress={handleCancel}>
               {t('common:refuse')}
             </Button>
           </Spacer>
