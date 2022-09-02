@@ -9,9 +9,82 @@ import numOfFollowerState from '@recoil/numOfFollowerState';
 // // START debug
 // import {ApolloError} from '@apollo/client';
 // import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
-// import {useCallback, useEffect, useRef, useState} from 'react';
+// import {
+//   MutableRefObject,
+//   useCallback,
+//   useEffect,
+//   useRef,
+//   useState,
+// } from 'react';
 // import {useSetRecoilState} from 'recoil';
 // import numOfFollowerState from '@recoil/numOfFollowerState';
+
+// const MAX_MOCK_FOLLOWERS = 10000000;
+// function mockGaginatedFollowers(
+//   ref: MutableRefObject<QueueData['paginatedFollowers']>,
+//   initialOffset: number,
+// ) {
+//   const paginatedFollowers = ref.current;
+//   let offset = initialOffset;
+//   for (let i = 0; i < 20; i++) {
+//     if (offset >= MAX_MOCK_FOLLOWERS) break;
+//     const i1 = {
+//       _: {
+//         dtag: `GoFind.${offset}`,
+//         address: 'desmos1p7ce9sydhm7dsugl890g9unmp99nmq0gz9f4vx',
+//         nickname: `GoFind.${offset}`,
+//         profile_pic: `https://picsum.photos/40?.${offset}`,
+//       },
+//     };
+//     if (offset in paginatedFollowers) paginatedFollowers[offset] = i1;
+//     else paginatedFollowers.push(i1);
+//     offset++;
+//     const i2 = {
+//       _: {
+//         dtag: `Masternode24.${offset}`,
+//         address: 'desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r',
+//         nickname: `Masternode24.de.${offset}`,
+//         profile_pic: `https://picsum.photos/40?.${offset}`,
+//       },
+//     };
+//     if (offset in paginatedFollowers) paginatedFollowers[offset] = i2;
+//     else paginatedFollowers.push(i2);
+//     offset++;
+//     const i3 = {
+//       _: {
+//         dtag: `dima_student2.${offset}`,
+//         address: 'desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh',
+//         nickname: `dima_student2#2856.${offset}`,
+//         profile_pic: `https://picsum.photos/40?.${offset}`,
+//       },
+//     };
+//     if (offset in paginatedFollowers) paginatedFollowers[offset] = i3;
+//     else paginatedFollowers.push(i3);
+//     const i4 = {
+//       _: {
+//         dtag: `!Masternode24.${offset}`,
+//         address: 'desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r',
+//         nickname: `!Masternode24.de.${offset}`,
+//         profile_pic: `https://picsum.photos/40?.${offset}`,
+//       },
+//     };
+//     if (offset in paginatedFollowers) paginatedFollowers[offset] = i4;
+//     else paginatedFollowers.push(i4);
+//     offset++;
+//     const i5 = {
+//       _: {
+//         dtag: `!dima_student2.${offset}`,
+//         address: 'desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh',
+//         nickname: `!dima_student2#2856.${offset}`,
+//         profile_pic: '',
+//       },
+//     };
+//     if (offset in paginatedFollowers) paginatedFollowers[offset] = i5;
+//     else paginatedFollowers.push(i5);
+//     offset++;
+//   }
+//   return paginatedFollowers;
+// }
 // // END debug
 
 /* It's setting the limit of the number of items to be fetched. */
@@ -51,81 +124,48 @@ const useHooks = (subspaceID: number, userAddress: string) => {
   );
 
   // // START debug
-  // const id = useRef(0);
+  // const paginatedFollowers = useRef<QueueData['paginatedFollowers']>([]);
   // const [data, setData] = useState<QueueData>();
   // const [loading, setLoading] = useState(false);
   // const [error, setError] = useState<ApolloError>();
-  // const fetchMore = (_: unknown) => fetch();
-  // const refetch = (_: any) => fetch();
-  // const fetch = useCallback(() => {
+  // function fetchMore(params: {variables: {offset: number}}) {
+  //   console.log('fetchMore', params);
+  //   return fetch(params.variables.offset);
+  // }
+  // function refetch(params: {offset: number}) {
+  //   console.log('refetch', params);
+  //   return fetch(params.offset);
+  // }
+  // function fetch(offset: number) {
+  //   console.log('fetch', offset);
   //   setLoading(true);
   //   setError(undefined);
   //   setTimeout(
   //     () => {
+  //       console.log('fetching', offset);
   //       if (Math.random() > 1) {
   //         setLoading(false);
   //         setError(new ApolloError({errorMessage: 'random error'}));
   //         return;
   //       }
-  //       const paginatedFollowers: QueueData['paginatedFollowers'] = [];
-  //       for (let i = 0; i < 20; i++) {
-  //         if (id.current >= 10000000) break;
-  //         paginatedFollowers.push({
-  //           _: {
-  //             dtag: `GoFind.${++id.current}`,
-  //             address: 'desmos1p7ce9sydhm7dsugl890g9unmp99nmq0gz9f4vx',
-  //             nickname: `GoFind.${id.current}`,
-  //             profile_pic: `https://picsum.photos/40?.${id.current}`,
-  //           },
-  //         });
-  //         paginatedFollowers.push({
-  //           _: {
-  //             dtag: `Masternode24.${++id.current}`,
-  //             address: 'desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r',
-  //             nickname: `Masternode24.de.${id.current}`,
-  //             profile_pic: `https://picsum.photos/40?.${id.current}`,
-  //           },
-  //         });
-  //         paginatedFollowers.push({
-  //           _: {
-  //             dtag: `dima_student2.${++id.current}`,
-  //             address: 'desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh',
-  //             nickname: `dima_student2#2856.${id.current}`,
-  //             profile_pic: `https://picsum.photos/40?.${id.current}`,
-  //           },
-  //         });
-  //         paginatedFollowers.push({
-  //           _: {
-  //             dtag: `!Masternode24.${++id.current}`,
-  //             address: 'desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r',
-  //             nickname: `!Masternode24.de.${id.current}`,
-  //             profile_pic: `https://picsum.photos/40?.${id.current}`,
-  //           },
-  //         });
-  //         paginatedFollowers.push({
-  //           _: {
-  //             dtag: `!dima_student2.${++id.current}`,
-  //             address: 'desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh',
-  //             nickname: `!dima_student2#2856.${id.current}`,
-  //             profile_pic: '',
-  //           },
-  //         });
-  //       }
   //       setLoading(false);
   //       setError(undefined);
   //       setData({
-  //         paginatedFollowers,
+  //         paginatedFollowers: mockGaginatedFollowers(
+  //           paginatedFollowers,
+  //           offset,
+  //         ),
   //         user_relationship_aggregate: {
   //           aggregate: {
-  //             count: 10000000,
+  //             count: MAX_MOCK_FOLLOWERS,
   //           },
   //         },
   //       });
   //     },
   //     Math.random() > 1 ? 60000 : 1000,
   //   );
-  // }, []);
-  // useEffect(fetch, []);
+  // }
+  // useEffect(() => fetch(0), []);
   // // END debug
 
   const setNumOfFollowers = useSetRecoilState(

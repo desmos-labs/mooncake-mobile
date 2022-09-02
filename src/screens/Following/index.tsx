@@ -60,12 +60,23 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
         ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={loading ? null : Empty}
         ListFooterComponent={loading ? Loading : undefined}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.5}
         onEndReached={fetchMore}
+        getItemLayout={getItemLayout}
       />
       {!!error && <Error error={error} onPress={fetchMore} />}
     </View>
   );
 };
+
+const ITEM_HEIGHT = 80;
+
+function getItemLayout(_: unknown, index: number) {
+  return {
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  };
+}
 
 export default FollowingTab;
