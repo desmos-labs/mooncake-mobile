@@ -18,6 +18,7 @@ export const deriveSecurePassword = (password: string): string => {
  */
 export const encryptData = (text: string, password: string): string => {
   const securePassword: string = deriveSecurePassword(password);
+
   return CryptoES.AES.encrypt(text, securePassword).toString();
 };
 
@@ -26,16 +27,11 @@ export const encryptData = (text: string, password: string): string => {
  * @param data The data to be decrypted.
  * @param password The password used to generate the cipher key.
  */
-export const decryptData = (
-  data: string,
-  password: string,
-): string | boolean => {
-  const securePassword: string = deriveSecurePassword(password);
-
-  const decryptedData = CryptoES.AES.decrypt(data, securePassword).toString(
+export const decryptData = (data: string, password: string): string => {
+  const decryptedData = CryptoES.AES.decrypt(data, password).toString(
     CryptoES.enc.Utf8,
   );
 
-  if (!decryptedData) return false;
+  if (!decryptedData) throw new Error('Incorrect password');
   return decryptedData;
 };
