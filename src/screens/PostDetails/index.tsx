@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {
@@ -45,8 +45,17 @@ export type NavProps = StackScreenProps<
 >;
 
 export type PostDetailsParams = {
+  /**
+   * id of the post
+   */
   postId: number;
+  /**
+   * susbpace_id of the post
+   */
   subspaceID: number;
+  /**
+   * focus the comment box when navigating to this screen
+   */
   focusCommentBox: boolean;
 };
 
@@ -55,7 +64,6 @@ const PostDetails = () => {
   const theme = useTheme();
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
-  const {navigate} = useNavigation<NavProps['navigation']>();
   const [profileData] = useRecoilState(activeProfileState);
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
@@ -73,14 +81,14 @@ const PostDetails = () => {
     commentsLoading,
     reactions,
     formattedDate,
+    handlePressSelectedComment,
+    handleExpandComment,
+    handlePressCounters,
+    handlePressSendTips,
   } = useHooks({
     id: params.postId,
     sId: params.subspaceID,
   });
-
-  const flatListData = useMemo(() => {
-    return comments;
-  }, [comments]);
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
@@ -129,25 +137,6 @@ const PostDetails = () => {
     [],
   );
 
-  const handlePressSelectedComment = React.useCallback(
-    ({
-      postId,
-      commentId,
-      subspaceId,
-    }: {
-      postId: number;
-      commentId: number;
-      subspaceId: number;
-    }) => {
-      navigate(ROUTES.COMMENT_REPLIES, {
-        postId,
-        commentId,
-        subspaceId,
-      });
-    },
-    [],
-  );
-
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
       return (
@@ -185,31 +174,6 @@ const PostDetails = () => {
     },
     [comments],
   );
-
-  const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
-      navigate(ROUTES.ENTER_COMMENT, {
-        author,
-        postId,
-      });
-    },
-    [],
-  );
-
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
-  }, []);
-
-  const handlePressCounters = React.useCallback(() => {
-    navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_REACTIONS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-        reactions,
-      },
-    });
-  }, [reactions]);
 
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label="No comments yet" />;
@@ -282,7 +246,7 @@ const PostDetails = () => {
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[...flatListData]}
+        data={[...comments]}
         ListEmptyComponent={ListEmptyComponent}
       />
       <EnterCommentBottomBar

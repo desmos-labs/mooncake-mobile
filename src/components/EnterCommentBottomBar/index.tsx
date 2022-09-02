@@ -6,7 +6,7 @@ import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -14,6 +14,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -30,6 +31,9 @@ export type Props = {
    * Action to execute when the right icon is pressed
    */
   onIconPress: () => void;
+  /**
+   * Focus the text input when navigating to this screen
+   */
   focusTextInput: boolean;
 };
 
@@ -44,6 +48,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const theme = useTheme();
   const [comment, setComment] = useState<string>('');
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
+  const textInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -64,6 +69,13 @@ const EnterCommentBottomBar: React.FC<Props> = ({
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (focusTextInput) {
+      // It was too fast, so we need to slow it down to be able to render everything else before focussing this input
+      setTimeout(() => textInputRef?.current?.focus());
+    }
+  }, [focusTextInput]);
 
   const rightButtonComponent = useMemo(() => {
     return (
@@ -98,7 +110,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
             <ActivityIndicator style={styles.profilePic} />
           )}
           <DTextInput
-            autoFocus={focusTextInput}
+            inputRef={textInputRef}
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
             value={comment}
             onChangeText={text => setComment(text)}

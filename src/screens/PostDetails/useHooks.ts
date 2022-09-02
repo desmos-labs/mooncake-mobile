@@ -1,14 +1,18 @@
 import {useQuery} from '@apollo/client';
+import {useNavigation} from '@react-navigation/native';
 import appSettingsState from '@recoil/settings';
 import {utcToZonedTime} from 'date-fns-tz';
+import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useRecoilState} from 'recoil';
+import {NavProps} from 'screens/PostDetails/index';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 
 const useHooks = ({id, sId}: {id: number; sId: number}) => {
   const [settings] = useRecoilState(appSettingsState);
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
     data: originalPost,
@@ -43,7 +47,6 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
   });
 
   const post = React.useMemo(() => {
-    console.log(originalPost);
     if (!originalPost) return {};
     return originalPost.posts[0];
   }, [originalPost]);
@@ -67,6 +70,50 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     [post?.creation_date, settings.currentTimezone],
   );
 
+  const handlePressSelectedComment = React.useCallback(
+    ({
+      postId,
+      commentId,
+      subspaceId,
+    }: {
+      postId: number;
+      commentId: number;
+      subspaceId: number;
+    }) => {
+      navigate(ROUTES.COMMENT_REPLIES, {
+        postId,
+        commentId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
+  const handleExpandComment = React.useCallback(
+    ({author, postId}: {author: PostAuthor; postId: string}) => {
+      navigate(ROUTES.ENTER_COMMENT, {
+        author,
+        postId,
+      });
+    },
+    [],
+  );
+
+  const handlePressSendTips = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
+  const handlePressCounters = React.useCallback(() => {
+    navigate(ROUTES.POST_INTERACTION, {
+      screen: ROUTES.POST_REACTIONS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+        reactions,
+      },
+    });
+  }, [reactions]);
+
   return {
     post,
     postLoading,
@@ -75,6 +122,10 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     commentsLoading,
     reactions,
     formattedDate,
+    handlePressSelectedComment,
+    handleExpandComment,
+    handlePressSendTips,
+    handlePressCounters,
   };
 };
 
