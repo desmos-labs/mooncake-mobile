@@ -3,9 +3,10 @@ import {
   ApolloLink,
   createHttpLink,
   InMemoryCache,
+  FieldPolicy,
+  StoreObject,
 } from '@apollo/client';
 import {MultiAPILink} from '@habx/apollo-multi-endpoint-link';
-import {FieldPolicy, StoreObject} from '@apollo/client/cache';
 import {useMemo} from 'react';
 import EnvConfig from 'config/EnvConfig';
 
@@ -14,10 +15,10 @@ import EnvConfig from 'config/EnvConfig';
  * respects the pagination variables
  * @returns A FieldPolicy object.
  */
-function userRelationshipPagination() {
+function user_relationship() {
   const merge: FieldPolicy['merge'] = (
-    existing: Array<StoreObject & PaginatedFollower>,
-    incoming: Array<StoreObject & PaginatedFollower>,
+    existing: Array<StoreObject>,
+    incoming: Array<StoreObject>,
     {readField, mergeObjects, field},
   ) => {
     /* This is to make sure that the
@@ -30,12 +31,17 @@ function userRelationshipPagination() {
     const addressToIndex: Record<string, number> = Object.create(null);
     if (existing) {
       existing.forEach((item, index) => {
-        const address = readField<ProfileSummary>('_', item)?.address;
+        const address = readField<string>(
+          'address',
+          readField<ProfileSummary>('_', item),
+        );
         if (address) addressToIndex[address] = index;
       });
     }
     incoming.forEach(item => {
-      const address = readField<ProfileSummary>('_', item)?.address ?? '';
+      const address =
+        readField<string>('address', readField<ProfileSummary>('_', item)) ??
+        '';
       const index = address ? addressToIndex[address] : undefined;
       if (typeof index === 'number') {
         merged[index] = mergeObjects(existing[index], item);
@@ -47,9 +53,7 @@ function userRelationshipPagination() {
     });
   };
 
-  return {
-    merge,
-  };
+  return {merge};
 }
 
 export default function useApolloClient() {
@@ -60,9 +64,12 @@ export default function useApolloClient() {
       new ApolloClient({
         cache: new InMemoryCache({
           typePolicies: {
+            profile: {
+              keyFields: ['address'],
+            },
             Query: {
               fields: {
-                user_relationship: userRelationshipPagination(),
+                user_relationship,
               },
             },
           },
