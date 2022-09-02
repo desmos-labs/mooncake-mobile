@@ -14,7 +14,6 @@ const useStyles = makeStyle(() => {
       justifyContent: 'center',
       alignItems: 'center',
       padding: 0,
-      gap: 10,
       width: 83,
       height: 32,
 
