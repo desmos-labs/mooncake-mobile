@@ -19,7 +19,9 @@ import {
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import {Any} from 'cosmjs-types/google/protobuf/any';
-import {createAuthMsgEncode} from './utils';
+import {Grant} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import Long from 'long';
 
 /**
  * MVP msg authorizations
@@ -37,10 +39,6 @@ const useCreateAuthGrant = () => {
   const unlockWallet = useUnlockWallet();
   const broadcastMessages = useBroadcastMessages();
   const {getActiveGrants} = useGetActiveGrants();
-
-  const granteeAddress = React.useMemo(() => {
-    return butterConfig.desmos_address;
-  }, [butterConfig.desmos_address]);
 
   const requestAndUpdateGrants = React.useCallback(
     async ({grantsToRequest}: {grantsToRequest: GrantEnums[]}) => {
@@ -85,78 +83,66 @@ const useCreateAuthGrant = () => {
         value: {
           granter: butterConfig.desmos_address,
           grantee: chainAccount.address,
-          allowance: {
+          allowance: Any.fromPartial({
             typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
             value: AllowedMsgAllowance.encode(allowance).finish(),
-          },
+          }),
         },
       };
 
       const msgsGrantEncodes: MsgGrantEncodeObject[] = grantsToBuild.map(
-        grant => ({
-          typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-          value: {
-            granter: butterConfig.desmos_address,
-            grantee: chainAccount.address,
-            grant: {
-              authorization: grant,
-              expiration: undefined,
+        grant => {
+          const subspaceAuthorization: GenericSubspaceAuthorization = {
+            subspacesIds: [Long.fromNumber(5)], // 5 is our app's subspace id
+            msg: grant,
+          };
+
+          const _grant: Grant = {
+            authorization: Any.fromPartial({
+              typeUrl:
+                '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
+              value: GenericSubspaceAuthorization.encode(
+                subspaceAuthorization,
+              ).finish(),
+            }),
+          };
+
+          return {
+            typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+            value: {
+              granter: butterConfig.desmos_address,
+              grantee: chainAccount.address,
+              grant: _grant,
             },
-          },
-        }),
+          };
+        },
       );
-
-      console.log(
-        msgsGrantEncodes,
-        msgGrantAllowanceEncode,
-        msgRevokeAllowanceEncode,
-      );
-    },
-    [],
-  );
-
-  const createAndBroadcastAuthGrant = React.useCallback(
-    async ({
-      scope,
-      onSuccess,
-      onFailure,
-    }: {
-      scope: GrantEnums;
-      onSuccess?: () => void;
-      onFailure?: () => void;
-    }) => {
-      if (!chainAccount) return;
-
-      const grantMsg = createAuthMsgEncode({
-        chainAccount,
-        scope,
-        granteeAddress,
-      });
 
       const wallet = await unlockWallet(chainAccount);
 
+      const combinedMessages = _.flatten([
+        msgRevokeAllowanceEncode as any,
+        msgGrantAllowanceEncode,
+        ...msgsGrantEncodes,
+      ]);
+
       const {fee} = computeGasAndFees({
-        msg: [grantMsg],
+        msg: combinedMessages,
         denom: EnvConfig.BASE_DENOM,
       });
 
       const broadcastResult = await broadcastMessages(
         wallet as OfflineSigner,
-        [grantMsg],
+        combinedMessages,
         fee.average,
       );
 
-      if (broadcastResult) {
-        onSuccess && onSuccess();
-      } else {
-        onFailure && onFailure();
-      }
+      console.log(broadcastResult);
     },
-    [chainAccount],
+    [],
   );
 
   return {
-    createAndBroadcastAuthGrant,
     // expose the async loading of ChainAccounts so it can be used
     // to block/disable input before the data is fully loaded¬
     accountsLoading: loading,
