@@ -6,6 +6,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import useHooks from './useHooks';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 
@@ -16,7 +17,13 @@ type NavProps = StackScreenProps<
 
 const PostReactions = () => {
   const {t} = useTranslation('postInteraction');
-  const {params} = useRoute<NavProps['route']>();
+  const {
+    params: {postId, subspaceId},
+  } = useRoute<NavProps['route']>();
+  const {reactions, reactionsLoading, reactionsRefetch} = useHooks({
+    postId,
+    subspaceId,
+  });
 
   const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
     return <ReactionItem reaction={item} />;
@@ -28,8 +35,12 @@ const PostReactions = () => {
 
   return (
     <FlatList
-      keyExtractor={item => item.address}
-      data={params.reactions}
+      refreshing={reactionsLoading}
+      onRefresh={() =>
+        reactionsRefetch({postID: postId, subspaceID: subspaceId})
+      }
+      keyExtractor={item => item.id}
+      data={reactions}
       renderItem={renderItem}
       contentContainerStyle={{
         flexGrow: 1,

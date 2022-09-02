@@ -109,10 +109,11 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       params: {
         expandOnOpen: true,
         allowPanning: true,
-        reactions,
+        postId: id,
+        subspaceId: sId,
       },
     });
-  }, [reactions]);
+  }, []);
 
   return {
     post,

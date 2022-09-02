@@ -36,7 +36,8 @@ export type PostInteractionReactionsTabsParams = {
    * Should the user be able to drag the tab window in and out?
    */
   allowPanning: boolean;
-  reactions: [];
+  postId: number;
+  subspaceId: number;
 };
 
 export type PostInteractionTipsTabsParams = {
@@ -49,7 +50,8 @@ export type PostInteractionTipsTabsParams = {
    * Should the user be able to drag the tab window in and out?
    */
   allowPanning: boolean;
-  tips: [];
+  postId: number;
+  subspaceId: number;
 };
 
 const PostInteractionTabs = () => {
