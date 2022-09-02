@@ -120,7 +120,7 @@ const useCreateAuthGrant = () => {
 
       const wallet = await unlockWallet(chainAccount);
 
-      const combinedMessages = _.flatten([
+      const combinedMessages = _.compact([
         msgRevokeAllowanceEncode as any,
         msgGrantAllowanceEncode,
         ...msgsGrantEncodes,
@@ -139,7 +139,7 @@ const useCreateAuthGrant = () => {
 
       console.log(broadcastResult);
     },
-    [],
+    [chainAccount],
   );
 
   return {

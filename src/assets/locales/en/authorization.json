@@ -4,6 +4,8 @@
   "avoidRepetitiveActions": "This is to avoid using your major wallet to execute daily repetitive actions.",
   "post": "post",
   "like": "like",
+  "follow":"follow",
+  "unfollow": "unfollow",
   "followUnfollow":"follow / unfollow",
   "blockUnblock": "block / unblock",
   "report": "report",

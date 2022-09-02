@@ -336,7 +336,7 @@ const RootNavigator = () => {
         <Stack.Screen
           initialParams={{
             // TODO: remove when going production
-            grantType: GrantEnums.MsgCreateReport,
+            grants: [GrantEnums.MsgCreateReport],
           }}
           name={ROUTES.ACTION_AUTHORIZATION}
           component={ActionAuthorization}

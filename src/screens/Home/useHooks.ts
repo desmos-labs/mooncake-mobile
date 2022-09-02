@@ -7,6 +7,8 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 
 /**
  * Hooks for the Home screen.
@@ -16,8 +18,10 @@ const useHooks = () => {
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
   const maxOffset = React.useRef<number>(0);
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const {checkGrants} = useCheckGrants();
 
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
@@ -61,7 +65,31 @@ const useHooks = () => {
     async (address: string) => {
       const followedAddresses = following.map(x => x.address);
 
-      console.log(followedAddresses, address);
+      const grantsToRequest: GrantEnums[] = [
+        GrantEnums.MsgCreateRelationship,
+        GrantEnums.MsgDeleteRelationship,
+      ];
+      // check if user has grants first
+
+      const grantsRequired = await checkGrants(grantsToRequest);
+
+      if (grantsRequired.length > 0) {
+        navigate(ROUTES.ACTION_AUTHORIZATION, {
+          grants: grantsRequired,
+
+          onApprove: () => {
+            // regular follow flow
+            console.log('approved');
+            pop();
+          },
+          onCancel: () => {
+            console.log('cancelled');
+          },
+        });
+      } else {
+        // regular follow flow
+        console.log(address, followedAddresses);
+      }
     },
     [following],
   );

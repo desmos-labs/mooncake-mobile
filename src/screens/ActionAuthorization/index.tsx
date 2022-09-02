@@ -12,12 +12,11 @@ import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import useCreateAuthGrant from 'hooks/authGrants/useCreateAuthorization';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
-  grantType: GrantEnums;
-
-  hasFeeGrant?: boolean;
+  grants: GrantEnums[];
 
   onCancel?: () => void;
 
@@ -38,9 +37,28 @@ const ActionAuthorization = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  const {requestAndUpdateGrants} = useCreateAuthGrant();
+
   const {
-    params: {grantType, onCancel, onApprove},
+    params: {grants, onCancel, onApprove},
   } = useRoute<NavProps['route']>();
+
+  const grantMessage = React.useMemo(() => {
+    return grants
+      .map(x => {
+        switch (x) {
+          case GrantEnums.MsgCreateReport:
+            return t('report');
+          case GrantEnums.MsgCreateRelationship:
+            return t('follow');
+          case GrantEnums.MsgDeleteRelationship:
+            return t('unfollow');
+          default:
+            return 'unmapped';
+        }
+      })
+      .join(', ');
+  }, [grants]);
 
   const handleCancel = React.useCallback(() => {
     // do cancel things here
@@ -49,23 +67,14 @@ const ActionAuthorization = () => {
     onCancel && onCancel();
   }, [onCancel]);
 
-  const handleApprove = React.useCallback(() => {
-    // do approve things here
+  const handleApprove = React.useCallback(async () => {
+    await requestAndUpdateGrants({grantsToRequest: grants});
+
     goBack();
 
     // run onApprove last
     onApprove && onApprove();
-  }, [onApprove, grantType]);
-
-  const actionString = React.useMemo(() => {
-    switch (grantType) {
-      case GrantEnums.MsgCreateReport:
-        return t('report');
-      case GrantEnums.MsgCreateRelationship:
-      case GrantEnums.MsgDeleteRelationship:
-        return t('followUnfollow');
-    }
-  }, [grantType]);
+  }, [onApprove, grants, requestAndUpdateGrants]);
 
   return (
     <View style={styles.container}>
@@ -86,7 +95,7 @@ const ActionAuthorization = () => {
             <Trans
               i18nKey="authorization:authorizeToAction"
               values={{
-                action: actionString,
+                action: grantMessage,
               }}
             />
           </Typography.Body5>
