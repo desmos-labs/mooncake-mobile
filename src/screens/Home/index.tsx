@@ -49,10 +49,9 @@ const Home = () => {
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
 
+  // Check if we need to login the user
   React.useEffect(() => {
-    // If there is already a bearer token, then there's no need to login.
     if (bearerToken) return;
-    // uncomment when ready
     login(activeAddress!).then(result => {
       if (result) {
         console.log('login successful');
