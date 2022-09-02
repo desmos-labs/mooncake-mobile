@@ -1,39 +1,5 @@
 import {gql} from '@apollo/client';
-
-export const POST_FIELDS = gql`
-  fragment PostFields on post {
-    id
-    creation_date
-    author_address
-    attachments {
-      id
-      content
-    }
-    author {
-      address
-      bio
-      dtag
-      profile_pic
-      nickname
-    }
-    subspace_id
-    reactions {
-      id
-      value
-    }
-    reactions_aggregate {
-      aggregate {
-        count
-      }
-    }
-    text
-    conversation {
-      author {
-        address
-      }
-    }
-  }
-`;
+import {POST_FIELDS} from '../fragments';
 
 const GetPosts = gql`
   ${POST_FIELDS}

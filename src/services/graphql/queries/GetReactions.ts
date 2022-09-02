@@ -1,6 +1,8 @@
 import {gql} from '@apollo/client';
+import {PROFILE_SUMMARY_FIELDS} from '../fragments';
 
 const GetPostReactions = gql`
+  ${PROFILE_SUMMARY_FIELDS}
   query PostReactions(
     $subspaceID: bigint!
     $postID: bigint!
@@ -15,10 +17,7 @@ const GetPostReactions = gql`
       id
       value
       author {
-        address
-        dtag
-        profile_pic
-        nickname
+        ...ProfileSummaryFields
       }
     }
   }

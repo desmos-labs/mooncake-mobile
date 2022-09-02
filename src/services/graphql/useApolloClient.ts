@@ -30,12 +30,12 @@ function userRelationshipPagination() {
     const addressToIndex: Record<string, number> = Object.create(null);
     if (existing) {
       existing.forEach((item, index) => {
-        const address = readField<FollowerData>('_', item)?.address;
+        const address = readField<ProfileSummary>('_', item)?.address;
         if (address) addressToIndex[address] = index;
       });
     }
     incoming.forEach(item => {
-      const address = readField<FollowerData>('_', item)?.address ?? '';
+      const address = readField<ProfileSummary>('_', item)?.address ?? '';
       const index = address ? addressToIndex[address] : undefined;
       if (typeof index === 'number') {
         merged[index] = mergeObjects(existing[index], item);

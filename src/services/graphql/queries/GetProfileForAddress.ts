@@ -1,15 +1,14 @@
 import {gql} from '@apollo/client';
+import {PROFILE_SUMMARY_FIELDS} from '../fragments';
 
-const GetProfileForAddress =
-  gql(`query GetProfileForAddress($address: String) @api(name: desmos) {
-  profile(where: {address: {_eq: $address}}) {
-      address
+const GetProfileForAddress = gql`
+  ${PROFILE_SUMMARY_FIELDS}
+  query GetProfileForAddress($address: String) @api(name: desmos) {
+    profile(where: {address: {_eq: $address}}) {
+      ...ProfileSummaryFields
       bio
-      dtag
       creation_time
       cover_pic
-      nickname
-      profile_pic
       followage {
         counterparty_address
         subspace_id
@@ -18,8 +17,8 @@ const GetProfileForAddress =
         counterparty_address
         subspace_id
       }
-}
-}
-`);
+    }
+  }
+`;
 
 export default GetProfileForAddress;

@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {PAGINATED_FOLLOWING} from '../fragments';
+import {PROFILE_SUMMARY_FIELDS} from '../fragments';
 
 export type QueueData = {
   paginatedFollowers: PaginatedFollower[];
@@ -12,7 +12,7 @@ export type QueueData = {
 
 /* A GraphQL query. */
 const GetPaginatedFollowing = gql`
-  ${PAGINATED_FOLLOWING}
+  ${PROFILE_SUMMARY_FIELDS}
   query GetFollowing(
     $subspaceID: bigint!
     $userAddress: String!
@@ -28,13 +28,10 @@ const GetPaginatedFollowing = gql`
         creator: {}
         counterparty: {}
       }
-      order_by: {counterparty: {creation_time: desc}}
-    )
-      @connection(
-        key: "user_relationship"
-        filter: ["where", ["subspace_id", "creator_address"]]
-      ) {
-      ...PaginatedFollowingFields
+    ) {
+      _: counterparty {
+        ...ProfileSummaryFields
+      }
     }
     user_relationship_aggregate(
       where: {

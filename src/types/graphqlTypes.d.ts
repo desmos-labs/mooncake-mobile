@@ -34,7 +34,7 @@ declare global {
     address: string;
   }
 
-  interface FollowerData {
+  interface ProfileSummary {
     dtag: string;
     nickname: string;
     profile_pic: string;
@@ -42,7 +42,7 @@ declare global {
   }
 
   interface PaginatedFollower {
-    _: FollowerData;
+    _: ProfileSummary;
   }
 
   interface FollowerType {
