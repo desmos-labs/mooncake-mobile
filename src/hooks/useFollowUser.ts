@@ -28,11 +28,12 @@ export default function useFollowUser(
 
   const unlockWallet = useUnlockWallet();
   const {chainAccount} = useActiveAccount();
+  const {address} = counterParty;
 
   /* A react hook that is used to memoize the value of following. */
   const following = useMemo(
-    () => followedAddresses.has(counterParty.address),
-    [followedAddresses, counterParty],
+    () => followedAddresses.has(address),
+    [followedAddresses, address],
   );
 
   /* A function that is used to unlock the wallet and get the offlineSigner. */
@@ -78,7 +79,7 @@ export default function useFollowUser(
             typeUrl: MsgTypes.MsgCreateRelationship,
             value: {
               signer,
-              counterparty: counterParty.address,
+              counterparty: address,
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
@@ -86,9 +87,7 @@ export default function useFollowUser(
 
           /* Adding the counterParty to the followingState. */
           set(followingState, curVal => {
-            const index = curVal.findIndex(
-              c => c.address === counterParty.address,
-            );
+            const index = curVal.findIndex(c => c.address === address);
             if (index === -1) curVal;
             return curVal.concat(counterParty);
           });
@@ -100,7 +99,7 @@ export default function useFollowUser(
           setError(String(err));
         }
       },
-    [subspaceID, counterParty],
+    [subspaceID, address, counterParty],
   );
 
   /* A function that is used to unfollow a user. */
@@ -119,7 +118,7 @@ export default function useFollowUser(
             typeUrl: MsgTypes.MsgDeleteRelationship,
             value: {
               signer,
-              counterparty: counterParty.address,
+              counterparty: address,
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
@@ -127,9 +126,7 @@ export default function useFollowUser(
 
           /* Removing the counterParty to the followingState. */
           set(followingState, curVal => {
-            const index = curVal.findIndex(
-              c => c.address === counterParty.address,
-            );
+            const index = curVal.findIndex(v => v.address === address);
             if (index === -1) curVal;
             return curVal.filter((_, i) => i !== index);
           });
@@ -141,7 +138,7 @@ export default function useFollowUser(
           setError(String(err));
         }
       },
-    [subspaceID, counterParty],
+    [subspaceID, address],
   );
 
   return {following, loading, error, follow, unfollow};
