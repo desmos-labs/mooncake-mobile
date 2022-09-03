@@ -1,4 +1,6 @@
 import {
+  ACCESS_CONTROL,
+  ACCESSIBLE,
   getAllGenericPasswordServices,
   resetGenericPassword,
   Result,
@@ -7,13 +9,20 @@ import * as Keychain from 'react-native-keychain';
 
 import LocalWallet from 'lib/LocalWallet';
 import {ChainAccount} from 'types/chains';
+import {
+  decryptData,
+  deriveSecurePassword,
+  encryptData,
+} from 'lib/EncryptionUtils';
+import {Platform} from 'react-native';
 
 const defaultOptions: Keychain.Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
   },
-  accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+  accessControl:
+    Platform.OS === 'android' ? ACCESS_CONTROL.BIOMETRY_ANY : undefined,
+  accessible: ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
 };
 
 enum SECURE_STORAGE_KEYS {
@@ -54,6 +63,7 @@ async function getItem<T>(
   if (!value) {
     return undefined;
   }
+
   return JSON.parse(value.password);
 }
 
@@ -69,6 +79,7 @@ async function setItem(
   options?: StoreOptions | undefined,
 ): Promise<false | Result> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
+
   return Keychain.setGenericPassword('secureValue', JSON.stringify(value), {
     service: key,
     ...moreOptions,
@@ -114,21 +125,21 @@ export const getAccounts = async () =>
 export const saveLocalWallet = async (
   _wallet: LocalWallet,
   password: string,
-  useBiometrics?: boolean,
 ) => {
   const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
-  if (useBiometrics) {
-    await setItem(
-      `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-      password,
-      {
-        biometrics: true,
-      },
-    );
-  }
+  // Store the derived password for biometric unlocking
+  await setItem(
+    `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+    deriveSecurePassword(password),
+    {
+      biometrics: true,
+    },
+  );
 
-  return setItem(walletKey, _wallet.serialize(), {password});
+  const walletToSave = encryptData(_wallet.serialize(), password);
+
+  return setItem(walletKey, walletToSave);
 };
 
 export const getLocalWallet = async (
@@ -146,17 +157,15 @@ export const getLocalWallet = async (
         biometrics: true,
       },
     );
+  } else {
+    walletPassword = deriveSecurePassword(walletPassword!);
   }
 
-  const serializedWallet = await getItem<string>(walletKey, {
-    password: walletPassword,
-  });
+  const encryptedData = await getItem<string>(walletKey);
 
-  if (!serializedWallet) {
-    throw new Error(`No wallet found with address ${address}`);
-  }
+  const decryptedData = decryptData(encryptedData!, walletPassword!);
 
-  return LocalWallet.deserialize(serializedWallet);
+  return LocalWallet.deserialize(decryptedData);
 };
 
 /**
@@ -172,7 +181,9 @@ export const saveMnemonic = async (
 ) => {
   const mnemonicKey = `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`;
 
-  return setItem(mnemonicKey, mnemonic, {password});
+  const encryptedMnemonic = encryptData(mnemonic, password);
+
+  return setItem(mnemonicKey, encryptedMnemonic, {password});
 };
 
 export const getMnemonic = async (
@@ -180,19 +191,27 @@ export const getMnemonic = async (
   password?: string,
   useBiometrics?: boolean,
 ): Promise<string | undefined> => {
-  let _password = password;
-  if (!password && useBiometrics) {
-    _password = await getItem<string>(
+  let _password: string;
+
+  if (useBiometrics) {
+    _password = (await getItem<string>(
       `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
       {
         biometrics: true,
       },
-    );
+    )) as string;
+  } else {
+    _password = deriveSecurePassword(password!);
   }
 
-  return getItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`, {
-    password: _password,
-  });
+  const encryptedData = await getItem<string>(
+    `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`,
+    {
+      password: _password,
+    },
+  );
+
+  return decryptData(encryptedData!, _password);
 };
 
 export const deleteMnemonic = async (address: string) => {

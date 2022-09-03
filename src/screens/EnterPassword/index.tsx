@@ -2,7 +2,7 @@ import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
-import {Formik} from 'formik';
+import {Formik, FormikHelpers} from 'formik';
 import _ from 'lodash';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -17,7 +17,7 @@ import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
 import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import {StackScreenProps} from '@react-navigation/stack';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import useStyles from './useStyles';
@@ -48,7 +48,6 @@ export type EnterPasswordParams = {
 
 const EnterPassword = () => {
   const {t} = useTranslation('enterPassword');
-  const {goBack} = useNavigation<NavProps['navigation']>();
   const {
     params: {
       address,
@@ -62,30 +61,36 @@ const EnterPassword = () => {
   const styles = useStyles();
 
   const onFormSubmit = React.useCallback(
-    async (formValues: typeof initialFormValues) => {
+    async (
+      formValues: typeof initialFormValues,
+      {setErrors}: FormikHelpers<any>,
+    ) => {
       const {password} = formValues;
+
       const useBiometrics = getMMKV<boolean>(
         MMKVKEYS.USE_BIOMETRICS,
       ) as boolean;
 
       if (address) {
-        const wallet = await getLocalWallet(address, password, useBiometrics);
+        try {
+          const wallet = await getLocalWallet(address, password, useBiometrics);
 
-        if (!wallet) return;
+          if (!wallet) throw new Error('Error unlocking wallet');
 
-        const mnemonic = await getMnemonic(address, password);
+          const mnemonic = await getMnemonic(address, password);
 
-        if (wallet && onSuccessfulAuthentication) {
-          onSuccessfulAuthentication({
-            wallet: provideWallet ? wallet : undefined,
-            mnemonic: provideMnemonic ? mnemonic : undefined,
-            authorized: true,
-          });
+          if (wallet && onSuccessfulAuthentication) {
+            onSuccessfulAuthentication({
+              wallet: provideWallet ? wallet : undefined,
+              mnemonic: provideMnemonic ? mnemonic : undefined,
+              authorized: true,
+            });
+          }
+        } catch (err) {
+          onFailedAuthentication && onFailedAuthentication();
+          setErrors({password: t('error:incorrectPassword')});
         }
       }
-
-      onFailedAuthentication && onFailedAuthentication();
-      goBack();
     },
     [],
   );
@@ -122,9 +127,9 @@ const EnterPassword = () => {
               error={!!errors.password}
             />
             {errors.password && (
-              <Typography.Subtitle2 style={styles.errorText}>
+              <Typography.Caption1 style={styles.errorText}>
                 {errors.password}
-              </Typography.Subtitle2>
+              </Typography.Caption1>
             )}
 
             <KeyboardAvoidingView
