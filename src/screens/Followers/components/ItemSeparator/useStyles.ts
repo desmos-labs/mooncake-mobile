@@ -5,6 +5,8 @@ const useStyles = makeStyle(() => ({
     flexGrow: 1,
     margin: 10,
     height: 1,
+    minHeight: 1,
+    maxHeight: 1,
     backgroundColor: 'rgb(239,239,239)',
   },
 }));

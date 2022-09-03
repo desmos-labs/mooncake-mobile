@@ -1,7 +1,7 @@
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback} from 'react';
+import React, {FC} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import useHooks from './useHooks';
@@ -42,13 +42,6 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
     userAddress,
   );
 
-  const renderItem = useCallback(
-    (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
-      return <ListItem {...props} />;
-    },
-    [subspaceID, userAddress],
-  );
-
   return (
     <View style={styles.contentContainer}>
       <FlatList
@@ -60,21 +53,33 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
         ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={loading ? null : Empty}
         ListFooterComponent={loading ? Loading : undefined}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={3}
         onEndReached={fetchMore}
         getItemLayout={getItemLayout}
+        keyExtractor={keyExtractor}
       />
       {!!error && <Error error={error} onPress={fetchMore} />}
     </View>
   );
 };
 
-const ITEM_HEIGHT = 80;
+function keyExtractor(item: PaginatedFollower) {
+  return item._.address;
+}
+
+function renderItem(
+  props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>,
+) {
+  return <ListItem {...props} />;
+}
+
+const ITEM_HEIGHT = 60;
+const ITEM_SEPARATOR_HEIGHT = 21;
 
 function getItemLayout(_: unknown, index: number) {
   return {
     length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
+    offset: (ITEM_HEIGHT + ITEM_SEPARATOR_HEIGHT) * index,
     index,
   };
 }

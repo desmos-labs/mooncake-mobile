@@ -19,15 +19,15 @@ const ListItem: FC<
   } = item;
   return (
     <View style={styles.contentContainer}>
-      <View style={styles.pic}>
-        {!!profile_pic && (
-          <Image
-            source={{uri: profile_pic, width: 40, height: 40}}
-            borderRadius={40}
-          />
-        )}
-        {!profile_pic && <View style={styles.emptyPic} />}
-      </View>
+      {profile_pic ? (
+        <Image
+          source={{uri: profile_pic, width: 40, height: 40}}
+          borderRadius={40}
+          style={styles.pic}
+        />
+      ) : (
+        <View style={styles.emptyPic} />
+      )}
       <View style={styles.names}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
           {nickname}
@@ -36,8 +36,7 @@ const ListItem: FC<
           @{dtag}
         </Text>
       </View>
-      {!followingAddress.has(address) && <FollowButton />}
-      {followingAddress.has(address) && <UnfollowButton />}
+      {!followingAddress.has(address) ? <FollowButton /> : <UnfollowButton />}
     </View>
   );
 };
