@@ -4,6 +4,7 @@ import ROUTES from 'navigation/routes';
 import React, {FC, useCallback, useState} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
+import {useTranslation} from 'react-i18next';
 import useHooks from './useHooks';
 import Empty from './components/Empty';
 import useStyles from './useStyles';
@@ -36,12 +37,13 @@ export type FollowingParams = {
 export const FollowingTab: FC<NavProps> = ({route}) => {
   const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
-
+  const {t} = useTranslation('common');
   const {loading, error, data, fetchMore, refetch} = useHooks(
     subspaceID,
     userAddress,
   );
   const [itemError, setItemError] = useState<string>('');
+  const resetError = useCallback(() => setItemError(''), []);
 
   const renderItem = useCallback(
     (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
@@ -73,9 +75,11 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
         keyExtractor={keyExtractor}
         removeClippedSubviews={true}
       />
-      {!!error && <Error error={error.message} onPress={fetchMore} />}
+      {!!error && (
+        <Error error={error.message} label={t('retry')} onPress={fetchMore} />
+      )}
       {!!itemError && (
-        <Error error={itemError} onPress={() => setItemError('')} />
+        <Error error={itemError} label={t('dismiss')} onPress={resetError} />
       )}
     </View>
   );
@@ -95,5 +99,3 @@ function getItemLayout(_: unknown, index: number) {
     index,
   };
 }
-
-export default FollowingTab;

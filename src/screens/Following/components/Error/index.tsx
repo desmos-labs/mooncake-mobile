@@ -8,8 +8,9 @@ import useStyles from './useStyles';
 /* A React component that renders an error message. */
 const Error: FC<{
   error: string;
+  label: string;
   onPress: ComponentProps<typeof Button>['onPress'];
-}> = ({error, onPress}) => {
+}> = ({error, label, onPress}) => {
   const styles = useStyles();
   const {t} = useTranslation('followingAndFollowers');
   const [visible, setVisible] = React.useState(true);
@@ -21,7 +22,7 @@ const Error: FC<{
       duration={Number.POSITIVE_INFINITY}
       onDismiss={() => setVisible(false)}
       action={{
-        label: t('common:retry'),
+        label,
         labelStyle: styles.retryLabel,
         contentStyle: styles.retryContent,
         uppercase: false,
