@@ -1,9 +1,9 @@
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
+import {QueueData} from 'services/graphql/queries/GetPaginatedFollowers';
 import useHooks from './useHooks';
 import Empty from './components/Empty';
 import useStyles from './useStyles';
@@ -14,32 +14,46 @@ import ListItem from './components/ListItem';
 
 type NavProps = MaterialTopTabScreenProps<
   RootNavigatorParamList,
-  ROUTES.FOLLOWING
+  ROUTES.FOLLOWERS
 >;
 
 /**
- * @property {number} subspaceID - The ID of the subspace you want to get the following accounts for.
- * @property {string} userAddress - The address of the user you want to get the following accounts for.
- * @property {string} username - The username of the user you want to get the following accounts for.
+ * @property {number} subspaceID - The ID of the subspace you want to get the followers for.
+ * @property {string} userAddress - The address of the user you want to get the followers for.
+ * @property {string} username - The username of the user you want to get the followers for.
  */
-export type FollowingParams = {
+export type FollwersParams = {
   subspaceID: number;
   userAddress: string;
   username: string;
 };
 
 /**
- * It renders a FlatList of the user's following accounts
- * @param  - userAddress: The address of the user whose following accounts list we want to display.
- * @returns A list of users that the user is following accounts.
+ * It renders a FlatList of the user's followers
+ * @param  - userAddress: The address of the user whose followers list we want to display.
+ * @returns A list of users that the user is followers.
  */
-export const FollowingTab: FC<NavProps> = ({route}) => {
+export const FollowersTab: FC<NavProps> = ({route}) => {
   const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
 
   const {loading, error, data, fetchMore, refetch} = useHooks(
     subspaceID,
     userAddress,
+  );
+  const [itemError, setItemError] = useState<string>('');
+
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
+      return (
+        <ListItem
+          {...props}
+          subspaceID={subspaceID}
+          handleError={setItemError}
+        />
+      );
+    },
+    [subspaceID],
   );
 
   return (
@@ -59,19 +73,16 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
         keyExtractor={keyExtractor}
         removeClippedSubviews={true}
       />
-      {!!error && <Error error={error} onPress={fetchMore} />}
+      {!!error && <Error error={error.message} onPress={fetchMore} />}
+      {!!itemError && (
+        <Error error={itemError} onPress={() => setItemError('')} />
+      )}
     </View>
   );
 };
 
 function keyExtractor(item: PaginatedFollower) {
   return item._.address;
-}
-
-function renderItem(
-  props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>,
-) {
-  return <ListItem {...props} />;
 }
 
 const ITEM_HEIGHT = 60;
@@ -85,4 +96,4 @@ function getItemLayout(_: unknown, index: number) {
   };
 }
 
-export default FollowingTab;
+export default FollowersTab;

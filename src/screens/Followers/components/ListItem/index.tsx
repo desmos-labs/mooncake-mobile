@@ -1,22 +1,33 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {Image, ListRenderItemInfo, Text, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
-import {useRecoilValue} from 'recoil';
 import FollowButton from 'components/FollowButton';
 import UnfollowButton from 'components/UnfollowButton';
-import followedAddressesState from '@recoil/followedAddressesState';
+import useFollowUser from 'hooks/useFollowUser';
 import useStyles from './useStyles';
 
-const ListItem: FC<
-  ListRenderItemInfo<QueueData['paginatedFollowers'][number]>
-> = ({item}) => {
+export type ListItemProps = ListRenderItemInfo<
+  QueueData['paginatedFollowers'][number]
+> & {
+  subspaceID: number;
+  handleError: (error: string) => void;
+};
+
+const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
   const styles = useStyles();
 
   /* Getting the following state and then it is getting the addresses of the following. */
-  const followingAddress = useRecoilValue(followedAddressesState);
   const {
     _: {profile_pic, nickname, dtag, address},
   } = item;
+  const countryParty = {address, dtag, nickname};
+  const {following, loading, error, follow, unfollow} = useFollowUser(
+    subspaceID,
+    countryParty,
+  );
+  useEffect(() => {
+    if (error) handleError(error);
+  }, [error]);
   return (
     <View style={styles.contentContainer}>
       {profile_pic ? (
@@ -36,7 +47,11 @@ const ListItem: FC<
           @{dtag}
         </Text>
       </View>
-      {!followingAddress.has(address) ? <FollowButton /> : <UnfollowButton />}
+      {following ? (
+        <FollowButton loading={loading} onPress={follow} />
+      ) : (
+        <UnfollowButton loading={loading} onPress={unfollow} />
+      )}
     </View>
   );
 };

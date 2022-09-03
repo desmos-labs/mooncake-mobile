@@ -1,14 +1,13 @@
 import React, {ComponentProps, FC} from 'react';
 import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
-import {ApolloError} from '@apollo/client';
 import {Snackbar, Text} from 'react-native-paper';
 import {View} from 'react-native';
 import useStyles from './useStyles';
 
 /* A React component that renders an error message. */
 const Error: FC<{
-  error: ApolloError;
+  error: string;
   onPress: ComponentProps<typeof Button>['onPress'];
 }> = ({error, onPress}) => {
   const styles = useStyles();
@@ -30,7 +29,7 @@ const Error: FC<{
       }}>
       <View style={styles.errorMessage}>
         <Text style={styles.errorTitle}>{t('oops')}</Text>
-        <Text style={styles.errorText}>{error.message}</Text>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     </Snackbar>
   );
