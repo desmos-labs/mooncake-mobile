@@ -4,7 +4,7 @@ import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
-import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
+import {EncodeObject} from '@cosmjs/proto-signing';
 import MsgTypes from 'lib/desmos/msgtypes';
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
@@ -12,6 +12,7 @@ import {useRecoilCallback, useRecoilValue} from 'recoil';
 import {followingState} from '@recoil/following';
 import followedAddressesState from '@recoil/followedAddressesState';
 import {useTranslation} from 'react-i18next';
+import {ChainAccount} from 'types/chains';
 import useBroadcastMessages from './broadcastTx/useBroadcastMessages';
 import useActiveAccount from './useActiveAccount';
 import useUnlockWallet from './useUnlockWallet';
@@ -20,14 +21,10 @@ export default function useFollowUser(
   subspaceID: number,
   counterParty: CounterParty,
 ) {
-  const broadcastMessages = useBroadcastMessages();
   const followedAddresses = useRecoilValue(followedAddressesState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
-  const {t} = useTranslation('followingAndFollowers');
 
-  const unlockWallet = useUnlockWallet();
-  const {chainAccount} = useActiveAccount();
   const {address} = counterParty;
 
   /* A react hook that is used to memoize the value of following. */
@@ -36,32 +33,9 @@ export default function useFollowUser(
     [followedAddresses, address],
   );
 
-  /* A function that is used to unlock the wallet and get the offlineSigner. */
-  const unlockingWallet = useCallback(async () => {
-    if (!chainAccount) throw new Error(t('noActiveAccountFound'));
-    /* Unlocking the wallet and getting the offlineSigner. */
-    const unlockedWallet = await unlockWallet(chainAccount);
-    const offlineSigner = unlockedWallet?.wallet;
-    if (!offlineSigner) throw new Error(t('pleaseUnlockYourWallet'));
-    const signer = chainAccount.address;
-    return {signer, offlineSigner};
-  }, [chainAccount]);
-
-  /* A function that is used to calculate the gas and fees for the transaction and broadcasting it. */
-  const boardcastEncodeObject = useCallback(
-    (
-      uncodeObject: EncodeObject,
-      offlineSigner: OfflineSigner,
-      granter: string,
-    ) => {
-      /* Calculating the gas and fees for the transaction and broadcasting it. */
-      const messages = [uncodeObject];
-      const gas = messagesGas(messages);
-      const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
-      broadcastMessages(offlineSigner, messages, txFee, '', granter);
-    },
-    [],
-  );
+  const {chainAccount} = useActiveAccount();
+  const boardcastEncodeObject = useBoardcastEncodeObject();
+  const {t} = useTranslation('followingAndFollowers');
 
   /* A function that is used to follow a user. */
   const follow = useRecoilCallback(
@@ -71,19 +45,18 @@ export default function useFollowUser(
           setLoading(true);
           setError(undefined);
 
-          /* Unlocking the wallet and getting the offlineSigner. */
-          const {signer, offlineSigner} = await unlockingWallet();
+          if (!chainAccount) throw new Error(t('noActiveAccountFound'));
 
           /* Creating a message object that will be sent to the blockchain. */
           const uncodeObject: MsgCreateRelationshipEncodeObject = {
             typeUrl: MsgTypes.MsgCreateRelationship,
             value: {
-              signer,
+              signer: chainAccount.address,
               counterparty: address,
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
-          boardcastEncodeObject(uncodeObject, offlineSigner, signer);
+          boardcastEncodeObject(uncodeObject, chainAccount);
 
           /* Adding the counterParty to the followingState. */
           set(followingState, curVal => {
@@ -110,19 +83,18 @@ export default function useFollowUser(
           setLoading(true);
           setError(undefined);
 
-          /* Unlocking the wallet and getting the offlineSigner. */
-          const {signer, offlineSigner} = await unlockingWallet();
+          if (!chainAccount) throw new Error(t('noActiveAccountFound'));
 
           /* Creating a message object that will be sent to the blockchain. */
           const uncodeObject: MsgDeleteRelationshipEncodeObject = {
             typeUrl: MsgTypes.MsgDeleteRelationship,
             value: {
-              signer,
+              signer: chainAccount.address,
               counterparty: address,
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
-          boardcastEncodeObject(uncodeObject, offlineSigner, signer);
+          boardcastEncodeObject(uncodeObject, chainAccount);
 
           /* Removing the counterParty to the followingState. */
           set(followingState, curVal => {
@@ -142,4 +114,36 @@ export default function useFollowUser(
   );
 
   return {following, loading, error, follow, unfollow};
+}
+
+/**
+ * It's a function that is used to unlock the wallet and get the offlineSigner, calculate the gas and
+ * fees for the transaction and broadcasting it
+ * @returns A function that is used to calculate the gas and fees for the transaction and broadcasting
+ * it.
+ */
+function useBoardcastEncodeObject() {
+  const broadcastMessages = useBroadcastMessages();
+  const unlockWallet = useUnlockWallet();
+  const {t} = useTranslation('followingAndFollowers');
+
+  /* A function that is used to calculate the gas and fees for the transaction and broadcasting it. */
+  const boardcastEncodeObject = useCallback(
+    async (uncodeObject: EncodeObject, chainAccount: ChainAccount) => {
+      /* Unlocking the wallet and getting the offlineSigner. */
+      const unlockedWallet = await unlockWallet(chainAccount);
+      const offlineSigner = unlockedWallet?.wallet;
+      if (!offlineSigner) throw new Error(t('pleaseUnlockYourWallet'));
+      const signer = chainAccount.address;
+
+      /* Calculating the gas and fees for the transaction and broadcasting it. */
+      const messages = [uncodeObject];
+      const gas = messagesGas(messages);
+      const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
+      broadcastMessages(offlineSigner, messages, txFee, '', signer);
+    },
+    [],
+  );
+
+  return boardcastEncodeObject;
 }
