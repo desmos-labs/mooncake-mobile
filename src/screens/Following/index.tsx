@@ -1,7 +1,7 @@
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import useHooks from './useHooks';
@@ -41,6 +41,20 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
     subspaceID,
     userAddress,
   );
+  const [itemError, setItemError] = useState<string>('');
+
+  const renderItem = useCallback(
+    (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
+      return (
+        <ListItem
+          {...props}
+          subspaceID={subspaceID}
+          handleError={setItemError}
+        />
+      );
+    },
+    [subspaceID],
+  );
 
   return (
     <View style={styles.contentContainer}>
@@ -57,20 +71,18 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
         onEndReached={fetchMore}
         getItemLayout={getItemLayout}
         keyExtractor={keyExtractor}
+        removeClippedSubviews={true}
       />
-      {!!error && <Error error={error} onPress={fetchMore} />}
+      {!!error && <Error error={error.message} onPress={fetchMore} />}
+      {!!itemError && (
+        <Error error={itemError} onPress={() => setItemError('')} />
+      )}
     </View>
   );
 };
 
 function keyExtractor(item: PaginatedFollower) {
   return item._.address;
-}
-
-function renderItem(
-  props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>,
-) {
-  return <ListItem {...props} />;
 }
 
 const ITEM_HEIGHT = 60;

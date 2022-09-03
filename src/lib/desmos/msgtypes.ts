@@ -7,6 +7,8 @@ enum MsgTypes {
   MsgSaveProfile = '/desmos.profiles.v3.MsgSaveProfile',
   MsgLinkChainAccount = '/desmos.profiles.v3.MsgLinkChainAccount',
   MsgUnlinkChainAccount = '/desmos.profiles.v3.MsgUnlinkChainAccount',
+  MsgCreateRelationship = '/desmos.relationships.v1.MsgCreateRelationship',
+  MsgDeleteRelationship = '/desmos.relationships.v1.MsgDeleteRelationship',
 }
 
 export default MsgTypes;
