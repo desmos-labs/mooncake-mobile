@@ -10,4 +10,5 @@ storiesOf('components/FollowButton', module)
       {getStories()}
     </SbContainer>
   ))
-  .add('Default', () => <FollowButton />);
+  .add('Follow', () => <FollowButton type="follow" />)
+  .add('Unfollow', () => <FollowButton type="unfollow" />);

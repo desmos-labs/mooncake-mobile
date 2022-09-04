@@ -2,7 +2,6 @@ import React, {FC, useEffect} from 'react';
 import {Image, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import FollowButton from 'components/FollowButton';
-import UnfollowButton from 'components/UnfollowButton';
 import useFollowUser from 'hooks/useFollowUser';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
@@ -49,9 +48,9 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
         </Typography.Caption2>
       </View>
       {following ? (
-        <FollowButton loading={loading} onPress={follow} />
+        <FollowButton loading={loading} onPress={follow} type="follow" />
       ) : (
-        <UnfollowButton loading={loading} onPress={unfollow} />
+        <FollowButton loading={loading} onPress={unfollow} type="unfollow" />
       )}
     </View>
   );
