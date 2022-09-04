@@ -88,7 +88,7 @@ function keyExtractor(item: PaginatedFollower) {
 }
 
 const ITEM_HEIGHT = 60;
-const ITEM_SEPARATOR_HEIGHT = 21;
+const ITEM_SEPARATOR_HEIGHT = 15;
 
 function getItemLayout(_: unknown, index: number) {
   return {
