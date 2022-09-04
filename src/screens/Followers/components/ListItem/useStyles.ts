@@ -26,11 +26,6 @@ const useStyles = makeStyle(() => ({
     margin: 5,
     borderRadius: 20,
   },
-  title: {
-    fontWeight: '700',
-    fontSize: 15,
-  },
-  subtitle: {},
   names: {
     marginHorizontal: 10,
     flexGrow: 1,

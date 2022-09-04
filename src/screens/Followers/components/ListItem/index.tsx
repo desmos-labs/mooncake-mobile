@@ -1,9 +1,10 @@
 import React, {FC, useEffect} from 'react';
-import {Image, ListRenderItemInfo, Text, View} from 'react-native';
+import {Image, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import FollowButton from 'components/FollowButton';
 import UnfollowButton from 'components/UnfollowButton';
 import useFollowUser from 'hooks/useFollowUser';
+import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
 export type ListItemProps = ListRenderItemInfo<
@@ -40,12 +41,12 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
         <View style={styles.emptyPic} />
       )}
       <View style={styles.names}>
-        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+        <Typography.Caption3 numberOfLines={1} ellipsizeMode="tail">
           {nickname}
-        </Text>
-        <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">
+        </Typography.Caption3>
+        <Typography.Caption2 numberOfLines={1} ellipsizeMode="tail">
           @{dtag}
-        </Text>
+        </Typography.Caption2>
       </View>
       {following ? (
         <FollowButton loading={loading} onPress={follow} />
