@@ -20,10 +20,10 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
   const {
     _: {profile_pic, nickname, dtag, address},
   } = item;
-  const countryParty = {address, dtag, nickname};
+  const counterParty = {address, dtag, nickname};
   const {following, loading, error, follow, unfollow} = useFollowUser(
     subspaceID,
-    countryParty,
+    counterParty,
   );
   useEffect(() => {
     if (error) handleError(error);
