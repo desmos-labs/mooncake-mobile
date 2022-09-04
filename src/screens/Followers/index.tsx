@@ -21,12 +21,10 @@ type NavProps = MaterialTopTabScreenProps<
 /**
  * @property {number} subspaceID - The ID of the subspace you want to get the followers for.
  * @property {string} userAddress - The address of the user you want to get the followers for.
- * @property {string} username - The username of the user you want to get the followers for.
  */
 export type FollwersParams = {
   subspaceID: number;
   userAddress: string;
-  username: string;
 };
 
 /**

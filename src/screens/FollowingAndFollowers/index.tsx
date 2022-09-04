@@ -82,7 +82,7 @@ export const FollowingAndFollowersHeader: FC<StackHeaderProps> = ({
 
 /* A React component for the following and followers screen. */
 const FollowingAndFollowers: FC<NavProps> = ({route}) => {
-  const {initialTabRouteName, subspaceID, userAddress, username} = route.params;
+  const {initialTabRouteName, subspaceID, userAddress} = route.params;
 
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
@@ -159,13 +159,13 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
           options={{tabBarLabel: nameOfFolowing}}
-          initialParams={{subspaceID, userAddress, username}}
+          initialParams={{subspaceID, userAddress}}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowersTab}
           options={{tabBarLabel: nameOfFolowers}}
-          initialParams={{subspaceID, userAddress, username}}
+          initialParams={{subspaceID, userAddress}}
         />
       </Tab.Navigator>
     </View>

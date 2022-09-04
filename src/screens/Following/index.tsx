@@ -21,12 +21,10 @@ type NavProps = MaterialTopTabScreenProps<
 /**
  * @property {number} subspaceID - The ID of the subspace you want to get the following accounts for.
  * @property {string} userAddress - The address of the user you want to get the following accounts for.
- * @property {string} username - The username of the user you want to get the following accounts for.
  */
 export type FollowingParams = {
   subspaceID: number;
   userAddress: string;
-  username: string;
 };
 
 /**
