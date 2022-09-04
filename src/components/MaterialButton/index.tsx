@@ -1,5 +1,7 @@
 import React, {ElementType, ReactNode} from 'react';
 import {
+  Pressable,
+  PressableStateCallbackType,
   StyleProp,
   Text,
   TextStyle,
@@ -186,19 +188,20 @@ const MaterialButton: React.FC<Props> = props => {
   }
 
   if (mode === 'backgroundComponent') {
+    // TouchableOpacity in FlatList causing 'Excessive number of pending callbacks: 501. Some pending callbacks that might have leaked by never being called from native code:' ...startAnimatingNode...{}
     return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.backgroundComponentButton, style]}>
-        {!!BackgroundComponent && (
-          <BackgroundComponent
-            style={styles.backgroundComponent}
-            width={styles.backgroundComponent.width}
-            height={styles.backgroundComponent.height}
-          />
-        )}
-        {children}
-      </TouchableOpacity>
+      <Pressable onPress={onPress} style={pressableFeekback}>
+        <View style={[styles.backgroundComponentButton, style]}>
+          {!!BackgroundComponent && (
+            <BackgroundComponent
+              style={styles.backgroundComponent}
+              width={styles.backgroundComponent.width}
+              height={styles.backgroundComponent.height}
+            />
+          )}
+          {children}
+        </View>
+      </Pressable>
     );
   }
 
@@ -217,5 +220,10 @@ const MaterialButton: React.FC<Props> = props => {
     </Button>
   );
 };
+
+function pressableFeekback({pressed}: PressableStateCallbackType) {
+  if (!pressed) return {};
+  return {opacity: 0.75, transform: [{scale: 1.05}]};
+}
 
 export default MaterialButton;
