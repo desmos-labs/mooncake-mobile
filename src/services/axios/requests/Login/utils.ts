@@ -9,8 +9,7 @@ import {
   getSignatureBytes,
 } from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
-
-const toHex = (data: Uint8Array) => Buffer.from(data).toString('hex');
+import {toHex} from '@cosmjs/encoding';
 
 // eslint-disable-next-line import/prefer-default-export
 export const generateLoginData = async ({
