@@ -1,6 +1,4 @@
-import {MsgGrant} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import {ChainAccount} from 'types/chains';
-import {GenericMsgEnums, GrantEnums} from 'lib/desmos/msgtypes';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import Long from 'long';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
@@ -14,43 +12,7 @@ import {
   AllowedMsgAllowance,
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-
-// eslint-disable-next-line import/prefer-default-export
-export const createAuthMsgEncode = ({
-  chainAccount,
-  scope,
-  granteeAddress,
-}: {
-  chainAccount: ChainAccount;
-  scope: GrantEnums;
-  granteeAddress: string;
-}) => {
-  const subspaceAuthorization: GenericSubspaceAuthorization = {
-    subspacesIds: [Long.fromNumber(5)],
-    msg: scope,
-  };
-
-  const grant: Grant = {
-    authorization: Any.fromPartial({
-      typeUrl: '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
-      value: GenericSubspaceAuthorization.encode(
-        subspaceAuthorization,
-      ).finish(),
-    }),
-  };
-
-  const msgGrant: MsgGrant = {
-    granter: chainAccount.address,
-    grantee: granteeAddress,
-    grant,
-  };
-
-  const encodeObject: MsgGrantEncodeObject = {
-    typeUrl: GenericMsgEnums.MsgGrant,
-    value: msgGrant,
-  };
-  return encodeObject;
-};
+import EnvConfig from 'config/EnvConfig';
 
 export const buildRevokeAllowanceEncode = ({
   grantee,
@@ -112,7 +74,7 @@ export const buildGrantMsgEncodes = ({
 }): MsgGrantEncodeObject[] => {
   return grants.map(grant => {
     const subspaceAuthorization: GenericSubspaceAuthorization = {
-      subspacesIds: [Long.fromNumber(5)], // 5 is our app's subspace id
+      subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
       msg: grant,
     };
 

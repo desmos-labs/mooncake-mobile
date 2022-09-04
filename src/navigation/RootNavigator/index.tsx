@@ -66,6 +66,7 @@ import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import EnvConfig from 'config/EnvConfig';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -184,7 +185,7 @@ const RootNavigator = () => {
       <Stack.Screen
         initialParams={{
           commentId: 1,
-          subspaceId: 5,
+          subspaceId: EnvConfig.APP_SUBSPACE_ID,
         }}
         name={ROUTES.COMMENT_REPLIES}
         component={CommentReplies}
