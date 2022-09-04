@@ -9,7 +9,6 @@ export type QueueData = {
   };
 };
 
-// @connection(key: "user_relationship", filter: ["where"])
 /* A GraphQL query. */
 const GetPaginatedFollowers = gql`
   query GetFollowers(

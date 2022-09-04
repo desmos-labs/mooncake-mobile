@@ -1,6 +1,5 @@
 // START debug
 import {ApolloError} from '@apollo/client';
-import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import {
   MutableRefObject,
   useCallback,
@@ -13,7 +12,7 @@ import numOfFollowerState from '@recoil/numOfFollowerState';
 
 const MAX_MOCK_FOLLOWERS = 10000000;
 function mockGaginatedFollowers(
-  ref: MutableRefObject<QueueData['paginatedFollowers']>,
+  ref: MutableRefObject<ProfileSummary[]>,
   initialOffset: number,
 ) {
   const paginatedFollowers = ref.current;
@@ -21,55 +20,45 @@ function mockGaginatedFollowers(
   for (let i = 0; i < 20; i++) {
     if (offset >= MAX_MOCK_FOLLOWERS) break;
     const i1 = {
-      _: {
-        dtag: `GoFind.${offset}`,
-        address: `desmos1p7ce9sydhm7dsugl890g9unmp99nmq0gz9f4vx.${offset}`,
-        nickname: `GoFind.${offset}`,
-        profile_pic: `https://picsum.photos/40?.${offset}`,
-      },
+      dtag: `GoFind.${offset}`,
+      address: `desmos1p7ce9sydhm7dsugl890g9unmp99nmq0gz9f4vx.${offset}`,
+      nickname: `GoFind.${offset}`,
+      profile_pic: `https://picsum.photos/40?.${offset}`,
     };
     if (offset in paginatedFollowers) paginatedFollowers[offset] = i1;
     else paginatedFollowers.push(i1);
     offset++;
     const i2 = {
-      _: {
-        dtag: `Masternode24.${offset}`,
-        address: `desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r.${offset}`,
-        nickname: `Masternode24.de.${offset}`,
-        profile_pic: `https://picsum.photos/40?.${offset}`,
-      },
+      dtag: `Masternode24.${offset}`,
+      address: `desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r.${offset}`,
+      nickname: `Masternode24.de.${offset}`,
+      profile_pic: `https://picsum.photos/40?.${offset}`,
     };
     if (offset in paginatedFollowers) paginatedFollowers[offset] = i2;
     else paginatedFollowers.push(i2);
     offset++;
     const i3 = {
-      _: {
-        dtag: `dima_student2.${offset}`,
-        address: `desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh.${offset}`,
-        nickname: `dima_student2#2856.${offset}`,
-        profile_pic: `https://picsum.photos/40?.${offset}`,
-      },
+      dtag: `dima_student2.${offset}`,
+      address: `desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh.${offset}`,
+      nickname: `dima_student2#2856.${offset}`,
+      profile_pic: `https://picsum.photos/40?.${offset}`,
     };
     if (offset in paginatedFollowers) paginatedFollowers[offset] = i3;
     else paginatedFollowers.push(i3);
     const i4 = {
-      _: {
-        dtag: `!Masternode24.${offset}`,
-        address: `desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r.${offset}`,
-        nickname: `!Masternode24.de.${offset}`,
-        profile_pic: `https://picsum.photos/40?.${offset}`,
-      },
+      dtag: `!Masternode24.${offset}`,
+      address: `desmos1h5f3dywec65v9qulxkmcv3e6yujyh3zm39lr4r.${offset}`,
+      nickname: `!Masternode24.de.${offset}`,
+      profile_pic: `https://picsum.photos/40?.${offset}`,
     };
     if (offset in paginatedFollowers) paginatedFollowers[offset] = i4;
     else paginatedFollowers.push(i4);
     offset++;
     const i5 = {
-      _: {
-        dtag: `!dima_student2.${offset}`,
-        address: `desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh.${offset}`,
-        nickname: `!dima_student2#2856.${offset}`,
-        profile_pic: '',
-      },
+      dtag: `!dima_student2.${offset}`,
+      address: `desmos1ys42amj53hka8mx4h2nvz4hxf82v9rwvn6xuxh.${offset}`,
+      nickname: `!dima_student2#2856.${offset}`,
+      profile_pic: '',
     };
     if (offset in paginatedFollowers) paginatedFollowers[offset] = i5;
     else paginatedFollowers.push(i5);
@@ -103,8 +92,8 @@ export type PaginatedData<T> = {
  */
 const useHooks = (subspaceID: number, userAddress: string) => {
   // START debug
-  const paginatedFollowers = useRef<QueueData['paginatedFollowers']>([]);
-  const [data, setData] = useState<QueueData>();
+  const paginatedFollowers = useRef<ProfileSummary[]>([]);
+  const [data, setData] = useState<ProfileSummary[]>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApolloError>();
   function fetchMore(params: {variables: {offset: number}}) {
@@ -129,17 +118,7 @@ const useHooks = (subspaceID: number, userAddress: string) => {
         }
         setLoading(false);
         setError(undefined);
-        setData({
-          paginatedFollowers: mockGaginatedFollowers(
-            paginatedFollowers,
-            offset,
-          ),
-          user_relationship_aggregate: {
-            aggregate: {
-              count: MAX_MOCK_FOLLOWERS,
-            },
-          },
-        });
+        setData(mockGaginatedFollowers(paginatedFollowers, offset));
       },
       Math.random() > 1 ? 60000 : 1000,
     );
@@ -150,19 +129,13 @@ const useHooks = (subspaceID: number, userAddress: string) => {
   const setNumOfFollowers = useSetRecoilState(
     numOfFollowerState({type: 'following', subspaceID, userAddress}),
   );
-  useEffect(
-    () =>
-      setNumOfFollowers(
-        data?.user_relationship_aggregate?.aggregate.count ?? 0,
-      ),
-    [data],
-  );
+  useEffect(() => setNumOfFollowers(MAX_MOCK_FOLLOWERS), [data]);
 
   /* It's making a GraphQL query to the server. */
   const fetchMoreCallback = useCallback(() => {
     fetchMore({
       variables: {
-        offset: data?.paginatedFollowers.length ?? 0,
+        offset: data?.length ?? 0,
       },
     });
   }, [data]);

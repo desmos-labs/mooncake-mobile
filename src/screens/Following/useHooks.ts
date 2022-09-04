@@ -2,9 +2,11 @@ import {useQuery} from '@apollo/client';
 import GetPaginatedQuery, {
   QueueData,
 } from 'services/graphql/queries/GetPaginatedFollowing';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useSetRecoilState} from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
+import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
 
 /* It's setting the limit of the number of items to be fetched. */
 export const ITEMS_PER_FETCH = 100;
@@ -29,38 +31,49 @@ export type PaginatedData<T> = {
  * - refetch: () => void
  */
 const useHooks = (subspaceID: number, userAddress: string) => {
+  const [paginatedData, setPaginatedData] = useState<ProfileSummary[]>([]);
+
   /* It's making a GraphQL query to the server. */
-  const {loading, error, data, fetchMore, refetch} = useQuery<QueueData>(
-    GetPaginatedQuery,
-    {
+  const {loading, error, data, fetchMore, refetch, variables} =
+    useQuery<QueueData>(GetPaginatedQuery, {
       variables: {
         subspaceID,
         userAddress,
         limit: ITEMS_PER_FETCH,
         offset: 0,
       },
-    },
-  );
+    });
 
+  const dataOrNull = !loading && !error && data ? data : null;
+  const offset = variables?.offset ?? 0;
+  useEffect(() => {
+    if (!dataOrNull) return;
+    setPaginatedData(prevData => {
+      const newData = dataOrNull.paginatedFollowers.map(({_}) => _);
+      const mergedData = uniqBy(
+        offset < prevData.length
+          ? prevData.slice(0, offset).concat(newData) // refetch or concurrent fetchMore
+          : prevData.concat(newData),
+        'address',
+      );
+      return isEqual(prevData, mergedData) ? prevData : mergedData;
+    });
+  }, [dataOrNull, offset]);
+
+  const count = data?.paginatedFollowers?.length ?? 0;
   const setNumOfFollowers = useSetRecoilState(
     numOfFollowerState({type: 'following', subspaceID, userAddress}),
   );
-  useEffect(
-    () =>
-      setNumOfFollowers(
-        data?.user_relationship_aggregate?.aggregate.count ?? 0,
-      ),
-    [data],
-  );
+  useEffect(() => setNumOfFollowers(count), [count]);
 
   /* It's making a GraphQL query to the server. */
   const fetchMoreCallback = useCallback(() => {
     fetchMore({
       variables: {
-        offset: data?.paginatedFollowers.length ?? 0,
+        offset: paginatedData.length ?? 0,
       },
     });
-  }, [data]);
+  }, [paginatedData]);
 
   const refetchCallback = useCallback(() => {
     refetch({offset: 0});
@@ -69,7 +82,7 @@ const useHooks = (subspaceID: number, userAddress: string) => {
   return {
     loading,
     error,
-    data,
+    data: paginatedData,
     fetchMore: fetchMoreCallback,
     refetch: refetchCallback,
   };

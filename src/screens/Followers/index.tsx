@@ -3,7 +3,6 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {FC, useCallback, useState} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {QueueData} from 'services/graphql/queries/GetPaginatedFollowers';
 import {useTranslation} from 'react-i18next';
 import useHooks from './useHooks';
 import Empty from './components/Empty';
@@ -44,7 +43,7 @@ export const FollowersTab: FC<NavProps> = ({route}) => {
   const resetError = useCallback(() => setItemError(''), []);
 
   const renderItem = useCallback(
-    (props: ListRenderItemInfo<QueueData['paginatedFollowers'][number]>) => {
+    (props: ListRenderItemInfo<ProfileSummary>) => {
       return (
         <ListItem
           {...props}
@@ -59,7 +58,7 @@ export const FollowersTab: FC<NavProps> = ({route}) => {
   return (
     <View style={styles.contentContainer}>
       <FlatList
-        data={data?.paginatedFollowers}
+        data={data}
         style={styles.flatList}
         refreshing={false}
         onRefresh={refetch}
@@ -83,8 +82,8 @@ export const FollowersTab: FC<NavProps> = ({route}) => {
   );
 };
 
-function keyExtractor(item: PaginatedFollower) {
-  return item._.address;
+function keyExtractor(item: ProfileSummary) {
+  return item.address;
 }
 
 const ITEM_HEIGHT = 60;

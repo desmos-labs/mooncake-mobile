@@ -1,14 +1,11 @@
 import React, {FC, useEffect} from 'react';
 import {Image, ListRenderItemInfo, View} from 'react-native';
-import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import FollowButton from 'components/FollowButton';
 import useFollowUser from 'hooks/useFollowUser';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
-export type ListItemProps = ListRenderItemInfo<
-  QueueData['paginatedFollowers'][number]
-> & {
+export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {
   subspaceID: number;
   handleError: (error: string) => void;
 };
@@ -17,9 +14,7 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
   const styles = useStyles();
 
   /* Getting the following state and then it is getting the addresses of the following. */
-  const {
-    _: {profile_pic, nickname, dtag, address},
-  } = item;
+  const {profile_pic, nickname, dtag, address} = item;
   const counterParty = {address, dtag, nickname};
   const {following, loading, error, follow, unfollow} = useFollowUser(
     subspaceID,
@@ -48,9 +43,9 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
         </Typography.Caption2>
       </View>
       {following ? (
-        <FollowButton loading={loading} onPress={follow} type="follow" />
-      ) : (
         <FollowButton loading={loading} onPress={unfollow} type="unfollow" />
+      ) : (
+        <FollowButton loading={loading} onPress={follow} type="follow" />
       )}
     </View>
   );
