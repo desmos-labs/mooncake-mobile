@@ -51,8 +51,6 @@ export const generateLoginData = async ({
   // to grab the SignatureResult
   const result = await desmosClient.signTx(address, [], fee, nonce);
 
-  console.log('nonce', nonce);
-
   return {
     signatureBytes: toHex(getSignatureBytes(result)),
     pubkeyBytes: toHex(getPubKeyBytes(result)),
