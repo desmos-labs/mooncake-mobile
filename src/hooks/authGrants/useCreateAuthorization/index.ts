@@ -57,8 +57,8 @@ const useCreateAuthGrant = () => {
         ? {
             typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
             value: {
-              granter: butterConfig.desmos_address,
-              grantee: chainAccount.address,
+              grantee: butterConfig.desmos_address,
+              granter: chainAccount.address,
             },
           }
         : undefined;
@@ -81,8 +81,8 @@ const useCreateAuthGrant = () => {
       const msgGrantAllowanceEncode: MsgGrantAllowanceEncodeObject = {
         typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
         value: {
-          granter: butterConfig.desmos_address,
-          grantee: chainAccount.address,
+          grantee: butterConfig.desmos_address,
+          granter: chainAccount.address,
           allowance: Any.fromPartial({
             typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
             value: AllowedMsgAllowance.encode(allowance).finish(),
@@ -110,15 +110,23 @@ const useCreateAuthGrant = () => {
           return {
             typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
             value: {
-              granter: butterConfig.desmos_address,
-              grantee: chainAccount.address,
+              grantee: butterConfig.desmos_address,
+              granter: chainAccount.address,
               grant: _grant,
             },
           };
         },
       );
 
-      const wallet = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet(chainAccount);
+
+      if (!unlockResult) {
+        throw new Error(
+          'Error unlocking wallet or user cancelled authetication',
+        );
+      }
+
+      const {wallet} = unlockResult;
 
       const combinedMessages = _.compact([
         msgRevokeAllowanceEncode as any,
