@@ -27,6 +27,7 @@ export const generateLoginData = async ({
   const {nonce} = await GetNonce({address});
 
   // omitted as MsgAuthenticate is not a supported message type yet
+  // if uncommenting, need to reinstall text-encoding polyfill using fast-text-encoder
   // const msg: MsgAuthenticateEncodeObject = {
   //   value: {
   //     user: address,
