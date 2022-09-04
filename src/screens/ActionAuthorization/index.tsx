@@ -12,7 +12,7 @@ import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import useCreateAuthGrant from 'hooks/authGrants/useCreateAuthorization';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
@@ -37,7 +37,7 @@ const ActionAuthorization = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
-  const {requestAndUpdateGrants} = useCreateAuthGrant();
+  const {addOrUpdateGrants} = useAddOrUpdateGrants();
 
   const {
     params: {grants, onCancel, onApprove},
@@ -68,13 +68,13 @@ const ActionAuthorization = () => {
   }, [onCancel]);
 
   const handleApprove = React.useCallback(async () => {
-    await requestAndUpdateGrants({grantsToRequest: grants});
+    await addOrUpdateGrants({grantsToRequest: grants});
 
     goBack();
 
     // run onApprove last
     onApprove && onApprove();
-  }, [onApprove, grants, requestAndUpdateGrants]);
+  }, [onApprove, grants, addOrUpdateGrants]);
 
   return (
     <View style={styles.container}>

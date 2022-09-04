@@ -14,7 +14,7 @@ import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
-} from 'hooks/authGrants/useCreateAuthorization/utils';
+} from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 
 /**
  * MVP msg authorizations
@@ -26,7 +26,7 @@ import {
  * report content
  */
 
-const useCreateAuthGrant = () => {
+const useAddOrUpdateGrants = () => {
   const {butterConfig} = useButterConfig();
   const {chainAccount, loading} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
@@ -39,7 +39,7 @@ const useCreateAuthGrant = () => {
    * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#Granting-authorizations
    * @param {GrantEnums[]} grantsToRequest - An array of grants to request.
    */
-  const requestAndUpdateGrants = React.useCallback(
+  const addOrUpdateGrants = React.useCallback(
     async ({grantsToRequest}: {grantsToRequest: GrantEnums[]}) => {
       if (!chainAccount) throw new Error('No active chain account found.');
       const grantsData = await getActiveGrants();
@@ -115,8 +115,8 @@ const useCreateAuthGrant = () => {
     // expose the async loading of ChainAccounts so it can be used
     // to block/disable input before the data is fully loaded¬
     accountsLoading: loading,
-    requestAndUpdateGrants,
+    addOrUpdateGrants,
   };
 };
 
-export default useCreateAuthGrant;
+export default useAddOrUpdateGrants;
