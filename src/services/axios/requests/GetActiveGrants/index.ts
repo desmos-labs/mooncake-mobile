@@ -25,6 +25,12 @@ type Response = {
   grants: GrantEnums[];
 };
 
+/**
+ * API call to get active grants and fee grant status of an address.
+ * @param {Object} Params - An object containing the address to check grants for.
+ * @param {string} Object.address - The address to check grants for
+ * @returns {Promise<Response>} - A Promise that resolves to the Response type above.
+ */
 const GetActiveGrants = async ({address}: Params): Promise<Response> => {
   const _response = await axiosInstance.get(`/grants/${address}`);
 
