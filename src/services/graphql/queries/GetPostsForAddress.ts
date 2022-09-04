@@ -1,8 +1,6 @@
 import {gql} from '@apollo/client';
-import {PROFILE_SUMMARY_FIELDS} from '../fragments';
 
 const GetPostsForAddress = gql`
-  ${PROFILE_SUMMARY_FIELDS}
   query GetPostsForAddress($address: String) @api(name: desmos) {
     post(
       order_by: {creation_date: desc}
@@ -16,8 +14,11 @@ const GetPostsForAddress = gql`
         content
       }
       author {
-        ...ProfileSummaryFields
+        address
         bio
+        dtag
+        profile_pic
+        nickname
       }
       subspace_id
       reactions {

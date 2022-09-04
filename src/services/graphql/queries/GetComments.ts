@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {POST_FIELDS, PROFILE_SUMMARY_FIELDS} from '../fragments';
+import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
 export const GetPostComments = gql`
   ${POST_FIELDS}
@@ -24,7 +24,6 @@ export const GetPostComments = gql`
 `;
 
 export const GetCommentReplies = gql`
-  ${PROFILE_SUMMARY_FIELDS}
   query PostComments(
     $postID: bigint
     $subspaceID: bigint
@@ -48,8 +47,11 @@ export const GetCommentReplies = gql`
           content
         }
         author {
-          ...ProfileSummaryFields
+          address
           bio
+          dtag
+          profile_pic
+          nickname
         }
         subspace_id
         reactions {

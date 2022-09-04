@@ -5,7 +5,7 @@ import React, {FC, useCallback, useState} from 'react';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {QueueData} from 'services/graphql/queries/GetPaginatedFollowing';
 import {useTranslation} from 'react-i18next';
-import useHooks from './useHooks';
+import useHooks from './useTestHooks';
 import Empty from './components/Empty';
 import useStyles from './useStyles';
 import ItemSeparator from './components/ItemSeparator';
