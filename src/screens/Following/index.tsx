@@ -99,3 +99,5 @@ function getItemLayout(_: unknown, index: number) {
     index,
   };
 }
+
+export default FollowingTab;
