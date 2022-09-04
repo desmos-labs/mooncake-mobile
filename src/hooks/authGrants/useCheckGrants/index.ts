@@ -9,7 +9,8 @@ const useCheckGrants = () => {
 
   /**
    * Convenience function to check if the user has enabled a grant for a given list
-   * returns an array of grants that have not been granted.
+   * @param {GrantEnums[]} grantsToCheck - check if user has provided grants for these grants
+   * @return GrantEnums[] - an empty array or subset of grantsToCheck that have not yet been granted
    */
   const checkGrants = React.useCallback(
     async (grantsToCheck: GrantEnums[]): Promise<GrantEnums[]> => {

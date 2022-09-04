@@ -33,6 +33,12 @@ const useCreateAuthGrant = () => {
   const broadcastMessages = useBroadcastMessages();
   const {getActiveGrants} = useGetActiveGrants();
 
+  /**
+   * All-in-one function that builds and broadcast a transaction as part of the
+   * Granting Authorization flows outlined in the @link below.
+   * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#Granting-authorizations
+   * @param {GrantEnums[]} grantsToRequest - An array of grants to request.
+   */
   const requestAndUpdateGrants = React.useCallback(
     async ({grantsToRequest}: {grantsToRequest: GrantEnums[]}) => {
       if (!chainAccount) throw new Error('No active chain account found.');
@@ -71,14 +77,16 @@ const useCreateAuthGrant = () => {
 
       if (!unlockResult) {
         throw new Error(
-          'Error unlocking wallet or user cancelled authetication',
+          'Error unlocking wallet or user cancelled authentication',
         );
       }
 
       const {wallet} = unlockResult;
 
+      // compact to remove undefined message, as msgRevokeAllowanceEncode is undefined
+      // if user does not have a fee grant
       const combinedMessages = _.compact([
-        msgRevokeAllowanceEncode as any,
+        msgRevokeAllowanceEncode,
         msgGrantAllowanceEncode,
         ...msgsGrantEncodes,
       ]);
@@ -100,7 +108,7 @@ const useCreateAuthGrant = () => {
 
       return true;
     },
-    [chainAccount],
+    [chainAccount, butterConfig],
   );
 
   return {

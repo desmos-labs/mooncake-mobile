@@ -14,6 +14,13 @@ import {
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import EnvConfig from 'config/EnvConfig';
 
+/**
+ * Build a MsgRevokeAllowanceEncode object.
+ * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-revoke-an-allowance
+ * @param {Object} Object - An object containing a grantee and granter string
+ * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
+ * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ */
 export const buildRevokeAllowanceEncode = ({
   grantee,
   granter,
@@ -28,6 +35,14 @@ export const buildRevokeAllowanceEncode = ({
   },
 });
 
+/**
+ * Build a MsgGrantAllowanceEncode
+ * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#Authorizing-the-payment-of-fees
+ * @param {Object} Object - An object containing the grants to build, a grantee, and granter
+ * @param {GrantEnums[]} grants - An array of grants to build allowance grants for
+ * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
+ * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ */
 export const buildGrantAllowanceEncode = ({
   grants,
   grantee,
@@ -63,6 +78,14 @@ export const buildGrantAllowanceEncode = ({
   };
 };
 
+/**
+ * Build the MsgGrantEncodeObjects from an array of grants.
+ * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-grant-an-authorization
+ * @param {Object} Object - An object containing an array of grants, a grantee, and granter
+ * @param {GrantEnums[]} grants - An array of grants to build MsgGrantEncodeObjects for.
+ * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
+ * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ */
 export const buildGrantMsgEncodes = ({
   grants,
   grantee,
