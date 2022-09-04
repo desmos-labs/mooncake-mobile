@@ -9,19 +9,12 @@ import EnvConfig from 'config/EnvConfig';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import useGetActiveGrants from 'services/axios/requests/GetActiveGrants/useGetActiveGrants';
 import _ from 'lodash';
+import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
 import {
-  MsgGrantAllowanceEncodeObject,
-  MsgGrantEncodeObject,
-  MsgRevokeAllowanceEncodeObject,
-} from '@desmoslabs/desmjs';
-import {
-  AllowedMsgAllowance,
-  BasicAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {Any} from 'cosmjs-types/google/protobuf/any';
-import {Grant} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import Long from 'long';
+  buildGrantAllowanceEncode,
+  buildGrantMsgEncodes,
+  buildRevokeAllowanceEncode,
+} from 'hooks/authGrants/useCreateAuthorization/utils';
 
 /**
  * MVP msg authorizations
@@ -45,78 +38,34 @@ const useCreateAuthGrant = () => {
       if (!chainAccount) throw new Error('No active chain account found.');
       const grantsData = await getActiveGrants();
 
-      const {grants, has_fee_grant} = grantsData;
+      const {grants: existingGrants, has_fee_grant} = grantsData;
 
-      if (_.difference(grantsToRequest, grants).length === 0) return;
+      if (_.difference(grantsToRequest, existingGrants).length === 0) return;
 
-      // Need to revoke old fee grant if one exists
+      const grantee = butterConfig.desmos_address;
+      const granter = chainAccount.address;
+      const grants = _.uniq([...existingGrants, ...grantsToRequest]);
 
+      /**
+       * If user already has a fee grant, we need to revoke it by creating a MsgRevokeallowanceEncodeObject
+       * Otherwise, do nothing.
+       */
       const msgRevokeAllowanceEncode:
         | MsgRevokeAllowanceEncodeObject
         | undefined = has_fee_grant
-        ? {
-            typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
-            value: {
-              grantee: butterConfig.desmos_address,
-              granter: chainAccount.address,
-            },
-          }
+        ? buildRevokeAllowanceEncode({
+            grantee,
+            granter,
+          })
         : undefined;
 
-      const grantsToBuild = _.uniq([...grants, ...grantsToRequest]);
+      const msgGrantAllowanceEncode = buildGrantAllowanceEncode({
+        grants,
+        grantee,
+        granter,
+      });
 
-      const basicAllowance: BasicAllowance = {
-        spendLimit: [], // This is empty so that there are no limits
-        expiration: undefined, // This is null so that the allowance will never expire
-      };
-
-      const allowance: AllowedMsgAllowance = {
-        allowance: Any.fromPartial({
-          typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
-          value: BasicAllowance.encode(basicAllowance).finish(),
-        }),
-        allowedMessages: grantsToBuild,
-      };
-
-      const msgGrantAllowanceEncode: MsgGrantAllowanceEncodeObject = {
-        typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
-        value: {
-          grantee: butterConfig.desmos_address,
-          granter: chainAccount.address,
-          allowance: Any.fromPartial({
-            typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
-            value: AllowedMsgAllowance.encode(allowance).finish(),
-          }),
-        },
-      };
-
-      const msgsGrantEncodes: MsgGrantEncodeObject[] = grantsToBuild.map(
-        grant => {
-          const subspaceAuthorization: GenericSubspaceAuthorization = {
-            subspacesIds: [Long.fromNumber(5)], // 5 is our app's subspace id
-            msg: grant,
-          };
-
-          const _grant: Grant = {
-            authorization: Any.fromPartial({
-              typeUrl:
-                '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
-              value: GenericSubspaceAuthorization.encode(
-                subspaceAuthorization,
-              ).finish(),
-            }),
-          };
-
-          return {
-            typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-            value: {
-              grantee: butterConfig.desmos_address,
-              granter: chainAccount.address,
-              grant: _grant,
-            },
-          };
-        },
-      );
+      const msgsGrantEncodes = buildGrantMsgEncodes({grants, grantee, granter});
 
       const unlockResult = await unlockWallet(chainAccount);
 
@@ -145,7 +94,11 @@ const useCreateAuthGrant = () => {
         fee.average,
       );
 
-      console.log(broadcastResult);
+      if (!broadcastResult) {
+        throw new Error('Error requesting grants');
+      }
+
+      return true;
     },
     [chainAccount],
   );
