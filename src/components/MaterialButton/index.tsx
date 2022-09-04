@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, {ElementType, ReactNode} from 'react';
 import {
   StyleProp,
   Text,
@@ -19,8 +19,17 @@ export type Props = {
    * - `text` - flat button without background or outline (low emphasis)
    * - `outlined` - button with an outline (medium emphasis)
    * - `contained` - button with a background color and elevation shadow (high emphasis)
+   * - `gradient` - button with a gradient filled background color
+   * - `gradientFilled` - button with a gradient filled background color
+   * - `backgroundComponent` - button with a react component filled as background
    */
-  mode?: 'text' | 'outlined' | 'contained' | 'gradient' | 'gradientFilled';
+  mode?:
+    | 'text'
+    | 'outlined'
+    | 'contained'
+    | 'gradient'
+    | 'gradientFilled'
+    | 'backgroundComponent';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -59,6 +68,12 @@ export type Props = {
    * Modify the container wrapping the gradient button. Has no effect for other modes.
    */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * [mode: backgroundComponent]
+   * Use this component to fill the button background.
+   * Has no effect for other modes.
+   */
+  BackgroundComponent?: ElementType;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
@@ -76,6 +91,7 @@ const MaterialButton: React.FC<Props> = props => {
     contentStyle,
     style,
     containerStyle,
+    BackgroundComponent,
     children,
   } = props;
   const theme = useTheme();
@@ -166,6 +182,23 @@ const MaterialButton: React.FC<Props> = props => {
           {children}
         </Button>
       </View>
+    );
+  }
+
+  if (mode === 'backgroundComponent') {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.backgroundComponentButton, style]}>
+        {!!BackgroundComponent && (
+          <BackgroundComponent
+            style={styles.backgroundComponent}
+            width={styles.backgroundComponent.width}
+            height={styles.backgroundComponent.height}
+          />
+        )}
+        {children}
+      </TouchableOpacity>
     );
   }
 
