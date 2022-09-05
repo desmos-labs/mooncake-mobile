@@ -9,7 +9,7 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
   },
   container: {
     backgroundColor: theme.colors.white,
-    padding: theme.spacing.m,
+    padding: theme.spacing.s,
   },
   flexRow: {
     flexDirection: 'row',
@@ -38,8 +38,8 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
     color: theme.colors.desmosOrange01,
   },
   buttonImage: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
     resizeMode: 'contain',
     tintColor: theme.colors.surfaceBlack,
   },

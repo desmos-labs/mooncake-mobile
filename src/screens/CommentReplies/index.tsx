@@ -1,10 +1,11 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import PopupMenu from 'components/PopupMenu';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -17,9 +18,11 @@ import {
   ListRenderItemInfo,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {Divider, useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
+import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
+import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useHooks from './useHooks';
@@ -41,16 +44,37 @@ const CommentReplies = () => {
   const theme = useTheme();
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
-  const {navigate} = useNavigation<NavProps['navigation']>();
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [profileData] = useRecoilState(activeProfileState);
 
-  const {mainComment, mainCommentLoading, mainCommentRefetch, comments} =
-    useHooks({
-      subspaceID: params.subspaceId,
-      commentID: params.commentId,
+  const {
+    mainComment,
+    mainCommentLoading,
+    mainCommentRefetch,
+    comments,
+    reactions,
+    handlePressCounters,
+    handleExpandComment,
+    handlePressSendTips,
+  } = useHooks({
+    subspaceID: params.subspaceId,
+    commentID: params.commentId,
+  });
+
+  const likesImages: [] = useMemo(() => {
+    return reactions.map((reaction: any) => {
+      if (reaction.author.profile_pic) {
+        return {uri: reaction.author.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
     });
+  }, [reactions]);
+
+  const ListEmptyComponent = React.useMemo(() => {
+    return <EmptyListComponent label="No comments yet" />;
+  }, []);
 
   const MiddleElement = useMemo(
     () => (
@@ -62,10 +86,6 @@ const CommentReplies = () => {
     ),
     [comments?.length],
   );
-
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
-  }, []);
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
@@ -97,16 +117,6 @@ const CommentReplies = () => {
       );
     },
     [comments],
-  );
-
-  const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
-      navigate(ROUTES.ENTER_COMMENT, {
-        author,
-        postId,
-      });
-    },
-    [],
   );
 
   const headerComponent = React.useMemo(() => {
@@ -145,6 +155,16 @@ const CommentReplies = () => {
           }}
           handleTipPress={() => handlePressSendTips()}
         />
+        <Spacer paddingVertical={16}>
+          <InteractionCountersBar
+            likesCounter={reactions.length}
+            tipsCounter={0}
+            handlePressCounters={() => handlePressCounters()}
+            accountsHighlitedPics={likesImages}
+          />
+        </Spacer>
+        <Divider style={styles.divider} />
+        <Spacer paddingBottom={16} />
       </>
     );
   }, [mainComment]);
@@ -173,12 +193,14 @@ const CommentReplies = () => {
         }
         keyExtractor={item => item.post.id}
         ListHeaderComponent={headerComponent}
+        ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={flatListData}
       />
       <EnterCommentBottomBar
+        focusTextInput={false}
         profileImage={
           profileData?.profile_pic
             ? {uri: profileData?.profile_pic}
