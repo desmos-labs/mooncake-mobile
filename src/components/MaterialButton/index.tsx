@@ -1,3 +1,4 @@
+import MaskedView from '@react-native-masked-view/masked-view';
 import React, {ElementType, ReactNode} from 'react';
 import {
   Pressable,
@@ -9,10 +10,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {Button, useTheme} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
-import MaskedView from '@react-native-masked-view/masked-view';
-import LinearGradient from 'react-native-linear-gradient';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -221,7 +221,9 @@ const MaterialButton: React.FC<Props> = props => {
   );
 };
 
-function pressableFeekback({pressed}: PressableStateCallbackType) {
+function pressableFeekback({
+  pressed,
+}: PressableStateCallbackType): StyleProp<ViewStyle> {
   if (!pressed) return {};
   return {opacity: 0.75, transform: [{scale: 1.05}]};
 }
