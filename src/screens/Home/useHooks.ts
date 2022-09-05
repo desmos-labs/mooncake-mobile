@@ -92,17 +92,40 @@ const useHooks = () => {
     [maxOffset.current],
   );
 
+  const handlePressReactions = React.useCallback(() => {
+    console.log('like');
+  }, []);
+
+  const handlePressComments = React.useCallback(() => {
+    navigate(ROUTES.POST_DETAILS, {
+      focusCommentBox: true,
+      postId: postData[selectedPostIndex].id,
+      subspaceID: postData[selectedPostIndex].subspace_id,
+    });
+  }, [selectedPostIndex, postData]);
+
+  const handlePressTip = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
+  const handlePressProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE);
+  }, []);
+
   return {
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
+    handlePressComments,
+    handlePressProfile,
+    handlePressTip,
+    handlePressReactions,
     selectedIndex,
     setSelectedIndex,
     postTypes,
     onCarouselProgressChange,
     onPostChanged,
     postData,
-    selectedPostIndex,
   };
 };
 

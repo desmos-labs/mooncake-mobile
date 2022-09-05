@@ -33,8 +33,6 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     variables: {
       postID: id,
       subspaceID: sId,
-      limit: 99,
-      offset: 0,
     },
   });
 
@@ -44,8 +42,6 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       variables: {
         postID: id,
         subspaceID: sId,
-        limit: 99,
-        offset: 0,
       },
     },
   );

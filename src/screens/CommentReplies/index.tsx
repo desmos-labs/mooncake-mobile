@@ -102,7 +102,7 @@ const CommentReplies = () => {
   }, [reactions]);
 
   const ListEmptyComponent = React.useMemo(() => {
-    return <EmptyListComponent label="No comments yet" />;
+    return <EmptyListComponent label={t('no comments yet')} />;
   }, []);
 
   const MiddleElement = useMemo(

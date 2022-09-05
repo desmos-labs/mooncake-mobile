@@ -1,6 +1,4 @@
-import React from 'react';
-import {Dimensions, LogBox, View} from 'react-native';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import {StackScreenProps} from '@react-navigation/stack';
 import {
   commentIcon,
   createPost,
@@ -8,22 +6,23 @@ import {
   optionsIcon,
   tipIcon,
 } from 'assets/images';
-import Carousel from 'react-native-reanimated-carousel';
-import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
-import PostCard from 'screens/Home/components/PostCard';
 import DView from 'components/DView';
-import InteractionButton from 'screens/Home/components/InteractionButton';
-import {verticalScale} from 'react-native-size-matters';
-import useHooks from 'screens/Home/useHooks';
-import NoMorePosts from 'screens/Home/components/NoMorePosts';
-import {StackScreenProps} from '@react-navigation/stack';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
-import useActiveAccount from 'hooks/useActiveAccount';
-import _ from 'lodash';
+import React from 'react';
+import {Dimensions, LogBox, View} from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
+import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
+import {verticalScale} from 'react-native-size-matters';
+import InteractionButton from 'screens/Home/components/InteractionButton';
+import NoMorePosts from 'screens/Home/components/NoMorePosts';
+import PostCard from 'screens/Home/components/PostCard';
+import useHooks from 'screens/Home/useHooks';
 import useLogin from 'services/axios/requests/Login/useLogin';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -40,8 +39,6 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 
 const Home = () => {
   const styles = useStyles();
-
-  const {navigate} = useNavigation<NavProps['navigation']>();
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
 
@@ -63,13 +60,16 @@ const Home = () => {
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
+    handlePressTip,
+    handlePressReactions,
+    handlePressProfile,
+    handlePressComments,
     selectedIndex,
     setSelectedIndex,
     postTypes,
     onCarouselProgressChange,
     onPostChanged,
     postData,
-    selectedPostIndex,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -92,29 +92,6 @@ const Home = () => {
     },
     [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
-
-  const handlePressReactions = React.useCallback(() => {
-    console.log('like');
-  }, []);
-
-  const handlePressComments = React.useCallback(
-    ({postId, subspaceID}: {postId: number; subspaceID: number}) => {
-      navigate(ROUTES.POST_DETAILS, {
-        focusCommentBox: true,
-        postId,
-        subspaceID,
-      });
-    },
-    [],
-  );
-
-  const handlePressTip = React.useCallback(() => {
-    console.log('tips');
-  }, []);
-
-  const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE);
-  }, []);
 
   const profilePic = _.get(profileData, 'profile_pic');
 
@@ -165,12 +142,7 @@ const Home = () => {
 
       <View style={styles.interactionButtonGroup}>
         <InteractionButton
-          onPress={() =>
-            handlePressComments({
-              postId: postData[selectedPostIndex].id,
-              subspaceID: postData[selectedPostIndex].subspace_id,
-            })
-          }
+          onPress={() => handlePressComments()}
           interactionCount={10500}
           icon={commentIcon}
         />

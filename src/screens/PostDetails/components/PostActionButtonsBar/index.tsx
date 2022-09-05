@@ -2,6 +2,7 @@ import {commentIcon, commentLiked, optionsIcon, tipIcon} from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {Divider} from 'react-native-paper';
 import useStyles from './useStyles';
@@ -20,6 +21,7 @@ const PostActionButtonsBar = ({
   handleTipPress,
 }: Props) => {
   const styles = useStyles();
+  const {t} = useTranslation('postDetails');
 
   return (
     <>
@@ -31,17 +33,21 @@ const PostActionButtonsBar = ({
             source={postLiked ? commentLiked : optionsIcon}
             style={styles.icon}
           />
-          <Typography.Subtitle3 style={styles.text}>Like</Typography.Subtitle3>
+          <Typography.Subtitle3 style={styles.text}>
+            {t('like')}
+          </Typography.Subtitle3>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
           <Image source={commentIcon} style={styles.icon} />
           <Typography.Subtitle3 style={styles.text}>
-            Comment
+            {t('comment')}
           </Typography.Subtitle3>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleTipPress} style={styles.button}>
           <Image source={tipIcon} style={styles.icon} />
-          <Typography.Subtitle3 style={styles.text}>Tip</Typography.Subtitle3>
+          <Typography.Subtitle3 style={styles.text}>
+            {t('tip')}
+          </Typography.Subtitle3>
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />

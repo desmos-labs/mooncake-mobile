@@ -1,5 +1,6 @@
 import Typography from 'components/Typography';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
 
@@ -17,6 +18,7 @@ const InteractionCountersBar = ({
   handlePressCounters,
 }: Props) => {
   const styles = useStyles();
+  const {t} = useTranslation('postDetails');
   // TODO i dont like this but i had not found any better idea
   const calculatedWidth =
     accountsHighlitedPics.length === 1
@@ -42,7 +44,7 @@ const InteractionCountersBar = ({
           </View>
         )}
         <Typography.Button2 style={styles.text}>
-          {likesCounter} Likes and {tipsCounter} Tips
+          {t('likes and tips', {likesCounter, tipsCounter})}
         </Typography.Button2>
       </TouchableOpacity>
     </View>

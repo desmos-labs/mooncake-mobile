@@ -17,8 +17,6 @@ const useHooks = ({
     variables: {
       postID: postId,
       subspaceID: subspaceId,
-      limit: 99,
-      offset: 0,
     },
   });
 

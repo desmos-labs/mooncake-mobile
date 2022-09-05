@@ -35,8 +35,6 @@ const useHooks = ({
     variables: {
       postID: commentID,
       subspaceID,
-      limit: 99,
-      offset: 0,
     },
   });
 
@@ -48,8 +46,6 @@ const useHooks = ({
     variables: {
       postID: commentID,
       subspaceID,
-      limit: 99,
-      offset: 0,
     },
   });
 
