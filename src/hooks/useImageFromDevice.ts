@@ -45,6 +45,7 @@ const useImageFromDevice = (): ReturnValue => {
   const imageFromLibrary = React.useCallback(async () => {
     const result = await launchImageLibrary(DEFAULT_OPTIONS);
 
+    // Temporary error handling
     if (result.errorCode) {
       Alert.alert(
         'Error',
@@ -59,6 +60,7 @@ const useImageFromDevice = (): ReturnValue => {
     // ios simulator returns error, possible permission problem
     const result = await launchCamera(DEFAULT_OPTIONS);
     if (result.errorCode) {
+      // Temporary error handling
       Alert.alert(
         'Error',
         'Unable to load photo. Please select another photo.',
