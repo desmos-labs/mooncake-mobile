@@ -89,18 +89,16 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
   const countOfFollowing = useRecoilValue(
     numOfFollowerState({type: 'following', subspaceID, userAddress}),
   );
-  const nameOfFolowing = useMemo(
-    () => `${formatNumShorthand(countOfFollowing)} ${t('profile:following')}`,
-    [t, countOfFollowing],
-  );
+  const nameOfFolowing = `${formatNumShorthand(countOfFollowing)} ${t(
+    'profile:following',
+  )}`;
 
   const countOfFollowers = useRecoilValue(
     numOfFollowerState({type: 'followers', subspaceID, userAddress}),
   );
-  const nameOfFolowers = useMemo(
-    () => `${formatNumShorthand(countOfFollowers)} ${t('profile:followers')}`,
-    [t, countOfFollowers],
-  );
+  const nameOfFolowers = `${formatNumShorthand(countOfFollowers)} ${t(
+    'profile:followers',
+  )}`;
 
   /* To allow going back to previous screen via swipe left. */
   const [swipeEnabled, setSwipeEnabled] = useState(true);
@@ -131,19 +129,15 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
 
   const theme = useTheme();
 
-  /* A memoized version of the screen options for the tab navigator. */
-  const screenOptions = useMemo<MaterialTopTabNavigationOptions>(
-    () => ({
-      tabBarStyle: styles.tabBar,
-      tabBarItemStyle: styles.tabBarItem,
-      tabBarLabelStyle: styles.tabBarLabel,
-      tabBarActiveTintColor: theme.colors.text,
-      tabBarInactiveTintColor: theme.colors.grey01,
-      tabBarIndicatorStyle: styles.tabBarIndicator,
-      swipeEnabled,
-    }),
-    [swipeEnabled, styles, theme],
-  );
+  const screenOptions: MaterialTopTabNavigationOptions = {
+    tabBarStyle: styles.tabBar,
+    tabBarItemStyle: styles.tabBarItem,
+    tabBarLabelStyle: styles.tabBarLabel,
+    tabBarActiveTintColor: theme.colors.text,
+    tabBarInactiveTintColor: theme.colors.grey01,
+    tabBarIndicatorStyle: styles.tabBarIndicator,
+    swipeEnabled,
+  };
 
   return (
     <View
