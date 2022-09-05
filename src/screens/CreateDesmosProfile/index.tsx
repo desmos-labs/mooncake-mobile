@@ -40,6 +40,8 @@ import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import MsgTypes from 'lib/desmos/msgtypes';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 type NavProp = StackScreenProps<
@@ -63,11 +65,13 @@ const CreateDesmosProfile = () => {
   const {goBack, navigate, reset, push} =
     useNavigation<NavProp['navigation']>();
 
-  const {imageAsset: bannerImage, imageFromLibrary: selectBannerImage} =
+  const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
     useImageFromDevice();
 
-  const {imageAsset: profileImage, imageFromLibrary: selectProfileImage} =
+  const {imageAsset: profilePicture, imageFromLibrary: selectProfilePicture} =
     useImageFromDevice();
+
+  const [loading, setLoading] = React.useState(false);
 
   const profileParams = useRecoilValue(profileParamsState);
   const accountCreation = useRecoilValue(createLocalWalletState);
@@ -107,37 +111,19 @@ const CreateDesmosProfile = () => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
+      setLoading(true);
+
       const {dTag, nickname, bio} = formValues;
 
       let wallet: LocalWallet;
 
-      if (accountCreation && accountCreation.mnemonic) {
-        const {password, mnemonic} = accountCreation;
-        wallet = await LocalWallet.fromMnemonic(mnemonic);
+      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
+        profilePicture && UploadMedia({mediaFile: profilePicture}),
+        coverPicture && UploadMedia({mediaFile: coverPicture}),
+      ]);
 
-        const newAccount: ChainAccount = {
-          address: wallet.bech32Address,
-          pubKey: toBase64(wallet.publicKey),
-          type: ChainAccountType.Local,
-          hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-          signAlgorithm: 'secp256k1',
-        };
-
-        await saveLocalWallet(wallet, password!);
-        await saveNewAccount(newAccount);
-        await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-      } else if (createLedgerAccount && createLedgerAccount.account) {
-        const {account: ledgerAccount} = createLedgerAccount;
-
-        wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
-        await saveNewAccount(ledgerAccount);
-      }
-
-      // images are placeholders. They should be uploaded and the link
-      // be passed as parameters to the save profile message
-      console.log(profileImage);
-      console.log(bannerImage);
+      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
 
       // Save new wallet as last selected wallet
       // Build save profile message
@@ -148,17 +134,46 @@ const CreateDesmosProfile = () => {
           dtag: dTag,
           nickname: nickname || '[do-not-modify]',
           bio: bio || '[do-not-modify]',
-          profilePicture: '[do-not-modify]',
-          coverPicture: '[do-not-modify]',
+          profilePicture: profilePictureUrl || '[do-not-modify]',
+          coverPicture: coverPictureUrl || '[do-not-modify]',
         },
       };
 
       const messages = [saveProfileMessage];
 
+      // delay setLoading false so it occurs while the screen is in background
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+
       navigate(ROUTES.BROADCAST_TX, {
         messages,
         offlineSigner: wallet!,
-        successAction: () => {
+        // save newly created account data and navigate to home page
+        successAction: async () => {
+          if (accountCreation && accountCreation.mnemonic) {
+            const {password, mnemonic} = accountCreation;
+            wallet = await LocalWallet.fromMnemonic(mnemonic);
+
+            const newAccount: ChainAccount = {
+              address: wallet.bech32Address,
+              pubKey: toBase64(wallet.publicKey),
+              type: ChainAccountType.Local,
+              hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+              signAlgorithm: 'secp256k1',
+            };
+
+            await saveLocalWallet(wallet, password!);
+            await saveNewAccount(newAccount);
+            await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+            setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+          } else if (createLedgerAccount && createLedgerAccount.account) {
+            const {account: ledgerAccount} = createLedgerAccount;
+
+            wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
+            await saveNewAccount(ledgerAccount);
+          }
+
           push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
             title: t('common:congratulations'),
             subtitle: t('common:dtag created'),
@@ -186,7 +201,7 @@ const CreateDesmosProfile = () => {
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white}>
       <Image
-        source={bannerImage ? {uri: bannerImage.uri} : createProfileBanner}
+        source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
         style={styles.bannerImage}
       />
 
@@ -196,13 +211,13 @@ const CreateDesmosProfile = () => {
         <ProfileHeaderButton
           imageSrc={cameraButton}
           style={styles.cameraButton}
-          onPress={selectBannerImage}
+          onPress={selectCoverPicture}
         />
       </View>
 
       <CreateAvatar
-        avatar={profileImage ? {uri: profileImage.uri} : defaultProfilePic}
-        handlePressEdit={selectProfileImage}
+        avatar={profilePicture ? {uri: profilePicture.uri} : defaultProfilePic}
+        handlePressEdit={selectProfilePicture}
       />
       <ScrollView style={styles.scrollview} contentContainerStyle={styles.card}>
         <Typography.H4>{t('header')}</Typography.H4>
@@ -292,7 +307,10 @@ const CreateDesmosProfile = () => {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 200}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={styles.buttonGroup}>
-                <Button mode="gradientFilled" onPress={handleSubmit}>
+                <Button
+                  mode="gradientFilled"
+                  onPress={handleSubmit}
+                  loading={loading}>
                   {t('common:confirm')}
                 </Button>
               </KeyboardAvoidingView>
