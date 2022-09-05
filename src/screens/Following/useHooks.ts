@@ -1,7 +1,7 @@
 import {DocumentNode, useQuery} from '@apollo/client';
 import {QueueData as QueueFollowing} from 'services/graphql/queries/GetPaginatedFollowing';
 import {QueueData as QueueFollowers} from 'services/graphql/queries/GetPaginatedFollowers';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useSetRecoilState} from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
 import isEqual from 'lodash/isEqual';
@@ -79,11 +79,21 @@ const useHooks = (
         offset: nextOffset,
       },
     });
-  }, [nextOffset]);
+  }, [subspaceID, userAddress, nextOffset]);
 
   const refetchCallback = useCallback(() => {
-    refetch({offset: 0});
-  }, []);
+    refetch({subspaceID, userAddress, offset: 0});
+  }, [subspaceID, userAddress]);
+
+  /* Refetch when subspaceID, userAddress changed. */
+  const called = useRef(false);
+  useEffect(() => {
+    if (called.current) {
+      refetchCallback();
+    } else {
+      called.current = true;
+    }
+  }, [subspaceID, userAddress]);
 
   return {
     loading,
