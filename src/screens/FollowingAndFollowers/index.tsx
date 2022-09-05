@@ -41,7 +41,7 @@ export type FollowingAndFollowersParams = {
   initialTabRouteName: ROUTES.FOLLOWING | ROUTES.FOLLOWERS;
   subspaceID: number;
   userAddress: string;
-  username: string;
+  headerTitle: string;
 };
 
 /* Creating a new React component that is a tab navigator. */
@@ -63,13 +63,13 @@ export const FollowingAndFollowersHeader: FC<StackHeaderProps> = ({
   options,
   ...rest
 }) => {
-  const {username} = rest.route.params as FollowingAndFollowersParams;
+  const {headerTitle} = rest.route.params as FollowingAndFollowersParams;
   return (
     <Header
       {...rest}
       options={{
         ...options,
-        title: username,
+        title: headerTitle,
         headerShadowVisible: false,
         headerStyle: {borderWidth: 0},
         headerBackImage: HeaderBackImage,

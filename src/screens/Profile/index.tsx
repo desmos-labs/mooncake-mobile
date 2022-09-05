@@ -133,7 +133,7 @@ const Profile = () => {
         initialTabRouteName: ROUTES.FOLLOWING,
         subspaceID,
         userAddress: activeAddress ?? '',
-        username: nickname || `@${dtag}`,
+        headerTitle: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
@@ -144,7 +144,7 @@ const Profile = () => {
         initialTabRouteName: ROUTES.FOLLOWERS,
         subspaceID,
         userAddress: activeAddress ?? '',
-        username: nickname || `@${dtag}`,
+        headerTitle: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
