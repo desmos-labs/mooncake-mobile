@@ -1,4 +1,4 @@
-package com.desmosflagship;
+package social.butter;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

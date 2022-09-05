@@ -1,0 +1,52 @@
+diff --git a/node_modules/react-native-circular-progress/index.d.ts b/node_modules/react-native-circular-progress/index.d.ts
+index 563c30d..dc12054 100644
+--- a/node_modules/react-native-circular-progress/index.d.ts
++++ b/node_modules/react-native-circular-progress/index.d.ts
+@@ -1,13 +1,13 @@
+ declare module 'react-native-circular-progress' {
+   import * as React from 'react';
+   import {
+-    Animated,
+-    Easing,
+-    EasingFunction,
+-    ViewPropTypes,
+-    StyleProp,
+-    ViewStyle
+-  } from 'react-native';
++  Animated,
++  Easing,
++  EasingFunction,
++  ViewPropTypes,
++  StyleProp,
++  ViewStyle, ColorValue,
++} from "react-native";
+ 
+   export interface AnimatedCircularProgressProps {
+     /**
+@@ -45,7 +45,7 @@ declare module 'react-native-circular-progress' {
+      * @type {string}
+      * @default 'black'
+      */
+-    tintColor?: string;
++    tintColor?: ColorValue | string;
+ 
+     /**
+      * Change the fill color from tintColor to tintColorSecondary as animation progresses.
+@@ -53,7 +53,7 @@ declare module 'react-native-circular-progress' {
+      * @type {string}
+      * @default 'undefined'
+      */
+-    tintColorSecondary?: string;
++    tintColorSecondary?: ColorValue |  string;
+ 
+     /**
+      * Current progress / tint transparency
+@@ -68,7 +68,7 @@ declare module 'react-native-circular-progress' {
+      *
+      * @type {string}
+      */
+-    backgroundColor?: string;
++    backgroundColor?: ColorValue | string;
+ 
+     /**
+      * Angle from which the progress starts from

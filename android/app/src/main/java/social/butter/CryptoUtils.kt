@@ -1,4 +1,4 @@
-package com.desmosflagship
+package social.butter
 
 import org.bouncycastle.math.ec.ECPoint
 import org.web3j.crypto.Bip32ECKeyPair
