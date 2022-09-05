@@ -66,6 +66,7 @@ import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -132,11 +133,21 @@ const RootNavigator = () => {
 
   const {t} = useTranslation();
 
+  const initialRouteName = React.useMemo(() => {
+    if (__DEV__) return ROUTES.DEV_SCREEN;
+    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
+    if (activeAddr) {
+      return ROUTES.HOME;
+    }
+    return ROUTES.LANDING;
+  }, []);
+
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      {__DEV__ && (
-        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
-      )}
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
 
       <Stack.Screen
