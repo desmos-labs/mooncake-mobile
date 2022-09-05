@@ -1,5 +1,10 @@
-import {useRoute} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
@@ -10,15 +15,16 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 
-type NavProps = StackScreenProps<
-  PostInteractionTabsParamList,
-  ROUTES.POST_TIPS
+type NavProps = CompositeScreenProps<
+  StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
+  StackScreenProps<RootNavigatorParamList>
 >;
 
 const PostTips = () => {
   const {t} = useTranslation('postInteraction');
   const theme = useTheme();
   const {params} = useRoute<NavProps['route']>();
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   useEffect(() => {
     console.log('params', params);
@@ -36,13 +42,17 @@ const PostTips = () => {
     );
   }, []);
 
+  const handlePressSendTips = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
   const ListEmptyComponent = React.useCallback(() => {
     return (
       <EmptyListComponent
         label={t('noTips')}
         additionalButton
         buttonLabel={t('tip')}
-        handleButton={() => console.log('tip')}
+        handleButton={() => handlePressSendTips()}
       />
     );
   }, []);
