@@ -72,13 +72,14 @@ const useHooks = (
   useEffect(() => setNumOfFollowers(count), [count]);
 
   /* It's making a GraphQL query to the server. */
+  const nextOffset = offset + (data?.paginatedFollowers?.length ?? 0);
   const fetchMoreCallback = useCallback(() => {
     fetchMore({
       variables: {
-        offset: paginatedData.length ?? 0,
+        offset: nextOffset,
       },
     });
-  }, [paginatedData]);
+  }, [nextOffset]);
 
   const refetchCallback = useCallback(() => {
     refetch({offset: 0});
