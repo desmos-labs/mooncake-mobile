@@ -42,7 +42,7 @@ const useInitializeAppData = () => {
         ...prev,
         // temporary timezone setting
         currentTimezone: RNLocalize.getTimeZone(),
-        registeredReactions: data.subspace_registered_reaction,
+        registeredReactions: data?.subspace_registered_reaction,
         dataInitialized: true,
       }));
     }
