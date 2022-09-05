@@ -74,9 +74,12 @@ const Profile = () => {
   const {activeAddress, profileData, loading} = useActiveAccount();
 
   const screenMode = useMemo(() => {
-    if (activeAddress !== params.visitingProfileAddress) {
-      return 'guestProfile';
+    if (params.visitingProfileAddress) {
+      return activeAddress !== params.visitingProfileAddress
+        ? 'guestProfile'
+        : 'myProfile';
     }
+
     return 'myProfile';
   }, [params.visitingProfileAddress, activeAddress]);
 
