@@ -1,4 +1,5 @@
 import {errorImage} from 'assets/images';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import {makeStyle} from 'config/theme';
 import React from 'react';
@@ -6,9 +7,17 @@ import {Image, View} from 'react-native';
 
 type Props = {
   label: string;
+  additionalButton?: boolean;
+  buttonLabel?: string;
+  handleButton?: () => void;
 };
 
-const EmptyListComponent = ({label}: Props) => {
+const EmptyListComponent = ({
+  label,
+  additionalButton,
+  buttonLabel,
+  handleButton,
+}: Props) => {
   const styles = useStyles();
 
   return (
@@ -17,6 +26,16 @@ const EmptyListComponent = ({label}: Props) => {
         <Image source={errorImage} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
+      {additionalButton && (
+        <Button
+          style={styles.additionalButton}
+          mode="contained"
+          onPress={handleButton}>
+          <Typography.Button3 style={styles.buttonText}>
+            {buttonLabel}
+          </Typography.Button3>
+        </Button>
+      )}
     </View>
   );
 };
@@ -34,6 +53,10 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.surfaceBlack,
     textAlign: 'center',
   },
+  buttonText: {
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
   imageStyle: {
     width: 230,
     height: 116,
@@ -41,6 +64,10 @@ const useStyles = makeStyle(theme => ({
   },
   buttonStyle: {
     marginTop: theme.spacing.l,
+  },
+  additionalButton: {
+    marginTop: theme.spacing.xl,
+    marginHorizontal: 80,
   },
 }));
 

@@ -37,7 +37,14 @@ const PostTips = () => {
   }, []);
 
   const ListEmptyComponent = React.useCallback(() => {
-    return <EmptyListComponent label={t('noTips')} />;
+    return (
+      <EmptyListComponent
+        label={t('noTips')}
+        additionalButton
+        buttonLabel={t('tip')}
+        handleButton={() => console.log('tip')}
+      />
+    );
   }, []);
 
   return (
