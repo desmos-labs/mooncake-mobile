@@ -52,15 +52,18 @@ const useHooks = (activeAddress: string) => {
     return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
   }, []);
 
-  const handlePressAuthor = useCallback((address: string) => {
-    if (activeAddress === address) {
-      navigate(ROUTES.USER_PROFILE, {});
-    } else {
-      navigate(ROUTES.USER_PROFILE, {
-        visitingProfileAddress: address,
-      });
-    }
-  }, []);
+  const handlePressAuthor = useCallback(
+    (address: string) => {
+      if (activeAddress === address) {
+        navigate(ROUTES.USER_PROFILE, {});
+      } else {
+        navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: address,
+        });
+      }
+    },
+    [activeAddress],
+  );
 
   const handlePressFollow = React.useCallback(async (address: string) => {
     const followedAddresses = following.map(x => x.address);

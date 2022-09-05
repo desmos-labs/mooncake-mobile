@@ -68,18 +68,17 @@ const Profile = () => {
   });
   /** Animations end * */
 
+  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
+    params.visitingProfileAddress || '',
+  );
+  const {activeAddress, profileData, loading} = useActiveAccount();
+
   const screenMode = useMemo(() => {
     if (activeAddress !== params.visitingProfileAddress) {
       return 'guestProfile';
     }
     return 'myProfile';
-  }, [params.visitingProfileAddress]);
-
-  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
-    params.visitingProfileAddress || '',
-  );
-
-  const {activeAddress, profileData, loading} = useActiveAccount();
+  }, [params.visitingProfileAddress, activeAddress]);
 
   const {
     address,
