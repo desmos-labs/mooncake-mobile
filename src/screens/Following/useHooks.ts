@@ -1,12 +1,13 @@
-import {useQuery} from '@apollo/client';
-import GetPaginatedQuery, {
-  QueueData,
-} from 'services/graphql/queries/GetPaginatedFollowing';
+import {DocumentNode, useQuery} from '@apollo/client';
+import {QueueData as QueueFollowing} from 'services/graphql/queries/GetPaginatedFollowing';
+import {QueueData as QueueFollowers} from 'services/graphql/queries/GetPaginatedFollowers';
 import {useCallback, useEffect, useState} from 'react';
 import {useSetRecoilState} from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
 import isEqual from 'lodash/isEqual';
 import uniqBy from 'lodash/uniqBy';
+
+type QueueData = QueueFollowing | QueueFollowers;
 
 /* It's setting the limit of the number of items to be fetched. */
 export const ITEMS_PER_FETCH = 100;
@@ -30,12 +31,16 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (subspaceID: number, userAddress: string) => {
+const useHooks = (
+  subspaceID: number,
+  userAddress: string,
+  query: DocumentNode,
+) => {
   const [paginatedData, setPaginatedData] = useState<ProfileSummary[]>([]);
 
   /* It's making a GraphQL query to the server. */
   const {loading, error, data, fetchMore, refetch, variables} =
-    useQuery<QueueData>(GetPaginatedQuery, {
+    useQuery<QueueData>(query, {
       variables: {
         subspaceID,
         userAddress,

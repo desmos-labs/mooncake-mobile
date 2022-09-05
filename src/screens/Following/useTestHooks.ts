@@ -1,5 +1,5 @@
 // START debug
-import {ApolloError} from '@apollo/client';
+import {ApolloError, DocumentNode} from '@apollo/client';
 import {
   MutableRefObject,
   useCallback,
@@ -90,7 +90,13 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (subspaceID: number, userAddress: string) => {
+const useHooks = (
+  subspaceID: number,
+  userAddress: string,
+  query: DocumentNode,
+) => {
+  console.log('useHooks', {subspaceID, userAddress, query});
+
   // START debug
   const paginatedFollowers = useRef<ProfileSummary[]>([]);
   const [data, setData] = useState<ProfileSummary[]>();

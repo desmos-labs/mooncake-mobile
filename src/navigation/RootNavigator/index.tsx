@@ -72,7 +72,6 @@ import FollowingAndFollowers, {
 } from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
-import {FollowersParams} from 'screens/Followers';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -134,7 +133,7 @@ export type RootNavigatorParamList = {
   [ROUTES.FOLLOWING]: FollowingParams;
 
   /* Followers tab route. */
-  [ROUTES.FOLLOWERS]: FollowersParams;
+  [ROUTES.FOLLOWERS]: FollowingParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();

@@ -1,16 +1,19 @@
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useState} from 'react';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import useHooks from './useHooks';
-import Empty from './components/Empty';
-import useStyles from './useStyles';
-import ItemSeparator from './components/ItemSeparator';
-import Loading from './components/Loading/Loading';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import GetPaginatedFollowers from 'services/graphql/queries/GetPaginatedFollowers';
+import GetPaginatedFollowing from 'services/graphql/queries/GetPaginatedFollowing';
+import EmptyFollowers from './components/EmptyFollowers';
+import EmptyFollowing from './components/EmptyFollowing';
 import Error from './components/Error';
+import ItemSeparator from './components/ItemSeparator';
 import ListItem from './components/ListItem';
+import Loading from './components/Loading/Loading';
+import useHooks from './useHooks';
+import useStyles from './useStyles';
 
 type NavProps = MaterialTopTabScreenProps<
   RootNavigatorParamList,
@@ -20,10 +23,12 @@ type NavProps = MaterialTopTabScreenProps<
 /**
  * @property {number} subspaceID - The ID of the subspace you want to get the following accounts for.
  * @property {string} userAddress - The address of the user you want to get the following accounts for.
+ * @property {string} tabName - 'following' or 'followers'
  */
 export type FollowingParams = {
   subspaceID: number;
   userAddress: string;
+  tabName: 'following' | 'followers';
 };
 
 /**
@@ -31,13 +36,14 @@ export type FollowingParams = {
  * @param  - userAddress: The address of the user whose following accounts list we want to display.
  * @returns A list of users that the user is following accounts.
  */
-export const FollowingTab: FC<NavProps> = ({route}) => {
-  const {subspaceID, userAddress} = route.params;
+export const Following: FC<NavProps> = ({route}) => {
+  const {subspaceID, userAddress, tabName} = route.params;
   const styles = useStyles();
   const {t} = useTranslation('common');
   const {loading, error, data, fetchMore, refetch} = useHooks(
     subspaceID,
     userAddress,
+    tabName === 'following' ? GetPaginatedFollowing : GetPaginatedFollowers,
   );
   const [itemError, setItemError] = useState<string>('');
   const resetError = useCallback(() => setItemError(''), []);
@@ -53,6 +59,10 @@ export const FollowingTab: FC<NavProps> = ({route}) => {
       );
     },
     [subspaceID],
+  );
+  const Empty = useMemo(
+    () => (tabName === 'following' ? EmptyFollowing : EmptyFollowers),
+    [tabName],
   );
 
   return (
@@ -97,4 +107,4 @@ function getItemLayout(_: unknown, index: number) {
   };
 }
 
-export default FollowingTab;
+export default Following;

@@ -27,7 +27,6 @@ import {
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import useStyles from './useStyles';
 import FollowingTab from '../Following';
-import FollowersTab from '../Followers';
 
 /**
  * @property {ROUTES.FOLLOWING | ROUTES.FOLLOWERS} initialTabRouteName - The initial tab route name.
@@ -159,13 +158,13 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
           options={{tabBarLabel: nameOfFolowing}}
-          initialParams={{subspaceID, userAddress}}
+          initialParams={{subspaceID, userAddress, type: 'following'}}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
-          component={FollowersTab}
+          component={FollowingTab}
           options={{tabBarLabel: nameOfFolowers}}
-          initialParams={{subspaceID, userAddress}}
+          initialParams={{subspaceID, userAddress, type: 'followers'}}
         />
       </Tab.Navigator>
     </View>
