@@ -81,6 +81,7 @@ const PostDetails = () => {
     commentsLoading,
     commentsRefetch,
     reactions,
+    reactionsLoading,
     reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
@@ -103,14 +104,10 @@ const PostDetails = () => {
     await commentsRefetch({
       postID: params.postId,
       subspaceID: params.subspaceID,
-      limit: 99,
-      offset: 0,
     });
     await reactionsRefetch({
       postID: params.postId,
       subspaceID: params.subspaceID,
-      limit: 99,
-      offset: 0,
     });
   };
 
@@ -229,6 +226,7 @@ const PostDetails = () => {
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
+            loading={reactionsLoading}
             likesCounter={reactions.length}
             tipsCounter={0}
             handlePressCounters={() => handlePressCounters()}

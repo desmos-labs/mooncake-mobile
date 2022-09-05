@@ -80,14 +80,10 @@ const CommentReplies = () => {
     await commentsRefetch({
       postID: params.commentId,
       subspaceID: params.subspaceId,
-      limit: 99,
-      offset: 0,
     });
     await reactionsRefetch({
       postID: params.commentId,
       subspaceID: params.subspaceId,
-      limit: 99,
-      offset: 0,
     });
   };
 
@@ -186,6 +182,7 @@ const CommentReplies = () => {
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
+            loading={reactionsLoading}
             likesCounter={reactions.length}
             tipsCounter={0}
             handlePressCounters={() => handlePressCounters()}

@@ -2,9 +2,11 @@ import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
+  loading: boolean;
   accountsHighlitedPics: React.ComponentProps<typeof Image>['source'][];
   tipsCounter: number;
   likesCounter: number;
@@ -12,6 +14,7 @@ type Props = {
 };
 
 const InteractionCountersBar = ({
+  loading,
   accountsHighlitedPics,
   tipsCounter,
   likesCounter,
@@ -27,7 +30,9 @@ const InteractionCountersBar = ({
       ? 50
       : 70;
 
-  return (
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
         {accountsHighlitedPics[0] && (
