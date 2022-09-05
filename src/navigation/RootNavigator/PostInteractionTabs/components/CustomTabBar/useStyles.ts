@@ -6,6 +6,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-evenly',
     backgroundColor: theme.colors.white,
     marginBottom: theme.spacing.m,
+    paddingHorizontal: 80,
   },
   indicatorStyle: {
     width: 4,

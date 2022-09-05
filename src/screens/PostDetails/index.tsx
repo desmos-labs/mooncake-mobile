@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {
@@ -79,7 +79,9 @@ const PostDetails = () => {
     postRefetch,
     comments,
     commentsLoading,
+    commentsRefetch,
     reactions,
+    reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
@@ -89,6 +91,28 @@ const PostDetails = () => {
     id: params.postId,
     sId: params.subspaceID,
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      pageRefetch();
+    }, [params]),
+  );
+
+  const pageRefetch = async () => {
+    await postRefetch({ID: params.postId, subspaceID: params.subspaceID});
+    await commentsRefetch({
+      postID: params.postId,
+      subspaceID: params.subspaceID,
+      limit: 99,
+      offset: 0,
+    });
+    await reactionsRefetch({
+      postID: params.postId,
+      subspaceID: params.subspaceID,
+      limit: 99,
+      offset: 0,
+    });
+  };
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
@@ -215,7 +239,7 @@ const PostDetails = () => {
         <Spacer paddingBottom={16} />
       </>
     ),
-    [reactions],
+    [post, reactions, likesImages],
   );
 
   return postLoading || !post ? (
@@ -238,9 +262,7 @@ const PostDetails = () => {
       <FlatList
         scrollEnabled={true}
         refreshing={postLoading}
-        onRefresh={() =>
-          postRefetch({ID: params.postId, subspaceID: params.subspaceID})
-        }
+        onRefresh={() => pageRefetch()}
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.id}

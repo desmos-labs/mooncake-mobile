@@ -27,19 +27,24 @@ const useHooks = ({
     },
   });
 
-  const {data: commentReplies, loading: commentsLoading} = useQuery(
-    GetCommentReplies,
-    {
-      variables: {
-        postID: commentID,
-        subspaceID,
-        limit: 99,
-        offset: 0,
-      },
+  const {
+    data: commentReplies,
+    loading: commentsLoading,
+    refetch: commentsRefetch,
+  } = useQuery(GetCommentReplies, {
+    variables: {
+      postID: commentID,
+      subspaceID,
+      limit: 99,
+      offset: 0,
     },
-  );
+  });
 
-  const {data: commentReactions} = useQuery(GetPostReactions, {
+  const {
+    data: commentReactions,
+    loading: reactionsLoading,
+    refetch: reactionsRefetch,
+  } = useQuery(GetPostReactions, {
     variables: {
       postID: commentID,
       subspaceID,
@@ -95,7 +100,10 @@ const useHooks = ({
     mainCommentRefetch,
     comments,
     commentsLoading,
+    commentsRefetch,
     reactions,
+    reactionsLoading,
+    reactionsRefetch,
     handlePressCounters,
     handlePressSendTips,
     handleExpandComment,

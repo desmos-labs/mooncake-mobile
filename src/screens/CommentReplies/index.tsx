@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
@@ -53,7 +53,11 @@ const CommentReplies = () => {
     mainCommentLoading,
     mainCommentRefetch,
     comments,
+    commentsLoading,
+    commentsRefetch,
     reactions,
+    reactionsLoading,
+    reactionsRefetch,
     handlePressCounters,
     handleExpandComment,
     handlePressSendTips,
@@ -61,6 +65,31 @@ const CommentReplies = () => {
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      pageRefetch();
+    }, [params]),
+  );
+
+  const pageRefetch = async () => {
+    await mainCommentRefetch({
+      ID: params.commentId,
+      subspaceID: params.subspaceId,
+    });
+    await commentsRefetch({
+      postID: params.commentId,
+      subspaceID: params.subspaceId,
+      limit: 99,
+      offset: 0,
+    });
+    await reactionsRefetch({
+      postID: params.commentId,
+      subspaceID: params.subspaceId,
+      limit: 99,
+      offset: 0,
+    });
+  };
 
   const likesImages: [] = useMemo(() => {
     return reactions.map((reaction: any) => {
@@ -167,13 +196,13 @@ const CommentReplies = () => {
         <Spacer paddingBottom={16} />
       </>
     );
-  }, [mainComment]);
+  }, [mainComment, reactions, likesImages]);
 
   const flatListData = useMemo(() => {
     return comments;
   }, [comments]);
 
-  return mainCommentLoading ? (
+  return mainCommentLoading || commentsLoading || reactionsLoading ? (
     <ActivityIndicator />
   ) : (
     <DView

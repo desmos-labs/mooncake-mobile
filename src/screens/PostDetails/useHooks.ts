@@ -25,8 +25,21 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     },
   });
 
-  const {data: postComments, loading: commentsLoading} = useQuery(
-    GetPostComments,
+  const {
+    data: postComments,
+    loading: commentsLoading,
+    refetch: commentsRefetch,
+  } = useQuery(GetPostComments, {
+    variables: {
+      postID: id,
+      subspaceID: sId,
+      limit: 99,
+      offset: 0,
+    },
+  });
+
+  const {data: postReactions, refetch: reactionsRefetch} = useQuery(
+    GetPostReactions,
     {
       variables: {
         postID: id,
@@ -36,15 +49,6 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       },
     },
   );
-
-  const {data: postReactions} = useQuery(GetPostReactions, {
-    variables: {
-      postID: id,
-      subspaceID: sId,
-      limit: 99,
-      offset: 0,
-    },
-  });
 
   const post = React.useMemo(() => {
     if (!originalPost) return {};
@@ -121,7 +125,9 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     postRefetch,
     comments,
     commentsLoading,
+    commentsRefetch,
     reactions,
+    reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
