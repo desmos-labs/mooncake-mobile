@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   textContainer: {
-    backgroundColor: theme.colors.butterYellow01,
+    backgroundColor: theme.colors.butterOrange01,
     width: Dimensions.get('window').width,
     height: 630,
     paddingHorizontal: theme.spacing.m,

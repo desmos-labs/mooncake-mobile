@@ -17,11 +17,11 @@ const LightTheme: ReactNativePaper.Theme = {
     // default MUI colors
 
     // when using colors, try to use the custom ones below instead
-    primary: '#F3725A',
+    primary: '#FEB027',
     background: '#F7F8FA',
-    surface: '#f9f9f9',
+    surface: '#EFEFEF',
     accent: '#16CEEF',
-    error: '#fd565f',
+    error: '#FD565F',
 
     butterOrange01: '#FEB027',
     butterOrange02: '#FEC054',

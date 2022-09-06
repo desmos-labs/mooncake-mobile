@@ -13,7 +13,7 @@ const FakeDropShadow = () => {
   return (
     <View style={{marginTop: theme.spacing.m, marginBottom: -theme.spacing.s}}>
       <DropShadowWrapper
-        customColor={addAlphaToHex(theme.colors.desmosOrange01, 0.1)}
+        customColor={addAlphaToHex(theme.colors.butterOrange01, 0.1)}
         customDistance={20}
         customOverlayColor="rgba(255,107,0,0.1)">
         <View style={{height: 20}} />

@@ -58,7 +58,7 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   imageStyle: {
-    width: 230,
+    width: 335,
     height: 116,
     resizeMode: 'contain',
   },

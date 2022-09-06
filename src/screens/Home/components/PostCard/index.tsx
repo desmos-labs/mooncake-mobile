@@ -1,4 +1,4 @@
-import {followedButton, followIcon} from 'assets/images';
+import {defaultProfilePic, followedButton, followIcon} from 'assets/images';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -63,7 +63,12 @@ const PostCard = ({
         />
       );
     }
-    return <View style={styles.blankAvatar} />;
+    return (
+      <ProfileHeaderButton
+        imageSrc={defaultProfilePic}
+        style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
+      />
+    );
   }, [profile_pic]);
 
   const AttachmentImage = React.useMemo(() => {

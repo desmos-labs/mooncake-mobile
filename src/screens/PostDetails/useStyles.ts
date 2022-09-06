@@ -24,6 +24,7 @@ const useStyles = makeStyle(theme => ({
     zIndex: 1,
     width: 24,
     height: 24,
+    tintColor: theme.colors.butterOrange01,
   },
   moreIcon: {
     width: 24,

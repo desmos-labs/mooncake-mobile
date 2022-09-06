@@ -29,7 +29,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  tipButton: {minWidth: 106},
+  tipButton: {minWidth: 106, borderColor: theme.colors.black},
   tipButtonContent: {height: 42},
   textInput: {
     backgroundColor: theme.colors.background,

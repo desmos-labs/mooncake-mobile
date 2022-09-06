@@ -140,7 +140,7 @@ const ProfileHeader = ({
                   hasNotification ? (
                     <PingAnimation
                       size={10}
-                      color={theme.colors.desmosOrange01}
+                      color={theme.colors.butterOrange01}
                     />
                   ) : undefined
                 }
