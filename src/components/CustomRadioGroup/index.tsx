@@ -53,13 +53,13 @@ const CustomRadioGroup = (props: Props) => {
               borderWidth={1}
               buttonInnerColor={
                 selectedValue === index
-                  ? theme.colors.desmosOrange01
-                  : theme.colors.black
+                  ? theme.colors.surfaceBlack
+                  : theme.colors.white
               }
               buttonOuterColor={
                 selectedValue === index
-                  ? theme.colors.desmosOrange01
-                  : theme.colors.black
+                  ? theme.colors.surfaceBlack
+                  : theme.colors.surfaceBlack
               }
             />
             <Typography.Body6 style={{marginLeft: theme.spacing.m}}>

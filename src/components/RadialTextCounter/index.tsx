@@ -1,8 +1,7 @@
+import Typography from 'components/Typography';
 import React from 'react';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import Typography from 'components/Typography';
 import {useTheme} from 'react-native-paper';
-import {ColorValue} from 'react-native';
 
 type Props = {
   /**
@@ -19,19 +18,19 @@ type Props = {
    * Override default filled color.
    * @default theme.colors.iconGrey
    */
-  customFillColor?: ColorValue;
+  customFillColor?: string;
 
   /**
    * Override default empty color.
    * @default theme.colors.lightGrey01
    */
-  customEmptyColor?: ColorValue;
+  customEmptyColor?: string;
 
   /**
    * Override default warn color.
    * @default theme.colors.pink01
    */
-  customWarnColor?: ColorValue;
+  customWarnColor?: string;
 };
 
 const RadialTextCounter = ({

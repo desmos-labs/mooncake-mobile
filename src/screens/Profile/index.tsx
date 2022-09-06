@@ -220,7 +220,7 @@ const Profile = () => {
             <View style={styles.socialCounterGroup}>
               <TouchableOpacity onPress={handleFollowingPressed}>
                 <SocialCounter
-                  count={following.length}
+                  count={following?.length}
                   label={t('following')}
                 />
               </TouchableOpacity>
@@ -229,7 +229,7 @@ const Profile = () => {
 
               <TouchableOpacity onPress={handleFollowersPressed}>
                 <SocialCounter
-                  count={followage.length}
+                  count={followage?.length}
                   label={t('followers')}
                 />
               </TouchableOpacity>

@@ -7,7 +7,7 @@ import {StyleSheet} from 'react-native';
 const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
-    backgroundColor: theme.colors.desmosOrange01,
+    backgroundColor: theme.colors.butterOrange01,
     justifyContent: 'flex-end',
     overflow: 'hidden',
     width: '95%',
@@ -28,6 +28,7 @@ const useStyles = makeStyle(theme => ({
   },
   profileGroup: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
   },
   profileText: {
     color: theme.colors.white,

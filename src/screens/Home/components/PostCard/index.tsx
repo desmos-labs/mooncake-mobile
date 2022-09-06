@@ -1,10 +1,8 @@
+import {defaultProfilePic, followedButton, followIcon} from 'assets/images';
+import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import Typography from 'components/Typography';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import Typography from 'components/Typography';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import Spacer from 'components/Spacer';
-import {blogDetails, followedButton, followIcon} from 'assets/images';
-import {useTheme} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import useStyles from './useStyles';
 
@@ -50,7 +48,6 @@ const PostCard = ({
   followed,
 }: Props) => {
   const styles = useStyles();
-  const theme = useTheme();
 
   const {
     author: {dtag, nickname, profile_pic},
@@ -59,9 +56,19 @@ const PostCard = ({
 
   const Avatar = React.useMemo(() => {
     if (profile_pic) {
-      return <ProfileHeaderButton imageSrc={{uri: profile_pic}} />;
+      return (
+        <ProfileHeaderButton
+          imageSrc={{uri: profile_pic}}
+          style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
+        />
+      );
     }
-    return <View style={styles.blankAvatar} />;
+    return (
+      <ProfileHeaderButton
+        imageSrc={defaultProfilePic}
+        style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
+      />
+    );
   }, [profile_pic]);
 
   const AttachmentImage = React.useMemo(() => {
@@ -172,13 +179,6 @@ const PostCard = ({
                 imageSrc={followIcon}
                 onPress={onPressFollow}
               />
-
-              <Spacer paddingTop={theme.spacing.m}>
-                <ProfileHeaderButton
-                  imageSrc={blogDetails}
-                  onPress={onPressDetails}
-                />
-              </Spacer>
             </View>
           </View>
         </View>

@@ -7,7 +7,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
-    backgroundColor: theme.colors.desmosOrange01,
+    backgroundColor: theme.colors.butterOrange01,
     justifyContent: 'center',
     overflow: 'hidden',
     padding: theme.spacing.m,

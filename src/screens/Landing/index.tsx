@@ -36,7 +36,7 @@ const Landing = () => {
         <Button
           mode="contained"
           style={{backgroundColor: theme.colors.white}}
-          labelStyle={{color: theme.colors.desmosOrange01}}
+          labelStyle={{color: theme.colors.surfaceBlack}}
           onPress={() => navigate(ROUTES.SIGNUP)}>
           {t('signUp')}
         </Button>

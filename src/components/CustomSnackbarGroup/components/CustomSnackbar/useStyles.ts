@@ -26,8 +26,8 @@ const useStyles = makeStyle(theme => ({
     marginLeft: 'auto',
   },
   success: {
-    backgroundColor: theme.colors.green03,
-    borderColor: theme.colors.green01,
+    backgroundColor: theme.colors.accentGreen01,
+    borderColor: theme.colors.accentGreen02,
   },
   failure: {
     backgroundColor: theme.colors.pink03,

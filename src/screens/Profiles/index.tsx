@@ -1,23 +1,20 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {useLoadProfiles} from '@recoil/profiles';
+import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {getAccounts} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Feather';
-import SettingsProfileBadgeGroup, {
-  RadioValue,
-} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import {useTheme} from 'react-native-paper';
-import {getAccounts} from 'lib/SecureStorage';
-import {defaultProfilePic} from 'assets/images';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import Icon from 'react-native-vector-icons/Feather';
+import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -57,7 +54,7 @@ const Profiles: React.FC<Props> = props => {
             i18nKey="confirmModal:backupSeedphrase"
             components={[
               <Typography.Subtitle2
-                style={{color: theme.colors.desmosOrange01}}
+                style={{color: theme.colors.butterOrange01}}
               />,
             ]}
           />
@@ -88,7 +85,7 @@ const Profiles: React.FC<Props> = props => {
           ? {uri: profile.profile_pic}
           : defaultProfilePic,
         isSelected: activeAddress === profile.address,
-      } as RadioValue;
+      };
     });
   }, [profiles]);
 
@@ -99,14 +96,7 @@ const Profiles: React.FC<Props> = props => {
         <TouchableOpacity
           style={styles.plusButton}
           onPress={() => console.log('press')}>
-          <LinearGradient
-            colors={[
-              'rgba(255, 199, 91, 1)',
-              'rgba(255, 132, 79, 1)',
-              'rgba(255, 132, 79, 1)',
-              'rgba(255, 132, 79, 1)',
-            ]}
-            style={styles.plusButton}>
+          <View style={styles.plusButton}>
             <Icon
               name="plus"
               color="white"
@@ -114,7 +104,7 @@ const Profiles: React.FC<Props> = props => {
               allowFontScaling
               style={styles.plusButtonIcon}
             />
-          </LinearGradient>
+          </View>
         </TouchableOpacity>
       </View>
       <ScrollView

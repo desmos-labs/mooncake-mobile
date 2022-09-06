@@ -16,11 +16,11 @@ const useStyles = makeStyle(theme => ({
     width: 24,
     height: 24,
     resizeMode: 'contain',
-    tintColor: theme.colors.desmosOrange01,
+    tintColor: theme.colors.butterYellow01,
   },
   countText: {
     marginTop: theme.spacing.xs,
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterYellow01,
   },
 }));
 

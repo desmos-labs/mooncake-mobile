@@ -1,9 +1,9 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   commentIcon,
-  createPost,
   defaultProfilePic,
   optionsIcon,
+  plusWhiteIcon,
   tipIcon,
 } from 'assets/images';
 import DView from 'components/DView';
@@ -13,6 +13,7 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
@@ -21,7 +22,6 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import {useTranslation} from 'react-i18next';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -83,6 +83,7 @@ const Home = () => {
     <DView style={styles.container}>
       <View style={styles.headerGroup}>
         <ProfileHeaderButton
+          style={styles.profileButton}
           imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
           onPress={handlePressProfile}
         />
@@ -96,8 +97,9 @@ const Home = () => {
         </View>
 
         <ProfileHeaderButton
-          style={styles.createPostButton}
-          imageSrc={createPost}
+          containerStyle={styles.createPostButton}
+          style={styles.icon}
+          imageSrc={plusWhiteIcon}
           onPress={() => {
             console.log('create post');
           }}
