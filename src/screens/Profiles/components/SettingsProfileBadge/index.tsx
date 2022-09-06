@@ -8,6 +8,7 @@ import {
   PanGestureHandlerGestureEvent,
   PanGestureHandlerProps,
 } from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
@@ -56,6 +57,7 @@ const SettingsProfileBadge = (props: Props) => {
     simultaneousHandlers,
   } = props;
   const styles = useStyles();
+  const theme = useTheme();
   const {t} = useTranslation('settings');
   const translateX = useSharedValue(0);
   const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -107,9 +109,10 @@ const SettingsProfileBadge = (props: Props) => {
           name="edit"
           size={26}
           style={{alignSelf: 'center'}}
-          color="#007FFF"
+          color={theme.colors.accentBlue01}
         />
-        <Typography.Subtitle4 style={{color: '#007FFF', textAlign: 'center'}}>
+        <Typography.Subtitle4
+          style={{color: theme.colors.accentBlue01, textAlign: 'center'}}>
           {t('edit')}
         </Typography.Subtitle4>
       </TouchableOpacity>
@@ -120,9 +123,10 @@ const SettingsProfileBadge = (props: Props) => {
           name="trash-2"
           size={26}
           style={{alignSelf: 'center'}}
-          color="#FD565F"
+          color={theme.colors.pink01}
         />
-        <Typography.Subtitle4 style={{color: '#FD565F', textAlign: 'center'}}>
+        <Typography.Subtitle4
+          style={{color: theme.colors.pink01, textAlign: 'center'}}>
           {t('remove')}
         </Typography.Subtitle4>
       </TouchableOpacity>
@@ -150,8 +154,8 @@ const SettingsProfileBadge = (props: Props) => {
                 buttonSize={12}
                 // @ts-ignore
                 borderWidth={2}
-                buttonInnerColor="#F3725A"
-                buttonOuterColor="#F3725A"
+                buttonInnerColor={theme.colors.butterOrange01}
+                buttonOuterColor={theme.colors.butterOrange01}
               />
             </View>
           </DropShadowWrapper>

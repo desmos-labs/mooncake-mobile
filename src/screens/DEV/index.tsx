@@ -1,13 +1,12 @@
+import {useNavigation} from '@react-navigation/native';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import {clearMMKV} from 'lib/MMKVStorage';
+import {resetSecureStorage} from 'lib/SecureStorage';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
-import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
-import Spacer from 'components/Spacer';
-import DView from 'components/DView';
-import Button from 'components/Button';
-import {clearMMKV} from 'lib/MMKVStorage';
-import _ from 'lodash';
-import {resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -40,10 +39,10 @@ const routesToRender = [
 const DevScreen = () => {
   const {navigate} = useNavigation<any>();
 
-  const a = [1, 2];
+  /*  const a = [1, 2];
   const b = [1, 2, 3];
 
-  console.log(_.includes(b, a));
+  console.log(_.includes(b, a)); */
 
   const renderItem = ({item}: any) => {
     return (
@@ -85,13 +84,13 @@ const DevScreen = () => {
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
 
-      <Button mode="gradientFilled" onPress={() => navigate(ROUTES.LANDING)}>
+      <Button mode="contained" onPress={() => navigate(ROUTES.LANDING)}>
         Continue to Landing screen
       </Button>
 
       <Spacer paddingVertical={16} />
       <Button
-        mode="gradientFilled"
+        mode="contained"
         onPress={() => {
           Alert.alert(
             'Are you sure?',
@@ -113,7 +112,7 @@ const DevScreen = () => {
       </Button>
 
       <Button
-        mode="gradientFilled"
+        mode="contained"
         onPress={() => {
           Alert.alert('Are you sure?', 'This will delete all values in MMKV', [
             {

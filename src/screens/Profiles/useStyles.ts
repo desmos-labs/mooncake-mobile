@@ -29,6 +29,7 @@ const useStyles = makeStyle(theme => ({
     height: 46,
     borderRadius: 23,
     justifyContent: 'center',
+    backgroundColor: theme.colors.butterOrange01,
   },
   plusButtonIcon: {
     alignSelf: 'center',

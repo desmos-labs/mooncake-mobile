@@ -3,7 +3,9 @@ import {Props} from 'components/MaterialButton/index';
 import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => {
-  const accent = props.accent ? theme.colors.accent : theme.colors.primary;
+  const accent = props.accent
+    ? theme.colors.accent
+    : theme.colors.butterOrange01;
   const color = props.color ? props.color : accent;
   return {
     labelStyle: {

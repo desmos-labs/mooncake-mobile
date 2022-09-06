@@ -100,6 +100,12 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     [],
   );
 
+  const navigateToProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE, {
+      visitingProfileAddress: post?.author.address,
+    });
+  }, []);
+
   const handlePressSendTips = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
@@ -131,6 +137,7 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     handleExpandComment,
     handlePressSendTips,
     handlePressCounters,
+    navigateToProfile,
   };
 };
 

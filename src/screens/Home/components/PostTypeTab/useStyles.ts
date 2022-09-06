@@ -47,7 +47,7 @@ const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
     height: 4,
     alignSelf: 'center',
     borderRadius: 4,
-    backgroundColor: '#FF844F',
+    backgroundColor: theme.colors.butterOrange01,
   },
 }));
 

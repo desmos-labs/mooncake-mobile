@@ -169,7 +169,7 @@ const MaterialButton: React.FC<Props> = props => {
         ]}>
         <LinearGradient
           style={[styles.maskedView, styles.linearGradient]}
-          colors={theme.colors.dOrangeGradient01}
+          colors={theme.colors.butterYellowGradient}
         />
         <Button
           icon={icon}

@@ -6,6 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
+  ViewStyle,
 } from 'react-native';
 
 type Props = {
@@ -20,14 +21,24 @@ type Props = {
   onPress?: () => void;
 
   /**
+   * Override container style
+   */
+  containerStyle?: StyleProp<ViewStyle>;
+
+  /**
    * Override image style
    */
   style?: StyleProp<ImageStyle>;
 };
 
-const ProfileHeaderButton = ({imageSrc, onPress, style}: Props) => {
+const ProfileHeaderButton = ({
+  imageSrc,
+  onPress,
+  style,
+  containerStyle,
+}: Props) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity style={containerStyle} onPress={onPress}>
       <Image source={imageSrc} style={style || styles.defaultStyle} />
     </TouchableOpacity>
   );

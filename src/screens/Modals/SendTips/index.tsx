@@ -5,6 +5,8 @@ import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {formatNumShorthand} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
@@ -17,11 +19,12 @@ import useStyles from './useStyles';
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
+  const {activeAddress} = useActiveAccount();
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
   const {refetch, loading, data} = useQuery(getAccountBalance, {
-    variables: {address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n'},
+    variables: {address: activeAddress},
   });
   const styles = useStyles();
   const theme = useTheme();
@@ -71,16 +74,14 @@ const SendTips = () => {
         <View style={styles.buttonGroup}>
           <Button
             disabled={!editable}
-            mode={tipAmount === '1' ? 'gradientFilled' : 'outlined'}
+            mode={tipAmount === '1' ? 'contained' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
             onPress={() => handlePressSetTip('1')}>
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '1'
-                    ? theme.colors.white
-                    : theme.colors.desmosOrange01,
+                  tipAmount === '1' ? theme.colors.white : theme.colors.black,
                 textTransform: 'uppercase',
               }}>
               1 DSM
@@ -88,16 +89,14 @@ const SendTips = () => {
           </Button>
           <Button
             disabled={!editable}
-            mode={tipAmount === '5' ? 'gradientFilled' : 'outlined'}
+            mode={tipAmount === '5' ? 'contained' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
             onPress={() => handlePressSetTip('5')}>
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '5'
-                    ? theme.colors.white
-                    : theme.colors.desmosOrange01,
+                  tipAmount === '5' ? theme.colors.white : theme.colors.black,
                 textTransform: 'uppercase',
               }}>
               5 DSM
@@ -105,16 +104,14 @@ const SendTips = () => {
           </Button>
           <Button
             disabled={!editable}
-            mode={tipAmount === '10' ? 'gradientFilled' : 'outlined'}
+            mode={tipAmount === '10' ? 'contained' : 'outlined'}
             style={styles.tipButton}
             contentStyle={styles.tipButtonContent}
             onPress={() => handlePressSetTip('10')}>
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '10'
-                    ? theme.colors.white
-                    : theme.colors.desmosOrange01,
+                  tipAmount === '10' ? theme.colors.white : theme.colors.black,
                 textTransform: 'uppercase',
               }}>
               10 DSM
@@ -139,13 +136,14 @@ const SendTips = () => {
           <ActivityIndicator
             style={{left: 0, marginRight: 'auto'}}
             size="small"
-            color={theme.colors.desmosOrange01}
+            color={theme.colors.butterOrange01}
           />
         ) : (
           <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
             {/* we will need to format accordingly this number */}
-            {t('available')} {data.action_account_balance.coins[0].amount}{' '}
-            {data.action_account_balance.coins[0].denom}
+            {t('available')}{' '}
+            {formatNumShorthand(data.action_account_balance.coins[0].amount)}{' '}
+            {data.action_account_balance.coins[0].denom.toUpperCase()}
           </Typography.Body7>
         )}
 
@@ -163,7 +161,8 @@ const SendTips = () => {
         />
         <Spacer paddingVertical={40}>
           <Button
-            mode="gradientFilled"
+            mode="contained"
+            color={theme.colors.surfaceBlack}
             onPress={handlePressConfirm}
             disabled={tipAmount === ''}>
             {t('common:confirm')}

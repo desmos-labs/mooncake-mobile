@@ -4,6 +4,7 @@ import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -44,7 +45,7 @@ const Settings: React.FC<Props> = props => {
             i18nKey="confirmModal:backupSeedphrase"
             components={[
               <Typography.Subtitle2
-                style={{color: theme.colors.desmosOrange01}}
+                style={{color: theme.colors.butterOrange01}}
               />,
             ]}
           />
@@ -132,13 +133,12 @@ const Settings: React.FC<Props> = props => {
           onPress={() => console.log('about')}
         />
       </Section>
-
+      <Spacer paddingVertical={12} />
       <Button
-        mode="gradient"
+        mode="outlined"
         style={styles.signOutButton}
-        containerStyle={styles.buttonContainer}
         onPress={navigateToConfirmModal}>
-        {t('signOut')}
+        <Typography.Button1>{t('signOut')}</Typography.Button1>
       </Button>
 
       <Typography.Body7 style={styles.bottomText}>

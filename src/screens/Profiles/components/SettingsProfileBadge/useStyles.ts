@@ -39,7 +39,7 @@ const useStyles = makeStyle(theme => ({
     width: 78,
     paddingVertical: 20,
     position: 'absolute',
-    backgroundColor: theme.colors.desmosBlue06,
+    backgroundColor: 'rgba(0, 127, 255, 0.05)',
   },
 
   secondBox: {
@@ -48,7 +48,7 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: 20,
     width: 78,
     position: 'absolute',
-    backgroundColor: '#FDEBE7',
+    backgroundColor: theme.colors.pink03,
   },
 }));
 

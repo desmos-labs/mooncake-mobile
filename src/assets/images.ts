@@ -70,6 +70,8 @@ export const defaultBanner = require('./images/defaultBanner.png');
 
 export const homeButton = require('./images/homeButton.png');
 
+export const plusWhiteIcon = require('./images/plusWhite.png');
+
 export const settingsButton = require('./images/settingsButton.png');
 
 export const notificationsButton = require('./images/notificationsButton.png');
