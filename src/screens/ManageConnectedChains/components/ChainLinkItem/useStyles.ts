@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.grey01,
   },
   disconnectText: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   container: {
     flexDirection: 'row',

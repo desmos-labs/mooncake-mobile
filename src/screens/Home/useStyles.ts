@@ -27,9 +27,24 @@ const useStyles = makeStyle(theme => ({
   carousel: {
     alignItems: 'center',
   },
+  profileButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    resizeMode: 'contain',
+  },
   createPostButton: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    resizeMode: 'contain',
+    backgroundColor: theme.colors.butterOrange01,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 26,
+    height: 26,
     resizeMode: 'contain',
   },
 }));

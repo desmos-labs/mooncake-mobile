@@ -11,6 +11,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    backgroundColor: theme.colors.butterOrange01,
   },
   icon: {
     width: 24,

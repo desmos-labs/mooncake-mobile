@@ -1679,7 +1679,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                         },
                       ],
                       Object {
-                        "color": "#F3725A",
+                        "color": "#FEB027",
                       },
                     ]
                   }
