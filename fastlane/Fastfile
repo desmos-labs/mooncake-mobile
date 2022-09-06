@@ -58,7 +58,7 @@ platform :android do
   lane :prepare_keystore do
     # Expand keystore from enviroment variable
     sh(
-      command: "rm -rf /tmp/keystore.jks && echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> /tmp/keystore.jks",
+      command: "#{ENV["SCRIPT_PREFIX"]} rm -rf /tmp/keystore.jks && echo #{ENV["ANDROID_SIGNING_KEY_BASE64"]} | base64 --decode >> /tmp/keystore.jks",
     )
     # Check keystore integrity
     sh(
@@ -72,7 +72,7 @@ platform :android do
 
   lane :prepare_playstore_key do
     sh(
-      command: "sudo rm -f /tmp/playstore-key.json && printf '#{ENV["PLAYSTORE_JSON_KEY"]}' | base64 --decode >> /tmp/playstore-key.json",
+      command: "#{ENV["SCRIPT_PREFIX"]} rm -f /tmp/playstore-key.json && printf '#{ENV["PLAYSTORE_JSON_KEY_BASE64"]}' | base64 --decode >> /tmp/playstore-key.json",
       log: false
     )
 
@@ -85,7 +85,7 @@ platform :android do
     # Prepares keystore to sign the application in /tmp/keystore.jks
     prepare_keystore
 
-#     gradle(task: 'clean', project_dir: "android/")
+    gradle(task: 'clean', project_dir: "android/")
 
     gradle(
       task: "assemble",
