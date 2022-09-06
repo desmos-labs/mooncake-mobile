@@ -4,9 +4,7 @@ import {useGetPosts} from '@recoil/posts';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Dimensions} from 'react-native';
-import {NavProps, POST_TYPE} from 'screens/Home/index';
+import {NavProps} from 'screens/Home/index';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useLogin from 'services/axios/requests/Login/useLogin';
@@ -16,10 +14,8 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {t} = useTranslation('home');
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
-  const maxOffset = React.useRef<number>(0);
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
@@ -54,13 +50,6 @@ const useHooks = () => {
     });
   }, []);
 
-  // recalculate max carousel offset. This value is used to determine if the
-  // carousel has been overscrolled
-  React.useEffect(() => {
-    maxOffset.current =
-      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
-  }, [posts.length]);
-
   // fetch new posts before the user reaches the last post so they
   // will be enslaved by the app forever
   const onPostChanged = React.useCallback(
@@ -72,10 +61,6 @@ const useHooks = () => {
     },
     [posts.length],
   );
-
-  const postTypes = React.useMemo(() => {
-    return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
-  }, []);
 
   const handlePressAuthor = useCallback(
     (address: string) => {
@@ -137,20 +122,6 @@ const useHooks = () => {
     [],
   );
 
-  const onCarouselProgressChange = React.useCallback(
-    (_temp: number, __: number, value: number) => {
-      const offsetValue = value;
-      // console.log(offsetValue, maxOffset.current);
-      if (offsetValue > 0) {
-        // do overscroll right things
-      }
-      if (offsetValue < maxOffset.current) {
-        // do overscroll left things
-      }
-    },
-    [maxOffset.current],
-  );
-
   const handlePressReactions = React.useCallback(() => {
     console.log('like');
   }, []);
@@ -181,8 +152,6 @@ const useHooks = () => {
     handlePressReactions,
     selectedIndex,
     setSelectedIndex,
-    postTypes,
-    onCarouselProgressChange,
     onPostChanged,
     postData,
   };

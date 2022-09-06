@@ -21,6 +21,7 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
+import {useTranslation} from 'react-i18next';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -37,6 +38,7 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 
 const Home = () => {
   const styles = useStyles();
+  const {t} = useTranslation('home');
 
   const {
     handlePressDetails,
@@ -48,13 +50,13 @@ const Home = () => {
     handlePressComments,
     selectedIndex,
     setSelectedIndex,
-    postTypes,
-    onCarouselProgressChange,
     onPostChanged,
     postData,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
+
+  const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -103,7 +105,6 @@ const Home = () => {
       </View>
 
       <Carousel
-        onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}
