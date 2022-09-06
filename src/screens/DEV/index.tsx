@@ -33,6 +33,7 @@ const routesToRender = [
   ROUTES.DISCONNECT_CHAIN_MODAL,
   ROUTES.POST_DETAILS,
   ROUTES.REPORT_POST,
+  ROUTES.FOLLOWING_AND_FOLLOWERS,
 ];
 
 const DevScreen = () => {
@@ -42,7 +43,19 @@ const DevScreen = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigate(item);
+          switch (item) {
+            case ROUTES.FOLLOWING_AND_FOLLOWERS:
+              navigate(item, {
+                initialTabRouteName: ROUTES.FOLLOWING,
+                subspaceID: 5,
+                userAddress: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+                username: '@Raffaello',
+              });
+              break;
+            default:
+              navigate(item);
+              break;
+          }
         }}
         style={{padding: 18, borderWidth: 1, borderColor: 'grey'}}>
         <Text>{item}</Text>

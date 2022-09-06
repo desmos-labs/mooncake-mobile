@@ -108,6 +108,10 @@ enum ROUTES {
 
   POST_TIPS = 'POST_TIPS',
   // Post interaction end
+
+  FOLLOWING_AND_FOLLOWERS = 'FOLLOWING_AND_FOLLOWERS',
+  FOLLOWING = 'FOLLOWING',
+  FOLLOWERS = 'FOLLOWERS',
 }
 
 export default ROUTES;
