@@ -1,48 +1,10 @@
 import {StdFee} from '@cosmjs/amino';
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {isBroadcastTxFailure} from '@cosmjs/stargate';
+import {isDeliverTxFailure} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
-import {Coin} from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import {SignMode} from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
-import {AuthInfo, SignerInfo, TxRaw} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-import {Any} from 'cosmjs-types/google/protobuf/any';
-import Long from 'long';
+import {TxRaw} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {useCallback} from 'react';
 import EnvConfig from 'config/EnvConfig';
-
-function makeSignerInfo(
-  signer: {readonly pubkey: Any; readonly sequence: number},
-  signMode: SignMode,
-): SignerInfo {
-  return SignerInfo.fromPartial({
-    publicKey: signer.pubkey,
-    modeInfo: {
-      single: {
-        mode: signMode,
-      },
-    },
-    sequence: Long.fromNumber(signer.sequence),
-  });
-}
-
-export function makeAuthInfoBytes(
-  signer: {readonly pubkey: Any; readonly sequence: number},
-  feeAmount: readonly Coin[],
-  gasLimit: number,
-  signMode: SignMode,
-  granter?: string,
-): Uint8Array {
-  return AuthInfo.encode(
-    AuthInfo.fromPartial({
-      signerInfos: [makeSignerInfo(signer, signMode)],
-      fee: {
-        amount: [...feeAmount],
-        gasLimit: Long.fromNumber(gasLimit),
-        granter,
-      },
-    }),
-  ).finish();
-}
 
 /**
  * Hook that returns a function that create a transaction with the provided
@@ -80,9 +42,11 @@ export default function useBroadcastMessages() {
         TxRaw.encode(signed.txRaw).finish(),
       );
 
-      if (isBroadcastTxFailure(broadcastResult)) {
+      if (isDeliverTxFailure(broadcastResult)) {
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }
+
+      return true;
     },
     [],
   );

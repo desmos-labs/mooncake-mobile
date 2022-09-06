@@ -1,7 +1,7 @@
 import {StdFee} from '@cosmjs/amino';
 import {EncodeObject} from '@cosmjs/proto-signing';
 import {calculateFee} from '@cosmjs/stargate';
-import MsgTypes from './msgtypes';
+import {GenericMsgEnums} from './msgtypes';
 
 /**
  * Interface that represents the various level
@@ -66,13 +66,13 @@ export function messagesGas(msg: EncodeObject[]): number {
 
   msg.forEach(m => {
     switch (m.typeUrl) {
-      case MsgTypes.MsgLinkChainAccount:
-      case MsgTypes.MsgUnlinkChainAccount:
-      case MsgTypes.MsgSaveProfile:
+      case GenericMsgEnums.MsgLinkChainAccount:
+      case GenericMsgEnums.MsgUnlinkChainAccount:
+      case GenericMsgEnums.MsgSaveProfile:
         gas += 200000;
         break;
 
-      case MsgTypes.MsgSend:
+      case GenericMsgEnums.MsgSend:
         gas += 140000;
         break;
 
@@ -84,3 +84,24 @@ export function messagesGas(msg: EncodeObject[]): number {
 
   return gas;
 }
+
+/**
+ * Convenience function that returns an object containing the Gas and txFees
+ */
+export const computeGasAndFees = ({
+  msg,
+  denom,
+}: {
+  msg: EncodeObject[];
+  denom: string;
+}): {
+  gas: number;
+  fee: TxFees;
+} => {
+  const gas = messagesGas(msg);
+
+  return {
+    gas,
+    fee: computeTxFees(gas, denom),
+  };
+};

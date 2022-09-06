@@ -12,6 +12,8 @@ const RefreshSession = async () => {
         _response.data,
       )}`,
     );
+  } else {
+    console.log('session refreshed');
   }
 };
 

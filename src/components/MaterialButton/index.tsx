@@ -1,5 +1,8 @@
-import React, {ReactNode} from 'react';
+import MaskedView from '@react-native-masked-view/masked-view';
+import React, {ElementType, ReactNode} from 'react';
 import {
+  Pressable,
+  PressableStateCallbackType,
   StyleProp,
   Text,
   TextStyle,
@@ -7,10 +10,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {Button, useTheme} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
-import MaskedView from '@react-native-masked-view/masked-view';
-import LinearGradient from 'react-native-linear-gradient';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -19,8 +21,17 @@ export type Props = {
    * - `text` - flat button without background or outline (low emphasis)
    * - `outlined` - button with an outline (medium emphasis)
    * - `contained` - button with a background color and elevation shadow (high emphasis)
+   * - `gradient` - button with a gradient filled background color
+   * - `gradientFilled` - button with a gradient filled background color
+   * - `backgroundComponent` - button with a react component filled as background
    */
-  mode?: 'text' | 'outlined' | 'contained' | 'gradient' | 'gradientFilled';
+  mode?:
+    | 'text'
+    | 'outlined'
+    | 'contained'
+    | 'gradient'
+    | 'gradientFilled'
+    | 'backgroundComponent';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -59,6 +70,12 @@ export type Props = {
    * Modify the container wrapping the gradient button. Has no effect for other modes.
    */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * [mode: backgroundComponent]
+   * Use this component to fill the button background.
+   * Has no effect for other modes.
+   */
+  BackgroundComponent?: ElementType;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
@@ -76,6 +93,7 @@ const MaterialButton: React.FC<Props> = props => {
     contentStyle,
     style,
     containerStyle,
+    BackgroundComponent,
     children,
   } = props;
   const theme = useTheme();
@@ -169,6 +187,24 @@ const MaterialButton: React.FC<Props> = props => {
     );
   }
 
+  if (mode === 'backgroundComponent') {
+    // TouchableOpacity in FlatList causing 'Excessive number of pending callbacks: 501. Some pending callbacks that might have leaked by never being called from native code:' ...startAnimatingNode...{}
+    return (
+      <Pressable onPress={onPress} style={pressableFeekback}>
+        <View style={[styles.backgroundComponentButton, style]}>
+          {!!BackgroundComponent && (
+            <BackgroundComponent
+              style={styles.backgroundComponent}
+              width={styles.backgroundComponent.width}
+              height={styles.backgroundComponent.height}
+            />
+          )}
+          {children}
+        </View>
+      </Pressable>
+    );
+  }
+
   return (
     <Button
       icon={icon}
@@ -184,5 +220,12 @@ const MaterialButton: React.FC<Props> = props => {
     </Button>
   );
 };
+
+function pressableFeekback({
+  pressed,
+}: PressableStateCallbackType): StyleProp<ViewStyle> {
+  if (!pressed) return {};
+  return {opacity: 0.75, transform: [{scale: 1.05}]};
+}
 
 export default MaterialButton;

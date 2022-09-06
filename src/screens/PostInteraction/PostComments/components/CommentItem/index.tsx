@@ -46,12 +46,7 @@ type Props = {
 
   subspace_id: number;
 
-  author: {
-    address: string;
-    dtag: string;
-    nickname: string;
-    profile_pic: string;
-  };
+  author: ProfileSummary;
 
   // not final
   reactions: {}[];
@@ -209,7 +204,7 @@ const CommentItem = ({
               />
               <Typography.Subtitle3
                 style={liked ? styles.likedStyle : styles.textStyle}>
-                {formatNumShorthand(reactions.length)}
+                {reactions ? formatNumShorthand(reactions.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
 

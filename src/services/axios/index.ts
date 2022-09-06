@@ -16,10 +16,19 @@ export const initializeAxiosInstance = async () => {
 
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
+  axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+      console.warn(`[AXIOS]: ${error}`);
+      return error;
+    },
+  );
   // Don't do anything if bearerToken is not found
   if (!bearerToken) return;
 
-  axiosInstance.defaults.headers.common.Authorization = `bearer ${bearerToken}`;
+  axiosInstance.defaults.headers.common = {
+    Authorization: `Bearer ${bearerToken}`,
+  };
 
   await RefreshSession();
 };
@@ -30,7 +39,9 @@ export const initializeAxiosInstance = async () => {
 export const updateAuthToken = (newToken: string) => {
   setMMKV(MMKVKEYS.REST_AUTH_TOKEN, newToken);
 
-  axiosInstance.defaults.headers.common.Authorization = `bearer ${newToken}`;
+  axiosInstance.defaults.headers.common = {
+    Authorization: `Bearer ${newToken}`,
+  };
 };
 
 export default axiosInstance;

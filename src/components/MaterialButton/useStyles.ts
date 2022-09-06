@@ -68,6 +68,16 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
     gradientFilledGradient: {
       paddingVertical: 14,
     },
+    backgroundComponent: {
+      position: 'absolute',
+      zIndex: -1,
+      width: '100%',
+      height: '100%',
+    },
+    backgroundComponentButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   };
 });
 

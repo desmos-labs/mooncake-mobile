@@ -1,19 +1,23 @@
+import {errorImage} from 'assets/images';
+import Button from 'components/Button';
+import Typography from 'components/Typography';
+import {makeStyle} from 'config/theme';
 import React from 'react';
 import {Image, View} from 'react-native';
-import {errorImage} from 'assets/images';
-import {makeStyle} from 'config/theme';
-import Typography from 'components/Typography';
-import Button from 'components/Button';
 
 type Props = {
   label: string;
-
+  additionalButton?: boolean;
   buttonLabel?: string;
-
-  handleButtonPress?: () => void;
+  handleButton?: () => void;
 };
 
-const EmptyListComponent = ({handleButtonPress, label, buttonLabel}: Props) => {
+const EmptyListComponent = ({
+  label,
+  additionalButton,
+  buttonLabel,
+  handleButton,
+}: Props) => {
   const styles = useStyles();
 
   return (
@@ -22,13 +26,14 @@ const EmptyListComponent = ({handleButtonPress, label, buttonLabel}: Props) => {
         <Image source={errorImage} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
-
-      {handleButtonPress && buttonLabel && (
+      {additionalButton && (
         <Button
-          containerStyle={styles.buttonStyle}
-          mode="gradientFilled"
-          onPress={handleButtonPress}>
-          {buttonLabel}
+          style={styles.additionalButton}
+          mode="contained"
+          onPress={handleButton}>
+          <Typography.Button3 style={styles.buttonText}>
+            {buttonLabel}
+          </Typography.Button3>
         </Button>
       )}
     </View>
@@ -37,6 +42,7 @@ const EmptyListComponent = ({handleButtonPress, label, buttonLabel}: Props) => {
 
 const useStyles = makeStyle(theme => ({
   container: {
+    paddingVertical: theme.spacing.m,
     flex: 1,
     justifyContent: 'center',
   },
@@ -47,6 +53,10 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.surfaceBlack,
     textAlign: 'center',
   },
+  buttonText: {
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
   imageStyle: {
     width: 230,
     height: 116,
@@ -54,6 +64,10 @@ const useStyles = makeStyle(theme => ({
   },
   buttonStyle: {
     marginTop: theme.spacing.l,
+  },
+  additionalButton: {
+    marginTop: theme.spacing.xl,
+    marginHorizontal: 80,
   },
 }));
 

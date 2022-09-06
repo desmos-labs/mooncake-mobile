@@ -1,8 +1,8 @@
 import {gql} from '@apollo/client';
 
-const GetProfileForAddress =
-  gql(`query GetProfileForAddress($address: String) @api(name: desmos) {
-  profile(where: {address: {_eq: $address}}) {
+const GetProfileForAddress = gql`
+  query GetProfileForAddress($address: String) @api(name: desmos) {
+    profile(where: {address: {_eq: $address}}) {
       address
       bio
       dtag
@@ -18,8 +18,8 @@ const GetProfileForAddress =
         counterparty_address
         subspace_id
       }
-}
-}
-`);
+    }
+  }
+`;
 
 export default GetProfileForAddress;

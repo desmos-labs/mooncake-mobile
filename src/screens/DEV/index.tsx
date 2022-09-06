@@ -6,6 +6,7 @@ import Spacer from 'components/Spacer';
 import DView from 'components/DView';
 import Button from 'components/Button';
 import {clearMMKV} from 'lib/MMKVStorage';
+import _ from 'lodash';
 import {resetSecureStorage} from 'lib/SecureStorage';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -33,16 +34,34 @@ const routesToRender = [
   ROUTES.DISCONNECT_CHAIN_MODAL,
   ROUTES.POST_DETAILS,
   ROUTES.REPORT_POST,
+  ROUTES.FOLLOWING_AND_FOLLOWERS,
 ];
 
 const DevScreen = () => {
   const {navigate} = useNavigation<any>();
 
+  const a = [1, 2];
+  const b = [1, 2, 3];
+
+  console.log(_.includes(b, a));
+
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigate(item);
+          switch (item) {
+            case ROUTES.FOLLOWING_AND_FOLLOWERS:
+              navigate(item, {
+                initialTabRouteName: ROUTES.FOLLOWING,
+                subspaceID: 5,
+                userAddress: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+                username: '@Raffaello',
+              });
+              break;
+            default:
+              navigate(item);
+              break;
+          }
         }}
         style={{padding: 18, borderWidth: 1, borderColor: 'grey'}}>
         <Text>{item}</Text>

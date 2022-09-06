@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: theme.spacing.l,
     alignItems: 'center',
   },
   textStyle: {

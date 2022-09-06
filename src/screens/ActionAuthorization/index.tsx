@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from 'components/Typography';
-import {View, TouchableOpacity, Image} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {Trans, useTranslation} from 'react-i18next';
@@ -10,12 +10,13 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
-  authType: APP_AUTHORIZATIONS;
+  grants: GrantEnums[];
 
   onCancel?: () => void;
 
@@ -36,9 +37,28 @@ const ActionAuthorization = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  const {addOrUpdateGrants} = useAddOrUpdateGrants();
+
   const {
-    params: {authType, onCancel, onApprove},
+    params: {grants, onCancel, onApprove},
   } = useRoute<NavProps['route']>();
+
+  const grantMessage = React.useMemo(() => {
+    return grants
+      .map(x => {
+        switch (x) {
+          case GrantEnums.MsgCreateReport:
+            return t('report');
+          case GrantEnums.MsgCreateRelationship:
+            return t('follow');
+          case GrantEnums.MsgDeleteRelationship:
+            return t('unfollow');
+          default:
+            return 'unmapped';
+        }
+      })
+      .join(', ');
+  }, [grants]);
 
   const handleCancel = React.useCallback(() => {
     // do cancel things here
@@ -47,28 +67,14 @@ const ActionAuthorization = () => {
     onCancel && onCancel();
   }, [onCancel]);
 
-  const handleApprove = React.useCallback(() => {
-    // do approve things here
+  const handleApprove = React.useCallback(async () => {
+    await addOrUpdateGrants({grantsToRequest: grants});
+
     goBack();
 
     // run onApprove last
     onApprove && onApprove();
-  }, [onApprove, authType]);
-
-  const actionString = React.useMemo(() => {
-    switch (authType) {
-      case APP_AUTHORIZATIONS.BLOCK_UNBLOCK:
-        return t('blockUnblock');
-      case APP_AUTHORIZATIONS.TIP:
-        return t('tip');
-      case APP_AUTHORIZATIONS.LIKE:
-        return t('like');
-      case APP_AUTHORIZATIONS.REPORT:
-        return t('report');
-      case APP_AUTHORIZATIONS.FOLLOW_UNFOLLOW:
-        return t('followUnfollow');
-    }
-  }, [authType]);
+  }, [onApprove, grants, addOrUpdateGrants]);
 
   return (
     <View style={styles.container}>
@@ -89,7 +95,7 @@ const ActionAuthorization = () => {
             <Trans
               i18nKey="authorization:authorizeToAction"
               values={{
-                action: actionString,
+                action: grantMessage,
               }}
             />
           </Typography.Body5>
@@ -101,7 +107,7 @@ const ActionAuthorization = () => {
           </Button>
 
           <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-            <Button mode="outlined" onPress={goBack}>
+            <Button mode="outlined" onPress={handleCancel}>
               {t('common:refuse')}
             </Button>
           </Spacer>

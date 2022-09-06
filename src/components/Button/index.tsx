@@ -15,7 +15,9 @@ const Button: React.FC<Props> = ({onPress, ...rest}: Props) => {
     return rest.mode === 'text' ? (
       <MaterialButton onPress={onPress} {...rest} />
     ) : (
-      <TouchableOpacity disabled={rest.disabled} onPress={onPress}>
+      <TouchableOpacity
+        disabled={rest.disabled || rest.loading}
+        onPress={onPress}>
         <MaterialButton {...rest} />
       </TouchableOpacity>
     );

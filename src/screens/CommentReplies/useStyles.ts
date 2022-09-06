@@ -22,10 +22,9 @@ const useStyles = makeStyle(theme => ({
   },
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {
-    borderColor: theme.colors.desmosBlue07,
-    borderWidth: 3,
-    marginHorizontal: -20,
-    marginVertical: theme.spacing.l,
+    borderColor: theme.colors.surfaceGrey,
+    borderWidth: 1,
+    marginHorizontal: -30,
   },
 }));
 

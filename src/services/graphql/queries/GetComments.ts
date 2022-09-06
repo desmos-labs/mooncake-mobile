@@ -3,20 +3,13 @@ import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
 export const GetPostComments = gql`
   ${POST_FIELDS}
-  query PostComments(
-    $postID: bigint
-    $subspaceID: bigint
-    $limit: Int
-    $offset: Int
-  ) @api(name: desmos) {
+  query PostComments($postID: bigint, $subspaceID: bigint) @api(name: desmos) {
     post(
       where: {
         subspace_id: {_eq: $subspaceID}
         conversation: {id: {_eq: $postID}}
         references: {type: {_eq: "POST_REFERENCE_TYPE_QUOTE"}}
       }
-      limit: $limit
-      offset: $offset
     ) {
       ...PostFields
     }
@@ -24,16 +17,9 @@ export const GetPostComments = gql`
 `;
 
 export const GetCommentReplies = gql`
-  query PostComments(
-    $postID: bigint
-    $subspaceID: bigint
-    $limit: Int
-    $offset: Int
-  ) @api(name: desmos) {
+  query PostComments($postID: bigint, $subspaceID: bigint) @api(name: desmos) {
     post_reference(
       where: {reference: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
-      limit: $limit
-      offset: $offset
     ) {
       reference {
         id

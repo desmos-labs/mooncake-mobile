@@ -15,6 +15,9 @@ const useActiveAccount = () => {
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
 
+  // You may be tempted to turn this into a useCallback, but
+  // keeping it in a useEffect allows it to change should the user
+  // change their active account
   React.useEffect(() => {
     const loadChainAccount = async () => {
       const _chainAccounts = await getAccounts();
@@ -22,7 +25,6 @@ const useActiveAccount = () => {
         const _currentChainAccount = _chainAccounts.find(
           x => x.address === activeAddress,
         );
-        console.log(_currentChainAccount);
         setChainAccount(_currentChainAccount);
       }
     };
