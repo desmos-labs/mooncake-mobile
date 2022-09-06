@@ -70,7 +70,7 @@ const Home = () => {
     onCarouselProgressChange,
     onPostChanged,
     postData,
-  } = useHooks();
+  } = useHooks(activeAddress!);
 
   const {profileData} = useActiveAccount();
 
@@ -82,7 +82,7 @@ const Home = () => {
       return (
         <PostCard
           postData={info.item}
-          onPressAuthor={() => handlePressAuthor('')}
+          onPressAuthor={() => handlePressAuthor(info.item.author_address)}
           onPressDetails={() =>
             handlePressDetails(info.item.id, info.item.subspace_id)
           }
