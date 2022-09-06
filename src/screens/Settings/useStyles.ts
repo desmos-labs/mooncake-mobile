@@ -12,6 +12,7 @@ const useStyles = makeStyle(theme => ({
     marginBottom: 24,
   },
   signOutButton: {
+    borderColor: theme.colors.surfaceBlack,
     borderRadius: theme.roundness,
     padding: 1,
   },

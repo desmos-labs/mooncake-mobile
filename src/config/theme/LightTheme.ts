@@ -64,17 +64,17 @@ const LightTheme: ReactNativePaper.Theme = {
     dividerGrey: '#EFEFEF',
 
     accentRed01: '#FD565F',
-    accentRed02: '#6061E4',
+    accentRed02: '#D2484F',
     accentOrange01: '#FCBB36',
-    accentOrange02: '#B484EA',
+    accentOrange02: '#E4A11E',
     accentYellow01: '#EDD500',
-    accentYellow02: '#B1B1F2',
+    accentYellow02: '#DEC053',
     accentGreen01: '#1EC490',
-    accentGreen02: '#8A75DE',
-    accentLightBlue01: '#FF9C8F',
-    accentLightBlue02: '#4D2FC2',
-    accentBlue01: '#FF8272',
-    accentBlue02: '#362187',
+    accentGreen02: '#059C78',
+    accentLightBlue01: '#2DCBE0',
+    accentLightBlue02: '#30B5C7',
+    accentBlue01: '#007FFF',
+    accentBlue02: '#0767C9',
 
     // Gradients to be checked
     butterOrangeGradient01: [

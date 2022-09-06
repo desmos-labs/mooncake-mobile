@@ -36,7 +36,7 @@ const SectionSwitch: React.FC<Props> = props => {
       </Typography.Button1>
       <Switch
         value={value}
-        trackColor={{true: theme.colors.butterYellow01}}
+        trackColor={{true: theme.colors.butterOrange01}}
         thumbColor="white"
         disabled={disabled}
         onValueChange={onValueChange}
