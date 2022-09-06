@@ -1,4 +1,3 @@
-import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
@@ -7,6 +6,8 @@ import {
   editButton,
   followOrangeFilledIcon,
 } from 'assets/images';
+import Button from 'components/Button';
+import DropShadowWrapper from 'components/DropShadowWrapper';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -18,20 +19,11 @@ import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {scale} from 'react-native-size-matters';
-import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import AddressCopy from './components/AddressCopy';
-import ContentTabs from './components/ContentTab';
-import EmptyPostComponent from './components/EmptyPostComponent';
-import FakeDropShadow from './components/FakeDropShadow';
-import ProfileConnectButton from './components/ProfileConnectButton';
 import ProfileHeader from './components/ProfileHeader';
-import ProfilePostCard from './components/ProfilePostCard';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
 import useStyles from './useStyles';
@@ -44,7 +36,6 @@ export interface UserProfileParams {
 
 const Profile = () => {
   const theme = useTheme();
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const {t} = useTranslation('profile');
   const styles = useStyles();
@@ -59,13 +50,13 @@ const Profile = () => {
   const scrollProgress = useSharedValue(0);
 
   // Calculate the percentage of scroll and set it to shared value
-  const scrollHandler = useAnimatedScrollHandler(event => {
+  /*  const scrollHandler = useAnimatedScrollHandler(event => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  });
+  }); */
   /** Animations end * */
 
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
@@ -99,41 +90,6 @@ const Profile = () => {
 
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
-
-  const tabs = useMemo(
-    () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
-    [t],
-  );
-
-  const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
-    variables: {
-      address:
-        screenMode === 'myProfile'
-          ? activeAddress
-          : params.visitingProfileAddress,
-    },
-  });
-
-  const posts: [] = React.useMemo(() => {
-    if (!postData) return [];
-    return postData.post;
-  }, [postData, postsLoading]);
-
-  const handlePostPressed = React.useCallback(
-    ({
-      subspaceID,
-      authorAddress,
-      id,
-    }: {
-      subspaceID: number;
-      authorAddress: string;
-      id: number;
-    }) => {
-      // Pass these variables into the PostDetails page
-      console.log(subspaceID, authorAddress, id);
-    },
-    [],
-  );
 
   const handlePressConnectAddress = React.useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
@@ -183,13 +139,19 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const ListHeaderComponent = React.useMemo(() => {
-    return (
-      <>
-        {/* top buttons start */}
-        {/* top buttons end */}
+  if (profileLoading) {
+    return <ActivityIndicator />;
+  }
 
-        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+  return (
+    <View style={styles.container}>
+      <Image source={bannerImage} style={styles.bannerImage} />
+
+      <Animated.ScrollView
+        // onScroll={scrollHandler}
+        // Hardcoded value to avoid overlapping with header
+        style={{paddingTop: 100 + top}}
+        contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.avatarContainer}>
           <Image style={styles.avatar} source={profileImage} />
         </View>
@@ -237,11 +199,28 @@ const Profile = () => {
 
             {screenMode === 'myProfile' && (
               <View style={styles.connectButtonGroup}>
-                <ProfileConnectButton
-                  label={t('connectAddress')}
-                  handlePress={handlePressConnectAddress}
-                />
-
+                <Button
+                  mode="outlined"
+                  style={{
+                    height: 48,
+                    width: 170,
+                    justifyContent: 'center',
+                    borderColor: theme.colors.black,
+                  }}
+                  onPress={handlePressConnectAddress}>
+                  <Typography.Button2>{t('connectAddress')}</Typography.Button2>
+                </Button>
+                <Button
+                  mode="outlined"
+                  style={{
+                    height: 48,
+                    width: 170,
+                    justifyContent: 'center',
+                    borderColor: theme.colors.black,
+                  }}
+                  onPress={() => console.log('connectTwitter')}>
+                  <Typography.Button2>{t('connectTwitter')}</Typography.Button2>
+                </Button>
                 {/* hidden on MVP */}
                 {/* <ProfileConnectButton */}
                 {/*  label={t('connectApp')} */}
@@ -251,55 +230,98 @@ const Profile = () => {
             )}
           </View>
         </View>
-
-        <FakeDropShadow />
-        <View style={styles.tabContainer}>
-          <ContentTabs
-            tabs={tabs}
-            selectedIndex={selectedTabIndex}
-            handleTabPressed={setSelectedTabIndex}
-          />
+        <Spacer paddingVertical={12} />
+        <View style={styles.sectionGroup}>
+          <DropShadowWrapper
+            customColor="rgba(133, 133, 133, 0.001)"
+            customDistance={20}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'white',
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderRadius: theme.roundness,
+                padding: theme.spacing.m,
+                minHeight: 80,
+              }}>
+              <View style={{flexDirection: 'column'}}>
+                <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
+                {screenMode === 'myProfile' && (
+                  <Typography.Body6>{t('check posts')}</Typography.Body6>
+                )}
+              </View>
+              <Icon
+                name="angle-right"
+                color={theme.colors.black}
+                size={24}
+                allowFontScaling
+              />
+            </TouchableOpacity>
+          </DropShadowWrapper>
         </View>
-      </>
-    );
-  }, [selectedTabIndex, nickname, dtag]);
-
-  if (profileLoading || postsLoading) {
-    return <ActivityIndicator />;
-  }
-
-  const renderPosts = ({item}: any) => (
-    <ProfilePostCard
-      postData={item}
-      onPress={() =>
-        handlePostPressed({
-          subspaceID: item.subspace_id,
-          authorAddress: item.author_address,
-          id: item.id,
-        })
-      }
-    />
-  );
-
-  return (
-    <View style={styles.container}>
-      <Image source={bannerImage} style={styles.bannerImage} />
-
-      <Animated.FlatList
-        ListHeaderComponent={ListHeaderComponent}
-        onScroll={scrollHandler}
-        // Hardcoded value to avoid overlapping with header
-        style={{paddingTop: 100 + top}}
-        data={posts}
-        renderItem={renderPosts}
-        numColumns={3}
-        columnWrapperStyle={{
-          // slight adjustment so column items appear centered
-          left: scale(20),
-        }}
-        contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={EmptyPostComponent}
-      />
+        <View style={styles.sectionGroup}>
+          <DropShadowWrapper
+            customColor="rgba(133, 133, 133, 0.001)"
+            customDistance={10}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'white',
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderRadius: theme.roundness,
+                padding: theme.spacing.m,
+                minHeight: 80,
+              }}>
+              <View style={{flexDirection: 'column'}}>
+                <Typography.Subtitle2>{t('nft')}</Typography.Subtitle2>
+                {screenMode === 'myProfile' && (
+                  <Typography.Body6>{t('link nft')}</Typography.Body6>
+                )}
+              </View>
+              <Icon
+                name="angle-right"
+                color={theme.colors.black}
+                size={24}
+                allowFontScaling
+              />
+            </TouchableOpacity>
+          </DropShadowWrapper>
+        </View>
+        <View style={styles.sectionGroup}>
+          <DropShadowWrapper
+            customColor="rgba(133, 133, 133, 0.001)"
+            customDistance={10}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'white',
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderRadius: theme.roundness,
+                padding: theme.spacing.m,
+                minHeight: 80,
+              }}>
+              <View style={{flexDirection: 'column'}}>
+                <Typography.Subtitle2>{t('poap')}</Typography.Subtitle2>
+                {screenMode === 'myProfile' && (
+                  <Typography.Body6>{t('claim poap')}</Typography.Body6>
+                )}
+              </View>
+              <Icon
+                name="angle-right"
+                color={theme.colors.black}
+                size={24}
+                allowFontScaling
+              />
+            </TouchableOpacity>
+          </DropShadowWrapper>
+        </View>
+      </Animated.ScrollView>
 
       <ProfileHeader
         disableRightButtons={screenMode === 'guestProfile'}

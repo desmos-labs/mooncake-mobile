@@ -20,7 +20,6 @@ const useStyles = makeStyle(theme => ({
   },
   contentGroup: {
     overflow: 'hidden',
-    flexGrow: 1,
     paddingTop: theme.spacing.m,
     paddingBottom: theme.spacing.s,
   },
@@ -50,7 +49,7 @@ const useStyles = makeStyle(theme => ({
   connectButtonGroup: {
     marginTop: theme.spacing.m,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   bannerImage: {
     position: 'absolute',
@@ -58,23 +57,18 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'cover',
     height: Dimensions.get('window').height * 0.7,
   },
-  tabContainer: {
-    flexGrow: 1,
-    backgroundColor: theme.colors.background,
-    borderTopRightRadius: 28,
-    borderTopLeftRadius: 28,
-    padding: theme.spacing.m,
-  },
   snackbar: {
     zIndex: 2,
     backgroundColor: theme.colors.surface,
   },
   contentContainerStyle: {
-    flexGrow: 1,
-    minHeight: Dimensions.get('screen').height * 1.5,
     backgroundColor: theme.colors.background,
-    borderTopRightRadius: 24,
-    borderTopLeftRadius: 24,
+    borderTopRightRadius: 32,
+    borderTopLeftRadius: 32,
+  },
+  sectionGroup: {
+    marginHorizontal: theme.spacing.m,
+    marginBottom: theme.spacing.m,
   },
 }));
 
