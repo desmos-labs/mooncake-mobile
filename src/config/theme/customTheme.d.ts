@@ -41,19 +41,17 @@ declare global {
       /**
        * V2
        */
-      desmosOrange01: string;
-      desmosOrange02: string;
-      desmosOrange03: string;
-      desmosOrange04: string;
-      desmosOrange05: string;
+      butterOrange01: string;
+      butterOrange02: string;
+      butterOrange03: string;
+      butterOrange04: string;
+      butterOrange05: string;
 
-      desmosBlue01: string;
-      desmosBlue02: string;
-      desmosBlue03: string;
-      desmosBlue04: string;
-      desmosBlue05: string;
-      desmosBlue06: string;
-      desmosBlue07: string;
+      butterYellow01: string;
+      butterYellow02: string;
+      butterYellow03: string;
+      butterYellow04: string;
+      butterYellow05: string;
 
       pink01: string;
       pink02: string;
@@ -62,12 +60,12 @@ declare global {
       purple02: string;
       purple03: string;
 
-      yellow01: string;
-      yellow02: string;
-      yellow03: string;
-      green01: string;
-      green02: string;
-      green03: string;
+      red01: string;
+      red02: string;
+      red03: string;
+      orange01: string;
+      orange02: string;
+      orange03: string;
 
       white: string;
       backgroundGrey: string;
@@ -82,6 +80,8 @@ declare global {
       darkGrey: string;
       surfaceBlack: string;
       black: string;
+      backgroundBlue: string;
+      dividerGrey: string;
 
       accentRed01: string;
       accentRed02: string;
@@ -96,26 +96,19 @@ declare global {
       accentBlue01: string;
       accentBlue02: string;
 
-      // Desmos orange gradient 01
-      dOrangeGradient01: string[];
+      butterOrangeGradient01: string[];
 
-      // Desmos orange gradient 02
-      dOrangeGradient02: string[];
+      butterOrangeGradient02: string[];
 
-      // Desmos blue gradient 01
-      dBlueGradient01: string[];
-
-      // Desmos blue gradient 02
-      dBlueGradient02: string[];
-
-      // Desmos blue gradient 03
-      dBlueGradient03: string[];
+      butterYellowGradient: string[];
 
       pinkGradient: string[];
 
       whiteGradient01: string[];
 
       blackGradient01: string[];
+
+      // MORE GRADIENTS TO BE ADDED
 
       /**
        * V2 end
