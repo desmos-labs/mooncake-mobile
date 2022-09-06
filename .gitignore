@@ -67,3 +67,4 @@ buck-out/
 .eslintcache
 storyLoader.js
 keystore.jks
+playstore-key.json
