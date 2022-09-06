@@ -118,7 +118,7 @@ const useHooks = (activeAddress: string) => {
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE);
+    navigate(ROUTES.USER_PROFILE, {});
   }, []);
 
   return {
