@@ -3,7 +3,7 @@ import {useGetFollowing} from '@recoil/following';
 import {useGetPosts} from '@recoil/posts';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
@@ -11,7 +11,7 @@ import {NavProps, POST_TYPE} from 'screens/Home/index';
 /**
  * Hooks for the Home screen.
  */
-const useHooks = () => {
+const useHooks = (activeAddress: string) => {
   const {t} = useTranslation('home');
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
@@ -52,9 +52,18 @@ const useHooks = () => {
     return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
   }, []);
 
-  const handlePressAuthor = React.useCallback((address: string) => {
-    console.log(address);
-  }, []);
+  const handlePressAuthor = useCallback(
+    (address: string) => {
+      if (activeAddress === address) {
+        navigate(ROUTES.USER_PROFILE, {});
+      } else {
+        navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: address,
+        });
+      }
+    },
+    [activeAddress],
+  );
 
   const handlePressFollow = React.useCallback(async (address: string) => {
     const followedAddresses = following.map(x => x.address);

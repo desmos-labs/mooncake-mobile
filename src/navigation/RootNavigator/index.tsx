@@ -52,7 +52,7 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
-import Profile from 'screens/Profile';
+import Profile, {UserProfileParams} from 'screens/Profile';
 import Profiles from 'screens/Profiles';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
@@ -85,7 +85,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
-  [ROUTES.USER_PROFILE]: undefined;
+  [ROUTES.USER_PROFILE]: UserProfileParams;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;

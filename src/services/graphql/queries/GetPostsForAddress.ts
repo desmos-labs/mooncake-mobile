@@ -4,7 +4,7 @@ const GetPostsForAddress = gql`
   query GetPostsForAddress($address: String) @api(name: desmos) {
     post(
       order_by: {creation_date: desc}
-      where: {author_address: {_eq: $address}}
+      where: {author_address: {_eq: $address}, _not: {conversation: {}}}
     ) {
       id
       creation_date
@@ -24,6 +24,11 @@ const GetPostsForAddress = gql`
       reactions {
         id
         value
+      }
+      reactions_aggregate {
+        aggregate {
+          count
+        }
       }
       text
       conversation {
