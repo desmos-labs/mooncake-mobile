@@ -73,6 +73,7 @@ import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -152,8 +153,20 @@ const RootNavigator = () => {
   const {height, width} = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
 
+  const initialRouteName = React.useMemo(() => {
+    if (__DEV__) return ROUTES.DEV_SCREEN;
+    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
+    if (activeAddr) {
+      return ROUTES.HOME;
+    }
+    return ROUTES.LANDING;
+  }, []);
+
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{headerShown: false}}>
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}

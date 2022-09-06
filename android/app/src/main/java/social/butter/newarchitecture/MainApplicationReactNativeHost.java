@@ -1,4 +1,4 @@
-package com.desmosflagship.newarchitecture;
+package social.butter.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.desmosflagship.BuildConfig;
-import com.desmosflagship.newarchitecture.components.MainComponentsRegistry;
-import com.desmosflagship.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import social.butter.BuildConfig;
+import social.butter.newarchitecture.components.MainComponentsRegistry;
+import social.butter.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

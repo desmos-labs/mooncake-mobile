@@ -1,0 +1,147 @@
+# Global variables to simplify the individual adjustment
+PROJECT_NAME = "DesmosProfileManager"
+XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
+XCODE_WORKSPACE = "./ios/#{PROJECT_NAME}.xcworkspace"
+OUTPUT_DIRECTORY = "./fastlane/builds/"
+
+DEVELOPER_APP_ID = ENV["DEVELOPER_APP_ID"]
+DEVELOPER_APP_IDENTIFIER = ENV["DEVELOPER_APP_IDENTIFIER"]
+PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
+TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
+APPLE_ISSUER_ID = ENV["APPLE_ISSUER_ID"]
+APPLE_KEY_ID = ENV["APPLE_KEY_ID"]
+APPLE_KEY_CONTENT = ENV["APPLE_KEY_CONTENT"]
+GIT_AUTHORIZATION = ENV["GIT_AUTHORIZATION"]
+
+def delete_temp_keychain(name)
+  delete_keychain(
+    name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
+
+def create_temp_keychain(name, password)
+  create_keychain(
+    name: name,
+    password: password,
+    unlock: false,
+    timeout: 0
+  )
+end
+
+def ensure_temp_keychain(name, password)
+  delete_temp_keychain(name)
+  create_temp_keychain(name, password)
+end
+
+def build_number_from_git(xcodeproj)
+    version_number = ''
+    if ENV['VERSION_OVERRIDE'] != nil
+      version_number = ENV['VERSION_OVERRIDE']
+    else
+      git_tag = last_git_tag
+      version_number = git_tag.sub('v', '')
+    end
+
+    # Set marketing version to version_number
+    sh("sed -i '' -e 's/MARKETING_VERSION \= [^\;]*\;/MARKETING_VERSION = #{version_number};/' ../ios/#{PROJECT_NAME}.xcodeproj/project.pbxproj")
+
+    increment_build_number(
+        xcodeproj: xcodeproj,
+        build_number: version_number
+    )
+end
+
+###############################################################
+
+platform :android do
+  lane :prepare_keystore do
+    # Expand keystore from enviroment variable
+    sh(
+      command: "#{ENV["SCRIPT_PREFIX"]} rm -rf /tmp/keystore.jks && echo #{ENV["ANDROID_SIGNING_KEY_BASE64"]} | base64 --decode >> /tmp/keystore.jks",
+      log: false
+    )
+    # Check keystore integrity
+    sh(
+      command: "md5sum /tmp/keystore.jks"
+    )
+
+    sh(
+        command: "echo '959f8019fe2e0630dcae2971d81b5717  /tmp/keystore.jks' | md5sum -c -"
+    )
+  end
+
+  lane :prepare_playstore_key do
+    sh(
+      command: "#{ENV["SCRIPT_PREFIX"]} rm -f /tmp/playstore-key.json && printf '#{ENV["PLAYSTORE_JSON_KEY_BASE64"]}' | base64 --decode >> /tmp/playstore-key.json",
+      log: false
+    )
+
+    validate_play_store_json_key(
+      json_key: '/tmp/playstore-key.json'
+    )
+  end
+
+  lane :build_apk do
+    # Prepares keystore to sign the application in /tmp/keystore.jks
+    prepare_keystore
+
+    gradle(task: 'clean', project_dir: "android/")
+
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      print_command: false,
+      project_dir: "android/",
+      properties: {
+        "android.injected.signing.store.file" => "/tmp/keystore.jks",
+        "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+      }
+    )
+  end
+
+  lane :build_bundle do
+    # Prepares keystore to sign the application in /tmp/keystore.jks
+    prepare_keystore
+
+    gradle(task: 'clean', project_dir: "android/")
+
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      print_command: false,
+      project_dir: "android/",
+      properties: {
+        "android.injected.signing.store.file" => "/tmp/keystore.jks",
+        "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+      }
+    )
+  end
+
+  lane :deploy_to_internal_testing do
+    # Build the application bundle
+    build_bundle
+
+    # Prepares the playstore key in /tmp/playstore-key.json
+    prepare_playstore_key
+
+    # Deploy the bundle to the playstore
+    supply(
+      package_name: 'social.butter',
+      track: 'internal',
+      json_key: '/tmp/playstore-key.json',
+      aab: 'android/app/build/outputs/bundle/release/app-release.aab',
+      # Uncomment this line to just upload without publishing
+      release_status: 'draft',
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_apk: true,
+    )
+  end
+end

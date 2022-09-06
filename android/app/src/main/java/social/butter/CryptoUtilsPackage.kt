@@ -1,4 +1,4 @@
-package com.desmosflagship
+package social.butter
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
