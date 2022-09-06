@@ -37,7 +37,7 @@ const RenderMoreThan2 = () => {
   );
 };
 
-storiesOf('components/InteractionSwitch', module)
+storiesOf('components/PostActionButtonsBar', module)
   .addDecorator(s => (
     <SbContainer justifyContent="center" alignItems="center">
       {s()}

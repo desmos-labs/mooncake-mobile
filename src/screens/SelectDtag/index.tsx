@@ -89,14 +89,7 @@ const SelectDtag = () => {
     });
   }, []);
 
-  const renderItem = ({
-    item,
-  }: ListRenderItemInfo<{
-    address: string;
-    dtag: string;
-    profile_pic: string;
-    nickname: string;
-  }>) => {
+  const renderItem = ({item}: ListRenderItemInfo<ProfileSummary>) => {
     return (
       <ProfileItem
         nickname={item.nickname}

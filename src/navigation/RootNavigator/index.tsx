@@ -51,7 +51,7 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
-import Profile from 'screens/Profile';
+import Profile, {UserProfileParams} from 'screens/Profile';
 import Profiles from 'screens/Profiles';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
@@ -65,6 +65,12 @@ import WelcomePage from 'screens/WelcomePage';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
+import FollowingAndFollowers, {
+  FollowingAndFollowersParams,
+  FollowingAndFollowersHeader,
+} from 'screens/FollowingAndFollowers';
+import {Dimensions} from 'react-native';
+import {FollowingParams} from 'screens/Following';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 
@@ -80,7 +86,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
-  [ROUTES.USER_PROFILE]: undefined;
+  [ROUTES.USER_PROFILE]: UserProfileParams;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -120,6 +126,15 @@ export type RootNavigatorParamList = {
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
+
+  /* Following and followers route. */
+  [ROUTES.FOLLOWING_AND_FOLLOWERS]: FollowingAndFollowersParams;
+
+  /* Following tab route. */
+  [ROUTES.FOLLOWING]: FollowingParams;
+
+  /* Followers tab route. */
+  [ROUTES.FOLLOWERS]: FollowingParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -132,6 +147,10 @@ const RootNavigator = () => {
   // End initialization
 
   const {t} = useTranslation();
+
+  /* To allow going back to previous screen via swipe left. */
+  const {height, width} = Dimensions.get('window');
+  const gestureResponseDistance = Math.max(height, width);
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -354,6 +373,16 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
         component={AuthorizeWalletStack}
+      />
+
+      <Stack.Screen
+        name={ROUTES.FOLLOWING_AND_FOLLOWERS}
+        component={FollowingAndFollowers}
+        options={{
+          gestureResponseDistance,
+          header: FollowingAndFollowersHeader,
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );

@@ -1,5 +1,6 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import activeProfileState from '@recoil/activeProfileState';
 import {
   defaultProfilePic,
   followBlackIcon,
@@ -14,12 +15,12 @@ import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
 import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import StickyBottomMenu from 'components/StickyBottomMenu';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -27,12 +28,14 @@ import {
   ListRenderItemInfo,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
-import InteractionSwitch from 'screens/PostDetails/components/InteractionSwitch';
+import {Divider, useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useRecoilState} from 'recoil';
+import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
+import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
+import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem';
-import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -42,8 +45,18 @@ export type NavProps = StackScreenProps<
 >;
 
 export type PostDetailsParams = {
+  /**
+   * id of the post
+   */
   postId: number;
+  /**
+   * susbpace_id of the post
+   */
   subspaceID: number;
+  /**
+   * focus the comment box when navigating to this screen
+   */
+  focusCommentBox: boolean;
 };
 
 const PostDetails = () => {
@@ -51,16 +64,14 @@ const PostDetails = () => {
   const theme = useTheme();
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [menuVisible, setMenuVisible] = React.useState(false);
-  const [profileMenuVisible, setProfileMenuVisible] = React.useState(false);
-  const [profileMenuAnchor, setProfileMenuAnchor] = React.useState<{
+  const [profileData] = useRecoilState(activeProfileState);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [profileMenuVisible, setProfileMenuVisible] = useState(false);
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState<{
     x: number;
     y: number;
   }>();
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
-  const [mode, setMode] = React.useState<'view' | 'comment'>('view');
 
   const {
     post,
@@ -68,25 +79,44 @@ const PostDetails = () => {
     postRefetch,
     comments,
     commentsLoading,
+    commentsRefetch,
     reactions,
+    reactionsLoading,
+    reactionsRefetch,
     formattedDate,
+    handlePressSelectedComment,
+    handleExpandComment,
+    handlePressCounters,
+    handlePressSendTips,
   } = useHooks({
     id: params.postId,
     sId: params.subspaceID,
   });
 
-  const flatListData = useMemo(() => {
-    if (selectedIndex === 0) return comments;
-    else if (selectedIndex === 1) return reactions;
-    else return [];
-  }, [selectedIndex, comments, reactions]);
+  useFocusEffect(
+    React.useCallback(() => {
+      pageRefetch();
+    }, [params]),
+  );
+
+  const pageRefetch = async () => {
+    await postRefetch({ID: params.postId, subspaceID: params.subspaceID});
+    await commentsRefetch({
+      postID: params.postId,
+      subspaceID: params.subspaceID,
+    });
+    await reactionsRefetch({
+      postID: params.postId,
+      subspaceID: params.subspaceID,
+    });
+  };
 
   const Avatar = React.useMemo(() => {
-    if (post?.author.profile_pic) {
+    if (post?.author?.profile_pic) {
       return <ProfileHeaderButton imageSrc={{uri: post?.author.profile_pic}} />;
     }
     return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
-  }, [post?.author.profile_pic]);
+  }, [post?.author?.profile_pic]);
 
   const MiddleElement = useMemo(
     () => (
@@ -94,7 +124,7 @@ const PostDetails = () => {
         {Avatar}
         <View style={styles.middleTextContainer}>
           <Typography.Subtitle3 numberOfLines={1}>
-            {post?.author.nickname || `@${post?.author.dtag}`}
+            {post?.author?.nickname || `@${post?.author?.dtag}`}
           </Typography.Subtitle3>
           {/* temporary */}
           <Typography.Body7>{formattedDate}</Typography.Body7>
@@ -128,133 +158,95 @@ const PostDetails = () => {
     [],
   );
 
-  const handlePressSelectedComment = React.useCallback(
-    ({
-      postId,
-      commentId,
-      subspaceId,
-    }: {
-      postId: number;
-      commentId: number;
-      subspaceId: number;
-    }) => {
-      navigate(ROUTES.COMMENT_REPLIES, {
-        postId,
-        commentId,
-        subspaceId,
-      });
-    },
-    [],
-  );
-
   const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
-      if (index === 0) {
-        return (
-          <InteractionSwitch
-            selectedIndex={selectedIndex}
-            setSelectedIndex={setSelectedIndex}
-            sections={[
-              {sectionName: t('comments'), counter: comments.length},
-              {
-                sectionName: t('reactions'),
-                counter: reactions.length,
-              },
-              {sectionName: t('tips'), counter: 0},
-            ]}
-          />
-        );
-      }
-      if (selectedIndex === 0) {
-        return (
-          <CommentItem
-            handlePressMore={() => {
-              console.log('hello world');
-            }}
-            handlePressComment={() => {
-              console.log('hello world');
-            }}
-            handlePressLike={() => {
-              console.log('hello world');
-            }}
-            handlePressTip={() => {
-              console.log('hello world');
-            }}
-            handlePress={() =>
-              handlePressSelectedComment({
-                postId: post.id,
-                commentId: item.id,
-                subspaceId: item.subspace_id,
-              })
-            }
-            handleLongPress={event => {
-              setAnchor({
-                x: event.nativeEvent.pageX,
-                y: event.nativeEvent.pageY,
-              });
-              setMenuVisible(true);
-            }}
-            loading={commentsLoading}
-            {...item}
-          />
-        );
-      } else if (selectedIndex === 1) {
-        return (
-          <ReactionItem
-            reaction={item}
-            handlePressFollow={() => {
-              console.log('follow');
-            }}
-            handlePressUnfollow={() => {
-              console.log('unfollow');
-            }}
-          />
-        );
-      } else {
-        return (
-          <TipItem
-            tipAmount={item.tipAmount}
-            avatar={item.avatar}
-            nickname={item.nickname}
-            dTag={item.dTag}
-            timestamp={item.timestamp}
-          />
-        );
-      }
+    ({item}: ListRenderItemInfo<any>) => {
+      return (
+        <CommentItem
+          handlePressMore={() => {
+            console.log('hello world');
+          }}
+          handlePressComment={() => {
+            console.log('hello world');
+          }}
+          handlePressLike={() => {
+            console.log('hello world');
+          }}
+          handlePressTip={() => {
+            console.log('hello world');
+          }}
+          handlePress={() =>
+            handlePressSelectedComment({
+              postId: post.id,
+              commentId: item.id,
+              subspaceId: item.subspace_id,
+            })
+          }
+          handleLongPress={event => {
+            setAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setMenuVisible(true);
+          }}
+          loading={commentsLoading}
+          {...item}
+        />
+      );
     },
-    [selectedIndex, comments, reactions],
+    [comments],
   );
 
-  const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
-      navigate(ROUTES.ENTER_COMMENT, {
-        author,
-        postId,
-      });
-    },
-    [],
-  );
-
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
+  const ListEmptyComponent = React.useMemo(() => {
+    return <EmptyListComponent label="No comments yet" />;
   }, []);
 
-  /*  const ListEmptyComponent = React.useMemo(() => {
-    return (
-      <EmptyListComponent
-        label="no comments"
-        handleButtonPress={() => {
-          handlePressComment({author: post.author, postId: post.id});
-        }}
-        buttonLabel="comment"
-      />
-    );
-  }, []); */
+  const likesImages: [] = useMemo(() => {
+    return reactions.map((reaction: any) => {
+      if (reaction.author.profile_pic) {
+        return {uri: reaction.author.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
+    });
+  }, [reactions]);
 
-  return postLoading ? (
-    <ActivityIndicator />
+  const headerComponent = useMemo(
+    () => (
+      <>
+        <PostComponent postData={post} />
+        <PostActionButtonsBar
+          postLiked={false}
+          handleLikePress={() => {
+            console.log('hello world');
+          }}
+          handleCommentPress={() => {
+            console.log('hello world');
+          }}
+          handleTipPress={() => handlePressSendTips()}
+        />
+        <Spacer paddingVertical={16}>
+          <InteractionCountersBar
+            loading={reactionsLoading}
+            likesCounter={reactions.length}
+            tipsCounter={0}
+            handlePressCounters={() => handlePressCounters()}
+            accountsHighlitedPics={likesImages}
+          />
+        </Spacer>
+        <Divider style={styles.divider} />
+        <Spacer paddingBottom={16} />
+      </>
+    ),
+    [post, reactions, likesImages],
+  );
+
+  return postLoading || !post ? (
+    <SafeAreaView>
+      <ActivityIndicator />
+    </SafeAreaView>
   ) : (
     <DView
+      disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
@@ -268,37 +260,26 @@ const PostDetails = () => {
       <FlatList
         scrollEnabled={true}
         refreshing={postLoading}
-        onRefresh={() =>
-          postRefetch({ID: params.postId, subspaceID: params.subspaceID})
-        }
-        ListHeaderComponent={<PostComponent postData={post} />}
+        onRefresh={() => pageRefetch()}
+        ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[0 as any, ...flatListData]}
+        data={[...comments]}
+        ListEmptyComponent={ListEmptyComponent}
       />
-      {mode === 'view' ? (
-        <StickyBottomMenu
-          leftButtonInteractions={comments.length}
-          middleButtonInteractions={reactions.length}
-          rightButtonInteractions={0}
-          leftButtonAction={() => setMode('comment')}
-          middleButtonAction={() => console.log('middle')}
-          rightButtonAction={handlePressSendTips}
-        />
-      ) : (
-        <EnterCommentBottomBar
-          profileImage={
-            post?.author.profile_pic
-              ? {uri: post?.author.profile_pic}
-              : defaultProfilePic
-          }
-          onIconPress={() =>
-            handleExpandComment({author: post.author, postId: post.id})
-          }
-        />
-      )}
+      <EnterCommentBottomBar
+        focusTextInput={params.focusCommentBox}
+        profileImage={
+          profileData?.profile_pic
+            ? {uri: profileData?.profile_pic}
+            : defaultProfilePic
+        }
+        onIconPress={() =>
+          handleExpandComment({author: post.author, postId: post.id})
+        }
+      />
 
       <PopupMenu
         anchor={anchor}

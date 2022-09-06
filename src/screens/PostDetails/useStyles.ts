@@ -37,6 +37,11 @@ const useStyles = makeStyle(theme => ({
     minWidth: 160,
   },
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
+  divider: {
+    borderColor: theme.colors.surfaceGrey,
+    borderWidth: 1,
+    marginHorizontal: -30,
+  },
 }));
 
 export default useStyles;

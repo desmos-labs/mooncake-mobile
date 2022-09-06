@@ -1,28 +1,34 @@
-import React from 'react';
-import {FlatList, ListRenderItemInfo} from 'react-native';
-import {useTranslation} from 'react-i18next';
-import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
-import {useTheme} from 'react-native-paper';
-import Button from 'components/Button';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
-import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import ROUTES from 'navigation/routes';
+import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {FlatList, ListRenderItemInfo} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
+import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 
 type NavProps = CompositeScreenProps<
-  StackScreenProps<RootNavigatorParamList, any>,
-  MaterialTopTabScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>
+  StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
+  StackScreenProps<RootNavigatorParamList>
 >;
 
 const PostTips = () => {
   const {t} = useTranslation('postInteraction');
   const theme = useTheme();
-
+  const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
+
+  useEffect(() => {
+    console.log('params', params);
+  }, [params]);
 
   const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
     return (
@@ -36,7 +42,7 @@ const PostTips = () => {
     );
   }, []);
 
-  const handlePressTip = React.useCallback(() => {
+  const handlePressSendTips = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
 
@@ -44,25 +50,16 @@ const PostTips = () => {
     return (
       <EmptyListComponent
         label={t('noTips')}
+        additionalButton
         buttonLabel={t('tip')}
-        handleButtonPress={() => {
-          // tip
-        }}
+        handleButton={() => handlePressSendTips()}
       />
-    );
-  }, []);
-
-  const ListFooterComponent = React.useMemo(() => {
-    return (
-      <Button mode="gradientFilled" onPress={handlePressTip}>
-        {t('tip')}
-      </Button>
     );
   }, []);
 
   return (
     <FlatList
-      data={DUMMY_TIPS}
+      data={[]}
       renderItem={renderItem}
       ListEmptyComponent={ListEmptyComponent}
       ItemSeparatorComponent={ItemSeparatorComponent}
@@ -73,47 +70,8 @@ const PostTips = () => {
       ListFooterComponentStyle={{
         marginTop: theme.spacing.xl,
       }}
-      ListFooterComponent={ListFooterComponent}
     />
   );
 };
-
-const DUMMY_TIPS = [
-  {
-    tipAmount: 1,
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    timestamp: '2022-07-03T16:00:40.08408',
-  },
-  {
-    tipAmount: 1,
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    timestamp: '2022-07-03T16:00:40.08408',
-  },
-  {
-    tipAmount: 1,
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    timestamp: '2022-07-03T16:00:40.08408',
-  },
-  {
-    tipAmount: 1,
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    timestamp: '2022-07-03T16:00:40.08408',
-  },
-  {
-    tipAmount: 1,
-    avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
-    nickname: 'Shrek',
-    dTag: 'SwampyBoi',
-    timestamp: '2022-07-03T16:00:40.08408',
-  },
-];
 
 export default PostTips;

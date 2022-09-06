@@ -1,10 +1,8 @@
-import {defaultProfilePic} from 'assets/images';
-import Button from 'components/Button';
+import {commentLiked, defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -12,19 +10,11 @@ type Props = {
     value: any;
     author: any;
   };
-  handlePressFollow: () => void;
-  handlePressUnfollow: () => void;
 };
 
-const ReactionItem = ({
-  handlePressFollow,
-  handlePressUnfollow,
-  reaction,
-}: Props) => {
+const ReactionItem = ({reaction}: Props) => {
   const styles = useStyles();
-  const theme = useTheme();
   const {t} = useTranslation('postInteraction');
-  const followed = true;
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
@@ -49,26 +39,10 @@ const ReactionItem = ({
         </View>
       </View>
 
-      {followed ? (
-        <Button
-          style={styles.buttonContainer}
-          mode="outlined"
-          color={theme.colors.desmosOrange01}
-          onPress={handlePressUnfollow}>
-          <Typography.Button3 style={styles.unfollowText}>
-            {t('unfollow')}
-          </Typography.Button3>
-        </Button>
-      ) : (
-        <Button
-          containerStyle={styles.buttonContainer}
-          mode="gradientFilled"
-          onPress={handlePressFollow}>
-          <Typography.Button3 style={styles.followText}>
-            {t('follow')}
-          </Typography.Button3>
-        </Button>
-      )}
+      <Image
+        source={commentLiked}
+        style={{height: 20, width: 20, resizeMode: 'contain'}}
+      />
     </View>
   );
 };

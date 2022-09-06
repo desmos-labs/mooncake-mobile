@@ -3,7 +3,7 @@ import {useGetFollowing} from '@recoil/following';
 import {useGetPosts} from '@recoil/posts';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
@@ -13,13 +13,14 @@ import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 /**
  * Hooks for the Home screen.
  */
-const useHooks = () => {
+const useHooks = (activeAddress: string) => {
   const {t} = useTranslation('home');
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
   const maxOffset = React.useRef<number>(0);
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
 
   const {checkGrants} = useCheckGrants();
 
@@ -46,6 +47,7 @@ const useHooks = () => {
   // will be enslaved by the app forever
   const onPostChanged = React.useCallback(
     (index: number) => {
+      setSelectedPostIndex(index);
       if (index >= posts.length - 2) {
         fetchNewPosts();
       }
@@ -57,9 +59,18 @@ const useHooks = () => {
     return [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
   }, []);
 
-  const handlePressAuthor = React.useCallback((address: string) => {
-    console.log(address);
-  }, []);
+  const handlePressAuthor = useCallback(
+    (address: string) => {
+      if (activeAddress === address) {
+        navigate(ROUTES.USER_PROFILE, {});
+      } else {
+        navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: address,
+        });
+      }
+    },
+    [activeAddress],
+  );
 
   const handlePressFollow = React.useCallback(
     async (address: string) => {
@@ -99,6 +110,7 @@ const useHooks = () => {
       navigate({
         name: ROUTES.POST_DETAILS,
         params: {
+          focusCommentBox: false,
           postId: id,
           subspaceID,
         },
@@ -121,10 +133,34 @@ const useHooks = () => {
     [maxOffset.current],
   );
 
+  const handlePressReactions = React.useCallback(() => {
+    console.log('like');
+  }, []);
+
+  const handlePressComments = React.useCallback(() => {
+    navigate(ROUTES.POST_DETAILS, {
+      focusCommentBox: true,
+      postId: postData[selectedPostIndex].id,
+      subspaceID: postData[selectedPostIndex].subspace_id,
+    });
+  }, [selectedPostIndex, postData]);
+
+  const handlePressTip = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
+  const handlePressProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE, {});
+  }, []);
+
   return {
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
+    handlePressComments,
+    handlePressProfile,
+    handlePressTip,
+    handlePressReactions,
     selectedIndex,
     setSelectedIndex,
     postTypes,

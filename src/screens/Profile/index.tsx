@@ -1,16 +1,22 @@
 import {useQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {defaultBanner, defaultProfilePic, editButton} from 'assets/images';
+import {
+  defaultBanner,
+  defaultProfilePic,
+  editButton,
+  followOrangeFilledIcon,
+} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, View} from 'react-native';
+import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
   useAnimatedScrollHandler,
@@ -32,21 +38,27 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
 
+export interface UserProfileParams {
+  visitingProfileAddress?: string;
+}
+
 const Profile = () => {
   const theme = useTheme();
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const {t} = useTranslation('profile');
+  const styles = useStyles();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {params} = useRoute<NavProps['route']>();
+  const {top} = useSafeAreaInsets();
 
-  const {
-    activeAddress,
-    profileData,
-    loading: profileLoading,
-  } = useActiveAccount();
-
-  // animations start
-  // These hooks act as the animation driver for the ProfileHeader component
-  // The actual animations are created in the component itself.
+  /** Animations start
+   * These hooks act as the animation driver for the ProfileHeader component
+   * The actual animations are created in the component itself.
+   * */
   const scrollProgress = useSharedValue(0);
 
-  // calculate the percentage of scroll and set it to shared value
+  // Calculate the percentage of scroll and set it to shared value
   const scrollHandler = useAnimatedScrollHandler(event => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
@@ -54,30 +66,58 @@ const Profile = () => {
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   });
-  // animations end
+  /** Animations end * */
 
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
+  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
+    params.visitingProfileAddress || '',
+  );
+  const {activeAddress, profileData, loading} = useActiveAccount();
 
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const screenMode = useMemo(() => {
+    if (params.visitingProfileAddress) {
+      return activeAddress !== params.visitingProfileAddress
+        ? 'guestProfile'
+        : 'myProfile';
+    }
 
-  const {t} = useTranslation('profile');
+    return 'myProfile';
+  }, [params.visitingProfileAddress, activeAddress]);
 
-  const styles = useStyles();
+  const {
+    address,
+    bio,
+    dtag,
+    cover_pic,
+    profile_pic,
+    nickname,
+    following,
+    followage,
+  } =
+    screenMode === 'guestProfile'
+      ? visitingProfileData
+      : (profileData as ProfileData);
 
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const profileLoading =
+    screenMode === 'myProfile' ? loading : visitingProfileLoading;
 
-  const {top} = useSafeAreaInsets();
-
-  const tabs = React.useMemo(
+  const tabs = useMemo(
     () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
     [t],
   );
 
   const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
     variables: {
-      address: activeAddress,
+      address:
+        screenMode === 'myProfile'
+          ? activeAddress
+          : params.visitingProfileAddress,
     },
   });
+
+  const posts: [] = React.useMemo(() => {
+    if (!postData) return [];
+    return postData.post;
+  }, [postData, postsLoading]);
 
   const handlePostPressed = React.useCallback(
     ({
@@ -103,17 +143,6 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
-  const {
-    address,
-    bio,
-    dtag,
-    cover_pic,
-    profile_pic,
-    nickname,
-    following,
-    followage,
-  } = profileData as ProfileData;
-
   const bannerImage = React.useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
@@ -121,6 +150,38 @@ const Profile = () => {
   const profileImage = React.useMemo(() => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
+
+  // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
+  const followButton = React.useMemo(() => {
+    return followOrangeFilledIcon;
+  }, []);
+
+  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
+  const subspaceID = 5;
+
+  /* A hook that returns a props object that can be used to pass to a component that will navigate to
+  the following and followers screen. */
+  const handleFollowingPressed = React.useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWING,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        headerTitle: nickname || `@${dtag}`,
+      }),
+    [subspaceID, activeAddress, nickname, dtag],
+  );
+
+  const handleFollowersPressed = React.useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWERS,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        headerTitle: nickname || `@${dtag}`,
+      }),
+    [subspaceID, activeAddress, nickname, dtag],
+  );
 
   const ListHeaderComponent = React.useMemo(() => {
     return (
@@ -135,7 +196,10 @@ const Profile = () => {
 
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
-            <ImageButton image={editButton} style={styles.editButton} />
+            <ImageButton
+              image={screenMode === 'myProfile' ? editButton : followButton}
+              style={styles.editButton}
+            />
 
             <Typography.H3
               style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
@@ -151,28 +215,40 @@ const Profile = () => {
               />
             </Spacer>
 
-            <UserBio content={bio} />
+            <UserBio content={bio || ''} />
 
             <View style={styles.socialCounterGroup}>
-              <SocialCounter count={following.length} label={t('following')} />
+              <TouchableOpacity onPress={handleFollowingPressed}>
+                <SocialCounter
+                  count={following.length}
+                  label={t('following')}
+                />
+              </TouchableOpacity>
 
               <View style={styles.separator} />
 
-              <SocialCounter count={followage.length} label={t('followers')} />
+              <TouchableOpacity onPress={handleFollowersPressed}>
+                <SocialCounter
+                  count={followage.length}
+                  label={t('followers')}
+                />
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.connectButtonGroup}>
-              <ProfileConnectButton
-                label={t('connectAddress')}
-                handlePress={handlePressConnectAddress}
-              />
+            {screenMode === 'myProfile' && (
+              <View style={styles.connectButtonGroup}>
+                <ProfileConnectButton
+                  label={t('connectAddress')}
+                  handlePress={handlePressConnectAddress}
+                />
 
-              {/* hidden on MVP */}
-              {/* <ProfileConnectButton */}
-              {/*  label={t('connectApp')} */}
-              {/*  handlePress={() => {}} */}
-              {/* /> */}
-            </View>
+                {/* hidden on MVP */}
+                {/* <ProfileConnectButton */}
+                {/*  label={t('connectApp')} */}
+                {/*  handlePress={() => {}} */}
+                {/* /> */}
+              </View>
+            )}
           </View>
         </View>
 
@@ -191,8 +267,6 @@ const Profile = () => {
   if (profileLoading || postsLoading) {
     return <ActivityIndicator />;
   }
-
-  const {post} = postData;
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
@@ -216,7 +290,7 @@ const Profile = () => {
         onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
-        data={post}
+        data={posts}
         renderItem={renderPosts}
         numColumns={3}
         columnWrapperStyle={{
@@ -228,6 +302,7 @@ const Profile = () => {
       />
 
       <ProfileHeader
+        disableRightButtons={screenMode === 'guestProfile'}
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
         handlePressNotification={() => {

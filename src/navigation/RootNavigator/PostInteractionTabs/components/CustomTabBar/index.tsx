@@ -52,6 +52,7 @@ const CustomTabBar = ({state, descriptors, navigation, position}: any) => {
 
         return (
           <TouchableOpacity
+            key={route.name}
             accessibilityRole="button"
             accessibilityState={isFocused ? {selected: true} : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -60,7 +61,9 @@ const CustomTabBar = ({state, descriptors, navigation, position}: any) => {
             onLongPress={onLongPress}
             style={styles.tabButton}>
             <Animated.View style={{opacity, alignItems: 'center'}}>
-              <Typography.Button2>{label}</Typography.Button2>
+              <Typography.Button2 style={{marginBottom: 4}}>
+                {label}
+              </Typography.Button2>
               <Animated.View
                 style={[styles.indicatorStyle, {opacity: indicatorOpacity}]}
               />
