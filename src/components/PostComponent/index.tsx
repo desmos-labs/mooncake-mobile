@@ -1,5 +1,5 @@
 import Typography from 'components/Typography';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Dimensions, ImageBackground, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
@@ -13,21 +13,11 @@ type Props = {
   postData: PostItem;
 };
 
-enum POST_TYPE {
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-  IMAGE_TEXT = 'IMAGE_TEXT',
-}
-
 const PostComponent = ({postData}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const {attachments} = postData;
   const {width} = Dimensions.get('window');
-
-  useEffect(() => {
-    console.log(width);
-  }, []);
 
   const AttachmentImage = React.useMemo(() => {
     const [attachment] = attachments;
@@ -48,25 +38,8 @@ const PostComponent = ({postData}: Props) => {
     return undefined;
   }, []);
 
-  const postType: POST_TYPE = React.useMemo(() => {
-    if (postData.text && postData.attachments.length === 0) {
-      return POST_TYPE.TEXT;
-    }
-    if (postData.text && postData.attachments.length > 0) {
-      return POST_TYPE.IMAGE_TEXT;
-    }
-    if (!postData.text && postData.attachments.length > 0) {
-      return POST_TYPE.IMAGE;
-    }
-
-    // This should never be reached. Logged post id's should be checked for
-    // validity
-    console.log('Default post behavior for post id', postData.id);
-    return POST_TYPE.TEXT;
-  }, [postData]);
-
   const content = React.useMemo(() => {
-    if (postType === POST_TYPE.TEXT) {
+    if (postData?.text && postData?.attachments?.length === 0) {
       return (
         <View style={styles.textContainer}>
           <Typography.H2 style={styles.textStyle}>
@@ -74,7 +47,7 @@ const PostComponent = ({postData}: Props) => {
           </Typography.H2>
         </View>
       );
-    } else if (postType === POST_TYPE.IMAGE) {
+    } else if (!postData?.text && postData?.attachments?.length > 0) {
       return <View>{AttachmentImage}</View>;
     } else {
       return (
@@ -86,7 +59,7 @@ const PostComponent = ({postData}: Props) => {
         </View>
       );
     }
-  }, [postType, postData]);
+  }, [postData]);
 
   return (
     <View onStartShouldSetResponder={() => true} style={styles.container}>

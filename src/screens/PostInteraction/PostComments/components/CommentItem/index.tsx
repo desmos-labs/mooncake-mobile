@@ -204,7 +204,7 @@ const CommentItem = ({
               />
               <Typography.Subtitle3
                 style={liked ? styles.likedStyle : styles.textStyle}>
-                {formatNumShorthand(reactions.length)}
+                {reactions ? formatNumShorthand(reactions.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
 

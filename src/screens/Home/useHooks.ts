@@ -18,6 +18,7 @@ const useHooks = (activeAddress: string) => {
   const maxOffset = React.useRef<number>(0);
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
 
@@ -41,6 +42,7 @@ const useHooks = (activeAddress: string) => {
   // will be enslaved by the app forever
   const onPostChanged = React.useCallback(
     (index: number) => {
+      setSelectedPostIndex(index);
       if (index >= posts.length - 2) {
         fetchNewPosts();
       }
@@ -76,6 +78,7 @@ const useHooks = (activeAddress: string) => {
       navigate({
         name: ROUTES.POST_DETAILS,
         params: {
+          focusCommentBox: false,
           postId: id,
           subspaceID,
         },
@@ -98,10 +101,34 @@ const useHooks = (activeAddress: string) => {
     [maxOffset.current],
   );
 
+  const handlePressReactions = React.useCallback(() => {
+    console.log('like');
+  }, []);
+
+  const handlePressComments = React.useCallback(() => {
+    navigate(ROUTES.POST_DETAILS, {
+      focusCommentBox: true,
+      postId: postData[selectedPostIndex].id,
+      subspaceID: postData[selectedPostIndex].subspace_id,
+    });
+  }, [selectedPostIndex, postData]);
+
+  const handlePressTip = React.useCallback(() => {
+    navigate(ROUTES.SEND_TIPS);
+  }, []);
+
+  const handlePressProfile = React.useCallback(() => {
+    navigate(ROUTES.USER_PROFILE, {});
+  }, []);
+
   return {
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
+    handlePressComments,
+    handlePressProfile,
+    handlePressTip,
+    handlePressReactions,
     selectedIndex,
     setSelectedIndex,
     postTypes,
