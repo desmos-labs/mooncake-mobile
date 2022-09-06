@@ -14,6 +14,7 @@ const EnvConfig = {
   BASE_DENOM: Config.BASE_DENOM,
   MAX_COMMENT_LENGTH: 500,
   DESMOS_REST: Config.DESMOS_REST,
+  APP_SUBSPACE_ID: 5,
 };
 
 export default EnvConfig;

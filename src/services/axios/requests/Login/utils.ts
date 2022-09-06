@@ -1,8 +1,15 @@
 import {OfflineDirectSigner} from '@cosmjs/proto-signing';
 import GetNonce from 'services/axios/requests/GetNonce';
-import Long from 'long';
-import {fromBase64} from '@cosmjs/encoding';
-import {SignDoc, TxBody} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
+import {StdFee} from '@cosmjs/amino';
+import {
+  DesmosClient,
+  OfflineSignerAdapter,
+  getSignedBytes,
+  getPubKeyBytes,
+  getSignatureBytes,
+} from '@desmoslabs/desmjs';
+import EnvConfig from 'config/EnvConfig';
+import {toHex} from '@cosmjs/encoding';
 
 // eslint-disable-next-line import/prefer-default-export
 export const generateLoginData = async ({
@@ -12,30 +19,41 @@ export const generateLoginData = async ({
   wallet: OfflineDirectSigner;
   address: string;
 }): Promise<{
-  signatureBytes: Uint8Array;
-  pubkeyBytes: Uint8Array;
-  signedBytes: Uint8Array;
+  signatureBytes: string;
+  pubkeyBytes: string;
+  signedBytes: string;
 }> => {
   const {nonce} = await GetNonce({address});
 
-  const signDoc = SignDoc.fromPartial({
-    accountNumber: Long.ZERO,
-    authInfoBytes: new Uint8Array(),
-    bodyBytes: TxBody.encode(
-      TxBody.fromPartial({
-        memo: nonce,
-      }),
-    ).finish(),
-    chainId: '',
-  });
-  const result = await (wallet as OfflineDirectSigner).signDirect(
-    address,
-    signDoc,
+  // omitted as MsgAuthenticate is not a supported message type yet
+  // if uncommenting, need to reinstall text-encoding polyfill using fast-text-encoder
+  // const msg: MsgAuthenticateEncodeObject = {
+  //   value: {
+  //     user: address,
+  //     nonce: new TextEncoder().encode(nonce),
+  //   },
+  //   typeUrl: '/desmjs.v1.MsgAuthenticate',
+  // };
+
+  const fee: StdFee = {
+    amount: [],
+    gas: '0',
+  };
+
+  const offlineSigner = new OfflineSignerAdapter(wallet);
+
+  const desmosClient = await DesmosClient.connectWithSigner(
+    EnvConfig.DESMOS_RPC,
+    offlineSigner,
   );
 
+  // Pass an empty array as message, as we just need to sign something
+  // to grab the SignatureResult
+  const result = await desmosClient.signTx(address, [], fee, nonce);
+
   return {
-    signatureBytes: fromBase64(result.signature.signature),
-    pubkeyBytes: fromBase64(result.signature.pub_key.value),
-    signedBytes: SignDoc.encode(signDoc).finish(),
+    signatureBytes: toHex(getSignatureBytes(result)),
+    pubkeyBytes: toHex(getPubKeyBytes(result)),
+    signedBytes: toHex(getSignedBytes(result)),
   };
 };

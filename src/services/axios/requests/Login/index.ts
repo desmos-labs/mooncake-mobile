@@ -13,17 +13,17 @@ type Params = {
   /**
    * Hex-encoded bytes of the public key associated to the private key used to sign the transaction
    */
-  pubkeyBytes: Uint8Array;
+  pubkeyBytes: string;
 
   /**
    * Hex-encoded bytes of the signed transaction
    */
-  signedBytes: Uint8Array;
+  signedBytes: string;
 
   /**
    * Hex-encoded result of the signature
    */
-  signatureBytes: Uint8Array;
+  signatureBytes: string;
 };
 
 /**

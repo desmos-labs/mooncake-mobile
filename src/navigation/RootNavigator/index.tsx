@@ -1,7 +1,6 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
@@ -72,6 +71,8 @@ import FollowingAndFollowers, {
 } from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import EnvConfig from 'config/EnvConfig';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -203,7 +204,7 @@ const RootNavigator = () => {
       <Stack.Screen
         initialParams={{
           commentId: 1,
-          subspaceId: 5,
+          subspaceId: EnvConfig.APP_SUBSPACE_ID,
         }}
         name={ROUTES.COMMENT_REPLIES}
         component={CommentReplies}
@@ -355,7 +356,7 @@ const RootNavigator = () => {
         <Stack.Screen
           initialParams={{
             // TODO: remove when going production
-            authType: APP_AUTHORIZATIONS.TIP,
+            grants: [GrantEnums.MsgCreateReport],
           }}
           name={ROUTES.ACTION_AUTHORIZATION}
           component={ActionAuthorization}

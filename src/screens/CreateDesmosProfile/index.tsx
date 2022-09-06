@@ -37,7 +37,7 @@ import {toBase64} from '@cosmjs/encoding';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import MsgTypes from 'lib/desmos/msgtypes';
+import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useStyles from './useStyles';
@@ -142,7 +142,7 @@ const CreateDesmosProfile = () => {
       // Save new wallet as last selected wallet
       // Build save profile message
       const saveProfileMessage: MsgSaveProfileEncodeObject = {
-        typeUrl: MsgTypes.MsgSaveProfile,
+        typeUrl: GenericMsgEnums.MsgSaveProfile,
         value: {
           creator: wallet!.bech32Address,
           dtag: dTag,

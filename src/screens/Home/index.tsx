@@ -9,7 +9,6 @@ import {
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -22,7 +21,7 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import useLogin from 'services/axios/requests/Login/useLogin';
+import {useTranslation} from 'react-i18next';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -39,22 +38,7 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 
 const Home = () => {
   const styles = useStyles();
-  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
-
-  // useLogin is called here instead of useHooks for better visibility.
-  const {login} = useLogin();
-
-  React.useEffect(() => {
-    // If there is already a bearer token, then there's no need to login.
-    if (bearerToken) return;
-
-    // placeholder to avoid eslint error
-    console.log(activeAddress, login);
-
-    // uncomment when ready
-    // login(activeAddress!).then();
-  }, []);
+  const {t} = useTranslation('home');
 
   const {
     handlePressDetails,
@@ -66,13 +50,13 @@ const Home = () => {
     handlePressComments,
     selectedIndex,
     setSelectedIndex,
-    postTypes,
-    onCarouselProgressChange,
     onPostChanged,
     postData,
-  } = useHooks(activeAddress!);
+  } = useHooks();
 
   const {profileData} = useActiveAccount();
+
+  const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -121,7 +105,6 @@ const Home = () => {
       </View>
 
       <Carousel
-        onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}
