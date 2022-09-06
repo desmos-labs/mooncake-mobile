@@ -59,6 +59,7 @@ platform :android do
     # Expand keystore from enviroment variable
     sh(
       command: "#{ENV["SCRIPT_PREFIX"]} rm -rf /tmp/keystore.jks && echo #{ENV["ANDROID_SIGNING_KEY_BASE64"]} | base64 --decode >> /tmp/keystore.jks",
+      log: false
     )
     # Check keystore integrity
     sh(
@@ -130,7 +131,7 @@ platform :android do
 
     # Deploy the bundle to the playstore
     supply(
-      package_name: 'social.desmos',
+      package_name: 'social.butter',
       track: 'internal',
       json_key: '/tmp/playstore-key.json',
       aab: 'android/app/build/outputs/bundle/release/app-release.aab',
