@@ -9,11 +9,13 @@ import {Dimensions} from 'react-native';
 import {NavProps, POST_TYPE} from 'screens/Home/index';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
+import useLogin from 'services/axios/requests/Login/useLogin';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 
 /**
  * Hooks for the Home screen.
  */
-const useHooks = (activeAddress: string) => {
+const useHooks = () => {
   const {t} = useTranslation('home');
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
@@ -21,6 +23,8 @@ const useHooks = (activeAddress: string) => {
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
+  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
 
   const {checkGrants} = useCheckGrants();
 
@@ -35,6 +39,20 @@ const useHooks = (activeAddress: string) => {
       x => followedAddresses.indexOf(x.author_address) !== -1,
     );
   }, [posts, following, selectedIndex]);
+
+  // useLogin is called here instead of useHooks for better visibility.
+  const {login} = useLogin();
+
+  // Check if we need to login the user
+  React.useEffect(() => {
+    if (bearerToken) return;
+    login(activeAddress!).then(result => {
+      if (result) {
+        console.log('login successful');
+        pop();
+      }
+    });
+  }, []);
 
   // recalculate max carousel offset. This value is used to determine if the
   // carousel has been overscrolled

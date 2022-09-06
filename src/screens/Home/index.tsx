@@ -9,12 +9,10 @@ import {
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
@@ -23,7 +21,6 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import useLogin from 'services/axios/requests/Login/useLogin';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -41,24 +38,6 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
 const Home = () => {
   const styles = useStyles();
 
-  const {pop} = useNavigation<NavProps['navigation']>();
-  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
-
-  // useLogin is called here instead of useHooks for better visibility.
-  const {login} = useLogin();
-
-  // Check if we need to login the user
-  React.useEffect(() => {
-    if (bearerToken) return;
-    login(activeAddress!).then(result => {
-      if (result) {
-        console.log('login successful');
-        pop();
-      }
-    });
-  }, []);
-
   const {
     handlePressDetails,
     handlePressFollow,
@@ -73,7 +52,7 @@ const Home = () => {
     onCarouselProgressChange,
     onPostChanged,
     postData,
-  } = useHooks(activeAddress);
+  } = useHooks();
 
   const {profileData} = useActiveAccount();
 
