@@ -46,12 +46,7 @@ type Props = {
 
   subspace_id: number;
 
-  author: {
-    address: string;
-    dtag: string;
-    nickname: string;
-    profile_pic: string;
-  };
+  author: ProfileSummary;
 
   // not final
   reactions: {}[];

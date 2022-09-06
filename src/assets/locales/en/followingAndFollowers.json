@@ -1,0 +1,11 @@
+{
+  "noFollowingDTags": "No following dTags",
+  "noFollowers": "No followers",
+  "failedToFollow": "Failed to follow <0>{{userName}}</0>",
+  "oops": "Oops!",
+  "follow": "Follow",
+  "unfollow": "Unfollow",
+  "noActiveAccountFound": "No active account found",
+  "pleaseUnlockYourWallet": "Please unlock your wallet",
+  "dismiss": "Dismiss"
+}

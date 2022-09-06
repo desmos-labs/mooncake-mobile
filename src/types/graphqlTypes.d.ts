@@ -34,6 +34,17 @@ declare global {
     address: string;
   }
 
+  interface ProfileSummary {
+    dtag: string;
+    nickname: string;
+    profile_pic: string;
+    address: string;
+  }
+
+  interface PaginatedFollower {
+    _: ProfileSummary;
+  }
+
   interface FollowerType {
     counterparty_address: string;
     subspace_id: number;

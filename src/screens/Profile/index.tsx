@@ -16,7 +16,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, View} from 'react-native';
+import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
   useAnimatedScrollHandler,
@@ -156,6 +156,33 @@ const Profile = () => {
     return followOrangeFilledIcon;
   }, []);
 
+  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
+  const subspaceID = 5;
+
+  /* A hook that returns a props object that can be used to pass to a component that will navigate to
+  the following and followers screen. */
+  const handleFollowingPressed = React.useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWING,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        headerTitle: nickname || `@${dtag}`,
+      }),
+    [subspaceID, activeAddress, nickname, dtag],
+  );
+
+  const handleFollowersPressed = React.useCallback(
+    () =>
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        initialTabRouteName: ROUTES.FOLLOWERS,
+        subspaceID,
+        userAddress: activeAddress ?? '',
+        headerTitle: nickname || `@${dtag}`,
+      }),
+    [subspaceID, activeAddress, nickname, dtag],
+  );
+
   const ListHeaderComponent = React.useMemo(() => {
     return (
       <>
@@ -191,11 +218,21 @@ const Profile = () => {
             <UserBio content={bio || ''} />
 
             <View style={styles.socialCounterGroup}>
-              <SocialCounter count={following?.length} label={t('following')} />
+              <TouchableOpacity onPress={handleFollowingPressed}>
+                <SocialCounter
+                  count={following.length}
+                  label={t('following')}
+                />
+              </TouchableOpacity>
 
               <View style={styles.separator} />
 
-              <SocialCounter count={followage?.length} label={t('followers')} />
+              <TouchableOpacity onPress={handleFollowersPressed}>
+                <SocialCounter
+                  count={followage.length}
+                  label={t('followers')}
+                />
+              </TouchableOpacity>
             </View>
 
             {screenMode === 'myProfile' && (
