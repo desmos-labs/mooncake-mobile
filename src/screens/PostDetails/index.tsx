@@ -88,6 +88,7 @@ const PostDetails = () => {
     handleExpandComment,
     handlePressCounters,
     handlePressSendTips,
+    navigateToProfile,
   } = useHooks({
     id: params.postId,
     sId: params.subspaceID,
@@ -113,9 +114,19 @@ const PostDetails = () => {
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
-      return <ProfileHeaderButton imageSrc={{uri: post?.author.profile_pic}} />;
+      return (
+        <ProfileHeaderButton
+          imageSrc={{uri: post?.author.profile_pic}}
+          onPress={() => navigateToProfile()}
+        />
+      );
     }
-    return <ProfileHeaderButton imageSrc={defaultProfilePic} />;
+    return (
+      <ProfileHeaderButton
+        imageSrc={defaultProfilePic}
+        onPress={() => navigateToProfile()}
+      />
+    );
   }, [post?.author?.profile_pic]);
 
   const MiddleElement = useMemo(
