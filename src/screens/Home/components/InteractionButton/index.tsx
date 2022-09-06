@@ -35,7 +35,7 @@ const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <LinearGradient
-        colors={theme.colors.dOrangeGradient01}
+        colors={theme.colors.butterOrangeGradient01}
         style={StyleSheet.absoluteFillObject}
       />
       <Image source={icon} style={styles.icon} />

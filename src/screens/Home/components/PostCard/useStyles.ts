@@ -7,7 +7,7 @@ import {StyleSheet} from 'react-native';
 const useStyles = makeStyle(theme => ({
   container: {
     borderRadius: 18,
-    backgroundColor: theme.colors.desmosOrange01,
+    backgroundColor: theme.colors.butterYellow01,
     justifyContent: 'flex-end',
     overflow: 'hidden',
     width: '95%',
