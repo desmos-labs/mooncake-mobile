@@ -13,8 +13,15 @@ const useStyles = makeStyle(theme => {
       paddingHorizontal: 20,
       paddingTop: 20,
     },
-    container: {flexDirection: 'row', width: '100%'},
-    textInput: {flex: 1, marginLeft: 8},
+    container: {
+      flexDirection: 'row',
+      width: '100%',
+      marginBottom: theme.spacing.s,
+    },
+    textInput: {
+      flex: 1,
+      marginLeft: 8,
+    },
     profilePic: {
       width: 38,
       height: 38,

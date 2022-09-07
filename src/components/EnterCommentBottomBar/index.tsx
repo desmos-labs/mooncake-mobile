@@ -13,6 +13,7 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  KeyboardEventName,
   Platform,
   TextInput,
   View,
@@ -52,13 +53,19 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardWillShow',
+      Platform.select({
+        ios: 'keyboardWillShow',
+        android: 'keyboardDidShow',
+      }) as KeyboardEventName,
       () => {
         setKeyboardShow(true);
       },
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardWillHide',
+      Platform.select({
+        ios: 'keyboardWillHide',
+        android: 'keyboardDidHide',
+      }) as KeyboardEventName,
       () => {
         setKeyboardShow(false);
       },
@@ -94,7 +101,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
-      behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
       <Shadow
         viewStyle={[
           styles.shadow,

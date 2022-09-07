@@ -33,10 +33,16 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   unfollowText: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   followText: {
     color: theme.colors.white,
+  },
+  likedIcon: {
+    height: 20,
+    width: 20,
+    resizeMode: 'contain',
+    tintColor: theme.colors.butterOrange01,
   },
 }));
 

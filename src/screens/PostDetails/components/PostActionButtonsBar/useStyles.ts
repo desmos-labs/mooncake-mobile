@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-between',
   },
   text: {
-    color: theme.colors.black,
+    color: theme.colors.butterOrange01,
   },
   button: {
     alignItems: 'center',
@@ -26,7 +26,7 @@ const useStyles = makeStyle(theme => ({
   },
   icon: {
     marginRight: theme.spacing.xs,
-    tintColor: theme.colors.black,
+    tintColor: theme.colors.butterOrange01,
     width: 25,
     height: 25,
     resizeMode: 'contain',
