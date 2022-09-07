@@ -6,11 +6,16 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     backgroundColor: theme.colors.white,
   },
   headerBackImage: {
+    color: theme.colors.text,
+    backgroundColor: 'rgba(0,0,0,0)',
+    flexGrow: 0,
+    margin: 0,
     marginHorizontal: 8,
     padding: 12,
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
+    borderRadius: 12,
   },
   tabBar: {
     margin: 0,

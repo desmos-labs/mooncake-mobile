@@ -1,13 +1,19 @@
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationOptions,
+} from '@react-navigation/material-top-tabs';
+import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import {
+  Header,
   StackHeaderProps,
   StackScreenProps,
-  Header,
 } from '@react-navigation/stack';
+import numOfFollowerState from '@recoil/numOfFollowerState';
+import {formatNumShorthand} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState, useCallback, FC} from 'react';
+import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -16,17 +22,11 @@ import {
   PanResponderGestureState,
   View,
 } from 'react-native';
-import {useRecoilValue} from 'recoil';
-import numOfFollowerState from '@recoil/numOfFollowerState';
 import {useTheme} from 'react-native-paper';
-import {formatNumShorthand} from 'lib/FormatUtils';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabNavigationOptions,
-} from '@react-navigation/material-top-tabs';
-import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
-import useStyles from './useStyles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {useRecoilValue} from 'recoil';
 import FollowingTab from '../Following';
+import useStyles from './useStyles';
 
 /**
  * @property {ROUTES.FOLLOWING | ROUTES.FOLLOWERS} initialTabRouteName - The initial tab route name.
@@ -55,7 +55,15 @@ type NavProps = StackScreenProps<
 
 const HeaderBackImage = () => {
   const styles = useStyles(numOfTabs);
-  return <AntDesignIcon name="left" size={20} style={styles.headerBackImage} />;
+  return (
+    <Icon
+      name="angle-left"
+      color="black"
+      size={24}
+      allowFontScaling
+      style={styles.headerBackImage}
+    />
+  );
 };
 
 /* A React component that renders the header for the following and followers screen. */

@@ -14,7 +14,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
@@ -35,7 +35,7 @@ export interface UserProfileParams {
 
 const Profile = () => {
   const theme = useTheme();
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const {t} = useTranslation('profile');
   const styles = useStyles();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
@@ -90,24 +90,24 @@ const Profile = () => {
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
 
-  const handlePressConnectAddress = React.useCallback(() => {
+  const handlePressConnectAddress = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
   }, []);
 
-  const handlePressSettings = React.useCallback(() => {
+  const handlePressSettings = useCallback(() => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
-  const bannerImage = React.useMemo(() => {
+  const bannerImage = useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
 
-  const profileImage = React.useMemo(() => {
+  const profileImage = useMemo(() => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
   // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
-  const followButton = React.useMemo(() => {
+  const followButton = useMemo(() => {
     return followOrangeFilledIcon;
   }, []);
 
@@ -116,7 +116,7 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressed = React.useCallback(
+  const handleFollowingPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
@@ -127,7 +127,7 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const handleFollowersPressed = React.useCallback(
+  const handleFollowersPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,
@@ -137,6 +137,21 @@ const Profile = () => {
       }),
     [subspaceID, activeAddress, nickname, dtag],
   );
+
+  const handlePostsSectionPressed = useCallback(() => {
+    navigate(ROUTES.PROFILE_POSTS, {
+      userAddress: activeAddress!,
+      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
+    });
+  }, [activeAddress]);
+
+  const handleNftSectionPressed = useCallback(() => {
+    console.log('test');
+  }, []);
+
+  const handlePoapSectionPressed = useCallback(() => {
+    console.log('test');
+  }, []);
 
   if (profileLoading) {
     return <ActivityIndicator />;
@@ -216,16 +231,19 @@ const Profile = () => {
         </View>
         <Spacer paddingVertical={12} />
         <ProfileSectionButton
+          onPress={handlePostsSectionPressed}
           titleLabel={t('posts')}
           bodyLabel={t('check posts')}
           screenMode={screenMode}
         />
         <ProfileSectionButton
+          onPress={handleNftSectionPressed}
           titleLabel={t('nft')}
           bodyLabel={t('link nft')}
           screenMode={screenMode}
         />
         <ProfileSectionButton
+          onPress={handlePoapSectionPressed}
           titleLabel={t('poap')}
           bodyLabel={t('claim poap')}
           screenMode={screenMode}

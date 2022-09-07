@@ -10,9 +10,15 @@ type Props = {
   screenMode: 'myProfile' | 'guestProfile';
   bodyLabel: string;
   titleLabel: string;
+  onPress: () => void;
 };
 
-const ProfileSectionButton = ({screenMode, titleLabel, bodyLabel}: Props) => {
+const ProfileSectionButton = ({
+  screenMode,
+  titleLabel,
+  bodyLabel,
+  onPress,
+}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -21,7 +27,7 @@ const ProfileSectionButton = ({screenMode, titleLabel, bodyLabel}: Props) => {
       <DropShadowWrapper
         customColor="rgba(133, 133, 133, 0.001)"
         customDistance={10}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onPress}>
           <View style={{flexDirection: 'column'}}>
             <Typography.Subtitle2>{titleLabel}</Typography.Subtitle2>
             {screenMode === 'myProfile' && (

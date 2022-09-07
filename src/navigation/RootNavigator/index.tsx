@@ -52,6 +52,8 @@ import ChangePassword, {
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
 import Profile, {UserProfileParams} from 'screens/Profile';
+import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
+import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
@@ -136,6 +138,12 @@ export type RootNavigatorParamList = {
 
   /* Followers tab route. */
   [ROUTES.FOLLOWERS]: FollowingParams;
+
+  // Profile posts
+  [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
+  [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
+  [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
+  [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -395,6 +403,14 @@ const RootNavigator = () => {
           gestureResponseDistance,
           header: FollowingAndFollowersHeader,
           headerShown: true,
+        }}
+      />
+
+      <Stack.Screen
+        name={ROUTES.PROFILE_POSTS}
+        component={ProfilePosts}
+        options={{
+          gestureResponseDistance,
         }}
       />
     </Stack.Navigator>
