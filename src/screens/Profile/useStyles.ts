@@ -66,9 +66,11 @@ const useStyles = makeStyle(theme => ({
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
   },
-  sectionGroup: {
-    marginHorizontal: theme.spacing.m,
-    marginBottom: theme.spacing.m,
+  connectButton: {
+    height: 48,
+    width: 170,
+    justifyContent: 'center',
+    borderColor: theme.colors.black,
   },
 }));
 

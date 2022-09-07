@@ -7,7 +7,6 @@ import {
   followOrangeFilledIcon,
 } from 'assets/images';
 import Button from 'components/Button';
-import DropShadowWrapper from 'components/DropShadowWrapper';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -21,7 +20,7 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -201,126 +200,36 @@ const Profile = () => {
               <View style={styles.connectButtonGroup}>
                 <Button
                   mode="outlined"
-                  style={{
-                    height: 48,
-                    width: 170,
-                    justifyContent: 'center',
-                    borderColor: theme.colors.black,
-                  }}
+                  style={styles.connectButton}
                   onPress={handlePressConnectAddress}>
                   <Typography.Button2>{t('connectAddress')}</Typography.Button2>
                 </Button>
                 <Button
                   mode="outlined"
-                  style={{
-                    height: 48,
-                    width: 170,
-                    justifyContent: 'center',
-                    borderColor: theme.colors.black,
-                  }}
+                  style={styles.connectButton}
                   onPress={() => console.log('connectTwitter')}>
                   <Typography.Button2>{t('connectTwitter')}</Typography.Button2>
                 </Button>
-                {/* hidden on MVP */}
-                {/* <ProfileConnectButton */}
-                {/*  label={t('connectApp')} */}
-                {/*  handlePress={() => {}} */}
-                {/* /> */}
               </View>
             )}
           </View>
         </View>
         <Spacer paddingVertical={12} />
-        <View style={styles.sectionGroup}>
-          <DropShadowWrapper
-            customColor="rgba(133, 133, 133, 0.001)"
-            customDistance={20}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'white',
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderRadius: theme.roundness,
-                padding: theme.spacing.m,
-                minHeight: 80,
-              }}>
-              <View style={{flexDirection: 'column'}}>
-                <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
-                {screenMode === 'myProfile' && (
-                  <Typography.Body6>{t('check posts')}</Typography.Body6>
-                )}
-              </View>
-              <Icon
-                name="angle-right"
-                color={theme.colors.black}
-                size={24}
-                allowFontScaling
-              />
-            </TouchableOpacity>
-          </DropShadowWrapper>
-        </View>
-        <View style={styles.sectionGroup}>
-          <DropShadowWrapper
-            customColor="rgba(133, 133, 133, 0.001)"
-            customDistance={10}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'white',
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderRadius: theme.roundness,
-                padding: theme.spacing.m,
-                minHeight: 80,
-              }}>
-              <View style={{flexDirection: 'column'}}>
-                <Typography.Subtitle2>{t('nft')}</Typography.Subtitle2>
-                {screenMode === 'myProfile' && (
-                  <Typography.Body6>{t('link nft')}</Typography.Body6>
-                )}
-              </View>
-              <Icon
-                name="angle-right"
-                color={theme.colors.black}
-                size={24}
-                allowFontScaling
-              />
-            </TouchableOpacity>
-          </DropShadowWrapper>
-        </View>
-        <View style={styles.sectionGroup}>
-          <DropShadowWrapper
-            customColor="rgba(133, 133, 133, 0.001)"
-            customDistance={10}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'white',
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderRadius: theme.roundness,
-                padding: theme.spacing.m,
-                minHeight: 80,
-              }}>
-              <View style={{flexDirection: 'column'}}>
-                <Typography.Subtitle2>{t('poap')}</Typography.Subtitle2>
-                {screenMode === 'myProfile' && (
-                  <Typography.Body6>{t('claim poap')}</Typography.Body6>
-                )}
-              </View>
-              <Icon
-                name="angle-right"
-                color={theme.colors.black}
-                size={24}
-                allowFontScaling
-              />
-            </TouchableOpacity>
-          </DropShadowWrapper>
-        </View>
+        <ProfileSectionButton
+          titleLabel={t('posts')}
+          bodyLabel={t('check posts')}
+          screenMode={screenMode}
+        />
+        <ProfileSectionButton
+          titleLabel={t('nft')}
+          bodyLabel={t('link nft')}
+          screenMode={screenMode}
+        />
+        <ProfileSectionButton
+          titleLabel={t('poap')}
+          bodyLabel={t('claim poap')}
+          screenMode={screenMode}
+        />
       </Animated.ScrollView>
 
       <ProfileHeader
