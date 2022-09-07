@@ -6,7 +6,9 @@ import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/Mat
 import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -18,7 +20,9 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import LikedTab from 'screens/ProfilePosts/LikedTab';
 import PostsTab from 'screens/ProfilePosts/PostsTab';
+import TippedTab from 'screens/ProfilePosts/TippedTab';
 import useStyles from './useStyles';
 
 export type ProfilePostsTabsParams = {
@@ -37,7 +41,7 @@ const ProfilePosts = () => {
   const route = useRoute<NavProps['route']>();
   const styles = useStyles(numOfTabs);
   const theme = useTheme();
-  const {t} = useTranslation('profilePosts');
+  const {t} = useTranslation('profile');
   const [swipeEnabled, setSwipeEnabled] = useState(true);
 
   const screenOptions: MaterialTopTabNavigationOptions = {
@@ -66,7 +70,6 @@ const ProfilePosts = () => {
       const focusedRouteName =
         getFocusedRouteNameFromRoute(route) ??
         route.params.initialTabsRouteName;
-
       setSwipeEnabled(
         focusedRouteName !== ROUTES.PROFILE_POSTS_POSTS || diffX < 0,
       );
@@ -80,10 +83,14 @@ const ProfilePosts = () => {
 
   return (
     <DView
-      topBar={<TopBar />}
+      backgroundColor={theme.colors.white}
+      topBar={<TopBar style={{backgroundColor: theme.colors.white}} />}
+      disableHideKeyboardTouchable={true}
       style={styles.container}
       {...panResponder.panHandlers}
       onTouchStart={disableParentSwipeLeft}>
+      <Spacer paddingVertical={8} />
+      <Typography.H3>{t('posts')}</Typography.H3>
       <Tab.Navigator
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
@@ -96,13 +103,13 @@ const ProfilePosts = () => {
         />
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_LIKED}
-          component={PostsTab}
+          component={LikedTab}
           options={{tabBarLabel: t('liked')}}
           initialParams={{userAddress: route.params.userAddress, type: 'liked'}}
         />
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_TIPPED}
-          component={PostsTab}
+          component={TippedTab}
           options={{tabBarLabel: t('tipped')}}
           initialParams={{
             userAddress: route.params.userAddress,

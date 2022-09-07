@@ -6,18 +6,7 @@ import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
-// type ScreenProps = {
-//   navigation: {
-//     readonly goBack: () => void;
-//     readonly canGoBack: () => boolean;
-//   };
-// };
-
 export type Props = {
-  /**
-   * Props regarding of the stack screen to manage.
-   */
-  // stackProps: ScreenProps;
   /**
    * Element to display on the center of the bar.
    */
@@ -43,7 +32,6 @@ export const TopBar: React.FC<Props> = props => {
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
-  // const {navigation} = stackProps;
 
   const navigationGoBack = navigation.canGoBack() ? (
     <TouchableOpacity

@@ -4,38 +4,30 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {
     flexGrow: 1,
     backgroundColor: theme.colors.white,
-  },
-  headerBackImage: {
-    color: theme.colors.text,
-    backgroundColor: 'rgba(0,0,0,0)',
-    flexGrow: 0,
-    margin: 0,
-    marginHorizontal: 8,
-    padding: 12,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
+    paddingHorizontal: theme.spacing.m,
   },
   tabBar: {
-    margin: 0,
     marginBottom: 10,
-    padding: 0,
+    width: 250,
     backgroundColor: 'rgba(0,0,0,0)',
   },
   tabBarItem: {
     margin: 0,
     padding: 0,
-    backgroundColor: 'rgba(0,0,0,0)',
     flexDirection: 'row',
     alignItems: 'flex-end',
     height: 52,
+    justifyContent: 'flex-start',
   },
   tabBarLabel: {
     marginBottom: 10,
-    backgroundColor: 'rgba(0,0,0,0)',
-    fontSize: 15,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 14,
+    fontStyle: 'normal',
     fontWeight: '600',
+    lineHeight: 21,
+    letterSpacing: 0.15,
+    textAlign: 'left',
     textTransform: 'none',
   },
   tabBarIndicator: {
@@ -45,7 +37,8 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
     height: 4,
     maxHeight: 4,
     borderRadius: 4,
-    marginLeft: `${100 / numOfTabs / 2}%`,
+    // tentative
+    marginLeft: 23,
   },
 }));
 

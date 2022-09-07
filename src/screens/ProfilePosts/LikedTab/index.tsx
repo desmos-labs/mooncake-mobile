@@ -7,34 +7,38 @@ import React from 'react';
 import {FlatList, View} from 'react-native';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
-import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
+import GetPostsLikedFromAddress from 'services/graphql/queries/GetPostsLikedFromAddress';
 import useStyles from './useStyles';
 
 type NavProps = MaterialTopTabScreenProps<
   RootNavigatorParamList,
-  ROUTES.PROFILE_POSTS_POSTS
+  ROUTES.PROFILE_POSTS_LIKED
 >;
 
-export type PostsTabParams = {
-  userAddress: string;
-};
-
-export const PostsTab = () => {
+export const LikedTab = () => {
   const styles = useStyles();
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const spec = {
+    '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+    registered_reaction_id: 9,
+  };
 
   const {
     data: postsData,
     loading: postsLoading,
     refetch: postsRefetch,
-  } = useQuery(GetPostsForAddress, {
+  } = useQuery(GetPostsLikedFromAddress, {
     variables: {
+      subspaceID: 5,
       address: params.userAddress,
+      spec,
     },
   });
 
   const posts: [] = React.useMemo(() => {
+    console.log('likedPosts', postsData);
     if (!postsData) return [];
     return postsData.post;
   }, [postsData, postsLoading]);
@@ -78,4 +82,4 @@ export const PostsTab = () => {
   );
 };
 
-export default PostsTab;
+export default LikedTab;

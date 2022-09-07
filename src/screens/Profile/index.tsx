@@ -140,7 +140,10 @@ const Profile = () => {
 
   const handlePostsSectionPressed = useCallback(() => {
     navigate(ROUTES.PROFILE_POSTS, {
-      userAddress: activeAddress!,
+      userAddress:
+        screenMode === 'myProfile'
+          ? activeAddress!
+          : params.visitingProfileAddress!,
       initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
     });
   }, [activeAddress]);

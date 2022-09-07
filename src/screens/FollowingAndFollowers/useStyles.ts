@@ -29,8 +29,13 @@ const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   tabBarLabel: {
     marginBottom: 10,
     backgroundColor: 'rgba(0,0,0,0)',
-    fontSize: 15,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 14,
+    fontStyle: 'normal',
     fontWeight: '600',
+    lineHeight: 21,
+    letterSpacing: 0.15,
+    textAlign: 'left',
     textTransform: 'none',
   },
   tabBarIndicator: {
