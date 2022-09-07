@@ -5,6 +5,12 @@ const useStyles = makeStyle(theme => ({
     flexGrow: 1,
     backgroundColor: theme.colors.white,
   },
+  contentContainerStyle: {
+    flexGrow: 1,
+    backgroundColor: theme.colors.white,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+  },
 }));
 
 export default useStyles;
