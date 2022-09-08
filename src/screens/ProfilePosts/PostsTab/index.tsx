@@ -8,6 +8,7 @@ import {
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, View} from 'react-native';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
@@ -27,6 +28,7 @@ export const PostsTab = () => {
   const styles = useStyles();
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const {t} = useTranslation('profile');
 
   const {
     data: postsData,
@@ -86,7 +88,12 @@ export const PostsTab = () => {
         renderItem={renderPosts}
         numColumns={3}
         contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={EmptyPostComponent}
+        ListEmptyComponent={
+          <EmptyPostComponent
+            textLabel={t('noUserPosts')}
+            buttonLabel={t('createPost')}
+          />
+        }
       />
     </View>
   );

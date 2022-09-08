@@ -36,7 +36,7 @@ const ProfileSectionButton = ({
           </View>
           <Icon
             name="angle-right"
-            color={theme.colors.black}
+            color={theme.colors.surfaceBlack}
             size={24}
             allowFontScaling
           />

@@ -70,7 +70,7 @@ const useStyles = makeStyle(theme => ({
     height: 48,
     width: 170,
     justifyContent: 'center',
-    borderColor: theme.colors.black,
+    borderColor: theme.colors.surfaceBlack,
   },
 }));
 

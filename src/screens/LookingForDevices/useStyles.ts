@@ -12,13 +12,13 @@ const useStyles = makeStyle(theme => ({
     padding: theme.spacing.m,
   },
   headerStyle: {
-    color: theme.colors.black,
+    color: theme.colors.surfaceBlack,
     marginTop: 40,
     marginBottom: 20,
     textAlign: 'center',
   },
   descriptionStyle: {
-    color: theme.colors.black,
+    color: theme.colors.surfaceBlack,
     textAlign: 'center',
   },
   warningStyle: {
@@ -51,7 +51,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: 22,
   },
   noDevicesText: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   noDeviceImage: {
     width: 110,

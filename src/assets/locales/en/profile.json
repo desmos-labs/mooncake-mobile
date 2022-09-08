@@ -8,7 +8,7 @@
   "connectAddress": "Connect Address",
   "connectTwitter": "Connect Twitter",
   "connectApp": "Connect App",
-  "userNoPosts": "No posts yet",
+  "userNoPosts": "You don't have any post yet",
   "posts": "Posts",
   "check posts": "Check your posts ",
   "portfolio": "Portfolio",
@@ -16,5 +16,9 @@
   "claim poap": "Claim your attendance rewards",
   "tippings": "Tippings",
   "nft": "NFT",
-  "link nft": "Link up address to show off your NFT"
+  "link nft": "Link up address to show off your NFT",
+  "noTipsYet": "No posts tipped yet",
+  "browsePosts": "Browse posts",
+  "createPost": "Create a post",
+  "noLikesYet": "No posts liked yet"
 }

@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, View} from 'react-native';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
@@ -16,6 +17,7 @@ type NavProps = MaterialTopTabScreenProps<
 export const TippedTab = () => {
   const styles = useStyles();
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const {t} = useTranslation('profile');
 
   const handlePostPressed = React.useCallback(
     ({subspaceID, id}: {subspaceID: number; id: number}) => {
@@ -48,7 +50,12 @@ export const TippedTab = () => {
         renderItem={renderPosts}
         numColumns={3}
         contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={EmptyPostComponent}
+        ListEmptyComponent={
+          <EmptyPostComponent
+            textLabel={t('noTipsYet')}
+            buttonLabel={t('browsePosts')}
+          />
+        }
       />
     </View>
   );

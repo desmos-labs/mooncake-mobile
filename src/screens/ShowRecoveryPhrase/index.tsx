@@ -26,9 +26,9 @@ const ShowRecoveryPhrase: React.FC<Props> = () => {
           i18nKey="settings:show recovery passphrase message"
           components={[
             <Typography.Subtitle2
-              style={{color: theme.colors.desmosOrange01}}
+              style={{color: theme.colors.butterOrange01}}
             />,
-            <Typography.Subtitle2 style={{color: theme.colors.black}} />,
+            <Typography.Subtitle2 style={{color: theme.colors.surfaceBlack}} />,
           ]}
         />
       </Typography.Body6>
