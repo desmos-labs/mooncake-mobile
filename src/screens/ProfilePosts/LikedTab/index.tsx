@@ -5,6 +5,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -32,7 +33,7 @@ export const LikedTab = () => {
     refetch: postsRefetch,
   } = useQuery(GetPostsLikedFromAddress, {
     variables: {
-      subspaceID: 5,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
       address: params.userAddress,
     },
   });
@@ -80,7 +81,7 @@ export const LikedTab = () => {
       <FlatList
         showsVerticalScrollIndicator={false}
         refreshing={postsLoading}
-        onRefresh={() => pageRefetch()}
+        onRefresh={pageRefetch}
         data={posts}
         renderItem={renderPosts}
         numColumns={3}

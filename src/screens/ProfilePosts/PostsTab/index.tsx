@@ -5,6 +5,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -36,6 +37,7 @@ export const PostsTab = () => {
     refetch: postsRefetch,
   } = useQuery(GetPostsForAddress, {
     variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
       address: params.userAddress,
     },
   });
@@ -83,7 +85,7 @@ export const PostsTab = () => {
       <FlatList
         showsVerticalScrollIndicator={false}
         refreshing={postsLoading}
-        onRefresh={() => pageRefetch()}
+        onRefresh={pageRefetch}
         data={posts}
         renderItem={renderPosts}
         numColumns={3}
