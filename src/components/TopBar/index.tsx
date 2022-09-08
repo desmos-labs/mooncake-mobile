@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import BackButton from 'components/TopBar/BackButton';
+import BackButton from 'components/BackButton';
 import React, {ReactElement} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 import useStyles from './useStyles';
