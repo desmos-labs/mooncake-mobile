@@ -75,6 +75,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.background,
     borderTopRightRadius: 24,
     borderTopLeftRadius: 24,
+    overflow: 'visible',
   },
 }));
 

@@ -20,11 +20,13 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
   useAnimatedScrollHandler,
+  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
+import EnvConfig from 'config/EnvConfig';
 import AddressCopy from './components/AddressCopy';
 import ContentTabs from './components/ContentTab';
 import EmptyPostComponent from './components/EmptyPostComponent';
@@ -57,6 +59,8 @@ const Profile = () => {
    * The actual animations are created in the component itself.
    * */
   const scrollProgress = useSharedValue(0);
+  const scrollOffset = useSharedValue(0);
+  const AVATAR_TOP_OFFSET = 100 + top;
 
   // Calculate the percentage of scroll and set it to shared value
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -65,6 +69,14 @@ const Profile = () => {
     const numerator = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
+    scrollOffset.value = contentOffset.y;
+  });
+
+  const animatedAvatarStyle = useAnimatedStyle(() => {
+    return {
+      top: AVATAR_TOP_OFFSET - scrollOffset.value,
+      transform: [{scale: 1.0 - scrollProgress.value}],
+    };
   });
   /** Animations end * */
 
@@ -156,8 +168,7 @@ const Profile = () => {
     return followOrangeFilledIcon;
   }, []);
 
-  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
-  const subspaceID = 5;
+  const subspaceID = EnvConfig.APP_SUBSPACE_ID;
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
@@ -189,10 +200,11 @@ const Profile = () => {
         {/* top buttons start */}
         {/* top buttons end */}
 
-        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-        <View style={styles.avatarContainer}>
-          <Image style={styles.avatar} source={profileImage} />
-        </View>
+        {/* {Platform.OS === 'ios' && ( */}
+        {/*  <View style={[styles.avatarContainer]}> */}
+        {/*    <Image style={styles.avatar} source={profileImage} /> */}
+        {/*  </View> */}
+        {/* )} */}
 
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
@@ -285,9 +297,20 @@ const Profile = () => {
     <View style={styles.container}>
       <Image source={bannerImage} style={styles.bannerImage} />
 
+      {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+      <Animated.View
+        style={[
+          styles.avatarContainer,
+          {position: 'absolute', left: 0, right: 0, top: AVATAR_TOP_OFFSET},
+          animatedAvatarStyle,
+        ]}>
+        <Image style={styles.avatar} source={profileImage} />
+      </Animated.View>
+
       <Animated.FlatList
         ListHeaderComponent={ListHeaderComponent}
         onScroll={scrollHandler}
+        scrollEventThrottle={15}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
         data={posts}
