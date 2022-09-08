@@ -392,6 +392,8 @@ PODS:
     - React-Core
   - RNCMaskedView (0.2.6):
     - React-Core
+  - RNDeviceInfo (10.0.2):
+    - React-Core
   - RNGestureHandler (2.5.0):
     - React-Core
   - RNKeychain (8.1.0):
@@ -511,6 +513,7 @@ DEPENDENCIES:
   - RNBluetoothStateManager (from `../node_modules/react-native-bluetooth-state-manager`)
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -637,6 +640,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -719,6 +724,7 @@ SPEC CHECKSUMS:
   RNBluetoothStateManager: 4f2d73aecf081b97024116cba628e36c5b283791
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
+  RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNKeychain: c442b8512802a20cab4db3e3a1cf53e4731615bc
   RNLocalize: a64514b46a01375fdfae9349036b4dc7130333b5
