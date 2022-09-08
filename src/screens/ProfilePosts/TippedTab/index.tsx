@@ -13,7 +13,7 @@ type NavProps = MaterialTopTabScreenProps<
   ROUTES.PROFILE_POSTS_LIKED
 >;
 
-export const LikedTab = () => {
+export const TippedTab = () => {
   const styles = useStyles();
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -54,4 +54,4 @@ export const LikedTab = () => {
   );
 };
 
-export default LikedTab;
+export default TippedTab;

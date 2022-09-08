@@ -1,6 +1,10 @@
 import {useQuery} from '@apollo/client';
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -33,6 +37,16 @@ export const PostsTab = () => {
       address: params.userAddress,
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      pageRefetch();
+    }, [params]),
+  );
+
+  const pageRefetch = async () => {
+    await postsRefetch({address: params.userAddress});
+  };
 
   const posts: [] = React.useMemo(() => {
     if (!postsData) return [];
@@ -67,7 +81,7 @@ export const PostsTab = () => {
       <FlatList
         showsVerticalScrollIndicator={false}
         refreshing={postsLoading}
-        onRefresh={() => postsRefetch({address: params.userAddress})}
+        onRefresh={() => pageRefetch()}
         data={posts}
         renderItem={renderPosts}
         numColumns={3}
