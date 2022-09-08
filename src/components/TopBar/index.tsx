@@ -1,9 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
+import BackButton from 'components/TopBar/BackButton';
 import React, {ReactElement} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -22,28 +20,13 @@ export type Props = {
  * TODO: use react-navigation's header prop on navigator instead
  */
 export const TopBar: React.FC<Props> = props => {
-  const {
-    // stackProps,
-    centerElement,
-    rightElement,
-    style,
-  } = props;
-  const theme = useTheme();
+  const {centerElement, rightElement, style} = props;
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
 
   const navigationGoBack = navigation.canGoBack() ? (
-    <TouchableOpacity
-      hitSlop={{top: 30, bottom: 30, right: 30, left: 30}}
-      onPress={navigation.goBack}>
-      <Icon
-        name="angle-left"
-        color={theme.colors.surfaceBlack}
-        size={24}
-        allowFontScaling
-      />
-    </TouchableOpacity>
+    <BackButton onPress={navigation.goBack} />
   ) : null;
 
   return (

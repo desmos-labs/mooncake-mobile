@@ -5,7 +5,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.background,
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.m,
   },
   container: {
     flex: 1,

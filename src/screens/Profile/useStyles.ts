@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     width: 88,
     height: 88,
     borderRadius: 44,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     position: 'absolute',
     top: -50,
     alignSelf: 'center',
