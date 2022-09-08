@@ -1,6 +1,9 @@
 import {makeStyle} from 'config/theme';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const useStyles = makeStyle(theme => {
+  const {bottom} = useSafeAreaInsets();
+
   return {
     postButton: {
       height: 30,
@@ -16,7 +19,8 @@ const useStyles = makeStyle(theme => {
     container: {
       flexDirection: 'row',
       width: '100%',
-      marginBottom: theme.spacing.s,
+      // Add spacing for devices that do not require bottom safe-area
+      marginBottom: bottom === 0 ? theme.spacing.s : 0,
     },
     textInput: {
       flex: 1,
