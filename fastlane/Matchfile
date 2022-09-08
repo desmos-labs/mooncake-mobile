@@ -1,4 +1,6 @@
-git_url("git@github.com:desmos-labs/ios-butter-fastlane-certs.git")
+# ssh url for easier initial syncing
+#git_url("git@github.com:desmos-labs/ios-butter-fastlane-certs.git")
+git_url("https://github.com/desmos-labs/ios-butter-fastlane-certs")
 
 storage_mode("git")
 
