@@ -18,6 +18,7 @@ import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
 import {useTheme} from 'react-native-paper';
 import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
+import VersionString from 'screens/Settings/components/VersionString';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
@@ -146,6 +147,8 @@ const Settings: React.FC<Props> = props => {
           formattedDate: '21 June 2022',
         })}
       </Typography.Body7>
+
+      <VersionString />
     </DView>
   );
 };
