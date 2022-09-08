@@ -1,5 +1,6 @@
 import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {ImageSourcePropType} from 'react-native';
+import {DenomUnit} from '@desmoslabs/desmjs';
 import {HdPath} from './hdpath';
 
 export enum ChainAccountType {
@@ -34,6 +35,16 @@ export interface ChainAccount {
   signAlgorithm: 'secp256k1' | 'ed25519' | 'sr25519';
 }
 
+export type ChainAsset = {
+  description: string;
+  denom_units: DenomUnit[];
+  base: string;
+  name: string;
+  display: string;
+  symbol: string;
+  coingecko_id: string;
+  type_asset?: string;
+};
 /**
  * Type that represents a chain that can be
  * linked to a desmos profile.

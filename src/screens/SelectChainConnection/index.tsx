@@ -5,7 +5,7 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import LinkableChains from 'config/LinkableChains';
-import {LinkableChain} from 'types/chains';
+import {ChainAsset, LinkableChain} from 'types/chains';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
 import {getDenomSymbol} from 'config/ChainAssets';
 import Spacer from 'components/Spacer';
@@ -39,10 +39,19 @@ const SelectChainConnection = () => {
     [],
   );
 
+  const denomSymbols: {[index: string]: ChainAsset} = React.useMemo(() => {
+    return LinkableChains.reduce((acc, cur) => {
+      return {
+        ...acc,
+        [cur.name]: getDenomSymbol(cur.name),
+      };
+    }, {});
+  }, [LinkableChains]);
+
   const listItems = React.useMemo(() => {
     const sortedItems = LinkableChains.sort((a, b) => {
-      const aSymbol = getDenomSymbol(a.name).symbol;
-      const bSymbol = getDenomSymbol(b.name).symbol;
+      const aSymbol = denomSymbols[a.name].symbol;
+      const bSymbol = denomSymbols[b.name].symbol;
       // DSM will always be the first result
       if (aSymbol === 'DSM' || bSymbol === 'DSM') return 1;
       if (aSymbol > bSymbol) return 1;
@@ -51,7 +60,7 @@ const SelectChainConnection = () => {
     });
 
     const filteredItems = sortedItems.filter(chain => {
-      const {symbol} = getDenomSymbol(chain.name);
+      const {symbol} = denomSymbols[chain.name];
 
       const lowercaseFilter = filter.toLowerCase();
 
