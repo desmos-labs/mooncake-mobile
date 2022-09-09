@@ -34,7 +34,7 @@ export default function useUnlockWallet(): (
 
   return useCallback(async (account: ChainAccount) => {
     if (account.type === ChainAccountType.Local) {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         navigation.navigate(ROUTES.AUTHORIZE_WALLET, {
           screen: ROUTES.AUTH_UNLOCK_LOCAL_WALLET,
           params: {
@@ -49,7 +49,6 @@ export default function useUnlockWallet(): (
                 mnemonic: result.mnemonic,
               });
             },
-            onFailedAuthentication: reject,
           },
         });
       });

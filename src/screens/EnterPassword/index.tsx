@@ -1,9 +1,16 @@
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
+import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import _ from 'lodash';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import ROUTES from 'navigation/routes';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -14,13 +21,6 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
-import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
-import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
-import {StackScreenProps} from '@react-navigation/stack';
-import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -66,7 +66,7 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
-      {setErrors, setSubmitting}: FormikHelpers<any>,
+      {setErrors}: FormikHelpers<any>,
     ) => {
       setLoading(true);
       const {password} = formValues;
@@ -84,8 +84,6 @@ const EnterPassword = () => {
           const mnemonic = await getMnemonic(address, password);
 
           if (wallet && onSuccessfulAuthentication) {
-            setLoading(false);
-            setSubmitting(false);
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
@@ -98,7 +96,6 @@ const EnterPassword = () => {
           setErrors({password: t('error:incorrectPassword')});
         } finally {
           setLoading(false);
-          setSubmitting(false);
         }
       }
     },
