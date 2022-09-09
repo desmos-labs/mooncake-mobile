@@ -1,17 +1,27 @@
+import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import MnemonicGrid from 'components/MnemonicGrid';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+export type ShowSecretPhraseParams = {
+  mnemonic: string;
+};
 
-const ShowRecoveryPhrase: React.FC<Props> = () => {
+declare type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.SETTINGS_SHOW_SECRET_PHRASE
+>;
+
+const ShowRecoveryPhrase = () => {
+  const {params} = useRoute<NavProps['route']>();
   const {t} = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
@@ -34,7 +44,7 @@ const ShowRecoveryPhrase: React.FC<Props> = () => {
       </Typography.Body6>
       <MnemonicGrid
         style={{marginTop: theme.spacing.l}}
-        mnemonic="Twirly Matrices Service Fat Dentists Twirly Matrices Service Fat Dentists Twirly Matrices Service Fat Twirly Matrices Service Fat Twirly Matrices Service Fat Test Test"
+        mnemonic={params.mnemonic}
       />
     </DView>
   );

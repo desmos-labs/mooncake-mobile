@@ -1,3 +1,4 @@
+import TopBar from 'components/TopBar';
 import React from 'react';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -82,7 +83,7 @@ const PasswordManipulation = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container} scrollable>
+    <DView style={styles.container} scrollable topBar={<TopBar />}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       {descriptionText && (

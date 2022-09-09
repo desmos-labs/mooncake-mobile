@@ -5,11 +5,14 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {Formik} from 'formik';
+import {Formik, FormikHelpers} from 'formik';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -22,6 +25,8 @@ type NavProps = StackScreenProps<
 >;
 
 const RevealRecoveryPhrase: React.FC<NavProps> = () => {
+  const [loading, setLoading] = useState(false);
+  const {activeAddress} = useActiveAccount();
   const navigation = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation();
   const styles = useStyles();
@@ -32,10 +37,40 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
   };
 
   const onFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      // if password is correct, navigate to the next screen
-      console.log(formValues);
-      navigation.navigate(ROUTES.SETTINGS_SHOW_SECRET_PHRASE);
+    async (
+      formValues: typeof initialFormValues,
+      {setErrors}: FormikHelpers<any>,
+    ) => {
+      setLoading(true);
+      const {password} = formValues;
+
+      const useBiometrics = getMMKV<boolean>(
+        MMKVKEYS.USE_BIOMETRICS,
+      ) as boolean;
+
+      if (activeAddress) {
+        try {
+          const wallet = await getLocalWallet(
+            activeAddress,
+            password,
+            useBiometrics,
+          );
+
+          if (!wallet) setErrors({password: t('error:walletError')});
+
+          const mnemonic = await getMnemonic(activeAddress, password);
+
+          if (wallet) {
+            setLoading(false);
+            navigation.navigate(ROUTES.SETTINGS_SHOW_SECRET_PHRASE, {
+              mnemonic: mnemonic!,
+            });
+          }
+        } catch (err) {
+          setLoading(false);
+          setErrors({password: t('error:incorrectPassword')});
+        }
+      }
     },
     [],
   );
@@ -86,7 +121,9 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
-                mode="gradientFilled"
+                color={theme.colors.surfaceBlack}
+                loading={loading}
+                mode="contained"
                 onPress={handleSubmit}
                 disabled={
                   !values.password ||

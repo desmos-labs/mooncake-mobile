@@ -60,7 +60,9 @@ import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
 import Settings from 'screens/Settings';
-import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import ShowRecoveryPhrase, {
+  ShowSecretPhraseParams,
+} from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
@@ -94,7 +96,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
-  [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SELECT_DTAG]: SelectDtagParamList;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
