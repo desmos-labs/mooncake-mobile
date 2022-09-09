@@ -27,9 +27,10 @@ jobs:
           yarn install
 
       - name: Deploy iOS Beta to TestFlight via Fastlane
-        uses: maierj/fastlane-action@v2.1.0
+        uses: maierj/fastlane-action@v2.2.0
         with:
           lane: ios closed_beta
+          ruby-version: 2.7.5
         env:
           APP_STORE_CONNECT_TEAM_ID: '${{ secrets.APP_STORE_CONNECT_TEAM_ID }}'
           DEVELOPER_APP_ID: '${{ secrets.DEVELOPER_APP_ID }}'
