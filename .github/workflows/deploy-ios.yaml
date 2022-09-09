@@ -25,6 +25,10 @@ jobs:
       - name: Install yarn dependencies
         run: |
           yarn install
+      - name: Install ruby 2.7.5
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.5' # Not needed with a .ruby-version file
       - name: Install ruby bundle
         run: |
           bundle install --jobs 4 --retry 4
