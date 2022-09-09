@@ -81,7 +81,9 @@ const SendTips = () => {
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '1' ? theme.colors.white : theme.colors.black,
+                  tipAmount === '1'
+                    ? theme.colors.white
+                    : theme.colors.surfaceBlack,
                 textTransform: 'uppercase',
               }}>
               1 DSM
@@ -96,7 +98,9 @@ const SendTips = () => {
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '5' ? theme.colors.white : theme.colors.black,
+                  tipAmount === '5'
+                    ? theme.colors.white
+                    : theme.colors.surfaceBlack,
                 textTransform: 'uppercase',
               }}>
               5 DSM
@@ -111,7 +115,9 @@ const SendTips = () => {
             <Typography.Subtitle3
               style={{
                 color:
-                  tipAmount === '10' ? theme.colors.white : theme.colors.black,
+                  tipAmount === '10'
+                    ? theme.colors.white
+                    : theme.colors.surfaceBlack,
                 textTransform: 'uppercase',
               }}>
               10 DSM

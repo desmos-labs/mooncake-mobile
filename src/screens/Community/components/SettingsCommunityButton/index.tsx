@@ -31,7 +31,7 @@ const SettingsCommunityButton = (props: Props) => {
         <View style={styles.arrowIcon}>
           <Icon
             name="angle-right"
-            color={theme.colors.black}
+            color={theme.colors.surfaceBlack}
             size={24}
             allowFontScaling
           />

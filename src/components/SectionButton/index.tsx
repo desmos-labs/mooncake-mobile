@@ -34,7 +34,7 @@ const SectionButton: React.FC<Props> = props => {
       <Typography.Button1 style={styles.label}>{label}</Typography.Button1>
       <Icon
         name={rightIconName || 'angle-right'}
-        color={theme.colors.black}
+        color={theme.colors.surfaceBlack}
         size={24}
         allowFontScaling
       />

@@ -35,7 +35,7 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   secondaryButtonText: {
-    color: theme.colors.black,
+    color: theme.colors.surfaceBlack,
   },
   primaryButton: {
     alignSelf: 'stretch',

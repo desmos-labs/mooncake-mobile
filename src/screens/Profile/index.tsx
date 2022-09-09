@@ -1,4 +1,3 @@
-import {useQuery} from '@apollo/client';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
@@ -7,6 +6,7 @@ import {
   editButton,
   followOrangeFilledIcon,
 } from 'assets/images';
+import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -14,24 +14,15 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {scale} from 'react-native-size-matters';
-import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
+import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import AddressCopy from './components/AddressCopy';
-import ContentTabs from './components/ContentTab';
-import EmptyPostComponent from './components/EmptyPostComponent';
-import FakeDropShadow from './components/FakeDropShadow';
-import ProfileConnectButton from './components/ProfileConnectButton';
 import ProfileHeader from './components/ProfileHeader';
-import ProfilePostCard from './components/ProfilePostCard';
 import SocialCounter from './components/SocialCounter';
 import UserBio from './components/UserBio';
 import useStyles from './useStyles';
@@ -44,8 +35,7 @@ export interface UserProfileParams {
 
 const Profile = () => {
   const theme = useTheme();
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const {t} = useTranslation('profile');
   const styles = useStyles();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
@@ -59,13 +49,13 @@ const Profile = () => {
   const scrollProgress = useSharedValue(0);
 
   // Calculate the percentage of scroll and set it to shared value
-  const scrollHandler = useAnimatedScrollHandler(event => {
+  /*  const scrollHandler = useAnimatedScrollHandler(event => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  });
+  }); */
   /** Animations end * */
 
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
@@ -100,59 +90,24 @@ const Profile = () => {
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
 
-  const tabs = useMemo(
-    () => [t('posts'), t('portfolio'), t('poap'), t('tippings')],
-    [t],
-  );
-
-  const {data: postData, loading: postsLoading} = useQuery(GetPostsForAddress, {
-    variables: {
-      address:
-        screenMode === 'myProfile'
-          ? activeAddress
-          : params.visitingProfileAddress,
-    },
-  });
-
-  const posts: [] = React.useMemo(() => {
-    if (!postData) return [];
-    return postData.post;
-  }, [postData, postsLoading]);
-
-  const handlePostPressed = React.useCallback(
-    ({
-      subspaceID,
-      authorAddress,
-      id,
-    }: {
-      subspaceID: number;
-      authorAddress: string;
-      id: number;
-    }) => {
-      // Pass these variables into the PostDetails page
-      console.log(subspaceID, authorAddress, id);
-    },
-    [],
-  );
-
-  const handlePressConnectAddress = React.useCallback(() => {
+  const handlePressConnectAddress = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
   }, []);
 
-  const handlePressSettings = React.useCallback(() => {
+  const handlePressSettings = useCallback(() => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
-  const bannerImage = React.useMemo(() => {
+  const bannerImage = useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
 
-  const profileImage = React.useMemo(() => {
+  const profileImage = useMemo(() => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
   // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
-  const followButton = React.useMemo(() => {
+  const followButton = useMemo(() => {
     return followOrangeFilledIcon;
   }, []);
 
@@ -161,7 +116,7 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressed = React.useCallback(
+  const handleFollowingPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
@@ -172,7 +127,7 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const handleFollowersPressed = React.useCallback(
+  const handleFollowersPressed = useCallback(
     () =>
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,
@@ -183,13 +138,37 @@ const Profile = () => {
     [subspaceID, activeAddress, nickname, dtag],
   );
 
-  const ListHeaderComponent = React.useMemo(() => {
-    return (
-      <>
-        {/* top buttons start */}
-        {/* top buttons end */}
+  const handlePostsSectionPressed = useCallback(() => {
+    navigate(ROUTES.PROFILE_POSTS, {
+      userAddress:
+        screenMode === 'myProfile'
+          ? activeAddress!
+          : params.visitingProfileAddress!,
+      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
+    });
+  }, [activeAddress]);
 
-        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+  const handleNftSectionPressed = useCallback(() => {
+    console.log('test');
+  }, []);
+
+  const handlePoapSectionPressed = useCallback(() => {
+    console.log('test');
+  }, []);
+
+  if (profileLoading) {
+    return <ActivityIndicator />;
+  }
+
+  return (
+    <View style={styles.container}>
+      <Image source={bannerImage} style={styles.bannerImage} />
+
+      <Animated.ScrollView
+        // onScroll={scrollHandler}
+        // Hardcoded value to avoid overlapping with header
+        style={{paddingTop: 100 + top}}
+        contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.avatarContainer}>
           <Image style={styles.avatar} source={profileImage} />
         </View>
@@ -237,69 +216,42 @@ const Profile = () => {
 
             {screenMode === 'myProfile' && (
               <View style={styles.connectButtonGroup}>
-                <ProfileConnectButton
-                  label={t('connectAddress')}
-                  handlePress={handlePressConnectAddress}
-                />
-
-                {/* hidden on MVP */}
-                {/* <ProfileConnectButton */}
-                {/*  label={t('connectApp')} */}
-                {/*  handlePress={() => {}} */}
-                {/* /> */}
+                <Button
+                  mode="outlined"
+                  style={styles.connectButton}
+                  onPress={handlePressConnectAddress}>
+                  <Typography.Button2>{t('connectAddress')}</Typography.Button2>
+                </Button>
+                <Button
+                  mode="outlined"
+                  style={styles.connectButton}
+                  onPress={() => console.log('connectTwitter')}>
+                  <Typography.Button2>{t('connectTwitter')}</Typography.Button2>
+                </Button>
               </View>
             )}
           </View>
         </View>
-
-        <FakeDropShadow />
-        <View style={styles.tabContainer}>
-          <ContentTabs
-            tabs={tabs}
-            selectedIndex={selectedTabIndex}
-            handleTabPressed={setSelectedTabIndex}
-          />
-        </View>
-      </>
-    );
-  }, [selectedTabIndex, nickname, dtag]);
-
-  if (profileLoading || postsLoading) {
-    return <ActivityIndicator />;
-  }
-
-  const renderPosts = ({item}: any) => (
-    <ProfilePostCard
-      postData={item}
-      onPress={() =>
-        handlePostPressed({
-          subspaceID: item.subspace_id,
-          authorAddress: item.author_address,
-          id: item.id,
-        })
-      }
-    />
-  );
-
-  return (
-    <View style={styles.container}>
-      <Image source={bannerImage} style={styles.bannerImage} />
-
-      <Animated.FlatList
-        ListHeaderComponent={ListHeaderComponent}
-        onScroll={scrollHandler}
-        // Hardcoded value to avoid overlapping with header
-        style={{paddingTop: 100 + top}}
-        data={posts}
-        renderItem={renderPosts}
-        numColumns={3}
-        columnWrapperStyle={{
-          // slight adjustment so column items appear centered
-          left: scale(20),
-        }}
-        contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={EmptyPostComponent}
-      />
+        <Spacer paddingVertical={12} />
+        <ProfileSectionButton
+          onPress={handlePostsSectionPressed}
+          titleLabel={t('posts')}
+          bodyLabel={t('check posts')}
+          screenMode={screenMode}
+        />
+        <ProfileSectionButton
+          onPress={handleNftSectionPressed}
+          titleLabel={t('nft')}
+          bodyLabel={t('link nft')}
+          screenMode={screenMode}
+        />
+        <ProfileSectionButton
+          onPress={handlePoapSectionPressed}
+          titleLabel={t('poap')}
+          bodyLabel={t('claim poap')}
+          screenMode={screenMode}
+        />
+      </Animated.ScrollView>
 
       <ProfileHeader
         disableRightButtons={screenMode === 'guestProfile'}
