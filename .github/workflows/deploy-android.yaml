@@ -37,11 +37,6 @@ jobs:
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-caches-
-
-      - name: 'Setup Ruby 2.7.5'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.7.5'
       - name: 'Build and deploy on Play Store'
         uses: maierj/fastlane-action@v2.2.0
         with:
