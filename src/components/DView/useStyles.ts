@@ -2,7 +2,7 @@ import {Props} from 'components/DView/index';
 import {makeStyleWithProps} from 'config/theme';
 import {StyleSheet} from 'react-native';
 
-const useStyles = makeStyleWithProps((props: Props, theme) => ({
+const useStyles = makeStyleWithProps((background: Props, theme) => ({
   root: {
     flexDirection: 'column',
     flexGrow: 1,
@@ -16,7 +16,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
     backgroundColor:
-      props.background === undefined ? theme.colors.background : 'transparent',
+      background === undefined ? theme.colors.background : 'transparent',
   },
   scrollViewOuter: {
     margin: -20,

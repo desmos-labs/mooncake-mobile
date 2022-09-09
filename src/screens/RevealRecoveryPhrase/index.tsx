@@ -53,7 +53,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
         <Trans
           i18nKey="settings:secret recovery passphrase message"
           components={[
-            <Typography.Subtitle2 style={{color: theme.colors.black}} />,
+            <Typography.Subtitle2 style={{color: theme.colors.surfaceBlack}} />,
           ]}
         />
       </Typography.Body6>

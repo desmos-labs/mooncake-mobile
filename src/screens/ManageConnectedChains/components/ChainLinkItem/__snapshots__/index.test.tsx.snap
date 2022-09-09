@@ -1547,7 +1547,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                   Array [
                     Array [
                       Object {
-                        "color": "#1D1E22",
+                        "color": "#25282D",
                       },
                       Object {
                         "fontFamily": "Poppins-SemiBold",
@@ -1581,7 +1581,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                     Array [
                       Array [
                         Object {
-                          "color": "#1D1E22",
+                          "color": "#25282D",
                         },
                         Object {
                           "fontFamily": "Poppins-Regular",
@@ -1667,7 +1667,7 @@ exports[`component: ChainLinkItem renders 1`] = `
                     Array [
                       Array [
                         Object {
-                          "color": "#1D1E22",
+                          "color": "#25282D",
                         },
                         Object {
                           "fontFamily": "Poppins-SemiBold",

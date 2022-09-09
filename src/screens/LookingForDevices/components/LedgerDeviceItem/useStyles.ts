@@ -18,7 +18,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   nameStyle: {
-    color: theme.colors.black,
+    color: theme.colors.surfaceBlack,
     marginLeft: 20,
   },
   ledgerIconStyle: {

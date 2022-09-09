@@ -40,7 +40,6 @@ export type Props = SafeAreaViewProps & {
   onRefresh?: () => void;
   edges?: Edge[];
   statusBarProps?: React.ComponentProps<typeof StatusBar>;
-
   disableHideKeyboardTouchable?: boolean;
 };
 // TODO fix statusBarStyle accordingly with the theme
@@ -58,6 +57,7 @@ const DView: React.FC<Props> = props => {
     onRefresh,
     enableRefreshControl,
     edges,
+    ...rest
   } = props;
   const styles = useStyles(props);
 
@@ -68,7 +68,8 @@ const DView: React.FC<Props> = props => {
       onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
         edges={edges ?? ['bottom', 'left', 'right', 'top']}
-        style={[styles.root, backgroundColor ? {backgroundColor} : {}]}>
+        style={[styles.root, backgroundColor ? {backgroundColor} : {}]}
+        {...rest}>
         <StatusBar backgroundColor="transparent" {...statusBarProps} />
         {background !== undefined && (
           <ImageBackground style={styles.background} source={background} />
