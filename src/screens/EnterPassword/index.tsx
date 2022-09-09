@@ -66,7 +66,7 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
-      {setErrors}: FormikHelpers<any>,
+      {setErrors, setSubmitting}: FormikHelpers<any>,
     ) => {
       setLoading(true);
       const {password} = formValues;
@@ -85,6 +85,7 @@ const EnterPassword = () => {
 
           if (wallet && onSuccessfulAuthentication) {
             setLoading(false);
+            setSubmitting(false);
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
@@ -95,6 +96,9 @@ const EnterPassword = () => {
           setLoading(false);
           onFailedAuthentication && onFailedAuthentication();
           setErrors({password: t('error:incorrectPassword')});
+        } finally {
+          setLoading(false);
+          setSubmitting(false);
         }
       }
     },
