@@ -43,8 +43,8 @@ jobs:
         with:
           lane: 'android deploy_to_internal_testing'
         env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_SIGNING_KEY_BASE64: ${{ secrets.ANDROID_SIGNING_KEY_BASE64 }}
           ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           ANDROID_SIGNING_ALIAS: ${{ secrets.ANDROID_SIGNING_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
-          PLAYSTORE_JSON_KEY: ${{ secrets.PLAYSTORE_JSON_KEY }}
+          PLAYSTORE_JSON_KEY_BASE64: ${{ secrets.PLAYSTORE_JSON_KEY_BASE64 }}
