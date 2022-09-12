@@ -23,6 +23,7 @@ target 'desmosFlagship' do
   # react-native-permissions compat
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
 
   target 'desmosFlagshipTests' do
     inherit! :complete
