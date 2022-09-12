@@ -1,17 +1,17 @@
-import {useCallback, useMemo, useState} from 'react';
-import {computeTxFees, messagesGas} from 'lib/desmos/fees';
+import {EncodeObject} from '@cosmjs/proto-signing';
 import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
-import {EncodeObject} from '@cosmjs/proto-signing';
+import followedAddressesState from '@recoil/followedAddressesState';
+import {followingState} from '@recoil/following';
+import EnvConfig from 'config/EnvConfig';
+import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import MsgTypes from 'lib/desmos/msgtypes';
 import Long from 'long';
-import EnvConfig from 'config/EnvConfig';
-import {useRecoilCallback, useRecoilValue} from 'recoil';
-import {followingState} from '@recoil/following';
-import followedAddressesState from '@recoil/followedAddressesState';
+import {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {useRecoilCallback, useRecoilValue} from 'recoil';
 import {ChainAccount} from 'types/chains';
 import useBroadcastMessages from './broadcastTx/useBroadcastMessages';
 import useActiveAccount from './useActiveAccount';

@@ -7,34 +7,51 @@ import SectionSwitch from 'components/SectionSwitch';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
-import useStyles from 'screens/Settings/useStyles';
-import {AppSettings} from 'types/settings';
-import {useTheme} from 'react-native-paper';
 import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
+import useStyles from 'screens/Settings/useStyles';
+import {AppSettings} from 'types/settings';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+declare type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.SETTINGS
+>;
 
-const Settings: React.FC<Props> = props => {
+const Settings: React.FC<NavProps> = props => {
   const {
     navigation: {navigate},
   } = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
-
+  const {chainAccount} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
+  const unlockWallet = useUnlockWallet();
 
   /*  const areBiometricsSupported = useCallback(async () => {
     console.log('checkIfBiometricsAreSupported');
   }, []); */
+
+  const handleChangePassword = useCallback(async () => {
+    if (chainAccount) {
+      const unlockResult = await unlockWallet(chainAccount);
+      if (unlockResult) {
+        navigate(ROUTES.PASSWORD_MANIPULATION, {
+          mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+        });
+      }
+    }
+  }, [chainAccount, unlockWallet]);
 
   const navigateToConfirmModal = useCallback(() => {
     navigate({
@@ -99,11 +116,7 @@ const Settings: React.FC<Props> = props => {
         />
         <SectionButton
           label={t('change password')}
-          onPress={() =>
-            navigate(ROUTES.PASSWORD_MANIPULATION, {
-              mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
-            })
-          }
+          onPress={handleChangePassword}
         />
         <SectionSwitch
           label={t('enable biometrics')}

@@ -1,3 +1,4 @@
+import TopBar from 'components/TopBar';
 import React from 'react';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -12,6 +13,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useTranslation} from 'react-i18next';
 import Spacer from 'components/Spacer';
+import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import * as Yup from 'yup';
 import PasswordReqGroup from 'components/PasswordReqGroup';
@@ -47,10 +49,9 @@ export type NavProps = StackScreenProps<
 
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
-
   const {top} = useSafeAreaInsets();
-
   const styles = useStyles();
+  const theme = useTheme();
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -82,7 +83,7 @@ const PasswordManipulation = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container} scrollable>
+    <DView style={styles.container} scrollable topBar={<TopBar />}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       {descriptionText && (
@@ -144,17 +145,18 @@ const PasswordManipulation = () => {
               )}
 
               <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? top + 180 : 0}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? top + 120 : 0}
+                behavior={Platform.OS === 'ios' ? 'position' : undefined}
                 style={styles.buttonGroup}>
                 <Button
+                  color={theme.colors.surfaceBlack}
                   onPress={handleSubmit}
                   disabled={
                     values.confirmPassword.length === 0 ||
                     values.newPassword.length === 0 ||
                     _.flatten(Object.values(errors)).length > 0
                   }
-                  mode="gradientFilled">
+                  mode="contained">
                   <Typography.Button2 style={styles.confirmButtonText}>
                     {t(buttonLabel)}
                   </Typography.Button2>
