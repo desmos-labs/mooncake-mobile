@@ -13,7 +13,7 @@ import useStyles from './useStyles';
 
 // type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_NFTS>;
 
-const ProfilePosts = () => {
+const ProfileNfts = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('nft');
@@ -58,4 +58,4 @@ const ProfilePosts = () => {
   );
 };
 
-export default ProfilePosts;
+export default ProfileNfts;
