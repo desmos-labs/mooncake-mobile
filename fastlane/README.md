@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios test_t
+### ios key_check
 
 ```sh
-[bundle exec] fastlane ios test_t
+[bundle exec] fastlane ios key_check
 ```
 
 
