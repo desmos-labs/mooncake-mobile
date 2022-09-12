@@ -42,7 +42,11 @@ const CustomCheckbox = ({checked, handlePress, error}: Props) => {
     <TouchableOpacity onPress={handlePress}>
       <Image
         source={checkboxUnchecked}
-        style={[styles.image, error && styles.errorTint]}
+        style={[
+          styles.image,
+          error && styles.errorTint,
+          checked && styles.checkedTint,
+        ]}
       />
       <Animated.Image
         source={checkboxChecked}
@@ -63,7 +67,10 @@ const useStyles = makeStyle(theme => ({
     width: 24,
   },
   errorTint: {
-    tintColor: theme.colors.pink01,
+    tintColor: theme.colors.surfaceBlack,
+  },
+  checkedTint: {
+    tintColor: theme.colors.accentGreen01,
   },
 }));
 

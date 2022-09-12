@@ -7,6 +7,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     padding: theme.spacing.m,
+    paddingTop: 0, // override top padding
     backgroundColor: theme.colors.background,
   },
   headerText: {
@@ -67,6 +68,15 @@ const useStyles = makeStyle(theme => ({
   },
   touchableText: {
     color: theme.colors.primary,
+  },
+  touchableTextChecked: {
+    color: theme.colors.accentGreen01,
+  },
+  iconButton: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    margin: theme.spacing.s,
   },
 }));
 

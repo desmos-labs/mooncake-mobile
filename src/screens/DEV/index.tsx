@@ -10,6 +10,7 @@ import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.SIGNUP,
   ROUTES.ACTION_AUTHORIZATION,
   ROUTES.CREATE_TEXT_POST,
   ROUTES.SELECT_POST_TYPE,
