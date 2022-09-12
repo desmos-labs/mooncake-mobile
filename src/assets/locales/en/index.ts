@@ -35,6 +35,7 @@ import createPost from './createPost.json';
 import postDetails from './postDetails.json';
 import comment from './comment.json';
 import followingAndFollowers from './followingAndFollowers.json';
+import nft from './nft.json';
 
 const en = {
   common,
@@ -74,6 +75,7 @@ const en = {
   postDetails,
   comment,
   followingAndFollowers,
+  nft,
 };
 
 export default en;

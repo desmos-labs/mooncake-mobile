@@ -36,7 +36,7 @@ const EmptyPostComponent = ({textLabel, buttonLabel}: Props) => {
         mode="outlined"
         style={{
           borderColor: theme.colors.surfaceBlack,
-          marginHorizontal: 100,
+          marginHorizontal: 80,
           height: 44,
           justifyContent: 'center',
         }}>

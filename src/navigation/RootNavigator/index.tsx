@@ -52,6 +52,7 @@ import ChangePassword, {
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
 import Profile, {UserProfileParams} from 'screens/Profile';
+import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
@@ -146,6 +147,8 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
+
+  [ROUTES.PROFILE_NFTS]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -415,6 +418,8 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
+
+      <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
     </Stack.Navigator>
   );
 };

@@ -30,13 +30,11 @@ export type ProfilePostsTabsParams = {
   userAddress: string;
 };
 
-/* Creating a new React component that is a tab navigator. */
 const Tab = createMaterialTopTabNavigator();
 const numOfTabs = 3;
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS>;
 
-/* A React component for the following and followers screen. */
 const ProfilePosts = () => {
   const route = useRoute<NavProps['route']>();
   const styles = useStyles(numOfTabs);
