@@ -2,6 +2,8 @@ name: iOS Release
 
 on:
   push:
+    branches:
+      - 'CIrelease/**'
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
