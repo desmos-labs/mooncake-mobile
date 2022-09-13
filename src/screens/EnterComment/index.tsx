@@ -54,11 +54,10 @@ const EnterComment = () => {
     };
 
     return (
-      <Button
-        mode="gradientFilled"
-        onPress={handlePress}
-        style={styles.postButton}>
-        {t('post')}
+      <Button mode="contained" onPress={handlePress} style={styles.postButton}>
+        <Typography.Button3 style={styles.postButtonText}>
+          {t('post')}
+        </Typography.Button3>
       </Button>
     );
   }, [imageAsset, reply]);
