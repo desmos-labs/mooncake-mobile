@@ -53,6 +53,7 @@ const useStyles = makeStyle(theme => {
     safeAreaView: {
       position: 'absolute',
       width: '100%',
+      zIndex: 3,
     },
   };
 });

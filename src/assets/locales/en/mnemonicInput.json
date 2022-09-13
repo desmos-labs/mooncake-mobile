@@ -6,5 +6,5 @@
   "inputPlaceholder": "Enter recovery phrase separated by spaces",
   "invalidMnemonic": "Invalid recovery phrase, please make sure you've entered it correctly.",
   "clearAll": "Clear all",
-  "userConsent": "I’ve read and accepted the [Product] <0>Terms of Service</0> and <1>Privacy Policy</1>."
+  "userConsent": "I’ve read and accepted the Butter <0>Terms of Service</0> and <1>Privacy Policy</1>."
 }

@@ -39,10 +39,7 @@ const ReactionItem = ({reaction}: Props) => {
         </View>
       </View>
 
-      <Image
-        source={commentLiked}
-        style={{height: 20, width: 20, resizeMode: 'contain'}}
-      />
+      <Image source={commentLiked} style={styles.likedIcon} />
     </View>
   );
 };

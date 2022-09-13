@@ -53,11 +53,11 @@ const WelcomePage: React.FC<Props> = () => {
         mode="gradientFilled"
         onPress={navigateToHome}>
         <Typography.Button2 style={{color: theme.colors.white}}>
-          {t('welcome to', {product: '[Product]'})}
+          {t('welcome to', {product: 'Butter'})}
         </Typography.Button2>
       </Button>
       <Button mode="outlined" onPress={navigateToBackupPhrase}>
-        <Typography.Button2 style={{color: theme.colors.desmosOrange01}}>
+        <Typography.Button2 style={{color: theme.colors.butterOrange01}}>
           {t('backup phrase')}
         </Typography.Button2>
       </Button>

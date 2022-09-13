@@ -18,7 +18,11 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
-import Animated, {useSharedValue} from 'react-native-reanimated';
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import AddressCopy from './components/AddressCopy';
@@ -47,15 +51,24 @@ const Profile = () => {
    * The actual animations are created in the component itself.
    * */
   const scrollProgress = useSharedValue(0);
+  const scrollOffset = useSharedValue(0);
+  const AVATAR_TOP_OFFSET = 100 + top;
 
   // Calculate the percentage of scroll and set it to shared value
-  /*  const scrollHandler = useAnimatedScrollHandler(event => {
+  const scrollHandler = useAnimatedScrollHandler(event => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  }); */
+  });
+
+  const animatedAvatarStyle = useAnimatedStyle(() => {
+    return {
+      top: AVATAR_TOP_OFFSET - scrollOffset.value,
+      transform: [{scale: 1.0 - scrollProgress.value}],
+    };
+  });
   /** Animations end * */
 
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
@@ -164,15 +177,21 @@ const Profile = () => {
     <View style={styles.container}>
       <Image source={bannerImage} style={styles.bannerImage} />
 
+      {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+      <Animated.View
+        style={[
+          styles.avatarContainer,
+          {position: 'absolute', left: 0, right: 0, top: AVATAR_TOP_OFFSET},
+          animatedAvatarStyle,
+        ]}>
+        <Image style={styles.avatar} source={profileImage} />
+      </Animated.View>
+
       <Animated.ScrollView
-        // onScroll={scrollHandler}
+        onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.avatarContainer}>
-          <Image style={styles.avatar} source={profileImage} />
-        </View>
-
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
             <ImageButton
