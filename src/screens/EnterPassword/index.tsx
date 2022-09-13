@@ -1,10 +1,17 @@
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
+import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import _ from 'lodash';
-import React from 'react';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import ROUTES from 'navigation/routes';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -12,14 +19,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
-import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
-import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
-import {StackScreenProps} from '@react-navigation/stack';
-import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import useStyles from './useStyles';
 
 const initialFormValues = {
@@ -47,6 +48,7 @@ export type EnterPasswordParams = {
 };
 
 const EnterPassword = () => {
+  const [loading, setLoading] = useState(false);
   const {t} = useTranslation('enterPassword');
   const {
     params: {
@@ -59,12 +61,14 @@ const EnterPassword = () => {
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
+  const theme = useTheme();
 
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
       {setErrors}: FormikHelpers<any>,
     ) => {
+      setLoading(true);
       const {password} = formValues;
 
       const useBiometrics = getMMKV<boolean>(
@@ -87,8 +91,11 @@ const EnterPassword = () => {
             });
           }
         } catch (err) {
+          setLoading(false);
           onFailedAuthentication && onFailedAuthentication();
           setErrors({password: t('error:incorrectPassword')});
+        } finally {
+          setLoading(false);
         }
       }
     },
@@ -137,12 +144,14 @@ const EnterPassword = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
+                loading={loading}
+                color={theme.colors.surfaceBlack}
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
                 onPress={handleSubmit}
-                mode="gradientFilled">
+                mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:confirm')}
                 </Typography.Button1>

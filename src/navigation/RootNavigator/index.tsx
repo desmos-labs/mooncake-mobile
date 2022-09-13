@@ -52,6 +52,7 @@ import ChangePassword, {
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
 import Profile, {UserProfileParams} from 'screens/Profile';
+import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
@@ -60,7 +61,9 @@ import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
 import Settings from 'screens/Settings';
-import ShowRecoveryPhrase from 'screens/ShowRecoveryPhrase';
+import ShowRecoveryPhrase, {
+  ShowSecretPhraseParams,
+} from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
@@ -94,7 +97,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
-  [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: undefined;
+  [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SELECT_DTAG]: SelectDtagParamList;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: undefined;
@@ -144,6 +147,8 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
+
+  [ROUTES.PROFILE_NFTS]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -413,6 +418,8 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
+
+      <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
     </Stack.Navigator>
   );
 };

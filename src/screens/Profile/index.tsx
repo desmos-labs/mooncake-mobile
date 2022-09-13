@@ -149,7 +149,7 @@ const Profile = () => {
   }, [activeAddress]);
 
   const handleNftSectionPressed = useCallback(() => {
-    console.log('test');
+    navigate(ROUTES.PROFILE_NFTS);
   }, []);
 
   const handlePoapSectionPressed = useCallback(() => {
