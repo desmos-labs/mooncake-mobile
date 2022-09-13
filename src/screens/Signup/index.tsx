@@ -11,7 +11,7 @@ import _ from 'lodash';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
-import {IconButton} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import * as Yup from 'yup';
 import {
@@ -22,11 +22,18 @@ import {
 } from 'lib/ValidationUtils';
 import PasswordReqGroup from 'components/PasswordReqGroup';
 import {useGetProfileParams} from '@recoil/profileParams';
+import BackButton from 'components/BackButton';
+import {useNavigation} from '@react-navigation/native';
+import Spacer from 'components/Spacer';
+import ImageButton from 'components/ImageButton';
+import {iconButton} from 'assets/images';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
+  const {goBack} = useNavigation();
+  const theme = useTheme();
   const styles = useStyles();
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
@@ -114,6 +121,11 @@ const Signup = () => {
   return (
     <DView
       style={styles.container}
+      topBar={
+        <Spacer paddingLeft={theme.spacing.m} paddingTop={theme.spacing.s}>
+          <BackButton onPress={goBack} />
+        </Spacer>
+      }
       statusBarProps={{
         barStyle: 'dark-content',
       }}>
@@ -138,9 +150,10 @@ const Signup = () => {
                       <Typography.Subtitle2>
                         {t('signup:profile dtag')}
                       </Typography.Subtitle2>
-                      <IconButton
-                        icon="information-outline"
-                        onPress={() => openInfoModal()}
+                      <ImageButton
+                        style={styles.iconButton}
+                        image={iconButton}
+                        onPress={openInfoModal}
                       />
                     </View>
 
@@ -152,7 +165,7 @@ const Signup = () => {
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
-                      error={!!errors.dTag || !availableDTag}
+                      // error={!!errors.dTag || !availableDTag}
                     />
                     {errors.dTag && (
                       <Typography.Caption1 style={styles.errorText}>
@@ -181,7 +194,7 @@ const Signup = () => {
                       }}
                       style={styles.inputLabel}
                       placeholder={t('newPw')}
-                      error={!!errors.newPassword}
+                      // error={!!errors.newPassword}
                     />
 
                     {errors.newPassword && (
@@ -201,7 +214,7 @@ const Signup = () => {
                       onChangeText={(value: string) => {
                         setFieldValue('confirmPassword', value, true);
                       }}
-                      error={!!errors.confirmPassword}
+                      // error={!!errors.confirmPassword}
                     />
                     {errors.confirmPassword && (
                       <Typography.Caption1
@@ -226,11 +239,19 @@ const Signup = () => {
                       components={[
                         <Typography.Body6
                           onPress={handlePressTOS}
-                          style={styles.touchableText}
+                          style={
+                            values.consent
+                              ? styles.touchableTextChecked
+                              : styles.touchableText
+                          }
                         />,
                         <Typography.Body6
                           onPress={handlePressPP}
-                          style={styles.touchableText}
+                          style={
+                            values.consent
+                              ? styles.touchableTextChecked
+                              : styles.touchableText
+                          }
                         />,
                       ]}
                     />
@@ -238,6 +259,7 @@ const Signup = () => {
                 </View>
                 <Button
                   onPress={handleSubmit}
+                  color={theme.colors.surfaceBlack}
                   disabled={
                     !values.dTag ||
                     !values.confirmPassword ||
@@ -246,11 +268,8 @@ const Signup = () => {
                     !availableDTag ||
                     _.flatten(Object.values(errors)).length > 0
                   }
-                  containerStyle={{marginTop: 10}}
-                  mode="gradientFilled">
-                  <Typography.Button2 style={styles.confirmButtonText}>
-                    {t('common:confirm')}
-                  </Typography.Button2>
+                  mode="contained">
+                  {t('common:next')}
                 </Button>
               </>
             );

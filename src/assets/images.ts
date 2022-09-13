@@ -191,6 +191,10 @@ export const profileBack = require('./images/profileBack.png');
 
 export const profileSettings = require('./images/profileSettings.png');
 
+export const iconButton = require('./images/iconButton.png');
+
+export const eyeOpen =require('./images/eyeOpen.png');
+
 // Socials
 
 export const discordIcon = require('./images/discord.png');
@@ -202,3 +206,4 @@ export const twitterIcon = require('./images/twitter.png');
 export const mediumIcon = require('./images/medium.png');
 
 export const githubIcon = require('./images/github.png');
+
