@@ -19,4 +19,7 @@ storiesOf('components/ProfileItem', module)
       {s()}
     </SbContainer>
   ))
-  .add('default', () => <ProfileItem {...defaultProps} />);
+  .add('default', () => <ProfileItem {...defaultProps} />)
+  .add('default profile picture', () => (
+    <ProfileItem {...defaultProps} avatar={{uri: '[do-not-modify]'}} />
+  ));
