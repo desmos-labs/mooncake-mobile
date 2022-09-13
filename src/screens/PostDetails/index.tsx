@@ -240,7 +240,7 @@ const PostDetails = () => {
             loading={reactionsLoading}
             likesCounter={reactions.length}
             tipsCounter={0}
-            handlePressCounters={() => handlePressCounters()}
+            handlePressCounters={handlePressCounters}
             accountsHighlitedPics={likesImages}
           />
         </Spacer>

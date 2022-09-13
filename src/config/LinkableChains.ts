@@ -41,7 +41,7 @@ import {
   xprtIcon,
 } from 'assets/images';
 import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import {LinkableChain} from 'types/chains';
+import {ChainAsset, LinkableChain} from 'types/chains';
 import {
   AkashAssets,
   BandAssets,
@@ -290,5 +290,21 @@ const LinkableChains: LinkableChain[] = [
     assets: SifchainAssets,
   },
 ];
+
+/**
+ * Returns a chain's default asset. Currently, it just returns the first ChainAsset.
+ */
+export const getDefaultChainAsset = (chainName: string): ChainAsset => {
+  const chain = LinkableChains.find(_chain => {
+    return _chain.name.toLowerCase() === chainName.toLowerCase();
+  });
+  if (chain && chain.assets) {
+    return chain.assets[0];
+  }
+  if (!chain) {
+    console.log('could not find', chainName);
+    throw new Error(`Chain with name ${chainName} not found in LinkableChains`);
+  } else throw new Error('Chain has no assets');
+};
 
 export default LinkableChains;
