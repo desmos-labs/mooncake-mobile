@@ -8,20 +8,22 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
   },
   container: {
-    flex: 1,
     alignItems: 'center',
   },
   containerLeft: {
     alignItems: 'flex-start',
     justifyContent: 'center',
+    flex: 0.25,
   },
   containerCenter: {
     alignItems: 'center',
+    flex: 0.5,
     justifyContent: 'center',
   },
   containerRight: {
     alignItems: 'flex-end',
     justifyContent: 'center',
+    flex: 0.25,
   },
 }));
 

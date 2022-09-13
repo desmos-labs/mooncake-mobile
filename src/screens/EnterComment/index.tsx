@@ -64,8 +64,11 @@ const EnterComment = () => {
 
   const TopBarCenterElement = React.useMemo(() => {
     return (
-      <Typography.Body7 style={{flex: 1, textAlign: 'center'}}>
-        hello world
+      <Typography.Body7
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={{textAlign: 'center'}}>
+        {t('replyTo', {replyTo: `@${author.dtag}`})}
       </Typography.Body7>
     );
   }, []);
