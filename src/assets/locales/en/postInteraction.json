@@ -7,5 +7,6 @@
   "noTips": "No tips yet",
   "tip": "Tip",
   "post": "Post",
-  "yourReply": "Your reply"
+  "yourReply": "Your reply",
+  "replyTo": "Reply {{replyTo}}"
 }

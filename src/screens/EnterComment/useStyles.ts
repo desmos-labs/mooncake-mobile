@@ -31,7 +31,12 @@ const useStyles = makeStyle(theme => ({
     height: 40,
     borderRadius: 20,
   },
-  bottomPanel: {paddingHorizontal: theme.spacing.m},
+  bottomPanel: {
+    paddingHorizontal: theme.spacing.m,
+  },
+  postButtonText: {
+    color: theme.colors.white,
+  },
 }));
 
 export default useStyles;

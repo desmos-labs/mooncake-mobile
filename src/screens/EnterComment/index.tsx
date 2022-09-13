@@ -54,19 +54,21 @@ const EnterComment = () => {
     };
 
     return (
-      <Button
-        mode="gradientFilled"
-        onPress={handlePress}
-        style={styles.postButton}>
-        {t('post')}
+      <Button mode="contained" onPress={handlePress} style={styles.postButton}>
+        <Typography.Button3 style={styles.postButtonText}>
+          {t('post')}
+        </Typography.Button3>
       </Button>
     );
   }, [imageAsset, reply]);
 
   const TopBarCenterElement = React.useMemo(() => {
     return (
-      <Typography.Body7 style={{flex: 1, textAlign: 'center'}}>
-        hello world
+      <Typography.Body7
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={{textAlign: 'center'}}>
+        {t('replyTo', {replyTo: `@${author.dtag}`})}
       </Typography.Body7>
     );
   }, []);
