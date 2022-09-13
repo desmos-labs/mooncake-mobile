@@ -1,31 +1,5 @@
-import {DenomUnit} from '@desmoslabs/desmjs';
-import LinkableChains from 'config/LinkableChains';
-
-declare global {
-  type ChainAsset = {
-    description: string;
-    denom_units: DenomUnit[];
-    base: string;
-    name: string;
-    display: string;
-    symbol: string;
-    coingecko_id: string;
-    type_asset?: string;
-  };
-}
-
-/**
- * Returns a chain's default asset. Currently, it just returns the first ChainAsset.
- */
-export const getDefaultChainAsset = (chainName: string): ChainAsset => {
-  const chain = LinkableChains.find(_chain => _chain.name === chainName);
-  if (chain && chain.assets) {
-    return chain.assets[0];
-  }
-  if (!chain) {
-    throw new Error(`Chain with name ${chainName} not found in LinkableChains`);
-  } else throw new Error('Chain has no assets');
-};
+import {ChainAsset} from 'types/chains';
+import {getDefaultChainAsset} from 'config/LinkableChains';
 
 /**
  * Get an asset's denom symbol, as well as exponent data.

@@ -5,7 +5,8 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import {Asset, ImageLibraryOptions} from 'react-native-image-picker/src/types';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
+import {Permission, PERMISSIONS, request} from 'react-native-permissions';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   mediaType: 'photo',
@@ -57,7 +58,15 @@ const useImageFromDevice = (): ReturnValue => {
   }, []);
 
   const imageFromCamera = React.useCallback(async () => {
-    // ios simulator returns error, possible permission problem
+    const permissions = await request(
+      Platform.select({
+        ios: PERMISSIONS.IOS.CAMERA,
+        android: PERMISSIONS.ANDROID.CAMERA,
+      }) as Permission,
+    );
+
+    if (permissions !== 'granted') return;
+
     const result = await launchCamera(DEFAULT_OPTIONS);
     if (result.errorCode) {
       // Temporary error handling
