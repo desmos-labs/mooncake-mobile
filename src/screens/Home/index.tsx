@@ -52,6 +52,8 @@ const Home = () => {
     setSelectedIndex,
     onPostChanged,
     postData,
+    handlePressPost,
+    loading,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -80,7 +82,7 @@ const Home = () => {
   const profilePic = _.get(profileData, 'profile_pic');
 
   return (
-    <DView style={styles.container}>
+    <DView style={styles.container} showLoadingOverlay={loading}>
       <View style={styles.headerGroup}>
         <ProfileHeaderButton
           style={styles.profileButton}
@@ -100,9 +102,7 @@ const Home = () => {
           containerStyle={styles.createPostButton}
           style={styles.icon}
           imageSrc={plusWhiteIcon}
-          onPress={() => {
-            console.log('create post');
-          }}
+          onPress={handlePressPost}
         />
       </View>
 

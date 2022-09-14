@@ -16,13 +16,15 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 const useHooks = () => {
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
-  const {navigate, pop} = useNavigation<NavProps['navigation']>();
+  const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
 
   const {checkGrants} = useCheckGrants();
+
+  const [loading, setLoading] = React.useState(false);
 
   const postData = React.useMemo(() => {
     if (selectedIndex === 0) return posts;
@@ -77,6 +79,7 @@ const useHooks = () => {
 
   const handlePressFollow = React.useCallback(
     async (address: string) => {
+      setLoading(true);
       const followedAddresses = following.map(x => x.address);
 
       const grantsToRequest: GrantEnums[] = [
@@ -86,6 +89,7 @@ const useHooks = () => {
       // check if user has grants first
 
       const grantsRequired = await checkGrants(grantsToRequest);
+      setLoading(false);
 
       if (grantsRequired.length > 0) {
         navigate(ROUTES.ACTION_AUTHORIZATION, {
@@ -142,6 +146,27 @@ const useHooks = () => {
     navigate(ROUTES.USER_PROFILE, {});
   }, []);
 
+  const handlePressPost = React.useCallback(async () => {
+    setLoading(true);
+
+    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
+
+    const grantsRequired = await checkGrants(grantsToRequest);
+    setLoading(false);
+
+    if (grantsRequired.length > 0) {
+      navigate(ROUTES.ACTION_AUTHORIZATION, {
+        grants: grantsRequired,
+
+        onApprove: () => {
+          // regular follow flow
+          console.log('approved');
+          replace(ROUTES.CREATE_TEXT_POST);
+        },
+      });
+    }
+  }, []);
+
   return {
     handlePressDetails,
     handlePressFollow,
@@ -150,10 +175,12 @@ const useHooks = () => {
     handlePressProfile,
     handlePressTip,
     handlePressReactions,
+    handlePressPost,
     selectedIndex,
     setSelectedIndex,
     onPostChanged,
     postData,
+    loading,
   };
 };
 
