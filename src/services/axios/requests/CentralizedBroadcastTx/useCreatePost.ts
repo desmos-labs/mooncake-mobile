@@ -43,8 +43,8 @@ const useCreatePost = () => {
         });
 
         console.log('response', msgResponse);
-      } catch (err) {
-        console.log('error', err.response.data);
+      } catch (err: any) {
+        console.log('error', err?.response.data);
       } finally {
         setLoading(false);
       }
