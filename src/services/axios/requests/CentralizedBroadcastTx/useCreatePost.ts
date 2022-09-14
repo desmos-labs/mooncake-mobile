@@ -5,7 +5,7 @@ import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {ReplySetting} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {DesmosClient, MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
-import SendTransaction from 'services/axios/requests/SendTransaction/index';
+import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx/index';
 
 /**
  * Hook that creates a new post
@@ -38,7 +38,9 @@ const useCreatePost = () => {
 
         const aminoEncodedMsg = client.encodeToAmino([msg]);
 
-        const msgResponse = await SendTransaction({messages: aminoEncodedMsg});
+        const msgResponse = await CentralizedBroadcastTx({
+          messages: aminoEncodedMsg,
+        });
 
         console.log('response:', msgResponse);
       } catch (err) {

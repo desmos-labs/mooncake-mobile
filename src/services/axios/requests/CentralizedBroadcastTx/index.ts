@@ -15,10 +15,12 @@ type Params = {
 /**
  * Authenticated response - requires a valid auth token
  */
-const SendTransaction = async ({messages}: Params): Promise<Response> => {
-  const _response = await axiosInstance.post('/transaction', {messages});
+const CentralizedBroadcastTx = async ({
+  messages,
+}: Params): Promise<Response> => {
+  const _response = await axiosInstance.post('/broadcast', {messages});
 
   return _response.data;
 };
 
-export default SendTransaction;
+export default CentralizedBroadcastTx;
