@@ -1,5 +1,11 @@
 import React from 'react';
-import {Image, ImageSourcePropType, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import ImageButton from 'components/ImageButton';
 import {
   profileBack,
@@ -167,14 +173,16 @@ const ProfileHeader = ({
             resizeMode="contain"
             style={[StyleSheet.absoluteFillObject, {opacity: 0.5}]}
           />
-          <BlurView
-            style={StyleSheet.absoluteFillObject}
-            blurType="light"
-            blurAmount={8}
-            blurRadius={16}
-            pointerEvents="none"
-            reducedTransparencyFallbackColor="white"
-          />
+          {Platform.OS === 'ios' && (
+            <BlurView
+              style={StyleSheet.absoluteFillObject}
+              blurType="light"
+              blurAmount={8}
+              blurRadius={16}
+              pointerEvents="none"
+              reducedTransparencyFallbackColor="white"
+            />
+          )}
         </Animated.View>
 
         <Animated.View

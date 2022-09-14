@@ -108,7 +108,7 @@ const DView: React.FC<Props> = props => {
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
-      <LoadingOverlay isVisible={showLoadingOverlay} />
+      <LoadingOverlay isVisible={showLoadingOverlay ?? false} />
     </>
   );
 };

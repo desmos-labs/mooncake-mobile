@@ -20,6 +20,7 @@ const LoadingOverlay = ({isVisible}: Props) => {
         style={styles.lottieView}
         autoPlay
         source={buildingBlockAnim}
+        resizeMode="cover"
       />
     </View>
   );

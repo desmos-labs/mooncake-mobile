@@ -187,7 +187,10 @@ const PostCard = ({
   }, [followed, postType, onPressFollow]);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPressDetails}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPressDetails}
+      activeOpacity={0.9}>
       {AttachmentImage}
       {content}
     </TouchableOpacity>
