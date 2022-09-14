@@ -146,7 +146,7 @@ const useHooks = () => {
     navigate(ROUTES.USER_PROFILE, {});
   }, []);
 
-  const handlePressPost = React.useCallback(async () => {
+  const handlePressCreatePost = React.useCallback(async () => {
     setLoading(true);
 
     const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
@@ -164,7 +164,7 @@ const useHooks = () => {
           replace(ROUTES.CREATE_TEXT_POST);
         },
       });
-    }
+    } else navigate(ROUTES.CREATE_TEXT_POST);
   }, []);
 
   return {
@@ -175,7 +175,7 @@ const useHooks = () => {
     handlePressProfile,
     handlePressTip,
     handlePressReactions,
-    handlePressPost,
+    handlePressCreatePost,
     selectedIndex,
     setSelectedIndex,
     onPostChanged,

@@ -37,6 +37,8 @@ const ActionAuthorization = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  const [loading, setLoading] = React.useState(false);
+
   const {addOrUpdateGrants} = useAddOrUpdateGrants();
 
   const {
@@ -70,8 +72,9 @@ const ActionAuthorization = () => {
   }, [onCancel]);
 
   const handleApprove = React.useCallback(async () => {
+    setLoading(true);
     await addOrUpdateGrants({grantsToRequest: grants});
-
+    setLoading(false);
     goBack();
 
     // run onApprove last
@@ -107,7 +110,8 @@ const ActionAuthorization = () => {
           <Button
             mode="contained"
             style={{backgroundColor: theme.colors.surfaceBlack}}
-            onPress={handleApprove}>
+            onPress={handleApprove}
+            loading={loading}>
             {t('common:confirm')}
           </Button>
 
@@ -116,6 +120,7 @@ const ActionAuthorization = () => {
               mode="outlined"
               style={{borderColor: theme.colors.surfaceBlack}}
               labelStyle={{color: theme.colors.surfaceBlack}}
+              disabled={loading}
               onPress={handleCancel}>
               {t('common:refuse')}
             </Button>

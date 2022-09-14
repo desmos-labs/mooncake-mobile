@@ -42,14 +42,14 @@ const useCreatePost = () => {
           messages: aminoEncodedMsg,
         });
 
-        console.log('response:', msgResponse);
+        console.log('response', msgResponse);
       } catch (err) {
-        console.log(err);
+        console.log('error', err.response.data);
       } finally {
         setLoading(false);
       }
     },
-    [activeAddress],
+    [activeAddress, CentralizedBroadcastTx],
   );
 
   return {createPost, loading};

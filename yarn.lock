@@ -1219,7 +1219,15 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.3.5", "@desmoslabs/desmjs-types@workspace:packages/types":
+"@desmoslabs/desmjs-types@4.3.8":
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.8.tgz#9094f3a97aa778d1a9cbcf38ad760b8a903c42b6"
+  integrity sha512-wXjBL1LlryGpgh/RENEHsKtWlYaynQ0tDdovWWH/Ryl8GNTAT+4ZIatYxD4ye9U/5mIwOiXIot5vV8SVkLb+6g==
+  dependencies:
+    long "^4.0.0"
+    protobufjs "^7.1.0"
+
+"@desmoslabs/desmjs-types@workspace:packages/types":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.5.tgz#5e8437c0af1dd901b97ae1c5d443e93da50c7c28"
   integrity sha512-nYMOqHW88+LdOC5G9tixGdfmCxKmayFd8h+4OuIr6hPvQe1uzzKGVjdLNnk4hEp2s/K9ahrjIX6jU6HlcN6JcQ==
@@ -1227,10 +1235,10 @@
     long "^4.0.0"
     protobufjs "^7.1.0"
 
-"@desmoslabs/desmjs@4.3.5":
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.5.tgz#d6f808d4a5f1589e5ccf8c419aff847371519a02"
-  integrity sha512-uK2WSDyTKcIxHgqWk9p8CAvf67Eyk6te6cZhnOKxeDGbJDspXJl6S0GX6JjosVXrI/YLi6H0uAIAJeZuVqTeUw==
+"@desmoslabs/desmjs@4.3.8":
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.8.tgz#50dc95431fc02eb014651ccc59d57592c2491a12"
+  integrity sha512-0iiTuGYJhSngVYMRfcrMIgEKBJFgrmQ6v+ToOVIAYdrz1gAnJa5Nt4u5btrHQER6Bhoqs5Jxv+/YSv5Wz14Ckg==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"

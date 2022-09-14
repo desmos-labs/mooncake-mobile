@@ -52,7 +52,7 @@ const Home = () => {
     setSelectedIndex,
     onPostChanged,
     postData,
-    handlePressPost,
+    handlePressCreatePost,
     loading,
   } = useHooks();
 
@@ -102,7 +102,7 @@ const Home = () => {
           containerStyle={styles.createPostButton}
           style={styles.icon}
           imageSrc={plusWhiteIcon}
-          onPress={handlePressPost}
+          onPress={handlePressCreatePost}
         />
       </View>
 
