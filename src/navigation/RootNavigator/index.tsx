@@ -46,6 +46,7 @@ import ReportPost from 'screens/Modals/ReportPost';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import SendTips from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
+import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
@@ -149,6 +150,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   [ROUTES.PROFILE_NFTS]: undefined;
+  [ROUTES.NFT_DETAILS]: NftDetailsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -420,6 +422,7 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
+      <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
     </Stack.Navigator>
   );
 };
