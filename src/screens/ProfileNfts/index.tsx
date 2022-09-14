@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList} from 'react-native';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import NftComponent from 'screens/ProfileNfts/components/NftComponent';
 import useStyles from './useStyles';
@@ -63,6 +63,7 @@ const ProfileNfts = () => {
 
   return (
     <DView
+      showLoadingOverlay={loading}
       backgroundColor={theme.colors.white}
       topBar={<TopBar style={{backgroundColor: theme.colors.white}} />}
       disableHideKeyboardTouchable={true}
@@ -84,14 +85,12 @@ const ProfileNfts = () => {
         numColumns={2}
         contentContainerStyle={styles.contentContainer}
         ListEmptyComponent={
-          loading ? (
-            <ActivityIndicator />
-          ) : (
+          !loading ? (
             <EmptyPostComponent
               textLabel={t('noNft')}
               buttonLabel={t('connect address')}
             />
-          )
+          ) : null
         }
       />
     </DView>
