@@ -53,6 +53,8 @@ const ActionAuthorization = () => {
             return t('follow');
           case GrantEnums.MsgDeleteRelationship:
             return t('unfollow');
+          case GrantEnums.MsgCreatePost:
+            return t('createPost');
           default:
             return 'unmapped';
         }
@@ -102,12 +104,19 @@ const ActionAuthorization = () => {
 
           <Image source={authorizationImage} style={styles.imageStyle} />
 
-          <Button mode="gradientFilled" onPress={handleApprove}>
+          <Button
+            mode="contained"
+            style={{backgroundColor: theme.colors.surfaceBlack}}
+            onPress={handleApprove}>
             {t('common:confirm')}
           </Button>
 
           <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-            <Button mode="outlined" onPress={handleCancel}>
+            <Button
+              mode="outlined"
+              style={{borderColor: theme.colors.surfaceBlack}}
+              labelStyle={{color: theme.colors.surfaceBlack}}
+              onPress={handleCancel}>
               {t('common:refuse')}
             </Button>
           </Spacer>
