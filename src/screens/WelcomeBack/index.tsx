@@ -1,13 +1,13 @@
-import DView from 'components/DView';
-import React from 'react';
-import {dummyAvatar, landingBG} from 'assets/images';
-import {Image, View} from 'react-native';
-import Typography from 'components/Typography';
-import {useTheme} from 'react-native-paper';
-import {useTranslation} from 'react-i18next';
-import Spacer from 'components/Spacer';
+import {butterflyLandingIcon, landingBG} from 'assets/images';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Image, View} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 const WelcomeBack = () => {
@@ -23,16 +23,17 @@ const WelcomeBack = () => {
       statusBarProps={{translucent: true}}
       background={landingBG}
       style={styles.container}>
-      <Image source={dummyAvatar} style={styles.dummyAvatar} />
-
-      <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
-
-      <Typography.Body6 style={styles.descriptionStyle}>
+      <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
+      <Text style={styles.title} allowFontScaling>
+        {t('header')}
+      </Text>
+      <Text style={styles.subtitle} allowFontScaling>
         {t('description')}
-      </Typography.Body6>
-
+      </Text>
+      <Spacer paddingVertical={20} />
       <View style={{alignSelf: 'stretch'}}>
-        <Typography.Subtitle2 style={{color: theme.colors.white}}>
+        <Typography.Subtitle2
+          style={{color: theme.colors.white, marginBottom: 6}}>
           {t('inputLabel')}
         </Typography.Subtitle2>
 
