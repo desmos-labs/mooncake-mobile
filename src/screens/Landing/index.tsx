@@ -1,16 +1,16 @@
-import DView from 'components/DView';
-import React from 'react';
-import {dummyAvatar, landingBG, ledgerLIcon} from 'assets/images';
-import {Image, TouchableOpacity, View} from 'react-native';
-import Typography from 'components/Typography';
-import {useTheme} from 'react-native-paper';
-import {useTranslation} from 'react-i18next';
-import Spacer from 'components/Spacer';
-import Button from 'components/Button';
+import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {butterflyLandingIcon, landingBG, ledgerLIcon} from 'assets/images';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Image, TouchableOpacity, View} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
 import useStyles from './useStyles';
 
@@ -29,9 +29,13 @@ const Landing = () => {
       statusBarProps={{translucent: true}}
       background={landingBG}
       style={styles.container}>
-      <Image source={dummyAvatar} style={styles.dummyAvatar} />
-
-      <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
+      <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
+      <Text style={styles.title} allowFontScaling>
+        {t('butter')}
+      </Text>
+      <Text style={styles.subtitle} allowFontScaling>
+        {t('header')}
+      </Text>
       <View style={{alignSelf: 'stretch'}}>
         <Button
           mode="contained"
