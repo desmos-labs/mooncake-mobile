@@ -27,7 +27,7 @@ const BottomBar = ({handlePressGallery, handlePressPost}: Props) => {
         style={styles.postButton}
         mode="contained"
         onPress={handlePressPost}>
-        {t('postInteraction:text')}
+        {t('postInteraction:post')}
       </Button>
     </SafeAreaView>
   );
