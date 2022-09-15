@@ -1,30 +1,29 @@
-import TopBar from 'components/TopBar';
-import React from 'react';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
+import PasswordReqGroup from 'components/PasswordReqGroup';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import {useTranslation} from 'react-i18next';
-import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import * as Yup from 'yup';
-import PasswordReqGroup from 'components/PasswordReqGroup';
 import {
   MIN_PW_LENGTH,
   validateMin1Lowercase,
   validateMin1SpecialChar,
   validateMin1Uppercase,
 } from 'lib/ValidationUtils';
-import useStyles from './useStyles';
+import _ from 'lodash';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, {useRef} from 'react';
+import {useTranslation} from 'react-i18next';
+import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import * as Yup from 'yup';
 import useHooks from './useHooks';
+import useStyles from './useStyles';
 
 export enum PASSWORD_MANIPULATION_MODE {
   CHANGE_PASSWORD,
@@ -49,9 +48,9 @@ export type NavProps = StackScreenProps<
 
 const PasswordManipulation = () => {
   const {t} = useTranslation('passwordManipulation');
-  const {top} = useSafeAreaInsets();
   const styles = useStyles();
   const theme = useTheme();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -73,6 +72,7 @@ const PasswordManipulation = () => {
   }, []);
 
   const {
+    loading,
     headerText,
     descriptionText,
     pwInputLabel,
@@ -83,7 +83,10 @@ const PasswordManipulation = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container} scrollable topBar={<TopBar />}>
+    <DView
+      style={styles.container}
+      topBar={<TopBar />}
+      disableHideKeyboardTouchable={true}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       {descriptionText && (
@@ -91,81 +94,98 @@ const PasswordManipulation = () => {
           <Typography.Body6>{t(descriptionText)}</Typography.Body6>
         </Spacer>
       )}
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{flex: 1, backgroundColor: 'transparent'}}>
+        <Formik
+          initialValues={initialFormValues}
+          onSubmit={handleFormSubmit}
+          validationSchema={validationSchema}>
+          {({handleSubmit, values, errors, setFieldValue}) => {
+            return (
+              <>
+                <ScrollView ref={scrollViewRef}>
+                  <View style={styles.formContainer}>
+                    <View style={styles.labelGroup}>
+                      <Typography.Subtitle2>
+                        {t(pwInputLabel)}
+                      </Typography.Subtitle2>
 
-      <Formik
-        initialValues={initialFormValues}
-        onSubmit={handleFormSubmit}
-        validationSchema={validationSchema}>
-        {({handleSubmit, values, errors, setFieldValue}) => {
-          return (
-            <View style={styles.formContainer}>
-              <View style={styles.labelGroup}>
-                <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
+                      {values.newPassword.length >= MIN_PW_LENGTH && (
+                        <Typography.Subtitle4
+                          style={mapPwStyle(values.newPassword)}>
+                          {t(passwordStrength(values.newPassword).value)}
+                        </Typography.Subtitle4>
+                      )}
+                    </View>
 
-                {values.newPassword.length >= MIN_PW_LENGTH && (
-                  <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
-                    {t(passwordStrength(values.newPassword).value)}
-                  </Typography.Subtitle4>
-                )}
-              </View>
+                    <DSecureTextInput
+                      value={values.newPassword}
+                      onChangeText={(value: string) =>
+                        setFieldValue('newPassword', value, true)
+                      }
+                      style={styles.inputLabel}
+                      placeholder={t('newPw')}
+                      error={!!errors.newPassword}
+                    />
 
-              <DSecureTextInput
-                value={values.newPassword}
-                onChangeText={(value: string) =>
-                  setFieldValue('newPassword', value, true)
-                }
-                style={styles.inputLabel}
-                placeholder={t('newPw')}
-                error={!!errors.newPassword}
-              />
+                    {errors.newPassword && (
+                      <Typography.Caption1 style={styles.errorText}>
+                        {errors.newPassword}
+                      </Typography.Caption1>
+                    )}
 
-              {errors.newPassword && (
-                <Typography.Caption1 style={styles.errorText}>
-                  {errors.newPassword}
-                </Typography.Caption1>
-              )}
+                    <PasswordReqGroup passwordToCheck={values.newPassword} />
 
-              <PasswordReqGroup passwordToCheck={values.newPassword} />
-
-              <Typography.Subtitle2 style={styles.inputLabel}>
-                {t('confirmPw')}
-              </Typography.Subtitle2>
-              <DSecureTextInput
-                placeholder={t('pw')}
-                value={values.confirmPassword}
-                onChangeText={(value: string) =>
-                  setFieldValue('confirmPassword', value, true)
-                }
-                error={!!errors.confirmPassword}
-              />
-              {errors.confirmPassword && (
-                <Typography.Caption1 style={styles.errorText}>
-                  {errors.confirmPassword}
-                </Typography.Caption1>
-              )}
-
-              <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? top + 120 : 0}
-                behavior={Platform.OS === 'ios' ? 'position' : undefined}
-                style={styles.buttonGroup}>
-                <Button
-                  color={theme.colors.surfaceBlack}
-                  onPress={handleSubmit}
-                  disabled={
-                    values.confirmPassword.length === 0 ||
-                    values.newPassword.length === 0 ||
-                    _.flatten(Object.values(errors)).length > 0
-                  }
-                  mode="contained">
-                  <Typography.Button2 style={styles.confirmButtonText}>
-                    {t(buttonLabel)}
-                  </Typography.Button2>
-                </Button>
-              </KeyboardAvoidingView>
-            </View>
-          );
-        }}
-      </Formik>
+                    <Typography.Subtitle2 style={styles.inputLabel}>
+                      {t('confirmPw')}
+                    </Typography.Subtitle2>
+                    <DSecureTextInput
+                      onOuterFocus={() =>
+                        setTimeout(
+                          () =>
+                            scrollViewRef.current?.scrollToEnd({
+                              animated: true,
+                            }),
+                          300,
+                        )
+                      }
+                      placeholder={t('pw')}
+                      value={values.confirmPassword}
+                      onChangeText={(value: string) =>
+                        setFieldValue('confirmPassword', value, true)
+                      }
+                      error={!!errors.confirmPassword}
+                    />
+                    {errors.confirmPassword && (
+                      <Typography.Caption1 style={styles.errorText}>
+                        {errors.confirmPassword}
+                      </Typography.Caption1>
+                    )}
+                  </View>
+                </ScrollView>
+                <View style={{marginTop: 8}}>
+                  <Button
+                    loading={loading}
+                    color={theme.colors.surfaceBlack}
+                    onPress={handleSubmit}
+                    disabled={
+                      values.confirmPassword.length === 0 ||
+                      values.newPassword.length === 0 ||
+                      _.flatten(Object.values(errors)).length > 0
+                    }
+                    mode="contained">
+                    <Typography.Button2 style={styles.confirmButtonText}>
+                      {t(buttonLabel)}
+                    </Typography.Button2>
+                  </Button>
+                </View>
+              </>
+            );
+          }}
+        </Formik>
+      </KeyboardAvoidingView>
     </DView>
   );
 };
