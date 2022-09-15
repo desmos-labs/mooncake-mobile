@@ -17,7 +17,7 @@ const useHooks = () => {
   const {posts, fetchNewPosts} = useGetPosts();
   const {following} = useGetFollowing();
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
@@ -25,7 +25,7 @@ const useHooks = () => {
   const {checkGrants} = useCheckGrants();
 
   const postData = React.useMemo(() => {
-    if (selectedIndex === 0) return posts;
+    if (selectedFilterIndex === 0) return posts;
 
     // Get the list of following accounts
     const followedAddresses = following.map(x => x.address);
@@ -34,7 +34,7 @@ const useHooks = () => {
       posts,
       x => followedAddresses.indexOf(x.author_address) !== -1,
     );
-  }, [posts, following, selectedIndex]);
+  }, [posts, following, selectedFilterIndex]);
 
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
@@ -150,10 +150,11 @@ const useHooks = () => {
     handlePressProfile,
     handlePressTip,
     handlePressReactions,
-    selectedIndex,
-    setSelectedIndex,
+    selectedFilterIndex,
+    setSelectedFilterIndex,
     onPostChanged,
     postData,
+    selectedPostIndex,
   };
 };
 

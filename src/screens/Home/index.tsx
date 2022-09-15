@@ -48,10 +48,11 @@ const Home = () => {
     handlePressReactions,
     handlePressProfile,
     handlePressComments,
-    selectedIndex,
-    setSelectedIndex,
+    selectedFilterIndex,
+    setSelectedFilterIndex,
     onPostChanged,
     postData,
+    selectedPostIndex,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -90,8 +91,8 @@ const Home = () => {
 
         <View style={styles.tabContainer}>
           <PostTypeTab
-            selectedIndex={selectedIndex}
-            setSelectedIndex={setSelectedIndex}
+            selectedIndex={selectedFilterIndex}
+            setSelectedIndex={setSelectedFilterIndex}
             postTypes={postTypes}
           />
         </View>
@@ -125,25 +126,27 @@ const Home = () => {
         }}
       />
 
-      <View style={styles.interactionButtonGroup}>
-        <InteractionButton
-          onPress={() => handlePressComments()}
-          interactionCount={10500}
-          icon={commentIcon}
-        />
+      {selectedPostIndex !== postData.length && (
+        <View style={styles.interactionButtonGroup}>
+          <InteractionButton
+            onPress={() => handlePressComments()}
+            interactionCount={10500}
+            icon={commentIcon}
+          />
 
-        <InteractionButton
-          onPress={handlePressReactions}
-          interactionCount={100}
-          icon={optionsIcon}
-        />
+          <InteractionButton
+            onPress={handlePressReactions}
+            interactionCount={100}
+            icon={optionsIcon}
+          />
 
-        <InteractionButton
-          onPress={handlePressTip}
-          interactionCount={100000000}
-          icon={tipIcon}
-        />
-      </View>
+          <InteractionButton
+            onPress={handlePressTip}
+            interactionCount={100000000}
+            icon={tipIcon}
+          />
+        </View>
+      )}
     </DView>
   );
 };
