@@ -7,6 +7,7 @@ import {Slip10RawIndex} from '@cosmjs/crypto';
 import {StdFee} from '@cosmjs/amino';
 import LinkableChains from 'config/LinkableChains';
 import _ from 'lodash';
+import {differenceInYears, format} from 'date-fns';
 
 /**
  * Very naive way to format interactionCount into something like 5000 > 5k
@@ -81,4 +82,18 @@ export const formatFeeWithDenoms = (fee: StdFee) => {
     denom: matchingDenom,
     formattedString: `${formattedAmount} ${matchingDenom.toUpperCase()}`,
   };
+};
+
+/**
+ * Format a date so that if it is in the same year, it is displayed as dd MMM, HH:mm
+ * if it is a different year, display as ccc MMM dd yyyy
+ */
+export const formatDateForPostDetails = (dateToFormat: any) => {
+  console.log(dateToFormat);
+  const date = new Date(dateToFormat);
+
+  if (differenceInYears(date, Date.now()) === 0) {
+    return format(date, 'dd MMM, HH:mm');
+  }
+  return format(date, 'ccc MMM dd yyyy');
 };
