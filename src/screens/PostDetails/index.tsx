@@ -1,4 +1,8 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {
@@ -16,7 +20,6 @@ import PopupMenu from 'components/PopupMenu';
 import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -36,6 +39,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import BackButton from 'components/BackButton';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -64,6 +68,7 @@ const PostDetails = () => {
   const theme = useTheme();
   const {t} = useTranslation('postDetails');
   const {params} = useRoute<NavProps['route']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
   const [profileData] = useRecoilState(activeProfileState);
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
@@ -128,46 +133,6 @@ const PostDetails = () => {
       />
     );
   }, [post?.author?.profile_pic]);
-
-  const MiddleElement = useMemo(
-    () => (
-      <View style={styles.rightContainer}>
-        {Avatar}
-        <View style={styles.middleTextContainer}>
-          <Typography.Subtitle3 numberOfLines={1}>
-            {post?.author?.nickname || `@${post?.author?.dtag}`}
-          </Typography.Subtitle3>
-          {/* temporary */}
-          <Typography.Body7>{formattedDate}</Typography.Body7>
-        </View>
-      </View>
-    ),
-    [post],
-  );
-
-  const RightElement = useMemo(
-    () => (
-      <View style={styles.rightContainer}>
-        <ImageButton
-          style={styles.followIcon}
-          image={followOrangeIcon}
-          onPress={() => console.log('add')}
-        />
-        <ImageButton
-          onPress={event => {
-            setProfileMenuAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setProfileMenuVisible(true);
-          }}
-          style={styles.moreIcon}
-          image={moreBlackIcon}
-        />
-      </View>
-    ),
-    [],
-  );
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
@@ -251,6 +216,45 @@ const PostDetails = () => {
     [post, reactions, likesImages],
   );
 
+  const CustomTopBar = React.useMemo(() => {
+    return (
+      <View style={styles.customTopBarContainer}>
+        <View style={styles.customTopBarInnerContainer}>
+          <BackButton onPress={goBack} />
+          <View style={styles.rightContainer}>
+            {Avatar}
+            <View style={styles.middleTextContainer}>
+              <Typography.Subtitle3 numberOfLines={1}>
+                {post?.author?.nickname || `@${post?.author?.dtag}`}
+              </Typography.Subtitle3>
+              {/* temporary */}
+              <Typography.Body7>{formattedDate}</Typography.Body7>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.rightContainer}>
+          <ImageButton
+            style={styles.followIcon}
+            image={followOrangeIcon}
+            onPress={() => console.log('add')}
+          />
+          <ImageButton
+            onPress={event => {
+              setProfileMenuAnchor({
+                x: event.nativeEvent.pageX,
+                y: event.nativeEvent.pageY,
+              });
+              setProfileMenuVisible(true);
+            }}
+            style={styles.moreIcon}
+            image={moreBlackIcon}
+          />
+        </View>
+      </View>
+    );
+  }, [Avatar, formattedDate, post?.author]);
+
   return postLoading || !post ? (
     <SafeAreaView>
       <ActivityIndicator />
@@ -261,13 +265,7 @@ const PostDetails = () => {
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
-      topBar={
-        <TopBar
-          style={styles.topBar}
-          centerElement={MiddleElement}
-          rightElement={RightElement}
-        />
-      }>
+      topBar={CustomTopBar}>
       <FlatList
         scrollEnabled={true}
         refreshing={postLoading}
