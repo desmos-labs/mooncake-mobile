@@ -131,10 +131,14 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 pointerEvents={keyboardShow ? 'auto' : 'none'}
                 style={{
                   opacity: keyboardShow ? 1 : 0,
-                  position: 'absolute',
-                  top: 0,
                 }}>
-                <ImageButton image={expandCommentIcon} onPress={onIconPress} />
+                <ImageButton
+                  style={{
+                    opacity: keyboardShow ? 1 : 0,
+                  }}
+                  image={expandCommentIcon}
+                  onPress={onIconPress}
+                />
               </View>
             }
           />
