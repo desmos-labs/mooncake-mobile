@@ -19,6 +19,8 @@ import {
 import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Shadow} from 'react-native-shadow-2';
+import ImageButton from 'components/ImageButton';
+import {expandCommentIcon} from 'assets/images';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -27,11 +29,10 @@ export type Props = {
    */
   profileImage: React.ComponentProps<typeof ProfileHeaderButton>['imageSrc'];
 
-  // https://forbole.atlassian.net/browse/DFP-471 disable enlarge icon
-  // /**
-  //  * Action to execute when the right icon is pressed
-  //  */
-  // onIconPress: () => void;
+  /**
+   * Action to execute when the right icon is pressed
+   */
+  onIconPress: () => void;
   /**
    * Focus the text input when navigating to this screen
    */
@@ -40,7 +41,7 @@ export type Props = {
 
 const EnterCommentBottomBar: React.FC<Props> = ({
   profileImage,
-  // onIconPress,
+  onIconPress,
   focusTextInput,
 }) => {
   const {t} = useTranslation('comment');
@@ -125,9 +126,17 @@ const EnterCommentBottomBar: React.FC<Props> = ({
             style={styles.textInput}
             placeholder={t('write a comment')}
             textAlignVertical="center"
-            // rightElement={
-            //   <ImageButton image={expandCommentIcon} onPress={onIconPress} />
-            // }
+            rightElement={
+              <View
+                pointerEvents={keyboardShow ? 'auto' : 'none'}
+                style={{
+                  opacity: keyboardShow ? 1 : 0,
+                  position: 'absolute',
+                  top: 0,
+                }}>
+                <ImageButton image={expandCommentIcon} onPress={onIconPress} />
+              </View>
+            }
           />
         </View>
         {keyboardShow && (

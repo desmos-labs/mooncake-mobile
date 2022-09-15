@@ -90,7 +90,7 @@ const PostDetails = () => {
     reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
-    // handleExpandComment,
+    handleExpandComment,
     handlePressCounters,
     handlePressSendTips,
     navigateToProfile,
@@ -222,7 +222,7 @@ const PostDetails = () => {
         <View style={styles.customTopBarInnerContainer}>
           <BackButton onPress={goBack} />
 
-          <Spacer paddingLeft={theme.spacing.s}>
+          <Spacer paddingLeft={theme.spacing.m}>
             <View style={styles.rightContainer}>
               {Avatar}
               <View style={styles.middleTextContainer}>
@@ -287,9 +287,9 @@ const PostDetails = () => {
             ? {uri: profileData?.profile_pic}
             : defaultProfilePic
         }
-        // onIconPress={() =>
-        //   handleExpandComment({author: post.author, postId: post.id})
-        // }
+        onIconPress={() =>
+          handleExpandComment({author: post.author, postId: post.id})
+        }
       />
 
       <PopupMenu
