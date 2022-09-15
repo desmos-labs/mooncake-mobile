@@ -1,6 +1,9 @@
 import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
+  container: {
+    backgroundColor: theme.colors.white,
+  },
   icon: {
     marginRight: theme.spacing.s,
     height: 32,
