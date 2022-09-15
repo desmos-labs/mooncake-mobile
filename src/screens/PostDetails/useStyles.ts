@@ -40,7 +40,7 @@ const useStyles = makeStyle(theme => ({
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {
     borderColor: theme.colors.surfaceGrey,
-    borderWidth: 1,
+    borderWidth: 0.5,
     marginHorizontal: -30,
   },
   customTopBarContainer: {
