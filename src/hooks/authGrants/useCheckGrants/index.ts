@@ -32,7 +32,7 @@ const useCheckGrants = () => {
         if (grants[x]) {
           const differenceFromNow = differenceInMilliseconds(
             Date.now(),
-            new Date(1663163175473),
+            new Date(grants[x].expiration),
           );
 
           if (differenceFromNow >= 0) {

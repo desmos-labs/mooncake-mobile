@@ -44,13 +44,16 @@ const useAddOrUpdateGrants = () => {
       if (!chainAccount) throw new Error('No active chain account found.');
       const grantsData = await getActiveGrants();
 
-      const {grants: existingGrants, has_fee_grant} = grantsData;
+      const {has_fee_grant} = grantsData;
 
-      if (_.difference(grantsToRequest, existingGrants).length === 0) return;
+      // if (_.difference(grantsToRequest, existingGrantsArray).length === 0) {
+      //   console.log('no difference');
+      //   return;
+      // }
 
       const grantee = butterConfig.desmos_address;
       const granter = chainAccount.address;
-      const grants = _.uniq([...existingGrants, ...grantsToRequest]);
+      const grants = grantsToRequest;
 
       /**
        * If user already has a fee grant, we need to revoke it by creating a MsgRevokeallowanceEncodeObject
