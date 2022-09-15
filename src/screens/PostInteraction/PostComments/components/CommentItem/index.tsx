@@ -21,7 +21,7 @@ import {
   View,
 } from 'react-native';
 import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
-import useFormatTimeForPostDetails from 'lib/FormatUtils/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useStyles from './useStyles';
 
 // note: props are not final

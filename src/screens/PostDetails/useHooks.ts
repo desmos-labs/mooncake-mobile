@@ -6,7 +6,7 @@ import {NavProps} from 'screens/PostDetails/index';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
-import useFormatTimeForPostDetails from 'lib/FormatUtils/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 
 const useHooks = ({id, sId}: {id: number; sId: number}) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
