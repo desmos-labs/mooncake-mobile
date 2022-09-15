@@ -1,12 +1,10 @@
-import {expandCommentIcon} from 'assets/images';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
-import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -28,10 +26,10 @@ export type Props = {
    * Source of the image to display
    */
   profileImage: React.ComponentProps<typeof ProfileHeaderButton>['imageSrc'];
-  /**
-   * Action to execute when the right icon is pressed
-   */
-  onIconPress: () => void;
+  // /**
+  //  * Action to execute when the right icon is pressed
+  //  */
+  // onIconPress: () => void;
   /**
    * Focus the text input when navigating to this screen
    */
@@ -40,7 +38,7 @@ export type Props = {
 
 const EnterCommentBottomBar: React.FC<Props> = ({
   profileImage,
-  onIconPress,
+  // onIconPress,
   focusTextInput,
 }) => {
   const {t} = useTranslation('comment');
@@ -124,9 +122,10 @@ const EnterCommentBottomBar: React.FC<Props> = ({
             multiline={true}
             style={styles.textInput}
             placeholder={t('write a comment')}
-            rightElement={
-              <ImageButton image={expandCommentIcon} onPress={onIconPress} />
-            }
+            textAlignVertical="center"
+            // rightElement={
+            //   <ImageButton image={expandCommentIcon} onPress={onIconPress} />
+            // }
           />
         </View>
         {keyboardShow && (

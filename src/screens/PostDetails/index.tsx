@@ -90,7 +90,7 @@ const PostDetails = () => {
     reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
-    handleExpandComment,
+    // handleExpandComment,
     handlePressCounters,
     handlePressSendTips,
     navigateToProfile,
@@ -221,16 +221,19 @@ const PostDetails = () => {
       <View style={styles.customTopBarContainer}>
         <View style={styles.customTopBarInnerContainer}>
           <BackButton onPress={goBack} />
-          <View style={styles.rightContainer}>
-            {Avatar}
-            <View style={styles.middleTextContainer}>
-              <Typography.Subtitle3 numberOfLines={1}>
-                {post?.author?.nickname || `@${post?.author?.dtag}`}
-              </Typography.Subtitle3>
-              {/* temporary */}
-              <Typography.Body7>{formattedDate}</Typography.Body7>
+
+          <Spacer paddingLeft={theme.spacing.s}>
+            <View style={styles.rightContainer}>
+              {Avatar}
+              <View style={styles.middleTextContainer}>
+                <Typography.Subtitle3 numberOfLines={1}>
+                  {post?.author?.nickname || `@${post?.author?.dtag}`}
+                </Typography.Subtitle3>
+                {/* temporary */}
+                <Typography.Body7>{formattedDate}</Typography.Body7>
+              </View>
             </View>
-          </View>
+          </Spacer>
         </View>
 
         <View style={styles.rightContainer}>
@@ -285,9 +288,9 @@ const PostDetails = () => {
             ? {uri: profileData?.profile_pic}
             : defaultProfilePic
         }
-        onIconPress={() =>
-          handleExpandComment({author: post.author, postId: post.id})
-        }
+        // onIconPress={() =>
+        //   handleExpandComment({author: post.author, postId: post.id})
+        // }
       />
 
       <PopupMenu
