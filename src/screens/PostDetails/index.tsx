@@ -22,14 +22,16 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {verticalScale} from 'react-native-size-matters';
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   ListRenderItemInfo,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
@@ -94,6 +96,8 @@ const PostDetails = () => {
     sId: params.subspaceID,
   });
 
+  const {top} = useSafeAreaInsets();
+
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
@@ -154,10 +158,14 @@ const PostDetails = () => {
           onPress={() => console.log('add')}
         />
         <ImageButton
-          onPress={event => {
+          onPress={() => {
+            // setProfileMenuAnchor({
+            //   x: event.nativeEvent.pageX,
+            //   y: event.nativeEvent.pageY,
+            // });
             setProfileMenuAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
+              x: Dimensions.get('window').width * 0.95,
+              y: verticalScale(35) + top,
             });
             setProfileMenuVisible(true);
           }}
