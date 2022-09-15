@@ -26,6 +26,8 @@ export type Props = {
    * Source of the image to display
    */
   profileImage: React.ComponentProps<typeof ProfileHeaderButton>['imageSrc'];
+
+  // https://forbole.atlassian.net/browse/DFP-471 disable enlarge icon
   // /**
   //  * Action to execute when the right icon is pressed
   //  */

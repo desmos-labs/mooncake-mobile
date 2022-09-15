@@ -229,7 +229,6 @@ const PostDetails = () => {
                 <Typography.Subtitle3 numberOfLines={1}>
                   {post?.author?.nickname || `@${post?.author?.dtag}`}
                 </Typography.Subtitle3>
-                {/* temporary */}
                 <Typography.Body7>{formattedDate}</Typography.Body7>
               </View>
             </View>
