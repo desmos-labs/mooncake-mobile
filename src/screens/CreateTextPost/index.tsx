@@ -60,7 +60,14 @@ const CreateTextPost = () => {
   }, [inputRef.current]);
 
   const handleSubmitPost = React.useCallback(async () => {
-    await createPost({postText: text});
+    const createPostResponse = await createPost({postText: text});
+
+    if (createPostResponse) {
+      console.log(createPostResponse);
+      goBack();
+    } else {
+      console.log('something went wrong while submitting post');
+    }
   }, [createPost, text]);
 
   return (
