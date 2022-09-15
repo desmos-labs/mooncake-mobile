@@ -17,7 +17,8 @@ const useStyles = makeStyle(theme => ({
   mnemonicInput: {
     borderWidth: 1,
     borderColor: 'transparent',
-    height: verticalScale(160),
+    paddingTop: theme.spacing.s,
+    paddingBottom: verticalScale(160),
   },
   errorInput: {
     borderColor: theme.colors.pink01,
@@ -45,7 +46,7 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   clearAllText: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   consentGroup: {
     flexDirection: 'row',
