@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client';
-import appSettingsState from '@recoil/settings';
 import {buildingBlockAnim} from 'assets/animations';
 import {
   commentComment,
@@ -12,7 +11,6 @@ import {
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
-import {utcToZonedTime} from 'date-fns-tz';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -22,8 +20,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useRecoilState} from 'recoil';
 import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -82,7 +80,6 @@ const CommentItem = ({
 }: Props) => {
   const styles = useStyles(disableInnerComment);
   const {t} = useTranslation();
-  const [settings] = useRecoilState(appSettingsState);
   const {data} = useQuery(GetPostCommentsCount, {
     variables: {
       subspaceID: subspace_id,
@@ -95,11 +92,12 @@ const CommentItem = ({
     return data.post_reference_aggregate.aggregate.count;
   }, [data]);
 
-  const formattedDate = useMemo(
-    () =>
-      utcToZonedTime(creation_date, settings.currentTimezone).toDateString(),
-    [creation_date, settings.currentTimezone],
-  );
+  // const formattedDate = useMemo(
+  //   () =>
+  //     utcToZonedTime(creation_date, settings.currentTimezone).toDateString(),
+  //   [creation_date, settings.currentTimezone],
+  // );
+  const formattedDate = useFormatTimeForPostDetails(creation_date);
 
   const content = React.useMemo(() => {
     if (text && attachments?.length === 0) {

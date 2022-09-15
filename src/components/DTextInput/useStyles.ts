@@ -22,9 +22,8 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     textAlign: 'left',
     paddingHorizontal: 11,
     flexGrow: 1,
-    flex: 0.9,
-    textAlignVertical: props.multiline === true ? 'top' : 'center',
-    height: '100%',
+    // textAlignVertical: props.multiline === true ? 'top' : 'center',
+    // height: '100%',
     color: props.error ? theme.colors.pink01 : theme.colors.surfaceBlack,
     minHeight:
       props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,

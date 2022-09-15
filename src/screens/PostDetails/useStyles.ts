@@ -24,7 +24,7 @@ const useStyles = makeStyle(theme => ({
     zIndex: 1,
     width: 24,
     height: 24,
-    tintColor: theme.colors.butterOrange01,
+    tintColor: theme.colors.surfaceBlack,
   },
   moreIcon: {
     width: 24,
@@ -40,8 +40,19 @@ const useStyles = makeStyle(theme => ({
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {
     borderColor: theme.colors.surfaceGrey,
-    borderWidth: 1,
+    borderWidth: 0.5,
     marginHorizontal: -30,
+  },
+  customTopBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.m,
+    paddingVertical: theme.spacing.s,
+  },
+  customTopBarInnerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 }));
 
