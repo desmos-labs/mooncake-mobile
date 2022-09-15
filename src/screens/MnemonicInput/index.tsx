@@ -66,20 +66,23 @@ const MnemonicInput = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
 
-            <DTextInput
-              textAlignVertical="top"
-              multiline
-              error={!!errors.mnemonic}
-              style={[
-                styles.mnemonicInput,
-                errors.mnemonic ? styles.errorInput : undefined,
-              ]}
-              placeholder={t('inputPlaceholder')}
-              value={values.mnemonic}
-              onChangeText={text => {
-                setFieldValue('mnemonic', text, false);
-              }}
-            />
+            <View>
+              <DTextInput
+                textAlignVertical="top"
+                multiline
+                error={!!errors.mnemonic}
+                inputStyle={styles.mnemonicInputLabel}
+                style={[
+                  styles.mnemonicInput,
+                  errors.mnemonic ? styles.errorInput : undefined,
+                ]}
+                placeholder={t('inputPlaceholder')}
+                value={values.mnemonic}
+                onChangeText={text => {
+                  setFieldValue('mnemonic', text, false);
+                }}
+              />
+            </View>
 
             {errors.mnemonic && (
               <View style={styles.errorGroup}>

@@ -18,7 +18,11 @@ const useStyles = makeStyle(theme => ({
     borderWidth: 1,
     borderColor: 'transparent',
     paddingTop: theme.spacing.s,
-    paddingBottom: verticalScale(160),
+    textAlignVertical: 'top',
+    height: verticalScale(160),
+  },
+  mnemonicInputLabel: {
+    alignSelf: 'flex-start',
   },
   errorInput: {
     borderColor: theme.colors.pink01,
