@@ -6,13 +6,14 @@ const useStyles = makeStyle(theme => ({
   },
   icon: {
     marginRight: theme.spacing.s,
-    height: 32,
-    width: 32,
+    height: 24,
+    width: 24,
+    resizeMode: 'contain',
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: theme.spacing.m,
     marginRight: theme.spacing.m,
     paddingVertical: theme.spacing.s,
