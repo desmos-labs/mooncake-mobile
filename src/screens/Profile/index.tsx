@@ -1,16 +1,20 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
+  cosmosIcon,
   defaultBanner,
   defaultProfilePic,
   editButton,
   followOrangeFilledIcon,
+  stargazeIcon,
+  twitterIcon,
 } from 'assets/images';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useChainLinks from 'hooks/useChainLinks';
 import useVisitingProfileData from 'hooks/useVisitingProfileData';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -24,6 +28,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
@@ -45,6 +50,7 @@ const Profile = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
+  const {chainLinks} = useChainLinks();
 
   /** Animations start
    * These hooks act as the animation driver for the ProfileHeader component
@@ -234,24 +240,45 @@ const Profile = () => {
             </View>
 
             {screenMode === 'myProfile' && (
-              <View style={styles.connectButtonGroup}>
-                <Button
-                  mode="outlined"
-                  style={styles.connectButton}
-                  onPress={handlePressConnectAddress}>
-                  <Typography.Button2>{t('connectAddress')}</Typography.Button2>
-                </Button>
-                <Button
-                  mode="outlined"
-                  style={styles.connectButton}
-                  onPress={() => console.log('connectTwitter')}>
-                  <Typography.Button2>{t('connectTwitter')}</Typography.Button2>
-                </Button>
-              </View>
+              <>
+                <View style={styles.connectButtonGroup}>
+                  <Button
+                    mode="outlined"
+                    style={styles.connectButton}
+                    onPress={handlePressConnectAddress}>
+                    <Typography.Button2>
+                      {t('connectAddress')}
+                    </Typography.Button2>
+                  </Button>
+                  <Button
+                    mode="outlined"
+                    style={styles.connectButton}
+                    onPress={() => console.log('connectTwitter')}>
+                    <Typography.Button2>
+                      {t('connectTwitter')}
+                    </Typography.Button2>
+                  </Button>
+                </View>
+                {chainLinks.length > 0 && (
+                  <View style={{marginTop: 12}}>
+                    <ChainsCountersBar
+                      loading={false}
+                      connectedChainsCounter={chainLinks.length}
+                      connectedAppsCounter={0}
+                      connectedChainsImages={[
+                        stargazeIcon,
+                        cosmosIcon,
+                        twitterIcon,
+                      ]}
+                      handlePressCounters={() => console.log('test')}
+                    />
+                  </View>
+                )}
+              </>
             )}
           </View>
         </View>
-        <Spacer paddingVertical={12} />
+        <Spacer paddingVertical={4} />
         <ProfileSectionButton
           onPress={handlePostsSectionPressed}
           titleLabel={t('posts')}
