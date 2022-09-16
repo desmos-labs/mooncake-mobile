@@ -18,6 +18,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
+import LoadingOverlay from 'components/LoadingOverlay';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
 import BottomBar from './components/BottomBar';
 
@@ -27,6 +30,8 @@ const CreateTextPost = () => {
 
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
+  const {createPost, loading} = useCreatePost();
+  const {goBack} = useNavigation();
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
@@ -54,6 +59,17 @@ const CreateTextPost = () => {
     }
   }, [inputRef.current]);
 
+  const handleSubmitPost = React.useCallback(async () => {
+    const createPostResponse = await createPost({postText: text});
+
+    if (createPostResponse) {
+      console.log(createPostResponse);
+      goBack();
+    } else {
+      console.log('something went wrong while submitting post');
+    }
+  }, [createPost, text]);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -70,6 +86,7 @@ const CreateTextPost = () => {
               color={theme.colors.white}
               size={32}
               allowFontScaling
+              onPress={goBack}
             />
 
             <TouchableOpacity onPress={handlePressBGButton}>
@@ -97,9 +114,7 @@ const CreateTextPost = () => {
       </SafeAreaView>
 
       <BottomBar
-        handlePressPost={() => {
-          console.log('post');
-        }}
+        handlePressPost={handleSubmitPost}
         handlePressGallery={() => console.log('gallery')}
       />
       <KeyboardAvoidingView
@@ -112,6 +127,7 @@ const CreateTextPost = () => {
           customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
+      <LoadingOverlay isVisible={loading} />
     </View>
   );
 };

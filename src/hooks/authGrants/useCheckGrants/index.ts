@@ -1,6 +1,7 @@
 import React from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import {differenceInMilliseconds} from 'date-fns';
 import useGetActiveGrants from 'services/axios/requests/GetActiveGrants/useGetActiveGrants';
 
 const useCheckGrants = () => {
@@ -16,9 +17,31 @@ const useCheckGrants = () => {
     async (grantsToCheck: GrantEnums[]): Promise<GrantEnums[]> => {
       if (!activeAddr) throw new Error('[checkGrant]: No active address found');
 
-      const grants = await getActiveGrants();
+      const grantsResponse = await getActiveGrants();
 
-      return grantsToCheck.filter(x => !grants.grants.includes(x));
+      const grants: {
+        [index: string]: {msg_type: GrantEnums; expiration: string};
+      } = grantsResponse.grants.reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur.msg_type]: cur,
+        };
+      }, {});
+
+      return grantsToCheck.filter(x => {
+        if (grants[x]) {
+          const differenceFromNow = differenceInMilliseconds(
+            Date.now(),
+            new Date(grants[x].expiration),
+          );
+
+          if (differenceFromNow >= 0) {
+            console.log('grant', grants[x].msg_type, 'is expired');
+            return grants[x];
+          }
+        }
+        return !grants[x];
+      });
     },
     [activeAddr],
   );

@@ -6,6 +6,7 @@ import {
   MsgGrantAllowanceEncodeObject,
   MsgGrantEncodeObject,
   MsgRevokeAllowanceEncodeObject,
+  timestampFromDate,
 } from '@desmoslabs/desmjs';
 import {Grant} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import {
@@ -54,7 +55,7 @@ export const buildGrantAllowanceEncode = ({
 }): MsgGrantAllowanceEncodeObject => {
   const basicAllowance: BasicAllowance = {
     spendLimit: [], // This is empty so that there are no limits
-    expiration: undefined, // This is null so that the allowance will never expire
+    expiration: undefined,
   };
 
   const allowance: AllowedMsgAllowance = {
@@ -108,6 +109,9 @@ export const buildGrantMsgEncodes = ({
           subspaceAuthorization,
         ).finish(),
       }),
+      expiration: timestampFromDate(
+        new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years expiration
+      ),
     };
 
     return {

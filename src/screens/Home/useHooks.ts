@@ -9,20 +9,32 @@ import {GrantEnums} from 'lib/desmos/msgtypes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {Dimensions} from 'react-native';
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {posts, fetchNewPosts} = useGetPosts();
+  const {
+    posts,
+    fetchMorePosts,
+    fetchNewestPosts,
+    loading: postsLoading,
+  } = useGetPosts();
   const {following} = useGetFollowing();
-  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
+  const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
+  const maxOffset = React.useRef<number>(0);
+
+  const prevOffsetValue = React.useRef(0);
+  const overscrolling = React.useRef(false);
 
   const {checkGrants} = useCheckGrants();
+
+  const [loading, setLoading] = React.useState(false);
 
   const postData = React.useMemo(() => {
     if (selectedFilterIndex === 0) return posts;
@@ -38,6 +50,12 @@ const useHooks = () => {
 
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
+
+  // calculate carousel offset
+  React.useEffect(() => {
+    maxOffset.current =
+      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
+  }, [posts.length]);
 
   // Check if we need to login the user
   React.useEffect(() => {
@@ -55,8 +73,8 @@ const useHooks = () => {
   const onPostChanged = React.useCallback(
     (index: number) => {
       setSelectedPostIndex(index);
-      if (index >= posts.length - 2) {
-        fetchNewPosts();
+      if (index >= posts.length - 3) {
+        fetchMorePosts();
       }
     },
     [posts.length],
@@ -77,7 +95,11 @@ const useHooks = () => {
 
   const handlePressFollow = React.useCallback(
     async (address: string) => {
+      setLoading(true);
       const followedAddresses = following.map(x => x.address);
+
+      // placeholder to avoid eslint error
+      console.log(address, followedAddresses);
 
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgCreateRelationship,
@@ -86,6 +108,7 @@ const useHooks = () => {
       // check if user has grants first
 
       const grantsRequired = await checkGrants(grantsToRequest);
+      setLoading(false);
 
       if (grantsRequired.length > 0) {
         navigate(ROUTES.ACTION_AUTHORIZATION, {
@@ -102,7 +125,6 @@ const useHooks = () => {
         });
       } else {
         // regular follow flow
-        console.log(address, followedAddresses);
       }
     },
     [following],
@@ -142,6 +164,67 @@ const useHooks = () => {
     navigate(ROUTES.USER_PROFILE, {});
   }, []);
 
+  const handlePressCreatePost = React.useCallback(async () => {
+    setLoading(true);
+
+    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
+
+    const grantsRequired = await checkGrants(grantsToRequest);
+    setLoading(false);
+
+    if (grantsRequired.length > 0) {
+      navigate(ROUTES.ACTION_AUTHORIZATION, {
+        grants: grantsRequired,
+
+        onApprove: () => {
+          // regular follow flow
+          replace(ROUTES.CREATE_TEXT_POST);
+        },
+      });
+    } else navigate(ROUTES.CREATE_TEXT_POST);
+  }, []);
+
+  // Throttle this function to max one call every 3 seconds
+  const onOverscrollRight = React.useCallback(() => {
+    fetchNewestPosts();
+  }, [postsLoading]);
+
+  const onCarouselProgressChange = React.useCallback(
+    (_temp: number, __: number, value: number) => {
+      const offsetValue = value;
+
+      if (overscrolling.current && value === 0) {
+        overscrolling.current = false;
+      }
+
+      if (prevOffsetValue.current > 25 && !overscrolling.current) {
+        overscrolling.current = true;
+        // do overscroll right things
+        onOverscrollRight();
+      }
+      if (offsetValue < maxOffset.current) {
+        // do overscroll left things
+      }
+      prevOffsetValue.current = value;
+    },
+    [maxOffset.current, prevOffsetValue.current, overscrolling.current],
+  );
+  // const onCarouselProgressChange = React.useCallback(
+  //   _.throttle((_temp: number, __: number, value: number) => {
+  //     const offsetValue = value;
+  //     // console.log(offsetValue, maxOffset.current);
+  //     if (offsetValue > 0) {
+  //       console.log('fetch');
+  //       // do overscroll right things
+  //       onOverscrollRight();
+  //     }
+  //     if (offsetValue < maxOffset.current) {
+  //       // do overscroll left things
+  //     }
+  //   }, 3000),
+  //   [maxOffset.current],
+  // );
+
   return {
     handlePressDetails,
     handlePressFollow,
@@ -152,9 +235,12 @@ const useHooks = () => {
     handlePressReactions,
     selectedFilterIndex,
     setSelectedFilterIndex,
+    handlePressCreatePost,
     onPostChanged,
     postData,
     selectedPostIndex,
+    loading,
+    onCarouselProgressChange,
   };
 };
 
