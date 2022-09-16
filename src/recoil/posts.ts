@@ -32,9 +32,8 @@ export const useGetPosts = () => {
       limit: POSTS_PER_FETCH,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-first',
     errorPolicy: 'ignore',
-    nextFetchPolicy: 'no-cache',
   });
 
   const fetchMorePosts = React.useCallback(() => {
@@ -55,6 +54,7 @@ export const useGetPosts = () => {
     }
   }, [loading, data]);
 
+  // Reset the fetch offset to restart post fetching
   const fetchNewestPosts = React.useCallback(
     _.throttle(() => {
       setPosts([]);
@@ -68,7 +68,7 @@ export const useGetPosts = () => {
         setPosts(_.get(a, 'data.post'));
         newOffset.current += POSTS_PER_FETCH;
       });
-    }, 3000),
+    }, 1500),
     [newOffset.current, loading],
   );
 
