@@ -26,26 +26,52 @@ export const useGetPosts = () => {
   // is moved
   const newOffset = React.useRef(0);
 
-  const {data, refetch} = useQuery(GetPosts, {
+  const {data, refetch, loading} = useQuery(GetPosts, {
     variables: {
       offset: 0,
       limit: POSTS_PER_FETCH,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+    nextFetchPolicy: 'no-cache',
   });
 
-  const fetchNewPosts = React.useCallback(() => {
-    refetch({offset: newOffset.current, limit: POSTS_PER_FETCH}).then(() => {
+  const fetchMorePosts = React.useCallback(() => {
+    if (loading) return;
+    refetch({
+      offset: newOffset.current,
+      limit: POSTS_PER_FETCH,
+      subspaceID,
+    }).then(() => {
       newOffset.current += POSTS_PER_FETCH;
     });
   }, [newOffset.current]);
 
   React.useEffect(() => {
-    if (data) {
+    if (!loading && data) {
       const {post} = data;
       setPosts(prev => _.uniqBy([...prev, ...post], 'id'));
     }
-  }, [data]);
+  }, [loading, data]);
 
-  return {posts, fetchNewPosts};
+  const fetchNewestPosts = React.useCallback(
+    _.throttle(() => {
+      console.log('fetch new posts');
+      setPosts([]);
+      newOffset.current = 0;
+
+      refetch({
+        offset: 0,
+        limit: POSTS_PER_FETCH,
+        subspaceID,
+      }).then(a => {
+        setPosts(_.get(a, 'data.post'));
+        newOffset.current += POSTS_PER_FETCH;
+      });
+    }, 3000),
+    [newOffset.current],
+  );
+
+  return {posts, fetchMorePosts, fetchNewestPosts};
 };

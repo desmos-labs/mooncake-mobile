@@ -54,6 +54,7 @@ const Home = () => {
     postData,
     handlePressCreatePost,
     loading,
+    onCarouselProgressChange,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -107,6 +108,7 @@ const Home = () => {
       </View>
 
       <Carousel
+        onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}

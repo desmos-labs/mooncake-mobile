@@ -9,18 +9,20 @@ import {GrantEnums} from 'lib/desmos/msgtypes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {Dimensions} from 'react-native';
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {posts, fetchNewPosts} = useGetPosts();
+  const {posts, fetchMorePosts, fetchNewestPosts} = useGetPosts();
   const {following} = useGetFollowing();
   const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
+  const maxOffset = React.useRef<number>(0);
 
   const {checkGrants} = useCheckGrants();
 
@@ -41,6 +43,12 @@ const useHooks = () => {
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
 
+  // calculate carousel offset
+  React.useEffect(() => {
+    maxOffset.current =
+      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
+  }, [posts.length]);
+
   // Check if we need to login the user
   React.useEffect(() => {
     if (bearerToken) return;
@@ -57,8 +65,8 @@ const useHooks = () => {
   const onPostChanged = React.useCallback(
     (index: number) => {
       setSelectedPostIndex(index);
-      if (index >= posts.length - 2) {
-        fetchNewPosts();
+      if (index >= posts.length - 3) {
+        fetchMorePosts();
       }
     },
     [posts.length],
@@ -81,6 +89,8 @@ const useHooks = () => {
     async (address: string) => {
       setLoading(true);
       const followedAddresses = following.map(x => x.address);
+
+      console.log(address, followedAddresses);
 
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgCreateRelationship,
@@ -106,7 +116,6 @@ const useHooks = () => {
         });
       } else {
         // regular follow flow
-        console.log(address, followedAddresses);
       }
     },
     [following],
@@ -139,7 +148,8 @@ const useHooks = () => {
   }, [selectedPostIndex, postData]);
 
   const handlePressTip = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
+    fetchNewestPosts();
+    // navigate(ROUTES.SEND_TIPS);
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
@@ -160,12 +170,46 @@ const useHooks = () => {
 
         onApprove: () => {
           // regular follow flow
-          console.log('approved');
           replace(ROUTES.CREATE_TEXT_POST);
         },
       });
     } else navigate(ROUTES.CREATE_TEXT_POST);
   }, []);
+
+  // Throttle this function to max one call every 3 seconds
+  const onOverscrollRight = React.useCallback(() => {
+    fetchNewestPosts();
+  }, []);
+
+  const onCarouselProgressChange = React.useCallback(
+    (_temp: number, __: number, value: number) => {
+      const offsetValue = value;
+      // console.log(offsetValue, maxOffset.current);
+      if (offsetValue > 0) {
+        // do overscroll right things
+        onOverscrollRight();
+      }
+      if (offsetValue < maxOffset.current) {
+        // do overscroll left things
+      }
+    },
+    [maxOffset.current],
+  );
+  // const onCarouselProgressChange = React.useCallback(
+  //   _.throttle((_temp: number, __: number, value: number) => {
+  //     const offsetValue = value;
+  //     // console.log(offsetValue, maxOffset.current);
+  //     if (offsetValue > 0) {
+  //       console.log('fetch');
+  //       // do overscroll right things
+  //       onOverscrollRight();
+  //     }
+  //     if (offsetValue < maxOffset.current) {
+  //       // do overscroll left things
+  //     }
+  //   }, 3000),
+  //   [maxOffset.current],
+  // );
 
   return {
     handlePressDetails,
@@ -181,6 +225,7 @@ const useHooks = () => {
     onPostChanged,
     postData,
     loading,
+    onCarouselProgressChange,
   };
 };
 
