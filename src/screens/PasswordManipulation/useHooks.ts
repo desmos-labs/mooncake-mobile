@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ROUTES from 'navigation/routes';
 import {passwordStrength} from 'check-password-strength';
 import {
@@ -21,7 +21,7 @@ import useStyles from './useStyles';
  */
 const useHooks = () => {
   const styles = useStyles();
-
+  const [loading, setLoading] = useState(false);
   const {t} = useTranslation('passwordManipulation');
   const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
 
@@ -92,6 +92,7 @@ const useHooks = () => {
         });
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
+        setLoading(true);
         // perhaps move this into global config
         const ACCOUNT_SEARCH_LIMIT = 1;
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
@@ -145,8 +146,10 @@ const useHooks = () => {
         });
 
         if (accountsWithWalletData.length === 0) {
+          setLoading(false);
           navigate(ROUTES.NO_DTAG_FOUND);
         } else {
+          setLoading(false);
           navigate(ROUTES.SELECT_DTAG, {
             accountsWithWalletData,
             password: confirmPassword,
@@ -171,6 +174,7 @@ const useHooks = () => {
   }, []);
 
   return {
+    loading,
     headerText,
     descriptionText,
     pwInputLabel,

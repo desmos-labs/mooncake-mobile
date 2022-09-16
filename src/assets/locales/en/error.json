@@ -2,6 +2,6 @@
   "required": "This field is required.",
   "minChar": "At least {{numChar}} characters required.",
   "maxChar": "Maximum {{numChar}} characters.",
-  "pwMustMatch": "Passwords must match.",
+  "pwMustMatch": "Passwords do not match, please try again.",
   "incorrectPassword": "Password is incorrect."
 }

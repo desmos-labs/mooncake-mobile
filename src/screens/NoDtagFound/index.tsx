@@ -5,6 +5,7 @@ import Typography from 'components/Typography';
 import {Image, View} from 'react-native';
 import Button from 'components/Button';
 import {errorImage} from 'assets/images';
+import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useNavigation} from '@react-navigation/native';
@@ -22,6 +23,7 @@ const NoDtagFound = () => {
   const createLocalWallet = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const theme = useTheme();
 
   const handlePress = React.useCallback(() => {
     if (createLocalWallet || createLedgerAccount) {
@@ -31,7 +33,7 @@ const NoDtagFound = () => {
 
   return (
     <DView style={styles.container}>
-      <Image source={errorImage} style={styles.image} />
+      <Image source={errorImage} style={styles.image} resizeMode="cover" />
       <View style={styles.textGroup}>
         <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
         <Typography.Body6 style={styles.descriptionText}>
@@ -39,7 +41,10 @@ const NoDtagFound = () => {
         </Typography.Body6>
       </View>
 
-      <Button onPress={handlePress} mode="gradientFilled">
+      <Button
+        onPress={handlePress}
+        mode="contained"
+        color={theme.colors.surfaceBlack}>
         {t('createDesmosProfile')}
       </Button>
     </DView>

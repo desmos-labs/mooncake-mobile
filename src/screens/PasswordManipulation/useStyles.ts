@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     padding: theme.spacing.m,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
   },
   headerText: {
     marginBottom: theme.spacing.m,
@@ -17,10 +17,6 @@ const useStyles = makeStyle(theme => ({
   },
   inputLabel: {
     marginBottom: theme.spacing.s,
-  },
-  buttonGroup: {
-    flex: 1,
-    justifyContent: 'flex-end',
   },
   confirmButtonText: {
     color: theme.colors.white,
