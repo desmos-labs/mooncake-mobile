@@ -57,7 +57,6 @@ export const useGetPosts = () => {
 
   const fetchNewestPosts = React.useCallback(
     _.throttle(() => {
-      console.log('fetch new posts');
       setPosts([]);
       newOffset.current = 0;
 
@@ -70,8 +69,8 @@ export const useGetPosts = () => {
         newOffset.current += POSTS_PER_FETCH;
       });
     }, 3000),
-    [newOffset.current],
+    [newOffset.current, loading],
   );
 
-  return {posts, fetchMorePosts, fetchNewestPosts};
+  return {posts, fetchMorePosts, fetchNewestPosts, loading};
 };
