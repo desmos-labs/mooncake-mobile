@@ -119,6 +119,7 @@ enum ROUTES {
   // Profile posts end
 
   PROFILE_NFTS = 'PROFILE_NFTS',
+  NFT_DETAILS = 'NFT_DETAILS',
 }
 
 export default ROUTES;

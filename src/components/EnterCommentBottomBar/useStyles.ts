@@ -24,6 +24,7 @@ const useStyles = makeStyle(theme => {
     },
     textInput: {
       flex: 1,
+      paddingHorizontal: 8,
       marginLeft: 8,
     },
     profilePic: {

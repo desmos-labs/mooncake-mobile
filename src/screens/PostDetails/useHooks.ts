@@ -1,17 +1,14 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import appSettingsState from '@recoil/settings';
-import {utcToZonedTime} from 'date-fns-tz';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
-import {useRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 
 const useHooks = ({id, sId}: {id: number; sId: number}) => {
-  const [settings] = useRecoilState(appSettingsState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
@@ -62,14 +59,7 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     return postReactions.reaction;
   }, [postReactions]);
 
-  const formattedDate = useMemo(
-    () =>
-      utcToZonedTime(
-        post?.creation_date,
-        settings.currentTimezone,
-      ).toDateString(),
-    [post?.creation_date, settings.currentTimezone],
-  );
+  const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 
   const handlePressSelectedComment = React.useCallback(
     ({

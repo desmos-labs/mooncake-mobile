@@ -1,12 +1,10 @@
-import {expandCommentIcon} from 'assets/images';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
-import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -21,6 +19,8 @@ import {
 import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Shadow} from 'react-native-shadow-2';
+import ImageButton from 'components/ImageButton';
+import {expandCommentIcon} from 'assets/images';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -28,6 +28,7 @@ export type Props = {
    * Source of the image to display
    */
   profileImage: React.ComponentProps<typeof ProfileHeaderButton>['imageSrc'];
+
   /**
    * Action to execute when the right icon is pressed
    */
@@ -124,8 +125,21 @@ const EnterCommentBottomBar: React.FC<Props> = ({
             multiline={true}
             style={styles.textInput}
             placeholder={t('write a comment')}
+            textAlignVertical="center"
             rightElement={
-              <ImageButton image={expandCommentIcon} onPress={onIconPress} />
+              <View
+                pointerEvents={keyboardShow ? 'auto' : 'none'}
+                style={{
+                  opacity: keyboardShow ? 1 : 0,
+                }}>
+                <ImageButton
+                  style={{
+                    opacity: keyboardShow ? 1 : 0,
+                  }}
+                  image={expandCommentIcon}
+                  onPress={onIconPress}
+                />
+              </View>
             }
           />
         </View>

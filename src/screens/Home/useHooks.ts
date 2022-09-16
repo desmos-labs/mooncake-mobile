@@ -22,8 +22,8 @@ const useHooks = () => {
     loading: postsLoading,
   } = useGetPosts();
   const {following} = useGetFollowing();
+  const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
   const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
@@ -37,7 +37,7 @@ const useHooks = () => {
   const [loading, setLoading] = React.useState(false);
 
   const postData = React.useMemo(() => {
-    if (selectedIndex === 0) return posts;
+    if (selectedFilterIndex === 0) return posts;
 
     // Get the list of following accounts
     const followedAddresses = following.map(x => x.address);
@@ -46,7 +46,7 @@ const useHooks = () => {
       posts,
       x => followedAddresses.indexOf(x.author_address) !== -1,
     );
-  }, [posts, following, selectedIndex]);
+  }, [posts, following, selectedFilterIndex]);
 
   // useLogin is called here instead of useHooks for better visibility.
   const {login} = useLogin();
@@ -98,6 +98,7 @@ const useHooks = () => {
       setLoading(true);
       const followedAddresses = following.map(x => x.address);
 
+      // placeholder to avoid eslint error
       console.log(address, followedAddresses);
 
       const grantsToRequest: GrantEnums[] = [
@@ -232,11 +233,12 @@ const useHooks = () => {
     handlePressProfile,
     handlePressTip,
     handlePressReactions,
+    selectedFilterIndex,
+    setSelectedFilterIndex,
     handlePressCreatePost,
-    selectedIndex,
-    setSelectedIndex,
     onPostChanged,
     postData,
+    selectedPostIndex,
     loading,
     onCarouselProgressChange,
   };

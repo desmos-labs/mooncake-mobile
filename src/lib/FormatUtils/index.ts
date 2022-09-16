@@ -1,7 +1,6 @@
 /**
  * File for all formatting related utils
  */
-
 import {HdPath} from 'types/hdpath';
 import {Slip10RawIndex} from '@cosmjs/crypto';
 import {StdFee} from '@cosmjs/amino';

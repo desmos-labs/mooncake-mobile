@@ -1,36 +1,69 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import axios from 'axios';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import React, {useCallback} from 'react';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import NftComponent from 'screens/ProfileNfts/components/NftComponent';
-import nftTestData from 'screens/ProfileNfts/mock';
 import useStyles from './useStyles';
 
-// type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_NFTS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_NFTS>;
 
 const ProfileNfts = () => {
   const styles = useStyles();
   const theme = useTheme();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('nft');
+  const [nfts, setNfts] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handleNftPressed = useCallback((item: any) => {
-    console.log('pressed', item);
+  const getNftsData = async (address: string) => {
+    try {
+      const response = await axios.get(
+        `https://nft-api.stargaze-apis.com/api/v1beta/profile/${address}/nfts`,
+      );
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const fetchNfts = useCallback(async (address: string) => {
+    setLoading(true);
+    console.log('fetching');
+    const newNfts = await getNftsData(address);
+    setNfts((existingNfts: any[]) => [...existingNfts, ...newNfts]);
+    setLoading(false);
   }, []);
 
-  const renderNft = (data: any) => (
+  useEffect(() => {
+    fetchNfts('stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25');
+  }, []);
+
+  const handleNftPressed = useCallback((nftData: any) => {
+    navigate(ROUTES.NFT_DETAILS, {
+      nftData,
+    });
+  }, []);
+
+  const renderNft = (nftData: any) => (
     <NftComponent
-      data={data.item}
-      onPress={() => handleNftPressed(data.item)}
+      data={nftData.item}
+      onPress={() => handleNftPressed(nftData.item)}
     />
   );
 
   return (
     <DView
+      showLoadingOverlay={loading}
       backgroundColor={theme.colors.white}
       topBar={<TopBar style={{backgroundColor: theme.colors.white}} />}
       disableHideKeyboardTouchable={true}
@@ -41,17 +74,23 @@ const ProfileNfts = () => {
       <Typography.Body6>{t('link stars')}</Typography.Body6>
       <Spacer paddingVertical={10} />
       <FlatList
+        refreshing={loading}
+        onRefresh={() =>
+          fetchNfts('stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25')
+        }
         showsVerticalScrollIndicator={false}
-        data={nftTestData}
+        data={nfts}
         keyExtractor={item => item.tokenId}
         renderItem={renderNft}
         numColumns={2}
         contentContainerStyle={styles.contentContainer}
         ListEmptyComponent={
-          <EmptyPostComponent
-            textLabel={t('noNft')}
-            buttonLabel={t('connect address')}
-          />
+          !loading ? (
+            <EmptyPostComponent
+              textLabel={t('noNft')}
+              buttonLabel={t('connect address')}
+            />
+          ) : null
         }
       />
     </DView>

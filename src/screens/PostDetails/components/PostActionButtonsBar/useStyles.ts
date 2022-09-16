@@ -31,7 +31,10 @@ const useStyles = makeStyle(theme => ({
     height: 25,
     resizeMode: 'contain',
   },
-  divider: {borderColor: theme.colors.surfaceGrey, borderWidth: 1},
+  divider: {
+    borderColor: theme.colors.surfaceGrey,
+    borderWidth: 0.5,
+  },
 }));
 
 export default useStyles;

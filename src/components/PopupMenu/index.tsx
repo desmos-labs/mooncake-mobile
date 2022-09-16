@@ -19,7 +19,11 @@ const PopupMenu: React.FC<Props> = ({
 }) => {
   const styles = useStyles();
   return (
-    <Menu visible={visible} onDismiss={closeMenu} anchor={anchor}>
+    <Menu
+      contentStyle={styles.container}
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={anchor}>
       {menuItems.map((item, index) => {
         const last = index === menuItems.length - 1;
         return (
