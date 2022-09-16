@@ -8,14 +8,25 @@ type Props = {
    * Display the overlay.
    */
   isVisible: boolean;
+
+  /**
+   * For pages with components that have a higher zIndex.
+   */
+  zIndexOverride?: number;
 };
 
-const LoadingOverlay = ({isVisible}: Props) => {
+const LoadingOverlay = ({isVisible, zIndexOverride = 2}: Props) => {
   if (!isVisible) {
     return null;
   }
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          zIndex: zIndexOverride,
+        },
+      ]}>
       <ThemedLottieView
         style={styles.lottieView}
         autoPlay
