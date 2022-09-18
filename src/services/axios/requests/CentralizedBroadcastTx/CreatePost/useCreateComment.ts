@@ -15,7 +15,7 @@ const useCreateComment = () => {
 
   const [loading, setLoading] = React.useState(false);
 
-  const createPost = React.useCallback(
+  const createComment = React.useCallback(
     async ({text, conversationId, postReferences}: CreatePostParams) => {
       if (!activeAddress) return;
 
@@ -44,6 +44,8 @@ const useCreateComment = () => {
           messages: aminoEncodedMsg,
         });
 
+        console.log(msgResponse);
+
         return msgResponse;
       } catch (err: any) {
         console.log('error', err?.response.data);
@@ -55,7 +57,7 @@ const useCreateComment = () => {
     [activeAddress, CentralizedBroadcastTx],
   );
 
-  return {createPost, loading};
+  return {createComment, loading};
 };
 
 export default useCreateComment;

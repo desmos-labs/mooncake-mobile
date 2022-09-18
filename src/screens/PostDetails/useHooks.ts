@@ -7,9 +7,20 @@ import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useCreateComment from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreateComment';
 
-const useHooks = ({id, sId}: {id: number; sId: number}) => {
+const useHooks = ({
+  postID,
+  subspaceID,
+}: {
+  postID: number;
+  subspaceID: number;
+}) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const {createComment} = useCreateComment();
+
+  const [postCommentLoading, setPostCommentLoading] = React.useState(false);
 
   const {
     data: originalPost,
@@ -17,8 +28,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: postRefetch,
   } = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
-      ID: id,
-      subspaceID: sId,
+      ID: postID,
+      subspaceID,
     },
   });
 
@@ -28,8 +39,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: commentsRefetch,
   } = useQuery(GetPostComments, {
     variables: {
-      postID: id,
-      subspaceID: sId,
+      postID,
+      subspaceID,
     },
   });
 
@@ -39,8 +50,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: reactionsRefetch,
   } = useQuery(GetPostReactions, {
     variables: {
-      postID: id,
-      subspaceID: sId,
+      postID,
+      subspaceID,
     },
   });
 
@@ -90,6 +101,15 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     [],
   );
 
+  const handlePostComment = React.useCallback(async (comment: string) => {
+    setPostCommentLoading(true);
+    await createComment({
+      text: comment,
+      conversationId: postID,
+    });
+    setPostCommentLoading(false);
+  }, []);
+
   const navigateToProfile = React.useCallback(() => {
     navigate(ROUTES.USER_PROFILE, {
       visitingProfileAddress: post?.author.address,
@@ -106,8 +126,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       params: {
         expandOnOpen: true,
         allowPanning: true,
-        postId: id,
-        subspaceId: sId,
+        postId: postID,
+        subspaceId: subspaceID,
       },
     });
   }, []);
@@ -128,6 +148,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     handlePressSendTips,
     handlePressCounters,
     navigateToProfile,
+    handlePostComment,
+    postCommentLoading,
   };
 };
 

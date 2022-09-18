@@ -37,12 +37,24 @@ export type Props = {
    * Focus the text input when navigating to this screen
    */
   focusTextInput: boolean;
+
+  /**
+   * Callback to handle when the user submits a comment.
+   */
+  handlePostComment: (text: string) => void;
+
+  /**
+   * Is an action being processed? (block out interaction buttons)
+   */
+  loading?: boolean;
 };
 
 const EnterCommentBottomBar: React.FC<Props> = ({
   profileImage,
   onIconPress,
   focusTextInput,
+  handlePostComment,
+  loading,
 }) => {
   const {t} = useTranslation('comment');
   const styles = useStyles();
@@ -91,16 +103,18 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         mode="gradientFilled"
         disabled={comment.length === 0}
         containerStyle={styles.postButton}
-        onPress={() => console.log('post it')}>
+        loading={loading}
+        onPress={() => handlePostComment(comment)}>
         <Typography.Button3 style={{color: theme.colors.white}}>
           {t('post')}
         </Typography.Button3>
       </Button>
     );
-  }, [comment]);
+  }, [comment, loading]);
 
   return (
     <KeyboardAvoidingView
+      pointerEvents={loading ? 'none' : 'auto'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
       <Shadow
