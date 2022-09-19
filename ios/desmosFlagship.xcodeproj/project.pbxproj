@@ -638,11 +638,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagshipDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.0.1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
+				DEVELOPMENT_TEAM = S7CFLM85H9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = desmosFlagship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -658,7 +656,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = desmosFlagship;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Butter provisioning profile for developers";
 				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -674,12 +671,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagship.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.0.1;
 				DEVELOPMENT_TEAM = S7CFLM85H9;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
 				INFOPLIST_FILE = desmosFlagship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -693,8 +688,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = desmosFlagship;
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore social.butter";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Butter provisioning profile for developers";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
