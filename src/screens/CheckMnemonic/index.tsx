@@ -115,7 +115,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
             {errorMessage}
           </Typography.Caption1>
           <Button mode="text" onPress={() => onWordClearAll()}>
-            <Typography.Subtitle4 style={{color: theme.colors.desmosOrange01}}>
+            <Typography.Subtitle4 style={{color: theme.colors.butterOrange01}}>
               {t('clear all')}
             </Typography.Subtitle4>
           </Button>

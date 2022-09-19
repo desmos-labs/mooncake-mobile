@@ -8,5 +8,7 @@
   "tip": "Tip",
   "post": "Post",
   "yourReply": "Your reply",
-  "replyTo": "Reply {{replyTo}}"
+  "replyTo": "Reply {{replyTo}}",
+  "text": "Text",
+  "totalReactions": "Total {{numReactions}} reactions"
 }

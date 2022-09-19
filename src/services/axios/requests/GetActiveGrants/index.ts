@@ -22,7 +22,11 @@ type Response = {
   /**
    * An array of grants the user has given.
    */
-  grants: GrantEnums[];
+  grants: {
+    msg_type: GrantEnums;
+
+    expiration: string;
+  }[];
 };
 
 /**

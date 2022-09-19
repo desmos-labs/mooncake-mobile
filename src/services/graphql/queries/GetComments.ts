@@ -5,10 +5,15 @@ export const GetPostComments = gql`
   ${POST_FIELDS}
   query PostComments($postID: bigint, $subspaceID: bigint) @api(name: desmos) {
     post(
+      order_by: {creation_date: desc}
       where: {
         subspace_id: {_eq: $subspaceID}
         conversation: {id: {_eq: $postID}}
-        references: {type: {_eq: "POST_REFERENCE_TYPE_QUOTE"}}
+        references: {
+          type: {
+            _in: ["POST_REFERENCE_TYPE_QUOTE", "POST_REFERENCE_TYPE_REPLY"]
+          }
+        }
       }
     ) {
       ...PostFields

@@ -37,6 +37,8 @@ const ActionAuthorization = () => {
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  const [loading, setLoading] = React.useState(false);
+
   const {addOrUpdateGrants} = useAddOrUpdateGrants();
 
   const {
@@ -53,6 +55,8 @@ const ActionAuthorization = () => {
             return t('follow');
           case GrantEnums.MsgDeleteRelationship:
             return t('unfollow');
+          case GrantEnums.MsgCreatePost:
+            return t('createPost');
           default:
             return 'unmapped';
         }
@@ -68,8 +72,9 @@ const ActionAuthorization = () => {
   }, [onCancel]);
 
   const handleApprove = React.useCallback(async () => {
+    setLoading(true);
     await addOrUpdateGrants({grantsToRequest: grants});
-
+    setLoading(false);
     goBack();
 
     // run onApprove last
@@ -102,12 +107,21 @@ const ActionAuthorization = () => {
 
           <Image source={authorizationImage} style={styles.imageStyle} />
 
-          <Button mode="gradientFilled" onPress={handleApprove}>
+          <Button
+            mode="contained"
+            style={{backgroundColor: theme.colors.surfaceBlack}}
+            onPress={handleApprove}
+            loading={loading}>
             {t('common:confirm')}
           </Button>
 
           <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-            <Button mode="outlined" onPress={handleCancel}>
+            <Button
+              mode="outlined"
+              style={{borderColor: theme.colors.surfaceBlack}}
+              labelStyle={{color: theme.colors.surfaceBlack}}
+              disabled={loading}
+              onPress={handleCancel}>
               {t('common:refuse')}
             </Button>
           </Spacer>

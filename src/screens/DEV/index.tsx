@@ -35,6 +35,7 @@ const routesToRender = [
   ROUTES.POST_DETAILS,
   ROUTES.REPORT_POST,
   ROUTES.FOLLOWING_AND_FOLLOWERS,
+  ROUTES.NO_DTAG_FOUND,
 ];
 
 const DevScreen = () => {

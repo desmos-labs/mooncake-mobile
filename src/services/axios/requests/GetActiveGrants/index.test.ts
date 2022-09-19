@@ -17,7 +17,12 @@ const mockedResponse = {
 
   has_fee_grant: true,
 
-  grants: ['/desmos.posts.v2.MsgCreatePost'],
+  grants: [
+    {
+      msg_type: '/desmos.posts.v2.MsgCreatePost',
+      expiration: '0001-01-01T00:00:00Z',
+    },
+  ],
 };
 
 describe('services/axios: useGetActiveGrants', () => {

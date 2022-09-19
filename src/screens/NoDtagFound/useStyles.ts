@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   image: {
-    width: 230,
+    width: 335,
     height: 116,
     alignSelf: 'center',
   },

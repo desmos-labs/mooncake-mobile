@@ -55,6 +55,9 @@ const Home = () => {
     onPostChanged,
     postData,
     selectedPostIndex,
+    handlePressCreatePost,
+    loading,
+    onCarouselProgressChange,
   } = useHooks();
 
   const {profileData} = useActiveAccount();
@@ -99,7 +102,7 @@ const Home = () => {
   const profilePic = _.get(profileData, 'profile_pic');
 
   return (
-    <DView style={styles.container}>
+    <DView style={styles.container} showLoadingOverlay={loading}>
       <View style={styles.headerGroup}>
         <ProfileHeaderButton
           style={styles.profileButton}
@@ -119,13 +122,12 @@ const Home = () => {
           containerStyle={styles.createPostButton}
           style={styles.icon}
           imageSrc={plusWhiteIcon}
-          onPress={() => {
-            console.log('create post');
-          }}
+          onPress={handlePressCreatePost}
         />
       </View>
 
       <Carousel
+        onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
         loop={false}

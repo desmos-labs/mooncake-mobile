@@ -1,17 +1,18 @@
-import React from 'react';
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
+import CustomCheckbox from 'components/CustomCheckbox';
+import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
-import {StackScreenProps} from '@react-navigation/stack';
+import {Formik} from 'formik';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import DTextInput from 'components/DTextInput';
-import Button from 'components/Button';
-import {Formik} from 'formik';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
-import CustomCheckbox from 'components/CustomCheckbox';
+import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRoute} from '@react-navigation/native';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -34,8 +35,8 @@ const MnemonicInput = () => {
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
+  const theme = useTheme();
   const {top} = useSafeAreaInsets();
-
   const {t} = useTranslation('mnemonicInput');
 
   const {
@@ -54,7 +55,6 @@ const MnemonicInput = () => {
       <Typography.Body6 style={styles.descriptionText}>
         {t('description')}
       </Typography.Body6>
-
       <Formik
         initialValues={initialFormFields}
         validate={validateForm}
@@ -66,19 +66,23 @@ const MnemonicInput = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
 
-            <DTextInput
-              multiline
-              error={!!errors.mnemonic}
-              style={[
-                styles.mnemonicInput,
-                errors.mnemonic ? styles.errorInput : undefined,
-              ]}
-              placeholder={t('inputPlaceholder')}
-              value={values.mnemonic}
-              onChangeText={text => {
-                setFieldValue('mnemonic', text, false);
-              }}
-            />
+            <View>
+              <DTextInput
+                textAlignVertical="top"
+                multiline
+                error={!!errors.mnemonic}
+                inputStyle={styles.mnemonicInputLabel}
+                style={[
+                  styles.mnemonicInput,
+                  errors.mnemonic ? styles.errorInput : undefined,
+                ]}
+                placeholder={t('inputPlaceholder')}
+                value={values.mnemonic}
+                onChangeText={text => {
+                  setFieldValue('mnemonic', text, false);
+                }}
+              />
+            </View>
 
             {errors.mnemonic && (
               <View style={styles.errorGroup}>
@@ -97,8 +101,8 @@ const MnemonicInput = () => {
             )}
 
             <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? top + 180 : 0}
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? top + 190 : 0}
+              behavior={Platform.OS === 'ios' ? 'position' : undefined}
               style={styles.buttonGroup}>
               {mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE && (
                 <View style={styles.consentGroup}>
@@ -129,7 +133,8 @@ const MnemonicInput = () => {
               )}
 
               <Button
-                mode="gradientFilled"
+                color={theme.colors.surfaceBlack}
+                mode="contained"
                 labelStyle={styles.labelStyle}
                 onPress={handleSubmit}>
                 {t(buttonText)}

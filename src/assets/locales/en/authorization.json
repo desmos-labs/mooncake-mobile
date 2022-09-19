@@ -9,5 +9,6 @@
   "followUnfollow":"follow / unfollow",
   "blockUnblock": "block / unblock",
   "report": "report",
-  "tip": "tip"
+  "tip": "tip",
+  "createPost": "Create Posts"
 }

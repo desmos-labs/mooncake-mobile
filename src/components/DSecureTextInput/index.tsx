@@ -4,7 +4,10 @@ import React, {useState} from 'react';
 import {IconButton, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
-const DSecureTextInput: React.FC<DTextInputProps> = props => {
+const DSecureTextInput: React.FC<DTextInputProps> = ({
+  onOuterFocus,
+  ...rest
+}) => {
   const [focused, setFocused] = useState<boolean>(false);
   // const {error} = props;
   const theme = useTheme();
@@ -14,8 +17,13 @@ const DSecureTextInput: React.FC<DTextInputProps> = props => {
 
   return (
     <DTextInput
-      {...props}
-      onFocus={() => setFocused(true)}
+      {...rest}
+      onFocus={() => {
+        setFocused(true);
+        if (onOuterFocus) {
+          onOuterFocus();
+        }
+      }}
       onBlur={() => setFocused(false)}
       secureTextEntry={hideText}
       textAlignVertical="center"

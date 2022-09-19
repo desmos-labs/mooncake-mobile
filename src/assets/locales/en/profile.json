@@ -20,5 +20,7 @@
   "noTipsYet": "No posts tipped yet",
   "browsePosts": "Browse posts",
   "createPost": "Create a post",
-  "noLikesYet": "No posts liked yet"
+  "noLikesYet": "No posts liked yet",
+  "chains and apps connected": "{{connectedChainsCounter}} Chains and {{connectedAppsCounter}} App connected"
+
 }

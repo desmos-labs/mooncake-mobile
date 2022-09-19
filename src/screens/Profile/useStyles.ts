@@ -67,7 +67,7 @@ const useStyles = makeStyle(theme => ({
     borderTopLeftRadius: 32,
   },
   connectButton: {
-    height: 48,
+    height: 40,
     width: 170,
     justifyContent: 'center',
     borderColor: theme.colors.surfaceBlack,

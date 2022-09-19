@@ -1,32 +1,32 @@
 import {useLazyQuery} from '@apollo/client';
+import {useNavigation} from '@react-navigation/native';
+import {useGetProfileParams} from '@recoil/profileParams';
+import {iconButton} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
+import BackButton from 'components/BackButton';
 import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
+import ImageButton from 'components/ImageButton';
+import PasswordReqGroup from 'components/PasswordReqGroup';
+import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import _ from 'lodash';
-import React, {useCallback, useEffect, useMemo} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
-import * as Yup from 'yup';
 import {
   MIN_PW_LENGTH,
   validateMin1Lowercase,
   validateMin1SpecialChar,
   validateMin1Uppercase,
 } from 'lib/ValidationUtils';
-import PasswordReqGroup from 'components/PasswordReqGroup';
-import {useGetProfileParams} from '@recoil/profileParams';
-import BackButton from 'components/BackButton';
-import {useNavigation} from '@react-navigation/native';
-import Spacer from 'components/Spacer';
-import ImageButton from 'components/ImageButton';
-import {iconButton} from 'assets/images';
+import _ from 'lodash';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
+import * as Yup from 'yup';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -38,6 +38,7 @@ const Signup = () => {
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
+  const scrollViewRef = useRef<ScrollView>(null);
   const {
     handlePressPP,
     handlePressTOS,
@@ -133,7 +134,7 @@ const Signup = () => {
         {t('signup:signup')}
       </Typography.H3>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.buttonGroup}>
         <Formik
@@ -144,7 +145,7 @@ const Signup = () => {
           {({handleSubmit, values, errors, setFieldValue}) => {
             return (
               <>
-                <ScrollView>
+                <ScrollView ref={scrollViewRef}>
                   <View style={styles.formContainer}>
                     <View style={styles.dTagRowContainer}>
                       <Typography.Subtitle2>
@@ -209,6 +210,15 @@ const Signup = () => {
                       {t('confirmPw')}
                     </Typography.Subtitle2>
                     <DSecureTextInput
+                      onOuterFocus={() =>
+                        setTimeout(
+                          () =>
+                            scrollViewRef.current?.scrollToEnd({
+                              animated: true,
+                            }),
+                          400,
+                        )
+                      }
                       placeholder={t('pw')}
                       value={values.confirmPassword}
                       onChangeText={(value: string) => {
