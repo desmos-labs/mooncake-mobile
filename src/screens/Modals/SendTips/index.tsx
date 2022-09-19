@@ -133,7 +133,9 @@ const SendTips = () => {
           numberOfLines={1}
           style={styles.textInput}
           placeholder={t('insert amount')}
-          rightElement={<Typography.Subtitle3>DSM</Typography.Subtitle3>}
+          rightElement={
+            <Typography.Subtitle3 numberOfLines={1}>DSM</Typography.Subtitle3>
+          }
         />
         <Spacer paddingBottom={10} />
 

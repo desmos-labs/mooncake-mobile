@@ -68,6 +68,7 @@ const MnemonicInput = () => {
 
             <View>
               <DTextInput
+                autoCapitalize="none"
                 textAlignVertical="top"
                 multiline
                 error={!!errors.mnemonic}

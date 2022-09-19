@@ -10,12 +10,15 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
+  Keyboard,
+  KeyboardEventName,
   ListRenderItemInfo,
+  Platform,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
@@ -65,12 +68,31 @@ const CommentReplies = () => {
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });
+  const scrollViewRef = useRef<FlatList>(null);
 
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
     }, [params]),
   );
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.select({
+        ios: 'keyboardWillShow',
+        android: 'keyboardDidShow',
+      }) as KeyboardEventName,
+      () => {
+        setTimeout(
+          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
+          100,
+        );
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const likesImages: [] = useMemo(() => {
     return reactions.map((reaction: any) => {
@@ -196,6 +218,7 @@ const CommentReplies = () => {
       style={styles.root}
       topBar={<TopBar style={styles.topBar} centerElement={MiddleElement} />}>
       <FlatList
+        ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={mainCommentLoading}
         onRefresh={() => pageRefetch()}
