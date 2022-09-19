@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
     width: 36,
     height: 36,
     borderRadius: 18,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   createPostButton: {
     width: 36,
