@@ -61,6 +61,8 @@ const CommentReplies = () => {
     handlePressCounters,
     handleExpandComment,
     handlePressSendTips,
+    handleCommentReply,
+    commentReplyLoading,
   } = useHooks({
     subspaceID: params.subspaceId,
     commentID: params.commentId,
@@ -226,6 +228,7 @@ const CommentReplies = () => {
         data={flatListData}
       />
       <EnterCommentBottomBar
+        loading={commentReplyLoading}
         focusTextInput={false}
         profileImage={
           profileData?.profile_pic
@@ -238,6 +241,7 @@ const CommentReplies = () => {
             postId: mainComment.id,
           })
         }
+        handlePostComment={handleCommentReply}
       />
       <PopupMenu
         anchor={anchor}
