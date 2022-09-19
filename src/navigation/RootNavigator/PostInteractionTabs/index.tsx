@@ -66,7 +66,8 @@ const PostInteractionTabs = () => {
         onPress={goBack}
         style={StyleSheet.absoluteFillObject}
       />
-      <Spacer paddingTop={60} />
+      {/* This padding controls the distance from the top of the screen */}
+      <Spacer paddingTop={30} />
       <Animated.View style={[animatedStyle, styles.animatedContainer]}>
         {/* wrap the inner content container with a safeAreaView as a safety net to */}
         {/* prevent contents from being rendered offscreen on devices that need a */}
