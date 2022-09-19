@@ -13,6 +13,7 @@ import {
   reportIcon,
   shareBlackIcon,
 } from 'assets/images';
+import BackButton from 'components/BackButton';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import ImageButton from 'components/ImageButton';
@@ -23,25 +24,27 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {verticalScale} from 'react-native-size-matters';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Keyboard,
+  KeyboardEventName,
   ListRenderItemInfo,
+  Platform,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {verticalScale} from 'react-native-size-matters';
 import {useRecoilState} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import BackButton from 'components/BackButton';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -102,12 +105,39 @@ const PostDetails = () => {
   });
 
   const {top} = useSafeAreaInsets();
-
+  const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
     }, [params]),
   );
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.select({
+        ios: 'keyboardWillShow',
+        android: 'keyboardDidShow',
+      }) as KeyboardEventName,
+      () => {
+        setTimeout(
+          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
+          100,
+        );
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.select({
+        ios: 'keyboardWillHide',
+        android: 'keyboardDidHide',
+      }) as KeyboardEventName,
+      () => {},
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
@@ -261,6 +291,7 @@ const PostDetails = () => {
       style={styles.root}
       topBar={CustomTopBar}>
       <FlatList
+        ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={postLoading}
         onRefresh={() => pageRefetch()}
