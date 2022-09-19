@@ -78,6 +78,7 @@ import FollowingAndFollowers, {
 } from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
+import AddProfile, {AddProfileHeader} from 'screens/AddProfile';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
@@ -152,6 +153,8 @@ export type RootNavigatorParamList = {
 
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
+
+  [ROUTES.ADD_PROFILE]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -426,6 +429,12 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
+
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE}
+        component={AddProfile}
+        options={{header: AddProfileHeader, headerShown: true}}
+      />
     </Stack.Navigator>
   );
 };

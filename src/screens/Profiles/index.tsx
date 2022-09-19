@@ -67,6 +67,11 @@ const Profiles: React.FC<Props> = props => {
     });
   }, []);
 
+  const navigateToAddProfile = useCallback(
+    () => navigation.navigate(ROUTES.ADD_PROFILE),
+    [],
+  );
+
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {
       if (index === i) {
@@ -95,7 +100,7 @@ const Profiles: React.FC<Props> = props => {
         <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
-          onPress={() => console.log('press')}>
+          onPress={navigateToAddProfile}>
           <View style={styles.plusButton}>
             <Icon
               name="plus"

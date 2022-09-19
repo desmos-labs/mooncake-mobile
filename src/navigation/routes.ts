@@ -120,6 +120,8 @@ enum ROUTES {
 
   PROFILE_NFTS = 'PROFILE_NFTS',
   NFT_DETAILS = 'NFT_DETAILS',
+
+  ADD_PROFILE = 'ADD_PROFILE',
 }
 
 export default ROUTES;
