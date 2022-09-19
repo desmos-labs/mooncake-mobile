@@ -126,6 +126,10 @@ const useHooks = ({
     resetCommentData();
   }, []);
 
+  React.useEffect(() => {
+    resetCommentData();
+  }, []);
+
   const navigateToProfile = React.useCallback(() => {
     navigate(ROUTES.USER_PROFILE, {
       visitingProfileAddress: post?.author.address,
