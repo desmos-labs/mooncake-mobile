@@ -96,9 +96,11 @@ const PostDetails = () => {
     handlePressCounters,
     handlePressSendTips,
     navigateToProfile,
+    handlePostComment,
+    postCommentLoading,
   } = useHooks({
-    id: params.postId,
-    sId: params.subspaceID,
+    postID: params.postId,
+    subspaceID: params.subspaceID,
   });
 
   const {top} = useSafeAreaInsets();
@@ -110,15 +112,9 @@ const PostDetails = () => {
   );
 
   const pageRefetch = async () => {
-    await postRefetch({ID: params.postId, subspaceID: params.subspaceID});
-    await commentsRefetch({
-      postID: params.postId,
-      subspaceID: params.subspaceID,
-    });
-    await reactionsRefetch({
-      postID: params.postId,
-      subspaceID: params.subspaceID,
-    });
+    await postRefetch();
+    await commentsRefetch();
+    await reactionsRefetch();
   };
 
   const Avatar = React.useMemo(() => {
@@ -285,6 +281,8 @@ const PostDetails = () => {
         ListEmptyComponent={ListEmptyComponent}
       />
       <EnterCommentBottomBar
+        loading={postCommentLoading}
+        handlePostComment={handlePostComment}
         focusTextInput={params.focusCommentBox}
         profileImage={
           profileData?.profile_pic

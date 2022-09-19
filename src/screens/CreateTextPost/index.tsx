@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
@@ -63,7 +63,6 @@ const CreateTextPost = () => {
     const createPostResponse = await createPost({postText: text});
 
     if (createPostResponse) {
-      console.log(createPostResponse);
       goBack();
     } else {
       console.log('something went wrong while submitting post');

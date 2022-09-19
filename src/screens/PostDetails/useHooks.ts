@@ -7,9 +7,29 @@ import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import {
+  PostReference,
+  PostReferenceType,
+} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import Long from 'long';
+import {useResetRecoilState} from 'recoil';
+import sharedCommentState from '@recoil/sharedCommentState';
 
-const useHooks = ({id, sId}: {id: number; sId: number}) => {
+const useHooks = ({
+  postID,
+  subspaceID,
+}: {
+  postID: number;
+  subspaceID: number;
+}) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
+
+  const {createPost} = useCreatePost();
+
+  const [postCommentLoading, setPostCommentLoading] = React.useState(false);
+
+  const resetCommentData = useResetRecoilState(sharedCommentState);
 
   const {
     data: originalPost,
@@ -17,8 +37,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: postRefetch,
   } = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
-      ID: id,
-      subspaceID: sId,
+      ID: postID,
+      subspaceID,
     },
   });
 
@@ -28,8 +48,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: commentsRefetch,
   } = useQuery(GetPostComments, {
     variables: {
-      postID: id,
-      subspaceID: sId,
+      postID,
+      subspaceID,
     },
   });
 
@@ -39,8 +59,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     refetch: reactionsRefetch,
   } = useQuery(GetPostReactions, {
     variables: {
-      postID: id,
-      subspaceID: sId,
+      postID,
+      subspaceID,
     },
   });
 
@@ -81,7 +101,7 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
   );
 
   const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
+    ({author, postId}: {author: PostAuthor; postId: number}) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -89,6 +109,22 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     },
     [],
   );
+
+  const handlePostComment = React.useCallback(async (comment: string) => {
+    setPostCommentLoading(true);
+    await createPost({
+      text: comment,
+      conversationId: Long.fromNumber(postID),
+      referencedPosts: [
+        PostReference.fromPartial({
+          type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+          postId: Long.fromNumber(postID),
+        }),
+      ],
+    });
+    setPostCommentLoading(false);
+    resetCommentData();
+  }, []);
 
   const navigateToProfile = React.useCallback(() => {
     navigate(ROUTES.USER_PROFILE, {
@@ -106,8 +142,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
       params: {
         expandOnOpen: true,
         allowPanning: true,
-        postId: id,
-        subspaceId: sId,
+        postId: postID,
+        subspaceId: subspaceID,
       },
     });
   }, []);
@@ -128,6 +164,8 @@ const useHooks = ({id, sId}: {id: number; sId: number}) => {
     handlePressSendTips,
     handlePressCounters,
     navigateToProfile,
+    handlePostComment,
+    postCommentLoading,
   };
 };
 

@@ -5,7 +5,7 @@ import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {ReplySetting} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {DesmosClient, MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx/index';
+import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
  * Hook that creates a new post
@@ -16,7 +16,7 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createPost = React.useCallback(
-    async ({postText}: {postText: string}) => {
+    async ({text, conversationId, referencedPosts}: Partial<MsgCreatePost>) => {
       if (!activeAddress) return;
 
       try {
@@ -30,7 +30,9 @@ const useCreatePost = () => {
             subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
             sectionId: 0,
             externalId: '',
-            text: postText,
+            text,
+            referencedPosts,
+            conversationId,
             author: activeAddress,
             replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
           }),
@@ -42,15 +44,16 @@ const useCreatePost = () => {
           messages: aminoEncodedMsg,
         });
 
+        console.log('response', msgResponse);
+
         return msgResponse;
       } catch (err: any) {
-        console.log('error', err?.response.data);
         return undefined;
       } finally {
         setLoading(false);
       }
     },
-    [activeAddress, CentralizedBroadcastTx],
+    [activeAddress],
   );
 
   return {createPost, loading};
