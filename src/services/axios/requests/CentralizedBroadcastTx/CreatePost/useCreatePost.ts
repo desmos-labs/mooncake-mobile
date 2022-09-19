@@ -16,7 +16,7 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createPost = React.useCallback(
-    async ({text, conversationId, postReferences}: CreatePostParams) => {
+    async ({text, conversationId, referencedPosts}: Partial<MsgCreatePost>) => {
       if (!activeAddress) return;
 
       try {
@@ -31,7 +31,7 @@ const useCreatePost = () => {
             sectionId: 0,
             externalId: '',
             text,
-            referencedPosts: postReferences,
+            referencedPosts,
             conversationId,
             author: activeAddress,
             replySettings: ReplySetting.REPLY_SETTING_EVERYONE,

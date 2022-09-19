@@ -71,7 +71,6 @@ const useHooks = ({
 
   const comments = useMemo(() => {
     if (!postComments) return [];
-    console.log(postComments);
     return postComments.post;
   }, [postComments]);
 
@@ -115,8 +114,8 @@ const useHooks = ({
     setPostCommentLoading(true);
     await createPost({
       text: comment,
-      conversationId: postID,
-      postReferences: [
+      conversationId: Long.fromNumber(postID),
+      referencedPosts: [
         PostReference.fromPartial({
           type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
           postId: Long.fromNumber(postID),

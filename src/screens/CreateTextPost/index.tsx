@@ -63,7 +63,6 @@ const CreateTextPost = () => {
     const createPostResponse = await createPost({postText: text});
 
     if (createPostResponse) {
-      console.log(createPostResponse);
       goBack();
     } else {
       console.log('something went wrong while submitting post');

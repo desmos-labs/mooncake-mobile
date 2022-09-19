@@ -66,10 +66,11 @@ const EnterComment = () => {
   const TopBarRightElement = React.useMemo(() => {
     const handlePress = async () => {
       setLoading(true);
+
       await createPost({
         text: commentText,
-        conversationId: postId,
-        postReferences: [
+        conversationId: Long.fromNumber(postId),
+        referencedPosts: [
           PostReference.fromPartial({
             type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
             postId: Long.fromNumber(postId),
