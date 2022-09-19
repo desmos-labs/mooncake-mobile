@@ -8,8 +8,8 @@ const ItemSeparatorComponent = () => {
   return (
     <View
       style={{
-        alignSelf: 'center',
-        width: '85%',
+        // padding won't work for some reason
+        marginHorizontal: theme.spacing.m,
         height: 1,
         backgroundColor: theme.colors.surfaceGrey,
         marginVertical: theme.spacing.m,
