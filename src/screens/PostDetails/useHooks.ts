@@ -37,7 +37,7 @@ const useHooks = ({
     refetch: postRefetch,
   } = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
-      ID: postID,
+      postID,
       subspaceID,
     },
   });
@@ -78,6 +78,21 @@ const useHooks = ({
     if (!postReactions) return [];
     return postReactions.reaction;
   }, [postReactions]);
+
+  const pageRefetch = async () => {
+    await postRefetch({
+      postID,
+      subspaceID,
+    });
+    await commentsRefetch({
+      postID,
+      subspaceID,
+    });
+    await reactionsRefetch({
+      postID,
+      subspaceID,
+    });
+  };
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 
@@ -170,6 +185,7 @@ const useHooks = ({
     navigateToProfile,
     handlePostComment,
     postCommentLoading,
+    pageRefetch,
   };
 };
 

@@ -83,13 +83,10 @@ const PostDetails = () => {
   const {
     post,
     postLoading,
-    postRefetch,
     comments,
     commentsLoading,
-    commentsRefetch,
     reactions,
     reactionsLoading,
-    reactionsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
@@ -98,6 +95,7 @@ const PostDetails = () => {
     navigateToProfile,
     handlePostComment,
     postCommentLoading,
+    pageRefetch,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -110,12 +108,6 @@ const PostDetails = () => {
       pageRefetch();
     }, [params]),
   );
-
-  const pageRefetch = async () => {
-    await postRefetch();
-    await commentsRefetch();
-    await reactionsRefetch();
-  };
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {

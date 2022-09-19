@@ -1,6 +1,7 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import useInitializeAppData from 'hooks/useInitializeAppData';
+import useNotifications from 'hooks/useNotifications';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
@@ -160,6 +161,8 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
+  useNotifications();
+
   // End initialization
 
   const {t} = useTranslation();

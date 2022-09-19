@@ -226,6 +226,7 @@ const useHooks = () => {
   // );
 
   return {
+    activeAddress,
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,

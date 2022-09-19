@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSCameraUsageDescription</key>
-    <string>Camera Permission is required for app functionality and personalization.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Files permission is required to select an avatar/banner.</string>
-    <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Bluetooth permissions is required for Ledger pairing.</string>
-    <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -47,6 +39,8 @@
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera Permission is required for app functionality and personalization.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -88,6 +82,11 @@
 		<string>Poppins-Thin.ttf</string>
 		<string>Poppins-ThinItalic.ttf</string>
 		<string>desmos.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

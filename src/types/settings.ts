@@ -16,6 +16,7 @@ export type AppSettings = {
   // app sessions
   biometrics: boolean;
   notifications: boolean;
+  notificationsPermission: boolean;
 
   // Has app data been initialized yet?
   dataInitialized: boolean;

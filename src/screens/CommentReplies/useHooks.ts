@@ -1,8 +1,16 @@
 import {useQuery} from '@apollo/client';
+import {
+  PostReference,
+  PostReferenceType,
+} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {useNavigation} from '@react-navigation/native';
+import sharedCommentState from '@recoil/sharedCommentState';
+import Long from 'long';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
+import {useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
@@ -14,6 +22,9 @@ const useHooks = ({
   subspaceID: number;
   commentID: number;
 }) => {
+  const {createPost} = useCreatePost();
+  const [commentReplyLoading, setCommentReplyLoading] = React.useState(false);
+  const resetCommentData = useResetRecoilState(sharedCommentState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
@@ -22,7 +33,7 @@ const useHooks = ({
     refetch: mainCommentRefetch,
   } = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
-      ID: commentID,
+      postID: commentID,
       subspaceID,
     },
   });
@@ -64,6 +75,21 @@ const useHooks = ({
     return commentReactions.reaction;
   }, [commentReactions]);
 
+  const pageRefetch = async () => {
+    await mainCommentRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+    await commentsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+    await reactionsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+  };
+
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
       screen: ROUTES.POST_REACTIONS,
@@ -76,12 +102,32 @@ const useHooks = ({
     });
   }, []);
 
+  const handleCommentReply = React.useCallback(async (comment: string) => {
+    setCommentReplyLoading(true);
+    await createPost({
+      text: comment,
+      conversationId: Long.fromNumber(commentID),
+      referencedPosts: [
+        PostReference.fromPartial({
+          type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+          postId: Long.fromNumber(commentID),
+        }),
+      ],
+    });
+    setCommentReplyLoading(false);
+    resetCommentData();
+  }, []);
+
+  React.useEffect(() => {
+    resetCommentData();
+  }, []);
+
   const handlePressSendTips = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
 
   const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
+    ({author, postId}: {author: PostAuthor; postId: number}) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -103,6 +149,9 @@ const useHooks = ({
     handlePressCounters,
     handlePressSendTips,
     handleExpandComment,
+    handleCommentReply,
+    commentReplyLoading,
+    pageRefetch,
   };
 };
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "888891422223",
+    "project_id": "butter-1af87",
+    "storage_bucket": "butter-1af87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888891422223:android:73aab2a23ad3ef6458557a",
+        "android_client_info": {
+          "package_name": "social.butter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888891422223-4qmsdj8a3gsg8j80a905ga57ame3viu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAraJV3U5Mn-AqHdv-sRMUc4rk1ointPBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888891422223-4qmsdj8a3gsg8j80a905ga57ame3viu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
