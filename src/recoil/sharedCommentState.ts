@@ -1,12 +1,12 @@
 import {atom, DefaultValue, selector} from 'recoil';
 import {UploadAssetType} from 'services/axios/requests/UploadMedia';
 
-const commentTextState = atom<string>({
+export const commentTextState = atom<string>({
   key: 'commentTextState',
   default: '',
 });
 
-const commentAttachmentsState = atom<UploadAssetType | undefined>({
+export const commentAttachmentsState = atom<UploadAssetType | undefined>({
   key: 'commentAttachmentsState',
   default: undefined,
 });

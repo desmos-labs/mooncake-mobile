@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
-import {View, Image, ActivityIndicator, TextInput} from 'react-native';
+import {ActivityIndicator, Image, TextInput, View} from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
@@ -13,8 +13,16 @@ import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommen
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
+import sharedCommentState, {commentTextState} from '@recoil/sharedCommentState';
+import {useRecoilState, useResetRecoilState} from 'recoil';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import {
+  PostReference,
+  PostReferenceType,
+} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import Long from 'long';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -26,7 +34,7 @@ export type EnterCommentParams = {
   /**
    * The id of the post that the reply belongs to.
    */
-  postId: string;
+  postId: number;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_COMMENT>;
@@ -38,29 +46,54 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
+  const {goBack} = useNavigation();
+
+  const [commentText, setCommentText] = useRecoilState(commentTextState);
+
+  const resetSharedCommentData = useResetRecoilState(sharedCommentState);
+
+  const {createPost} = useCreatePost();
+
+  const [loading, setLoading] = React.useState(false);
+
   const {
-    params: {author},
+    params: {author, postId},
   } = useRoute<NavProps['route']>();
 
   const {imageAsset, clearImage, imageFromCamera, imageFromLibrary} =
     useImageFromDevice();
 
-  const [reply, setReply] = React.useState('');
-
   const TopBarRightElement = React.useMemo(() => {
-    const handlePress = () => {
-      // these values will probably be useful in constructing the comment message
-      console.log(imageAsset, reply, author);
+    const handlePress = async () => {
+      setLoading(true);
+      await createPost({
+        text: commentText,
+        conversationId: postId,
+        postReferences: [
+          PostReference.fromPartial({
+            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+            postId: Long.fromNumber(postId),
+          }),
+        ],
+      });
+
+      resetSharedCommentData();
+      setLoading(false);
+      goBack();
     };
 
     return (
-      <Button mode="contained" onPress={handlePress} style={styles.postButton}>
+      <Button
+        loading={loading}
+        mode="contained"
+        onPress={handlePress}
+        style={styles.postButton}>
         <Typography.Button3 style={styles.postButtonText}>
           {t('post')}
         </Typography.Button3>
       </Button>
     );
-  }, [imageAsset, reply]);
+  }, [imageAsset, commentText, loading]);
 
   const TopBarCenterElement = React.useMemo(() => {
     return (
@@ -100,8 +133,8 @@ const EnterComment = () => {
           <TextInput
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
             placeholder={t('yourReply')}
-            value={reply}
-            onChangeText={setReply}
+            value={commentText}
+            onChangeText={setCommentText}
             multiline
             style={{flex: 1, alignSelf: 'flex-start'}}
           />
@@ -119,7 +152,7 @@ const EnterComment = () => {
         handlePressMention={() => {
           console.log('placeholder');
         }}
-        commentLength={reply.length}
+        commentLength={commentText.length}
         style={styles.bottomPanel}
       />
     </>

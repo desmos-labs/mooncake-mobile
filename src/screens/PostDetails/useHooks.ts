@@ -13,6 +13,8 @@ import {
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import Long from 'long';
+import {useResetRecoilState} from 'recoil';
+import sharedCommentState from '@recoil/sharedCommentState';
 
 const useHooks = ({
   postID,
@@ -26,6 +28,8 @@ const useHooks = ({
   const {createPost} = useCreatePost();
 
   const [postCommentLoading, setPostCommentLoading] = React.useState(false);
+
+  const resetCommentData = useResetRecoilState(sharedCommentState);
 
   const {
     data: originalPost,
@@ -98,7 +102,7 @@ const useHooks = ({
   );
 
   const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: string}) => {
+    ({author, postId}: {author: PostAuthor; postId: number}) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -120,6 +124,7 @@ const useHooks = ({
       ],
     });
     setPostCommentLoading(false);
+    resetCommentData();
   }, []);
 
   const navigateToProfile = React.useCallback(() => {
