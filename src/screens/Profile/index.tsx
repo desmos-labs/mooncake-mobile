@@ -259,12 +259,12 @@ const Profile = () => {
                     </Typography.Button2>
                   </Button>
                 </View>
-                {chainLinks.length > 0 && (
+                {chainLinks.length === 0 && (
                   <View style={{marginTop: 12}}>
                     <ChainsCountersBar
                       loading={false}
                       connectedChainsCounter={chainLinks.length}
-                      connectedAppsCounter={0}
+                      connectedAppsCounter={6}
                       connectedChainsImages={[
                         stargazeIcon,
                         cosmosIcon,
