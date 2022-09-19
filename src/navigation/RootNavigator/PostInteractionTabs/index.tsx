@@ -11,6 +11,7 @@ import {GestureDetector} from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import PostReactions from 'screens/PostInteraction/PostReactions';
 import PostTips from 'screens/PostInteraction/PostTips';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
@@ -65,31 +66,37 @@ const PostInteractionTabs = () => {
         onPress={goBack}
         style={StyleSheet.absoluteFillObject}
       />
-      <Spacer paddingTop={60} />
+      {/* This padding controls the distance from the top of the screen */}
+      <Spacer paddingTop={30} />
       <Animated.View style={[animatedStyle, styles.animatedContainer]}>
-        <GestureDetector gesture={panGesture}>
-          <View style={styles.barContainer}>
-            <View style={styles.bar} />
-          </View>
-        </GestureDetector>
-        <Tab.Navigator
-          sceneContainerStyle={styles.sceneContainerStyle}
-          tabBar={CustomTabBar}>
-          <Tab.Screen
-            name={ROUTES.POST_REACTIONS}
-            options={{
-              tabBarLabel: 'Reactions',
-            }}
-            component={PostReactions}
-          />
-          <Tab.Screen
-            name={ROUTES.POST_TIPS}
-            options={{
-              tabBarLabel: 'Tips',
-            }}
-            component={PostTips}
-          />
-        </Tab.Navigator>
+        {/* wrap the inner content container with a safeAreaView as a safety net to */}
+        {/* prevent contents from being rendered offscreen on devices that need a */}
+        {/* bottom safeArea */}
+        <SafeAreaView edges={['bottom']} style={{flex: 1}}>
+          <GestureDetector gesture={panGesture}>
+            <View style={styles.barContainer}>
+              <View style={styles.bar} />
+            </View>
+          </GestureDetector>
+          <Tab.Navigator
+            sceneContainerStyle={styles.sceneContainerStyle}
+            tabBar={CustomTabBar}>
+            <Tab.Screen
+              name={ROUTES.POST_REACTIONS}
+              options={{
+                tabBarLabel: 'Reactions',
+              }}
+              component={PostReactions}
+            />
+            <Tab.Screen
+              name={ROUTES.POST_TIPS}
+              options={{
+                tabBarLabel: 'Tips',
+              }}
+              component={PostTips}
+            />
+          </Tab.Navigator>
+        </SafeAreaView>
       </Animated.View>
     </View>
   );
