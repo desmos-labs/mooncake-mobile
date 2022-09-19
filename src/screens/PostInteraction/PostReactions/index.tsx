@@ -6,9 +6,12 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import Typography from 'components/Typography';
+import {formatNumShorthand} from 'lib/FormatUtils';
 import useHooks from './useHooks';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
   PostInteractionTabsParamList,
@@ -17,6 +20,7 @@ type NavProps = StackScreenProps<
 
 const PostReactions = () => {
   const {t} = useTranslation('postInteraction');
+  const styles = useStyles();
   const {
     params: {postId, subspaceId},
   } = useRoute<NavProps['route']>();
@@ -34,20 +38,25 @@ const PostReactions = () => {
   }, []);
 
   return (
-    <FlatList
-      refreshing={reactionsLoading}
-      onRefresh={() =>
-        reactionsRefetch({postID: postId, subspaceID: subspaceId})
-      }
-      keyExtractor={item => item.id}
-      data={reactions}
-      renderItem={renderItem}
-      contentContainerStyle={{
-        flexGrow: 1,
-      }}
-      ItemSeparatorComponent={ItemSeparatorComponent}
-      ListEmptyComponent={ListEmptyComponent}
-    />
+    <>
+      <Typography.Body6 style={styles.countText}>
+        {t('totalReactions', {
+          numReactions: formatNumShorthand(reactions.length),
+        })}
+      </Typography.Body6>
+      <FlatList
+        refreshing={reactionsLoading}
+        onRefresh={() =>
+          reactionsRefetch({postID: postId, subspaceID: subspaceId})
+        }
+        keyExtractor={item => item.id}
+        data={reactions}
+        renderItem={renderItem}
+        contentContainerStyle={styles.contentContainerStyle}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={ListEmptyComponent}
+      />
+    </>
   );
 };
 

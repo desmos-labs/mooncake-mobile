@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 
 /**
  * Style hook for the PostInteractionTabs tab navigator
@@ -9,7 +9,8 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   animatedContainer: {
-    ...StyleSheet.absoluteFillObject,
+    // uncommenting this will make the view not stick to bottom
+    // ...StyleSheet.absoluteFillObject,
     backgroundColor: theme.colors.white,
     borderRadius: 24,
     // paddingHorizontal: theme.spacing.m,
@@ -25,7 +26,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: '#DEDEDE',
   },
   barContainer: {
-    paddingVertical: theme.spacing.s,
+    paddingBottom: theme.spacing.m,
   },
   sceneContainerStyle: {
     backgroundColor: theme.colors.white,

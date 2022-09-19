@@ -9,5 +9,6 @@
   "post": "Post",
   "yourReply": "Your reply",
   "replyTo": "Reply {{replyTo}}",
-  "text": "Text"
+  "text": "Text",
+  "totalReactions": "Total {{numReactions}} reactions"
 }

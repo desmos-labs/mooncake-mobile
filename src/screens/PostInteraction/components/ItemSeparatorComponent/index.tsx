@@ -9,7 +9,7 @@ const ItemSeparatorComponent = () => {
     <View
       style={{
         alignSelf: 'center',
-        width: 335,
+        width: '85%',
         height: 1,
         backgroundColor: theme.colors.surfaceGrey,
         marginVertical: theme.spacing.m,
