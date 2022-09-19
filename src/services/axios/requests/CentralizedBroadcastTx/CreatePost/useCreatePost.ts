@@ -16,7 +16,7 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createPost = React.useCallback(
-    async ({text}: Pick<CreatePostParams, 'text'>) => {
+    async ({text, conversationId, postReferences}: CreatePostParams) => {
       if (!activeAddress) return;
 
       try {
@@ -31,6 +31,8 @@ const useCreatePost = () => {
             sectionId: 0,
             externalId: '',
             text,
+            referencedPosts: postReferences,
+            conversationId,
             author: activeAddress,
             replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
           }),
@@ -42,6 +44,8 @@ const useCreatePost = () => {
           messages: aminoEncodedMsg,
         });
 
+        console.log(msgResponse);
+
         return msgResponse;
       } catch (err: any) {
         console.log('error', err?.response.data);
@@ -50,7 +54,7 @@ const useCreatePost = () => {
         setLoading(false);
       }
     },
-    [activeAddress, CentralizedBroadcastTx],
+    [activeAddress],
   );
 
   return {createPost, loading};

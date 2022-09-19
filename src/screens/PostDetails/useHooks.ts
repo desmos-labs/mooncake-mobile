@@ -7,7 +7,7 @@ import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import useCreateComment from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreateComment';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 
 const useHooks = ({
   postID,
@@ -18,7 +18,7 @@ const useHooks = ({
 }) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const {createComment} = useCreateComment();
+  const {createPost} = useCreatePost();
 
   const [postCommentLoading, setPostCommentLoading] = React.useState(false);
 
@@ -103,7 +103,7 @@ const useHooks = ({
 
   const handlePostComment = React.useCallback(async (comment: string) => {
     setPostCommentLoading(true);
-    await createComment({
+    await createPost({
       text: comment,
       conversationId: postID,
     });
