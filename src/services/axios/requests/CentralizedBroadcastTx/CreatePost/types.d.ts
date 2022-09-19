@@ -1,3 +1,5 @@
+import {PostReference} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+
 export {};
 
 declare global {
@@ -6,7 +8,6 @@ declare global {
 
     conversationId?: number;
 
-    // temporary
-    postReferences?: any[];
+    postReferences?: PostReference[];
   };
 }

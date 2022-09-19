@@ -114,7 +114,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   return (
     <KeyboardAvoidingView
-      pointerEvents={loading ? 'none' : 'auto'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
       <Shadow

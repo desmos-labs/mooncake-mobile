@@ -8,7 +8,11 @@ import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubs
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import {PostReferenceType} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import {
+  PostReference,
+  PostReferenceType,
+} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import Long from 'long';
 
 const useHooks = ({
   postID,
@@ -108,10 +112,10 @@ const useHooks = ({
       text: comment,
       conversationId: postID,
       postReferences: [
-        {
+        PostReference.fromPartial({
           type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-          post_id: postID,
-        },
+          postId: Long.fromNumber(postID),
+        }),
       ],
     });
     setPostCommentLoading(false);

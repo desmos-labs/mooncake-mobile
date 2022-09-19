@@ -44,11 +44,8 @@ const useCreatePost = () => {
           messages: aminoEncodedMsg,
         });
 
-        console.log(msgResponse);
-
         return msgResponse;
       } catch (err: any) {
-        console.log('error', err?.response.data);
         return undefined;
       } finally {
         setLoading(false);
