@@ -66,7 +66,7 @@ export const GetCommentReplies = gql`
 `;
 
 export const GetPostCommentsCount = gql`
-  query PostCommentsCount($subspaceID: bigint!, $postID: bigint!)
+  query PostCommentsCount($subspaceID: bigint, $postID: bigint)
   @api(name: desmos) {
     post_reference_aggregate(
       where: {reference: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}

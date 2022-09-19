@@ -51,18 +51,16 @@ const CommentReplies = () => {
   const {
     mainComment,
     mainCommentLoading,
-    mainCommentRefetch,
     comments,
     commentsLoading,
-    commentsRefetch,
     reactions,
     reactionsLoading,
-    reactionsRefetch,
     handlePressCounters,
     handleExpandComment,
     handlePressSendTips,
     handleCommentReply,
     commentReplyLoading,
+    pageRefetch,
   } = useHooks({
     subspaceID: params.subspaceId,
     commentID: params.commentId,
@@ -73,21 +71,6 @@ const CommentReplies = () => {
       pageRefetch();
     }, [params]),
   );
-
-  const pageRefetch = async () => {
-    await mainCommentRefetch({
-      ID: params.commentId,
-      subspaceID: params.subspaceId,
-    });
-    await commentsRefetch({
-      postID: params.commentId,
-      subspaceID: params.subspaceId,
-    });
-    await reactionsRefetch({
-      postID: params.commentId,
-      subspaceID: params.subspaceId,
-    });
-  };
 
   const likesImages: [] = useMemo(() => {
     return reactions.map((reaction: any) => {
@@ -118,6 +101,7 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          loading={commentsLoading}
           disableInnerComment={true}
           handlePressMore={() => console.log('test')}
           handlePressComment={() => {
@@ -150,6 +134,7 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
+          loading={mainCommentLoading}
           handlePressMore={() => console.log('test')}
           handlePressComment={() => {
             console.log('hello world');
@@ -213,12 +198,7 @@ const CommentReplies = () => {
       <FlatList
         scrollEnabled={true}
         refreshing={mainCommentLoading}
-        onRefresh={() =>
-          mainCommentRefetch({
-            ID: params.commentId,
-            subspaceID: params.subspaceId,
-          })
-        }
+        onRefresh={() => pageRefetch()}
         keyExtractor={item => item.post.id}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={ListEmptyComponent}

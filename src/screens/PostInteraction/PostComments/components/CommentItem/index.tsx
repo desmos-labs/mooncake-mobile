@@ -11,8 +11,9 @@ import {
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -21,7 +22,6 @@ import {
   View,
 } from 'react-native';
 import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -80,7 +80,11 @@ const CommentItem = ({
 }: Props) => {
   const styles = useStyles(disableInnerComment);
   const {t} = useTranslation();
-  const {data} = useQuery(GetPostCommentsCount, {
+  const {
+    data: commentsCountData,
+    loading: commentsCountLoading,
+    refetch: commentCountRefetch,
+  } = useQuery(GetPostCommentsCount, {
     variables: {
       subspaceID: subspace_id,
       postID: id,
@@ -88,15 +92,17 @@ const CommentItem = ({
   });
 
   const commentsCount = useMemo(() => {
-    if (!data) return 0;
-    return data.post_reference_aggregate.aggregate.count;
-  }, [data]);
+    if (!commentsCountData) return 0;
+    return commentsCountData.post_reference_aggregate.aggregate.count;
+  }, [commentsCountLoading]);
 
-  // const formattedDate = useMemo(
-  //   () =>
-  //     utcToZonedTime(creation_date, settings.currentTimezone).toDateString(),
-  //   [creation_date, settings.currentTimezone],
-  // );
+  useEffect(() => {
+    commentCountRefetch({
+      subspaceID: subspace_id,
+      postID: id,
+    });
+  }, [loading]);
+
   const formattedDate = useFormatTimeForPostDetails(creation_date);
 
   const content = React.useMemo(() => {

@@ -33,7 +33,7 @@ const useHooks = ({
     refetch: mainCommentRefetch,
   } = useQuery(GetPostBySubspaceIDandPostID, {
     variables: {
-      ID: commentID,
+      postID: commentID,
       subspaceID,
     },
   });
@@ -74,6 +74,21 @@ const useHooks = ({
     if (!commentReactions) return [];
     return commentReactions.reaction;
   }, [commentReactions]);
+
+  const pageRefetch = async () => {
+    await mainCommentRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+    await commentsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+    await reactionsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+  };
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
@@ -136,6 +151,7 @@ const useHooks = ({
     handleExpandComment,
     handleCommentReply,
     commentReplyLoading,
+    pageRefetch,
   };
 };
 
