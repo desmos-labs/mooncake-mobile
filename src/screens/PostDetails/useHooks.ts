@@ -67,6 +67,7 @@ const useHooks = ({
 
   const comments = useMemo(() => {
     if (!postComments) return [];
+    console.log(postComments);
     return postComments.post;
   }, [postComments]);
 
