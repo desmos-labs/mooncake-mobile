@@ -125,16 +125,7 @@ const PostDetails = () => {
         );
       },
     );
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.select({
-        ios: 'keyboardWillHide',
-        android: 'keyboardDidHide',
-      }) as KeyboardEventName,
-      () => {},
-    );
-
     return () => {
-      keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
     };
   }, []);
