@@ -1,7 +1,18 @@
+import messaging from '@react-native-firebase/messaging';
 import React from 'react';
-import {atom, useRecoilState} from 'recoil';
+import {atom, DefaultValue, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+
+function isProfileData(
+  data: ProfileData | DefaultValue | undefined,
+): data is ProfileData {
+  if (!data) {
+    return false;
+  } else {
+    return (data as ProfileData).address !== undefined;
+  }
+}
 
 /**
  * An atom to hold account data of the user's selected profile
@@ -11,6 +22,24 @@ import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress'
 const activeProfileState = atom<ProfileData | undefined>({
   key: 'activeProfile',
   default: undefined,
+  effects: [
+    ({onSet}) => {
+      onSet((newValue, oldValue) => {
+        if (isProfileData(oldValue)) {
+          messaging()
+            .unsubscribeFromTopic(oldValue?.address)
+            .then(() =>
+              console.log('Unsubscribed to topic!', oldValue?.address),
+            );
+        }
+        if (newValue?.address) {
+          messaging()
+            .subscribeToTopic(newValue?.address)
+            .then(() => console.log('Subscribed to topic!', newValue?.address));
+        }
+      });
+    },
+  ],
 });
 
 export default activeProfileState;

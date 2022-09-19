@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import useRequestNotificationsPermission from 'hooks/useRequestNotificationsPermission';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -19,10 +20,9 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 const Landing = () => {
   const theme = useTheme();
   const {t} = useTranslation('landing');
-
   const {navigate} = useNavigation<NavProps['navigation']>();
-
   const styles = useStyles();
+  useRequestNotificationsPermission();
 
   return (
     <DView

@@ -9,6 +9,7 @@ export const DefaultAppSettings: AppSettings = {
   theme: 'light',
   biometrics: false,
   notifications: false,
+  notificationsPermission: false,
   dataInitialized: false,
   currentTimezone: '',
   registeredReactions: [],

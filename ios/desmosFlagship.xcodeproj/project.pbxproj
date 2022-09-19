@@ -31,6 +31,7 @@
 		87586BFCE2ED4EFDB604E8E0 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98355F2B15D8489FAF2BFDE8 /* Poppins-Black.ttf */; };
 		AC10F7CCC94CB637D02FD982 /* libPods-desmosFlagship.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F89DA852B4ADA334B6F44D1 /* libPods-desmosFlagship.a */; };
 		D0A1FCFF45784CDE988A0238 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FD2A9566A5448C89182D510 /* Poppins-Bold.ttf */; };
+		D2CE229128D862A800F7A232 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D2CE229028D862A700F7A232 /* GoogleService-Info.plist */; };
 		E1363118C4D7492682419DF6 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5B3188922324AD4B373B161 /* Poppins-SemiBold.ttf */; };
 		F500CC4F61AF4B54A6186152 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6409401F0DA542718EF081E9 /* Poppins-ThinItalic.ttf */; };
 		F8341B7E6D9744E589BDFC0F /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 180CFE5A7CAC48AC9CFD101A /* Poppins-SemiBoldItalic.ttf */; };
@@ -99,6 +100,9 @@
 		D219986B286B0B83003AD3D3 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		D219986C286B0B83003AD3D3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		D219986D286B0B83003AD3D3 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		D2CE229028D862A700F7A232 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D2CE229228D870C400F7A232 /* desmosFlagshipDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = desmosFlagshipDebug.entitlements; path = desmosFlagship/desmosFlagshipDebug.entitlements; sourceTree = "<group>"; };
+		D2CE229328D870E600F7A232 /* desmosFlagship.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = desmosFlagship.entitlements; path = desmosFlagship/desmosFlagship.entitlements; sourceTree = "<group>"; };
 		D2D327619F544AA78FC55E2F /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		E55071F4561E487E8CDE7ED7 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -145,6 +149,8 @@
 		13B07FAE1A68108700A75B9A /* desmosFlagship */ = {
 			isa = PBXGroup;
 			children = (
+				D2CE229328D870E600F7A232 /* desmosFlagship.entitlements */,
+				D2CE229228D870C400F7A232 /* desmosFlagshipDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -220,6 +226,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D2CE229028D862A700F7A232 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* desmosFlagship */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* desmosFlagshipTests */,
@@ -367,6 +374,7 @@
 				E1363118C4D7492682419DF6 /* Poppins-SemiBold.ttf in Resources */,
 				F8341B7E6D9744E589BDFC0F /* Poppins-SemiBoldItalic.ttf in Resources */,
 				7EE07B9D1CF643A5AACCD534 /* Poppins-Thin.ttf in Resources */,
+				D2CE229128D862A800F7A232 /* GoogleService-Info.plist in Resources */,
 				F500CC4F61AF4B54A6186152 /* Poppins-ThinItalic.ttf in Resources */,
 				318AE59F0D93438D9B9741CB /* desmos.ttf in Resources */,
 			);
@@ -628,10 +636,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagshipDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0.0.1;
-				DEVELOPMENT_TEAM = S7CFLM85H9;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = desmosFlagship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -647,6 +658,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = desmosFlagship;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Butter provisioning profile for developers";
 				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -661,10 +673,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagship.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0.0.1;
 				DEVELOPMENT_TEAM = S7CFLM85H9;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
 				INFOPLIST_FILE = desmosFlagship/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -679,6 +694,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = desmosFlagship;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore social.butter";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Butter provisioning profile for developers";
 				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
