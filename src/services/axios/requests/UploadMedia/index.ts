@@ -10,12 +10,14 @@ type ImageMedia = {
   fileName?: string;
 };
 
+export type UploadAssetType = ImageMedia;
+
 export type Params = {
   /**
    * The media asset to be uploaded.
    * In the future, additional media types should be added here.
    */
-  mediaFile: ImageMedia;
+  mediaFile: UploadAssetType;
 
   /**
    * Optional callback to listen to the file upload progress.
