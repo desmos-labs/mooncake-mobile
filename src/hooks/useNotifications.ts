@@ -30,19 +30,21 @@ const useNotifications = () => {
           },
         });
       } else if (remoteMessage.data) {
-        console.log(remoteMessage.data);
-        toast.show('Transaction success!', {
-          type: 'butterSuccess',
-        });
-        /*        if (remoteMessage?.data?.result?.type === 'transaction_success') {
-          toast.show('Transaction success!', {
-            type: 'butterSuccess',
-          });
-        } else {
-          toast.show('Transaction failed!', {
-            type: 'butterFailure',
-          });
-        } */
+        setTimeout(() => {
+          if (remoteMessage.data?.type === 'transaction_success') {
+            toast.show('Transaction success!', {
+              type: 'butterSuccess',
+            });
+          } else if (remoteMessage.data?.type === 'transaction_failed') {
+            toast.show('Transaction failed!', {
+              type: 'butterFailure',
+            });
+          } else {
+            toast.show('State of transaction unknown', {
+              type: 'butterFailure',
+            });
+          }
+        }, 1000);
         setTransactions([
           ...transactions,
           {
