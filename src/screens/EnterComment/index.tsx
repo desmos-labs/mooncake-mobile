@@ -80,10 +80,14 @@ const EnterComment = () => {
     else imageFromLibrary();
   }, [isCreatePost]);
 
-  const TopBarRightElement = React.useMemo(() => {
-    const handlePress = async () => {
-      setLoading(true);
+  const handlePress = React.useCallback(async () => {
+    setLoading(true);
 
+    // creating a new image+media post
+    if (isCreatePost) {
+    }
+    // comment on a post
+    else {
       await createPost({
         text: commentText,
         conversationId: Long.fromNumber(postId!),
@@ -94,12 +98,14 @@ const EnterComment = () => {
           }),
         ],
       });
+    }
 
-      resetSharedCommentData();
-      setLoading(false);
-      goBack();
-    };
+    resetSharedCommentData();
+    setLoading(false);
+    goBack();
+  }, [commentText, isCreatePost, commentText, commentAttachment]);
 
+  const TopBarRightElement = React.useMemo(() => {
     return (
       <Button
         loading={loading}
@@ -111,7 +117,7 @@ const EnterComment = () => {
         </Typography.Button3>
       </Button>
     );
-  }, [commentAttachment, commentText, loading]);
+  }, [commentAttachment, handlePress, loading]);
 
   const TopBarCenterElement = React.useMemo(() => {
     if (isCreatePost) return undefined;
@@ -151,7 +157,7 @@ const EnterComment = () => {
           {/* this may get refactored into its own custom component */}
           <TextInput
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
-            placeholder={t('yourReply')}
+            placeholder={t(isCreatePost ? 'writeSomething' : 'yourReply')}
             value={commentText}
             onChangeText={setCommentText}
             multiline
