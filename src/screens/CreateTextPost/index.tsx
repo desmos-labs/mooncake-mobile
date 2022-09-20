@@ -120,13 +120,13 @@ const CreateTextPost = () => {
         </TouchableOpacity>
       </SafeAreaView>
 
-      <BottomBar
-        handlePressPost={handleSubmitPost}
-        handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
-      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-        style={styles.textCounterContainer}>
+        style={styles.textCounterContainer}
+        // android pushes the text counter up excessively, so we need to use this offset
+        keyboardVerticalOffset={Platform.select({
+          android: -200,
+        })}>
         <RadialTextCounter
           max={EnvConfig.MAX_COMMENT_LENGTH}
           current={text.length}
@@ -134,6 +134,11 @@ const CreateTextPost = () => {
           customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
+      <BottomBar
+        handlePressPost={handleSubmitPost}
+        handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
+      />
+
       <LoadingOverlay isVisible={loading} />
     </View>
   );
