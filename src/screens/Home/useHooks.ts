@@ -37,6 +37,7 @@ const useHooks = () => {
   const [loading, setLoading] = React.useState(false);
 
   const postData = React.useMemo(() => {
+    console.log(JSON.stringify(posts.map(x => x.attachments)));
     if (selectedFilterIndex === 0) return posts;
 
     // Get the list of following accounts

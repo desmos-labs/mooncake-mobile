@@ -32,7 +32,7 @@ export const useGetPosts = () => {
       limit: POSTS_PER_FETCH,
       subspaceID,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'no-cache',
     errorPolicy: 'ignore',
   });
 

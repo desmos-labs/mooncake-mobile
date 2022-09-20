@@ -37,12 +37,12 @@ declare global {
 
   interface MediaContent {
     uri: string;
-    '@type': '/desmos.posts.v1.Media';
+    '@type': string;
     mime_type: string;
   }
 
   interface PollContent {
-    '@type': '/desmos.posts.v1.Poll';
+    '@type': string;
     end_date: string;
     question: string;
     provided_answers: {

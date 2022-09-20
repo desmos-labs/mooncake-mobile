@@ -1,6 +1,7 @@
 import {defaultProfilePic, followedButton, followIcon} from 'assets/images';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -75,11 +76,11 @@ const PostCard = ({
     const [attachment] = attachments;
 
     if (attachment) {
-      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
+      if (attachment.content['@type'].includes('Media')) {
         return (
           <Image
             source={{
-              uri: attachment.content.uri,
+              uri: _.get(attachment, 'content.uri'),
             }}
             style={StyleSheet.absoluteFillObject}
           />
@@ -87,7 +88,7 @@ const PostCard = ({
       }
     }
     return undefined;
-  }, []);
+  }, [attachments]);
 
   const postType: POST_TYPE = React.useMemo(() => {
     if (postData.text && postData.attachments.length === 0) {
