@@ -32,15 +32,15 @@ const useNotifications = () => {
       } else if (remoteMessage.data) {
         setTimeout(() => {
           if (remoteMessage.data?.type === 'transaction_success') {
-            toast.show('Transaction success!', {
+            toast.show?.('Transaction success!', {
               type: 'butterSuccess',
             });
           } else if (remoteMessage.data?.type === 'transaction_failed') {
-            toast.show('Transaction failed!', {
+            toast.show?.('Transaction failed!', {
               type: 'butterFailure',
             });
           } else {
-            toast.show('State of transaction unknown', {
+            toast.show?.('State of transaction unknown', {
               type: 'butterFailure',
             });
           }
