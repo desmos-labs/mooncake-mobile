@@ -14,7 +14,6 @@ import {useTranslation} from 'react-i18next';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
@@ -24,6 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import BackButton from 'components/BackButton';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -88,13 +88,7 @@ const CreateTextPost = () => {
           <Image source={postBG[backgroundIndex]} style={styles.background} />
 
           <View style={styles.headerGroup}>
-            <Icon
-              name="angle-left"
-              color={theme.colors.white}
-              size={32}
-              allowFontScaling
-              onPress={goBack}
-            />
+            <BackButton onPress={goBack} />
 
             <TouchableOpacity onPress={handlePressBGButton}>
               <Image

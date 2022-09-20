@@ -21,7 +21,7 @@ export const BackButton: React.FC<Props> = ({onPress, style}) => {
       <Icon
         name="angle-left"
         color={theme.colors.surfaceBlack}
-        size={24}
+        size={32}
         allowFontScaling
       />
     </TouchableOpacity>
