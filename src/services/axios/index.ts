@@ -19,6 +19,7 @@ export const initializeAxiosInstance = async () => {
   axiosInstance.interceptors.response.use(
     response => response,
     error => {
+      console.log(JSON.stringify(error.response));
       console.warn(`[AXIOS]: ${error.response.data}`);
       return error;
     },

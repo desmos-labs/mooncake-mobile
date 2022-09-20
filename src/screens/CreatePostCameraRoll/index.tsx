@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, TouchableOpacity} from 'react-native';
+import {FlatList, Platform, TouchableOpacity} from 'react-native';
 import useGallery, {ImageDto} from 'screens/CreatePostCameraRoll/useGallery';
 import CameraRollItem from 'screens/CreatePostCameraRoll/components/CameraRollItem';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -13,6 +13,7 @@ import CameraButton from 'screens/CreatePostCameraRoll/components/CameraRollItem
 import {useSetRecoilState} from 'recoil';
 import {commentAttachmentsState} from '@recoil/sharedCommentState';
 import {ImageMedia} from 'services/axios/requests/UploadMedia';
+import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -37,6 +38,22 @@ const CreatePostCameraRoll = () => {
   const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const setCommentAttachment = useSetRecoilState(commentAttachmentsState);
+
+  React.useEffect(() => {
+    const requestPermissions = async () => {
+      const permission: any = Platform.select({
+        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        ios: PERMISSIONS.IOS.MEDIA_LIBRARY,
+      });
+
+      // @ts-ignore
+      const grantedPermissions = await requestMultiple([permission]);
+
+      if (grantedPermissions[permission] !== 'granted') goBack();
+    };
+
+    requestPermissions();
+  }, []);
 
   const {photos} = useGallery({
     pageSize: 30,
