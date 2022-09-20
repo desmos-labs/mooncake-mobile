@@ -53,6 +53,9 @@ const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
   }));
 };
 
+/**
+ * Adapted from https://github.com/react-native-cameraroll/react-native-cameraroll
+ */
 const useGallery = ({
   pageSize = 30,
   mimeTypeFilter = supportedMimeTypesByTheBackEnd,

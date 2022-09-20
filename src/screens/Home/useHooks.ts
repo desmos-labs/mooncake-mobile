@@ -37,7 +37,6 @@ const useHooks = () => {
   const [loading, setLoading] = React.useState(false);
 
   const postData = React.useMemo(() => {
-    console.log(JSON.stringify(posts.map(x => x.attachments)));
     if (selectedFilterIndex === 0) return posts;
 
     // Get the list of following accounts
@@ -210,21 +209,6 @@ const useHooks = () => {
     },
     [maxOffset.current, prevOffsetValue.current, overscrolling.current],
   );
-  // const onCarouselProgressChange = React.useCallback(
-  //   _.throttle((_temp: number, __: number, value: number) => {
-  //     const offsetValue = value;
-  //     // console.log(offsetValue, maxOffset.current);
-  //     if (offsetValue > 0) {
-  //       console.log('fetch');
-  //       // do overscroll right things
-  //       onOverscrollRight();
-  //     }
-  //     if (offsetValue < maxOffset.current) {
-  //       // do overscroll left things
-  //     }
-  //   }, 3000),
-  //   [maxOffset.current],
-  // );
 
   return {
     activeAddress,

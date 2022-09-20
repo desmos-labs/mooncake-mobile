@@ -86,6 +86,7 @@ const PostCard = ({
 
     // This should never be reached. Logged post id's should be checked for
     // validity
+    // TODO: make this less naive
     console.log('Default post behavior for post id', postData.id);
     return POST_TYPE.TEXT;
   }, []);

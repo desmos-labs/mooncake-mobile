@@ -2,6 +2,7 @@ import {Media, Poll} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 export {};
 
+// TODO: replace this with POST type from desmjs
 declare global {
   interface PostItem {
     author_address: string;
