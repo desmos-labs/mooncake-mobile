@@ -15,6 +15,8 @@ import {commentAttachmentsState} from '@recoil/sharedCommentState';
 import {ImageMedia} from 'services/axios/requests/UploadMedia';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import _ from 'lodash';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import {Asset} from 'react-native-image-picker';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -39,6 +41,18 @@ const CreatePostCameraRoll = () => {
   const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const setCommentAttachment = useSetRecoilState(commentAttachmentsState);
+
+  const imageFromCameraCallback = React.useCallback((asset: Asset) => {
+    setCommentAttachment(asset);
+
+    replace(ROUTES.ENTER_COMMENT, {
+      isCreatePost: true,
+    });
+  }, []);
+
+  const {imageFromCamera} = useImageFromDevice({
+    onImageSelected: imageFromCameraCallback,
+  });
 
   React.useEffect(() => {
     const requestPermissions = async () => {
@@ -84,15 +98,8 @@ const CreatePostCameraRoll = () => {
   );
 
   const renderItem = React.useCallback((item: any) => {
-    console.log(item, item.index);
     if (item.index === 0) {
-      return (
-        <CameraButton
-          onPress={() => {
-            console.log('hello camera');
-          }}
-        />
-      );
+      return <CameraButton onPress={imageFromCamera} />;
     }
     return (
       <CameraRollItem
