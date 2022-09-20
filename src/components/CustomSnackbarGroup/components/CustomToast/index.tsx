@@ -2,6 +2,7 @@ import Button from 'components/Button';
 import Typography from 'components/Typography';
 import React from 'react';
 import {View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 
 import useStyles from './useStyles';
 
@@ -12,10 +13,12 @@ export interface Props {
 
 const CustomToast = ({type, toast}: Props): JSX.Element => {
   const styles = useStyles({type, toast});
+  const theme = useTheme();
 
   return (
     <View style={styles.commonToastStyle}>
-      <Typography.Body6 style={{alignSelf: 'center'}}>
+      <Typography.Body6
+        style={{color: theme.colors.surfaceBlack, alignSelf: 'center'}}>
         {toast.message}
       </Typography.Body6>
       {type === 'failure' ? (
