@@ -30,8 +30,11 @@ const useNotifications = () => {
           },
         });
       } else if (remoteMessage.data) {
-        // @ts-ignore
-        if (remoteMessage.data.result.type === 'transaction_success') {
+        console.log(remoteMessage.data);
+        toast.show('Transaction success!', {
+          type: 'butterSuccess',
+        });
+        /*        if (remoteMessage?.data?.result?.type === 'transaction_success') {
           toast.show('Transaction success!', {
             type: 'butterSuccess',
           });
@@ -39,7 +42,7 @@ const useNotifications = () => {
           toast.show('Transaction failed!', {
             type: 'butterFailure',
           });
-        }
+        } */
         setTransactions([
           ...transactions,
           {
