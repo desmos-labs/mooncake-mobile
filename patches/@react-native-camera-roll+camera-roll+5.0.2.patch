@@ -3732,3 +3732,15 @@ index 9956405..2608f27 100644
                                @"filepath": fullPath,
                                @"filename": originalFilename,
                                @"height": @([asset pixelHeight]),
+diff --git a/node_modules/@react-native-camera-roll/camera-roll/lib/typescript/CameraRoll.d.ts b/node_modules/@react-native-camera-roll/camera-roll/lib/typescript/CameraRoll.d.ts
+index af88faa..a0082ac 100644
+--- a/node_modules/@react-native-camera-roll/camera-roll/lib/typescript/CameraRoll.d.ts
++++ b/node_modules/@react-native-camera-roll/camera-roll/lib/typescript/CameraRoll.d.ts
+@@ -57,6 +57,7 @@ export declare type PhotoIdentifier = {
+             width: number;
+             fileSize: number | null;
+             playableDuration: number;
++            mimeType: string;
+         };
+         timestamp: number;
+         location: {
