@@ -4,7 +4,7 @@ import {AxiosError} from 'axios';
 
 // This can be manually constructed or passed the
 // imageAsset from useImageFromDevice hook.
-type ImageMedia = {
+export type ImageMedia = {
   uri?: string;
   type?: string;
   fileName?: string;

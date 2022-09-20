@@ -32,8 +32,23 @@ const supportedMimeTypesByTheBackEnd = [
   'image/heic-sequence',
 ];
 
-const convertEdgeToImageDTO = (edges: PhotoIdentifier[]) => {
-  return edges.map(x => ({...x.node.image, timestamp: x.node.timestamp}));
+export type ImageDto = {
+  filename: string | null;
+  uri: string;
+  height: number;
+  width: number;
+  fileSize: number | null;
+  playableDuration: number;
+  timestamp: number;
+  type: string;
+};
+
+const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
+  return edges.map(x => ({
+    ...x.node.image,
+    timestamp: x.node.timestamp,
+    type: x.node.type,
+  }));
 };
 
 const useGallery = ({
