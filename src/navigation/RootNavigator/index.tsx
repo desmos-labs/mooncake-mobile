@@ -81,6 +81,7 @@ import {FollowingParams} from 'screens/Following';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -125,6 +126,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_POST_TYPE]: undefined;
   [ROUTES.CREATE_TEXT_POST]: undefined;
   [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
+  [ROUTES.CREATE_POST_CAMERA_ROLL]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -313,7 +315,7 @@ const RootNavigator = () => {
       <Stack.Screen
         initialParams={{
           author: {} as any,
-          postId: '123123',
+          postId: 123123,
         }}
         name={ROUTES.ENTER_COMMENT}
         component={EnterComment}
@@ -325,6 +327,10 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+      <Stack.Screen
+        name={ROUTES.CREATE_POST_CAMERA_ROLL}
+        component={CreatePostCameraRoll}
+      />
 
       {/* modals */}
       <Stack.Group

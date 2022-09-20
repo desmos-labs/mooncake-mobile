@@ -21,8 +21,16 @@ import {postParamsState} from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {useNavigation} from '@react-navigation/native';
-import useStyles from './useStyles';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import BottomBar from './components/BottomBar';
+import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CREATE_TEXT_POST
+>;
 
 const CreateTextPost = () => {
   const styles = useStyles();
@@ -31,7 +39,7 @@ const CreateTextPost = () => {
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
   const {createPost, loading} = useCreatePost();
-  const {goBack} = useNavigation();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
@@ -114,7 +122,7 @@ const CreateTextPost = () => {
 
       <BottomBar
         handlePressPost={handleSubmitPost}
-        handlePressGallery={() => console.log('gallery')}
+        handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
