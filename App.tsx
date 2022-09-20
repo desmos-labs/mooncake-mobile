@@ -14,16 +14,20 @@ const App = () => {
   const client = useApolloClient();
   return (
     <SafeAreaProvider>
-      <ToastProvider
-        animationType="zoom-in"
-        placement="top"
-        offsetTop={30}
-        duration={60000}
-        renderType={{
-          butterSuccess: toast => <CustomToast type="success" toast={toast} />,
-          butterFailure: toast => <CustomToast type="failure" toast={toast} />,
-        }}>
-        <PaperProvider theme={LightTheme}>
+      <PaperProvider theme={LightTheme}>
+        <ToastProvider
+          animationType="zoom-in"
+          placement="top"
+          offsetTop={30}
+          duration={60000}
+          renderType={{
+            butterSuccess: toast => (
+              <CustomToast type="success" toast={toast} />
+            ),
+            butterFailure: toast => (
+              <CustomToast type="failure" toast={toast} />
+            ),
+          }}>
           <ApolloProvider client={client}>
             <RecoilRoot>
               <NavigationContainer>
@@ -31,8 +35,8 @@ const App = () => {
               </NavigationContainer>
             </RecoilRoot>
           </ApolloProvider>
-        </PaperProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </PaperProvider>
     </SafeAreaProvider>
   );
 };
