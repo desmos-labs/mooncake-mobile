@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 type Props = {
@@ -18,11 +19,11 @@ const ProfilePostCard = ({postData, onPress}: Props) => {
     const [attachment] = attachments;
 
     if (attachment) {
-      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
+      if (attachment.content['@type'].includes('Media')) {
         return (
           <Image
             source={{
-              uri: attachment.content.uri,
+              uri: _.get(attachment, 'content.uri'),
             }}
             style={StyleSheet.absoluteFillObject}
           />
