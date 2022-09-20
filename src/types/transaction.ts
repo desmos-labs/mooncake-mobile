@@ -18,12 +18,12 @@ interface ManualTransaction {
   granter?: string;
 }
 
-interface Success {
-  type: 'success';
+export interface Success {
+  type: 'transaction_success';
 }
 
-interface Failure {
-  type: 'failure';
+export interface Failure {
+  type: 'transaction_failure';
   error: string;
 }
 
