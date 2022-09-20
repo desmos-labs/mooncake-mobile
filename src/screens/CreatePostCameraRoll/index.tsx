@@ -23,7 +23,7 @@ type NavProps = StackScreenProps<
 const convertImageDtoToImageMedia = (imageDto: ImageDto): ImageMedia => {
   return {
     uri: imageDto.uri,
-    type: imageDto.type,
+    type: imageDto.mimeType,
     // TODO: fixme
     fileName: imageDto.filename || '',
   };
@@ -34,7 +34,7 @@ const CreatePostCameraRoll = () => {
 
   const {t} = useTranslation();
 
-  const {goBack, navigate} = useNavigation<NavProps['navigation']>();
+  const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const setCommentAttachment = useSetRecoilState(commentAttachmentsState);
 
@@ -56,7 +56,7 @@ const CreatePostCameraRoll = () => {
 
     setCommentAttachment(convertedImage);
 
-    navigate(ROUTES.ENTER_COMMENT, {
+    replace(ROUTES.ENTER_COMMENT, {
       isCreatePost: true,
     });
   }, []);

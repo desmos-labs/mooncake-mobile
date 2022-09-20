@@ -16,7 +16,12 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const createPost = React.useCallback(
-    async ({text, conversationId, referencedPosts}: Partial<MsgCreatePost>) => {
+    async ({
+      text,
+      conversationId,
+      referencedPosts,
+      attachments,
+    }: Partial<MsgCreatePost>) => {
       if (!activeAddress) return;
 
       try {
@@ -34,6 +39,7 @@ const useCreatePost = () => {
             referencedPosts,
             conversationId,
             author: activeAddress,
+            attachments,
             replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
           }),
         };

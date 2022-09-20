@@ -22,10 +22,13 @@ import sharedCommentState, {
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {
+  Media,
   PostReference,
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import Long from 'long';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -54,7 +57,7 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
-  const {goBack, navigate} = useNavigation<NavProps['navigation']>();
+  const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
 
   const [commentText, setCommentText] = useRecoilState(commentTextState);
   const [commentAttachment, setCommentAttachment] = useRecoilState(
@@ -84,7 +87,30 @@ const EnterComment = () => {
     setLoading(true);
 
     // creating a new image+media post
-    if (isCreatePost) {
+    if (isCreatePost && commentAttachment) {
+      const uploadResponse = await UploadMedia({mediaFile: commentAttachment});
+
+      if (!uploadResponse) {
+        console.log('something went wrong uploading an image');
+      }
+
+      const {url} = uploadResponse!;
+
+      const {type} = commentAttachment;
+
+      const mediaAny = mediaToAny(
+        Media.fromPartial({
+          uri: url,
+          mimeType: type,
+        }),
+      );
+
+      await createPost({
+        text: commentText,
+        attachments: [mediaAny],
+      });
+      // EnterComment -> CreateTextPost -> Home
+      pop(2);
     }
     // comment on a post
     else {
@@ -98,11 +124,11 @@ const EnterComment = () => {
           }),
         ],
       });
+      goBack();
     }
 
     resetSharedCommentData();
     setLoading(false);
-    goBack();
   }, [commentText, isCreatePost, commentText, commentAttachment]);
 
   const TopBarRightElement = React.useMemo(() => {

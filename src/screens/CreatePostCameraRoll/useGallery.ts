@@ -41,11 +41,13 @@ export type ImageDto = {
   playableDuration: number;
   timestamp: number;
   type: string;
+  mimeType: string;
 };
 
 const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
   return edges.map(x => ({
     ...x.node.image,
+    mimeType: x.node.image.mimeType,
     timestamp: x.node.timestamp,
     type: x.node.type,
   }));

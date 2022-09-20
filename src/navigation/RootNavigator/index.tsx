@@ -312,14 +312,7 @@ const RootNavigator = () => {
         component={ConnectChainMethod}
       />
 
-      <Stack.Screen
-        initialParams={{
-          author: {} as any,
-          postId: 123123,
-        }}
-        name={ROUTES.ENTER_COMMENT}
-        component={EnterComment}
-      />
+      <Stack.Screen name={ROUTES.ENTER_COMMENT} component={EnterComment} />
 
       <Stack.Screen
         name={ROUTES.SELECT_POST_TYPE}
