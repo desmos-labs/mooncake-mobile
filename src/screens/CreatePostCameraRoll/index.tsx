@@ -14,6 +14,7 @@ import {useSetRecoilState} from 'recoil';
 import {commentAttachmentsState} from '@recoil/sharedCommentState';
 import {ImageMedia} from 'services/axios/requests/UploadMedia';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -55,30 +56,34 @@ const CreatePostCameraRoll = () => {
     requestPermissions();
   }, []);
 
-  const {photos} = useGallery({
-    pageSize: 30,
-    mimeTypeFilter: [
-      'image/jpeg',
-      'image/png',
-      // 'image/heif',
-      // 'image/heic',
-      // 'image/heif-sequence',
-      // 'image/heic-sequence',
-    ],
-  });
-
-  const handleImagePress = React.useCallback((imageDto: ImageDto) => {
-    // convert selected imageDto into ImageMedia type
-    const convertedImage = convertImageDtoToImageMedia(imageDto);
-
-    setCommentAttachment(convertedImage);
-
-    replace(ROUTES.ENTER_COMMENT, {
-      isCreatePost: true,
+  const {photos, hasNextPage, loadNextPagePictures, isLoadingNextPage} =
+    useGallery({
+      pageSize: 60,
+      mimeTypeFilter: [
+        'image/jpeg',
+        'image/png',
+        // 'image/heif',
+        // 'image/heic',
+        // 'image/heif-sequence',
+        // 'image/heic-sequence',
+      ],
     });
-  }, []);
 
-  const renderItem = (item: any) => {
+  const handleImagePress = React.useCallback(
+    _.throttle((imageDto: ImageDto) => {
+      // convert selected imageDto into ImageMedia type
+      const convertedImage = convertImageDtoToImageMedia(imageDto);
+
+      setCommentAttachment(convertedImage);
+
+      replace(ROUTES.ENTER_COMMENT, {
+        isCreatePost: true,
+      });
+    }, 1500),
+    [],
+  );
+
+  const renderItem = React.useCallback((item: any) => {
     console.log(item, item.index);
     if (item.index === 0) {
       return (
@@ -95,7 +100,7 @@ const CreatePostCameraRoll = () => {
         handlePress={() => handleImagePress(item.item)}
       />
     );
-  };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -111,6 +116,10 @@ const CreatePostCameraRoll = () => {
         renderItem={renderItem}
         columnWrapperStyle={styles.columnWrapperStyle}
         contentContainerStyle={styles.contentContainerStyle}
+        onEndReachedThreshold={0.25}
+        onEndReached={() => {
+          if (hasNextPage && !isLoadingNextPage) loadNextPagePictures();
+        }}
       />
     </SafeAreaView>
   );
