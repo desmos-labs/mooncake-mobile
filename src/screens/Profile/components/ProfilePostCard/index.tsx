@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Typography from 'components/Typography';
-import _ from 'lodash';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
 
 type Props = {
@@ -15,27 +15,11 @@ const ProfilePostCard = ({postData, onPress}: Props) => {
 
   const {attachments} = postData;
 
-  const AttachmentImage = React.useMemo(() => {
-    const [attachment] = attachments;
-
-    if (attachment) {
-      if (attachment.content['@type'].includes('Media')) {
-        return (
-          <Image
-            source={{
-              uri: _.get(attachment, 'content.uri'),
-            }}
-            style={StyleSheet.absoluteFillObject}
-          />
-        );
-      }
-    }
-    return undefined;
-  }, []);
+  const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      {AttachmentImage}
+      {MediaAttachment}
       <Typography.H2 style={styles.textStyle}>{postData.text}</Typography.H2>
     </TouchableOpacity>
   );
