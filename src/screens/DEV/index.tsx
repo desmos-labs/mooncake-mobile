@@ -7,6 +7,7 @@ import {resetSecureStorage} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
+import {useToast} from 'react-native-toast-notifications';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -41,11 +42,20 @@ const routesToRender = [
 
 const DevScreen = () => {
   const {navigate} = useNavigation<any>();
-
+  const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
 
   console.log(_.includes(b, a)); */
+
+  const showToast = () => {
+    toast.show('I am a toast', {
+      type: 'butterSuccess',
+      onPress() {
+        console.log('test');
+      },
+    });
+  };
 
   const renderItem = ({item}: any) => {
     return (
@@ -92,6 +102,9 @@ const DevScreen = () => {
       </Button>
 
       <Spacer paddingVertical={16} />
+      <Button mode="contained" onPress={showToast}>
+        Show toast
+      </Button>
       <Button
         mode="contained"
         onPress={() => {

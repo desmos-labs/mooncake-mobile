@@ -1,3 +1,4 @@
+import LoadingOverlay from 'components/LoadingOverlay';
 import React, {ReactElement} from 'react';
 import {
   ColorValue,
@@ -14,7 +15,6 @@ import {
   SafeAreaView,
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
-import LoadingOverlay from 'components/LoadingOverlay';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -75,7 +75,12 @@ const DView: React.FC<Props> = props => {
           edges={edges ?? ['bottom', 'left', 'right', 'top']}
           style={[styles.root, backgroundColor ? {backgroundColor} : {}]}
           {...rest}>
-          <StatusBar backgroundColor="transparent" {...statusBarProps} />
+          <StatusBar
+            barStyle="dark-content"
+            backgroundColor="transparent"
+            translucent={true}
+            {...statusBarProps}
+          />
           {background !== undefined && (
             <ImageBackground style={styles.background} source={background} />
           )}

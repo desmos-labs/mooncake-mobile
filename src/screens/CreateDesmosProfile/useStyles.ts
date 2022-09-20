@@ -4,6 +4,7 @@ import {verticalScale} from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
+    backgroundColor: theme.colors.white,
   },
   headerButtonGroup: {
     flexDirection: 'row',
@@ -18,15 +19,11 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     top: 0,
   },
-  scrollview: {
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+  scrollView: {
     backgroundColor: theme.colors.white,
   },
   card: {
-    padding: theme.spacing.m,
-    paddingTop: 68,
-    flexGrow: 1,
+    paddingHorizontal: theme.spacing.m,
   },
   buttonGroup: {
     flex: 1,

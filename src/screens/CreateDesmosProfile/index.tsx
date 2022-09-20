@@ -1,47 +1,48 @@
-import React from 'react';
-import DView from 'components/DView';
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  View,
-} from 'react-native';
+import {toBase64} from '@cosmjs/encoding';
+import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import {profileParamsState} from '@recoil/profileParams';
 import {
   backButton,
   cameraButton,
   createProfileBanner,
   defaultProfilePic,
 } from 'assets/images';
-import Typography from 'components/Typography';
+import Button from 'components/Button';
+import DTextInput from 'components/DTextInput';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {StackScreenProps} from '@react-navigation/stack';
+import TextCounter from 'components/TextCounter';
+import Typography from 'components/Typography';
+import {Formik} from 'formik';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import {GenericMsgEnums} from 'lib/desmos/msgtypes';
+import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
-import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
+import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Formik} from 'formik';
-import {useRecoilValue} from 'recoil';
-import {profileParamsState} from '@recoil/profileParams';
-import * as Yup from 'yup';
-import DTextInput from 'components/DTextInput';
-import TextCounter from 'components/TextCounter';
-import Button from 'components/Button';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import createLocalWalletState from '@recoil/createLocalWalletState';
-import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
-import {ChainAccount, ChainAccountType} from 'types/chains';
-import {toBase64} from '@cosmjs/encoding';
-import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {GenericMsgEnums} from 'lib/desmos/msgtypes';
-import createLedgerAccountState from '@recoil/createLedgerAccountState';
-import useUnlockWallet from 'hooks/useUnlockWallet';
+import {useRecoilValue} from 'recoil';
+import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
-import _ from 'lodash';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import * as Yup from 'yup';
 import useStyles from './useStyles';
 
 type NavProp = StackScreenProps<
@@ -57,11 +58,8 @@ const initialFormState = {
 
 const CreateDesmosProfile = () => {
   const styles = useStyles();
-
   const theme = useTheme();
-
   const {t} = useTranslation('createProfile');
-
   const {goBack, navigate, reset, push} =
     useNavigation<NavProp['navigation']>();
 
@@ -77,10 +75,10 @@ const CreateDesmosProfile = () => {
   const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
   const unlockWallet = useUnlockWallet();
-
   const nicknameInputRef = React.useRef<any>();
   const dTagInputRef = React.useRef<any>();
   const bioInputRef = React.useRef<any>();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -199,7 +197,12 @@ const CreateDesmosProfile = () => {
   );
 
   return (
-    <DView style={styles.container} backgroundColor={theme.colors.white}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <Image
         source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
         style={styles.bannerImage}
@@ -219,106 +222,124 @@ const CreateDesmosProfile = () => {
         avatar={profilePicture ? {uri: profilePicture.uri} : defaultProfilePic}
         handlePressEdit={selectProfilePicture}
       />
-      <ScrollView style={styles.scrollview} contentContainerStyle={styles.card}>
-        <Typography.H4>{t('header')}</Typography.H4>
-        <Typography.Body6 style={styles.descriptionText}>
-          {t('description')}
-        </Typography.Body6>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{
+          flex: 1,
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          backgroundColor: theme.colors.white,
+        }}>
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
           onSubmit={handleFormSubmit}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
-              <Typography.Subtitle2 style={styles.inputLabel}>
-                {t('nickname')}
-              </Typography.Subtitle2>
-              <DTextInput
-                inputRef={nicknameInputRef}
-                value={values.nickname}
-                placeholder={t('enterNickname')}
-                onChangeText={value => {
-                  setFieldValue('nickname', value, true);
-                }}
-                error={!!errors.nickname}
-              />
-              {nicknameInputRef.current && (
-                <View
-                  style={{
-                    opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
-                  }}>
-                  <TextCounter
-                    maxChar={profileParams.nickname.max_length}
-                    textToCount={values.nickname}
+              <View
+                style={{paddingTop: 68, paddingHorizontal: theme.spacing.m}}>
+                <Typography.H4>{t('header')}</Typography.H4>
+                <Typography.Body6 style={styles.descriptionText}>
+                  {t('description')}
+                </Typography.Body6>
+              </View>
+              <ScrollView
+                ref={scrollViewRef}
+                style={styles.scrollView}
+                contentContainerStyle={styles.card}>
+                <View style={{flex: 1}}>
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('nickname')}
+                  </Typography.Subtitle2>
+                  <DTextInput
+                    inputRef={nicknameInputRef}
+                    value={values.nickname}
+                    placeholder={t('enterNickname')}
+                    onChangeText={value => {
+                      setFieldValue('nickname', value, true);
+                    }}
+                    error={!!errors.nickname}
                   />
-                </View>
-              )}
+                  {nicknameInputRef.current && (
+                    <View
+                      style={{
+                        opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
+                      }}>
+                      <TextCounter
+                        maxChar={profileParams.nickname.max_length}
+                        textToCount={values.nickname}
+                      />
+                    </View>
+                  )}
 
-              <Typography.Subtitle2 style={styles.inputLabel}>
-                {t('dTag')}
-              </Typography.Subtitle2>
-              <DTextInput
-                value={values.dTag}
-                placeholder={t('enterDTag')}
-                onChangeText={value => {
-                  setFieldValue('dTag', value, true);
-                }}
-                error={!!errors.dTag}
-                inputRef={dTagInputRef}
-              />
-              {dTagInputRef.current && (
-                <View
-                  style={{opacity: dTagInputRef.current.isFocused() ? 1 : 0}}>
-                  <TextCounter
-                    maxChar={profileParams.dtag.max_length}
-                    textToCount={values.dTag}
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('dTag')}
+                  </Typography.Subtitle2>
+                  <DTextInput
+                    value={values.dTag}
+                    placeholder={t('enterDTag')}
+                    onChangeText={value => {
+                      setFieldValue('dTag', value, true);
+                    }}
+                    error={!!errors.dTag}
+                    inputRef={dTagInputRef}
                   />
-                </View>
-              )}
+                  {dTagInputRef.current && (
+                    <View
+                      style={{
+                        opacity: dTagInputRef.current.isFocused() ? 1 : 0,
+                      }}>
+                      <TextCounter
+                        maxChar={profileParams.dtag.max_length}
+                        textToCount={values.dTag}
+                      />
+                    </View>
+                  )}
 
-              <Typography.Subtitle2 style={styles.inputLabel}>
-                {t('bio')}
-              </Typography.Subtitle2>
-              <DTextInput
-                inputRef={bioInputRef}
-                value={values.bio}
-                placeholder={t('addBio')}
-                onChangeText={value => {
-                  setFieldValue('bio', value, true);
-                }}
-                error={!!errors.bio}
-                multiline
-                style={{
-                  height: 120,
-                }}
-              />
-              {bioInputRef.current && (
-                <View
-                  style={{opacity: bioInputRef.current.isFocused() ? 1 : 0}}>
-                  <TextCounter
-                    maxChar={profileParams.bio.max_length}
-                    textToCount={values.bio}
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('bio')}
+                  </Typography.Subtitle2>
+                  <DTextInput
+                    inputRef={bioInputRef}
+                    value={values.bio}
+                    multiline={true}
+                    scrollEnabled={false}
+                    inputStyle={{alignSelf: 'flex-start'}}
+                    placeholder={t('addBio')}
+                    onChangeText={value => {
+                      setFieldValue('bio', value, true);
+                    }}
+                    error={!!errors.bio}
+                    style={{minHeight: 120}}
                   />
+                  {bioInputRef.current && (
+                    <View
+                      style={{
+                        opacity: bioInputRef.current.isFocused() ? 1 : 0,
+                      }}>
+                      <TextCounter
+                        maxChar={profileParams.bio.max_length}
+                        textToCount={values.bio}
+                      />
+                    </View>
+                  )}
                 </View>
-              )}
-
-              <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 200}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={styles.buttonGroup}>
+              </ScrollView>
+              <View style={{padding: theme.spacing.m}}>
                 <Button
-                  mode="gradientFilled"
+                  color={theme.colors.surfaceBlack}
+                  mode="contained"
                   onPress={handleSubmit}
                   loading={loading}>
                   {t('common:confirm')}
                 </Button>
-              </KeyboardAvoidingView>
+              </View>
             </>
           )}
         </Formik>
-      </ScrollView>
-    </DView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
