@@ -88,7 +88,11 @@ const CreateTextPost = () => {
           <Image source={postBG[backgroundIndex]} style={styles.background} />
 
           <View style={styles.headerGroup}>
-            <BackButton onPress={goBack} />
+            <BackButton
+              onPress={goBack}
+              // index 0 is black, which makes the default back button color hard to see
+              iconColor={backgroundIndex === 0 ? theme.colors.white : undefined}
+            />
 
             <TouchableOpacity onPress={handlePressBGButton}>
               <Image
