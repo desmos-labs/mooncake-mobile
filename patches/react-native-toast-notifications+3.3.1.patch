@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native-toast-notifications/src/hook/provider.tsx b/node_modules/react-native-toast-notifications/src/hook/provider.tsx
+index 10d238e..bbd2465 100644
+--- a/node_modules/react-native-toast-notifications/src/hook/provider.tsx
++++ b/node_modules/react-native-toast-notifications/src/hook/provider.tsx
+@@ -11,8 +11,9 @@ const ToastProvider: FC<PropsWithChildren> = ({ children, ...props }) => {
+   const [refState, setRefState] = useState({});
+ 
+   useEffect(() => {
+-    setRefState(toastRef.current as any);
+-  }, []);
++    if(toastRef.current)
++      setRefState(toastRef.current as any);
++  }, [toastRef.current]);
+ 
+   return (
+     <ToastContext.Provider value={refState as any}>
