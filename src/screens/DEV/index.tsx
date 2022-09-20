@@ -75,8 +75,12 @@ const DevScreen = () => {
               break;
           }
         }}
-        style={{padding: 18, borderWidth: 1, borderColor: 'grey'}}>
-        <Text>{item}</Text>
+        style={{
+          padding: 18,
+          borderWidth: 1,
+          borderColor: 'grey',
+        }}>
+        <Text style={{color: 'black'}}>{item}</Text>
       </TouchableOpacity>
     );
   };
