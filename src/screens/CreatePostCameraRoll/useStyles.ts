@@ -13,10 +13,14 @@ const useStyles = makeStyle(theme => ({
   },
   columnWrapperStyle: {
     paddingBottom: theme.spacing.s,
-    justifyContent: 'space-evenly',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   contentContainerStyle: {
     flexGrow: 1,
+  },
+  flatList: {
+    alignSelf: 'center',
   },
 }));
 

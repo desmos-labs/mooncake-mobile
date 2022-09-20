@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  Dimensions,
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {Image, ImageSourcePropType, TouchableOpacity} from 'react-native';
+import styles from './styles';
 
 type Props = {
   /**
@@ -26,12 +21,5 @@ const CameraRollItem = ({imageSrc, handlePress}: Props) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  imageStyle: {
-    height: 154,
-    width: Dimensions.get('screen').width * 0.24,
-  },
-});
 
 export default CameraRollItem;

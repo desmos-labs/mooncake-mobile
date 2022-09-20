@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
+import CameraButton from 'screens/CreatePostCameraRoll/components/CameraRollItem/CameraButton';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -40,6 +41,16 @@ const CreatePostCameraRoll = () => {
   }, []);
 
   const renderItem = (item: any) => {
+    console.log(item, item.index);
+    if (item.index === 0) {
+      return (
+        <CameraButton
+          onPress={() => {
+            console.log('hello camera');
+          }}
+        />
+      );
+    }
     return (
       <CameraRollItem
         imageSrc={{uri: item.item.uri}}
@@ -57,7 +68,8 @@ const CreatePostCameraRoll = () => {
       </TouchableOpacity>
       <FlatList
         numColumns={4}
-        data={photos}
+        style={styles.flatList}
+        data={photos ? [0, ...(photos as any[])] : [0]}
         renderItem={renderItem}
         columnWrapperStyle={styles.columnWrapperStyle}
         contentContainerStyle={styles.contentContainerStyle}
