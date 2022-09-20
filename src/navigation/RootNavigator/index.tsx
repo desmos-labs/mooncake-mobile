@@ -316,7 +316,7 @@ const RootNavigator = () => {
       <Stack.Screen
         initialParams={{
           author: {} as any,
-          postId: '123123',
+          postId: 123123,
         }}
         name={ROUTES.ENTER_COMMENT}
         component={EnterComment}

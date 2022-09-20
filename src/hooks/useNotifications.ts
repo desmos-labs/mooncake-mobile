@@ -1,6 +1,7 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import {useEffect} from 'react';
+import {Alert} from 'react-native';
 
 const useNotifications = () => {
   useEffect(() => {
@@ -10,6 +11,8 @@ const useNotifications = () => {
         id: 'default',
         name: 'Default Channel',
       });
+
+      Alert.alert(JSON.stringify(remoteMessage.data));
 
       // Display a notification
       await notifee.displayNotification({
