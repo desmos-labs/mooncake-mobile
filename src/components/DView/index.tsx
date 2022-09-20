@@ -1,3 +1,4 @@
+import LoadingOverlay from 'components/LoadingOverlay';
 import React, {ReactElement} from 'react';
 import {
   ColorValue,
@@ -14,7 +15,6 @@ import {
   SafeAreaView,
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
-import LoadingOverlay from 'components/LoadingOverlay';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {

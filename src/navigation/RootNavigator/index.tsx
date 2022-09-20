@@ -1,7 +1,10 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
@@ -11,6 +14,7 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {Dimensions} from 'react-native';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
@@ -25,7 +29,14 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import {FollowingParams} from 'screens/Following';
+import FollowingAndFollowers, {
+  FollowingAndFollowersHeader,
+  FollowingAndFollowersParams,
+} from 'screens/FollowingAndFollowers';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
@@ -53,12 +64,13 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
+import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
-import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
@@ -69,18 +81,6 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import PostTypeSelection from 'screens/PostTypeSelection';
-import CreateTextPost from 'screens/CreateTextPost';
-import FollowingAndFollowers, {
-  FollowingAndFollowersParams,
-  FollowingAndFollowersHeader,
-} from 'screens/FollowingAndFollowers';
-import {Dimensions} from 'react-native';
-import {FollowingParams} from 'screens/Following';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -166,7 +166,6 @@ const RootNavigator = () => {
   // End initialization
 
   const {t} = useTranslation();
-
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
