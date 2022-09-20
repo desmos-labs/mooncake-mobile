@@ -1,4 +1,5 @@
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import React from 'react';
 import {Dimensions, ImageBackground, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -23,12 +24,12 @@ const PostComponent = ({postData}: Props) => {
     const [attachment] = attachments;
 
     if (attachment) {
-      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
+      if (attachment.content['@type'].includes('Media')) {
         return (
           <ImageBackground
             resizeMode="cover"
             source={{
-              uri: attachment.content.uri,
+              uri: _.get(attachment, 'content.uri'),
             }}
             style={{width, height: 630}}
           />
