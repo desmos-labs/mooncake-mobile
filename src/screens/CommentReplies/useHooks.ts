@@ -24,7 +24,7 @@ const useHooks = ({
 }) => {
   const {createPost} = useCreatePost();
   const [commentReplyLoading, setCommentReplyLoading] = React.useState(false);
-  const resetCommentData = useResetRecoilState(sharedPostState);
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
@@ -115,11 +115,11 @@ const useHooks = ({
       ],
     });
     setCommentReplyLoading(false);
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   React.useEffect(() => {
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   const handlePressSendTips = React.useCallback(() => {

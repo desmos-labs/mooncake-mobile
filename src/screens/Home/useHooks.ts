@@ -10,6 +10,8 @@ import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
+import {useResetRecoilState} from 'recoil';
+import sharedPostState from '@recoil/sharedPostState';
 
 /**
  * Hooks for the Home screen.
@@ -27,6 +29,7 @@ const useHooks = () => {
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
 
   const prevOffsetValue = React.useRef(0);
@@ -165,6 +168,7 @@ const useHooks = () => {
   }, []);
 
   const handlePressCreatePost = React.useCallback(async () => {
+    resetSharedPostState();
     setLoading(true);
 
     const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];

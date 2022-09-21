@@ -15,7 +15,7 @@ import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
 import {useTheme} from 'react-native-paper';
-import {useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
@@ -24,7 +24,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import BackButton from 'components/BackButton';
-import sharedPostState, {postTextState} from '@recoil/sharedPostState';
+import {postTextState} from '@recoil/sharedPostState';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -40,7 +40,6 @@ const CreateTextPost = () => {
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
   const [sharedComment, setSharedComment] = useRecoilState(postTextState);
-  const resetSharedCommentState = useResetRecoilState(sharedPostState);
   const {createPost, loading} = useCreatePost();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
@@ -48,11 +47,6 @@ const CreateTextPost = () => {
     _.random(0, postBG.length),
   );
   const inputRef = useRef<any>();
-
-  // clear persisted comment state on entry
-  React.useEffect(() => {
-    resetSharedCommentState();
-  }, []);
 
   const handlePressBGButton = React.useCallback(() => {
     setBackgroundIndex(prev => (prev < postBG.length ? prev + 1 : 0));

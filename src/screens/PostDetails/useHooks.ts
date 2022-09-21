@@ -29,7 +29,7 @@ const useHooks = ({
 
   const [postCommentLoading, setPostCommentLoading] = React.useState(false);
 
-  const resetCommentData = useResetRecoilState(sharedPostState);
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
 
   const {
     data: originalPost,
@@ -138,11 +138,11 @@ const useHooks = ({
       ],
     });
     setPostCommentLoading(false);
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   React.useEffect(() => {
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   const navigateToProfile = React.useCallback(() => {
