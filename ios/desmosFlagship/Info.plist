@@ -45,6 +45,8 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Files permission is required for app functionality and personalization.</string>
+	<key>NSAppleMusicUsageDescription</key>
+    <string>Files permission is required for app functionality and personalization.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
