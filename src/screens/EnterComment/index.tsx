@@ -15,10 +15,10 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import sharedCommentState, {
-  commentAttachmentsState,
-  commentTextState,
-} from '@recoil/sharedCommentState';
+import sharedPostState, {
+  postAttachmentsState,
+  postTextState,
+} from '@recoil/sharedPostState';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {
@@ -59,12 +59,11 @@ const EnterComment = () => {
 
   const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
 
-  const [commentText, setCommentText] = useRecoilState(commentTextState);
-  const [commentAttachment, setCommentAttachment] = useRecoilState(
-    commentAttachmentsState,
-  );
+  const [commentText, setCommentText] = useRecoilState(postTextState);
+  const [commentAttachment, setCommentAttachment] =
+    useRecoilState(postAttachmentsState);
 
-  const resetSharedCommentData = useResetRecoilState(sharedCommentState);
+  const resetSharedCommentData = useResetRecoilState(sharedPostState);
 
   const {createPost} = useCreatePost();
 

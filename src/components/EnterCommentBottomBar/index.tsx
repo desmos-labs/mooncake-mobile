@@ -22,7 +22,7 @@ import {Shadow} from 'react-native-shadow-2';
 import ImageButton from 'components/ImageButton';
 import {expandCommentIcon} from 'assets/images';
 import {useRecoilState} from 'recoil';
-import {commentTextState} from '@recoil/sharedCommentState';
+import {postTextState} from '@recoil/sharedPostState';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -62,7 +62,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const styles = useStyles();
   const {bottom} = useSafeAreaInsets();
   const theme = useTheme();
-  const [comment, setComment] = useRecoilState(commentTextState);
+  const [comment, setComment] = useRecoilState(postTextState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
   const textInputRef = useRef<TextInput>(null);
 

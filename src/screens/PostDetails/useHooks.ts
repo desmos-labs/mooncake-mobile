@@ -14,7 +14,7 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import Long from 'long';
 import {useResetRecoilState} from 'recoil';
-import sharedCommentState from '@recoil/sharedCommentState';
+import sharedPostState from '@recoil/sharedPostState';
 
 const useHooks = ({
   postID,
@@ -29,7 +29,7 @@ const useHooks = ({
 
   const [postCommentLoading, setPostCommentLoading] = React.useState(false);
 
-  const resetCommentData = useResetRecoilState(sharedCommentState);
+  const resetCommentData = useResetRecoilState(sharedPostState);
 
   const {
     data: originalPost,

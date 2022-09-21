@@ -24,7 +24,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import BackButton from 'components/BackButton';
-import sharedCommentState, {commentTextState} from '@recoil/sharedCommentState';
+import sharedPostState, {postTextState} from '@recoil/sharedPostState';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -39,8 +39,8 @@ const CreateTextPost = () => {
 
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
-  const [sharedComment, setSharedComment] = useRecoilState(commentTextState);
-  const resetSharedCommentState = useResetRecoilState(sharedCommentState);
+  const [sharedComment, setSharedComment] = useRecoilState(postTextState);
+  const resetSharedCommentState = useResetRecoilState(sharedPostState);
   const {createPost, loading} = useCreatePost();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 

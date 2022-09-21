@@ -4,7 +4,7 @@ import {
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {useNavigation} from '@react-navigation/native';
-import sharedCommentState from '@recoil/sharedCommentState';
+import sharedPostState from '@recoil/sharedPostState';
 import Long from 'long';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
@@ -24,7 +24,7 @@ const useHooks = ({
 }) => {
   const {createPost} = useCreatePost();
   const [commentReplyLoading, setCommentReplyLoading] = React.useState(false);
-  const resetCommentData = useResetRecoilState(sharedCommentState);
+  const resetCommentData = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {

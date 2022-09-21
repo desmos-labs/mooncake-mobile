@@ -11,7 +11,7 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import CameraButton from 'screens/CreatePostCameraRoll/components/CameraRollItem/CameraButton';
 import {useSetRecoilState} from 'recoil';
-import {commentAttachmentsState} from '@recoil/sharedCommentState';
+import {postAttachmentsState} from '@recoil/sharedPostState';
 import {ImageMedia} from 'services/axios/requests/UploadMedia';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import _ from 'lodash';
@@ -41,7 +41,7 @@ const CreatePostCameraRoll = () => {
 
   const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
-  const setCommentAttachment = useSetRecoilState(commentAttachmentsState);
+  const setCommentAttachment = useSetRecoilState(postAttachmentsState);
 
   const imageFromCameraCallback = React.useCallback((asset: Asset) => {
     setCommentAttachment(asset);
