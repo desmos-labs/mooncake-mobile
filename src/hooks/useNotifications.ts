@@ -5,6 +5,7 @@ import {useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import {Result} from 'types/transaction';
+import ToastConfig from 'config/ToastConfig';
 
 const useNotifications = () => {
   const [transactions, setTransactions] = useRecoilState(resultTransactions);
@@ -33,15 +34,15 @@ const useNotifications = () => {
         setTimeout(() => {
           if (remoteMessage.data?.type === 'transaction_success') {
             toast.show('Transaction success!', {
-              type: 'butterSuccess',
+              type: ToastConfig.SUCCESS,
             });
           } else if (remoteMessage.data?.type === 'transaction_failed') {
             toast.show('Transaction failed!', {
-              type: 'butterFailure',
+              type: ToastConfig.ERROR,
             });
           } else {
             toast.show('State of transaction unknown', {
-              type: 'butterFailure',
+              type: ToastConfig.ERROR,
             });
           }
         }, 1000);

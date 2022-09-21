@@ -9,6 +9,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ToastProvider} from 'react-native-toast-notifications';
 import {RecoilRoot} from 'recoil';
 import useApolloClient from 'services/graphql/useApolloClient';
+import ToastConfig from 'config/ToastConfig';
 
 const App = () => {
   const client = useApolloClient();
@@ -21,10 +22,10 @@ const App = () => {
           offsetTop={30}
           duration={60000}
           renderType={{
-            butterSuccess: toast => (
+            [ToastConfig.SUCCESS]: toast => (
               <CustomToast type="success" toast={toast} />
             ),
-            butterFailure: toast => (
+            [ToastConfig.ERROR]: toast => (
               <CustomToast type="failure" toast={toast} />
             ),
           }}>

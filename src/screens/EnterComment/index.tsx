@@ -29,6 +29,8 @@ import {
 import Long from 'long';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -56,6 +58,8 @@ const EnterComment = () => {
   const styles = useStyles();
 
   const {profileData} = useActiveAccount();
+
+  const toast = useToast();
 
   const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
 
@@ -90,7 +94,11 @@ const EnterComment = () => {
       const uploadResponse = await UploadMedia({mediaFile: commentAttachment});
 
       if (!uploadResponse) {
-        console.log('something went wrong uploading an image');
+        return toast.show(
+          t('errors:imageUploadError', {
+            type: ToastConfig.ERROR,
+          }),
+        );
       }
 
       const {url} = uploadResponse!;
