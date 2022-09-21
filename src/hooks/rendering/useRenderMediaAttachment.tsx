@@ -9,12 +9,12 @@ const useRenderMediaAttachment = ({
   attachments,
   imageStyle,
 }: {
-  attachments: PostAttachment[];
+  attachments?: PostAttachment[];
   imageStyle?: StyleProp<ImageStyle>;
 }) => {
   const MediaAttachment = React.useMemo(() => {
     // currently only render one attachment
-    if (attachments.length === 0) return undefined;
+    if (!attachments || attachments.length === 0) return undefined;
     const [attachment] = attachments;
 
     if ('uri' in attachment.content) {
