@@ -62,16 +62,12 @@ type Response = {
 const UploadMedia = async ({mediaFile, onUploadProgress, onError}: Params) => {
   const {fileName, type, uri} = mediaFile;
 
-  console.log(mediaFile);
-
   const formData = new FormData();
   formData.append('file', {
     name: fileName,
     type,
     uri: Platform.OS === 'android' ? uri : uri!.replace('file://', ''),
   });
-
-  console.log(JSON.stringify(formData));
 
   try {
     const _response = await axiosInstance.post<Response>('/media', formData, {

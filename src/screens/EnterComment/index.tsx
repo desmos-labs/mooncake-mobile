@@ -89,8 +89,22 @@ const EnterComment = () => {
   const handlePress = React.useCallback(async () => {
     setLoading(true);
 
-    // creating a new image+media post
-    if (isCreatePost && commentAttachment) {
+    const isCreatingImagePost = isCreatePost && commentAttachment;
+
+    const attachments = [];
+
+    const conversationId = postId ? Long.fromNumber(postId) : undefined;
+
+    const referencedPosts = postId
+      ? [
+          PostReference.fromPartial({
+            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+            postId: Long.fromNumber(postId),
+          }),
+        ]
+      : [];
+
+    if (commentAttachment && 'uri' in commentAttachment) {
       const uploadResponse = await UploadMedia({mediaFile: commentAttachment});
 
       if (!uploadResponse) {
@@ -112,25 +126,20 @@ const EnterComment = () => {
         }),
       );
 
-      await createPost({
-        text: commentText,
-        attachments: [mediaAny],
-      });
-      // EnterComment -> CreateTextPost -> Home
-      pop(2);
+      attachments.push(mediaAny);
     }
-    // comment on a post
-    else {
-      await createPost({
-        text: commentText,
-        conversationId: Long.fromNumber(postId!),
-        referencedPosts: [
-          PostReference.fromPartial({
-            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-            postId: Long.fromNumber(postId!),
-          }),
-        ],
-      });
+
+    await createPost({
+      text: commentText,
+      attachments,
+      referencedPosts,
+      conversationId,
+    });
+
+    // EnterComment -> CreateTextPost -> Home
+    if (isCreatingImagePost) {
+      pop(2);
+    } else {
       goBack();
     }
 
