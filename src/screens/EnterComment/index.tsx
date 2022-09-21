@@ -139,8 +139,7 @@ const EnterComment = () => {
       }
 
       resetSharedCommentData();
-    } catch (err) {
-      console.log('caught error', err);
+    } catch (err: any) {
       if (err.toString().includes('413')) {
         toast.show(t('error:imageTooLarge'), {
           type: ToastConfig.ERROR_NO_RETRY,
