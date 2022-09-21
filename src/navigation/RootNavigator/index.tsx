@@ -1,9 +1,13 @@
 import {
-  NavigationProp,
   NavigatorScreenParams,
+  StackActions,
   useNavigation,
 } from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
@@ -34,7 +38,9 @@ import ConnectAddressGeneral from 'screens/ConnectAddress/General';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import CreateDesmosProfile, {
+  CreateDesmosProfileParams,
+} from 'screens/CreateDesmosProfile';
 import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
@@ -115,7 +121,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
+  [ROUTES.CREATE_DESMOS_PROFILE]: CreateDesmosProfileParams;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
   [ROUTES.CONNECT_ADDRESS_ADVANCED]: undefined;
@@ -160,7 +166,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET]: EnterPasswordParams | undefined;
+  [ROUTES.ADD_PROFILE_ENTER_PASSWORD]: EnterPasswordParams | undefined;
   [ROUTES.ADD_PROFILE]: undefined;
 };
 
@@ -191,8 +197,8 @@ const RootNavigator = () => {
   }, []);
 
   const theme = useTheme();
-  const {navigate, goBack} =
-    useNavigation<NavigationProp<RootNavigatorParamList>>();
+  const {dispatch} =
+    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   return (
     <Stack.Navigator
@@ -205,6 +211,7 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
+        initialParams={{}}
       />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
@@ -423,7 +430,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
       <Stack.Screen
-        name={ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET}
+        name={ROUTES.ADD_PROFILE_ENTER_PASSWORD}
         component={EnterPassword}
         options={{
           header: AddProfileHeader,
@@ -444,10 +451,7 @@ const RootNavigator = () => {
             },
           },
           onSuccessfulAuthentication() {
-            navigate(ROUTES.ADD_PROFILE);
-          },
-          onFailedAuthentication() {
-            goBack();
+            dispatch(StackActions.replace(ROUTES.ADD_PROFILE));
           },
         }}
       />
@@ -457,6 +461,8 @@ const RootNavigator = () => {
         options={{
           header: AddProfileHeader,
           headerShown: true,
+          headerStyle: {backgroundColor: 'rgb(245,246,249)'},
+          cardStyle: {backgroundColor: 'rgb(245,246,249)'},
         }}
       />
     </Stack.Navigator>

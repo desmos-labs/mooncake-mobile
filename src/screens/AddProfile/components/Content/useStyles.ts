@@ -3,10 +3,12 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flexGrow: 1,
+    paddingHorizontal: theme.spacing.m,
   },
   scrollViewOuter: {
     flexGrow: 1,
     marginTop: theme.spacing.m,
+    marginHorizontal: -theme.spacing.m,
   },
   scrollViewInner: {
     padding: 20,

@@ -9,20 +9,24 @@ type CompProps = React.ComponentProps<typeof SettingsProfileBadgeGroup>;
 const SelectedProfile: CompProps = {
   values: [
     {
+      id: '1',
       nickname: 'Rosalinda',
       dTag: '@rosa',
       profilePicture: {
         uri: 'https://www.pinpng.com/pngs/m/156-1567852_random-image-from-user-mario-boo-animated-gif.png',
       },
       isSelected: true,
+      disabled: false,
     },
     {
+      id: '2',
       nickname: 'Joe',
       dTag: '@joe',
       profilePicture: {
         uri: 'https://www.pinpng.com/pngs/m/156-1567852_random-image-from-user-mario-boo-animated-gif.png',
       },
       isSelected: false,
+      disabled: true,
     },
   ],
   onSelect: action('onPress'),

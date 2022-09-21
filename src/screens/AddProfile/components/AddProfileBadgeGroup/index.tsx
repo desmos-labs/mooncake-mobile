@@ -1,12 +1,16 @@
 import React from 'react';
 import {ImageSourcePropType, View} from 'react-native';
 import {PanGestureHandlerProps} from 'react-native-gesture-handler';
-import SettingsProfileBadge from '../SettingsProfileBadge';
+import AddProfileBadge from '../AddProfileBadge';
 
 /**
  * Simple interface to display a radio button as a profile
  */
 export interface ProfileRadioValue {
+  /**
+   * The id of the profile
+   */
+  id: string;
   /**
    * The nickname to display over the dTag
    */
@@ -23,6 +27,10 @@ export interface ProfileRadioValue {
    * Is the badge selected
    */
   isSelected: boolean;
+  /**
+   * Is the badge disabled
+   */
+  disabled: boolean;
 }
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -34,32 +42,24 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
    * Callback when the user click a button.
    * @param index the values[index] on the clicked button.
    */
-  onSelect: (index: number) => void;
+  onSelect: (id: string) => void;
 }
 
-const SettingsProfileBadgeGroup = (props: Props) => {
+const AddProfileBadgeGroup = (props: Props) => {
   const {values, onSelect} = props;
-
-  const radioValues: {label: string; value: string | number}[] | undefined = [];
 
   return (
     <View>
-      {values.map((value, index) => {
-        radioValues.push({
-          label: '',
-          value: +value.isSelected,
-        });
-        return (
-          <SettingsProfileBadge
-            value={value}
-            index={index}
-            onSelect={onSelect}
-            key={value.dTag}
-          />
-        );
-      })}
+      {values.map(value => (
+        <AddProfileBadge
+          value={value}
+          onSelect={onSelect}
+          key={value.id}
+          disabled={value.disabled}
+        />
+      ))}
     </View>
   );
 };
 
-export default SettingsProfileBadgeGroup;
+export default AddProfileBadgeGroup;

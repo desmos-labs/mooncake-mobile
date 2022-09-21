@@ -103,15 +103,18 @@ const EnterPassword = () => {
             });
           }
         } catch (err) {
+          console.error('EnterPassword', err);
           setLoading(false);
           onFailedAuthentication && onFailedAuthentication();
           setErrors({password: t('error:incorrectPassword')});
         } finally {
           setLoading(false);
         }
+      } else {
+        console.log('EnterPassowrd: address is empty');
       }
     },
-    [],
+    [address],
   );
 
   const onPressForgotPassword = () => {
@@ -140,6 +143,7 @@ const EnterPassword = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              autoFocus={true}
               placeholder={t('inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {

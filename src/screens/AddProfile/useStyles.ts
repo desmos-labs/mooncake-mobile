@@ -2,13 +2,16 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
-    padding: theme.spacing.m,
+    paddingVertical: theme.spacing.m,
     paddingBottom: 80,
     flexGrow: 1,
   },
   header: {
     borderWidth: 0,
     backgroundColor: 'transparent',
+  },
+  title: {
+    paddingHorizontal: theme.spacing.m,
   },
   headerBackImage: {
     marginHorizontal: 8,

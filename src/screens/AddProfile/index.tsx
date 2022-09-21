@@ -8,11 +8,11 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {FC, Suspense} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {ActivityIndicator} from 'react-native-paper';
 import ErrorBoundary from 'components/ErrorBoundary';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import DView from 'components/DView';
 import useStyles from './useStyles';
 import Content from './components/Content';
 
@@ -55,11 +55,13 @@ const AddProfile: FC<NavProps> = () => {
   const styles = useStyles();
   useUnlockWallet();
   return (
-    <View style={styles.container}>
-      <Typography.H3>{t('addProfile:title')}</Typography.H3>
+    <DView style={styles.container} scrollable={false}>
+      <Typography.H3 style={styles.title}>
+        {t('addProfile:title')}
+      </Typography.H3>
       <ErrorBoundary
         fallback={
-          <Typography.H1>
+          <Typography.H1 style={styles.title}>
             {t('common:oopsSomethingWentWrongPleaseTryAgainLater')}
           </Typography.H1>
         }>
@@ -67,7 +69,7 @@ const AddProfile: FC<NavProps> = () => {
           <Content />
         </Suspense>
       </ErrorBoundary>
-    </View>
+    </DView>
   );
 };
 

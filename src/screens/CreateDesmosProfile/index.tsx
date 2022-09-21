@@ -1,6 +1,5 @@
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
@@ -26,7 +25,7 @@ import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useRef} from 'react';
+import React, {FC, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
@@ -45,10 +44,14 @@ import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
-type NavProp = StackScreenProps<
+type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.CREATE_DESMOS_PROFILE
 >;
+
+export type CreateDesmosProfileParams = {
+  accountOverride?: ChainAccount;
+};
 
 const initialFormState = {
   nickname: '',
@@ -56,12 +59,12 @@ const initialFormState = {
   bio: '',
 };
 
-const CreateDesmosProfile = () => {
+const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
+  const {accountOverride} = route.params;
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push} =
-    useNavigation<NavProp['navigation']>();
+  const {goBack, navigate, reset, push} = navigation;
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
     useImageFromDevice();
@@ -113,8 +116,6 @@ const CreateDesmosProfile = () => {
 
       const {dTag, nickname, bio} = formValues;
 
-      let wallet: LocalWallet;
-
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
         profilePicture && UploadMedia({mediaFile: profilePicture}),
         coverPicture && UploadMedia({mediaFile: coverPicture}),
@@ -123,39 +124,34 @@ const CreateDesmosProfile = () => {
       const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
       const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
 
-      // Save new wallet as last selected wallet
-      // Build save profile message
-      const saveProfileMessage: MsgSaveProfileEncodeObject = {
-        typeUrl: GenericMsgEnums.MsgSaveProfile,
-        value: {
-          creator: wallet!.bech32Address,
-          dtag: dTag,
-          nickname: nickname || '[do-not-modify]',
-          bio: bio || '[do-not-modify]',
-          profilePicture: profilePictureUrl || '[do-not-modify]',
-          coverPicture: coverPictureUrl || '[do-not-modify]',
-        },
-      };
-
-      const messages = [saveProfileMessage];
-
       // delay setLoading false so it occurs while the screen is in background
       setTimeout(() => {
         setLoading(false);
       }, 500);
 
-      navigate(ROUTES.BROADCAST_TX, {
-        messages,
-        offlineSigner: wallet!,
-        // save newly created account data and navigate to home page
-        successAction: async () => {
-          if (accountCreation && accountCreation.mnemonic) {
-            const {password, mnemonic} = accountCreation;
-            wallet = await LocalWallet.fromMnemonic(mnemonic);
+      if (accountCreation && accountCreation.mnemonic) {
+        const {password, mnemonic} = accountCreation;
+        const wallet = await LocalWallet.fromMnemonic(mnemonic);
+        const [address, pubKey] = accountOverride?.address
+          ? [accountOverride.address, accountOverride.pubKey]
+          : [wallet.bech32Address, toBase64(wallet.publicKey)];
+        const messages = getMessage(
+          address,
+          dTag,
+          nickname,
+          bio,
+          profilePictureUrl,
+          coverPictureUrl,
+        );
 
+        navigate(ROUTES.BROADCAST_TX, {
+          messages,
+          offlineSigner: wallet!,
+          // save newly created account data and navigate to home page
+          async successAction() {
             const newAccount: ChainAccount = {
-              address: wallet.bech32Address,
-              pubKey: toBase64(wallet.publicKey),
+              address,
+              pubKey,
               type: ChainAccountType.Local,
               hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
               signAlgorithm: 'secp256k1',
@@ -163,35 +159,74 @@ const CreateDesmosProfile = () => {
 
             await saveLocalWallet(wallet, password!);
             await saveNewAccount(newAccount);
-            await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-            setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-          } else if (createLedgerAccount && createLedgerAccount.account) {
-            const {account: ledgerAccount} = createLedgerAccount;
+            await saveMnemonic(address, mnemonic, password!);
+            setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-            wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
-            await saveNewAccount(ledgerAccount);
-          }
+            push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+              title: t('common:congratulations'),
+              subtitle: t('common:dtag created'),
+              buttonLabel: t('resultModal:enterApp'),
+              handleButtonPress: () => {
+                reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: ROUTES.HOME,
+                    },
+                  ],
+                });
+              },
+            });
+          },
+          failureAction() {
+            goBack();
+          },
+        });
+      } else if (createLedgerAccount) {
+        const {account: ledgerAccount} = createLedgerAccount;
 
-          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-            title: t('common:congratulations'),
-            subtitle: t('common:dtag created'),
-            buttonLabel: t('resultModal:enterApp'),
-            handleButtonPress: () => {
-              reset({
-                index: 0,
-                routes: [
-                  {
-                    name: ROUTES.HOME,
+        if (ledgerAccount) {
+          const wallet = (await unlockWallet(ledgerAccount))
+            ?.wallet as LocalWallet;
+          if (wallet) {
+            const messages = getMessage(
+              accountOverride?.address || wallet!.bech32Address,
+              dTag,
+              nickname,
+              bio,
+              profilePictureUrl,
+              coverPictureUrl,
+            );
+            navigate(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: wallet!,
+              // save newly created account data and navigate to home page
+              async successAction() {
+                await saveNewAccount(ledgerAccount);
+
+                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('common:congratulations'),
+                  subtitle: t('common:dtag created'),
+                  buttonLabel: t('resultModal:enterApp'),
+                  handleButtonPress: () => {
+                    reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: ROUTES.HOME,
+                        },
+                      ],
+                    });
                   },
-                ],
-              });
-            },
-          });
-        },
-        failureAction: () => {
-          goBack();
-        },
-      });
+                });
+              },
+              failureAction() {
+                goBack();
+              },
+            });
+          }
+        }
+      }
     },
     [],
   );
@@ -342,5 +377,31 @@ const CreateDesmosProfile = () => {
     </SafeAreaView>
   );
 };
+
+// Save new wallet as last selected wallet
+// Build save profile message
+function getMessage(
+  creator: string,
+  dTag: string,
+  nickname: string,
+  bio: string,
+  profilePictureUrl: string | undefined,
+  coverPictureUrl: string | undefined,
+): MsgSaveProfileEncodeObject[] {
+  // Save new wallet as last selected wallet
+  // Build save profile message
+  const saveProfileMessage: MsgSaveProfileEncodeObject = {
+    typeUrl: GenericMsgEnums.MsgSaveProfile,
+    value: {
+      creator,
+      dtag: dTag,
+      nickname: nickname || '[do-not-modify]',
+      bio: bio || '[do-not-modify]',
+      profilePicture: profilePictureUrl || '[do-not-modify]',
+      coverPicture: coverPictureUrl || '[do-not-modify]',
+    },
+  };
+  return [saveProfileMessage];
+}
 
 export default CreateDesmosProfile;

@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {clearMMKV} from 'lib/MMKVStorage';
 import {resetSecureStorage} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
@@ -37,8 +38,7 @@ const routesToRender = [
   ROUTES.REPORT_POST,
   ROUTES.FOLLOWING_AND_FOLLOWERS,
   ROUTES.NO_DTAG_FOUND,
-  ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET,
-  ROUTES.ADD_PROFILE,
+  ROUTES.ADD_PROFILE_ENTER_PASSWORD,
 ];
 
 const DevScreen = () => {
@@ -58,6 +58,8 @@ const DevScreen = () => {
     });
   };
 
+  const {activeAddress} = useActiveAccount();
+
   const renderItem = ({item}: any) => {
     return (
       <TouchableOpacity
@@ -67,8 +69,17 @@ const DevScreen = () => {
               navigate(item, {
                 initialTabRouteName: ROUTES.FOLLOWING,
                 subspaceID: 5,
-                userAddress: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+                userAddress: activeAddress,
                 username: '@Raffaello',
+              });
+              break;
+            case ROUTES.ADD_PROFILE_ENTER_PASSWORD:
+              navigate({
+                name: item,
+                params: {
+                  address: activeAddress,
+                },
+                merge: true,
               });
               break;
             default:

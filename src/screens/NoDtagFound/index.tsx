@@ -27,7 +27,7 @@ const NoDtagFound = () => {
 
   const handlePress = React.useCallback(() => {
     if (createLocalWallet || createLedgerAccount) {
-      navigate(ROUTES.CREATE_DESMOS_PROFILE);
+      navigate(ROUTES.CREATE_DESMOS_PROFILE, {});
     }
   }, []);
 

@@ -68,8 +68,13 @@ const Profiles: React.FC<Props> = props => {
   }, []);
 
   const navigateToAddProfile = useCallback(
-    () => navigation.navigate(ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET),
-    [navigation],
+    () =>
+      navigation.navigate({
+        name: ROUTES.ADD_PROFILE_ENTER_PASSWORD,
+        params: {address: activeAddress},
+        merge: true,
+      }),
+    [navigation, activeAddress],
   );
 
   const selectProfile = (i: number) => {
