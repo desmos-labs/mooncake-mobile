@@ -22,10 +22,17 @@ const useStyles = makeStyle(theme => {
       // Add spacing for devices that do not require bottom safe-area
       marginBottom: bottom === 0 ? theme.spacing.s : 0,
     },
+    textInputContainer: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: theme.colors.lightGrey01,
+      borderRadius: 12,
+      padding: theme.spacing.s,
+      justifyContent: 'space-between',
+      marginLeft: theme.spacing.s,
+    },
     textInput: {
       flex: 1,
-      paddingHorizontal: 8,
-      marginLeft: 8,
     },
     profilePic: {
       width: 38,

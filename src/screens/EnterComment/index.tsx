@@ -9,7 +9,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommentImage';
+import SelectedCommentImage from 'components/SelectedCommentImage';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
