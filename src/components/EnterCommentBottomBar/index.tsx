@@ -116,7 +116,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 35 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         viewStyle={[
