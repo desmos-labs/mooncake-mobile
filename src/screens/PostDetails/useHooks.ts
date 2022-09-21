@@ -50,6 +50,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -61,6 +62,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {

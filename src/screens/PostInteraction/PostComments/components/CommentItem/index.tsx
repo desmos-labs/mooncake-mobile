@@ -109,6 +109,7 @@ const CommentItem = ({
   const {MediaAttachment} = useRenderMediaAttachment({
     attachments,
     imageStyle: {
+      marginTop: 8,
       width: '100%',
       height: 150,
       borderRadius: 24,

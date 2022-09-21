@@ -1,5 +1,6 @@
 import {useQuery} from '@apollo/client';
 import {
+  Media,
   PostReference,
   PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
@@ -8,12 +9,17 @@ import sharedPostState from '@recoil/sharedPostState';
 import Long from 'long';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
-import {useResetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
+import ToastConfig from 'config/ToastConfig';
+import {useToast} from 'react-native-toast-notifications';
+import {useTranslation} from 'react-i18next';
 
 const useHooks = ({
   subspaceID,
@@ -25,7 +31,11 @@ const useHooks = ({
   const {createPost} = useCreatePost();
   const [commentReplyLoading, setCommentReplyLoading] = React.useState(false);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const sharedCommentState = useRecoilValue(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const toast = useToast();
+
+  const {t} = useTranslation();
 
   const {
     data: originalComment,
@@ -36,6 +46,7 @@ const useHooks = ({
       postID: commentID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -47,6 +58,7 @@ const useHooks = ({
       postID: commentID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -102,21 +114,54 @@ const useHooks = ({
     });
   }, []);
 
-  const handleCommentReply = React.useCallback(async (comment: string) => {
+  const handleCommentReply = React.useCallback(async () => {
     setCommentReplyLoading(true);
-    await createPost({
-      text: comment,
-      conversationId: Long.fromNumber(commentID),
-      referencedPosts: [
-        PostReference.fromPartial({
-          type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-          postId: Long.fromNumber(commentID),
-        }),
-      ],
-    });
-    setCommentReplyLoading(false);
-    resetSharedPostState();
-  }, []);
+
+    try {
+      const {postText, postAttachments} = sharedCommentState;
+
+      const attachments = [];
+      if (postAttachments && 'uri' in postAttachments) {
+        const uploadResponse = await UploadMedia({
+          mediaFile: postAttachments,
+        });
+
+        const {url} = uploadResponse!;
+
+        const {type} = postAttachments;
+
+        const mediaAny = mediaToAny(
+          Media.fromPartial({
+            uri: url,
+            mimeType: type,
+          }),
+        );
+
+        attachments.push(mediaAny);
+      }
+
+      await createPost({
+        text: postText,
+        conversationId: Long.fromNumber(commentID),
+        attachments,
+        referencedPosts: [
+          PostReference.fromPartial({
+            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+            postId: Long.fromNumber(commentID),
+          }),
+        ],
+      });
+    } catch (err: any) {
+      if (err.toString().includes('413')) {
+        toast.show(t('error:imageTooLarge'), {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    } finally {
+      setCommentReplyLoading(false);
+      resetSharedPostState();
+    }
+  }, [sharedCommentState]);
 
   React.useEffect(() => {
     resetSharedPostState();
