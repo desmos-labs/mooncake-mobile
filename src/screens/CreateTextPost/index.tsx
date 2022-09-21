@@ -15,7 +15,7 @@ import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
@@ -24,6 +24,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import BackButton from 'components/BackButton';
+import sharedCommentState, {commentTextState} from '@recoil/sharedCommentState';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -38,24 +39,29 @@ const CreateTextPost = () => {
 
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
+  const [sharedComment, setSharedComment] = useRecoilState(commentTextState);
+  const resetSharedCommentState = useResetRecoilState(sharedCommentState);
   const {createPost, loading} = useCreatePost();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
   );
-  const [text, setText] = React.useState('');
-
   const inputRef = useRef<any>();
+
+  // clear persisted comment state on entry
+  React.useEffect(() => {
+    resetSharedCommentState();
+  }, []);
 
   const handlePressBGButton = React.useCallback(() => {
     setBackgroundIndex(prev => (prev < postBG.length ? prev + 1 : 0));
   }, [backgroundIndex]);
 
   const inputOpacity = React.useMemo(() => {
-    if (!inputRef.current || text.length === 0) return 0.8;
+    if (!inputRef.current || sharedComment.length === 0) return 0.8;
     return 1;
-  }, [inputRef.current, text]);
+  }, [inputRef.current, sharedComment]);
 
   const handlePostPressed = React.useCallback(() => {
     if (inputRef.current) {
@@ -68,14 +74,14 @@ const CreateTextPost = () => {
   }, [inputRef.current]);
 
   const handleSubmitPost = React.useCallback(async () => {
-    const createPostResponse = await createPost({text});
+    const createPostResponse = await createPost({text: sharedComment});
 
     if (createPostResponse) {
       goBack();
     } else {
       console.log('something went wrong while submitting post');
     }
-  }, [createPost, text]);
+  }, [createPost, sharedComment]);
 
   return (
     <View style={styles.container}>
@@ -107,9 +113,9 @@ const CreateTextPost = () => {
             <TextInput
               maxLength={postParams.max_text_length}
               ref={inputRef}
-              value={text}
+              value={sharedComment}
               multiline
-              onChangeText={setText}
+              onChangeText={setSharedComment}
               placeholder={t('tapToType')}
               style={[styles.inputStyle, {opacity: inputOpacity}]}
               placeholderTextColor="#FFFFFF"
@@ -127,7 +133,7 @@ const CreateTextPost = () => {
         })}>
         <RadialTextCounter
           max={EnvConfig.MAX_COMMENT_LENGTH}
-          current={text.length}
+          current={sharedComment.length}
           customEmptyColor="rgba(255,255,255,0.3)"
           customFillColor={theme.colors.white}
         />
