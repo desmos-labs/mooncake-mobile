@@ -12,6 +12,7 @@ import TopBar from 'components/TopBar';
 import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
+import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
@@ -28,7 +29,7 @@ import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
-import AddProfile from 'screens/AddProfile';
+import AddProfile, {AddProfileParams} from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -168,7 +169,7 @@ export type RootNavigatorParamList = {
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE_ENTER_PASSWORD]: EnterPasswordParams | undefined;
-  [ROUTES.ADD_PROFILE]: undefined;
+  [ROUTES.ADD_PROFILE]: AddProfileParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -447,6 +448,7 @@ const RootNavigator = () => {
         initialParams={{
           titleLabel: t('addProfile:title'),
           confirmButtonLabel: t('common:next'),
+          provideMnemonic: true,
           dViewProps: {
             topBar: <TopBar style={styles.addProfileTopBar} />,
             backgroundColor: 'transparent',
@@ -455,8 +457,10 @@ const RootNavigator = () => {
               backgroundColor: 'transparent',
             },
           },
-          onSuccessfulAuthentication() {
-            dispatch(StackActions.replace(ROUTES.ADD_PROFILE));
+          onSuccessfulAuthentication({
+            mnemonic,
+          }: LocalAccountAuthenticationArgs) {
+            dispatch(StackActions.replace(ROUTES.ADD_PROFILE, {mnemonic}));
           },
         }}
       />

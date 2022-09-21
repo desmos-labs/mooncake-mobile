@@ -15,13 +15,18 @@ import Content from './components/Content';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
+export type AddProfileParams = {
+  mnemonic: string;
+};
+
 const addProfileTopBarStyle: ViewStyle = {
   backgroundColor: 'transparent',
   shadowOpacity: 0,
 };
 
 /* A React component for the Add Profile screen. */
-const AddProfile: FC<NavProps> = () => {
+const AddProfile: FC<NavProps> = ({route}) => {
+  const {mnemonic} = route.params;
   const {t} = useTranslation('');
   const styles = useStyles();
   useUnlockWallet();
@@ -40,7 +45,7 @@ const AddProfile: FC<NavProps> = () => {
           </Typography.H1>
         }>
         <Suspense fallback={<ActivityIndicator />}>
-          <Content />
+          <Content mnemonic={mnemonic} />
         </Suspense>
       </ErrorBoundary>
     </DView>

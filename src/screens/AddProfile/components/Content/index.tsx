@@ -3,7 +3,6 @@ import {mnemonicState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import {getAccounts} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
 import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
@@ -15,7 +14,11 @@ import {ChainAccount} from 'types/chains';
 import AddProfileBadgeGroup, {ProfileRadioValue} from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 
-const Content: FC = () => {
+type ContentProps = {
+  mnemonic?: string;
+};
+
+const Content: FC<ContentProps> = ({mnemonic}) => {
   const styles = useStyles();
   const {t} = useTranslation();
   const theme = useTheme();
@@ -28,7 +31,6 @@ const Content: FC = () => {
     Map<string, ChainAccount>
   >(new Map());
   const [values, setValues] = useState<ProfileRadioValue[]>([]);
-  const unlockWallet = useUnlockWallet();
   const setMnemonic = useSetRecoilState(mnemonicState);
 
   const profilesByAddress = useMemo(
@@ -68,7 +70,7 @@ const Content: FC = () => {
           }) ?? [],
       );
     });
-  }, [profiles, selectedAddress]);
+  }, [profilesByAddress, selectedAddress]);
 
   const handleSelect = useCallback((id: string) => setSelectedAddress(id), []);
   const handleCreateDesmosProfile = useCallback(
@@ -76,17 +78,9 @@ const Content: FC = () => {
     [],
   );
   const handleConfirmPressed = useCallback(async () => {
-    if (!selectedAddress) return;
-    const account = accountByAddress.get(selectedAddress);
-    if (!account) return;
-    console.log({beforeUnlockWallet: account});
-    const unlockResult = await unlockWallet(account);
-    if (!unlockResult) return;
-    console.log({afterUnlockWallet: account});
-    const {mnemonic} = unlockResult;
     setMnemonic(mnemonic!);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
-  }, [unlockWallet, selectedAddress]);
+  }, [mnemonic, accountByAddress]);
 
   return (
     <View style={styles.container}>
