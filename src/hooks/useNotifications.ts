@@ -36,7 +36,7 @@ const useNotifications = () => {
             toast.show('Transaction success!', {
               type: ToastConfig.SUCCESS,
             });
-          } else if (remoteMessage.data?.type === 'transaction_failed') {
+          } else if (remoteMessage.data?.type === 'transaction_fail') {
             toast.show('Transaction failed!', {
               type: ToastConfig.ERROR,
             });
@@ -45,7 +45,7 @@ const useNotifications = () => {
               type: ToastConfig.ERROR,
             });
           }
-        }, 1000);
+        }, 100);
         setTransactions([
           ...transactions,
           {
