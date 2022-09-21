@@ -45,7 +45,7 @@ const useNotifications = () => {
               type: ToastConfig.ERROR,
             });
           }
-        }, 1000);
+        }, 100);
         setTransactions([
           ...transactions,
           {
