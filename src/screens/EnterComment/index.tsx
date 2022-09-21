@@ -87,64 +87,68 @@ const EnterComment = () => {
   }, [isCreatePost]);
 
   const handlePress = React.useCallback(async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const isCreatingImagePost = isCreatePost && commentAttachment;
+      const isCreatingImagePost = isCreatePost && commentAttachment;
 
-    const attachments = [];
+      const attachments = [];
 
-    const conversationId = postId ? Long.fromNumber(postId) : undefined;
+      const conversationId = postId ? Long.fromNumber(postId) : undefined;
 
-    const referencedPosts = postId
-      ? [
-          PostReference.fromPartial({
-            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-            postId: Long.fromNumber(postId),
-          }),
-        ]
-      : [];
+      const referencedPosts = postId
+        ? [
+            PostReference.fromPartial({
+              type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+              postId: Long.fromNumber(postId),
+            }),
+          ]
+        : [];
 
-    if (commentAttachment && 'uri' in commentAttachment) {
-      const uploadResponse = await UploadMedia({mediaFile: commentAttachment});
+      if (commentAttachment && 'uri' in commentAttachment) {
+        const uploadResponse = await UploadMedia({
+          mediaFile: commentAttachment,
+        });
 
-      if (!uploadResponse) {
-        return toast.show(
-          t('errors:imageUploadError', {
-            type: ToastConfig.ERROR,
+        const {url} = uploadResponse!;
+
+        const {type} = commentAttachment;
+
+        const mediaAny = mediaToAny(
+          Media.fromPartial({
+            uri: url,
+            mimeType: type,
           }),
         );
+
+        attachments.push(mediaAny);
       }
 
-      const {url} = uploadResponse!;
+      await createPost({
+        text: commentText,
+        attachments,
+        referencedPosts,
+        conversationId,
+      });
 
-      const {type} = commentAttachment;
+      // EnterComment -> CreateTextPost -> Home
+      if (isCreatingImagePost) {
+        pop(2);
+      } else {
+        goBack();
+      }
 
-      const mediaAny = mediaToAny(
-        Media.fromPartial({
-          uri: url,
-          mimeType: type,
-        }),
-      );
-
-      attachments.push(mediaAny);
+      resetSharedCommentData();
+    } catch (err) {
+      console.log('caught error', err);
+      if (err.toString().includes('413')) {
+        toast.show(t('error:imageTooLarge'), {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-
-    await createPost({
-      text: commentText,
-      attachments,
-      referencedPosts,
-      conversationId,
-    });
-
-    // EnterComment -> CreateTextPost -> Home
-    if (isCreatingImagePost) {
-      pop(2);
-    } else {
-      goBack();
-    }
-
-    resetSharedCommentData();
-    setLoading(false);
   }, [commentText, isCreatePost, commentText, commentAttachment]);
 
   const TopBarRightElement = React.useMemo(() => {

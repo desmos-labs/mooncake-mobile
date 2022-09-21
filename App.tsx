@@ -23,10 +23,13 @@ const App = () => {
           duration={60000}
           renderType={{
             [ToastConfig.SUCCESS]: toast => (
-              <CustomToast type="success" toast={toast} />
+              <CustomToast type={ToastConfig.SUCCESS} toast={toast} />
             ),
             [ToastConfig.ERROR]: toast => (
-              <CustomToast type="failure" toast={toast} />
+              <CustomToast type={ToastConfig.ERROR} toast={toast} />
+            ),
+            [ToastConfig.ERROR_NO_RETRY]: toast => (
+              <CustomToast type={ToastConfig.ERROR_NO_RETRY} toast={toast} />
             ),
           }}>
           <ApolloProvider client={client}>

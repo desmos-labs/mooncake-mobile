@@ -4,10 +4,11 @@ import React from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export interface Props {
-  type: 'success' | 'failure';
+  type: ToastConfig;
   toast: any;
 }
 
@@ -21,7 +22,7 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
         style={{color: theme.colors.surfaceBlack, alignSelf: 'center'}}>
         {toast.message}
       </Typography.Body6>
-      {type === 'failure' ? (
+      {type === ToastConfig.ERROR ? (
         <Button style={styles.button} mode="text" onPress={toast.onPress}>
           <Typography.Subtitle3>Retry</Typography.Subtitle3>
         </Button>
