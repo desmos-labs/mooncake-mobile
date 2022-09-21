@@ -8,6 +8,7 @@ import {
   StackNavigationProp,
   TransitionPresets,
 } from '@react-navigation/stack';
+import TopBar from 'components/TopBar';
 import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
@@ -22,12 +23,12 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions} from 'react-native';
+import {Dimensions, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
-import AddProfile, {AddProfileHeader} from 'screens/AddProfile';
+import AddProfile from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -171,6 +172,16 @@ export type RootNavigatorParamList = {
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
+
+const styles: {[key: string]: ViewStyle} = {
+  addProfileTopBar: {
+    backgroundColor: 'transparent',
+    shadowOpacity: 0,
+  },
+  addProfileCard: {
+    backgroundColor: 'rgb(245,246,249)',
+  },
+};
 
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
@@ -432,22 +443,16 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.ADD_PROFILE_ENTER_PASSWORD}
         component={EnterPassword}
-        options={{
-          header: AddProfileHeader,
-          headerShown: true,
-          headerStyle: {backgroundColor: 'rgb(245,246,249)'},
-          cardStyle: {backgroundColor: 'rgb(245,246,249)'},
-        }}
+        options={{cardStyle: styles.addProfileCard}}
         initialParams={{
           titleLabel: t('addProfile:title'),
           confirmButtonLabel: t('common:next'),
           dViewProps: {
-            edges: ['bottom', 'left', 'right'],
+            topBar: <TopBar style={styles.addProfileTopBar} />,
             backgroundColor: 'transparent',
             style: {
               padding: theme.spacing.m,
               backgroundColor: 'transparent',
-              maxHeight: 320,
             },
           },
           onSuccessfulAuthentication() {
@@ -458,12 +463,7 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.ADD_PROFILE}
         component={AddProfile}
-        options={{
-          header: AddProfileHeader,
-          headerShown: true,
-          headerStyle: {backgroundColor: 'rgb(245,246,249)'},
-          cardStyle: {backgroundColor: 'rgb(245,246,249)'},
-        }}
+        options={{cardStyle: styles.addProfileCard}}
       />
     </Stack.Navigator>
   );

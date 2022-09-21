@@ -101,9 +101,8 @@ const Content: FC = () => {
             mode="text"
             color={theme.colors.surfaceBlack}
             style={styles.button}
-            labelStyle={styles.textButton}
             onPress={handleCreateDesmosProfile}>
-            <Typography.Subtitle3>
+            <Typography.Subtitle3 style={styles.textButton}>
               {t('addProfile:orCreateADesmosProfile')}
             </Typography.Subtitle3>
           </Button>
@@ -111,10 +110,11 @@ const Content: FC = () => {
             mode="contained"
             color={theme.colors.surfaceBlack}
             style={styles.button}
-            labelStyle={styles.buttonLabel}
             disabled={!selectedAddress}
             onPress={handleConfirmPressed}>
-            <Typography.Button2>{t('common:confirm')}</Typography.Button2>
+            <Typography.Button2 style={styles.buttonLabel}>
+              {t('common:confirm')}
+            </Typography.Button2>
           </Button>
         </>
       ) : (
@@ -122,9 +122,8 @@ const Content: FC = () => {
           mode="contained"
           color={theme.colors.surfaceBlack}
           style={styles.button}
-          labelStyle={styles.buttonLabel}
           onPress={handleCreateDesmosProfile}>
-          <Typography.Subtitle2>
+          <Typography.Subtitle2 style={styles.buttonLabel}>
             {t('noDtagFound:createDesmosProfile')}
           </Typography.Subtitle2>
         </Button>

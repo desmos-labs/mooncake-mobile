@@ -16,6 +16,7 @@ const useStyles = makeStyle(theme => ({
   },
   button: {
     padding: theme.spacing.s,
+    color: theme.colors.white,
   },
   textButton: {
     color: theme.colors.surfaceBlack,
