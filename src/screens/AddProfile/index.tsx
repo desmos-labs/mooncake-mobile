@@ -3,18 +3,18 @@ import {
   StackHeaderProps,
   StackScreenProps,
 } from '@react-navigation/stack';
-import {useLoadProfiles} from '@recoil/profiles';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useMemo, useRef} from 'react';
-import {defaultProfilePic} from 'assets/images';
+import React, {FC, Suspense} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {ActivityIndicator} from 'react-native-paper';
+import ErrorBoundary from 'components/ErrorBoundary';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import useStyles from './useStyles';
+import Content from './components/Content';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
@@ -31,15 +31,17 @@ const HeaderBackImage = () => {
   );
 };
 
-/* A React component that renders the header for the following and followers screen. */
+/* A React component that renders the header for the Add Profile screen. */
 export const AddProfileHeader: FC<StackHeaderProps> = ({options, ...rest}) => {
+  const styles = useStyles();
   return (
     <Header
       {...rest}
       options={{
         ...options,
+        title: '',
         headerShadowVisible: false,
-        headerStyle: {borderWidth: 0},
+        headerStyle: styles.header,
         headerBackImage: HeaderBackImage,
         headerBackTitleVisible: false,
       }}
@@ -47,50 +49,26 @@ export const AddProfileHeader: FC<StackHeaderProps> = ({options, ...rest}) => {
   );
 };
 
-/* A React component for the following and followers screen. */
+/* A React component for the Add Profile screen. */
 const AddProfile: FC<NavProps> = () => {
-  const {t} = useTranslation('addProfile');
+  const {t} = useTranslation('');
   const styles = useStyles();
-  const scrollRef = useRef(null);
-  const [activeAddress] = useMMKVStorage<string | undefined>(
-    MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
-  );
-  const {profiles} = useLoadProfiles();
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const values = useMemo(() => {
-    if (profiles.length === 0) return [];
-    return profiles.map(profile => {
-      return {
-        nickname: profile.nickname,
-        dTag: profile.dtag,
-        profilePicture: profile.profile_pic
-          ? {uri: profile.profile_pic}
-          : defaultProfilePic,
-        isSelected: activeAddress === profile.address,
-      };
-    });
-  }, [profiles]);
-
+  useUnlockWallet();
   return (
     <View style={styles.container}>
-      <Typography.H3>{t('addProfile')}</Typography.H3>
-      <ScrollView
-        ref={scrollRef}
-        style={styles.scrollViewOuter}
-        contentContainerStyle={styles.scrollViewInner}>
-        <SettingsProfileBadgeGroup
-          simultaneousHandlers={scrollRef}
-          values={values}
-          onSelect={doNothing}
-          onEditProfile={doNothing}
-          onRemoveProfile={doNothing}
-        />
-      </ScrollView>
+      <Typography.H3>{t('addProfile:title')}</Typography.H3>
+      <ErrorBoundary
+        fallback={
+          <Typography.H1>
+            {t('common:oopsSomethingWentWrongPleaseTryAgainLater')}
+          </Typography.H1>
+        }>
+        <Suspense fallback={<ActivityIndicator />}>
+          <Content />
+        </Suspense>
+      </ErrorBoundary>
     </View>
   );
 };
-
-function doNothing() {}
 
 export default AddProfile;

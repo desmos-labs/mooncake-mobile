@@ -26,7 +26,7 @@ const Profiles: React.FC<Props> = props => {
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
 
-  const {t} = useTranslation('settings');
+  const {t} = useTranslation('');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();
@@ -68,8 +68,8 @@ const Profiles: React.FC<Props> = props => {
   }, []);
 
   const navigateToAddProfile = useCallback(
-    () => navigation.navigate(ROUTES.ADD_PROFILE),
-    [],
+    () => navigation.navigate(ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET),
+    [navigation],
   );
 
   const selectProfile = (i: number) => {
@@ -97,7 +97,9 @@ const Profiles: React.FC<Props> = props => {
   return (
     <DView style={styles.root} topBar={<TopBar />}>
       <View style={styles.titleBar}>
-        <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
+        <Typography.H3 style={styles.title}>
+          {t('addProfile:title')}
+        </Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
           onPress={navigateToAddProfile}>

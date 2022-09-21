@@ -11,7 +11,7 @@ import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
-import React, {useState} from 'react';
+import React, {ComponentProps, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -33,17 +33,26 @@ type NavProps = StackScreenProps<
 >;
 
 /**
- * These optional params are for unlocking a specific wallet
+ * `These optional params are for unlocking a specific wallet
+ * @property {string} address - The address of the account to authenticate.
+ * @property {boolean} provideWallet - If true, wallet will be return on successful authentication.
+ * @property {boolean} provideMnemonic - If true, mnemonic will be return on successful authentication.
+ * @property {string} titleLabel - The title of the screen.
+ * @property {string} confirmButtonLabel - The label of the button that will be used to confirm the input.
+ * @property dViewProps - This is the props that will be passed to the DView component.
+ * @property onSuccessfulAuthentication - A callback function that is called when the user successfully
+ * enters the password.
+ * @property onFailedAuthentication - A callback function that is called when the user fails to
+ * authenticate.
  */
 export type EnterPasswordParams = {
   address?: string;
-
   provideWallet?: boolean;
-
   provideMnemonic?: boolean;
-
+  titleLabel?: string;
+  confirmButtonLabel?: string;
+  dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
-
   onFailedAuthentication?: () => void;
 };
 
@@ -54,6 +63,9 @@ const EnterPassword = () => {
     params: {
       address,
       provideWallet,
+      titleLabel,
+      confirmButtonLabel,
+      dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
       provideMnemonic,
@@ -113,8 +125,10 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container}>
-      <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
+    <DView style={styles.container} {...dViewProps}>
+      <Typography.H3 style={styles.headerText}>
+        {titleLabel || t('header')}
+      </Typography.H3>
 
       <Formik
         initialValues={initialFormValues}
@@ -153,7 +167,7 @@ const EnterPassword = () => {
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:confirm')}
+                  {confirmButtonLabel || t('common:confirm')}
                 </Typography.Button1>
               </Button>
 

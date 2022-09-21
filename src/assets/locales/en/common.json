@@ -26,5 +26,6 @@
   "cancel": "Cancel",
   "no nickname": "nickname-not-set",
   "no dtag": "dtag-not-set",
-  "refuse": "Refuse"
+  "refuse": "Refuse",
+  "oopsSomethingWentWrongPleaseTryAgainLater": "Oops...! Something Went Wrong. Please try again later."
 }

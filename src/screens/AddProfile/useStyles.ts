@@ -2,9 +2,13 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
-    flexGrow: 1,
-    backgroundColor: theme.colors.white,
     padding: theme.spacing.m,
+    paddingBottom: 80,
+    flexGrow: 1,
+  },
+  header: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
   },
   headerBackImage: {
     marginHorizontal: 8,
@@ -12,11 +16,6 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
-  },
-  scrollViewOuter: {margin: -20},
-  scrollViewInner: {
-    padding: 20,
-    flexGrow: 1,
   },
 }));
 

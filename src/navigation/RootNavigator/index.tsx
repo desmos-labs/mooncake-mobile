@@ -1,7 +1,14 @@
-import {NavigatorScreenParams} from '@react-navigation/native';
+import {
+  NavigationProp,
+  NavigatorScreenParams,
+  useNavigation,
+} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
@@ -11,9 +18,12 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {Dimensions} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
+import AddProfile, {AddProfileHeader} from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -25,7 +35,15 @@ import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
+import {FollowingParams} from 'screens/Following';
+import FollowingAndFollowers, {
+  FollowingAndFollowersHeader,
+  FollowingAndFollowersParams,
+} from 'screens/FollowingAndFollowers';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
@@ -34,8 +52,8 @@ import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import MnemonicInput, {
-  MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
+  MNEMONIC_INPUT_MODE,
 } from 'screens/MnemonicInput';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
@@ -50,15 +68,16 @@ import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
 import ChangePassword, {
-  PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
+  PASSWORD_MANIPULATION_MODE,
 } from 'screens/PasswordManipulation';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
+import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
-import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
@@ -69,19 +88,6 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import PostTypeSelection from 'screens/PostTypeSelection';
-import CreateTextPost from 'screens/CreateTextPost';
-import FollowingAndFollowers, {
-  FollowingAndFollowersParams,
-  FollowingAndFollowersHeader,
-} from 'screens/FollowingAndFollowers';
-import {Dimensions} from 'react-native';
-import {FollowingParams} from 'screens/Following';
-import AddProfile, {AddProfileHeader} from 'screens/AddProfile';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -154,6 +160,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
+  [ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET]: EnterPasswordParams | undefined;
   [ROUTES.ADD_PROFILE]: undefined;
 };
 
@@ -184,6 +191,10 @@ const RootNavigator = () => {
     return ROUTES.LANDING;
   }, []);
 
+  const theme = useTheme();
+  const {navigate, goBack} =
+    useNavigation<NavigationProp<RootNavigatorParamList>>();
+
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -192,7 +203,6 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
-
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
@@ -200,11 +210,9 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
-
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
-
       <Stack.Screen
         name={ROUTES.FULLSCREEN_STATUS_SCREEN}
         component={FullscreenStatusScreen}
@@ -279,17 +287,14 @@ const RootNavigator = () => {
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
       />
-
       <Stack.Screen
         name={ROUTES.CONNECT_ADDRESS_GENERAL}
         component={ConnectAddressGeneral}
       />
-
       <Stack.Screen
         name={ROUTES.CONNECT_ADDRESS_ADVANCED}
         component={ConnectAddressAdvanced}
       />
-
       <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
@@ -297,22 +302,18 @@ const RootNavigator = () => {
         name={ROUTES.CONFIRM_ADDRESS}
         component={ConfirmAddress}
       />
-
       <Stack.Screen
         name={ROUTES.SELECT_CHAIN}
         component={SelectChainConnection}
       />
-
       <Stack.Screen
         name={ROUTES.CONNECT_CHAIN_TX_DETAIL}
         component={ConnectChainTxDetail}
       />
-
       <Stack.Screen
         name={ROUTES.CONNECT_CHAIN_METHOD}
         component={ConnectChainMethod}
       />
-
       <Stack.Screen
         initialParams={{
           author: {} as any,
@@ -321,14 +322,11 @@ const RootNavigator = () => {
         name={ROUTES.ENTER_COMMENT}
         component={EnterComment}
       />
-
       <Stack.Screen
         name={ROUTES.SELECT_POST_TYPE}
         component={PostTypeSelection}
       />
-
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
-
       {/* modals */}
       <Stack.Group
         screenOptions={{
@@ -401,14 +399,11 @@ const RootNavigator = () => {
           component={PostInteractionTabs}
         />
       </Stack.Group>
-
       {/* modals end */}
-
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
         component={AuthorizeWalletStack}
       />
-
       <Stack.Screen
         name={ROUTES.FOLLOWING_AND_FOLLOWERS}
         component={FollowingAndFollowers}
@@ -418,7 +413,6 @@ const RootNavigator = () => {
           headerShown: true,
         }}
       />
-
       <Stack.Screen
         name={ROUTES.PROFILE_POSTS}
         component={ProfilePosts}
@@ -426,14 +420,45 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
-
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
       <Stack.Screen
+        name={ROUTES.ADD_PROFILE_UNLOCK_LOCAL_WALLET}
+        component={EnterPassword}
+        options={{
+          header: AddProfileHeader,
+          headerShown: true,
+          headerStyle: {backgroundColor: 'rgb(245,246,249)'},
+          cardStyle: {backgroundColor: 'rgb(245,246,249)'},
+        }}
+        initialParams={{
+          titleLabel: t('addProfile:title'),
+          confirmButtonLabel: t('common:next'),
+          dViewProps: {
+            edges: ['bottom', 'left', 'right'],
+            backgroundColor: 'transparent',
+            style: {
+              padding: theme.spacing.m,
+              backgroundColor: 'transparent',
+              maxHeight: 320,
+            },
+          },
+          onSuccessfulAuthentication() {
+            navigate(ROUTES.ADD_PROFILE);
+          },
+          onFailedAuthentication() {
+            goBack();
+          },
+        }}
+      />
+      <Stack.Screen
         name={ROUTES.ADD_PROFILE}
         component={AddProfile}
-        options={{header: AddProfileHeader, headerShown: true}}
+        options={{
+          header: AddProfileHeader,
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );
