@@ -17,6 +17,7 @@ import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import _ from 'lodash';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import {Asset} from 'react-native-image-picker';
+import DeviceInfo from 'react-native-device-info';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -64,7 +65,10 @@ const CreatePostCameraRoll = () => {
       // @ts-ignore
       const grantedPermissions = await requestMultiple([permission]);
 
-      if (grantedPermissions[permission] !== 'granted') goBack();
+      // this will fail on ios simulator, so we skip permission check on emulators
+      // https://github.com/zoontek/react-native-permissions/issues/498
+      const isEmulator = await DeviceInfo.isEmulator();
+      if (!isEmulator && grantedPermissions[permission] !== 'granted') goBack();
     };
 
     requestPermissions();

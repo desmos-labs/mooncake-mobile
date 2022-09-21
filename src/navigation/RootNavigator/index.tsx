@@ -320,6 +320,7 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+
       <Stack.Screen
         name={ROUTES.CREATE_POST_CAMERA_ROLL}
         component={CreatePostCameraRoll}
