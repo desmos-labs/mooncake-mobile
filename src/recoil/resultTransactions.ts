@@ -7,6 +7,16 @@ import {ResultTransaction} from 'types/transaction';
 const resultTransactions = atom<ResultTransaction[]>({
   key: 'resultTransactions',
   default: [],
+  effects: [
+    ({onSet}) => {
+      onSet((newValue, oldValue) => {
+        newValue.forEach(value => {
+          console.log(value);
+        });
+        console.log(oldValue);
+      });
+    },
+  ],
 });
 
 export default resultTransactions;

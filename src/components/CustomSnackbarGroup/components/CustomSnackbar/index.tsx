@@ -49,7 +49,7 @@ const CustomSnackbar = ({
         positionY.value = withTiming(-1000, {
           duration: 4000,
         });
-        setTimeout(() => onHide(), 500);
+        setTimeout(onHide, 500);
       }, autoHideMs);
     }
   }, []);
@@ -66,7 +66,7 @@ const CustomSnackbar = ({
             positionY.value = withTiming(-1000, {
               duration: 4000,
             });
-            setTimeout(() => onSwipeUp(), 500);
+            setTimeout(onSwipeUp, 500);
           }
         }),
     [],

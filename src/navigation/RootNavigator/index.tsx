@@ -176,7 +176,6 @@ const RootNavigator = () => {
   // End initialization
 
   const {t} = useTranslation();
-
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
