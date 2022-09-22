@@ -51,9 +51,6 @@ const useCreatePost = () => {
       } catch (err: any) {
         if (err.toString().includes('413')) {
           throw new Error('Image too large');
-          // toast.show(t('error:imageTooLarge'), {
-          //   type: ToastConfig.ERROR_NO_RETRY,
-          // });
         }
         throw new Error(err.toString());
       }
@@ -71,8 +68,6 @@ const useCreatePost = () => {
       if (!activeAddress) return;
 
       try {
-        setLoading(true);
-
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const msg: MsgCreatePostEncodeObject = {
@@ -92,15 +87,11 @@ const useCreatePost = () => {
 
         const aminoEncodedMsg = client.encodeToAmino([msg]);
 
-        const msgResponse = await CentralizedBroadcastTx({
+        return await CentralizedBroadcastTx({
           messages: aminoEncodedMsg,
         });
-
-        return msgResponse;
       } catch (err: any) {
-        return undefined;
-      } finally {
-        setLoading(false);
+        throw new Error(err.toString());
       }
     },
     [activeAddress],
@@ -122,8 +113,6 @@ const useCreatePost = () => {
           const _sharedPostState = await snapshot.getPromise(sharedPostState);
 
           const {postAttachments, postText} = _sharedPostState;
-
-          console.log('shared state', _sharedPostState);
 
           // note: only Media attachments
           // only support 1 image attachment for now
@@ -162,7 +151,6 @@ const useCreatePost = () => {
             resetSharedPostState();
             return sendPostResponse;
           }
-          throw new Error('Error creating post: no response from server');
         } catch (err: any) {
           toast.show(`Error creating post: ${err.toString()}`, {
             type: ToastConfig.ERROR_NO_RETRY,

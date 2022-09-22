@@ -77,6 +77,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.select({
+        // keyboardWillShow only works on ios
         ios: 'keyboardWillShow',
         android: 'keyboardDidShow',
       }) as KeyboardEventName,
@@ -120,7 +121,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         </Typography.Button3>
       </Button>
     );
-  }, [comment, loading, handlePostComment]);
+  }, [comment, loading]);
 
   return (
     <KeyboardAvoidingView
