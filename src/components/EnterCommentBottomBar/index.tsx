@@ -158,6 +158,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
+                textAlignVertical="center"
               />
 
               <View
