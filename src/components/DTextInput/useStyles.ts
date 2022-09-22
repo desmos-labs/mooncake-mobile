@@ -32,7 +32,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   right: {
     padding: 0,
     margin: 0,
-    paddingRight: 12,
+    paddingRight: 4,
   },
 }));
 

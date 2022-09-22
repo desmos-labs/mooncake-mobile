@@ -35,7 +35,6 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
       ]}
       rightElement={
         <IconButton
-          style={styles.eyeIcon}
           icon={hideText ? eyeOpen : eyeClosed}
           color={iconColor}
           onPress={() => {
