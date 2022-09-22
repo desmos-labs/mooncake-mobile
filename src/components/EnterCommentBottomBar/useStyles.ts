@@ -33,6 +33,7 @@ const useStyles = makeStyle(theme => {
     },
     textInput: {
       flex: 1,
+      color: theme.colors.surfaceBlack,
     },
     profilePic: {
       width: 38,

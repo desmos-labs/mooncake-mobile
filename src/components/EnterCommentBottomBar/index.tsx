@@ -156,6 +156,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 onChangeText={text => setComment(text)}
                 multiline={true}
                 style={styles.textInput}
+                placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
               />

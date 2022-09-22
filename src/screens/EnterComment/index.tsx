@@ -18,6 +18,7 @@ import MediaBottomPanel from 'components/MediaBottomPanel';
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import {useRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -43,6 +44,8 @@ const EnterComment = () => {
   const {t} = useTranslation('postInteraction');
 
   const styles = useStyles();
+
+  const theme = useTheme();
 
   const {profileData} = useActiveAccount();
 
@@ -141,10 +144,15 @@ const EnterComment = () => {
           <TextInput
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
             placeholder={t(isCreatePost ? 'writeSomething' : 'yourReply')}
+            placeholderTextColor={theme.colors.grey02}
             value={commentText}
             onChangeText={setCommentText}
             multiline
-            style={{flex: 1, alignSelf: 'flex-start'}}
+            style={{
+              flex: 1,
+              alignSelf: 'flex-start',
+              color: theme.colors.surfaceBlack,
+            }}
           />
         </View>
 
