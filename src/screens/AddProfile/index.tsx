@@ -42,9 +42,9 @@ const AddProfile: FC<NavProps> = ({route}) => {
       </Typography.H3>
       <ErrorBoundary
         fallback={
-          <Typography.H1 style={styles.title}>
+          <Typography.H3 style={styles.title}>
             {t('common:oopsSomethingWentWrongPleaseTryAgainLater')}
-          </Typography.H1>
+          </Typography.H3>
         }>
         <Suspense fallback={<ActivityIndicator />}>
           <Content signer={signer} mnemonic={mnemonic} />
