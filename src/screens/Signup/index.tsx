@@ -224,6 +224,7 @@ const Signup = () => {
                       onChangeText={(value: string) => {
                         setFieldValue('confirmPassword', value, true);
                       }}
+                      style={styles.inputLabel}
                       // error={!!errors.confirmPassword}
                     />
                     {errors.confirmPassword && (

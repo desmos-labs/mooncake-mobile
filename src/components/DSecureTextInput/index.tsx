@@ -30,6 +30,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
       placeHolderColor={iconColor}
       style={[
         styles.input,
+        rest.style,
         // error && styles.error, focused && styles.focused
       ]}
       rightElement={
