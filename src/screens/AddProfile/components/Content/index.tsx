@@ -26,18 +26,18 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
   const theme = useTheme();
   const {dispatch} = useNavigation();
 
-  const [loadedProfiles, setLoadedProfiles] = useRecoilState(profilesState);
-  const [selectedAddresses, setSelectedAddresses] = useState(new Set<string>());
   const addresses = useMemo(() => accounts.map(acc => acc.address), [accounts]);
-  const {loading, error, data} = useQuery<ProfileData[]>(
+  const {loading, error, data} = useQuery<{data: {profiles: ProfileData[]}}>(
     GetProfileForAddresses,
     {variables: {addresses}},
   );
   if (error) throw error;
 
+  const profiles = data?.data.profiles ?? [];
+  const [loadedProfiles, setLoadedProfiles] = useRecoilState(profilesState);
+  const [selectedAddresses, setSelectedAddresses] = useState(new Set<string>());
   const values = useMemo(() => {
-    if (!data) return [];
-    return data.map(({address, nickname, dtag, profile_pic}) => ({
+    return profiles.map(({address, nickname, dtag, profile_pic}) => ({
       id: address,
       nickname,
       dTag: `@${dtag}`,
@@ -45,9 +45,7 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
       isSelected: selectedAddresses.has(address),
       disabled: loadedProfiles.some(p => p.address === address),
     }));
-  }, [loading, data, loadedProfiles]);
-
-  const setMnemonic = useSetRecoilState(mnemonicState);
+  }, [loading, profiles, loadedProfiles]);
 
   const handleSelect = useCallback(
     (id: string) => {
@@ -72,21 +70,23 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
     },
     [loadedProfiles, selectedAddresses],
   );
+
+  const setMnemonic = useSetRecoilState(mnemonicState);
   const handleCreateDesmosProfile = useCallback(() => {
     if (mnemonic) setMnemonic(mnemonic);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
   }, [mnemonic]);
   const handleConfirmPressed = useCallback(async () => {
     setLoadedProfiles(prev => {
-      if (!data?.length) return prev;
+      if (!profiles.length) return prev;
       const newProfiles = prev.slice();
-      data.forEach(profile => {
+      profiles.forEach(profile => {
         if (prev.some(p => p.address === profile.address)) return;
         newProfiles.push(profile);
       });
       return newProfiles;
     });
-  }, [selectedAddresses, data]);
+  }, [selectedAddresses, profiles]);
 
   return (
     <View style={styles.container}>
@@ -95,7 +95,7 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
         contentContainerStyle={styles.scrollViewInner}>
         <AddProfileBadgeGroup values={values} onSelect={handleSelect} />
       </ScrollView>
-      {data && data.length > loadedProfiles.length ? (
+      {profiles.length > loadedProfiles.length ? (
         <>
           <Button
             mode="text"

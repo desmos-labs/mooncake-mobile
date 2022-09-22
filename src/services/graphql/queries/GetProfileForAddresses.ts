@@ -18,6 +18,7 @@ const GetProfileForAddresses = gql`
         counterparty_address
         subspace_id
       }
+    }
   }
 `;
 
