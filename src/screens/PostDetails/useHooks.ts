@@ -1,15 +1,20 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
+import activeProfileState from '@recoil/activeProfileState';
+import sharedPostState from '@recoil/sharedPostState';
+import useCheckGrants from 'hooks/authGrants/useCheckGrants';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import Long from 'long';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
+import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
+import useAddReaction from 'services/axios/requests/CentralizedBroadcastTx/AddReaction/useAddReaction';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetPostReactions from 'services/graphql/queries/GetReactions';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import {useResetRecoilState} from 'recoil';
-import sharedPostState from '@recoil/sharedPostState';
 
 const useHooks = ({
   postID,
@@ -19,10 +24,11 @@ const useHooks = ({
   subspaceID: number;
 }) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
-
+  const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
-
+  const {addReaction} = useAddReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const {checkGrants} = useCheckGrants();
 
   const {
     data: originalPost,
@@ -124,6 +130,38 @@ const useHooks = ({
     await createPost({conversationId: postID, referencedPostId: postID});
   }, [postID]);
 
+  const handleAddReaction = React.useCallback(
+    async (postId: number) => {
+      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgAddReaction];
+      // check if user has grants first
+      const grantsRequired = await checkGrants(grantsToRequest);
+
+      if (grantsRequired.length > 0) {
+        navigate(ROUTES.ACTION_AUTHORIZATION, {
+          grants: grantsRequired,
+
+          onApprove: async () => {
+            // regular follow flow
+            console.log('approved');
+            await addReaction({
+              postId: Long.fromNumber(postId),
+              user: profile?.address,
+            });
+          },
+          onCancel: () => {
+            console.log('cancelled');
+          },
+        });
+      } else {
+        await addReaction({
+          postId: Long.fromNumber(postId),
+          user: profile?.address,
+        });
+      }
+    },
+    [postID, profile?.address],
+  );
+
   React.useEffect(() => {
     resetSharedPostState();
   }, []);
@@ -167,6 +205,7 @@ const useHooks = ({
     handlePressCounters,
     navigateToProfile,
     handlePostComment,
+    handleAddReaction,
     postCommentLoading: loading,
     pageRefetch,
   };

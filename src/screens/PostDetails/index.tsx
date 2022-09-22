@@ -97,6 +97,7 @@ const PostDetails = () => {
     handlePressSendTips,
     navigateToProfile,
     handlePostComment,
+    handleAddReaction,
     postCommentLoading,
     pageRefetch,
   } = useHooks({
@@ -158,9 +159,7 @@ const PostDetails = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => {
-            console.log('hello world');
-          }}
+          handlePressLike={() => console.log('reaction')}
           handlePressTip={() => {
             console.log('hello world');
           }}
@@ -206,9 +205,7 @@ const PostDetails = () => {
         <PostComponent postData={post} />
         <PostActionButtonsBar
           postLiked={false}
-          handleLikePress={() => {
-            console.log('hello world');
-          }}
+          handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');
           }}

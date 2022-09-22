@@ -57,6 +57,8 @@ const ActionAuthorization = () => {
             return t('unfollow');
           case GrantEnums.MsgCreatePost:
             return t('createPost');
+          case GrantEnums.MsgAddReaction:
+            return t('addReactions');
           default:
             return 'unmapped';
         }

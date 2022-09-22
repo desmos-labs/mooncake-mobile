@@ -10,5 +10,6 @@
   "blockUnblock": "block / unblock",
   "report": "report",
   "tip": "tip",
-  "createPost": "Create Posts"
+  "createPost": "Create Posts",
+  "addReactions": "Add Reactions"
 }

@@ -1,4 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import appSettingsState from '@recoil/settings';
 import {
   commentIcon,
   defaultProfilePic,
@@ -12,12 +13,13 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import {verticalScale} from 'react-native-size-matters';
+import {useRecoilState} from 'recoil';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
@@ -59,8 +61,12 @@ const Home = () => {
   } = useHooks();
 
   const {profileData} = useActiveAccount();
-
+  const [{registeredReactions}] = useRecoilState(appSettingsState);
   const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
+
+  useEffect(() => {
+    console.log(registeredReactions);
+  }, []);
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
