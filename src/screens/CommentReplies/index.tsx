@@ -157,7 +157,6 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
-          repliesCounter={mainComment?.repliesCount?.aggregate.count}
           loading={mainCommentLoading}
           handlePressMore={() => console.log('test')}
           handlePressComment={() => {
