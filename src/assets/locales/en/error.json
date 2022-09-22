@@ -3,5 +3,7 @@
   "minChar": "At least {{numChar}} characters required.",
   "maxChar": "Maximum {{numChar}} characters.",
   "pwMustMatch": "Passwords do not match, please try again.",
-  "incorrectPassword": "Password is incorrect."
+  "incorrectPassword": "Password is incorrect.",
+  "imageUploadError": "An issue occurred while uploading your image. Please try again.",
+  "imageTooLarge": "The selected image is too large."
 }

@@ -1226,10 +1226,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.3.9":
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.9.tgz#22318164a400e02a15b3c42f779f643fbc75a723"
-  integrity sha512-1tgtjR2aDNqJDEIxtBgSW/t2he9l5mAN41YJf/Ksom15rTi/cEzYKzJPXGg10tgKCyUbR6IZu1iqPsFXymoZMA==
+"@desmoslabs/desmjs-types@4.3.11":
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.11.tgz#4a80a55f60caa5a293c2102fd8eb43719d871223"
+  integrity sha512-dmnm0nMiw6vPMvpW7U0uUg92YahqXh5WQBw05jisrLo6gIymuG23uNE8qEnwaOGtVYO3974HxfUolT5Si0lhXA==
   dependencies:
     long "^4.0.0"
     protobufjs "^7.1.0"
@@ -1242,10 +1242,10 @@
     long "^4.0.0"
     protobufjs "^7.1.0"
 
-"@desmoslabs/desmjs@4.3.9":
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.9.tgz#f3156d376a8cf61b3062421977f9d3860e400205"
-  integrity sha512-eC2W/xdzaJlEJHJrZn/Hw9Ygd0AphIIhL4wrN+/GwQ2KIhT6uWJg0Rq6hFuQaA35YvnpZEEe5nwR4/Qa6451Fw==
+"@desmoslabs/desmjs@4.3.11":
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.11.tgz#a132588fdc1cbc2e0c6c8c10bfa1e672b937e275"
+  integrity sha512-v0J5D591Yl6pFktlOxyGBbfcJClfPBl/ijj8PMF/NdM+bLGS8DSvSZre4y47XGjpnx8pP7B+kS1H7Epb5x2ozQ==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"
@@ -1921,6 +1921,11 @@
     invariant "^2.2.3"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
+
+"@react-native-camera-roll/camera-roll@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.0.2.tgz#299bcd25fc51c1e8564808e744439bf7761286af"
+  integrity sha512-5gBol4mHjw9u1hUQzYWWdnB+uYgjuBd+adLQfJWhE6yv7rNFb+Noi872bYLyzBb8ayaVAbp/EtlxiG1lWY/IyA==
 
 "@react-native-clipboard/clipboard@^1.10.0":
   version "1.10.0"

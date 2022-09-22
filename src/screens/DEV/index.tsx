@@ -17,9 +17,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.CREATE_POST_CAMERA_ROLL,
   ROUTES.SIGNUP,
   ROUTES.ACTION_AUTHORIZATION,
   ROUTES.CREATE_TEXT_POST,
@@ -52,6 +54,7 @@ const routesToRender = [
 const styles: {[styleName: string]: ViewStyle | TextStyle} = {
   button: {padding: 18, borderWidth: 1, borderColor: 'grey'},
   flatList: {padding: 16},
+  text: {color: 'black'},
 };
 
 type DevScreenProps = StackScreenProps<
@@ -69,7 +72,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
 
   const showToast = () => {
     toast.show('I am a toast', {
-      type: 'butterSuccess',
+      type: ToastConfig.SUCCESS,
       onPress() {
         console.log('test');
       },
@@ -97,7 +100,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
           }
         }}
         style={styles.button}>
-        <Text>{item}</Text>
+        <Text style={styles.text}>{item}</Text>
       </TouchableOpacity>
     );
   };

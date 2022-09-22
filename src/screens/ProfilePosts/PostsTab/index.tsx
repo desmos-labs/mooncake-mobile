@@ -40,6 +40,7 @@ export const PostsTab = () => {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       address: params.userAddress,
     },
+    fetchPolicy: 'no-cache',
   });
 
   useFocusEffect(

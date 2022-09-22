@@ -1,11 +1,6 @@
 import {useQuery} from '@apollo/client';
-import {
-  PostReference,
-  PostReferenceType,
-} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {useNavigation} from '@react-navigation/native';
-import sharedCommentState from '@recoil/sharedCommentState';
-import Long from 'long';
+import sharedPostState from '@recoil/sharedPostState';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useResetRecoilState} from 'recoil';
@@ -22,9 +17,8 @@ const useHooks = ({
   subspaceID: number;
   commentID: number;
 }) => {
-  const {createPost} = useCreatePost();
-  const [commentReplyLoading, setCommentReplyLoading] = React.useState(false);
-  const resetCommentData = useResetRecoilState(sharedCommentState);
+  const {createPost, loading} = useCreatePost();
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {
@@ -47,6 +41,7 @@ const useHooks = ({
       postID: commentID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -102,24 +97,12 @@ const useHooks = ({
     });
   }, []);
 
-  const handleCommentReply = React.useCallback(async (comment: string) => {
-    setCommentReplyLoading(true);
-    await createPost({
-      text: comment,
-      conversationId: Long.fromNumber(commentID),
-      referencedPosts: [
-        PostReference.fromPartial({
-          type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-          postId: Long.fromNumber(commentID),
-        }),
-      ],
-    });
-    setCommentReplyLoading(false);
-    resetCommentData();
-  }, []);
+  const handleCommentReply = React.useCallback(async () => {
+    await createPost({conversationId: commentID, referencedPostId: commentID});
+  }, [commentID]);
 
   React.useEffect(() => {
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   const handlePressSendTips = React.useCallback(() => {
@@ -150,7 +133,7 @@ const useHooks = ({
     handlePressSendTips,
     handleExpandComment,
     handleCommentReply,
-    commentReplyLoading,
+    commentReplyLoading: loading,
     pageRefetch,
   };
 };

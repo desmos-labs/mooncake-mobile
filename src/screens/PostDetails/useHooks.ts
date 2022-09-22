@@ -8,13 +8,8 @@ import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubs
 import GetPostReactions from 'services/graphql/queries/GetReactions';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import {
-  PostReference,
-  PostReferenceType,
-} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import Long from 'long';
 import {useResetRecoilState} from 'recoil';
-import sharedCommentState from '@recoil/sharedCommentState';
+import sharedPostState from '@recoil/sharedPostState';
 
 const useHooks = ({
   postID,
@@ -25,11 +20,9 @@ const useHooks = ({
 }) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const {createPost} = useCreatePost();
+  const {createPost, loading} = useCreatePost();
 
-  const [postCommentLoading, setPostCommentLoading] = React.useState(false);
-
-  const resetCommentData = useResetRecoilState(sharedCommentState);
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
 
   const {
     data: originalPost,
@@ -40,6 +33,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -51,6 +45,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -125,24 +120,12 @@ const useHooks = ({
     [],
   );
 
-  const handlePostComment = React.useCallback(async (comment: string) => {
-    setPostCommentLoading(true);
-    await createPost({
-      text: comment,
-      conversationId: Long.fromNumber(postID),
-      referencedPosts: [
-        PostReference.fromPartial({
-          type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-          postId: Long.fromNumber(postID),
-        }),
-      ],
-    });
-    setPostCommentLoading(false);
-    resetCommentData();
-  }, []);
+  const handlePostComment = React.useCallback(async () => {
+    await createPost({conversationId: postID, referencedPostId: postID});
+  }, [postID]);
 
   React.useEffect(() => {
-    resetCommentData();
+    resetSharedPostState();
   }, []);
 
   const navigateToProfile = React.useCallback(() => {
@@ -184,7 +167,7 @@ const useHooks = ({
     handlePressCounters,
     navigateToProfile,
     handlePostComment,
-    postCommentLoading,
+    postCommentLoading: loading,
     pageRefetch,
   };
 };

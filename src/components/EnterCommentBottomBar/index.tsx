@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Button from 'components/Button';
-import DTextInput from 'components/DTextInput';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
@@ -21,8 +20,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Shadow} from 'react-native-shadow-2';
 import ImageButton from 'components/ImageButton';
 import {expandCommentIcon} from 'assets/images';
-import {useRecoilState} from 'recoil';
-import {commentTextState} from '@recoil/sharedCommentState';
+import {useRecoilState, useResetRecoilState} from 'recoil';
+import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import SelectedCommentImage from 'components/SelectedCommentImage';
+import useImageFromDevice from 'hooks/useImageFromDevice';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -43,7 +44,7 @@ export type Props = {
   /**
    * Callback to handle when the user submits a comment.
    */
-  handlePostComment: (text: string) => void;
+  handlePostComment: () => void;
 
   /**
    * Is an action being processed? (block out interaction buttons)
@@ -62,13 +63,21 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const styles = useStyles();
   const {bottom} = useSafeAreaInsets();
   const theme = useTheme();
-  const [comment, setComment] = useRecoilState(commentTextState);
+  const [comment, setComment] = useRecoilState(postTextState);
+  const [commentAttachment, setCommentAttachment] =
+    useRecoilState(postAttachmentsState);
+  const resetCommentAttachment = useResetRecoilState(postAttachmentsState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
-  const textInputRef = useRef<TextInput>(null);
+  const textInputRef = useRef<any>();
+
+  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+    onImageSelected: setCommentAttachment,
+  });
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.select({
+        // keyboardWillShow only works on ios
         ios: 'keyboardWillShow',
         android: 'keyboardDidShow',
       }) as KeyboardEventName,
@@ -106,7 +115,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         disabled={comment.length === 0}
         containerStyle={styles.postButton}
         loading={loading}
-        onPress={() => handlePostComment(comment)}>
+        onPress={handlePostComment}>
         <Typography.Button3 style={{color: theme.colors.white}}>
           {t('post')}
         </Typography.Button3>
@@ -116,7 +125,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 20 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 35 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         viewStyle={[
@@ -132,20 +141,30 @@ const EnterCommentBottomBar: React.FC<Props> = ({
           ) : (
             <ActivityIndicator style={styles.profilePic} />
           )}
-          <DTextInput
-            inputRef={textInputRef}
-            maxLength={EnvConfig.MAX_COMMENT_LENGTH}
-            value={comment}
-            onChangeText={text => setComment(text)}
-            multiline={true}
-            style={styles.textInput}
-            placeholder={t('write a comment')}
-            textAlignVertical="center"
-            rightElement={
+          <View style={styles.textInputContainer}>
+            {commentAttachment && (
+              <SelectedCommentImage
+                handlePress={resetCommentAttachment}
+                source={{uri: commentAttachment.uri}}
+              />
+            )}
+            <View style={{flexDirection: 'row'}}>
+              <TextInput
+                ref={textInputRef}
+                maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+                value={comment}
+                onChangeText={text => setComment(text)}
+                multiline={true}
+                style={styles.textInput}
+                placeholder={t('write a comment')}
+                textAlignVertical="center"
+              />
+
               <View
                 pointerEvents={keyboardShow ? 'auto' : 'none'}
                 style={{
                   opacity: keyboardShow ? 1 : 0,
+                  alignSelf: 'flex-end',
                 }}>
                 <ImageButton
                   style={{
@@ -155,14 +174,14 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                   onPress={onIconPress}
                 />
               </View>
-            }
-          />
+            </View>
+          </View>
         </View>
         {keyboardShow && (
           <MediaBottomPanel
             imageSelected={false}
-            handlePressGallery={() => console.log('test')}
-            handlePressCamera={() => console.log('test')}
+            handlePressGallery={imageFromLibrary}
+            handlePressCamera={imageFromCamera}
             handlePressMention={() => {
               console.log('placeholder');
             }}

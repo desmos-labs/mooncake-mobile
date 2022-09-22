@@ -20,7 +20,7 @@ export const initializeAxiosInstance = async () => {
     response => response,
     error => {
       console.warn(`[AXIOS]: ${error.response.data}`);
-      return error;
+      return Promise.reject(error);
     },
   );
   // Don't do anything if bearerToken is not found

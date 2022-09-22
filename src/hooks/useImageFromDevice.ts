@@ -10,7 +10,15 @@ import {Permission, PERMISSIONS, request} from 'react-native-permissions';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   mediaType: 'photo',
-  includeBase64: true,
+  // don't include base64, as having the uri is enough (for now)
+  includeBase64: false,
+};
+
+type Params = {
+  /**
+   * An optional callback to independently process a selected image.
+   */
+  onImageSelected?: (image: Asset) => void;
 };
 
 type ReturnValue = {
@@ -39,7 +47,7 @@ type ReturnValue = {
  * A hook that wraps react-native-image-picker logic and stores the selected
  * image in a useState hook.
  */
-const useImageFromDevice = (): ReturnValue => {
+const useImageFromDevice = ({onImageSelected}: Params): ReturnValue => {
   const [image, setImage] = React.useState<Asset>();
 
   // selecting webp images on ios will return an error code
@@ -55,6 +63,7 @@ const useImageFromDevice = (): ReturnValue => {
     } else if (result.assets) {
       setImage(result.assets[0]);
     }
+    onImageSelected && result.assets && onImageSelected(result.assets[0]);
   }, []);
 
   const imageFromCamera = React.useCallback(async () => {
@@ -77,6 +86,8 @@ const useImageFromDevice = (): ReturnValue => {
     } else if (result.assets) {
       setImage(result.assets[0]);
     }
+
+    onImageSelected && result.assets && onImageSelected(result.assets[0]);
   }, []);
 
   const clearImage = React.useCallback(() => {

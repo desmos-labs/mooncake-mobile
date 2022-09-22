@@ -9,21 +9,29 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ToastProvider} from 'react-native-toast-notifications';
 import {RecoilRoot} from 'recoil';
 import useApolloClient from 'services/graphql/useApolloClient';
+import ToastConfig from 'config/ToastConfig';
 
 const App = () => {
   const client = useApolloClient();
   return (
     <SafeAreaProvider>
-      <ToastProvider
-        animationType="zoom-in"
-        placement="top"
-        offsetTop={30}
-        duration={60000}
-        renderType={{
-          butterSuccess: toast => <CustomToast type="success" toast={toast} />,
-          butterFailure: toast => <CustomToast type="failure" toast={toast} />,
-        }}>
-        <PaperProvider theme={LightTheme}>
+      <PaperProvider theme={LightTheme}>
+        <ToastProvider
+          animationType="zoom-in"
+          placement="top"
+          offsetTop={30}
+          duration={60000}
+          renderType={{
+            [ToastConfig.SUCCESS]: toast => (
+              <CustomToast type={ToastConfig.SUCCESS} toast={toast} />
+            ),
+            [ToastConfig.ERROR]: toast => (
+              <CustomToast type={ToastConfig.ERROR} toast={toast} />
+            ),
+            [ToastConfig.ERROR_NO_RETRY]: toast => (
+              <CustomToast type={ToastConfig.ERROR_NO_RETRY} toast={toast} />
+            ),
+          }}>
           <ApolloProvider client={client}>
             <RecoilRoot>
               <NavigationContainer>
@@ -31,8 +39,8 @@ const App = () => {
               </NavigationContainer>
             </RecoilRoot>
           </ApolloProvider>
-        </PaperProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </PaperProvider>
     </SafeAreaProvider>
   );
 };

@@ -14,15 +14,24 @@ import {useTranslation} from 'react-i18next';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {useNavigation} from '@react-navigation/native';
-import useStyles from './useStyles';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import BackButton from 'components/BackButton';
+import {postTextState} from '@recoil/sharedPostState';
 import BottomBar from './components/BottomBar';
+import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.CREATE_TEXT_POST
+>;
 
 const CreateTextPost = () => {
   const styles = useStyles();
@@ -30,14 +39,13 @@ const CreateTextPost = () => {
 
   const {t} = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
+  const [sharedComment, setSharedComment] = useRecoilState(postTextState);
   const {createPost, loading} = useCreatePost();
-  const {goBack} = useNavigation();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
   );
-  const [text, setText] = React.useState('');
-
   const inputRef = useRef<any>();
 
   const handlePressBGButton = React.useCallback(() => {
@@ -45,9 +53,9 @@ const CreateTextPost = () => {
   }, [backgroundIndex]);
 
   const inputOpacity = React.useMemo(() => {
-    if (!inputRef.current || text.length === 0) return 0.8;
+    if (!inputRef.current || sharedComment.length === 0) return 0.8;
     return 1;
-  }, [inputRef.current, text]);
+  }, [inputRef.current, sharedComment]);
 
   const handlePostPressed = React.useCallback(() => {
     if (inputRef.current) {
@@ -60,14 +68,12 @@ const CreateTextPost = () => {
   }, [inputRef.current]);
 
   const handleSubmitPost = React.useCallback(async () => {
-    const createPostResponse = await createPost({text});
+    const createPostResponse = await createPost({});
 
     if (createPostResponse) {
       goBack();
-    } else {
-      console.log('something went wrong while submitting post');
     }
-  }, [createPost, text]);
+  }, [createPost, sharedComment]);
 
   return (
     <View style={styles.container}>
@@ -80,12 +86,10 @@ const CreateTextPost = () => {
           <Image source={postBG[backgroundIndex]} style={styles.background} />
 
           <View style={styles.headerGroup}>
-            <Icon
-              name="angle-left"
-              color={theme.colors.white}
-              size={32}
-              allowFontScaling
+            <BackButton
               onPress={goBack}
+              // index 0 is black, which makes the default back button color hard to see
+              iconColor={backgroundIndex === 0 ? theme.colors.white : undefined}
             />
 
             <TouchableOpacity onPress={handlePressBGButton}>
@@ -101,9 +105,9 @@ const CreateTextPost = () => {
             <TextInput
               maxLength={postParams.max_text_length}
               ref={inputRef}
-              value={text}
+              value={sharedComment}
               multiline
-              onChangeText={setText}
+              onChangeText={setSharedComment}
               placeholder={t('tapToType')}
               style={[styles.inputStyle, {opacity: inputOpacity}]}
               placeholderTextColor="#FFFFFF"
@@ -112,20 +116,25 @@ const CreateTextPost = () => {
         </TouchableOpacity>
       </SafeAreaView>
 
-      <BottomBar
-        handlePressPost={handleSubmitPost}
-        handlePressGallery={() => console.log('gallery')}
-      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-        style={styles.textCounterContainer}>
+        style={styles.textCounterContainer}
+        // android pushes the text counter up excessively, so we need to use this offset
+        keyboardVerticalOffset={Platform.select({
+          android: -200,
+        })}>
         <RadialTextCounter
           max={EnvConfig.MAX_COMMENT_LENGTH}
-          current={text.length}
+          current={sharedComment.length}
           customEmptyColor="rgba(255,255,255,0.3)"
           customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
+      <BottomBar
+        handlePressPost={handleSubmitPost}
+        handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
+      />
+
       <LoadingOverlay isVisible={loading} />
     </View>
   );
