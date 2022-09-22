@@ -32,6 +32,13 @@ export const POST_FIELDS = gql`
         address
       }
     }
+    repliesCount: referees_aggregate(
+      where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
+    ) {
+      aggregate {
+        count
+      }
+    }
   }
 `;
 

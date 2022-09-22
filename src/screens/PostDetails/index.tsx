@@ -151,6 +151,7 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          repliesCounter={item.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
           }}
