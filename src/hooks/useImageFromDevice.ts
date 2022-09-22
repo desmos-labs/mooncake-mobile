@@ -10,7 +10,8 @@ import {Permission, PERMISSIONS, request} from 'react-native-permissions';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   mediaType: 'photo',
-  includeBase64: true,
+  // don't include base64, as having the uri is enough (for now)
+  includeBase64: false,
 };
 
 type Params = {

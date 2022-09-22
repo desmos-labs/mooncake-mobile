@@ -20,6 +20,7 @@ import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
+import {useTranslation} from 'react-i18next';
 
 /**
  * Hook that creates a new post
@@ -29,9 +30,14 @@ const useCreatePost = () => {
 
   const toast = useToast();
 
+  const {t} = useTranslation();
+
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const [loading, setLoading] = React.useState(false);
 
+  /**
+   * Uploads an image and returns an object that is compatible with the Media.fromPartial helper function.
+   */
   const uploadImageForPost = React.useCallback(
     async ({
       mediaFile,
@@ -50,7 +56,7 @@ const useCreatePost = () => {
         return {uri: url, mimeType: type || ''};
       } catch (err: any) {
         if (err.toString().includes('413')) {
-          throw new Error('Image too large');
+          throw new Error(t('error:imageTooLarge'));
         }
         throw new Error(err.toString());
       }
@@ -97,6 +103,10 @@ const useCreatePost = () => {
     [activeAddress],
   );
 
+  /**
+   * Helper function that serves as a centralized point to create posts across the app.
+   * Under this context, comments are considered posts as well.
+   */
   const createPost = useRecoilCallback(
     ({snapshot}) =>
       async ({
@@ -110,6 +120,7 @@ const useCreatePost = () => {
       }) => {
         setLoading(true);
         try {
+          // get the postText and any attachments from recoil state
           const _sharedPostState = await snapshot.getPromise(sharedPostState);
 
           const {postAttachments, postText} = _sharedPostState;
@@ -148,6 +159,7 @@ const useCreatePost = () => {
           });
 
           if (sendPostResponse) {
+            // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();
             return sendPostResponse;
           }

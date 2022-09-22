@@ -25,6 +25,10 @@ type NavProps = StackScreenProps<
   ROUTES.CREATE_POST_CAMERA_ROLL
 >;
 
+/**
+ * Converts an image selected using react-native-camera-roll into an ImageMedia type,
+ * aligning the type for use with the rest of the app.
+ */
 const convertImageDtoToImageMedia = (imageDto: ImageDto): ImageMedia => {
   return {
     uri: imageDto.uri,

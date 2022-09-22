@@ -176,17 +176,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
               </View>
             </View>
           </View>
-          {/* <DTextInput */}
-          {/*  inputRef={textInputRef} */}
-          {/*  maxLength={EnvConfig.MAX_COMMENT_LENGTH} */}
-          {/*  value={comment} */}
-          {/*  onChangeText={text => setComment(text)} */}
-          {/*  multiline={true} */}
-          {/*  style={styles.textInput} */}
-          {/*  placeholder={t('write a comment')} */}
-          {/*  textAlignVertical="center" */}
-          {/*  rightElement={} */}
-          {/* /> */}
         </View>
         {keyboardShow && (
           <MediaBottomPanel

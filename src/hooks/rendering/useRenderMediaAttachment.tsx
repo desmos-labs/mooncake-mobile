@@ -17,6 +17,7 @@ const useRenderMediaAttachment = ({
     if (!attachments || attachments.length === 0) return undefined;
     const [attachment] = attachments;
 
+    // Only Media type attachments will have a uri property.
     if ('uri' in attachment.content) {
       return (
         <Image

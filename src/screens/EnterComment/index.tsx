@@ -103,7 +103,7 @@ const EnterComment = () => {
   }, [commentAttachment, handlePress, loading]);
 
   const TopBarCenterElement = React.useMemo(() => {
-    if (isCreatePost) return undefined;
+    if (!author) return undefined;
     return (
       <Typography.Body7
         numberOfLines={1}
