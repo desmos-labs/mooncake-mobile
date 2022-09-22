@@ -1,18 +1,8 @@
-import {
-  NavigatorScreenParams,
-  StackActions,
-  useNavigation,
-} from '@react-navigation/native';
-import {
-  createStackNavigator,
-  StackNavigationProp,
-  TransitionPresets,
-} from '@react-navigation/stack';
-import TopBar from 'components/TopBar';
+import {NavigatorScreenParams} from '@react-navigation/native';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
-import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
@@ -25,7 +15,6 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
@@ -46,7 +35,6 @@ import CreateDesmosProfile, {
 import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
 import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import EnterPassword, {EnterPasswordParams} from 'screens/EnterPassword';
 import {FollowingParams} from 'screens/Following';
 import FollowingAndFollowers, {
   FollowingAndFollowersHeader,
@@ -168,17 +156,12 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE_ENTER_PASSWORD]: EnterPasswordParams | undefined;
   [ROUTES.ADD_PROFILE]: AddProfileParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
 const styles: {[key: string]: ViewStyle} = {
-  addProfileTopBar: {
-    backgroundColor: 'transparent',
-    shadowOpacity: 0,
-  },
   addProfileCard: {
     backgroundColor: 'rgb(245,246,249)',
   },
@@ -207,10 +190,6 @@ const RootNavigator = () => {
     }
     return ROUTES.LANDING;
   }, []);
-
-  const theme = useTheme();
-  const {dispatch} =
-    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   return (
     <Stack.Navigator
@@ -442,39 +421,10 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
       <Stack.Screen
-        name={ROUTES.ADD_PROFILE_ENTER_PASSWORD}
-        component={EnterPassword}
-        options={{cardStyle: styles.addProfileCard}}
-        initialParams={{
-          titleLabel: t('addProfile:title'),
-          confirmButtonLabel: t('common:next'),
-          provideMnemonic: true,
-          provideWallet: true,
-          dViewProps: {
-            topBar: <TopBar style={styles.addProfileTopBar} />,
-            backgroundColor: 'transparent',
-            style: {
-              padding: theme.spacing.m,
-              backgroundColor: 'transparent',
-            },
-          },
-          onSuccessfulAuthentication({
-            mnemonic,
-            wallet,
-          }: LocalAccountAuthenticationArgs) {
-            dispatch(
-              StackActions.replace(ROUTES.ADD_PROFILE, {
-                mnemonic,
-                signer: wallet,
-              }),
-            );
-          },
-        }}
-      />
-      <Stack.Screen
         name={ROUTES.ADD_PROFILE}
         component={AddProfile}
         options={{cardStyle: styles.addProfileCard}}
+        initialParams={{}}
       />
     </Stack.Navigator>
   );

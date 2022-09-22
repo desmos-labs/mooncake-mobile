@@ -26,6 +26,10 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
     textTransform: 'none',
   },
+  topBar: {
+    backgroundColor: 'transparent',
+    shadowOpacity: 0,
+  },
 }));
 
 export default useStyles;

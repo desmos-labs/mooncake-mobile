@@ -1,3 +1,4 @@
+import {StackActions} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
@@ -68,12 +69,7 @@ const Profiles: React.FC<Props> = props => {
   }, []);
 
   const navigateToAddProfile = useCallback(
-    () =>
-      navigation.navigate({
-        name: ROUTES.ADD_PROFILE_ENTER_PASSWORD,
-        params: {address: activeAddress},
-        merge: true,
-      }),
+    () => navigation.dispatch(StackActions.push(ROUTES.ADD_PROFILE)),
     [navigation, activeAddress],
   );
 

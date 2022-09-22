@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageSourcePropType, View} from 'react-native';
+import {ImageSourcePropType} from 'react-native';
 import {PanGestureHandlerProps} from 'react-native-gesture-handler';
 import AddProfileBadge from '../AddProfileBadge';
 
@@ -49,7 +49,7 @@ const AddProfileBadgeGroup = (props: Props) => {
   const {values, onSelect} = props;
 
   return (
-    <View>
+    <>
       {values.map(value => (
         <AddProfileBadge
           value={value}
@@ -58,7 +58,7 @@ const AddProfileBadgeGroup = (props: Props) => {
           disabled={value.disabled}
         />
       ))}
-    </View>
+    </>
   );
 };
 

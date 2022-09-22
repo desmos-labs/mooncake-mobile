@@ -74,7 +74,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
 
   const handleSelect = useCallback((id: string) => setSelectedAddress(id), []);
   const handleCreateDesmosProfile = useCallback(() => {
-    if (mnemonic) setMnemonic(mnemonic!);
+    if (mnemonic) setMnemonic(mnemonic);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
   }, [mnemonic]);
   const handleConfirmPressed = useCallback(async () => {

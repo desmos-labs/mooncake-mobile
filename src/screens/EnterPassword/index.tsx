@@ -37,8 +37,8 @@ type NavProps = StackScreenProps<
  * @property {string} address - The address of the account to authenticate.
  * @property {boolean} provideWallet - If true, wallet will be return on successful authentication.
  * @property {boolean} provideMnemonic - If true, mnemonic will be return on successful authentication.
- * @property {string} titleLabel - The title of the screen.
- * @property {string} confirmButtonLabel - The label of the button that will be used to confirm the input.
+ * @property {string} titleLabelOverride - The title of the screen.
+ * @property {string} confirmButtonLabelOverride - The label of the button that will be used to confirm the input.
  * @property dViewProps - This is the props that will be passed to the DView component.
  * @property onSuccessfulAuthentication - A callback function that is called when the user successfully
  * enters the password.
@@ -49,8 +49,8 @@ export type EnterPasswordParams = {
   address?: string;
   provideWallet?: boolean;
   provideMnemonic?: boolean;
-  titleLabel?: string;
-  confirmButtonLabel?: string;
+  titleLabelOverride?: string;
+  buttonLabelOverride?: string;
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
@@ -64,8 +64,8 @@ const EnterPassword = () => {
       address,
       provideWallet,
       provideMnemonic,
-      titleLabel,
-      confirmButtonLabel,
+      titleLabelOverride,
+      buttonLabelOverride,
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
@@ -78,7 +78,7 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
-      {setErrors}: FormikHelpers<any>,
+      {setErrors}: FormikHelpers<typeof formValues>,
     ) => {
       setLoading(true);
       const {password} = formValues;
@@ -95,7 +95,7 @@ const EnterPassword = () => {
 
           const mnemonic = await getMnemonic(address, password);
 
-          if (wallet && onSuccessfulAuthentication) {
+          if (onSuccessfulAuthentication) {
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
@@ -136,7 +136,7 @@ const EnterPassword = () => {
   return (
     <DView style={styles.container} {...dViewProps}>
       <Typography.H3 style={styles.headerText}>
-        {titleLabel || t('header')}
+        {titleLabelOverride || t('header')}
       </Typography.H3>
 
       <Formik
@@ -177,7 +177,7 @@ const EnterPassword = () => {
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
-                  {confirmButtonLabel || t('common:confirm')}
+                  {buttonLabelOverride || t('common:confirm')}
                 </Typography.Button1>
               </Button>
 

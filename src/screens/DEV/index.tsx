@@ -1,4 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -6,8 +7,15 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {clearMMKV} from 'lib/MMKVStorage';
 import {resetSecureStorage} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
-import React from 'react';
-import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
+import React, {FC} from 'react';
+import {
+  Alert,
+  FlatList,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -38,11 +46,21 @@ const routesToRender = [
   ROUTES.REPORT_POST,
   ROUTES.FOLLOWING_AND_FOLLOWERS,
   ROUTES.NO_DTAG_FOUND,
-  ROUTES.ADD_PROFILE_ENTER_PASSWORD,
+  ROUTES.ADD_PROFILE,
 ];
 
-const DevScreen = () => {
-  const {navigate} = useNavigation<any>();
+const styles: {[styleName: string]: ViewStyle | TextStyle} = {
+  button: {padding: 18, borderWidth: 1, borderColor: 'grey'},
+  flatList: {padding: 16},
+};
+
+type DevScreenProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.DEV_SCREEN
+>;
+
+const DevScreen: FC<DevScreenProps> = ({navigation}) => {
+  const {navigate} = navigation;
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
@@ -73,21 +91,12 @@ const DevScreen = () => {
                 username: '@Raffaello',
               });
               break;
-            case ROUTES.ADD_PROFILE_ENTER_PASSWORD:
-              navigate({
-                name: item,
-                params: {
-                  address: activeAddress,
-                },
-                merge: true,
-              });
-              break;
             default:
               navigate(item);
               break;
           }
         }}
-        style={{padding: 18, borderWidth: 1, borderColor: 'grey'}}>
+        style={styles.button}>
         <Text>{item}</Text>
       </TouchableOpacity>
     );
@@ -101,9 +110,7 @@ const DevScreen = () => {
   return (
     <DView>
       <FlatList
-        contentContainerStyle={{
-          padding: 16,
-        }}
+        contentContainerStyle={styles.flatList}
         data={routesToRender}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
