@@ -18,7 +18,6 @@ const useStyles = makeStyle(theme => ({
   },
   inputLabel: {
     marginBottom: theme.spacing.s,
-    borderWidth: 0,
   },
   buttonGroup: {
     flex: 1,

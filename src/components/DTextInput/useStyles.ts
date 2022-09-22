@@ -9,8 +9,8 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     borderRadius: theme.roundness,
     minHeight: 48,
     alignItems: 'center',
-    borderColor: props.error ? theme.colors.pink01 : theme.colors.lightGrey01,
-    borderWidth: 1,
+    // borderColor: props.error ? theme.colors.pink01 : theme.colors.lightGrey01,
+    // borderWidth: 1,
   },
   input: {
     fontFamily: 'Poppins-Regular',
