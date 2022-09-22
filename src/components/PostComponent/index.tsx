@@ -1,7 +1,8 @@
 import Typography from 'components/Typography';
 import React from 'react';
-import {Dimensions, ImageBackground, View} from 'react-native';
+import {Dimensions, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
 
 // TODO: refactor this component to handle images and text + image shareable between home and post details
@@ -19,24 +20,10 @@ const PostComponent = ({postData}: Props) => {
   const {attachments} = postData;
   const {width} = Dimensions.get('window');
 
-  const AttachmentImage = React.useMemo(() => {
-    const [attachment] = attachments;
-
-    if (attachment) {
-      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
-        return (
-          <ImageBackground
-            resizeMode="cover"
-            source={{
-              uri: attachment.content.uri,
-            }}
-            style={{width, height: 630}}
-          />
-        );
-      }
-    }
-    return undefined;
-  }, []);
+  const {MediaAttachment} = useRenderMediaAttachment({
+    attachments,
+    imageStyle: {width, height: 630},
+  });
 
   const content = React.useMemo(() => {
     if (postData?.text && postData?.attachments?.length === 0) {
@@ -48,11 +35,11 @@ const PostComponent = ({postData}: Props) => {
         </View>
       );
     } else if (!postData?.text && postData?.attachments?.length > 0) {
-      return <View>{AttachmentImage}</View>;
+      return <View>{MediaAttachment}</View>;
     } else {
       return (
         <View>
-          {AttachmentImage}
+          {MediaAttachment}
           <Typography.Body7 style={{margin: theme.spacing.m}}>
             {postData.text}
           </Typography.Body7>

@@ -32,7 +32,7 @@ export const useGetPosts = () => {
       limit: POSTS_PER_FETCH,
       subspaceID,
     },
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'no-cache',
     errorPolicy: 'ignore',
   });
 
@@ -44,7 +44,6 @@ export const useGetPosts = () => {
       limit: POSTS_PER_FETCH,
       subspaceID,
     }).then(() => {
-      console.log('finished fetching more posts');
       newOffset.current += POSTS_PER_FETCH;
     });
   }, [newOffset.current]);

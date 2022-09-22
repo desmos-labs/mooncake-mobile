@@ -5,7 +5,7 @@ export const GetPostComments = gql`
   ${POST_FIELDS}
   query PostComments($postID: bigint, $subspaceID: bigint) @api(name: desmos) {
     post(
-      order_by: {creation_date: desc}
+      order_by: {creation_date: asc}
       where: {
         subspace_id: {_eq: $subspaceID}
         conversation: {id: {_eq: $postID}}

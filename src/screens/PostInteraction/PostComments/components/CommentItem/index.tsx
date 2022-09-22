@@ -22,6 +22,7 @@ import {
   View,
 } from 'react-native';
 import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -105,32 +106,16 @@ const CommentItem = ({
 
   const formattedDate = useFormatTimeForPostDetails(creation_date);
 
-  const content = React.useMemo(() => {
-    if (text && attachments?.length === 0) {
-      return (
-        <View>
-          <Typography.Body6 style={styles.contentText}>{text}</Typography.Body6>
-        </View>
-      );
-    }
-
-    if (attachments && attachments.length > 0) {
-      const [attachment] = attachments;
-
-      if (attachment) {
-        if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
-          return (
-            <Image
-              source={{
-                uri: attachment.content.uri,
-              }}
-              style={styles.attachmentImageStyle}
-            />
-          );
-        }
-      }
-    }
-  }, [attachments, text]);
+  const {MediaAttachment} = useRenderMediaAttachment({
+    attachments,
+    imageStyle: {
+      marginTop: 8,
+      width: '100%',
+      height: 150,
+      borderRadius: 24,
+      resizeMode: 'contain',
+    },
+  });
 
   return (
     <TouchableOpacity
@@ -173,7 +158,8 @@ const CommentItem = ({
             />
           )}
         </View>
-        {content}
+        {MediaAttachment}
+        <Typography.Body6 style={styles.contentText}>{text}</Typography.Body6>
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>

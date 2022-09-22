@@ -1,5 +1,8 @@
+import {Media, Poll} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+
 export {};
 
+// TODO: replace this with POST type from desmjs
 declare global {
   interface PostItem {
     author_address: string;
@@ -32,17 +35,17 @@ declare global {
   interface PostAttachment {
     id: number;
 
-    content: MediaContent | PollContent;
+    content: Media | Poll;
   }
 
   interface MediaContent {
     uri: string;
-    '@type': '/desmos.posts.v1.Media';
+    '@type': string;
     mime_type: string;
   }
 
   interface PollContent {
-    '@type': '/desmos.posts.v1.Poll';
+    '@type': string;
     end_date: string;
     question: string;
     provided_answers: {

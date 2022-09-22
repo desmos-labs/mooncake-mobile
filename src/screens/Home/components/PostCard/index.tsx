@@ -2,8 +2,9 @@ import {defaultProfilePic, followedButton, followIcon} from 'assets/images';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
 
 type Props = {
@@ -48,11 +49,12 @@ const PostCard = ({
   followed,
 }: Props) => {
   const styles = useStyles();
-
   const {
     author: {dtag, nickname, profile_pic},
     attachments,
   } = postData;
+
+  const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
   const Avatar = React.useMemo(() => {
     if (profile_pic) {
@@ -71,24 +73,6 @@ const PostCard = ({
     );
   }, [profile_pic]);
 
-  const AttachmentImage = React.useMemo(() => {
-    const [attachment] = attachments;
-
-    if (attachment) {
-      if (attachment.content['@type'] === '/desmos.posts.v1.Media') {
-        return (
-          <Image
-            source={{
-              uri: attachment.content.uri,
-            }}
-            style={StyleSheet.absoluteFillObject}
-          />
-        );
-      }
-    }
-    return undefined;
-  }, []);
-
   const postType: POST_TYPE = React.useMemo(() => {
     if (postData.text && postData.attachments.length === 0) {
       return POST_TYPE.TEXT;
@@ -102,6 +86,7 @@ const PostCard = ({
 
     // This should never be reached. Logged post id's should be checked for
     // validity
+    // TODO: make this less naive
     console.log('Default post behavior for post id', postData.id);
     return POST_TYPE.TEXT;
   }, []);
@@ -191,7 +176,7 @@ const PostCard = ({
       style={styles.container}
       onPress={onPressDetails}
       activeOpacity={0.9}>
-      {AttachmentImage}
+      {MediaAttachment}
       {content}
     </TouchableOpacity>
   );

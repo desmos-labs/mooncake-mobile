@@ -8,9 +8,11 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.CREATE_POST_CAMERA_ROLL,
   ROUTES.SIGNUP,
   ROUTES.ACTION_AUTHORIZATION,
   ROUTES.CREATE_TEXT_POST,
@@ -49,7 +51,7 @@ const DevScreen = () => {
 
   const showToast = () => {
     toast.show('I am a toast', {
-      type: 'butterSuccess',
+      type: ToastConfig.SUCCESS,
       onPress() {
         console.log('test');
       },
@@ -74,8 +76,12 @@ const DevScreen = () => {
               break;
           }
         }}
-        style={{padding: 18, borderWidth: 1, borderColor: 'grey'}}>
-        <Text>{item}</Text>
+        style={{
+          padding: 18,
+          borderWidth: 1,
+          borderColor: 'grey',
+        }}>
+        <Text style={{color: 'black'}}>{item}</Text>
       </TouchableOpacity>
     );
   };

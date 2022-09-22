@@ -9,32 +9,32 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import SelectedCommentImage from 'screens/EnterComment/components/SelectedCommentImage';
+import SelectedCommentImage from 'components/SelectedCommentImage';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import sharedCommentState, {commentTextState} from '@recoil/sharedCommentState';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {useRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import {
-  PostReference,
-  PostReferenceType,
-} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import Long from 'long';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
   /**
    * The author of the original post.
    */
-  author: PostAuthor;
+  author?: PostAuthor;
 
   /**
    * The id of the post that the reply belongs to.
    */
-  postId: number;
+  postId?: number;
+
+  /**
+   * Is the user creating a post instead of commenting?
+   */
+  isCreatePost?: boolean;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_COMMENT>;
@@ -46,43 +46,49 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
-  const {goBack} = useNavigation();
+  const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
 
-  const [commentText, setCommentText] = useRecoilState(commentTextState);
-
-  const resetSharedCommentData = useResetRecoilState(sharedCommentState);
+  const [commentText, setCommentText] = useRecoilState(postTextState);
+  const [commentAttachment, setCommentAttachment] =
+    useRecoilState(postAttachmentsState);
 
   const {createPost} = useCreatePost();
 
   const [loading, setLoading] = React.useState(false);
 
   const {
-    params: {author, postId},
+    params: {author, postId, isCreatePost},
   } = useRoute<NavProps['route']>();
 
-  const {imageAsset, clearImage, imageFromCamera, imageFromLibrary} =
-    useImageFromDevice();
+  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+    onImageSelected: setCommentAttachment,
+  });
+
+  const handlePressGallery = React.useCallback(() => {
+    if (isCreatePost) navigate(ROUTES.CREATE_POST_CAMERA_ROLL);
+    else imageFromLibrary();
+  }, [isCreatePost]);
+
+  const handlePress = React.useCallback(async () => {
+    setLoading(true);
+    const isCreatingImagePost = isCreatePost && commentAttachment;
+
+    await createPost({
+      referencedPostId: postId,
+      conversationId: postId,
+    });
+
+    // EnterComment -> CreateTextPost -> Home
+    if (isCreatingImagePost) {
+      pop(2);
+    } else {
+      goBack();
+    }
+
+    setLoading(false);
+  }, [isCreatePost, commentAttachment]);
 
   const TopBarRightElement = React.useMemo(() => {
-    const handlePress = async () => {
-      setLoading(true);
-
-      await createPost({
-        text: commentText,
-        conversationId: Long.fromNumber(postId),
-        referencedPosts: [
-          PostReference.fromPartial({
-            type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-            postId: Long.fromNumber(postId),
-          }),
-        ],
-      });
-
-      resetSharedCommentData();
-      setLoading(false);
-      goBack();
-    };
-
     return (
       <Button
         loading={loading}
@@ -94,15 +100,16 @@ const EnterComment = () => {
         </Typography.Button3>
       </Button>
     );
-  }, [imageAsset, commentText, loading]);
+  }, [commentAttachment, handlePress, loading]);
 
   const TopBarCenterElement = React.useMemo(() => {
+    if (!author) return undefined;
     return (
       <Typography.Body7
         numberOfLines={1}
         ellipsizeMode="tail"
         style={{textAlign: 'center'}}>
-        {t('replyTo', {replyTo: `@${author.dtag}`})}
+        {t('replyTo', {replyTo: `@${author!.dtag}`})}
       </Typography.Body7>
     );
   }, []);
@@ -133,7 +140,7 @@ const EnterComment = () => {
           {/* this may get refactored into its own custom component */}
           <TextInput
             maxLength={EnvConfig.MAX_COMMENT_LENGTH}
-            placeholder={t('yourReply')}
+            placeholder={t(isCreatePost ? 'writeSomething' : 'yourReply')}
             value={commentText}
             onChangeText={setCommentText}
             multiline
@@ -142,13 +149,17 @@ const EnterComment = () => {
         </View>
 
         <SelectedCommentImage
-          handlePress={clearImage}
-          source={imageAsset ? {uri: imageAsset.uri} : ('' as any)}
+          handlePress={() => {
+            setCommentAttachment(undefined);
+          }}
+          source={
+            commentAttachment ? {uri: commentAttachment.uri} : ('' as any)
+          }
         />
       </DView>
       <MediaBottomPanel
-        imageSelected={!!imageAsset}
-        handlePressGallery={imageFromLibrary}
+        imageSelected={!!commentAttachment}
+        handlePressGallery={handlePressGallery}
         handlePressCamera={imageFromCamera}
         handlePressMention={() => {
           console.log('placeholder');

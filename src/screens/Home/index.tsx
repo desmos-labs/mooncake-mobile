@@ -49,7 +49,7 @@ const Home = () => {
     handlePressProfile,
     handlePressComments,
     selectedFilterIndex,
-    setSelectedFilterIndex,
+    // setSelectedFilterIndex,
     onPostChanged,
     postData,
     selectedPostIndex,
@@ -95,7 +95,11 @@ const Home = () => {
         <View style={styles.tabContainer}>
           <PostTypeTab
             selectedIndex={selectedFilterIndex}
-            setSelectedIndex={setSelectedFilterIndex}
+            setSelectedIndex={() => {
+              // temporarily disable switching to following as there is an
+              // issue where attachments are cached and applied to incorrect posts
+              console.log('disabled for now');
+            }}
             postTypes={postTypes}
           />
         </View>

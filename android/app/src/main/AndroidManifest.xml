@@ -10,8 +10,14 @@
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--    END For ledger BLE connection-->
 
+    <!-- RN camera roll -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- RN camera roll -->
+
     <application
       android:name=".MainApplication"
+      android:requestLegacyExternalStorage="true"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
