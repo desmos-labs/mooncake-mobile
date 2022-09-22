@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -20,9 +21,21 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 const Landing = () => {
   const theme = useTheme();
   const {t} = useTranslation('landing');
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
+  const [consentGiven] = useMMKVStorage<Boolean>(MMKVKEYS.CONSENT_GIVEN);
+
   useRequestNotificationsPermission();
+
+  const handlePressConnectLedger = React.useCallback(() => {
+    if (!consentGiven) {
+      navigate(ROUTES.CONSENT_AGREEMENT, {
+        onConsentAgree: () => replace(ROUTES.LOOKING_FOR_DEVICES),
+      });
+    } else {
+      navigate(ROUTES.LOOKING_FOR_DEVICES);
+    }
+  }, [consentGiven]);
 
   return (
     <DView
@@ -62,9 +75,7 @@ const Landing = () => {
 
       <TouchableOpacity
         style={styles.connectLedgerButton}
-        onPress={() => {
-          navigate(ROUTES.LOOKING_FOR_DEVICES);
-        }}>
+        onPress={handlePressConnectLedger}>
         <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
 
         <Typography.Button1 style={{color: theme.colors.white}}>

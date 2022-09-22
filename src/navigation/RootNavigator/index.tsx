@@ -39,7 +39,9 @@ import MnemonicInput, {
 } from 'screens/MnemonicInput';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
-import ConsentAgreement from 'screens/Modals/ConsentAgreement';
+import ConsentAgreement, {
+  ConsentAgreementParams,
+} from 'screens/Modals/ConsentAgreement';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
@@ -103,7 +105,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SELECT_DTAG]: SelectDtagParamList;
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
-  [ROUTES.CONSENT_AGREEMENT]: undefined;
+  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   [ROUTES.WELCOME_PAGE]: undefined;
   [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;

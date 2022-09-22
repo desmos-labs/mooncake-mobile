@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 4,
     // this is a different gray as the gray used in design is not
     // in the theme colors
-    backgroundColor: theme.colors.iconGrey,
+    backgroundColor: theme.colors.lightGrey01,
     alignSelf: 'center',
   },
   headerText: {
@@ -24,6 +24,12 @@ const useStyles = makeStyle(theme => ({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: theme.spacing.l,
+    // lazy override padding
+    paddingTop: theme.spacing.s,
+  },
+  confirmButton: {
+    backgroundColor: theme.colors.surfaceBlack,
+    marginVertical: 40,
   },
 }));
 
