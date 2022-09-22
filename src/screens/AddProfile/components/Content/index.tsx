@@ -6,12 +6,13 @@ import ROUTES from 'navigation/routes';
 import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView, View} from 'react-native';
-import {Button, useTheme} from 'react-native-paper';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import {ActivityIndicator, Button, useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import {ChainAccount} from 'types/chains';
 import {useQuery} from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
-import profilesState from '@recoil/profiles';
+import profilesState, {useLoadProfiles} from '@recoil/profiles';
+import {isEqual} from 'lodash';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 
@@ -27,14 +28,16 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
   const {dispatch} = useNavigation();
 
   const addresses = useMemo(() => accounts.map(acc => acc.address), [accounts]);
-  const {loading, error, data} = useQuery<{data: {profiles: ProfileData[]}}>(
+  const {loading, error, data, variables} = useQuery<{profile: ProfileData[]}>(
     GetProfileForAddresses,
     {variables: {addresses}},
   );
   if (error) throw error;
 
-  const profiles = data?.data.profiles ?? [];
-  const [loadedProfiles, setLoadedProfiles] = useRecoilState(profilesState);
+  const profiles = data?.profile ?? [];
+  const {profiles: loadedProfiles, loading: loadingProfiles} =
+    useLoadProfiles();
+  const setLoadedProfiles = useSetRecoilState(profilesState);
   const [selectedAddresses, setSelectedAddresses] = useState(new Set<string>());
   const values = useMemo(() => {
     return profiles.map(({address, nickname, dtag, profile_pic}) => ({
@@ -45,7 +48,7 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
       isSelected: selectedAddresses.has(address),
       disabled: loadedProfiles.some(p => p.address === address),
     }));
-  }, [loading, profiles, loadedProfiles]);
+  }, [profiles, loadedProfiles, selectedAddresses]);
 
   const handleSelect = useCallback(
     (id: string) => {
@@ -93,7 +96,13 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
       <ScrollView
         style={styles.scrollViewOuter}
         contentContainerStyle={styles.scrollViewInner}>
-        <AddProfileBadgeGroup values={values} onSelect={handleSelect} />
+        {loading ||
+        loadingProfiles ||
+        !isEqual(variables?.addresses, addresses) ? (
+          <ActivityIndicator />
+        ) : (
+          <AddProfileBadgeGroup values={values} onSelect={handleSelect} />
+        )}
       </ScrollView>
       {profiles.length > loadedProfiles.length ? (
         <>
