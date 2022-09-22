@@ -1,5 +1,5 @@
 import {StackActions, useNavigation} from '@react-navigation/native';
-import {mnemonicState} from '@recoil/connectChainState';
+import {mnemonicState, selectedChainState} from '@recoil/connectChainState';
 import {defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -13,6 +13,7 @@ import {useQuery} from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import profilesState, {useLoadProfiles} from '@recoil/profiles';
 import {isEqual} from 'lodash';
+import LinkableChains from 'config/LinkableChains';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 
@@ -75,10 +76,13 @@ const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
   );
 
   const setMnemonic = useSetRecoilState(mnemonicState);
+  const setSelectedChain = useSetRecoilState(selectedChainState);
   const handleCreateDesmosProfile = useCallback(() => {
-    if (mnemonic) setMnemonic(mnemonic);
+    setMnemonic(mnemonic ?? '');
+    setSelectedChain(LinkableChains.find(c => /^Desmos$/i.test(c.name))!);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
   }, [mnemonic]);
+
   const handleConfirmPressed = useCallback(async () => {
     setLoadedProfiles(prev => {
       if (!profiles.length) return prev;
