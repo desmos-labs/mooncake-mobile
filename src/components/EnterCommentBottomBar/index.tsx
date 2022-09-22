@@ -169,6 +169,8 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 }}>
                 <ImageButton
                   style={{
+                    width: 24,
+                    height: 24,
                     opacity: keyboardShow ? 1 : 0,
                     bottom: Platform.select({
                       ios: 0,
