@@ -1,90 +1,92 @@
-import {OfflineSigner} from '@cosmjs/proto-signing';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {mnemonicState} from '@recoil/connectChainState';
-import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
-import {getAccounts} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {FC, useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView, View} from 'react-native';
 import {Button, useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import {ChainAccount} from 'types/chains';
-import AddProfileBadgeGroup, {ProfileRadioValue} from '../AddProfileBadgeGroup';
+import {useQuery} from '@apollo/client';
+import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
+import profilesState from '@recoil/profiles';
+import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 
 type ContentProps = {
-  signer: OfflineSigner;
   mnemonic?: string;
+  accounts: ChainAccount[];
 };
 
-const Content: FC<ContentProps> = ({signer, mnemonic}) => {
+const Content: FC<ContentProps> = ({mnemonic, accounts}) => {
   const styles = useStyles();
   const {t} = useTranslation();
   const theme = useTheme();
   const {dispatch} = useNavigation();
 
-  const {profiles} = useLoadProfiles();
-  const [selectedAddress, setSelectedAddress] = useState<string>();
-  const [canAdd, setCanAdd] = useState(false);
-  const [accountByAddress, setAccountByAddress] = useState<
-    Map<string, ChainAccount>
-  >(new Map());
-  const [values, setValues] = useState<ProfileRadioValue[]>([]);
+  const [loadedProfiles, setLoadedProfiles] = useRecoilState(profilesState);
+  const [selectedAddresses, setSelectedAddresses] = useState(new Set<string>());
+  const addresses = useMemo(() => accounts.map(acc => acc.address), [accounts]);
+  const {loading, error, data} = useQuery<ProfileData[]>(
+    GetProfileForAddresses,
+    {variables: {addresses}},
+  );
+  if (error) throw error;
+
+  const values = useMemo(() => {
+    if (!data) return [];
+    return data.map(({address, nickname, dtag, profile_pic}) => ({
+      id: address,
+      nickname,
+      dTag: `@${dtag}`,
+      profilePicture: profile_pic ? {uri: profile_pic} : defaultProfilePic,
+      isSelected: selectedAddresses.has(address),
+      disabled: loadedProfiles.some(p => p.address === address),
+    }));
+  }, [loading, data, loadedProfiles]);
+
   const setMnemonic = useSetRecoilState(mnemonicState);
 
-  const profilesByAddress = useMemo(
-    () =>
-      profiles.reduce(
-        (map, profile) => map.set(profile.address, profile),
-        new Map<string, ProfileData>(),
-      ),
-    [profiles],
-  );
-  useEffect(() => {
-    getAccounts().then(accounts => {
-      setAccountByAddress(
-        accounts?.reduce(
-          (map, account) => map.set(account.address, account),
-          new Map(),
-        ) ?? new Map(),
-      );
-      const newValues =
-        accounts
-          ?.filter(({address}) => address)
-          .map(({address}) => {
-            const profile = profilesByAddress.get(address);
-            return {
-              id: address,
-              nickname: profile?.nickname ?? '',
-              dTag: profile?.dtag ? `@${profile.dtag}` : address,
-              profilePicture: profile?.profile_pic
-                ? {uri: profile.profile_pic}
-                : defaultProfilePic,
-              isSelected: selectedAddress === address,
-              disabled: !!profile,
-            };
-          }) ?? [];
-      setValues(newValues);
-      setCanAdd(newValues.some(({id}) => !profilesByAddress.has(id)) ?? false);
-    });
-  }, [signer, profilesByAddress, selectedAddress]);
+  const handleSelect = useCallback(
+    (id: string) => {
+      const disabled = loadedProfiles.some(p => p.address === id);
+      const selected = selectedAddresses.has(id);
 
-  const handleSelect = useCallback((id: string) => setSelectedAddress(id), []);
+      if (!disabled && !selected) {
+        setSelectedAddresses(prev => {
+          if (prev.has(id)) return prev;
+          const newSet = new Set(prev);
+          newSet.add(id);
+          return newSet;
+        });
+      } else {
+        setSelectedAddresses(prev => {
+          if (!prev.has(id)) return prev;
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+      }
+    },
+    [loadedProfiles, selectedAddresses],
+  );
   const handleCreateDesmosProfile = useCallback(() => {
     if (mnemonic) setMnemonic(mnemonic);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
   }, [mnemonic]);
   const handleConfirmPressed = useCallback(async () => {
-    if (!selectedAddress || !accountByAddress.get(selectedAddress)) return;
-    dispatch(
-      StackActions.push(ROUTES.CREATE_DESMOS_PROFILE, {
-        accountOverride: accountByAddress.get(selectedAddress),
-      }),
-    );
-  }, [selectedAddress, accountByAddress]);
+    setLoadedProfiles(prev => {
+      if (!data?.length) return prev;
+      const newProfiles = prev.slice();
+      data.forEach(profile => {
+        if (prev.some(p => p.address === profile.address)) return;
+        newProfiles.push(profile);
+      });
+      return newProfiles;
+    });
+  }, [selectedAddresses, data]);
 
   return (
     <View style={styles.container}>
@@ -93,7 +95,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         contentContainerStyle={styles.scrollViewInner}>
         <AddProfileBadgeGroup values={values} onSelect={handleSelect} />
       </ScrollView>
-      {canAdd ? (
+      {data && data.length > loadedProfiles.length ? (
         <>
           <Button
             mode="text"
@@ -108,7 +110,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
             mode="contained"
             color={theme.colors.surfaceBlack}
             style={styles.button}
-            disabled={!selectedAddress}
+            disabled={selectedAddresses.size === 0}
             onPress={handleConfirmPressed}>
             <Typography.Button2 style={styles.buttonLabel}>
               {t('common:confirm')}

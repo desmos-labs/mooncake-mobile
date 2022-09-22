@@ -40,7 +40,7 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   values: ProfileRadioValue[];
   /**
    * Callback when the user click a button.
-   * @param index the values[index] on the clicked button.
+   * @param id the id on the clicked button.
    */
   onSelect: (id: string) => void;
 }
