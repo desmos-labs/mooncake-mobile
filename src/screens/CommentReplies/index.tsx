@@ -123,6 +123,7 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          repliesCounter={item.post.repliesCount.aggregate.count}
           loading={commentsLoading}
           disableInnerComment={true}
           handlePressMore={() => console.log('test')}
@@ -156,6 +157,7 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
+          repliesCounter={mainComment.repliesCount.aggregate.count}
           loading={mainCommentLoading}
           handlePressMore={() => console.log('test')}
           handlePressComment={() => {

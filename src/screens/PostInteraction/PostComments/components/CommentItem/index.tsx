@@ -1,4 +1,3 @@
-import {useQuery} from '@apollo/client';
 import {buildingBlockAnim} from 'assets/animations';
 import {
   commentComment,
@@ -11,9 +10,10 @@ import {
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
+import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import React, {useEffect, useMemo} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -21,8 +21,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {GetPostCommentsCount} from 'services/graphql/queries/GetComments';
-import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -41,9 +39,7 @@ type Props = {
 
   handleLongPress: (event: GestureResponderEvent) => void;
 
-  id: number;
-
-  subspace_id: number;
+  repliesCounter: number;
 
   author: ProfileSummary;
 
@@ -76,33 +72,10 @@ const CommentItem = ({
   attachments,
   liked,
   loading,
-  id,
-  subspace_id,
+  repliesCounter,
 }: Props) => {
   const styles = useStyles(disableInnerComment);
   const {t} = useTranslation();
-  const {
-    data: commentsCountData,
-    loading: commentsCountLoading,
-    refetch: commentCountRefetch,
-  } = useQuery(GetPostCommentsCount, {
-    variables: {
-      subspaceID: subspace_id,
-      postID: id,
-    },
-  });
-
-  const commentsCount = useMemo(() => {
-    if (!commentsCountData) return 0;
-    return commentsCountData.post_reference_aggregate.aggregate.count;
-  }, [commentsCountLoading]);
-
-  useEffect(() => {
-    commentCountRefetch({
-      subspaceID: subspace_id,
-      postID: id,
-    });
-  }, [loading]);
 
   const formattedDate = useFormatTimeForPostDetails(creation_date);
 
@@ -177,7 +150,7 @@ const CommentItem = ({
                   style={[styles.buttonImage, styles.interactionImage]}
                 />
                 <Typography.Subtitle3 style={styles.textStyle}>
-                  {formatNumShorthand(commentsCount)}
+                  {formatNumShorthand(repliesCounter)}
                 </Typography.Subtitle3>
               </TouchableOpacity>
             )}

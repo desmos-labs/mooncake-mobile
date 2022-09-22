@@ -35,6 +35,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Files permission is required for app functionality and personalization.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -45,8 +47,6 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Files permission is required for app functionality and personalization.</string>
-	<key>NSAppleMusicUsageDescription</key>
-    <string>Files permission is required for app functionality and personalization.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -99,8 +99,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
