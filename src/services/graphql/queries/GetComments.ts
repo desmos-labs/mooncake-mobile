@@ -60,19 +60,13 @@ export const GetCommentReplies = gql`
             address
           }
         }
-      }
-    }
-  }
-`;
-
-export const GetPostCommentsCount = gql`
-  query PostCommentsCount($subspaceID: bigint, $postID: bigint)
-  @api(name: desmos) {
-    post_reference_aggregate(
-      where: {reference: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
-    ) {
-      aggregate {
-        count
+        repliesCount: referees_aggregate(
+          where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
+        ) {
+          aggregate {
+            count
+          }
+        }
       }
     }
   }

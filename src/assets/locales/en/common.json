@@ -12,7 +12,7 @@
   "backup explanation" : "Why do I need to backup Secret Recovery Phrase?",
   "welcome to": "Welcome to {{product}}",
   "continue": "Continue",
-  "termsOfService": "Terms of Service",
+  "termsOfUse": "Terms of Use",
   "privacyPolicy": "Privacy Policy",
   "retry": "Retry",
   "atLeastChar": "At least {{length}} characters in length",

@@ -154,8 +154,9 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 maxLength={EnvConfig.MAX_COMMENT_LENGTH}
                 value={comment}
                 onChangeText={text => setComment(text)}
-                multiline={true}
+                multiline
                 style={styles.textInput}
+                placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
               />
@@ -168,7 +169,13 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 }}>
                 <ImageButton
                   style={{
+                    width: 24,
+                    height: 24,
                     opacity: keyboardShow ? 1 : 0,
+                    bottom: Platform.select({
+                      ios: 0,
+                      android: 8,
+                    }),
                   }}
                   image={expandCommentIcon}
                   onPress={onIconPress}

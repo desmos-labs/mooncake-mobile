@@ -20,7 +20,6 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -82,31 +81,24 @@ const LookingForDevices = () => {
   React.useEffect(() => {
     // user will get stuck in an infinite loop if they never give consent
     if (!isFocused) return;
-
-    const consentGiven = getMMKV<boolean>(MMKVKEYS.CONSENT_GIVEN);
-
-    if (!consentGiven) {
-      navigate(ROUTES.CONSENT_AGREEMENT);
-    } else {
-      checkPermissions()
-        .then(permissions => {
-          if (permissions) return scan();
-          else {
-            Alert.alert(t('permissionsDialog'), '', [
-              {
-                text: 'Go Back',
-                onPress: () => {},
-              },
-            ]);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(() => {
-          setScreenReady(true);
-        });
-    }
+    checkPermissions()
+      .then(permissions => {
+        if (permissions) return scan();
+        else {
+          Alert.alert(t('permissionsDialog'), '', [
+            {
+              text: 'Go Back',
+              onPress: () => {},
+            },
+          ]);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setScreenReady(true);
+      });
   }, [isFocused]);
 
   const onPressRetry = React.useCallback(() => {
@@ -187,8 +179,8 @@ const LookingForDevices = () => {
               numDots={5}
               dotSize={8}
               hideActiveDots={!scanning}
-              inactiveColor={theme.colors.desmosOrange03}
-              activeColor={theme.colors.desmosOrange01}
+              inactiveColor={theme.colors.butterOrange03}
+              activeColor={theme.colors.butterOrange03}
             />
             <Image source={ledgerIcon} style={styles.ledgerImg} />
           </View>

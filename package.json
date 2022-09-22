@@ -12,7 +12,9 @@
     "prestorybook": "rnstl",
     "use:main": "cp index.main.js index.js",
     "use:storybook": "cp index.storybook.js index.js && yarn prestorybook",
-    "postinstall": "patch-package && rn-nodeify --install stream,crypto,fs,path --hack"
+    "postinstall": "patch-package && rn-nodeify --install stream,crypto,fs,path --hack",
+    "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
+    "deploy:iosInternal": "fastlane ios closed_beta"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",

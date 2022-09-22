@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
     height: verticalScale(160),
   },
   mnemonicInputLabel: {
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
   },
   errorInput: {
     borderColor: theme.colors.pink01,
@@ -39,10 +39,6 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.pink01,
     flex: 1,
   },
-  buttonGroup: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   formContainer: {
     flex: 1,
   },
@@ -53,14 +49,14 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.butterOrange01,
   },
   consentGroup: {
+    paddingVertical: 8,
     flexDirection: 'row',
-    marginBottom: 8,
+    backgroundColor: theme.colors.background,
   },
   consentText: {
     bottom: 4,
     lineHeight: 20,
     marginLeft: 8,
-    flex: 1,
   },
   touchableText: {
     color: theme.colors.primary,

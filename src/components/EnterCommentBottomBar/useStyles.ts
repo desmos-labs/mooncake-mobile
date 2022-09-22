@@ -1,5 +1,6 @@
 import {makeStyle} from 'config/theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Platform} from 'react-native';
 
 const useStyles = makeStyle(theme => {
   const {bottom} = useSafeAreaInsets();
@@ -27,12 +28,17 @@ const useStyles = makeStyle(theme => {
       borderWidth: 1,
       borderColor: theme.colors.lightGrey01,
       borderRadius: 12,
-      padding: theme.spacing.s,
       justifyContent: 'space-between',
+      paddingVertical: Platform.select({
+        ios: 8,
+        android: 0,
+      }),
       marginLeft: theme.spacing.s,
+      paddingHorizontal: theme.spacing.s,
     },
     textInput: {
       flex: 1,
+      color: theme.colors.surfaceBlack,
     },
     profilePic: {
       width: 38,

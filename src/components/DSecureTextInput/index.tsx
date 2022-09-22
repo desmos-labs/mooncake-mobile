@@ -30,11 +30,11 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
       placeHolderColor={iconColor}
       style={[
         styles.input,
+        rest.style,
         // error && styles.error, focused && styles.focused
       ]}
       rightElement={
         <IconButton
-          style={styles.eyeIcon}
           icon={hideText ? eyeOpen : eyeClosed}
           color={iconColor}
           onPress={() => {
