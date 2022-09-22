@@ -2,7 +2,7 @@
   "forgotPw": "Forgot Password",
   "importMnemonic": "Import\nSecret Recovery Phrase",
   "description": "Please enter your secret recovery phrase in order and make sure your recovery phrase is written correctly",
-  "inputLabel": "Enter Recovery Phrase",
+  "inputLabel": "Recovery Phrase",
   "inputPlaceholder": "Enter recovery phrase separated by spaces",
   "invalidMnemonic": "Invalid recovery phrase, please make sure you've entered it correctly.",
   "clearAll": "Clear all",

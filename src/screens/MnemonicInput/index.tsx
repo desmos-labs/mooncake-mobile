@@ -11,7 +11,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useHooks from './useHooks';
@@ -51,61 +51,67 @@ const MnemonicInput = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
+    <DView
+      style={styles.container}
+      topBar={<TopBar />}
+      disableHideKeyboardTouchable={true}>
       <Typography.H3>{t(headerText)}</Typography.H3>
-      <Typography.Body6 style={styles.descriptionText}>
-        {t('description')}
-      </Typography.Body6>
-      <Formik
-        initialValues={initialFormFields}
-        validate={validateForm}
-        validateOnChange={false}
-        onSubmit={onSubmit}>
-        {({handleSubmit, errors, values, setFieldValue, resetForm}) => (
-          <View style={styles.formContainer}>
-            <Typography.Subtitle2 style={styles.inputLabel}>
-              {t('inputLabel')}
-            </Typography.Subtitle2>
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={Platform.OS === 'ios' ? top + 50 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{flex: 1}}>
+        <Formik
+          initialValues={initialFormFields}
+          validate={validateForm}
+          validateOnChange={false}
+          onSubmit={onSubmit}>
+          {({handleSubmit, errors, values, setFieldValue, resetForm}) => (
+            <>
+              <ScrollView>
+                <View style={{flex: 1}}>
+                  <Typography.Body6 style={styles.descriptionText}>
+                    {t('description')}
+                  </Typography.Body6>
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('inputLabel')}
+                  </Typography.Subtitle2>
 
-            <View>
-              <DTextInput
-                autoCapitalize="none"
-                textAlignVertical="top"
-                multiline
-                error={!!errors.mnemonic}
-                inputStyle={styles.mnemonicInputLabel}
-                style={[
-                  styles.mnemonicInput,
-                  errors.mnemonic ? styles.errorInput : undefined,
-                ]}
-                placeholder={t('inputPlaceholder')}
-                value={values.mnemonic}
-                onChangeText={text => {
-                  setFieldValue('mnemonic', text, false);
-                }}
-              />
-            </View>
+                  <DTextInput
+                    autoCapitalize="none"
+                    textAlignVertical="top"
+                    multiline
+                    scrollEnabled={false}
+                    error={!!errors.mnemonic}
+                    inputStyle={styles.mnemonicInputLabel}
+                    style={[
+                      styles.mnemonicInput,
+                      errors.mnemonic ? styles.errorInput : undefined,
+                    ]}
+                    placeholder={t('inputPlaceholder')}
+                    value={values.mnemonic}
+                    onChangeText={text => {
+                      setFieldValue('mnemonic', text, false);
+                    }}
+                  />
 
-            {errors.mnemonic && (
-              <View style={styles.errorGroup}>
-                <Typography.Caption1 style={styles.errorText}>
-                  {errors.mnemonic}
-                </Typography.Caption1>
+                  {errors.mnemonic && (
+                    <View style={styles.errorGroup}>
+                      <Typography.Caption1 style={styles.errorText}>
+                        {errors.mnemonic}
+                      </Typography.Caption1>
 
-                <Typography.Subtitle4
-                  onPress={() => {
-                    resetForm({values: initialFormFields});
-                  }}
-                  style={styles.clearAllText}>
-                  {t('clearAll')}
-                </Typography.Subtitle4>
-              </View>
-            )}
+                      <Typography.Subtitle4
+                        onPress={() => {
+                          resetForm({values: initialFormFields});
+                        }}
+                        style={styles.clearAllText}>
+                        {t('clearAll')}
+                      </Typography.Subtitle4>
+                    </View>
+                  )}
+                </View>
+              </ScrollView>
 
-            <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? top + 190 : 0}
-              behavior={Platform.OS === 'ios' ? 'position' : undefined}
-              style={styles.buttonGroup}>
               {mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE && (
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
@@ -133,18 +139,19 @@ const MnemonicInput = () => {
                   </Typography.Body6>
                 </View>
               )}
-
-              <Button
-                color={theme.colors.surfaceBlack}
-                mode="contained"
-                labelStyle={styles.labelStyle}
-                onPress={handleSubmit}>
-                {t(buttonText)}
-              </Button>
-            </KeyboardAvoidingView>
-          </View>
-        )}
-      </Formik>
+              <View style={{backgroundColor: theme.colors.background}}>
+                <Button
+                  color={theme.colors.surfaceBlack}
+                  mode="contained"
+                  labelStyle={styles.labelStyle}
+                  onPress={handleSubmit}>
+                  {t(buttonText)}
+                </Button>
+              </View>
+            </>
+          )}
+        </Formik>
+      </KeyboardAvoidingView>
     </DView>
   );
 };
