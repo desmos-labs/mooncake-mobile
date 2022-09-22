@@ -22,7 +22,7 @@ const useStyles = makeStyle(theme => ({
     height: verticalScale(160),
   },
   mnemonicInputLabel: {
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
   },
   errorInput: {
     borderColor: theme.colors.pink01,

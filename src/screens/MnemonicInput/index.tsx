@@ -4,6 +4,7 @@ import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -50,7 +51,7 @@ const MnemonicInput = () => {
   } = useHooks();
 
   return (
-    <DView style={styles.container}>
+    <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t(headerText)}</Typography.H3>
       <Typography.Body6 style={styles.descriptionText}>
         {t('description')}

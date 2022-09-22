@@ -150,9 +150,10 @@ const EnterComment = () => {
             multiline
             style={{
               flex: 1,
-              alignSelf: 'flex-start',
+              alignSelf: 'stretch',
               color: theme.colors.surfaceBlack,
             }}
+            textAlignVertical="top"
           />
         </View>
 
