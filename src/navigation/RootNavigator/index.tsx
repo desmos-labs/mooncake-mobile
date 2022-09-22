@@ -260,7 +260,11 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
       />
-      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      <Stack.Screen
+        name={ROUTES.USER_PROFILE}
+        component={Profile}
+        initialParams={{}}
+      />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
