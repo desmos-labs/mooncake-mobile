@@ -449,6 +449,7 @@ const RootNavigator = () => {
           titleLabel: t('addProfile:title'),
           confirmButtonLabel: t('common:next'),
           provideMnemonic: true,
+          provideWallet: true,
           dViewProps: {
             topBar: <TopBar style={styles.addProfileTopBar} />,
             backgroundColor: 'transparent',
@@ -459,8 +460,14 @@ const RootNavigator = () => {
           },
           onSuccessfulAuthentication({
             mnemonic,
+            wallet,
           }: LocalAccountAuthenticationArgs) {
-            dispatch(StackActions.replace(ROUTES.ADD_PROFILE, {mnemonic}));
+            dispatch(
+              StackActions.replace(ROUTES.ADD_PROFILE, {
+                mnemonic,
+                signer: wallet,
+              }),
+            );
           },
         }}
       />

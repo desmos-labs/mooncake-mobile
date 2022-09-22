@@ -1,3 +1,4 @@
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {mnemonicState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
@@ -15,10 +16,11 @@ import AddProfileBadgeGroup, {ProfileRadioValue} from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 
 type ContentProps = {
+  signer: OfflineSigner;
   mnemonic?: string;
 };
 
-const Content: FC<ContentProps> = ({mnemonic}) => {
+const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   const styles = useStyles();
   const {t} = useTranslation();
   const theme = useTheme();
@@ -68,13 +70,13 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
       setValues(newValues);
       setCanAdd(newValues.some(({id}) => !profilesByAddress.has(id)) ?? false);
     });
-  }, [profilesByAddress, selectedAddress]);
+  }, [signer, profilesByAddress, selectedAddress]);
 
   const handleSelect = useCallback((id: string) => setSelectedAddress(id), []);
   const handleCreateDesmosProfile = useCallback(() => {
-    setMnemonic(mnemonic!);
+    if (mnemonic) setMnemonic(mnemonic!);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
-  }, []);
+  }, [mnemonic]);
   const handleConfirmPressed = useCallback(async () => {
     if (!selectedAddress || !accountByAddress.get(selectedAddress)) return;
     dispatch(

@@ -63,12 +63,12 @@ const EnterPassword = () => {
     params: {
       address,
       provideWallet,
+      provideMnemonic,
       titleLabel,
       confirmButtonLabel,
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
-      provideMnemonic,
     },
   } = useRoute<NavProps['route']>();
 
@@ -111,10 +111,16 @@ const EnterPassword = () => {
           setLoading(false);
         }
       } else {
-        console.log('EnterPassowrd: address is empty');
+        throw new Error('EnterPassowrd: address is empty');
       }
     },
-    [address],
+    [
+      address,
+      provideWallet,
+      provideMnemonic,
+      onSuccessfulAuthentication,
+      onFailedAuthentication,
+    ],
   );
 
   const onPressForgotPassword = () => {

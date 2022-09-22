@@ -1,21 +1,23 @@
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import {StackScreenProps} from '@react-navigation/stack';
+import DView from 'components/DView';
+import ErrorBoundary from 'components/ErrorBoundary';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {FC, Suspense} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator} from 'react-native-paper';
-import ErrorBoundary from 'components/ErrorBoundary';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import DView from 'components/DView';
-import TopBar from 'components/TopBar';
 import {ViewStyle} from 'react-native';
-import useStyles from './useStyles';
+import {ActivityIndicator} from 'react-native-paper';
 import Content from './components/Content';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
 export type AddProfileParams = {
+  signer: OfflineSigner;
   mnemonic: string;
 };
 
@@ -26,7 +28,7 @@ const addProfileTopBarStyle: ViewStyle = {
 
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<NavProps> = ({route}) => {
-  const {mnemonic} = route.params;
+  const {signer, mnemonic} = route.params;
   const {t} = useTranslation('');
   const styles = useStyles();
   useUnlockWallet();
@@ -45,7 +47,7 @@ const AddProfile: FC<NavProps> = ({route}) => {
           </Typography.H1>
         }>
         <Suspense fallback={<ActivityIndicator />}>
-          <Content mnemonic={mnemonic} />
+          <Content signer={signer} mnemonic={mnemonic} />
         </Suspense>
       </ErrorBoundary>
     </DView>
