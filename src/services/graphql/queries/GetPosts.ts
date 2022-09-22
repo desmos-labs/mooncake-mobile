@@ -27,11 +27,6 @@ export const POST_FIELDS = gql`
       }
     }
     text
-    posts_aggregate {
-      aggregate {
-        count
-      }
-    }
     conversation {
       author {
         address
