@@ -15,22 +15,9 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import sharedPostState, {
-  postAttachmentsState,
-  postTextState,
-} from '@recoil/sharedPostState';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {useRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import {
-  Media,
-  PostReference,
-  PostReferenceType,
-} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import Long from 'long';
-import UploadMedia from 'services/axios/requests/UploadMedia';
-import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
-import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -59,15 +46,11 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
-  const toast = useToast();
-
   const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
 
   const [commentText, setCommentText] = useRecoilState(postTextState);
   const [commentAttachment, setCommentAttachment] =
     useRecoilState(postAttachmentsState);
-
-  const resetSharedCommentData = useResetRecoilState(sharedPostState);
 
   const {createPost} = useCreatePost();
 
@@ -87,68 +70,23 @@ const EnterComment = () => {
   }, [isCreatePost]);
 
   const handlePress = React.useCallback(async () => {
-    try {
-      setLoading(true);
+    setLoading(true);
+    const isCreatingImagePost = isCreatePost && commentAttachment;
 
-      const isCreatingImagePost = isCreatePost && commentAttachment;
+    await createPost({
+      referencedPostId: postId,
+      conversationId: postId,
+    });
 
-      const attachments = [];
-
-      const conversationId = postId ? Long.fromNumber(postId) : undefined;
-
-      const referencedPosts = postId
-        ? [
-            PostReference.fromPartial({
-              type: PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-              postId: Long.fromNumber(postId),
-            }),
-          ]
-        : [];
-
-      if (commentAttachment && 'uri' in commentAttachment) {
-        const uploadResponse = await UploadMedia({
-          mediaFile: commentAttachment,
-        });
-
-        const {url} = uploadResponse!;
-
-        const {type} = commentAttachment;
-
-        const mediaAny = mediaToAny(
-          Media.fromPartial({
-            uri: url,
-            mimeType: type,
-          }),
-        );
-
-        attachments.push(mediaAny);
-      }
-
-      await createPost({
-        text: commentText,
-        attachments,
-        referencedPosts,
-        conversationId,
-      });
-
-      // EnterComment -> CreateTextPost -> Home
-      if (isCreatingImagePost) {
-        pop(2);
-      } else {
-        goBack();
-      }
-
-      resetSharedCommentData();
-    } catch (err: any) {
-      if (err.toString().includes('413')) {
-        toast.show(t('error:imageTooLarge'), {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
-    } finally {
-      setLoading(false);
+    // EnterComment -> CreateTextPost -> Home
+    if (isCreatingImagePost) {
+      pop(2);
+    } else {
+      goBack();
     }
-  }, [commentText, isCreatePost, commentText, commentAttachment]);
+
+    setLoading(false);
+  }, [isCreatePost, commentAttachment]);
 
   const TopBarRightElement = React.useMemo(() => {
     return (
