@@ -43,16 +43,13 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
   );
   useEffect(() => {
     getAccounts().then(accounts => {
-      setCanAdd(
-        accounts?.some(({address}) => !profilesByAddress.has(address)) ?? false,
-      );
       setAccountByAddress(
         accounts?.reduce(
           (map, account) => map.set(account.address, account),
           new Map(),
         ) ?? new Map(),
       );
-      setValues(
+      const newValues =
         accounts
           ?.filter(({address}) => address)
           .map(({address}) => {
@@ -67,20 +64,25 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
               isSelected: selectedAddress === address,
               disabled: !!profile,
             };
-          }) ?? [],
-      );
+          }) ?? [];
+      setValues(newValues);
+      setCanAdd(newValues.some(({id}) => !profilesByAddress.has(id)) ?? false);
     });
   }, [profilesByAddress, selectedAddress]);
 
   const handleSelect = useCallback((id: string) => setSelectedAddress(id), []);
-  const handleCreateDesmosProfile = useCallback(
-    () => dispatch(StackActions.push(ROUTES.CREATE_DESMOS_PROFILE, {})),
-    [],
-  );
-  const handleConfirmPressed = useCallback(async () => {
+  const handleCreateDesmosProfile = useCallback(() => {
     setMnemonic(mnemonic!);
     dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
-  }, [mnemonic, accountByAddress]);
+  }, []);
+  const handleConfirmPressed = useCallback(async () => {
+    if (!selectedAddress || !accountByAddress.get(selectedAddress)) return;
+    dispatch(
+      StackActions.push(ROUTES.CREATE_DESMOS_PROFILE, {
+        accountOverride: accountByAddress.get(selectedAddress),
+      }),
+    );
+  }, [selectedAddress, accountByAddress]);
 
   return (
     <View style={styles.container}>
