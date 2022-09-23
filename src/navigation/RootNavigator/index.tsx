@@ -80,7 +80,6 @@ import FollowingAndFollowers, {
 } from 'screens/FollowingAndFollowers';
 import {Dimensions} from 'react-native';
 import {FollowingParams} from 'screens/Following';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
@@ -387,10 +386,6 @@ const RootNavigator = () => {
         />
 
         <Stack.Screen
-          initialParams={{
-            // TODO: remove when going production
-            grants: [GrantEnums.MsgCreateReport],
-          }}
           name={ROUTES.ACTION_AUTHORIZATION}
           component={ActionAuthorization}
         />

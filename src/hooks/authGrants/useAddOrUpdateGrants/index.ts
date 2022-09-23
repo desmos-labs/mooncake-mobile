@@ -105,17 +105,12 @@ const useAddOrUpdateGrants = () => {
 
       const {has_fee_grant} = grantsData;
 
-      // if (_.difference(grantsToRequest, existingGrantsArray).length === 0) {
-      //   console.log('no difference');
-      //   return;
-      // }
-
       const grantee = butterConfig.desmos_address;
       const granter = chainAccount.address;
       const grants = grantsToRequest;
 
       /**
-       * If user already has a fee grant, we need to revoke it by creating a MsgRevokeallowanceEncodeObject
+       * If user already has a fee grant, we need to revoke it by creating a MsgRevokeAllowanceEncodeObject
        * Otherwise, do nothing.
        */
       const msgRevokeAllowanceEncode:

@@ -49,6 +49,9 @@ export default function useUnlockWallet(): (
                 mnemonic: result.mnemonic,
               });
             },
+            onFailedAuthentication: () => {
+              resolve(undefined);
+            },
           },
         });
       });

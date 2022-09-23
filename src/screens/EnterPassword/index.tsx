@@ -50,6 +50,7 @@ export type EnterPasswordParams = {
 
 const EnterPassword = () => {
   const [loading, setLoading] = useState(false);
+  const [resolved, setResolved] = useState(false);
   const {t} = useTranslation('enterPassword');
   const {
     params: {
@@ -63,6 +64,15 @@ const EnterPassword = () => {
 
   const styles = useStyles();
   const theme = useTheme();
+
+  React.useEffect(() => {
+    return () => {
+      console.log('help');
+      if (!resolved) {
+        onFailedAuthentication && onFailedAuthentication();
+      }
+    };
+  }, [resolved]);
 
   const onFormSubmit = React.useCallback(
     async (
@@ -85,6 +95,7 @@ const EnterPassword = () => {
           const mnemonic = await getMnemonic(address, password);
 
           if (wallet && onSuccessfulAuthentication) {
+            setResolved(true);
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
@@ -92,7 +103,6 @@ const EnterPassword = () => {
             });
           }
         } catch (err) {
-          setLoading(false);
           onFailedAuthentication && onFailedAuthentication();
           setErrors({password: t('error:incorrectPassword')});
         } finally {
