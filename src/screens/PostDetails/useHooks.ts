@@ -7,7 +7,7 @@ import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useAddReaction from 'services/axios/requests/CentralizedBroadcastTx/AddReaction/useAddReaction';
@@ -23,7 +23,8 @@ const useHooks = ({
   postID: number;
   subspaceID: number;
 }) => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const [userLiked, setUserLiked] = useState<boolean>(false);
+  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
   const {addReaction} = useAddReaction();
@@ -76,9 +77,19 @@ const useHooks = ({
   }, [postComments]);
 
   const reactions = useMemo(() => {
-    if (!postReactions) return [];
-    return postReactions.reaction;
-  }, [postReactions]);
+    if (!postReactions) {
+      return [];
+    } else {
+      postReactions.reaction.forEach(
+        (reaction: {author: {address: string | undefined}}) => {
+          if (reaction.author.address === profile?.address) {
+            setUserLiked(true);
+          }
+        },
+      );
+      return postReactions.reaction;
+    }
+  }, [postReactions, profile?.address]);
 
   const pageRefetch = async () => {
     await postRefetch({
@@ -141,14 +152,14 @@ const useHooks = ({
           grants: grantsRequired,
 
           onApprove: async () => {
-            // regular follow flow
-            console.log('approved');
+            pop();
             await addReaction({
               postId: Long.fromNumber(postId),
               user: profile?.address,
             });
           },
           onCancel: () => {
+            pop();
             console.log('cancelled');
           },
         });
@@ -208,6 +219,7 @@ const useHooks = ({
     handleAddReaction,
     postCommentLoading: loading,
     pageRefetch,
+    userLiked,
   };
 };
 

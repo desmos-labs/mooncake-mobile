@@ -25,7 +25,6 @@ const useAddReaction = () => {
       );
 
       try {
-        setLoadingReaction(true);
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const msg: MsgAddReactionEncodeObject = {
@@ -45,14 +44,12 @@ const useAddReaction = () => {
         });
       } catch (err: any) {
         throw new Error(err.toString());
-      } finally {
-        setLoadingReaction(false);
       }
     },
     [activeAddress],
   );
 
-  return {addReaction, loadingReaction};
+  return {addReaction, loadingReaction, setLoadingReaction};
 };
 
 export default useAddReaction;

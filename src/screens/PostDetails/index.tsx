@@ -100,6 +100,7 @@ const PostDetails = () => {
     handleAddReaction,
     postCommentLoading,
     pageRefetch,
+    userLiked,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -204,7 +205,7 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
-          postLiked={false}
+          postLiked={userLiked}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');
