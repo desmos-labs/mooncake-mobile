@@ -23,9 +23,6 @@ This folder contains patches created using patch-package.
 ## react-native-circular-progress
 - Patch the ColorValue prop to support colors represented as a string
 
-## react-native-reanimated-carousel
-- Extend the onProgressChange callback to pass the scroll offset value, so it can be used to calculate overscroll
-
 ## react-native-toast-notifications
 - Apply a fix for https://github.com/arnnis/react-native-toast-notifications/issues/127
 
