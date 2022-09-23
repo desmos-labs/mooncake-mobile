@@ -153,7 +153,7 @@ const EnterPassword = () => {
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:confirm')}
+                  {t('common:next')}
                 </Typography.Button1>
               </Button>
 
