@@ -8,6 +8,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -58,6 +59,7 @@ const ConfirmModal = () => {
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
+  const theme = useTheme();
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
@@ -76,8 +78,8 @@ const ConfirmModal = () => {
         </Typography.Body5>
         {primaryButtonLabel && (
           <Button
-            containerStyle={styles.primaryButton}
-            mode="gradientFilled"
+            style={styles.primaryButton}
+            mode="contained"
             onPress={onPressPrimary}>
             {primaryButtonLabel}
           </Button>
@@ -85,6 +87,7 @@ const ConfirmModal = () => {
         {secondaryButtonLabel && (
           <Button
             containerStyle={styles.secondaryButton}
+            color={theme.colors.surfaceBlack}
             mode="text"
             onPress={onPressSecondary}>
             {secondaryButtonLabel}

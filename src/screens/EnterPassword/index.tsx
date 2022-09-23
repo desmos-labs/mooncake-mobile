@@ -3,6 +3,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
 import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
@@ -134,7 +135,7 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container} {...dViewProps}>
+    <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
       <Typography.H3 style={styles.headerText}>
         {titleLabelOverride || t('header')}
       </Typography.H3>
@@ -177,7 +178,7 @@ const EnterPassword = () => {
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
-                  {buttonLabelOverride || t('common:confirm')}
+                  {buttonLabelOverride || t('common:next')}
                 </Typography.Button1>
               </Button>
 

@@ -13,3 +13,17 @@ This folder contains patches created using patch-package.
 ## react-native-reanimated-carousel
 
 - exposes the true offsetX value as a third parameter in the `onProgressChanged` prop, for use in detecting overscroll.
+
+## noble-hashes
+- Replace bit shift operators with ones from BigInteger (android compatibility)
+
+## react-native-camera-roll/camera-roll
+- Pass mimetype in selected images
+
+## react-native-circular-progress
+- Patch the ColorValue prop to support colors represented as a string
+
+## react-native-toast-notifications
+- Apply a fix for https://github.com/arnnis/react-native-toast-notifications/issues/127
+
+

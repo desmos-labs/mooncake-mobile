@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -64,6 +65,7 @@ type DevScreenProps = StackScreenProps<
 
 const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
+  const {revokeAllGrants} = useAddOrUpdateGrants();
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
@@ -132,12 +134,12 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         onPress={() => {
           Alert.alert(
             'Are you sure?',
-            'This will delete all values in secure storage',
+            'This will revoke all grants on chain.',
             [
               {
                 text: 'Yes',
-                onPress: () => {
-                  resetSecureStorage();
+                onPress: async () => {
+                  await revokeAllGrants();
                 },
               },
               {
@@ -146,25 +148,30 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
             ],
           );
         }}>
-        Reset Secure storage
+        Revoke all Grants
       </Button>
 
       <Button
         mode="contained"
         onPress={() => {
-          Alert.alert('Are you sure?', 'This will delete all values in MMKV', [
-            {
-              text: 'Yes',
-              onPress: () => {
-                clearMMKV();
+          Alert.alert(
+            'Are you sure?',
+            'This will delete all values in MMKV and Secure Storage',
+            [
+              {
+                text: 'Yes',
+                onPress: async () => {
+                  clearMMKV();
+                  await resetSecureStorage();
+                },
               },
-            },
-            {
-              text: 'Cancel',
-            },
-          ]);
+              {
+                text: 'Cancel',
+              },
+            ],
+          );
         }}>
-        Reset MMKV storage
+        Reset MMKV storage & Secure Storage
       </Button>
     </DView>
   );
