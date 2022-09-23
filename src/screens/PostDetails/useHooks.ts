@@ -14,7 +14,10 @@ import useAddReaction from 'services/axios/requests/CentralizedBroadcastTx/AddRe
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
-import GetPostReactions from 'services/graphql/queries/GetReactions';
+import {
+  GetPostReactions,
+  GetReactionForPostAndAuthor,
+} from 'services/graphql/queries/GetReactions';
 
 const useHooks = ({
   postID,
@@ -27,7 +30,7 @@ const useHooks = ({
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
-  const {addReaction} = useAddReaction();
+  const {manageReaction} = useAddReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {checkGrants} = useCheckGrants();
 
@@ -66,6 +69,18 @@ const useHooks = ({
     },
   });
 
+  const {data: reactionAdded, refetch: reactionAddedRefetch} = useQuery(
+    GetReactionForPostAndAuthor,
+    {
+      variables: {
+        postID,
+        subspaceID,
+        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
+      },
+      fetchPolicy: 'no-cache',
+    },
+  );
+
   const post = React.useMemo(() => {
     if (!originalPost) return {};
     return originalPost.posts[0];
@@ -77,19 +92,19 @@ const useHooks = ({
   }, [postComments]);
 
   const reactions = useMemo(() => {
-    if (!postReactions) {
-      return [];
-    } else {
-      postReactions.reaction.forEach(
-        (reaction: {author: {address: string | undefined}}) => {
-          if (reaction.author.address === profile?.address) {
-            setUserLiked(true);
-          }
-        },
-      );
-      return postReactions.reaction;
-    }
+    if (!postReactions) return [];
+    return postReactions.reaction;
   }, [postReactions, profile?.address]);
+
+  const reactionIdFromUser: number | undefined = useMemo(() => {
+    if (reactionAdded?.reaction.length === 0 || !reactionAdded) {
+      setUserLiked(false);
+      return undefined;
+    } else {
+      setUserLiked(true);
+      return reactionAdded.reaction[0].id;
+    }
+  }, [reactionAdded, profile?.address]);
 
   const pageRefetch = async () => {
     await postRefetch({
@@ -103,6 +118,11 @@ const useHooks = ({
     await reactionsRefetch({
       postID,
       subspaceID,
+    });
+    await reactionAddedRefetch({
+      postID,
+      subspaceID,
+      address: profile?.address,
     });
   };
 
@@ -143,7 +163,10 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgAddReaction];
+      const grantsToRequest: GrantEnums[] = [
+        GrantEnums.MsgAddReaction,
+        GrantEnums.MsgRemoveReaction,
+      ];
       // check if user has grants first
       const grantsRequired = await checkGrants(grantsToRequest);
 
@@ -152,11 +175,12 @@ const useHooks = ({
           grants: grantsRequired,
 
           onApprove: async () => {
-            pop();
-            await addReaction({
+            await manageReaction({
               postId: Long.fromNumber(postId),
-              user: profile?.address,
+              user: profile?.address!,
+              reactionId: reactionIdFromUser,
             });
+            pop();
           },
           onCancel: () => {
             pop();
@@ -164,13 +188,14 @@ const useHooks = ({
           },
         });
       } else {
-        await addReaction({
+        await manageReaction({
           postId: Long.fromNumber(postId),
-          user: profile?.address,
+          user: profile?.address!,
+          reactionId: reactionIdFromUser,
         });
       }
     },
-    [postID, profile?.address],
+    [postID, profile?.address, reactionIdFromUser],
   );
 
   React.useEffect(() => {

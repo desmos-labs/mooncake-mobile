@@ -225,7 +225,7 @@ const PostDetails = () => {
         <Spacer paddingBottom={16} />
       </>
     ),
-    [post, reactions, likesImages],
+    [post, reactions, likesImages, userLiked],
   );
 
   const CustomTopBar = React.useMemo(() => {

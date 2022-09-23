@@ -1,10 +1,18 @@
-import {DesmosClient, MsgAddReactionEncodeObject} from '@desmoslabs/desmjs';
+import {
+  DesmosClient,
+  MsgAddReactionEncodeObject,
+  MsgRemoveReactionEncodeObject,
+} from '@desmoslabs/desmjs';
 import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
-import {MsgAddReaction} from '@desmoslabs/desmjs-types/desmos/reactions/v1/msgs';
+import {
+  MsgAddReaction,
+  MsgRemoveReaction,
+} from '@desmoslabs/desmjs-types/desmos/reactions/v1/msgs';
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import React from 'react';
+import Long from 'long';
+import React, {useCallback} from 'react';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
@@ -12,7 +20,7 @@ import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcast
  */
 const useAddReaction = () => {
   const {activeAddress} = useActiveAccount();
-  const [loadingReaction, setLoadingReaction] = React.useState(false);
+  const [reactionLoading, setReactionLoading] = React.useState(false);
 
   const addReaction = React.useCallback(
     async ({postId, user}: Partial<MsgAddReaction>) => {
@@ -49,7 +57,66 @@ const useAddReaction = () => {
     [activeAddress],
   );
 
-  return {addReaction, loadingReaction, setLoadingReaction};
+  const removeReaction = React.useCallback(
+    async ({postId, user, reactionId}: Partial<MsgRemoveReaction>) => {
+      if (!activeAddress) return;
+
+      try {
+        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+
+        const msg: MsgRemoveReactionEncodeObject = {
+          typeUrl: '/desmos.reactions.v1.MsgRemoveReaction',
+          value: MsgRemoveReaction.fromPartial({
+            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+            postId,
+            reactionId,
+            user,
+          }),
+        };
+
+        const aminoEncodedMsg = client.encodeToAmino([msg]);
+
+        return await CentralizedBroadcastTx({
+          messages: aminoEncodedMsg,
+        });
+      } catch (err: any) {
+        throw new Error(err.toString());
+      }
+    },
+    [activeAddress],
+  );
+
+  const manageReaction = useCallback(
+    async ({
+      postId,
+      user,
+      reactionId,
+    }: {
+      postId: Long;
+      user: string;
+      reactionId?: number;
+    }) => {
+      setReactionLoading(true);
+      let result;
+      try {
+        if (reactionId) {
+          console.log('rimuovo', reactionId);
+          result = await removeReaction({postId, user, reactionId});
+        } else {
+          console.log('aggiungo', reactionId);
+          result = await addReaction({postId, user});
+        }
+      } catch (err: any) {
+        throw new Error(err.toString());
+      } finally {
+        setReactionLoading(false);
+        console.log(result);
+      }
+    },
+    [],
+  );
+
+  return {manageReaction, reactionLoading};
 };
 
 export default useAddReaction;

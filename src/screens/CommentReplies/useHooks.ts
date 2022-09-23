@@ -8,7 +8,7 @@ import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
-import GetPostReactions from 'services/graphql/queries/GetReactions';
+import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 
 const useHooks = ({
   subspaceID,
