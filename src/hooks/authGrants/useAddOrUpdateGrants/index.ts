@@ -14,6 +14,7 @@ import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
+  buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 
 /**
@@ -32,6 +33,64 @@ const useAddOrUpdateGrants = () => {
   const unlockWallet = useUnlockWallet();
   const broadcastMessages = useBroadcastMessages();
   const {getActiveGrants} = useGetActiveGrants();
+
+  /**
+   * Remove all user's grants and authorizations from chain.
+   */
+  const revokeAllGrants = React.useCallback(async () => {
+    if (!chainAccount) throw new Error('No active chain account found.');
+
+    const grantee = butterConfig.desmos_address;
+    const granter = chainAccount.address;
+
+    const grantsData = await getActiveGrants();
+
+    const {grants} = grantsData;
+
+    const grantsToRevoke = grants.map(x => x.msg_type);
+
+    console.warn('Revoking the following grants:', grantsToRevoke.join(', '));
+    const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
+      grantee,
+      granter,
+    });
+
+    const msgRevokeGrantEncode = buildRevokeGrantMsgEncodes({
+      grantee,
+      granter,
+      grants: grantsToRevoke,
+    });
+
+    const unlockResult = await unlockWallet(chainAccount);
+
+    if (!unlockResult) {
+      throw new Error(
+        'Error unlocking wallet or user cancelled authentication',
+      );
+    }
+
+    const {wallet} = unlockResult;
+
+    const combinedMessages = _.compact([
+      msgRevokeAllowanceEncode,
+      ...msgRevokeGrantEncode,
+    ]);
+
+    const {fee} = computeGasAndFees({
+      msg: combinedMessages,
+      denom: EnvConfig.BASE_DENOM,
+    });
+
+    const broadcastResult = await broadcastMessages(
+      wallet as OfflineSigner,
+      combinedMessages,
+      fee.average,
+    );
+
+    if (!broadcastResult) {
+      throw new Error('Error deleting grants');
+    }
+  }, [chainAccount, butterConfig.desmos_address]);
 
   /**
    * All-in-one function that builds and broadcast a transaction as part of the
@@ -119,6 +178,7 @@ const useAddOrUpdateGrants = () => {
     // to block/disable input before the data is fully loaded¬
     accountsLoading: loading,
     addOrUpdateGrants,
+    revokeAllGrants,
   };
 };
 

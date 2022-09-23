@@ -6,6 +6,7 @@ import {
   MsgGrantAllowanceEncodeObject,
   MsgGrantEncodeObject,
   MsgRevokeAllowanceEncodeObject,
+  MsgRevokeEncodeObject,
   timestampFromDate,
 } from '@desmoslabs/desmjs';
 import {Grant} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
@@ -14,6 +15,7 @@ import {
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import EnvConfig from 'config/EnvConfig';
+import {MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 
 /**
  * Build a MsgRevokeAllowanceEncode object.
@@ -30,6 +32,7 @@ export const buildRevokeAllowanceEncode = ({
   granter: string;
 }): MsgRevokeAllowanceEncodeObject => ({
   typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
+  // replace with MsgRevokeAllowanceEncode.fromPartial
   value: {
     grantee,
     granter,
@@ -68,6 +71,7 @@ export const buildGrantAllowanceEncode = ({
 
   return {
     typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
+    // replace with MsgGrantAllowance.fromPartial
     value: {
       grantee,
       granter,
@@ -116,11 +120,37 @@ export const buildGrantMsgEncodes = ({
 
     return {
       typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+      // replace with MsgGrant.fromPartial
       value: {
         grantee,
         granter,
         grant: _grant,
       },
+    };
+  });
+};
+
+/**
+ * The opposite of buildGrantMsgEncodes, this function will build an array
+ * of revoking grants.
+ */
+export const buildRevokeGrantMsgEncodes = ({
+  grants,
+  grantee,
+  granter,
+}: {
+  grants: GrantEnums[];
+  grantee: string;
+  granter: string;
+}): MsgRevokeEncodeObject[] => {
+  return grants.map(grant => {
+    return {
+      typeUrl: '/cosmos.authz.v1beta1.MsgRevoke',
+      value: MsgRevoke.fromPartial({
+        grantee,
+        granter,
+        msgTypeUrl: grant,
+      }),
     };
   });
 };
