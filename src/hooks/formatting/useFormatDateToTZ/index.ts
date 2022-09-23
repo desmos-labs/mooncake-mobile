@@ -17,7 +17,11 @@ const useFormatDateToTZ = (timeToFormat: string, formatString: string) => {
 
   return React.useMemo(() => {
     if (!timeToFormat) return '';
-    const parsedTime = parseISO(`${timeToFormat}Z`);
+    // append a zone designator to timestamp if it is not present
+    // this is for formatting the time to different timezones
+    const parsedTime = parseISO(
+      !timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat,
+    );
 
     return formatInTimeZone(parsedTime, settings.currentTimezone, formatString);
   }, [timeToFormat, settings.currentTimezone]);
