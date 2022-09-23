@@ -68,3 +68,6 @@ buck-out/
 storyLoader.js
 keystore.jks
 playstore-key.json
+
+# temporary
+coverage
