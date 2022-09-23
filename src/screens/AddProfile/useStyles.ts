@@ -10,6 +10,11 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: 'transparent',
     shadowOpacity: 0,
   },
+  dView: {
+    padding: theme.spacing.m,
+    backgroundColor: 'transparent',
+    maxHeight: '40%',
+  },
   header: {
     borderWidth: 0,
     backgroundColor: 'transparent',
@@ -24,11 +29,6 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
-  },
-  dView: {
-    padding: theme.spacing.m,
-    backgroundColor: 'transparent',
-    maxHeight: '40%',
   },
 }));
 

@@ -1,7 +1,4 @@
-import {AccountData} from '@cosmjs/amino';
-import {toBase64} from '@cosmjs/encoding';
 import {OfflineSigner} from '@cosmjs/proto-signing';
-import {StackActions} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import ErrorBoundary from 'components/ErrorBoundary';
@@ -11,39 +8,44 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, Suspense, useEffect, useState} from 'react';
+import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
-import {ChainAccount, ChainAccountType} from 'types/chains';
-import Content from './components/Content';
+import {StackActions} from '@react-navigation/native';
 import useStyles from './useStyles';
+import Content from './components/Content';
 
 type AddProfileProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.ADD_PROFILE
 >;
 
+/**
+ * `AddProfileParams` is an object with optional properties `signer` and `mnemonic`.
+ * @property {OfflineSigner} signer - The signer to use for the profile.
+ * @property {string} mnemonic - The mnemonic phrase to use for the new profile.
+ */
 export type AddProfileParams = {
   signer?: OfflineSigner;
   mnemonic?: string;
 };
 
-const MAX_NUM_OF_PROFILES = 100; // TODO: need multiple queries to retreive more than 100 profiles
+/* The number of profiles that will be displayed on the screen. */
+export const PROFILE_PER_PAGE = 100;
 
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
   const {signer, mnemonic} = route?.params ?? {};
   const {dispatch} = navigation;
-  const {t} = useTranslation('');
-  const styles = useStyles();
 
+  const {t} = useTranslation();
+  const styles = useStyles();
   const unlockWallet = useUnlockWallet();
   const {chainAccount} = useActiveAccount();
-  const [accounts, setAccounts] = useState<ChainAccount[]>([]);
 
   /* Using the unlockWallet function to unlock the wallet. */
   useEffect(() => {
-    if (!chainAccount) return;
+    if (!chainAccount) return; // wait for async load
 
     if (signer) return; // already unlocked
 
@@ -78,13 +80,6 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
       );
     })();
   }, [chainAccount, signer]);
-  useEffect(() => {
-    if (!signer) return;
-    (async () => {
-      const chainAccounts = toChainAccounts(await signer.getAccounts());
-      setAccounts(chainAccounts.slice(0, MAX_NUM_OF_PROFILES));
-    })();
-  }, [signer]);
 
   return (
     <DView
@@ -101,8 +96,12 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
           </Typography.H3>
         }>
         <Suspense fallback={<ActivityIndicator />}>
-          {signer && accounts?.length ? (
-            <Content mnemonic={mnemonic} accounts={accounts} />
+          {signer && chainAccount ? (
+            <Content
+              signer={signer}
+              mnemonic={mnemonic}
+              chainAccount={chainAccount}
+            />
           ) : (
             <ActivityIndicator />
           )}
@@ -111,35 +110,5 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
     </DView>
   );
 };
-
-/**
- * It takes an array of AccountData objects and returns an array of ChainAccount objects
- * @param accountDatas - Readonly<AccountData[]>
- * @returns An array of ChainAccounts
- */
-function toChainAccounts(
-  accountDatas: Readonly<AccountData[]>,
-): ChainAccount[] {
-  if (!accountDatas) return [];
-
-  return accountDatas
-    .filter(({address}) => address)
-    .map(accountData => {
-      const hdPath = {
-        coinType: 852,
-        account: 0,
-        change: 0,
-        addressIndex: 0,
-      };
-      const chainAccount: ChainAccount = {
-        address: accountData.address,
-        signAlgorithm: accountData.algo,
-        hdPath,
-        type: ChainAccountType.Ledger,
-        pubKey: toBase64(accountData.pubkey),
-      };
-      return chainAccount;
-    });
-}
 
 export default AddProfile;

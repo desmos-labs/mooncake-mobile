@@ -1,12 +1,41 @@
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React, {useCallback} from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
 import {PanGestureHandlerProps} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import {RadioButtonInput} from 'react-native-simple-radio-button';
-import {ProfileRadioValue} from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
+
+/**
+ * Simple interface to display a radio button as a profile
+ */
+export interface ProfileRadioValue {
+  /**
+   * The id of the profile
+   */
+  id: string;
+  /**
+   * The nickname to display over the dTag
+   */
+  nickname: string;
+  /**
+   * The dTag to display under the nickname
+   */
+  dTag: string;
+  /**
+   * The picture to display, can be and asset or a url
+   */
+  profilePicture: ImageSourcePropType;
+  /**
+   * Is the badge selected
+   */
+  isSelected: boolean;
+  /**
+   * Is the badge disabled
+   */
+  disabled: boolean;
+}
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
