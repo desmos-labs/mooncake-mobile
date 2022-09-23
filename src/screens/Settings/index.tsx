@@ -21,6 +21,7 @@ import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
+import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 
 declare type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -32,11 +33,16 @@ const Settings: React.FC<NavProps> = props => {
     navigation: {navigate},
   } = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
-  const {chainAccount} = useActiveAccount();
+  const {chainAccount, profileData} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
   const unlockWallet = useUnlockWallet();
+
+  const formattedAccountCreationDate = useFormatDateToTZ(
+    profileData?.creation_time || '',
+    'MMM dd yyyy',
+  );
 
   /*  const areBiometricsSupported = useCallback(async () => {
     console.log('checkIfBiometricsAreSupported');
@@ -57,7 +63,7 @@ const Settings: React.FC<NavProps> = props => {
     navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
-        title: t('confirmModal:removeProfile'),
+        title: t('confirmModal:signout'),
         subtitle: (
           <Trans
             i18nKey="confirmModal:backupSeedphrase"
@@ -136,7 +142,8 @@ const Settings: React.FC<NavProps> = props => {
           label={t('notifications')}
           onPress={() => Linking.openSettings()}
         />
-        <SectionButton label={t('faq')} onPress={() => console.log('faq')} />
+        {/* removed as of Sept 23, DFP-497 */}
+        {/* <SectionButton label={t('faq')} onPress={() => console.log('faq')} /> */}
         <SectionButton
           label={t('community')}
           onPress={() => navigate(ROUTES.SETTINGS_COMMUNITY)}
@@ -152,13 +159,17 @@ const Settings: React.FC<NavProps> = props => {
         mode="outlined"
         style={styles.signOutButton}
         onPress={navigateToConfirmModal}>
-        <Typography.Button1>{t('signOut')}</Typography.Button1>
+        <Typography.Button1>{t('confirmModal:signout')}</Typography.Button1>
       </Button>
 
       <Typography.Body7 style={styles.bottomText}>
-        {t('joined product', {
-          formattedDate: '21 June 2022',
-        })}
+        <Trans
+          i18nKey="settings:joined product"
+          components={[<Typography.Button2 />]}
+          values={{
+            formattedDate: formattedAccountCreationDate,
+          }}
+        />
       </Typography.Body7>
 
       <VersionString />

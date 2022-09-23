@@ -3,5 +3,5 @@
   "backupSeedphrase": "Make sure you have a backup of secret recovery phrase and <0>DO NOT SHARE</0> it to anyone; it is the only way to restore your profile dTags!",
   "goToBackup": "Back up your phrase",
   "remove": "Remove",
-  "signout": "Signout"
+  "signout": "Sign Out"
 }

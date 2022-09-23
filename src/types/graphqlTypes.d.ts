@@ -59,5 +59,6 @@ declare global {
     nickname: string;
     followage: FollowerType[];
     following: FollowerType[];
+    creation_time: string;
   }
 }
