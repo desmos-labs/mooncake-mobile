@@ -57,7 +57,7 @@ const Settings: React.FC<NavProps> = props => {
     navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
-        title: t('confirmModal:removeProfile'),
+        title: t('confirmModal:signout'),
         subtitle: (
           <Trans
             i18nKey="confirmModal:backupSeedphrase"
@@ -152,7 +152,7 @@ const Settings: React.FC<NavProps> = props => {
         mode="outlined"
         style={styles.signOutButton}
         onPress={navigateToConfirmModal}>
-        <Typography.Button1>{t('signOut')}</Typography.Button1>
+        <Typography.Button1>{t('confirmModal:signout')}</Typography.Button1>
       </Button>
 
       <Typography.Body7 style={styles.bottomText}>

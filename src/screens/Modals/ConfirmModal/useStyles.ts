@@ -40,6 +40,7 @@ const useStyles = makeStyle(theme => ({
   primaryButton: {
     alignSelf: 'stretch',
     marginBottom: theme.spacing.m,
+    backgroundColor: theme.colors.surfaceBlack,
   },
   secondaryButton: {
     marginBottom: theme.spacing.m,
