@@ -15,7 +15,11 @@ import {
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import EnvConfig from 'config/EnvConfig';
-import {MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import {
+  MsgGrantAllowance,
+  MsgRevokeAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 
 /**
  * Build a MsgRevokeAllowanceEncode object.
@@ -33,11 +37,10 @@ export const buildRevokeAllowanceEncode = ({
   granter: string;
 }): MsgRevokeAllowanceEncodeObject => ({
   typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
-  // replace with MsgRevokeAllowanceEncode.fromPartial
-  value: {
+  value: MsgRevokeAllowance.fromPartial({
     grantee,
     granter,
-  },
+  }),
 });
 
 /**
@@ -73,15 +76,14 @@ export const buildGrantAllowanceEncode = ({
 
   return {
     typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
-    // replace with MsgGrantAllowance.fromPartial
-    value: {
+    value: MsgGrantAllowance.fromPartial({
       grantee,
       granter,
       allowance: Any.fromPartial({
         typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
         value: AllowedMsgAllowance.encode(allowance).finish(),
       }),
-    },
+    }),
   };
 };
 
@@ -123,12 +125,11 @@ export const buildGrantMsgEncodes = ({
 
     return {
       typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-      // replace with MsgGrant.fromPartial
-      value: {
+      value: MsgGrant.fromPartial({
         grantee,
         granter,
         grant: _grant,
-      },
+      }),
     };
   });
 };
