@@ -11,8 +11,7 @@ import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
 import {StackActions} from '@react-navigation/native';
-import LocalWallet from 'lib/LocalWallet';
-import {LedgerSigner} from '@cosmjs/ledger-amino';
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 import Content from './components/Content';
 
@@ -27,7 +26,7 @@ type AddProfileProps = StackScreenProps<
  * @property {string} mnemonic - The mnemonic phrase to use for the new profile.
  */
 export type AddProfileParams = {
-  signer?: LocalWallet | LedgerSigner;
+  signer?: OfflineSigner;
   mnemonic?: string;
 };
 
@@ -42,11 +41,13 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
   const unlockWallet = useUnlockWallet();
   const {chainAccount} = useActiveAccount();
 
+  const isWalletUnlocked = !!signer;
+
   /* Using the unlockWallet function to unlock the wallet. */
   useEffect(() => {
     if (!chainAccount) return; // wait for async load
 
-    if (signer) return; // already unlocked
+    if (isWalletUnlocked) return; // already unlocked
 
     (async () => {
       const shouldReplaceRoute = true;
@@ -80,9 +81,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
         }),
       );
     })();
-  }, [chainAccount, signer]);
-
-  const isWalletUnlocked = !!signer;
+  }, [chainAccount, isWalletUnlocked]);
 
   return (
     <DView
