@@ -1,12 +1,18 @@
 import {useQuery} from '@apollo/client';
-import {useLoadProfiles} from '@recoil/profiles';
-import {defaultProfilePic} from 'assets/images';
-import React, {FC, useCallback, useEffect, useMemo} from 'react';
+import React, {
+  FC,
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import {isEqual} from 'lodash';
-
-import {ActivityIndicator} from 'react-native-paper';
-import AddProfileBadge, {ProfileRadioValue} from '../AddProfileBadge';
+import AddProfileBadge, {
+  ProfileRadioValue,
+  profileToRadioValue,
+} from '../AddProfileBadge';
 
 /**
  * @property {number} page - The current page number.
@@ -16,6 +22,7 @@ import AddProfileBadge, {ProfileRadioValue} from '../AddProfileBadge';
  * @property onSelect - This is a function that is called when a profile is selected.
  * @property setProfileCount - This is a function that will be called when the component is mounted. It
  * will be called with the page number and the number of profiles that were found.
+ * @property loadMoreAccounts - load more profiles
  */
 export type AddProfileBadgeGroupProps = {
   page: number;
@@ -23,6 +30,7 @@ export type AddProfileBadgeGroupProps = {
   selectedProfiles: ProfileData[];
   onSelect: (profile: ProfileData) => void;
   setProfileCount: (page: number, count: number) => void;
+  loadMoreAccounts: () => void;
 };
 
 const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
@@ -31,6 +39,7 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   selectedProfiles,
   onSelect,
   setProfileCount,
+  loadMoreAccounts,
 }) => {
   const {loading, error, data, variables} = useQuery<{profile: ProfileData[]}>(
     GetProfileForAddresses,
@@ -39,51 +48,44 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   if (error) throw error;
   const profiles = data?.profile ?? [];
 
-  const {profiles: loadedProfiles, loading: loadingProfiles} =
-    useLoadProfiles();
-
   /* Creating a new array of ProfieRadioValue. */
   const values = useMemo<ProfileRadioValue[]>(() => {
-    return profiles.map(({address, nickname, dtag, profile_pic}) => ({
-      id: address,
-      nickname,
-      dTag: `@${dtag}`,
-      profilePicture: profile_pic ? {uri: profile_pic} : defaultProfilePic,
-      isSelected: selectedProfiles.some(p => p.address === address),
-      disabled: loadedProfiles.some(p => p.address === address),
+    return profiles.map(profile => ({
+      ...profileToRadioValue(profile),
+      isSelected: selectedProfiles.some(p => p.address === profile.address),
     }));
-  }, [profiles, loadedProfiles, selectedProfiles]);
-
-  /* Update profile count for this page for the parent component */
-  useEffect(() => {
-    if (!loadingProfiles) setProfileCount(page, loadedProfiles.length);
-  }, [loadingProfiles, loadedProfiles]);
+  }, [profiles, selectedProfiles]);
 
   /* A callback function that is used to handle the selection of a profile. */
   const handleSelect = useCallback(
     (id: string) => {
-      const disabled = loadedProfiles.some(p => p.address === id);
-      if (disabled) return;
       const profile = profiles.find(p => p.address === id);
       if (profile) onSelect(profile);
     },
-    [loadedProfiles, selectedProfiles, onSelect],
+    [selectedProfiles, onSelect],
   );
 
+  const isLoadedRef = useRef(false);
+  const isLoaded = !loading && isEqual(addresses, variables?.addresses);
+
+  useEffect(() => {
+    if (isLoaded && !isLoadedRef.current) {
+      isLoadedRef.current = true;
+      setProfileCount(page, profiles.length);
+      // if user picked the #400 account to create his profile, then it will nned 3 loadMoreAccounts to load his profile
+      startTransition(loadMoreAccounts);
+    }
+  }, [isLoaded]);
+
   /* This is a check to see if the data is loading, then it will return an activity indicator. */
-  if (loading || loadingProfiles || !isEqual(addresses, variables?.addresses)) {
-    return <ActivityIndicator />;
+  if (!isLoadedRef.current) {
+    return null;
   }
 
   return (
     <>
       {values.map(value => (
-        <AddProfileBadge
-          value={value}
-          onSelect={handleSelect}
-          key={value.id}
-          disabled={value.disabled}
-        />
+        <AddProfileBadge value={value} onSelect={handleSelect} key={value.id} />
       ))}
     </>
   );

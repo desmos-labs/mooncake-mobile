@@ -1,3 +1,4 @@
+import {defaultProfilePic} from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React, {useCallback} from 'react';
@@ -31,10 +32,6 @@ export interface ProfileRadioValue {
    * Is the badge selected
    */
   isSelected: boolean;
-  /**
-   * Is the badge disabled
-   */
-  disabled: boolean;
 }
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -46,24 +43,24 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
    * Callback when the user click a button.
    * @param id the id on the clicked button.
    */
-  onSelect: (id: string) => void;
+  onSelect?: (id: string) => void;
   /**
    * Is the badge disabled
    */
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const AddProfileBadge = (props: Props) => {
-  const {value, onSelect} = props;
+  const {value, onSelect, disabled} = props;
   const styles = useStyles();
   const theme = useTheme();
   const handleSelect = useCallback(() => {
-    if (!value.disabled) {
+    if (!disabled && onSelect) {
       onSelect(value.id);
     }
-  }, [onSelect, value.id, value.disabled]);
+  }, [onSelect, value.id, disabled]);
 
-  const {nickname, dTag, profilePicture, isSelected, disabled} = value;
+  const {nickname, dTag, profilePicture, isSelected} = value;
 
   const components = (
     <DropShadowWrapper
@@ -109,5 +106,21 @@ const AddProfileBadge = (props: Props) => {
     </TouchableOpacity>
   );
 };
+
+export function profileToRadioValue({
+  address,
+  nickname,
+  dtag,
+  profile_pic,
+}: ProfileData) {
+  return {
+    id: address,
+    nickname,
+    dTag: `@${dtag}`,
+    profilePicture: profile_pic ? {uri: profile_pic} : defaultProfilePic,
+    isSelected: false,
+    disabled: false,
+  };
+}
 
 export default AddProfileBadge;

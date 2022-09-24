@@ -1,12 +1,81 @@
-import React, {FC, Suspense, useCallback, useEffect, useState} from 'react';
+import React, {
+  FC,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {ScrollView, View} from 'react-native';
 import {ChainAccount} from 'types/chains';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {ActivityIndicator} from 'react-native-paper';
+import {useLoadProfiles} from '@recoil/profiles';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 import generateAccounts from '../../generateAccounts';
 import Buttons from '../Buttons';
+import AddProfileBadge, {profileToRadioValue} from '../AddProfileBadge';
+
+const MAX_PAGE_TO_LOAD = 10;
+
+export type ProfilesByPage = {
+  [page: number]: {
+    accounts: ChainAccount[];
+    profiles: ProfileData[];
+  };
+};
+
+/**
+ * @property {number} page - The current page number.
+ * @property {ChainAccount[]} accounts - ChainAccount[] - The list of accounts that are currently
+ * loaded.
+ * @property {Set<string>} loadedProfileAddresses - An array of ProfileData objects.
+ * @property {ProfileData[]} selectedProfiles - The profiles that are currently selected.
+ * @property handleSelect - This is a function that is called when a profile is selected.
+ * @property setProfileCount - This is a function that sets the profile count for a given page.
+ * @property loadMoreAccounts - This is a function that will be called when the user clicks the "Load
+ * More" button.
+ */
+type ContentGroupProps = {
+  page: number;
+  accounts: ChainAccount[];
+  selectedProfiles: ProfileData[];
+  handleSelect: (profile: ProfileData) => void;
+  setProfileCount: (page: number, count: number) => void;
+  loadMoreAccounts: () => void;
+};
+
+/* A React component that is used to render a group of AddProfileBadge components. */
+const ContentGroup: FC<ContentGroupProps> = ({
+  page,
+  accounts,
+  selectedProfiles,
+  handleSelect,
+  setProfileCount,
+  loadMoreAccounts,
+}) => {
+  const addresses = useMemo(
+    () => accounts.map(account => account.address),
+    [accounts],
+  );
+  return (
+    <Suspense fallback={<ActivityIndicator />} key={page}>
+      {accounts ? (
+        <AddProfileBadgeGroup
+          page={page}
+          addresses={addresses}
+          selectedProfiles={selectedProfiles}
+          onSelect={handleSelect}
+          setProfileCount={setProfileCount}
+          loadMoreAccounts={loadMoreAccounts}
+        />
+      ) : (
+        <ActivityIndicator />
+      )}
+    </Suspense>
+  );
+};
 
 /**
  * @property {OfflineSigner} signer - The offline signer that will be used to sign the transaction.
@@ -17,13 +86,6 @@ import Buttons from '../Buttons';
 type ContentProps = {
   signer: OfflineSigner;
   mnemonic: string | undefined;
-};
-
-export type ProfilesByPage = {
-  [page: number]: {
-    accounts: ChainAccount[];
-    profiles: ProfileData[];
-  };
 };
 
 const Content: FC<ContentProps> = ({signer, mnemonic}) => {
@@ -37,10 +99,11 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   >({});
   const [selectedProfiles, setSelectedProfiles] = useState<ProfileData[]>([]);
 
-  /* Reset and generate the first page of accounts */
-  useEffect(() => {
-    setAccountsByPage([]);
-    setProfileCountByPage([]);
+  const {profiles: loadedProfiles, loading} = useLoadProfiles();
+
+  const loadMoreAccounts = useCallback(() => {
+    console.log('accountsByPage.length', accountsByPage.length);
+    if (accountsByPage.length >= MAX_PAGE_TO_LOAD) return; // Only load 10 pages
     generateAccounts(
       signer,
       mnemonic,
@@ -48,6 +111,13 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
       setAccountsByPage,
       setProfileCountByPage,
     );
+  }, [signer, mnemonic, accountsByPage]);
+
+  /* Reset and generate the first page of accounts */
+  useEffect(() => {
+    setAccountsByPage([]);
+    setProfileCountByPage([]);
+    loadMoreAccounts();
   }, [signer, mnemonic]);
 
   /* A callback function that is used to select a profile. */
@@ -66,34 +136,67 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
     setProfileCountByPage(prev => ({...prev, [page]: count}));
   }, []);
 
+  const accountsExcludedLoadedProfile = useMemo(() => {
+    const loadedProfileAddresses = loadedProfiles.reduce(
+      (set, profile) => set.add(profile.address),
+      new Set<string>(),
+    );
+    return accountsByPage
+      .map((accounts, page) => ({
+        accounts: accounts.filter(
+          acc => !loadedProfileAddresses.has(acc.address),
+        ),
+        page,
+      }))
+      .filter(({accounts}) => accounts.length > 0);
+  }, [accountsByPage]);
+
+  const profileCount = useMemo(
+    () =>
+      Object.values(profileCountByPage).reduce((acc, count) => acc + count, 0),
+    [profileCountByPage],
+  );
+
   return (
     <View style={styles.content}>
       <ScrollView
         style={styles.scrollViewOuter}
         contentContainerStyle={styles.scrollViewInner}>
-        {accountsByPage
-          .map((accounts, page) => ({accounts, page}))
-          .map(({accounts, page}) => (
-            <Suspense fallback={<ActivityIndicator />} key={page}>
-              {accounts ? (
-                <AddProfileBadgeGroup
-                  page={page}
-                  addresses={accounts.map(account => account.address)}
-                  selectedProfiles={selectedProfiles}
-                  onSelect={handleSelect}
-                  setProfileCount={setProfileCount}
-                />
-              ) : (
-                <ActivityIndicator />
-              )}
-            </Suspense>
-          ))}
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            {accountsExcludedLoadedProfile.map(({accounts, page}) => (
+              <ContentGroup
+                page={page}
+                accounts={accounts}
+                selectedProfiles={selectedProfiles}
+                handleSelect={handleSelect}
+                setProfileCount={setProfileCount}
+                loadMoreAccounts={loadMoreAccounts}
+                key={page}
+              />
+            ))}
+            {loadedProfiles.map(profile => (
+              <AddProfileBadge
+                value={profileToRadioValue(profile)}
+                disabled={true}
+                key={profile.address}
+              />
+            ))}
+            {!profileCount && accountsByPage.length < MAX_PAGE_TO_LOAD && (
+              <ActivityIndicator />
+              // <Typography.Body7>
+              //   loading profiles ({accountsByPage.length * PROFILE_PER_PAGE}-
+              //   {(1 + accountsByPage.length) * PROFILE_PER_PAGE})...
+              // </Typography.Body7>
+            )}
+          </>
+        )}
       </ScrollView>
       <Buttons
-        canAddProfile={accountsByPage.some(
-          (accounts, page) =>
-            page in profileCountByPage &&
-            accounts.length > profileCountByPage[page],
+        canAddProfile={Object.values(profileCountByPage).some(
+          count => count > 0,
         )}
         mnemonic={mnemonic}
         selectedProfiles={selectedProfiles}
