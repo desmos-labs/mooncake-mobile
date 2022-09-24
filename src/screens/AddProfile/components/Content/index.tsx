@@ -12,9 +12,11 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import {ActivityIndicator} from 'react-native-paper';
 import {useLoadProfiles} from '@recoil/profiles';
 import {MAX_PAGE_TO_LOAD, PROFILE_PER_PAGE} from 'screens/AddProfile';
+import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
+import generateLedgerAccounts from 'screens/AddProfile/generateLedgerAccounts';
+import generateLocalAccounts from 'screens/AddProfile/generateLocalAccounts';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
-import generateAccounts from '../../generateAccounts';
 import Buttons from '../Buttons';
 import AddProfileBadge, {profileToRadioValue} from '../AddProfileBadge';
 
@@ -208,5 +210,24 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
     </View>
   );
 };
+
+/**
+ * It generates a list of accounts based on the page number, the signer, and the mnemonic
+ * @param {number} page - The page number of the accounts to generate.
+ * @param {OfflineSigner} signer - OfflineSigner - this is the signer that the user has selected.
+ * @param {string | undefined} mnemonic - The mnemonic phrase used to generate the accounts.
+ * @returns An array of accounts
+ */
+function generateAccounts(
+  page: number,
+  signer: OfflineSigner,
+  mnemonic: string | undefined,
+) {
+  const addressIndexOffset = page * PROFILE_PER_PAGE;
+  if (isLedgerSigner(signer)) {
+    return generateLedgerAccounts(addressIndexOffset, PROFILE_PER_PAGE, signer);
+  }
+  return generateLocalAccounts(addressIndexOffset, PROFILE_PER_PAGE, mnemonic);
+}
 
 export default Content;
