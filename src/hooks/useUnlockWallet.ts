@@ -68,7 +68,7 @@ export default function useUnlockWallet(): (
                 result: LocalAccountAuthenticationArgs,
               ) => {
                 resolve({
-                  wallet: result.wallet,
+                  wallet: result.wallet!,
                   mnemonic: result.mnemonic,
                 });
               },
@@ -89,7 +89,7 @@ export default function useUnlockWallet(): (
                   ledgerAppName: DesmosLedgerApp!.name,
                   hdPaths: [toCosmjsHdPath(account.hdPath)],
                   prefix: 'desmos',
-                }) as OfflineSigner,
+                }),
               });
             },
             onCancel: () => {

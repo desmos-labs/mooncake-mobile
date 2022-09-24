@@ -5,14 +5,12 @@ import desmosChain, {DESMOS_PREFIX} from './desmosChain';
 
 /**
  * @param {number} addressIndexOffset - The index of the first address to be generated.
- * @param signAlgorithm - The algorithm used to sign the transaction.
  * @param {string} [mnemonic] - The mnemonic that will be used to generate the accounts.
  * @returns An array of 100 items with the value of 0.
  */
 async function generateLocalAccounts(
   addressIndexOffset: number,
   numOfAccounts: number,
-  signAlgorithm: ChainAccount['signAlgorithm'],
   mnemonic?: string,
 ): Promise<ChainAccount[]> {
   /* If the mnemonic is not provided, then the function will return an empty array. */
@@ -38,7 +36,7 @@ async function generateLocalAccounts(
         address: wallet.bech32Address,
         hdPath,
         pubKey: toBase64(wallet.publicKey),
-        signAlgorithm,
+        signAlgorithm: 'secp256k1',
       };
     }),
   );

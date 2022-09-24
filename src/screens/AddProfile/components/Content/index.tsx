@@ -1,6 +1,6 @@
 import React, {FC, Suspense, useCallback, useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {ChainAccount, ChainAccountType} from 'types/chains';
+import {ChainAccount} from 'types/chains';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {ActivityIndicator} from 'react-native-paper';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
@@ -17,8 +17,6 @@ import Buttons from '../Buttons';
 type ContentProps = {
   signer: OfflineSigner;
   mnemonic: string | undefined;
-  accountType: ChainAccountType;
-  signAlgorithm: ChainAccount['signAlgorithm'];
 };
 
 export type ProfilesByPage = {
@@ -28,12 +26,7 @@ export type ProfilesByPage = {
   };
 };
 
-const Content: FC<ContentProps> = ({
-  signer,
-  mnemonic,
-  accountType,
-  signAlgorithm,
-}) => {
+const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   const styles = useStyles();
 
   const [accountsByPage, setAccountsByPage] = useState<Array<ChainAccount[]>>(
@@ -51,13 +44,11 @@ const Content: FC<ContentProps> = ({
     generateAccounts(
       signer,
       mnemonic,
-      accountType,
-      signAlgorithm,
       accountsByPage,
       setAccountsByPage,
       setProfileCountByPage,
     );
-  }, [signer, mnemonic, accountType, signAlgorithm]);
+  }, [signer, mnemonic]);
 
   /* A callback function that is used to select a profile. */
   const handleSelect = useCallback((profile: ProfileData) => {

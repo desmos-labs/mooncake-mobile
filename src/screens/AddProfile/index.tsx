@@ -1,4 +1,3 @@
-import {OfflineSigner} from '@cosmjs/proto-signing';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import ErrorBoundary from 'components/ErrorBoundary';
@@ -12,7 +11,8 @@ import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
 import {StackActions} from '@react-navigation/native';
-import {ChainAccount, ChainAccountType} from 'types/chains';
+import LocalWallet from 'lib/LocalWallet';
+import {LedgerSigner} from '@cosmjs/ledger-amino';
 import useStyles from './useStyles';
 import Content from './components/Content';
 
@@ -27,15 +27,13 @@ type AddProfileProps = StackScreenProps<
  * @property {string} mnemonic - The mnemonic phrase to use for the new profile.
  */
 export type AddProfileParams = {
-  signer?: OfflineSigner;
+  signer?: LocalWallet | LedgerSigner;
   mnemonic?: string;
-  accountType?: ChainAccountType;
-  signAlgorithm?: ChainAccount['signAlgorithm'];
 };
 
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
-  const {signer, mnemonic, accountType, signAlgorithm} = route?.params ?? {};
+  const {signer, mnemonic} = route?.params ?? {};
   const {dispatch} = navigation;
 
   const {t} = useTranslation();
@@ -84,8 +82,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
     })();
   }, [chainAccount, signer]);
 
-  const isWalletUnlocked =
-    !!signer && !!chainAccount && !!accountType && !!signAlgorithm;
+  const isWalletUnlocked = !!signer;
 
   return (
     <DView
@@ -103,12 +100,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
         }>
         <Suspense fallback={<ActivityIndicator />}>
           {isWalletUnlocked ? (
-            <Content
-              signer={signer}
-              mnemonic={mnemonic}
-              accountType={accountType}
-              signAlgorithm={signAlgorithm}
-            />
+            <Content signer={signer} mnemonic={mnemonic} />
           ) : (
             <ActivityIndicator />
           )}
