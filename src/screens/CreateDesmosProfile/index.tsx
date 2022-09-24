@@ -34,7 +34,10 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TextInput,
+  TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
@@ -79,9 +82,9 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
   const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
   const unlockWallet = useUnlockWallet();
-  const nicknameInputRef = React.useRef<any>();
-  const dTagInputRef = React.useRef<any>();
-  const bioInputRef = React.useRef<any>();
+  const nicknameInputRef = React.useRef<TextInput>(null);
+  const dTagInputRef = React.useRef<TextInput>(null);
+  const bioInputRef = React.useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const validationSchema = React.useMemo(() => {
@@ -233,6 +236,23 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
     [],
   );
 
+  const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
+    kbView: {
+      flex: 1,
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      backgroundColor: theme.colors.white,
+    },
+    header: {paddingTop: 68, paddingHorizontal: theme.spacing.m},
+    scrollContainer: {flex: 1},
+    nickname: {opacity: nicknameInputRef.current?.isFocused() ? 1 : 0},
+    dTag: {opacity: dTagInputRef.current?.isFocused() ? 1 : 0},
+    bioInput: {alignSelf: 'flex-start'},
+    bio: {opacity: bioInputRef.current?.isFocused() ? 1 : 0},
+    bioDTextInput: {minHeight: 120},
+    errorText: {color: theme.colors.pink01, flex: 1},
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -262,20 +282,14 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{
-          flex: 1,
-          borderTopLeftRadius: 32,
-          borderTopRightRadius: 32,
-          backgroundColor: theme.colors.white,
-        }}>
+        style={inlineStyles.kbView}>
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
           onSubmit={handleFormSubmit}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
-              <View
-                style={{paddingTop: 68, paddingHorizontal: theme.spacing.m}}>
+              <View style={inlineStyles.header}>
                 <Typography.H4>{t('header')}</Typography.H4>
                 <Typography.Body6 style={styles.descriptionText}>
                   {t('description')}
@@ -285,7 +299,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
-                <View style={{flex: 1}}>
+                <View style={inlineStyles.scrollContainer}>
                   <Typography.Subtitle2 style={styles.inputLabel}>
                     {t('nickname')}
                   </Typography.Subtitle2>
@@ -298,11 +312,13 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                     }}
                     error={!!errors.nickname}
                   />
+                  {errors.nickname && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.nickname}
+                    </Typography.Caption1>
+                  )}
                   {nicknameInputRef.current && (
-                    <View
-                      style={{
-                        opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.nickname}>
                       <TextCounter
                         maxChar={profileParams.nickname.max_length}
                         textToCount={values.nickname}
@@ -322,11 +338,13 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                     error={!!errors.dTag}
                     inputRef={dTagInputRef}
                   />
+                  {errors.dTag && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.dTag}
+                    </Typography.Caption1>
+                  )}
                   {dTagInputRef.current && (
-                    <View
-                      style={{
-                        opacity: dTagInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.dTag}>
                       <TextCounter
                         maxChar={profileParams.dtag.max_length}
                         textToCount={values.dTag}
@@ -342,19 +360,21 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                     value={values.bio}
                     multiline={true}
                     scrollEnabled={false}
-                    inputStyle={{alignSelf: 'flex-start'}}
+                    inputStyle={inlineStyles.bioInput}
                     placeholder={t('addBio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
                     }}
                     error={!!errors.bio}
-                    style={{minHeight: 120}}
+                    style={inlineStyles.bioDTextInput}
                   />
+                  {errors.bio && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.bio}
+                    </Typography.Caption1>
+                  )}
                   {bioInputRef.current && (
-                    <View
-                      style={{
-                        opacity: bioInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.bio}>
                       <TextCounter
                         maxChar={profileParams.bio.max_length}
                         textToCount={values.bio}
