@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {IconButton, useTheme} from 'react-native-paper';
@@ -14,6 +14,7 @@ import {Formik, isNaN} from 'formik';
 import Button from 'components/Button';
 import {removeNonNumbers} from 'lib/FormatUtils';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import {
   connectChainState,
   selectedExternalAccountState,
@@ -27,7 +28,14 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-const ConnectAddressAdvanced = () => {
+export type ConnectAddressAdvancedParams =
+  | {
+      onPressOverride: (signer: OfflineSigner) => void;
+    }
+  | undefined;
+
+const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
+  const {onPressOverride} = route?.params ?? {};
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
@@ -53,13 +61,16 @@ const ConnectAddressAdvanced = () => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+            navigate(
+              ROUTES.CONNECT_ADDRESS_GENERAL,
+              onPressOverride ? {onPressOverride} : undefined,
+            );
           }}>
           {t('general')}
         </Typography.Button2>
       </View>
     );
-  }, []);
+  }, [onPressOverride]);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -105,10 +116,14 @@ const ConnectAddressAdvanced = () => {
 
   const handlePressConfirm = React.useCallback(() => {
     if (generatedAccount) {
-      setSelectedExternalAccount(generatedAccount.serialize);
-      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+      if (onPressOverride) {
+        onPressOverride(generatedAccount);
+      } else {
+        setSelectedExternalAccount(generatedAccount.serialize);
+        navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+      }
     }
-  }, []);
+  }, [onPressOverride]);
 
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>

@@ -60,7 +60,7 @@ const initialFormState = {
 };
 
 const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
-  const {accountOverride} = route.params;
+  const {accountOverride} = route?.params ?? {};
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');

@@ -8,6 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {Button, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import profilesState from '@recoil/profiles';
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 
 type ButtonProps = {
@@ -29,12 +30,19 @@ const Buttons: FC<ButtonProps> = ({
   const setMnemonic = useSetRecoilState(mnemonicState);
   const setSelectedChain = useSetRecoilState(selectedChainState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
+  const onPressOverride = useCallback((signer: OfflineSigner) => {
+    console.log('onPressOverride', signer);
+  }, []);
   const handleCreateDesmosProfile = useCallback(() => {
     if (mnemonic) {
       setMnemonic(mnemonic);
     }
     setSelectedChain(LinkableChains.find(c => /^Desmos$/i.test(c.name))!);
-    dispatch(StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL));
+    dispatch(
+      StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL, {
+        onPressOverride,
+      }),
+    );
   }, [mnemonic]);
 
   const handleConfirmPressed = useCallback(async () => {

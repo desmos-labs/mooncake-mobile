@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import DView from 'components/DView';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
@@ -15,6 +15,7 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import {OfflineSigner} from '@cosmjs/proto-signing';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -24,7 +25,14 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-const ConnectAddressGeneral = () => {
+export type ConnectAddressGeneralParams =
+  | {
+      onPressOverride: (signer: OfflineSigner) => void;
+    }
+  | undefined;
+
+const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
+  const {onPressOverride} = route?.params ?? {};
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -60,27 +68,37 @@ const ConnectAddressGeneral = () => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+            navigate(
+              ROUTES.CONNECT_ADDRESS_ADVANCED,
+              onPressOverride ? {onPressOverride} : undefined,
+            );
           }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
     );
-  }, []);
+  }, [onPressOverride]);
 
-  const renderItem = React.useCallback(({item, index}: any) => {
-    return (
-      <AddressItem
-        key={item.bech32Address}
-        index={index}
-        address={item.bech32Address}
-        handlePress={() => {
-          setSelectedExternalAccount(item.serialize());
-          navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-        }}
-      />
-    );
-  }, []);
+  const renderItem = React.useCallback(
+    ({item, index}: any) => {
+      return (
+        <AddressItem
+          key={item.bech32Address}
+          index={index}
+          address={item.bech32Address}
+          handlePress={() => {
+            if (onPressOverride) {
+              onPressOverride(item);
+            } else {
+              setSelectedExternalAccount(item.serialize());
+              navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+            }
+          }}
+        />
+      );
+    },
+    [onPressOverride],
+  );
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,

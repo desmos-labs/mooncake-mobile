@@ -20,8 +20,12 @@ import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
 import Community from 'screens/Community';
 import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
-import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
-import ConnectAddressGeneral from 'screens/ConnectAddress/General';
+import ConnectAddressAdvanced, {
+  ConnectAddressAdvancedParams,
+} from 'screens/ConnectAddress/Advanced';
+import ConnectAddressGeneral, {
+  ConnectAddressGeneralParams,
+} from 'screens/ConnectAddress/General';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -114,10 +118,10 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.CREATE_DESMOS_PROFILE]: CreateDesmosProfileParams;
+  [ROUTES.CREATE_DESMOS_PROFILE]: CreateDesmosProfileParams | undefined;
   [ROUTES.WELCOME_BACK]: undefined;
-  [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
-  [ROUTES.CONNECT_ADDRESS_ADVANCED]: undefined;
+  [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
+  [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
@@ -160,7 +164,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE]: AddProfileParams;
+  [ROUTES.ADD_PROFILE]: AddProfileParams | undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -208,7 +212,6 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
-        initialParams={{}}
       />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
@@ -449,7 +452,6 @@ const RootNavigator = () => {
         name={ROUTES.ADD_PROFILE}
         component={AddProfile}
         options={{cardStyle: styles.addProfileCard}}
-        initialParams={{}}
       />
     </Stack.Navigator>
   );
