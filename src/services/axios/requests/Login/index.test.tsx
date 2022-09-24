@@ -6,18 +6,6 @@ import {generateLoginData} from 'services/axios/requests/Login/utils';
 import {updateAuthToken} from 'services/axios';
 import Login from './index';
 
-const mockedNavigate = jest.fn();
-
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native');
-  return {
-    ...actualNav,
-    useNavigation: () => ({
-      navigate: mockedNavigate,
-    }),
-  };
-});
-
 jest.mock('./utils', () => {
   return {
     generateLoginData: jest.fn(),
