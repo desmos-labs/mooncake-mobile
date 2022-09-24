@@ -67,10 +67,10 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
   const {goBack, navigate, reset, push} = navigation;
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
-    useImageFromDevice();
+    useImageFromDevice({});
 
   const {imageAsset: profilePicture, imageFromLibrary: selectProfilePicture} =
-    useImageFromDevice();
+    useImageFromDevice({});
 
   const [loading, setLoading] = React.useState(false);
 
