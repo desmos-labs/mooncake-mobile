@@ -103,7 +103,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   const loadMoreAccounts = useCallback(() => {
     console.log(
       `loading profiles (${accountsByPage.length * PROFILE_PER_PAGE}-${
-        (1 + accountsByPage.length) * PROFILE_PER_PAGE
+        (1 + accountsByPage.length) * PROFILE_PER_PAGE - 1
       })...`,
     );
     if (accountsByPage.length >= MAX_PAGE_TO_LOAD) return; // Only load 10 pages
