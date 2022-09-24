@@ -1,5 +1,5 @@
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {act, renderHook, waitFor} from '@testing-library/react-native';
+import {act, renderHook} from '@testing-library/react-native';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants/index';
 import ROUTES from 'navigation/routes';
 import {checkGrants} from 'hooks/authGrants/useCheckAndUpdateGrants/utils';
@@ -39,12 +39,10 @@ describe('hooks: useCheckAndUpdateGrants', () => {
         .then();
     });
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith(ROUTES.ACTION_AUTHORIZATION, {
-        grants: [GrantEnums.MsgCreateReport],
-        onApprove: expect.anything(),
-        onCancel: expect.anything(),
-      });
+    expect(mockNavigate).toHaveBeenCalledWith(ROUTES.ACTION_AUTHORIZATION, {
+      grants: [GrantEnums.MsgCreateReport],
+      onApprove: expect.anything(),
+      onCancel: expect.anything(),
     });
   });
 
