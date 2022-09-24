@@ -21,8 +21,9 @@ import {MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
  * Build a MsgRevokeAllowanceEncode object.
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-revoke-an-allowance
  * @param {Object} Object - An object containing a grantee and granter string
- * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
- * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ * @param {string} Object.grantee - The address of the grantee.
+ * @param {string} Object.granter - The address of the granter.
+ * @returns {MsgRevokeAllowanceEncodeObject} An encode object the revokes a previously granted allowance
  */
 export const buildRevokeAllowanceEncode = ({
   grantee,
@@ -44,8 +45,9 @@ export const buildRevokeAllowanceEncode = ({
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#Authorizing-the-payment-of-fees
  * @param {Object} Object - An object containing the grants to build, a grantee, and granter
  * @param {GrantEnums[]} grants - An array of grants to build allowance grants for
- * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
- * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ * @param {string} Object.grantee - The address of the grantee.
+ * @param {string} Object.granter - The address of the granter.
+ * @returns {MsgGrantAllowanceEncodeObject} An encode object that gives the grantee an allowance to use a granter's funds to conduct transactions
  */
 export const buildGrantAllowanceEncode = ({
   grants,
@@ -88,8 +90,9 @@ export const buildGrantAllowanceEncode = ({
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-grant-an-authorization
  * @param {Object} Object - An object containing an array of grants, a grantee, and granter
  * @param {GrantEnums[]} grants - An array of grants to build MsgGrantEncodeObjects for.
- * @param {string} Object.grantee - The address of the user being granted an allowance of another user's funds.
- * @param {string} Object.granter - The address of the user granting an allowance of their funds.
+ * @param {string} Object.grantee - The address of the grantee.
+ * @param {string} Object.granter - The address of the granter.
+ * @returns {MsgGrantEncodeObject[]} An array of Encode Objects that authorizes a grantee to conduct {grants} type transactions onbehalf of the granter.
  */
 export const buildGrantMsgEncodes = ({
   grants,
@@ -133,6 +136,12 @@ export const buildGrantMsgEncodes = ({
 /**
  * The opposite of buildGrantMsgEncodes, this function will build an array
  * of revoking grants.
+ * @param {Object} Object
+ * @param {GrantEnums[]} Object.grants - An array of grants to build MsgRevokeEncodeObjects for.
+ * @param {string} Object.grantee - The address of the grantee.
+ * @param {string} Object.granter - The address of the granter.
+ * @returns {MsgRevokeEncodeObject[]} - An array of MsgRevokeEncodeObjects that represent the grants that {granter} wants
+ *                                      to revoke from the {grantee}
  */
 export const buildRevokeGrantMsgEncodes = ({
   grants,
