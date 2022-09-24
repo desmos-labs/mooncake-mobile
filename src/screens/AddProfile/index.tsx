@@ -10,7 +10,6 @@ import ROUTES from 'navigation/routes';
 import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
-import {StackActions} from '@react-navigation/native';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 import Content from './components/Content';
@@ -19,7 +18,7 @@ import Content from './components/Content';
 export const PROFILE_PER_PAGE = 100;
 
 /* This is the maximum number of pages that will be loaded. */
-export const MAX_PAGE_TO_LOAD = 10;
+export const MAX_PAGE_TO_LOAD = 50;
 
 type AddProfileProps = StackScreenProps<
   RootNavigatorParamList,
@@ -39,7 +38,7 @@ export type AddProfileParams = {
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
   const {signer, mnemonic} = route?.params ?? {};
-  const {dispatch} = navigation;
+  const {pop, replace} = navigation;
 
   const {t} = useTranslation();
   const styles = useStyles();
@@ -74,18 +73,11 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
 
       // ledger cancelled
       if (!res?.wallet) {
-        return dispatch(StackActions.pop());
+        return pop();
       }
 
       // unlocked
-      dispatch(
-        StackActions.replace(ROUTES.ADD_PROFILE, {
-          signer: res.wallet,
-          mnemonic: res.mnemonic,
-          accountType: chainAccount.type,
-          signAlgorithm: chainAccount.signAlgorithm,
-        }),
-      );
+      replace(ROUTES.ADD_PROFILE, {signer: res.wallet, mnemonic: res.mnemonic});
     })();
   }, [chainAccount, isWalletUnlocked]);
 

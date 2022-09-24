@@ -1,4 +1,4 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {mnemonicState, selectedChainState} from '@recoil/connectChainState';
 import Typography from 'components/Typography';
 import LinkableChains from 'config/LinkableChains';
@@ -9,6 +9,8 @@ import {Button, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import profilesState from '@recoil/profiles';
 import {OfflineSigner} from '@cosmjs/proto-signing';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useStyles from './useStyles';
 
 type ButtonProps = {
@@ -26,7 +28,8 @@ const Buttons: FC<ButtonProps> = ({
 }) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {dispatch} = useNavigation();
+  const {navigate} =
+    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation();
 
   const setMnemonic = useSetRecoilState(mnemonicState);
@@ -36,17 +39,14 @@ const Buttons: FC<ButtonProps> = ({
     async (signer: OfflineSigner) => {
       const accounts = await signer.getAccounts();
       if (!accounts.length) throw new Error('No accounts found');
+      console.log('accounts', accounts);
       const accountOverride = accounts[0];
       if (loadedProfileAddresses.has(accountOverride.address)) {
-        dispatch(
-          StackActions.push(ROUTES.USER_PROFILE, {
-            visitingProfileAddress: accountOverride.address,
-          }),
-        );
+        navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: accountOverride.address,
+        });
       } else {
-        dispatch(
-          StackActions.push(ROUTES.CREATE_DESMOS_PROFILE, {accountOverride}),
-        );
+        navigate(ROUTES.CREATE_DESMOS_PROFILE, {accountOverride});
       }
     },
     [loadedProfileAddresses],
@@ -56,11 +56,9 @@ const Buttons: FC<ButtonProps> = ({
       setMnemonic(mnemonic);
     }
     setSelectedChain(LinkableChains.find(c => /^Desmos$/i.test(c.name))!);
-    dispatch(
-      StackActions.push(ROUTES.CONNECT_ADDRESS_GENERAL, {
-        onPressOverride,
-      }),
-    );
+    navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+      onPressOverride,
+    });
   }, [mnemonic]);
 
   const handleConfirmPressed = useCallback(async () => {
