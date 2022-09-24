@@ -28,7 +28,7 @@ const Buttons: FC<ButtonProps> = ({
 }) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {navigate} =
+  const {replace} =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation();
 
@@ -41,11 +41,11 @@ const Buttons: FC<ButtonProps> = ({
       if (!accounts.length) throw new Error('No accounts found');
       const accountOverride = accounts[0];
       if (loadedProfileAddresses.has(accountOverride.address)) {
-        navigate(ROUTES.USER_PROFILE, {
+        replace(ROUTES.USER_PROFILE, {
           visitingProfileAddress: accountOverride.address,
         });
       } else {
-        navigate(ROUTES.CREATE_DESMOS_PROFILE, {accountOverride});
+        replace(ROUTES.CREATE_DESMOS_PROFILE, {accountOverride});
       }
     },
     [loadedProfileAddresses],
@@ -55,7 +55,7 @@ const Buttons: FC<ButtonProps> = ({
       setMnemonic(mnemonic);
     }
     setSelectedChain(LinkableChains.find(c => /^Desmos$/i.test(c.name))!);
-    navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+    replace(ROUTES.CONNECT_ADDRESS_GENERAL, {
       onPressOverride,
     });
   }, [mnemonic]);

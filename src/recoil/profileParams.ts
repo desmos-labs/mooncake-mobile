@@ -12,7 +12,7 @@ export const profileParamsState = atom<ProfileParams>({
     dtag: {
       reg_ex: '^[A-Za-z0-9_]+$',
       max_length: '30',
-      min_length: '3',
+      min_length: '6', // default 3, 6 for App
     },
     oracle: {
       ask_count: 5,
@@ -23,7 +23,7 @@ export const profileParamsState = atom<ProfileParams>({
       prepare_gas: 50000,
     },
     nickname: {
-      max_length: '1000',
+      max_length: '30', // default 1000, 30 for App
       min_length: '2',
     },
   },

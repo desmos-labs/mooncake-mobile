@@ -29,7 +29,7 @@ export type ProfilesByPage = {
 
 /**
  * @property {number} page - The current page number.
- * @property {ChainAccount[]} accounts - ChainAccount[] - The list of accounts that are currently
+ * @property {ChainAccount[] | undefined;} accounts - ChainAccount[] - The list of accounts that are currently
  * loaded.
  * @property {Set<string>} loadedProfileAddresses - An array of ProfileData objects.
  * @property {ProfileData[]} selectedProfiles - The profiles that are currently selected.
@@ -117,7 +117,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         const result = prev.slice();
         if (result.length < page) {
           result.length = page;
-          result.fill([], prev.length, page);
+          result.fill([], prev.length);
         }
         result.splice(page, 1, newAccounts);
         return result;

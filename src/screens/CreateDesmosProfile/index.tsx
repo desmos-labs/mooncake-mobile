@@ -113,6 +113,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
+      console.log('formValues', formValues);
       setLoading(true);
 
       const {dTag, nickname, bio} = formValues;
