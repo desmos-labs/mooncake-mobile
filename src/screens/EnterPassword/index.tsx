@@ -65,9 +65,10 @@ const EnterPassword = () => {
   const styles = useStyles();
   const theme = useTheme();
 
+  // Fail the authentication request if the screen is unmounted (i.e user presses back)
+  // the resolved state will ensure that this is only run if the unlock promise has not been resolved
   React.useEffect(() => {
     return () => {
-      console.log('help');
       if (!resolved) {
         onFailedAuthentication && onFailedAuthentication();
       }
