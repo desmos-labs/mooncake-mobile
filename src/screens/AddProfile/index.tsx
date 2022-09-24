@@ -12,6 +12,7 @@ import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
 import {StackActions} from '@react-navigation/native';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import useStyles from './useStyles';
 import Content from './components/Content';
 
@@ -28,18 +29,18 @@ type AddProfileProps = StackScreenProps<
 export type AddProfileParams = {
   signer?: OfflineSigner;
   mnemonic?: string;
+  accountType?: ChainAccountType;
+  signAlgorithm?: ChainAccount['signAlgorithm'];
 };
-
-/* The number of profiles that will be displayed on the screen. */
-export const PROFILE_PER_PAGE = 100;
 
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
-  const {signer, mnemonic} = route?.params ?? {};
+  const {signer, mnemonic, accountType, signAlgorithm} = route?.params ?? {};
   const {dispatch} = navigation;
 
   const {t} = useTranslation();
   const styles = useStyles();
+
   const unlockWallet = useUnlockWallet();
   const {chainAccount} = useActiveAccount();
 
@@ -76,10 +77,15 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
         StackActions.replace(ROUTES.ADD_PROFILE, {
           signer: res.wallet,
           mnemonic: res.mnemonic,
+          accountType: chainAccount.type,
+          signAlgorithm: chainAccount.signAlgorithm,
         }),
       );
     })();
   }, [chainAccount, signer]);
+
+  const isWalletUnlocked =
+    !!signer && !!chainAccount && !!accountType && !!signAlgorithm;
 
   return (
     <DView
@@ -96,11 +102,12 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
           </Typography.H3>
         }>
         <Suspense fallback={<ActivityIndicator />}>
-          {signer && chainAccount ? (
+          {isWalletUnlocked ? (
             <Content
               signer={signer}
               mnemonic={mnemonic}
-              chainAccount={chainAccount}
+              accountType={accountType}
+              signAlgorithm={signAlgorithm}
             />
           ) : (
             <ActivityIndicator />

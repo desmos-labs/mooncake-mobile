@@ -3,7 +3,9 @@ import {Dispatch, SetStateAction} from 'react';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import generateLocalAccounts from './generateLocalAccounts';
 import generateLedgerAccounts from './generateLedgerAccounts';
-import {PROFILE_PER_PAGE} from './index';
+
+/* The number of profiles that will be displayed on the screen. */
+export const PROFILE_PER_PAGE = 100;
 
 /**
  * It generates a bunch of accounts, and then updates the state to reflect that
@@ -15,9 +17,10 @@ import {PROFILE_PER_PAGE} from './index';
  * @param setProfileCountByPage - Dispatch<
  */
 async function generateAccounts(
-  chainAccount: ChainAccount,
   signer: OfflineSigner,
   mnemonic: string | undefined,
+  accountType: ChainAccountType,
+  signAlgorithm: ChainAccount['signAlgorithm'],
   accountsByPage: Array<ChainAccount[]>,
   setAccountsByPage: Dispatch<SetStateAction<Array<ChainAccount[]>>>,
   setProfileCountByPage: Dispatch<SetStateAction<Record<number, number>>>,
@@ -25,16 +28,18 @@ async function generateAccounts(
   const page = accountsByPage.length;
   const addressIndexOffset = page * PROFILE_PER_PAGE;
   let newAccounts: Array<ChainAccount> = [];
-  if (chainAccount.type === ChainAccountType.Local) {
+  if (accountType === ChainAccountType.Local) {
     newAccounts = await generateLocalAccounts(
       addressIndexOffset,
-      chainAccount.signAlgorithm,
+      PROFILE_PER_PAGE,
+      signAlgorithm,
       mnemonic,
     );
   } else {
     newAccounts = await generateLedgerAccounts(
       addressIndexOffset,
-      chainAccount.signAlgorithm,
+      PROFILE_PER_PAGE,
+      signAlgorithm,
       signer,
     );
   }

@@ -3,15 +3,23 @@ import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import React, {FC, useCallback, useEffect, useMemo} from 'react';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
-import {ChainAccount} from 'types/chains';
 import {isEqual} from 'lodash';
 
 import {ActivityIndicator} from 'react-native-paper';
-import AddProfileBadge from '../AddProfileBadge';
+import AddProfileBadge, {ProfileRadioValue} from '../AddProfileBadge';
 
+/**
+ * @property {number} page - The current page number.
+ * @property {string[]} addresses - An array of addresses that we want to search for.
+ * @property {ProfileData[]} selectedProfiles - The list of profiles that have been selected by the
+ * user.
+ * @property onSelect - This is a function that is called when a profile is selected.
+ * @property setProfileCount - This is a function that will be called when the component is mounted. It
+ * will be called with the page number and the number of profiles that were found.
+ */
 export type AddProfileBadgeGroupProps = {
   page: number;
-  accounts: ChainAccount[];
+  addresses: string[];
   selectedProfiles: ProfileData[];
   onSelect: (profile: ProfileData) => void;
   setProfileCount: (page: number, count: number) => void;
@@ -19,15 +27,11 @@ export type AddProfileBadgeGroupProps = {
 
 const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   page,
-  accounts,
+  addresses,
   selectedProfiles,
   onSelect,
   setProfileCount,
 }) => {
-  const addresses = useMemo(
-    () => accounts.map(account => account.address),
-    [accounts],
-  );
   const {loading, error, data, variables} = useQuery<{profile: ProfileData[]}>(
     GetProfileForAddresses,
     {variables: {addresses}},
@@ -38,7 +42,8 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   const {profiles: loadedProfiles, loading: loadingProfiles} =
     useLoadProfiles();
 
-  const values = useMemo(() => {
+  /* Creating a new array of ProfieRadioValue. */
+  const values = useMemo<ProfileRadioValue[]>(() => {
     return profiles.map(({address, nickname, dtag, profile_pic}) => ({
       id: address,
       nickname,
@@ -49,10 +54,12 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
     }));
   }, [profiles, loadedProfiles, selectedProfiles]);
 
+  /* Update profile count for this page for the parent component */
   useEffect(() => {
     if (!loadingProfiles) setProfileCount(page, loadedProfiles.length);
   }, [loadingProfiles, loadedProfiles]);
 
+  /* A callback function that is used to handle the selection of a profile. */
   const handleSelect = useCallback(
     (id: string) => {
       const disabled = loadedProfiles.some(p => p.address === id);
@@ -63,9 +70,11 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
     [loadedProfiles, selectedProfiles, onSelect],
   );
 
+  /* This is a check to see if the data is loading, then it will return an activity indicator. */
   if (loading || loadingProfiles || !isEqual(addresses, variables?.addresses)) {
     return <ActivityIndicator />;
   }
+
   return (
     <>
       {values.map(value => (

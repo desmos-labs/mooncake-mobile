@@ -1,6 +1,6 @@
 import React, {FC, Suspense, useCallback, useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {ChainAccount} from 'types/chains';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {ActivityIndicator} from 'react-native-paper';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
@@ -8,10 +8,17 @@ import useStyles from './useStyles';
 import generateAccounts from '../../generateAccounts';
 import Buttons from '../Buttons';
 
+/**
+ * @property {OfflineSigner} signer - The offline signer that will be used to sign the transaction.
+ * @property {string | undefined} mnemonic - The mnemonic phrase that was generated for the account.
+ * @property {ChainAccountType} accountType - The type of account you want to create.
+ * @property signAlgorithm - The algorithm used to sign the transaction.
+ */
 type ContentProps = {
   signer: OfflineSigner;
   mnemonic: string | undefined;
-  chainAccount: ChainAccount;
+  accountType: ChainAccountType;
+  signAlgorithm: ChainAccount['signAlgorithm'];
 };
 
 export type ProfilesByPage = {
@@ -21,7 +28,12 @@ export type ProfilesByPage = {
   };
 };
 
-const Content: FC<ContentProps> = ({signer, mnemonic, chainAccount}) => {
+const Content: FC<ContentProps> = ({
+  signer,
+  mnemonic,
+  accountType,
+  signAlgorithm,
+}) => {
   const styles = useStyles();
 
   const [accountsByPage, setAccountsByPage] = useState<Array<ChainAccount[]>>(
@@ -32,22 +44,22 @@ const Content: FC<ContentProps> = ({signer, mnemonic, chainAccount}) => {
   >({});
   const [selectedProfiles, setSelectedProfiles] = useState<ProfileData[]>([]);
 
+  /* Reset and generate the first page of accounts */
   useEffect(() => {
-    if (!signer || !chainAccount) {
-      setAccountsByPage([]);
-      setProfileCountByPage([]);
-    } else {
-      generateAccounts(
-        chainAccount,
-        signer,
-        mnemonic,
-        accountsByPage,
-        setAccountsByPage,
-        setProfileCountByPage,
-      );
-    }
-  }, [signer, chainAccount]);
+    setAccountsByPage([]);
+    setProfileCountByPage([]);
+    generateAccounts(
+      signer,
+      mnemonic,
+      accountType,
+      signAlgorithm,
+      accountsByPage,
+      setAccountsByPage,
+      setProfileCountByPage,
+    );
+  }, [signer, mnemonic, accountType, signAlgorithm]);
 
+  /* A callback function that is used to select a profile. */
   const handleSelect = useCallback((profile: ProfileData) => {
     setSelectedProfiles(prev => {
       const index = prev.findIndex(p => p.address === profile.address);
@@ -75,7 +87,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic, chainAccount}) => {
               {accounts ? (
                 <AddProfileBadgeGroup
                   page={page}
-                  accounts={accounts}
+                  addresses={accounts.map(account => account.address)}
                   selectedProfiles={selectedProfiles}
                   onSelect={handleSelect}
                   setProfileCount={setProfileCount}

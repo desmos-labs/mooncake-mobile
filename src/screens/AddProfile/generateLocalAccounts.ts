@@ -1,7 +1,6 @@
 import {toBase64} from '@cosmjs/encoding';
 import LocalWallet from 'lib/LocalWallet';
 import {ChainAccount, ChainAccountType} from 'types/chains';
-import {PROFILE_PER_PAGE} from './index';
 import desmosChain, {DESMOS_PREFIX} from './desmosChain';
 
 /**
@@ -12,6 +11,7 @@ import desmosChain, {DESMOS_PREFIX} from './desmosChain';
  */
 async function generateLocalAccounts(
   addressIndexOffset: number,
+  numOfAccounts: number,
   signAlgorithm: ChainAccount['signAlgorithm'],
   mnemonic?: string,
 ): Promise<ChainAccount[]> {
@@ -21,7 +21,7 @@ async function generateLocalAccounts(
   }
 
   /* Creating an array of 100 items with the value of 0. */
-  const items = new Array(PROFILE_PER_PAGE).fill(0);
+  const items = new Array(numOfAccounts).fill(0);
 
   return Promise.all(
     items.map(async (_, addressIndex) => {

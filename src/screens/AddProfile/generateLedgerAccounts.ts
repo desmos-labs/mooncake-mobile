@@ -2,7 +2,6 @@ import {LedgerSigner} from '@cosmjs/ledger-amino';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import {ChainAccount, ChainAccountType} from 'types/chains';
-import {PROFILE_PER_PAGE} from './index';
 import desmosChain from './desmosChain';
 
 /**
@@ -13,6 +12,7 @@ import desmosChain from './desmosChain';
  */
 async function generateLedgerAccounts(
   addressIndexOffset: number,
+  numOfAccounts: number,
   signAlgorithm: ChainAccount['signAlgorithm'],
   signer: OfflineSigner,
 ): Promise<ChainAccount[]> {
@@ -22,7 +22,7 @@ async function generateLedgerAccounts(
   }
 
   /* Creating an array of 100 items with the value of 0. */
-  const items = new Array(PROFILE_PER_PAGE).fill(0);
+  const items = new Array(numOfAccounts).fill(0);
 
   return Promise.all(
     items.map(async (_, addressIndex) => {
