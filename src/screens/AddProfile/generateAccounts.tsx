@@ -1,50 +1,26 @@
 import {OfflineSigner} from '@cosmjs/proto-signing';
-import {Dispatch, SetStateAction} from 'react';
-import {ChainAccount} from 'types/chains';
 import generateLocalAccounts from './generateLocalAccounts';
 import generateLedgerAccounts from './generateLedgerAccounts';
 import isLedgerSigner from './isLedgerSigner';
 import {PROFILE_PER_PAGE} from '.';
 
 /**
- * It generates a bunch of accounts, and then updates the state to reflect that
- * @param {OfflineSigner} signer - OfflineSigner
+ * It generates a list of accounts based on the page number, the signer, and the mnemonic
+ * @param {number} page - The page number of the accounts to generate.
+ * @param {OfflineSigner} signer - OfflineSigner - this is the signer that the user has selected.
  * @param {string | undefined} mnemonic - The mnemonic phrase used to generate the accounts.
- * @param accountsByPage - Array<ChainAccount[]>
- * @param setAccountsByPage - Dispatch<SetStateAction<Array<ChainAccount[]>>>,
- * @param setProfileCountByPage - Dispatch<
+ * @returns An array of accounts
  */
-async function generateAccounts(
+function generateAccounts(
+  page: number,
   signer: OfflineSigner,
   mnemonic: string | undefined,
-  accountsByPage: Array<ChainAccount[]>,
-  setAccountsByPage: Dispatch<SetStateAction<Array<ChainAccount[]>>>,
-  setProfileCountByPage: Dispatch<SetStateAction<Record<number, number>>>,
 ) {
-  const page = accountsByPage.length;
   const addressIndexOffset = page * PROFILE_PER_PAGE;
-  let newAccounts: Array<ChainAccount> = [];
   if (isLedgerSigner(signer)) {
-    newAccounts = await generateLedgerAccounts(
-      addressIndexOffset,
-      PROFILE_PER_PAGE,
-      signer,
-    );
-  } else {
-    newAccounts = await generateLocalAccounts(
-      addressIndexOffset,
-      PROFILE_PER_PAGE,
-      mnemonic,
-    );
+    return generateLedgerAccounts(addressIndexOffset, PROFILE_PER_PAGE, signer);
   }
-  setAccountsByPage(prev => {
-    const result = prev.slice();
-    if (result.length !== page) {
-      result.length = page;
-    }
-    return result.concat([newAccounts]);
-  });
-  setProfileCountByPage(prev => ({...prev, [page]: 0}));
+  return generateLocalAccounts(addressIndexOffset, PROFILE_PER_PAGE, mnemonic);
 }
 
 export default generateAccounts;

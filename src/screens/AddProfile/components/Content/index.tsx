@@ -107,13 +107,20 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
       })...`,
     );
     if (accountsByPage.length >= MAX_PAGE_TO_LOAD) return; // Only load 10 pages
-    generateAccounts(
-      signer,
-      mnemonic,
-      accountsByPage,
-      setAccountsByPage,
-      setProfileCountByPage,
-    );
+    (async () => {
+      const page = accountsByPage.length; // zero-based page number
+      const newAccounts = await generateAccounts(page, signer, mnemonic);
+      setAccountsByPage(prev => {
+        const result = prev.slice();
+        if (result.length < page) {
+          result.length = page;
+          result.fill([], prev.length, page);
+        }
+        result.splice(page, 1, newAccounts);
+        return result;
+      });
+      setProfileCountByPage(prev => ({...prev, [page]: 0}));
+    })();
   }, [signer, mnemonic, accountsByPage]);
 
   /* Reset and generate the first page of accounts */

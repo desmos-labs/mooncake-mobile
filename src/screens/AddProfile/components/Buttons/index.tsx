@@ -39,7 +39,6 @@ const Buttons: FC<ButtonProps> = ({
     async (signer: OfflineSigner) => {
       const accounts = await signer.getAccounts();
       if (!accounts.length) throw new Error('No accounts found');
-      console.log('accounts', accounts);
       const accountOverride = accounts[0];
       if (loadedProfileAddresses.has(accountOverride.address)) {
         navigate(ROUTES.USER_PROFILE, {
