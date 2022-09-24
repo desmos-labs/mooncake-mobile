@@ -40,7 +40,7 @@ export type ProfilesByPage = {
  */
 type ContentGroupProps = {
   page: number;
-  accounts: ChainAccount[];
+  accounts: ChainAccount[] | undefined;
   selectedProfiles: ProfileData[];
   handleSelect: (profile: ProfileData) => void;
   setProfileCount: (page: number, count: number) => void;
@@ -57,9 +57,10 @@ const ContentGroup: FC<ContentGroupProps> = ({
   loadMoreAccounts,
 }) => {
   const addresses = useMemo(
-    () => accounts.map(account => account.address),
+    () => accounts?.map(account => account.address) ?? [],
     [accounts],
   );
+  if (!addresses.length) return null;
   return (
     <Suspense fallback={<ActivityIndicator />} key={page}>
       {accounts ? (
