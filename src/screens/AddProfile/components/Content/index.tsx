@@ -139,11 +139,16 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
     setProfileCountByPage(prev => ({...prev, [page]: count}));
   }, []);
 
+  const loadedProfileAddresses = useMemo(
+    () =>
+      loadedProfiles.reduce(
+        (set, profile) => set.add(profile.address),
+        new Set<string>(),
+      ),
+    [loadedProfiles],
+  );
+
   const accountsExcludedLoadedProfile = useMemo(() => {
-    const loadedProfileAddresses = loadedProfiles.reduce(
-      (set, profile) => set.add(profile.address),
-      new Set<string>(),
-    );
     return accountsByPage
       .map((accounts, page) => ({
         accounts: accounts.filter(
@@ -152,7 +157,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         page,
       }))
       .filter(({accounts}) => accounts.length > 0);
-  }, [accountsByPage]);
+  }, [accountsByPage, loadedProfileAddresses]);
 
   return (
     <View style={styles.content}>
@@ -191,6 +196,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         )}
         mnemonic={mnemonic}
         selectedProfiles={selectedProfiles}
+        loadedProfileAddresses={loadedProfileAddresses}
       />
     </View>
   );

@@ -42,6 +42,7 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
+import {AccountData} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -50,7 +51,7 @@ type NavProps = StackScreenProps<
 >;
 
 export type CreateDesmosProfileParams = {
-  accountOverride?: ChainAccount;
+  accountOverride?: AccountData;
 };
 
 const initialFormState = {
@@ -133,7 +134,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
         const {password, mnemonic} = accountCreation;
         const wallet = await LocalWallet.fromMnemonic(mnemonic);
         const [address, pubKey] = accountOverride?.address
-          ? [accountOverride.address, accountOverride.pubKey]
+          ? [accountOverride.address, toBase64(accountOverride.pubkey)]
           : [wallet.bech32Address, toBase64(wallet.publicKey)];
         const messages = getMessage(
           address,

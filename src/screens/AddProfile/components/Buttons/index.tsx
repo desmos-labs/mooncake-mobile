@@ -15,12 +15,14 @@ type ButtonProps = {
   canAddProfile: boolean;
   mnemonic: string | undefined;
   selectedProfiles: ProfileData[];
+  loadedProfileAddresses: Set<string>;
 };
 
 const Buttons: FC<ButtonProps> = ({
   canAddProfile,
   mnemonic,
   selectedProfiles,
+  loadedProfileAddresses,
 }) => {
   const styles = useStyles();
   const theme = useTheme();
@@ -30,9 +32,25 @@ const Buttons: FC<ButtonProps> = ({
   const setMnemonic = useSetRecoilState(mnemonicState);
   const setSelectedChain = useSetRecoilState(selectedChainState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
-  const onPressOverride = useCallback((signer: OfflineSigner) => {
-    console.log('onPressOverride', signer);
-  }, []);
+  const onPressOverride = useCallback(
+    async (signer: OfflineSigner) => {
+      const accounts = await signer.getAccounts();
+      if (!accounts.length) throw new Error('No accounts found');
+      const accountOverride = accounts[0];
+      if (loadedProfileAddresses.has(accountOverride.address)) {
+        dispatch(
+          StackActions.push(ROUTES.USER_PROFILE, {
+            visitingProfileAddress: accountOverride.address,
+          }),
+        );
+      } else {
+        dispatch(
+          StackActions.push(ROUTES.CREATE_DESMOS_PROFILE, {accountOverride}),
+        );
+      }
+    },
+    [loadedProfileAddresses],
+  );
   const handleCreateDesmosProfile = useCallback(() => {
     if (mnemonic) {
       setMnemonic(mnemonic);
