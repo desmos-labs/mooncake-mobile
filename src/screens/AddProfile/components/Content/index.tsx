@@ -11,13 +11,12 @@ import {ChainAccount} from 'types/chains';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {ActivityIndicator} from 'react-native-paper';
 import {useLoadProfiles} from '@recoil/profiles';
+import {MAX_PAGE_TO_LOAD, PROFILE_PER_PAGE} from 'screens/AddProfile';
 import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
 import useStyles from './useStyles';
 import generateAccounts from '../../generateAccounts';
 import Buttons from '../Buttons';
 import AddProfileBadge, {profileToRadioValue} from '../AddProfileBadge';
-
-const MAX_PAGE_TO_LOAD = 10;
 
 export type ProfilesByPage = {
   [page: number]: {
@@ -102,7 +101,11 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   const {profiles: loadedProfiles, loading} = useLoadProfiles();
 
   const loadMoreAccounts = useCallback(() => {
-    console.log('accountsByPage.length', accountsByPage.length);
+    console.log(
+      `loading profiles (${accountsByPage.length * PROFILE_PER_PAGE}-${
+        (1 + accountsByPage.length) * PROFILE_PER_PAGE
+      })...`,
+    );
     if (accountsByPage.length >= MAX_PAGE_TO_LOAD) return; // Only load 10 pages
     generateAccounts(
       signer,
@@ -151,12 +154,6 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
       .filter(({accounts}) => accounts.length > 0);
   }, [accountsByPage]);
 
-  const profileCount = useMemo(
-    () =>
-      Object.values(profileCountByPage).reduce((acc, count) => acc + count, 0),
-    [profileCountByPage],
-  );
-
   return (
     <View style={styles.content}>
       <ScrollView
@@ -184,13 +181,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
                 key={profile.address}
               />
             ))}
-            {!profileCount && accountsByPage.length < MAX_PAGE_TO_LOAD && (
-              <ActivityIndicator />
-              // <Typography.Body7>
-              //   loading profiles ({accountsByPage.length * PROFILE_PER_PAGE}-
-              //   {(1 + accountsByPage.length) * PROFILE_PER_PAGE})...
-              // </Typography.Body7>
-            )}
+            {accountsByPage.length < MAX_PAGE_TO_LOAD && <ActivityIndicator />}
           </>
         )}
       </ScrollView>

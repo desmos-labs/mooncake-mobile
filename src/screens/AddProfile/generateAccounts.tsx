@@ -4,9 +4,7 @@ import {ChainAccount} from 'types/chains';
 import generateLocalAccounts from './generateLocalAccounts';
 import generateLedgerAccounts from './generateLedgerAccounts';
 import isLedgerSigner from './isLedgerSigner';
-
-/* The number of profiles that will be displayed on the screen. */
-export const PROFILE_PER_PAGE = 100;
+import {PROFILE_PER_PAGE} from '.';
 
 /**
  * It generates a bunch of accounts, and then updates the state to reflect that

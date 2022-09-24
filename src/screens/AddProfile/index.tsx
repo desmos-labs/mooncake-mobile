@@ -15,6 +15,12 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 import Content from './components/Content';
 
+/* The number of profiles that will be displayed on the screen. */
+export const PROFILE_PER_PAGE = 100;
+
+/* This is the maximum number of pages that will be loaded. */
+export const MAX_PAGE_TO_LOAD = 10;
+
 type AddProfileProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.ADD_PROFILE
