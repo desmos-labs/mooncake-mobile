@@ -116,59 +116,137 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
-      try {
-        setLoading(true);
+      setLoading(true);
 
-        const {dTag, nickname, bio} = formValues;
+      const {dTag, nickname, bio} = formValues;
 
-        const [uploadProfilePicResult, uploadCoverPicResult] =
-          await Promise.all([
-            profilePicture && UploadMedia({mediaFile: profilePicture}),
-            coverPicture && UploadMedia({mediaFile: coverPicture}),
-          ]);
+      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
+        profilePicture && UploadMedia({mediaFile: profilePicture}),
+        coverPicture && UploadMedia({mediaFile: coverPicture}),
+      ]);
 
-        const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
-        const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
 
-        // delay setLoading false so it occurs while the screen is in background
-        setTimeout(() => {
+      const failureAction = goBack;
+      const useExternalAccount =
+        accountCreation?.useExternalAccount ??
+        createLedgerAccount?.useExternalAccount;
+
+      if (useExternalAccount) {
+        try {
+          if (!accountCreation && !createLedgerAccount) {
+            throw new Error('No account creation data');
+          }
+          if (accountCreation) {
+            const {mnemonic} = accountCreation;
+            if (!mnemonic) throw new Error('mnemonic is missing');
+            // const wallet = await LocalWallet.fromMnemonic(mnemonic);
+            const externalWallet = await LocalWallet.deserialize(
+              selectedExternalAccount,
+            );
+
+            // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
+            const address = externalWallet.bech32Address;
+            const messages = getMessage(
+              address,
+              dTag,
+              nickname,
+              bio,
+              profilePictureUrl,
+              coverPictureUrl,
+            );
+            navigate(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: externalWallet,
+              async successAction() {
+                const newAccount: ChainAccount = {
+                  address: externalWallet.bech32Address,
+                  pubKey: toBase64(externalWallet.publicKey),
+                  type: ChainAccountType.Local,
+                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                  signAlgorithm: 'secp256k1',
+                };
+                await saveNewAccount(newAccount);
+                console.log({newAccount});
+              },
+              failureAction,
+            });
+          } else {
+            // TO DO: support ledger account
+            const {account: ledgerAccount} = createLedgerAccount;
+            if (!ledgerAccount) throw new Error('ledgerAccount is missing');
+
+            const externalWallet = await LocalWallet.deserialize(
+              selectedExternalAccount,
+            );
+            const messages = getMessage(
+              externalWallet.bech32Address,
+              dTag,
+              nickname,
+              bio,
+              profilePictureUrl,
+              coverPictureUrl,
+            );
+            navigate(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: externalWallet,
+              // save newly created account data and navigate to home page
+              async successAction() {
+                await saveNewAccount(ledgerAccount);
+
+                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('common:congratulations'),
+                  subtitle: t('common:dtag created'),
+                  buttonLabel: t('resultModal:enterApp'),
+                  handleButtonPress: () => {
+                    reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: ROUTES.HOME,
+                        },
+                      ],
+                    });
+                  },
+                });
+              },
+              failureAction,
+            });
+          }
+        } catch (error) {
+          console.error('handlFormSubmit', error);
+          throw error;
+        } finally {
           setLoading(false);
-        }, 500);
+        }
+      } else {
+        try {
+          if (!accountCreation && !createLedgerAccount) {
+            throw new Error('No account creation data');
+          }
+          if (accountCreation) {
+            const {password, mnemonic} = accountCreation;
+            if (!mnemonic) throw new Error('mnemonic is missing');
+            const wallet = await LocalWallet.fromMnemonic(mnemonic);
+            const address = wallet.bech32Address;
+            const messages = getMessage(
+              address,
+              dTag,
+              nickname,
+              bio,
+              profilePictureUrl,
+              coverPictureUrl,
+            );
 
-        if (accountCreation && accountCreation.mnemonic) {
-          const {password, mnemonic} = accountCreation;
-
-          const wallet = await LocalWallet.fromMnemonic(mnemonic);
-          const account = accountCreation.useExternalAccount
-            ? await LocalWallet.deserialize(selectedExternalAccount)
-            : wallet;
-
-          const address = wallet.bech32Address;
-          const pubKey = toBase64(account.publicKey);
-          const messages = getMessage(
-            wallet.bech32Address,
-            dTag,
-            nickname,
-            bio,
-            profilePictureUrl,
-            coverPictureUrl,
-          );
-
-          console.log('wallet', wallet);
-          console.log('account', account);
-          console.log('messages', messages);
-
-          navigate(ROUTES.BROADCAST_TX, {
-            messages,
-            offlineSigner: account,
-            // save newly created account data and navigate to home page
-            async successAction() {
-              if (accountCreation.useExternalAccount) {
-                // TO DO
-              } else {
+            navigate(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: wallet,
+              // save newly created account data and navigate to home page
+              async successAction() {
                 const newAccount: ChainAccount = {
                   address,
-                  pubKey,
+                  pubKey: toBase64(wallet.publicKey),
                   type: ChainAccountType.Local,
                   hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
                   signAlgorithm: 'secp256k1',
@@ -194,72 +272,56 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                     });
                   },
                 });
-              }
-            },
-            failureAction() {
-              goBack();
-            },
-          });
-        } else if (createLedgerAccount) {
-          const {account: ledgerAccount} = createLedgerAccount;
+              },
+              failureAction,
+            });
+          } else {
+            // TO DO: support ledger account
+            const {account: ledgerAccount} = createLedgerAccount;
+            if (!ledgerAccount) throw new Error('ledgerAccount is missing');
 
-          // TO DO: support ledger account
-          if (ledgerAccount) {
             const wallet = (await unlockWallet(ledgerAccount))
               ?.wallet as LocalWallet;
-            const account = accountCreation.useExternalAccount
-              ? await LocalWallet.deserialize(selectedExternalAccount)
-              : wallet;
+            const messages = getMessage(
+              wallet.bech32Address,
+              dTag,
+              nickname,
+              bio,
+              profilePictureUrl,
+              coverPictureUrl,
+            );
+            navigate(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: wallet,
+              // save newly created account data and navigate to home page
+              async successAction() {
+                await saveNewAccount(ledgerAccount);
 
-            if (wallet) {
-              const address = wallet.bech32Address;
-              const messages = getMessage(
-                address,
-                dTag,
-                nickname,
-                bio,
-                profilePictureUrl,
-                coverPictureUrl,
-              );
-              navigate(ROUTES.BROADCAST_TX, {
-                messages,
-                offlineSigner: account,
-                // save newly created account data and navigate to home page
-                async successAction() {
-                  if (accountCreation.useExternalAccount) {
-                    // TO DO
-                  } else {
-                    await saveNewAccount(ledgerAccount);
-
-                    push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                      title: t('common:congratulations'),
-                      subtitle: t('common:dtag created'),
-                      buttonLabel: t('resultModal:enterApp'),
-                      handleButtonPress: () => {
-                        reset({
-                          index: 0,
-                          routes: [
-                            {
-                              name: ROUTES.HOME,
-                            },
-                          ],
-                        });
-                      },
+                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('common:congratulations'),
+                  subtitle: t('common:dtag created'),
+                  buttonLabel: t('resultModal:enterApp'),
+                  handleButtonPress: () => {
+                    reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: ROUTES.HOME,
+                        },
+                      ],
                     });
-                  }
-                },
-                failureAction() {
-                  goBack();
-                },
-              });
-            }
+                  },
+                });
+              },
+              failureAction,
+            });
           }
-        } else {
-          throw new Error('No account creation data found');
+        } catch (error) {
+          console.error('handlFormSubmit', error);
+          throw error;
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('handlFormSubmit', error);
-        throw error;
       }
     },
     [accountCreation, createLedgerAccount, profilePicture, coverPicture],
