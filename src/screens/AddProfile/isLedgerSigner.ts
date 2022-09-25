@@ -6,8 +6,10 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
  * @param {OfflineSigner} signer - OfflineSigner - The signer to check
  * @returns A boolean
  */
-function isLedgerSigner(signer: OfflineSigner): signer is LedgerSigner {
-  return typeof (signer as LedgerSigner).showAddress === 'function';
+function isLedgerSigner(
+  signer: OfflineSigner | undefined,
+): signer is LedgerSigner {
+  return !!signer && typeof (signer as LedgerSigner).showAddress === 'function';
 }
 
 export default isLedgerSigner;

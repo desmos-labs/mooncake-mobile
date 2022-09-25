@@ -1,3 +1,4 @@
+import {toBase64} from '@cosmjs/encoding';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import ErrorBoundary from 'components/ErrorBoundary';
@@ -16,6 +17,9 @@ import {
   signerState,
 } from '@recoil/connectChainState';
 import {useRecoilState, useSetRecoilState} from 'recoil';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import {ChainAccountType} from 'types/chains';
 import useStyles from './useStyles';
 import Content from './components/Content';
 import desmosChain from './desmosChain';
@@ -42,8 +46,11 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
   const {chainAccount} = useActiveAccount();
 
   const [signer, setSigner] = useRecoilState(signerState);
-  const [mnemonic, setMneomic] = useRecoilState(mnemonicState);
+  const [mnemonic, setMnemonic] = useRecoilState(mnemonicState);
   const setSelectedChain = useSetRecoilState(selectedChainState);
+
+  const setCreateLocalWallet = useSetRecoilState(createLocalWalletState);
+  const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
 
   const isWalletUnlocked = !!signer;
 
@@ -62,12 +69,14 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         backgroundColor: 'transparent',
         style: styles.dView,
       };
+      const providePassword = true;
       const res = await unlockWallet(
         chainAccount,
         shouldReplaceRoute,
         titleLabelOverride,
         buttonLabelOverride,
         dViewProps,
+        providePassword,
       );
 
       // ledger cancelled
@@ -75,10 +84,36 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         return pop();
       }
 
+      const {wallet, mnemonic: mnemonicRes, password} = res;
+
       // unlocked
-      setSigner(res.wallet);
-      if (res.mnemonic) setMneomic(res.mnemonic);
+      setSigner(wallet);
+
+      if (mnemonicRes) {
+        setMnemonic(mnemonicRes);
+        setCreateLocalWallet(prev => ({
+          ...prev,
+          mnemonic: mnemonicRes,
+          password,
+          useExternalAccount: true,
+        }));
+      } else {
+        const accounts = await wallet.getAccounts();
+        if (!accounts.length) return;
+        setCreateLedgerAccount(prev => ({
+          ...prev,
+          account: {
+            type: ChainAccountType.Ledger,
+            address: accounts[0].address,
+            hdPath: desmosChain().hdPath, // TO DO: add ledger support
+            pubKey: toBase64(accounts[0].pubkey),
+            signAlgorithm: accounts[0].algo,
+          },
+          useExternalAccount: true,
+        }));
+      }
       setSelectedChain(desmosChain());
+
       replace(ROUTES.ADD_PROFILE);
     })();
   }, [isWalletUnlocked, chainAccount]);

@@ -27,14 +27,13 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
 export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
-  loadedProfileAddresses?: Set<string>;
+  loadedProfileMap?: Map<string, ProfileData>;
 };
 
 const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileAddresses} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
@@ -62,14 +61,14 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
           onPress={() => {
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
               nextRouteOverride,
-              loadedProfileAddresses,
+              loadedProfileMap,
             });
           }}>
           {t('general')}
         </Typography.Button2>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileAddresses]);
+  }, [nextRouteOverride, loadedProfileMap]);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -117,7 +116,7 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
     if (!generatedAccount) return;
 
     if (nextRouteOverride) {
-      if (loadedProfileAddresses?.has(generatedAccount.bech32Address)) {
+      if (loadedProfileMap?.has(generatedAccount.bech32Address)) {
         return navigate(ROUTES.USER_PROFILE, {
           visitingProfileAddress: generatedAccount.bech32Address,
         });
@@ -128,7 +127,7 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
 
     setSelectedExternalAccount(generatedAccount.serialize);
     navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-  }, [nextRouteOverride, generatedAccount]);
+  }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
 
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>

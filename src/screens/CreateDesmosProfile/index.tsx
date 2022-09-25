@@ -45,6 +45,7 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
+import {selectedExternalAccountState} from '@recoil/connectChainState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -81,14 +82,17 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const bioInputRef = React.useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
+  const dtagMinLength = 6; // override the value (3) from query, 6 for App
+  const nicknameMaxLength = 30; // override the value (1000) from query, 30 for App
+
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
         .min(profileParams.nickname.min_length)
-        .max(profileParams.nickname.max_length),
+        .max(nicknameMaxLength),
       dTag: Yup.string()
         .required(t('error:required'))
-        .min(profileParams.dtag.min_length)
+        .min(dtagMinLength)
         .max(profileParams.dtag.max_length)
         .test(
           'respect reg_ex',
@@ -107,6 +111,8 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
       ),
     });
   }, [profileParams]);
+
+  const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -131,9 +137,14 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
 
         if (accountCreation && accountCreation.mnemonic) {
           const {password, mnemonic} = accountCreation;
-          const wallet = await LocalWallet.fromMnemonic(mnemonic);
-          const address = wallet.bech32Address;
-          const pubKey = toBase64(wallet.publicKey);
+
+          const offlineSigner = await LocalWallet.fromMnemonic(mnemonic);
+          const account = accountCreation.useExternalAccount
+            ? await LocalWallet.deserialize(selectedExternalAccount)
+            : offlineSigner;
+
+          const address = account.bech32Address;
+          const pubKey = toBase64(account.publicKey);
           const messages = getMessage(
             address,
             dTag,
@@ -152,7 +163,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
 
           navigate(ROUTES.BROADCAST_TX, {
             messages,
-            offlineSigner: wallet!,
+            offlineSigner,
             // save newly created account data and navigate to home page
             async successAction() {
               const newAccount: ChainAccount = {
@@ -163,7 +174,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                 signAlgorithm: 'secp256k1',
               };
 
-              await saveLocalWallet(wallet, password!);
+              await saveLocalWallet(offlineSigner, password!);
               await saveNewAccount(newAccount);
               await saveMnemonic(address, mnemonic, password!);
               setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
@@ -192,11 +203,17 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
           const {account: ledgerAccount} = createLedgerAccount;
 
           if (ledgerAccount) {
-            const wallet = (await unlockWallet(ledgerAccount))
+            const offlineSigner = (await unlockWallet(ledgerAccount))
               ?.wallet as LocalWallet;
-            if (wallet) {
+            const account = accountCreation.useExternalAccount
+              ? await LocalWallet.deserialize(selectedExternalAccount)
+              : offlineSigner;
+
+            const address = account.bech32Address;
+
+            if (offlineSigner) {
               const messages = getMessage(
-                wallet!.bech32Address,
+                address,
                 dTag,
                 nickname,
                 bio,
@@ -205,7 +222,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
               );
               navigate(ROUTES.BROADCAST_TX, {
                 messages,
-                offlineSigner: wallet!,
+                offlineSigner,
                 // save newly created account data and navigate to home page
                 async successAction() {
                   await saveNewAccount(ledgerAccount);
@@ -327,7 +344,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                   {nicknameInputRef.current && (
                     <View style={inlineStyles.nickname}>
                       <TextCounter
-                        maxChar={profileParams.nickname.max_length}
+                        maxChar={nicknameMaxLength}
                         textToCount={values.nickname}
                       />
                     </View>

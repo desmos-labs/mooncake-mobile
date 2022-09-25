@@ -31,7 +31,6 @@ export type ProfilesByPage = {
  * @property {number} page - The current page number.
  * @property {ChainAccount[] | undefined;} accounts - ChainAccount[] - The list of accounts that are currently
  * loaded.
- * @property {Set<string>} loadedProfileAddresses - An array of ProfileData objects.
  * @property {ProfileData[]} selectedProfiles - The profiles that are currently selected.
  * @property handleSelect - This is a function that is called when a profile is selected.
  * @property setProfileCount - This is a function that sets the profile count for a given page.
@@ -149,11 +148,11 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
     setProfileCountByPage(prev => ({...prev, [page]: count}));
   }, []);
 
-  const loadedProfileAddresses = useMemo(
+  const loadedProfileMap = useMemo(
     () =>
       loadedProfiles.reduce(
-        (set, profile) => set.add(profile.address),
-        new Set<string>(),
+        (map, profile) => map.set(profile.address, profile),
+        new Map<string, ProfileData>(),
       ),
     [loadedProfiles],
   );
@@ -161,13 +160,11 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
   const accountsExcludedLoadedProfile = useMemo(() => {
     return accountsByPage
       .map((accounts, page) => ({
-        accounts: accounts.filter(
-          acc => !loadedProfileAddresses.has(acc.address),
-        ),
+        accounts: accounts.filter(acc => !loadedProfileMap.has(acc.address)),
         page,
       }))
       .filter(({accounts}) => accounts.length > 0);
-  }, [accountsByPage, loadedProfileAddresses]);
+  }, [accountsByPage, loadedProfileMap]);
 
   return (
     <View style={styles.content}>
@@ -204,10 +201,8 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         canAddProfile={Object.values(profileCountByPage).some(
           count => count > 0,
         )}
-        signer={signer}
-        mnemonic={mnemonic}
         selectedProfiles={selectedProfiles}
-        loadedProfileAddresses={loadedProfileAddresses}
+        loadedProfileMap={loadedProfileMap}
       />
     </View>
   );

@@ -38,6 +38,7 @@ type NavProps = StackScreenProps<
  * @property {string} address - The address of the account to authenticate.
  * @property {boolean} provideWallet - If true, wallet will be return on successful authentication.
  * @property {boolean} provideMnemonic - If true, mnemonic will be return on successful authentication.
+ * @property {boolean} providePassword - If true, password will be return on successful authentication.
  * @property {string} titleLabelOverride - The title of the screen.
  * @property {string} confirmButtonLabelOverride - The label of the button that will be used to confirm the input.
  * @property dViewProps - This is the props that will be passed to the DView component.
@@ -50,6 +51,7 @@ export type EnterPasswordParams = {
   address?: string;
   provideWallet?: boolean;
   provideMnemonic?: boolean;
+  providePassword?: boolean;
   titleLabelOverride?: string;
   buttonLabelOverride?: string;
   dViewProps?: ComponentProps<typeof DView>;
@@ -65,6 +67,7 @@ const EnterPassword = () => {
       address,
       provideWallet,
       provideMnemonic,
+      providePassword,
       titleLabelOverride,
       buttonLabelOverride,
       dViewProps,
@@ -88,8 +91,8 @@ const EnterPassword = () => {
         MMKVKEYS.USE_BIOMETRICS,
       ) as boolean;
 
-      if (address) {
-        try {
+      try {
+        if (address) {
           const wallet = await getLocalWallet(address, password, useBiometrics);
 
           if (!wallet) throw new Error('Error unlocking wallet');
@@ -100,25 +103,28 @@ const EnterPassword = () => {
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
+              password: providePassword ? password : undefined,
               authorized: true,
             });
+          } else {
+            onFailedAuthentication && onFailedAuthentication();
+            setErrors({password: t('error:incorrectPassword')});
           }
-        } catch (err) {
-          console.error('EnterPassword', err);
-          setLoading(false);
-          onFailedAuthentication && onFailedAuthentication();
-          setErrors({password: t('error:incorrectPassword')});
-        } finally {
-          setLoading(false);
+        } else {
+          throw new Error('address is empty'); // instead of do nothing
         }
-      } else {
-        throw new Error('EnterPassowrd: address is empty');
+      } catch (err) {
+        onFailedAuthentication && onFailedAuthentication();
+        setErrors({password: String(err)});
+      } finally {
+        setLoading(false);
       }
     },
     [
       address,
       provideWallet,
       provideMnemonic,
+      providePassword,
       onSuccessfulAuthentication,
       onFailedAuthentication,
     ],

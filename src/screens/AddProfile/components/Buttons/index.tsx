@@ -1,13 +1,5 @@
-import {toBase64} from '@cosmjs/encoding';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {
-  mnemonicState,
-  selectedChainState,
-  signerState,
-} from '@recoil/connectChainState';
-import createLedgerAccountState from '@recoil/createLedgerAccountState';
-import createLocalWalletState from '@recoil/createLocalWalletState';
 import profilesState from '@recoil/profiles';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -16,24 +8,18 @@ import React, {FC, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
-import desmosChain from 'screens/AddProfile/desmosChain';
-import {ChainAccountType} from 'types/chains';
 import useStyles from './useStyles';
 
 type ButtonProps = {
   canAddProfile: boolean;
-  signer: OfflineSigner;
-  mnemonic: string | undefined;
   selectedProfiles: ProfileData[];
-  loadedProfileAddresses: Set<string>;
+  loadedProfileMap: Map<string, ProfileData>;
 };
 
 const Buttons: FC<ButtonProps> = ({
   canAddProfile,
-  signer,
-  mnemonic,
   selectedProfiles,
-  loadedProfileAddresses,
+  loadedProfileMap,
 }) => {
   const styles = useStyles();
   const theme = useTheme();
@@ -41,43 +27,17 @@ const Buttons: FC<ButtonProps> = ({
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation();
 
-  const setMnemonic = useSetRecoilState(mnemonicState);
-  const setSigner = useSetRecoilState(signerState);
-  const setSelectedChain = useSetRecoilState(selectedChainState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
 
-  const setCreateLocalWallet = useSetRecoilState(createLocalWalletState);
-  const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
-
   /* boardcast the MsgSaveProfile after an address is selected */
-  /* Setting the signer and mnemonic and then navigating to the connect address general screen. */
+  /* Navigating to the connect address general screen. */
+  /* TO DO: add Ledger support */
   const handleCreateDesmosProfile = useCallback(async () => {
-    setSigner(signer);
-
-    if (mnemonic) {
-      setMnemonic(mnemonic);
-      setCreateLocalWallet(prev => ({...prev, mnemonic}));
-    } else {
-      const accounts = await signer.getAccounts();
-      if (!accounts.length) return;
-      setCreateLedgerAccount(prev => ({
-        ...prev,
-        account: {
-          type: ChainAccountType.Ledger,
-          address: accounts[0].address,
-          hdPath: desmosChain().hdPath, // TO DO: add ledger support
-          pubKey: toBase64(accounts[0].pubkey),
-          signAlgorithm: accounts[0].algo,
-        },
-      }));
-    }
-
-    setSelectedChain(desmosChain());
     navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
       nextRouteOverride: ROUTES.CREATE_DESMOS_PROFILE,
-      loadedProfileAddresses,
+      loadedProfileMap,
     });
-  }, [signer, mnemonic, loadedProfileAddresses]);
+  }, [loadedProfileMap]);
 
   /* Adding the selected profiles to the loaded profiles. */
   const handleConfirmPressed = useCallback(async () => {

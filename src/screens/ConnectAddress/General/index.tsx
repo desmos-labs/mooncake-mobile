@@ -25,14 +25,13 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
 export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
-  loadedProfileAddresses?: Set<string>;
+  loadedProfileMap?: Map<string, ProfileData>;
 };
 
 const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileAddresses} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -70,14 +69,14 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           onPress={() => {
             navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
-              loadedProfileAddresses,
+              loadedProfileMap,
             });
           }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileAddresses]);
+  }, [nextRouteOverride, loadedProfileMap]);
 
   const renderItem = React.useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
@@ -89,7 +88,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           address={item.bech32Address}
           handlePress={() => {
             if (nextRouteOverride) {
-              if (loadedProfileAddresses?.has(item.bech32Address)) {
+              if (loadedProfileMap?.has(item.bech32Address)) {
                 return navigate(ROUTES.USER_PROFILE, {
                   visitingProfileAddress: item.bech32Address,
                 });
@@ -105,7 +104,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         />
       );
     },
-    [nextRouteOverride, loadedProfileAddresses],
+    [nextRouteOverride, loadedProfileMap],
   );
 
   const ItemSeparatorComponent = React.useCallback(
