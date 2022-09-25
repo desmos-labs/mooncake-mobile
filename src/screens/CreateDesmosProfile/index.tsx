@@ -202,8 +202,20 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             failureAction,
           });
         } catch (error) {
-          console.error('handlFormSubmit', error);
-          throw error;
+          const errorMessage = ((err): err is Error =>
+            !!(err as Error).message)(error)
+            ? error.message
+            : String(error);
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('resultModal:fail'),
+            subtitle: errorMessage,
+            buttonLabel: t('common:retry'),
+            handleButtonPress: goBack,
+            secondaryButtonLabel: t('common:goToProfile'),
+            handleSecondaryButtonPress: () => {
+              navigate(ROUTES.USER_PROFILE);
+            },
+          });
         } finally {
           setLoading(false);
         }

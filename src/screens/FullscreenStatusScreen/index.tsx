@@ -26,6 +26,10 @@ export type FullscreenStatusScreenParams = {
   buttonLabel: ReactNode | string;
 
   handleButtonPress: () => void;
+
+  secondaryButtonLabel?: ReactNode | string;
+
+  handleSecondaryButtonPress?: () => void;
 };
 
 const FullscreenStatusScreen = () => {
@@ -33,7 +37,15 @@ const FullscreenStatusScreen = () => {
   const theme = useTheme();
 
   const {
-    params: {image, title, subtitle, buttonLabel, handleButtonPress},
+    params: {
+      image,
+      title,
+      subtitle,
+      buttonLabel,
+      handleButtonPress,
+      secondaryButtonLabel,
+      handleSecondaryButtonPress,
+    },
   } = useRoute<NavProps['route']>();
 
   return (
@@ -52,6 +64,14 @@ const FullscreenStatusScreen = () => {
         onPress={handleButtonPress}>
         {buttonLabel}
       </Button>
+      {!!secondaryButtonLabel && (
+        <Button
+          containerStyle={{marginTop: theme.spacing.l}}
+          mode="contained"
+          onPress={handleSecondaryButtonPress}>
+          {secondaryButtonLabel}
+        </Button>
+      )}
     </DView>
   );
 };
