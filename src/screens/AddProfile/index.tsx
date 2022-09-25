@@ -69,14 +69,12 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         backgroundColor: 'transparent',
         style: styles.dView,
       };
-      const providePassword = true;
       const res = await unlockWallet(
         chainAccount,
         shouldReplaceRoute,
         titleLabelOverride,
         buttonLabelOverride,
         dViewProps,
-        providePassword,
       );
 
       // ledger cancelled
@@ -84,7 +82,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         return pop();
       }
 
-      const {wallet, mnemonic: mnemonicRes, password} = res;
+      const {wallet, mnemonic: mnemonicRes} = res;
 
       // unlocked
       setSigner(wallet);
@@ -94,7 +92,6 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         setCreateLocalWallet(prev => ({
           ...prev,
           mnemonic: mnemonicRes,
-          password,
           useExternalAccount: true,
         }));
       } else {

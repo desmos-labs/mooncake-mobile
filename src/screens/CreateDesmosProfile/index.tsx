@@ -138,15 +138,15 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         if (accountCreation && accountCreation.mnemonic) {
           const {password, mnemonic} = accountCreation;
 
-          const offlineSigner = await LocalWallet.fromMnemonic(mnemonic);
+          const wallet = await LocalWallet.fromMnemonic(mnemonic);
           const account = accountCreation.useExternalAccount
             ? await LocalWallet.deserialize(selectedExternalAccount)
-            : offlineSigner;
+            : wallet;
 
-          const address = account.bech32Address;
+          const address = wallet.bech32Address;
           const pubKey = toBase64(account.publicKey);
           const messages = getMessage(
-            address,
+            wallet.bech32Address,
             dTag,
             nickname,
             bio,
@@ -154,46 +154,47 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             coverPictureUrl,
           );
 
-          console.log('dTag', dTag);
-          console.log('nickname', nickname);
-          console.log('bio', bio);
-          console.log('profilePictureUrl', profilePictureUrl);
-          console.log('coverPictureUrl', coverPictureUrl);
+          console.log('wallet', wallet);
+          console.log('account', account);
           console.log('messages', messages);
 
           navigate(ROUTES.BROADCAST_TX, {
             messages,
-            offlineSigner,
+            offlineSigner: account,
             // save newly created account data and navigate to home page
             async successAction() {
-              const newAccount: ChainAccount = {
-                address,
-                pubKey,
-                type: ChainAccountType.Local,
-                hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                signAlgorithm: 'secp256k1',
-              };
+              if (accountCreation.useExternalAccount) {
+                // TO DO
+              } else {
+                const newAccount: ChainAccount = {
+                  address,
+                  pubKey,
+                  type: ChainAccountType.Local,
+                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                  signAlgorithm: 'secp256k1',
+                };
 
-              await saveLocalWallet(offlineSigner, password!);
-              await saveNewAccount(newAccount);
-              await saveMnemonic(address, mnemonic, password!);
-              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+                await saveLocalWallet(wallet, password!);
+                await saveNewAccount(newAccount);
+                await saveMnemonic(address, mnemonic, password!);
+                setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                title: t('common:congratulations'),
-                subtitle: t('common:dtag created'),
-                buttonLabel: t('resultModal:enterApp'),
-                handleButtonPress: () => {
-                  reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: ROUTES.HOME,
-                      },
-                    ],
-                  });
-                },
-              });
+                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('common:congratulations'),
+                  subtitle: t('common:dtag created'),
+                  buttonLabel: t('resultModal:enterApp'),
+                  handleButtonPress: () => {
+                    reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: ROUTES.HOME,
+                        },
+                      ],
+                    });
+                  },
+                });
+              }
             },
             failureAction() {
               goBack();
@@ -202,16 +203,16 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         } else if (createLedgerAccount) {
           const {account: ledgerAccount} = createLedgerAccount;
 
+          // TO DO: support ledger account
           if (ledgerAccount) {
-            const offlineSigner = (await unlockWallet(ledgerAccount))
+            const wallet = (await unlockWallet(ledgerAccount))
               ?.wallet as LocalWallet;
             const account = accountCreation.useExternalAccount
               ? await LocalWallet.deserialize(selectedExternalAccount)
-              : offlineSigner;
+              : wallet;
 
-            const address = account.bech32Address;
-
-            if (offlineSigner) {
+            if (wallet) {
+              const address = wallet.bech32Address;
               const messages = getMessage(
                 address,
                 dTag,
@@ -222,26 +223,30 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
               );
               navigate(ROUTES.BROADCAST_TX, {
                 messages,
-                offlineSigner,
+                offlineSigner: account,
                 // save newly created account data and navigate to home page
                 async successAction() {
-                  await saveNewAccount(ledgerAccount);
+                  if (accountCreation.useExternalAccount) {
+                    // TO DO
+                  } else {
+                    await saveNewAccount(ledgerAccount);
 
-                  push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                    title: t('common:congratulations'),
-                    subtitle: t('common:dtag created'),
-                    buttonLabel: t('resultModal:enterApp'),
-                    handleButtonPress: () => {
-                      reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: ROUTES.HOME,
-                          },
-                        ],
-                      });
-                    },
-                  });
+                    push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                      title: t('common:congratulations'),
+                      subtitle: t('common:dtag created'),
+                      buttonLabel: t('resultModal:enterApp'),
+                      handleButtonPress: () => {
+                        reset({
+                          index: 0,
+                          routes: [
+                            {
+                              name: ROUTES.HOME,
+                            },
+                          ],
+                        });
+                      },
+                    });
+                  }
                 },
                 failureAction() {
                   goBack();

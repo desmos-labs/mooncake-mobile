@@ -41,11 +41,7 @@ export default function useUnlockWallet(): (
   buttonLabelOverride?: string,
   /* A prop that is passed to the DView component. */
   dViewProps?: ComponentProps<typeof DView>,
-  /* A prop that is passed to the Enter Password Screen. */
-  providePassword?: boolean,
-) => Promise<
-  {wallet?: OfflineSigner; mnemonic?: string; password?: string} | undefined
-> {
+) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   return useCallback(
@@ -55,7 +51,6 @@ export default function useUnlockWallet(): (
       titleLabelOverride,
       buttonLabelOverride,
       dViewProps,
-      providePassword,
     ) => {
       const navigate = shouldReplaceRoute
         ? navigation.replace
@@ -68,7 +63,6 @@ export default function useUnlockWallet(): (
               address: account.address,
               provideWallet: true,
               provideMnemonic: true,
-              providePassword,
               titleLabelOverride,
               buttonLabelOverride,
               dViewProps,
@@ -78,7 +72,6 @@ export default function useUnlockWallet(): (
                 resolve({
                   wallet: result.wallet!,
                   mnemonic: result.mnemonic,
-                  password: result.password,
                 });
               },
             },
