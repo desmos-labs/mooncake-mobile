@@ -40,12 +40,17 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
-import {selectedExternalAccountState} from '@recoil/connectChainState';
+import {
+  selectedExternalAccountState,
+  signerState,
+} from '@recoil/connectChainState';
+import {format} from 'date-fns';
+import profilesState from '@recoil/profiles';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -76,6 +81,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const profileParams = useRecoilValue(profileParamsState);
   const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
+  const signer = useRecoilValue(signerState);
   const unlockWallet = useUnlockWallet();
   const nicknameInputRef = React.useRef<TextInput>(null);
   const dTagInputRef = React.useRef<TextInput>(null);
@@ -113,6 +119,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   }, [profileParams]);
 
   const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
+  const setLoadedProfiles = useSetRecoilState(profilesState);
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -134,86 +141,66 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         createLedgerAccount?.useExternalAccount;
 
       if (useExternalAccount) {
+        /**
+         * Profile
+         * Since a Profile extends the Cosmos SDK AccountI interface, we store profiles inside the x/auth module using the AccountKeeper.
+         * For this reason, there will only be a single profile for each on-chain account and having multiple profiles require to have different on-chain accounts for each one.
+         * In order to make it possible for users to search a profile based on the DTag, we also store the following reference:
+         * DTag: 0x10 | DTag | -> Address
+         * https://github.com/desmos-labs/desmos/blob/95711e2da7a83479d01be213f29f30df9a964b86/x/profiles/spec/03-state.md#profile
+         */
         try {
           if (!accountCreation && !createLedgerAccount) {
             throw new Error('No account creation data');
           }
-          if (accountCreation) {
-            const {mnemonic} = accountCreation;
-            if (!mnemonic) throw new Error('mnemonic is missing');
-            // const wallet = await LocalWallet.fromMnemonic(mnemonic);
-            const externalWallet = await LocalWallet.deserialize(
-              selectedExternalAccount,
-            );
+          const externalWallet = await LocalWallet.deserialize(
+            selectedExternalAccount,
+          );
+          const address = externalWallet.bech32Address;
+          const messages = getMessage(
+            address,
+            dTag,
+            nickname,
+            bio,
+            profilePictureUrl,
+            coverPictureUrl,
+          );
+          // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
+          navigate(ROUTES.BROADCAST_TX, {
+            messages,
+            offlineSigner: signer,
+            async successAction() {
+              const newProfile: ProfileData = {
+                address: messages[0].value.creator,
+                bio: messages[0].value.bio,
+                cover_pic: messages[0].value.coverPicture,
+                dtag: messages[0].value.dtag,
+                profile_pic: messages[0].value.profilePicture,
+                nickname: messages[0].value.nickname,
+                followage: [],
+                following: [],
+                creation_time: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), // TO DO: get creation time
+              };
+              setLoadedProfiles(prev => {
+                const prevWithExternal = prev.filter(
+                  profile => profile.address !== externalWallet.bech32Address,
+                );
+                return prevWithExternal.concat([newProfile]);
+              });
 
-            // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
-            const address = externalWallet.bech32Address;
-            const messages = getMessage(
-              address,
-              dTag,
-              nickname,
-              bio,
-              profilePictureUrl,
-              coverPictureUrl,
-            );
-            navigate(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: externalWallet,
-              async successAction() {
-                const newAccount: ChainAccount = {
-                  address: externalWallet.bech32Address,
-                  pubKey: toBase64(externalWallet.publicKey),
-                  type: ChainAccountType.Local,
-                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                  signAlgorithm: 'secp256k1',
-                };
-                await saveNewAccount(newAccount);
-                console.log({newAccount});
-              },
-              failureAction,
-            });
-          } else {
-            // TO DO: support ledger account
-            const {account: ledgerAccount} = createLedgerAccount;
-            if (!ledgerAccount) throw new Error('ledgerAccount is missing');
-
-            const externalWallet = await LocalWallet.deserialize(
-              selectedExternalAccount,
-            );
-            const messages = getMessage(
-              externalWallet.bech32Address,
-              dTag,
-              nickname,
-              bio,
-              profilePictureUrl,
-              coverPictureUrl,
-            );
-            navigate(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: externalWallet,
-              // save newly created account data and navigate to home page
-              async successAction() {
-                await saveNewAccount(ledgerAccount);
-
-                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('common:congratulations'),
-                  subtitle: t('common:dtag created'),
-                  buttonLabel: t('resultModal:enterApp'),
-                  handleButtonPress: () => {
-                    reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME,
-                        },
-                      ],
-                    });
-                  },
-                });
-              },
-              failureAction,
-            });
-          }
+              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                title: t('resultModal:success'),
+                subtitle: t('common:desmosProfileCreated'),
+                buttonLabel: t('common:goToProfile'),
+                handleButtonPress: () => {
+                  navigate(ROUTES.USER_PROFILE, {
+                    visitingProfileAddress: address,
+                  });
+                },
+              });
+            },
+            failureAction,
+          });
         } catch (error) {
           console.error('handlFormSubmit', error);
           throw error;
@@ -276,7 +263,6 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
               failureAction,
             });
           } else {
-            // TO DO: support ledger account
             const {account: ledgerAccount} = createLedgerAccount;
             if (!ledgerAccount) throw new Error('ledgerAccount is missing');
 
@@ -324,7 +310,14 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         }
       }
     },
-    [accountCreation, createLedgerAccount, profilePicture, coverPicture],
+    [
+      accountCreation,
+      createLedgerAccount,
+      signer,
+      profilePicture,
+      coverPicture,
+      setLoadedProfiles,
+    ],
   );
 
   const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
