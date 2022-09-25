@@ -2,7 +2,6 @@ import {LedgerSigner} from '@cosmjs/ledger-amino';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import desmosChain from './desmosChain';
-import isLedgerSigner from './isLedgerSigner';
 
 /**
  * @param {number} addressIndexOffset - The starting index of the address.
@@ -14,11 +13,6 @@ export async function generateLedgerAccounts(
   numOfAccounts: number,
   signer: LedgerSigner,
 ): Promise<ChainAccount[]> {
-  /* Checking if the signer is a LedgerSigner. */
-  if (!isLedgerSigner(signer)) {
-    return [];
-  }
-
   /* Creating an array of 100 items with the value of 0. */
   const items = new Array(numOfAccounts).fill(0);
 
