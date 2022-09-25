@@ -53,7 +53,7 @@ const ManageConnectedChains = () => {
       navigate(ROUTES.RESULT_MODAL, {
         image: modalSuccess,
         primaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressPrimary: () => navigate(ROUTES.USER_PROFILE, {}),
+        onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
       });
     },
     [chainAccount],

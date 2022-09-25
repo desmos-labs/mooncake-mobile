@@ -45,7 +45,6 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
-import {AccountData} from '@cosmjs/proto-signing';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -53,18 +52,13 @@ type NavProps = StackScreenProps<
   ROUTES.CREATE_DESMOS_PROFILE
 >;
 
-export type CreateDesmosProfileParams = {
-  accountOverride?: AccountData;
-};
-
 const initialFormState = {
   nickname: '',
   dTag: '',
   bio: '',
 };
 
-const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
-  const {accountOverride} = route?.params ?? {};
+const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
@@ -116,132 +110,137 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const {dTag, nickname, bio} = formValues;
-      console.log('dTag', dTag);
-      console.log('nickname', nickname);
-      console.log('bio', bio);
+        const {dTag, nickname, bio} = formValues;
 
-      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        profilePicture && UploadMedia({mediaFile: profilePicture}),
-        coverPicture && UploadMedia({mediaFile: coverPicture}),
-      ]);
+        const [uploadProfilePicResult, uploadCoverPicResult] =
+          await Promise.all([
+            profilePicture && UploadMedia({mediaFile: profilePicture}),
+            coverPicture && UploadMedia({mediaFile: coverPicture}),
+          ]);
 
-      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
-      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+        const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+        const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
 
-      console.log('profilePictureUrl', profilePictureUrl);
-      console.log('coverPictureUrl', coverPictureUrl);
+        // delay setLoading false so it occurs while the screen is in background
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
 
-      // delay setLoading false so it occurs while the screen is in background
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
+        if (accountCreation && accountCreation.mnemonic) {
+          const {password, mnemonic} = accountCreation;
+          const wallet = await LocalWallet.fromMnemonic(mnemonic);
+          const address = wallet.bech32Address;
+          const pubKey = toBase64(wallet.publicKey);
+          const messages = getMessage(
+            address,
+            dTag,
+            nickname,
+            bio,
+            profilePictureUrl,
+            coverPictureUrl,
+          );
 
-      if (accountCreation && accountCreation.mnemonic) {
-        const {password, mnemonic} = accountCreation;
-        const wallet = await LocalWallet.fromMnemonic(mnemonic);
-        const [address, pubKey] = accountOverride?.address
-          ? [accountOverride.address, toBase64(accountOverride.pubkey)]
-          : [wallet.bech32Address, toBase64(wallet.publicKey)];
-        const messages = getMessage(
-          address,
-          dTag,
-          nickname,
-          bio,
-          profilePictureUrl,
-          coverPictureUrl,
-        );
-        console.log('messages', messages);
+          console.log('dTag', dTag);
+          console.log('nickname', nickname);
+          console.log('bio', bio);
+          console.log('profilePictureUrl', profilePictureUrl);
+          console.log('coverPictureUrl', coverPictureUrl);
+          console.log('messages', messages);
 
-        navigate(ROUTES.BROADCAST_TX, {
-          messages,
-          offlineSigner: wallet!,
-          // save newly created account data and navigate to home page
-          async successAction() {
-            const newAccount: ChainAccount = {
-              address,
-              pubKey,
-              type: ChainAccountType.Local,
-              hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-              signAlgorithm: 'secp256k1',
-            };
+          navigate(ROUTES.BROADCAST_TX, {
+            messages,
+            offlineSigner: wallet!,
+            // save newly created account data and navigate to home page
+            async successAction() {
+              const newAccount: ChainAccount = {
+                address,
+                pubKey,
+                type: ChainAccountType.Local,
+                hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                signAlgorithm: 'secp256k1',
+              };
 
-            await saveLocalWallet(wallet, password!);
-            await saveNewAccount(newAccount);
-            await saveMnemonic(address, mnemonic, password!);
-            setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+              await saveLocalWallet(wallet, password!);
+              await saveNewAccount(newAccount);
+              await saveMnemonic(address, mnemonic, password!);
+              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-            push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-              title: t('common:congratulations'),
-              subtitle: t('common:dtag created'),
-              buttonLabel: t('resultModal:enterApp'),
-              handleButtonPress: () => {
-                reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: ROUTES.HOME,
+              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                title: t('common:congratulations'),
+                subtitle: t('common:dtag created'),
+                buttonLabel: t('resultModal:enterApp'),
+                handleButtonPress: () => {
+                  reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: ROUTES.HOME,
+                      },
+                    ],
+                  });
+                },
+              });
+            },
+            failureAction() {
+              goBack();
+            },
+          });
+        } else if (createLedgerAccount) {
+          const {account: ledgerAccount} = createLedgerAccount;
+
+          if (ledgerAccount) {
+            const wallet = (await unlockWallet(ledgerAccount))
+              ?.wallet as LocalWallet;
+            if (wallet) {
+              const messages = getMessage(
+                wallet!.bech32Address,
+                dTag,
+                nickname,
+                bio,
+                profilePictureUrl,
+                coverPictureUrl,
+              );
+              navigate(ROUTES.BROADCAST_TX, {
+                messages,
+                offlineSigner: wallet!,
+                // save newly created account data and navigate to home page
+                async successAction() {
+                  await saveNewAccount(ledgerAccount);
+
+                  push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                    title: t('common:congratulations'),
+                    subtitle: t('common:dtag created'),
+                    buttonLabel: t('resultModal:enterApp'),
+                    handleButtonPress: () => {
+                      reset({
+                        index: 0,
+                        routes: [
+                          {
+                            name: ROUTES.HOME,
+                          },
+                        ],
+                      });
                     },
-                  ],
-                });
-              },
-            });
-          },
-          failureAction() {
-            goBack();
-          },
-        });
-      } else if (createLedgerAccount) {
-        const {account: ledgerAccount} = createLedgerAccount;
-
-        if (ledgerAccount) {
-          const wallet = (await unlockWallet(ledgerAccount))
-            ?.wallet as LocalWallet;
-          if (wallet) {
-            const messages = getMessage(
-              accountOverride?.address || wallet!.bech32Address,
-              dTag,
-              nickname,
-              bio,
-              profilePictureUrl,
-              coverPictureUrl,
-            );
-            navigate(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: wallet!,
-              // save newly created account data and navigate to home page
-              async successAction() {
-                await saveNewAccount(ledgerAccount);
-
-                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('common:congratulations'),
-                  subtitle: t('common:dtag created'),
-                  buttonLabel: t('resultModal:enterApp'),
-                  handleButtonPress: () => {
-                    reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME,
-                        },
-                      ],
-                    });
-                  },
-                });
-              },
-              failureAction() {
-                goBack();
-              },
-            });
+                  });
+                },
+                failureAction() {
+                  goBack();
+                },
+              });
+            }
           }
+        } else {
+          throw new Error('No account creation data found');
         }
-      } else {
-        throw new Error('No account creation data found');
+      } catch (error) {
+        console.error('handlFormSubmit', error);
+        throw error;
       }
     },
-    [],
+    [accountCreation, createLedgerAccount, profilePicture, coverPicture],
   );
 
   const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
@@ -319,7 +318,6 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                       setFieldValue('nickname', value, true);
                     }}
                     error={!!errors.nickname}
-                    autoCapitalize="none"
                   />
                   {errors.nickname && (
                     <Typography.Caption1 style={inlineStyles.errorText}>
@@ -346,6 +344,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                     }}
                     error={!!errors.dTag}
                     inputRef={dTagInputRef}
+                    autoCapitalize="none"
                   />
                   {errors.dTag && (
                     <Typography.Caption1 style={inlineStyles.errorText}>

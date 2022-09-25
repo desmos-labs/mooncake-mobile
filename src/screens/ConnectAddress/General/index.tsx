@@ -25,14 +25,14 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-export type ConnectAddressGeneralParams =
-  | {
-      onPressOverride: (wallet: LocalWallet) => void;
-    }
-  | undefined;
+// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
+export type ConnectAddressGeneralParams = {
+  nextRouteOverride?: keyof RootNavigatorParamList;
+  loadedProfileAddresses?: Set<string>;
+};
 
 const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
-  const {onPressOverride} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileAddresses} = route?.params ?? {};
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -68,16 +68,16 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(
-              ROUTES.CONNECT_ADDRESS_ADVANCED,
-              onPressOverride ? {onPressOverride} : undefined,
-            );
+            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+              nextRouteOverride,
+              loadedProfileAddresses,
+            });
           }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
     );
-  }, [onPressOverride]);
+  }, [nextRouteOverride, loadedProfileAddresses]);
 
   const renderItem = React.useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
@@ -88,17 +88,24 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           index={index}
           address={item.bech32Address}
           handlePress={() => {
-            if (onPressOverride) {
-              onPressOverride(item);
-            } else {
+            if (nextRouteOverride) {
+              if (loadedProfileAddresses?.has(item.bech32Address)) {
+                return navigate(ROUTES.USER_PROFILE, {
+                  visitingProfileAddress: item.bech32Address,
+                });
+              }
+
               setSelectedExternalAccount(item.serialize());
-              navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+              return navigate(nextRouteOverride);
             }
+
+            setSelectedExternalAccount(item.serialize());
+            navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
           }}
         />
       );
     },
-    [onPressOverride],
+    [nextRouteOverride, loadedProfileAddresses],
   );
 
   const ItemSeparatorComponent = React.useCallback(

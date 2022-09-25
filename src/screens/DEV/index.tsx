@@ -19,6 +19,8 @@ import {
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import {mnemonicState, signerState} from '@recoil/connectChainState';
+import {useResetRecoilState} from 'recoil';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -72,6 +74,9 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
 
   console.log(_.includes(b, a)); */
 
+  const resetSigner = useResetRecoilState(signerState);
+  const resetMnemonic = useResetRecoilState(mnemonicState);
+
   const showToast = () => {
     toast.show('I am a toast', {
       type: ToastConfig.SUCCESS,
@@ -95,6 +100,11 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
                 userAddress: activeAddress,
                 username: '@Raffaello',
               });
+              break;
+            case ROUTES.ADD_PROFILE:
+              resetSigner();
+              resetMnemonic();
+              navigate(item);
               break;
             default:
               navigate(item);

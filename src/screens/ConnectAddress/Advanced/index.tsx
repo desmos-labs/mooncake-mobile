@@ -18,7 +18,6 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import LocalWallet from 'lib/LocalWallet';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
@@ -28,14 +27,14 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-export type ConnectAddressAdvancedParams =
-  | {
-      onPressOverride: (wallet: LocalWallet) => void;
-    }
-  | undefined;
+// https://reactnavigation.org/docs/troubleshooting/#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state
+export type ConnectAddressAdvancedParams = {
+  nextRouteOverride?: keyof RootNavigatorParamList;
+  loadedProfileAddresses?: Set<string>;
+};
 
 const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
-  const {onPressOverride} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileAddresses} = route?.params ?? {};
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
@@ -61,16 +60,16 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(
-              ROUTES.CONNECT_ADDRESS_GENERAL,
-              onPressOverride ? {onPressOverride} : undefined,
-            );
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+              nextRouteOverride,
+              loadedProfileAddresses,
+            });
           }}>
           {t('general')}
         </Typography.Button2>
       </View>
     );
-  }, [onPressOverride]);
+  }, [nextRouteOverride, loadedProfileAddresses]);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -115,15 +114,21 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   );
 
   const handlePressConfirm = React.useCallback(() => {
-    if (generatedAccount) {
-      if (onPressOverride) {
-        onPressOverride(generatedAccount);
-      } else {
-        setSelectedExternalAccount(generatedAccount.serialize);
-        navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+    if (!generatedAccount) return;
+
+    if (nextRouteOverride) {
+      if (loadedProfileAddresses?.has(generatedAccount.bech32Address)) {
+        return navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: generatedAccount.bech32Address,
+        });
       }
+
+      return navigate(nextRouteOverride);
     }
-  }, [onPressOverride]);
+
+    setSelectedExternalAccount(generatedAccount.serialize);
+    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+  }, [nextRouteOverride, generatedAccount]);
 
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>

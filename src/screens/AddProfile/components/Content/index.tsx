@@ -204,6 +204,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         canAddProfile={Object.values(profileCountByPage).some(
           count => count > 0,
         )}
+        signer={signer}
         mnemonic={mnemonic}
         selectedProfiles={selectedProfiles}
         loadedProfileAddresses={loadedProfileAddresses}

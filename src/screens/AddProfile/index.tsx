@@ -10,9 +10,15 @@ import ROUTES from 'navigation/routes';
 import React, {FC, Suspense, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator} from 'react-native-paper';
-import {OfflineSigner} from '@cosmjs/proto-signing';
+import {
+  mnemonicState,
+  selectedChainState,
+  signerState,
+} from '@recoil/connectChainState';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import useStyles from './useStyles';
 import Content from './components/Content';
+import desmosChain from './desmosChain';
 
 /* The number of profiles that will be displayed on the screen. */
 export const PROFILE_PER_PAGE = 100;
@@ -25,19 +31,8 @@ type AddProfileProps = StackScreenProps<
   ROUTES.ADD_PROFILE
 >;
 
-/**
- * `AddProfileParams` is an object with optional properties `signer` and `mnemonic`.
- * @property {OfflineSigner} signer - The signer to use for the profile.
- * @property {string} mnemonic - The mnemonic phrase to use for the new profile.
- */
-export type AddProfileParams = {
-  signer?: OfflineSigner;
-  mnemonic?: string;
-};
-
 /* A React component for the Add Profile screen. */
-const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
-  const {signer, mnemonic} = route?.params ?? {};
+const AddProfile: FC<AddProfileProps> = ({navigation}) => {
   const {pop, replace} = navigation;
 
   const {t} = useTranslation();
@@ -46,13 +41,17 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
   const unlockWallet = useUnlockWallet();
   const {chainAccount} = useActiveAccount();
 
+  const [signer, setSigner] = useRecoilState(signerState);
+  const [mnemonic, setMneomic] = useRecoilState(mnemonicState);
+  const setSelectedChain = useSetRecoilState(selectedChainState);
+
   const isWalletUnlocked = !!signer;
 
   /* Using the unlockWallet function to unlock the wallet. */
   useEffect(() => {
-    if (!chainAccount) return; // wait for async load
-
     if (isWalletUnlocked) return; // already unlocked
+
+    if (!chainAccount) return; // wait for async load
 
     (async () => {
       const shouldReplaceRoute = true;
@@ -77,9 +76,12 @@ const AddProfile: FC<AddProfileProps> = ({navigation, route}) => {
       }
 
       // unlocked
-      replace(ROUTES.ADD_PROFILE, {signer: res.wallet, mnemonic: res.mnemonic});
+      setSigner(res.wallet);
+      if (res.mnemonic) setMneomic(res.mnemonic);
+      setSelectedChain(desmosChain());
+      replace(ROUTES.ADD_PROFILE);
     })();
-  }, [chainAccount, isWalletUnlocked]);
+  }, [isWalletUnlocked, chainAccount]);
 
   return (
     <DView

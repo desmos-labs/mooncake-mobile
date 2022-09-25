@@ -14,7 +14,7 @@ import {useTranslation} from 'react-i18next';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
-import AddProfile, {AddProfileParams} from 'screens/AddProfile';
+import AddProfile from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -29,9 +29,7 @@ import ConnectAddressGeneral, {
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import CreateDesmosProfile, {
-  CreateDesmosProfileParams,
-} from 'screens/CreateDesmosProfile';
+import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
@@ -118,7 +116,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.CREATE_DESMOS_PROFILE]: CreateDesmosProfileParams | undefined;
+  [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
   [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
@@ -164,7 +162,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE]: AddProfileParams | undefined;
+  [ROUTES.ADD_PROFILE]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();

@@ -1,4 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import {mnemonicState, signerState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
@@ -14,6 +15,7 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import {useResetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
@@ -67,10 +69,13 @@ const Profiles: React.FC<Props> = props => {
     });
   }, []);
 
-  const navigateToAddProfile = useCallback(
-    () => navigation.navigate(ROUTES.ADD_PROFILE),
-    [activeAddress],
-  );
+  const resetSigner = useResetRecoilState(signerState);
+  const resetMnemonic = useResetRecoilState(mnemonicState);
+  const navigateToAddProfile = useCallback(() => {
+    resetSigner();
+    resetMnemonic();
+    navigation.navigate(ROUTES.ADD_PROFILE);
+  }, [activeAddress]);
 
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {

@@ -114,7 +114,7 @@ const ConnectChainTxDetail = () => {
             },
           }),
           onPressPrimary: () => {
-            navigate(ROUTES.USER_PROFILE, {});
+            navigate(ROUTES.USER_PROFILE);
           },
           primaryButtonLabel: t('resultModal:goToProfile') as string,
         });

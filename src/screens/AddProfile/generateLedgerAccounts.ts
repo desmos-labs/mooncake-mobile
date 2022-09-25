@@ -39,7 +39,7 @@ export async function generateLedgerAccounts(
         address,
         hdPath,
         pubKey: pubkey.value,
-        signAlgorithm: accounts[0]?.algo,
+        signAlgorithm: accounts[0].algo,
       };
     }),
   );
