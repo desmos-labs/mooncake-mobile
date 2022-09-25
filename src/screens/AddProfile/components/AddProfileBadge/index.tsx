@@ -62,47 +62,42 @@ const AddProfileBadge = (props: Props) => {
 
   const {nickname, dTag, profilePicture, isSelected} = value;
 
-  const components = (
-    <DropShadowWrapper
-      style={[
-        styles.externalContainer,
-        disabled && styles.externalContainerDisabled,
-      ]}
-      innerStyle={styles.container}>
-      <Image source={profilePicture} style={styles.profilePicture} />
-      <View style={styles.textContainer}>
-        {nickname && (
-          <Typography.H5 numberOfLines={2} ellipsizeMode="middle">
-            {nickname}
-          </Typography.H5>
-        )}
-        <Typography.Body6 numberOfLines={2} ellipsizeMode="middle">
-          {dTag}
-        </Typography.Body6>
-      </View>
-      <View
-        style={[styles.radioButton, disabled && styles.radioButtonDisabled]}>
-        <RadioButtonInput
-          obj={value}
-          isSelected={isSelected}
-          onPress={handleSelect}
-          buttonSize={12}
-          // @ts-ignore
-          borderWidth={2}
-          buttonInnerColor={theme.colors.butterOrange01}
-          buttonOuterColor={theme.colors.butterOrange01}
-        />
-      </View>
-    </DropShadowWrapper>
-  );
-
-  if (disabled) {
-    return <View>{components}</View>;
-  }
-
   return (
-    <TouchableOpacity onPress={handleSelect} activeOpacity={1}>
-      {components}
+    <TouchableOpacity
+      onPress={handleSelect}
+      activeOpacity={1}
+      disabled={disabled}>
+      <DropShadowWrapper
+        style={[
+          styles.externalContainer,
+          disabled && styles.externalContainerDisabled,
+        ]}
+        innerStyle={styles.container}>
+        <Image source={profilePicture} style={styles.profilePicture} />
+        <View style={styles.textContainer}>
+          {nickname && (
+            <Typography.H5 numberOfLines={2} ellipsizeMode="middle">
+              {nickname}
+            </Typography.H5>
+          )}
+          <Typography.Body6 numberOfLines={2} ellipsizeMode="middle">
+            {dTag}
+          </Typography.Body6>
+        </View>
+        <View
+          style={[styles.radioButton, disabled && styles.radioButtonDisabled]}>
+          <RadioButtonInput
+            obj={value}
+            isSelected={isSelected}
+            onPress={handleSelect}
+            buttonSize={12}
+            // @ts-ignore
+            borderWidth={2}
+            buttonInnerColor={theme.colors.butterOrange01}
+            buttonOuterColor={theme.colors.butterOrange01}
+          />
+        </View>
+      </DropShadowWrapper>
     </TouchableOpacity>
   );
 };

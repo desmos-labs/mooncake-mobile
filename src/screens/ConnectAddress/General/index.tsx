@@ -15,7 +15,7 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import {OfflineSigner} from '@cosmjs/proto-signing';
+import LocalWallet from 'lib/LocalWallet';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -27,7 +27,7 @@ type NavProps = StackScreenProps<
 
 export type ConnectAddressGeneralParams =
   | {
-      onPressOverride: (signer: OfflineSigner) => void;
+      onPressOverride: (wallet: LocalWallet) => void;
     }
   | undefined;
 
@@ -80,7 +80,8 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   }, [onPressOverride]);
 
   const renderItem = React.useCallback(
-    ({item, index}: any) => {
+    // eslint-disable-next-line react/no-unused-prop-types
+    ({item, index}: {item: LocalWallet; index: number}) => {
       return (
         <AddressItem
           key={item.bech32Address}

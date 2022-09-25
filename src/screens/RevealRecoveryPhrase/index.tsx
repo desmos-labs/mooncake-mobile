@@ -72,7 +72,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
         }
       }
     },
-    [navigation],
+    [],
   );
 
   const validationSchema = React.useMemo(() => {

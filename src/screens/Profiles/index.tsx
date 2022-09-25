@@ -26,7 +26,7 @@ const Profiles: React.FC<Props> = props => {
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
 
-  const {t} = useTranslation('');
+  const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();

@@ -116,10 +116,12 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
-      console.log('formValues', formValues);
       setLoading(true);
 
       const {dTag, nickname, bio} = formValues;
+      console.log('dTag', dTag);
+      console.log('nickname', nickname);
+      console.log('bio', bio);
 
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
         profilePicture && UploadMedia({mediaFile: profilePicture}),
@@ -128,6 +130,9 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
 
       const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
       const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+
+      console.log('profilePictureUrl', profilePictureUrl);
+      console.log('coverPictureUrl', coverPictureUrl);
 
       // delay setLoading false so it occurs while the screen is in background
       setTimeout(() => {
@@ -148,6 +153,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
           profilePictureUrl,
           coverPictureUrl,
         );
+        console.log('messages', messages);
 
         navigate(ROUTES.BROADCAST_TX, {
           messages,
@@ -231,6 +237,8 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
             });
           }
         }
+      } else {
+        throw new Error('No account creation data found');
       }
     },
     [],
@@ -311,6 +319,7 @@ const CreateDesmosProfile: FC<NavProps> = ({route, navigation}) => {
                       setFieldValue('nickname', value, true);
                     }}
                     error={!!errors.nickname}
+                    autoCapitalize="none"
                   />
                   {errors.nickname && (
                     <Typography.Caption1 style={inlineStyles.errorText}>

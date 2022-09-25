@@ -14,11 +14,11 @@ import {Formik, isNaN} from 'formik';
 import Button from 'components/Button';
 import {removeNonNumbers} from 'lib/FormatUtils';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
-import {OfflineSigner} from '@cosmjs/proto-signing';
 import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import LocalWallet from 'lib/LocalWallet';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
@@ -30,7 +30,7 @@ type NavProps = StackScreenProps<
 
 export type ConnectAddressAdvancedParams =
   | {
-      onPressOverride: (signer: OfflineSigner) => void;
+      onPressOverride: (wallet: LocalWallet) => void;
     }
   | undefined;
 
@@ -92,9 +92,9 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
       const {change, account, addressIndex} = formValues;
 
       if (
-        isNaN(parseInt(change)) ||
-        isNaN(parseInt(account)) ||
-        isNaN(parseInt(addressIndex))
+        isNaN(parseInt(change, 10)) ||
+        isNaN(parseInt(account, 10)) ||
+        isNaN(parseInt(addressIndex, 10))
       ) {
         setInvalidField(true);
         return;
