@@ -7,7 +7,11 @@ import ConnectChainMethodButton from 'screens/ConnectChainMethod/components/Conn
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
-import {connectMethodState, mnemonicState} from '@recoil/connectChainState';
+import {
+  connectMethodState,
+  mnemonicState,
+  signerState,
+} from '@recoil/connectChainState';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {ActivityIndicator} from 'react-native';
@@ -15,6 +19,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -34,6 +39,7 @@ const ConnectChainMethod = () => {
   const setConnectChainMethod = useSetRecoilState(connectMethodState);
 
   const setMnemonic = useSetRecoilState(mnemonicState);
+  const setSigner = useSetRecoilState(signerState);
 
   const handlePressLedger = React.useCallback(() => {
     setConnectChainMethod('LEDGER');
@@ -46,11 +52,15 @@ const ConnectChainMethod = () => {
       const unlockResult = await unlockWallet(chainAccount);
 
       if (unlockResult) {
-        const {mnemonic} = unlockResult;
+        const {mnemonic, wallet} = unlockResult;
 
-        setMnemonic(mnemonic!);
-
-        navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+        if (mnemonic) {
+          setMnemonic(mnemonic!);
+          navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+        } else if (isLedgerSigner(wallet)) {
+          setSigner(wallet);
+          navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+        }
       }
     }
   }, [chainAccount]);

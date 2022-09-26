@@ -85,12 +85,19 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
     <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3>{t('settings:reveal secret phrase')}</Typography.H3>
       <Typography.Body6 style={styles.bodyText}>
+        {t('settings:firstRow')}
+      </Typography.Body6>
+      <Typography.Body6 style={{marginTop: theme.spacing.l}}>
         <Trans
-          i18nKey="settings:secret recovery passphrase message"
+          i18nKey="settings:secondRow"
           components={[
             <Typography.Subtitle2 style={{color: theme.colors.surfaceBlack}} />,
           ]}
         />
+      </Typography.Body6>
+      <Typography.Body6
+        style={{marginTop: theme.spacing.l, marginBottom: theme.spacing.xl}}>
+        {t('settings:thirdRow')}
       </Typography.Body6>
       <Formik
         initialValues={initialFormValues}
@@ -117,7 +124,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
             )}
 
             <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS === 'ios' ? 370 : 0}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 415 : 0}
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button

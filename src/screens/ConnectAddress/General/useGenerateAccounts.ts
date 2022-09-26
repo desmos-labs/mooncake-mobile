@@ -25,7 +25,7 @@ type Args = {
  * dynamic account generation (i.e lists)
  */
 const useGenerateAccounts = ({mnemonic, prefix, coinType = 852}: Args) => {
-  const [accounts, setAccounts] = React.useState<any>([]);
+  const [accounts, setAccounts] = React.useState<LocalWallet[]>([]);
 
   const generateAccountsFromMnemonic = React.useCallback(async () => {
     const createNewWalletPromises = new Array(20)
@@ -44,7 +44,7 @@ const useGenerateAccounts = ({mnemonic, prefix, coinType = 852}: Args) => {
 
     const wallets = await Promise.all(createNewWalletPromises);
 
-    setAccounts((prev: any) => [...prev, ...wallets]);
+    setAccounts((prev: LocalWallet[]) => [...prev, ...wallets]);
   }, [accounts]);
 
   return {

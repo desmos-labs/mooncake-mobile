@@ -45,8 +45,8 @@ const ManageConnectedChains = () => {
 
       const unlockResponse = await unlockWallet(chainAccount);
 
-      if (!unlockResponse || !unlockResponse.signer) return;
-      await disconnectChainLink(unlockResponse.signer, chainLink);
+      if (!unlockResponse || !unlockResponse.wallet) return;
+      await disconnectChainLink(unlockResponse.wallet, chainLink);
       // we want the refetch call to run while the user is shown the sucess dialog.
       refetch();
 

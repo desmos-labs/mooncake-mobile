@@ -1,4 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import {mnemonicState, signerState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
@@ -14,6 +15,7 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import {useResetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
@@ -67,6 +69,14 @@ const Profiles: React.FC<Props> = props => {
     });
   }, []);
 
+  const resetSigner = useResetRecoilState(signerState);
+  const resetMnemonic = useResetRecoilState(mnemonicState);
+  const navigateToAddProfile = useCallback(() => {
+    resetSigner();
+    resetMnemonic();
+    navigation.navigate(ROUTES.ADD_PROFILE);
+  }, [activeAddress]);
+
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {
       if (index === i) {
@@ -92,10 +102,12 @@ const Profiles: React.FC<Props> = props => {
   return (
     <DView style={styles.root} topBar={<TopBar />}>
       <View style={styles.titleBar}>
-        <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
+        <Typography.H3 style={styles.title}>
+          {t('addProfile:title')}
+        </Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
-          onPress={() => console.log('press')}>
+          onPress={navigateToAddProfile}>
           <View style={styles.plusButton}>
             <Icon
               name="plus"

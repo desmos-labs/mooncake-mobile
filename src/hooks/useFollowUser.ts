@@ -45,7 +45,7 @@ export default function useFollowUser(
           setLoading(true);
           setError(undefined);
 
-          if (!chainAccount) throw new Error(t('noActiveAccountFound'));
+          if (!chainAccount) throw new Error(t('common:noActiveAccountFound'));
 
           /* Creating a message object that will be sent to the blockchain. */
           const uncodeObject: MsgCreateRelationshipEncodeObject = {
@@ -83,7 +83,7 @@ export default function useFollowUser(
           setLoading(true);
           setError(undefined);
 
-          if (!chainAccount) throw new Error(t('noActiveAccountFound'));
+          if (!chainAccount) throw new Error(t('common:noActiveAccountFound'));
 
           /* Creating a message object that will be sent to the blockchain. */
           const uncodeObject: MsgDeleteRelationshipEncodeObject = {
