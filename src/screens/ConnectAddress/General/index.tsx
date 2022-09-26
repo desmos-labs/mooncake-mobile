@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import DView from 'components/DView';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
@@ -15,6 +15,7 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import LocalWallet from 'lib/LocalWallet';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -24,7 +25,13 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-const ConnectAddressGeneral = () => {
+export type ConnectAddressGeneralParams = {
+  nextRouteOverride?: keyof RootNavigatorParamList;
+  loadedProfileMap?: Map<string, ProfileData>;
+};
+
+const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
+  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -60,27 +67,45 @@ const ConnectAddressGeneral = () => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+              nextRouteOverride,
+              loadedProfileMap,
+            });
           }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
     );
-  }, []);
+  }, [nextRouteOverride, loadedProfileMap]);
 
-  const renderItem = React.useCallback(({item, index}: any) => {
-    return (
-      <AddressItem
-        key={item.bech32Address}
-        index={index}
-        address={item.bech32Address}
-        handlePress={() => {
-          setSelectedExternalAccount(item.serialize());
-          navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-        }}
-      />
-    );
-  }, []);
+  const renderItem = React.useCallback(
+    // eslint-disable-next-line react/no-unused-prop-types
+    ({item, index}: {item: LocalWallet; index: number}) => {
+      return (
+        <AddressItem
+          key={item.bech32Address}
+          index={index}
+          address={item.bech32Address}
+          handlePress={() => {
+            if (nextRouteOverride) {
+              if (loadedProfileMap?.has(item.bech32Address)) {
+                return navigate(ROUTES.USER_PROFILE, {
+                  visitingProfileAddress: item.bech32Address,
+                });
+              }
+
+              setSelectedExternalAccount(item.serialize());
+              return navigate(nextRouteOverride);
+            }
+
+            setSelectedExternalAccount(item.serialize());
+            navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+          }}
+        />
+      );
+    },
+    [nextRouteOverride, loadedProfileMap],
+  );
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,

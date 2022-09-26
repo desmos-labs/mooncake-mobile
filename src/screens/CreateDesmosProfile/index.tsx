@@ -1,6 +1,5 @@
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
@@ -26,7 +25,7 @@ import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useRef} from 'react';
+import React, {FC, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
@@ -35,17 +34,26 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TextInput,
+  TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
+import {
+  selectedExternalAccountState,
+  signerState,
+} from '@recoil/connectChainState';
+import {format} from 'date-fns';
+import profilesState from '@recoil/profiles';
 import useStyles from './useStyles';
 
-type NavProp = StackScreenProps<
+type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.CREATE_DESMOS_PROFILE
 >;
@@ -56,38 +64,41 @@ const initialFormState = {
   bio: '',
 };
 
-const CreateDesmosProfile = () => {
+const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push} =
-    useNavigation<NavProp['navigation']>();
+  const {goBack, navigate, reset, push} = navigation;
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
-    useImageFromDevice();
+    useImageFromDevice({});
 
   const {imageAsset: profilePicture, imageFromLibrary: selectProfilePicture} =
-    useImageFromDevice();
+    useImageFromDevice({});
 
   const [loading, setLoading] = React.useState(false);
 
   const profileParams = useRecoilValue(profileParamsState);
   const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
+  const signer = useRecoilValue(signerState);
   const unlockWallet = useUnlockWallet();
-  const nicknameInputRef = React.useRef<any>();
-  const dTagInputRef = React.useRef<any>();
-  const bioInputRef = React.useRef<any>();
+  const nicknameInputRef = React.useRef<TextInput>(null);
+  const dTagInputRef = React.useRef<TextInput>(null);
+  const bioInputRef = React.useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const dtagMinLength = 6; // override the value (3) from query, 6 for App
+  const nicknameMaxLength = 30; // override the value (1000) from query, 30 for App
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
         .min(profileParams.nickname.min_length)
-        .max(profileParams.nickname.max_length),
+        .max(nicknameMaxLength),
       dTag: Yup.string()
         .required(t('error:required'))
-        .min(profileParams.dtag.min_length)
+        .min(dtagMinLength)
         .max(profileParams.dtag.max_length)
         .test(
           'respect reg_ex',
@@ -107,13 +118,14 @@ const CreateDesmosProfile = () => {
     });
   }, [profileParams]);
 
+  const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
+  const setLoadedProfiles = useSetRecoilState(profilesState);
+
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
       setLoading(true);
 
       const {dTag, nickname, bio} = formValues;
-
-      let wallet: LocalWallet;
 
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
         profilePicture && UploadMedia({mediaFile: profilePicture}),
@@ -123,78 +135,198 @@ const CreateDesmosProfile = () => {
       const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
       const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
 
-      // Save new wallet as last selected wallet
-      // Build save profile message
-      const saveProfileMessage: MsgSaveProfileEncodeObject = {
-        typeUrl: GenericMsgEnums.MsgSaveProfile,
-        value: {
-          creator: wallet!.bech32Address,
-          dtag: dTag,
-          nickname: nickname || '[do-not-modify]',
-          bio: bio || '[do-not-modify]',
-          profilePicture: profilePictureUrl || '[do-not-modify]',
-          coverPicture: coverPictureUrl || '[do-not-modify]',
-        },
-      };
+      const failureAction = goBack;
+      const useExternalAccount =
+        accountCreation?.useExternalAccount ??
+        createLedgerAccount?.useExternalAccount;
 
-      const messages = [saveProfileMessage];
-
-      // delay setLoading false so it occurs while the screen is in background
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-
-      navigate(ROUTES.BROADCAST_TX, {
-        messages,
-        offlineSigner: wallet!,
-        // save newly created account data and navigate to home page
-        successAction: async () => {
-          if (accountCreation && accountCreation.mnemonic) {
-            const {password, mnemonic} = accountCreation;
-            wallet = await LocalWallet.fromMnemonic(mnemonic);
-
-            const newAccount: ChainAccount = {
-              address: wallet.bech32Address,
-              pubKey: toBase64(wallet.publicKey),
-              type: ChainAccountType.Local,
-              hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-              signAlgorithm: 'secp256k1',
-            };
-
-            await saveLocalWallet(wallet, password!);
-            await saveNewAccount(newAccount);
-            await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-            setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-          } else if (createLedgerAccount && createLedgerAccount.account) {
-            const {account: ledgerAccount} = createLedgerAccount;
-
-            wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
-            await saveNewAccount(ledgerAccount);
+      if (useExternalAccount) {
+        /**
+         * Profile
+         * Since a Profile extends the Cosmos SDK AccountI interface, we store profiles inside the x/auth module using the AccountKeeper.
+         * For this reason, there will only be a single profile for each on-chain account and having multiple profiles require to have different on-chain accounts for each one.
+         * In order to make it possible for users to search a profile based on the DTag, we also store the following reference:
+         * DTag: 0x10 | DTag | -> Address
+         * https://github.com/desmos-labs/desmos/blob/95711e2da7a83479d01be213f29f30df9a964b86/x/profiles/spec/03-state.md#profile
+         */
+        try {
+          if (!accountCreation && !createLedgerAccount) {
+            throw new Error('No account creation data');
           }
+          const externalWallet = await LocalWallet.deserialize(
+            selectedExternalAccount,
+          );
+          const address = externalWallet.bech32Address;
+          const messages = getMessage(
+            address,
+            dTag,
+            nickname,
+            bio,
+            profilePictureUrl,
+            coverPictureUrl,
+          );
+          // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
+          navigate(ROUTES.BROADCAST_TX, {
+            messages,
+            offlineSigner: signer,
+            async successAction() {
+              const newProfile: ProfileData = {
+                address: messages[0].value.creator,
+                bio: messages[0].value.bio,
+                cover_pic: messages[0].value.coverPicture,
+                dtag: messages[0].value.dtag,
+                profile_pic: messages[0].value.profilePicture,
+                nickname: messages[0].value.nickname,
+                followage: [],
+                following: [],
+                creation_time: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), // TO DO: get creation time
+              };
+              setLoadedProfiles(prev => {
+                const prevWithExternal = prev.filter(
+                  profile => profile.address !== externalWallet.bech32Address,
+                );
+                return prevWithExternal.concat([newProfile]);
+              });
 
-          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-            title: t('common:congratulations'),
-            subtitle: t('common:dtag created'),
-            buttonLabel: t('resultModal:enterApp'),
-            handleButtonPress: () => {
-              reset({
-                index: 0,
-                routes: [
-                  {
-                    name: ROUTES.HOME,
-                  },
-                ],
+              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                title: t('resultModal:success'),
+                subtitle: t('common:desmosProfileCreated'),
+                buttonLabel: t('common:goToProfile'),
+                handleButtonPress: () => {
+                  navigate(ROUTES.USER_PROFILE, {
+                    visitingProfileAddress: address,
+                  });
+                },
               });
             },
+            failureAction,
           });
-        },
-        failureAction: () => {
-          goBack();
-        },
-      });
+        } catch (error) {
+          const errorMessage = ((err): err is Error =>
+            !!(err as Error).message)(error)
+            ? error.message
+            : String(error);
+          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+            title: t('resultModal:fail'),
+            subtitle: errorMessage,
+            buttonLabel: t('common:retry'),
+            handleButtonPress: goBack,
+            secondaryButtonLabel: t('common:goToProfile'),
+            handleSecondaryButtonPress: () => {
+              navigate(ROUTES.USER_PROFILE);
+            },
+          });
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        let wallet: LocalWallet;
+        if (accountCreation && accountCreation.mnemonic) {
+          const {mnemonic} = accountCreation;
+          wallet = await LocalWallet.fromMnemonic(mnemonic);
+        } else if (createLedgerAccount && createLedgerAccount.account) {
+          const {account: ledgerAccount} = createLedgerAccount;
+          wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
+        }
+
+        // Save new wallet as last selected wallet
+        // Build save profile message
+        const saveProfileMessage: MsgSaveProfileEncodeObject = {
+          typeUrl: GenericMsgEnums.MsgSaveProfile,
+          value: {
+            creator: wallet!.bech32Address,
+            dtag: dTag,
+            nickname: nickname || '[do-not-modify]',
+            bio: bio || '[do-not-modify]',
+            profilePicture: profilePictureUrl || '[do-not-modify]',
+            coverPicture: coverPictureUrl || '[do-not-modify]',
+          },
+        };
+
+        const messages = [saveProfileMessage];
+
+        // delay setLoading false so it occurs while the screen is in background
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+
+        navigate(ROUTES.BROADCAST_TX, {
+          messages,
+          offlineSigner: wallet!,
+          // save newly created account data and navigate to home page
+          successAction: async () => {
+            if (accountCreation && accountCreation.mnemonic) {
+              const {password, mnemonic} = accountCreation;
+              // wallet = await LocalWallet.fromMnemonic(mnemonic);
+
+              const newAccount: ChainAccount = {
+                address: wallet.bech32Address,
+                pubKey: toBase64(wallet.publicKey),
+                type: ChainAccountType.Local,
+                hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                signAlgorithm: 'secp256k1',
+              };
+
+              await saveLocalWallet(wallet, password!);
+              await saveNewAccount(newAccount);
+              await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+            } else if (createLedgerAccount && createLedgerAccount.account) {
+              const {account: ledgerAccount} = createLedgerAccount;
+
+              // wallet = (await unlockWallet(ledgerAccount))!
+              //   .wallet as LocalWallet;
+              await saveNewAccount(ledgerAccount);
+            }
+
+            push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+              title: t('common:congratulations'),
+              subtitle: t('common:dtag created'),
+              buttonLabel: t('resultModal:enterApp'),
+              handleButtonPress: () => {
+                reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: ROUTES.HOME,
+                    },
+                  ],
+                });
+              },
+            });
+          },
+          failureAction: () => {
+            goBack();
+          },
+        });
+      }
     },
-    [],
+    [
+      accountCreation,
+      createLedgerAccount,
+      signer,
+      profilePicture,
+      coverPicture,
+      setLoadedProfiles,
+    ],
   );
+
+  const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
+    kbView: {
+      flex: 1,
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
+      backgroundColor: theme.colors.white,
+    },
+    header: {paddingTop: 68, paddingHorizontal: theme.spacing.m},
+    scrollContainer: {flex: 1},
+    nickname: {opacity: nicknameInputRef.current?.isFocused() ? 1 : 0},
+    dTag: {opacity: dTagInputRef.current?.isFocused() ? 1 : 0},
+    bioInput: {alignSelf: 'flex-start'},
+    bio: {opacity: bioInputRef.current?.isFocused() ? 1 : 0},
+    bioDTextInput: {minHeight: 120},
+    errorText: {color: theme.colors.pink01, flex: 1},
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -225,20 +357,14 @@ const CreateDesmosProfile = () => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{
-          flex: 1,
-          borderTopLeftRadius: 32,
-          borderTopRightRadius: 32,
-          backgroundColor: theme.colors.white,
-        }}>
+        style={inlineStyles.kbView}>
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
           onSubmit={handleFormSubmit}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
-              <View
-                style={{paddingTop: 68, paddingHorizontal: theme.spacing.m}}>
+              <View style={inlineStyles.header}>
                 <Typography.H4>{t('header')}</Typography.H4>
                 <Typography.Body6 style={styles.descriptionText}>
                   {t('description')}
@@ -248,7 +374,7 @@ const CreateDesmosProfile = () => {
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
-                <View style={{flex: 1}}>
+                <View style={inlineStyles.scrollContainer}>
                   <Typography.Subtitle2 style={styles.inputLabel}>
                     {t('nickname')}
                   </Typography.Subtitle2>
@@ -261,13 +387,15 @@ const CreateDesmosProfile = () => {
                     }}
                     error={!!errors.nickname}
                   />
+                  {errors.nickname && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.nickname}
+                    </Typography.Caption1>
+                  )}
                   {nicknameInputRef.current && (
-                    <View
-                      style={{
-                        opacity: nicknameInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.nickname}>
                       <TextCounter
-                        maxChar={profileParams.nickname.max_length}
+                        maxChar={nicknameMaxLength}
                         textToCount={values.nickname}
                       />
                     </View>
@@ -284,12 +412,15 @@ const CreateDesmosProfile = () => {
                     }}
                     error={!!errors.dTag}
                     inputRef={dTagInputRef}
+                    autoCapitalize="none"
                   />
+                  {errors.dTag && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.dTag}
+                    </Typography.Caption1>
+                  )}
                   {dTagInputRef.current && (
-                    <View
-                      style={{
-                        opacity: dTagInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.dTag}>
                       <TextCounter
                         maxChar={profileParams.dtag.max_length}
                         textToCount={values.dTag}
@@ -305,19 +436,21 @@ const CreateDesmosProfile = () => {
                     value={values.bio}
                     multiline={true}
                     scrollEnabled={false}
-                    inputStyle={{alignSelf: 'flex-start'}}
+                    inputStyle={inlineStyles.bioInput}
                     placeholder={t('addBio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
                     }}
                     error={!!errors.bio}
-                    style={{minHeight: 120}}
+                    style={inlineStyles.bioDTextInput}
                   />
+                  {errors.bio && (
+                    <Typography.Caption1 style={inlineStyles.errorText}>
+                      {errors.bio}
+                    </Typography.Caption1>
+                  )}
                   {bioInputRef.current && (
-                    <View
-                      style={{
-                        opacity: bioInputRef.current.isFocused() ? 1 : 0,
-                      }}>
+                    <View style={inlineStyles.bio}>
                       <TextCounter
                         maxChar={profileParams.bio.max_length}
                         textToCount={values.bio}
@@ -342,5 +475,31 @@ const CreateDesmosProfile = () => {
     </SafeAreaView>
   );
 };
+
+// Save new wallet as last selected wallet
+// Build save profile message
+function getMessage(
+  creator: string,
+  dTag: string,
+  nickname: string,
+  bio: string,
+  profilePictureUrl: string | undefined,
+  coverPictureUrl: string | undefined,
+): MsgSaveProfileEncodeObject[] {
+  // Save new wallet as last selected wallet
+  // Build save profile message
+  const saveProfileMessage: MsgSaveProfileEncodeObject = {
+    typeUrl: GenericMsgEnums.MsgSaveProfile,
+    value: {
+      creator,
+      dtag: dTag,
+      nickname: nickname || '[do-not-modify]',
+      bio: bio || '[do-not-modify]',
+      profilePicture: profilePictureUrl || '[do-not-modify]',
+      coverPicture: coverPictureUrl || '[do-not-modify]',
+    },
+  };
+  return [saveProfileMessage];
+}
 
 export default CreateDesmosProfile;

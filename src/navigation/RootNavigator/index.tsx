@@ -14,13 +14,18 @@ import {useTranslation} from 'react-i18next';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
+import AddProfile from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
 import Community from 'screens/Community';
 import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
-import ConnectAddressAdvanced from 'screens/ConnectAddress/Advanced';
-import ConnectAddressGeneral from 'screens/ConnectAddress/General';
+import ConnectAddressAdvanced, {
+  ConnectAddressAdvancedParams,
+} from 'screens/ConnectAddress/Advanced';
+import ConnectAddressGeneral, {
+  ConnectAddressGeneralParams,
+} from 'screens/ConnectAddress/General';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -97,7 +102,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME]: undefined;
-  [ROUTES.USER_PROFILE]: UserProfileParams;
+  [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -113,8 +118,8 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
-  [ROUTES.CONNECT_ADDRESS_GENERAL]: undefined;
-  [ROUTES.CONNECT_ADDRESS_ADVANCED]: undefined;
+  [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
+  [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
@@ -156,6 +161,8 @@ export type RootNavigatorParamList = {
 
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
+
+  [ROUTES.ADD_PROFILE]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -189,6 +196,9 @@ const RootNavigator = () => {
   const styles: {[key: string]: ViewStyle | TextStyle} = {
     followingAndFollowers: {
       backgroundColor: theme.colors.white,
+    },
+    addProfileCard: {
+      backgroundColor: 'rgb(245,246,249)',
     },
   };
 
@@ -434,6 +444,12 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
+
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE}
+        component={AddProfile}
+        options={{cardStyle: styles.addProfileCard}}
+      />
     </Stack.Navigator>
   );
 };

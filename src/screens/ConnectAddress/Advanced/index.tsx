@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {IconButton, useTheme} from 'react-native-paper';
@@ -27,7 +27,13 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
 
-const ConnectAddressAdvanced = () => {
+export type ConnectAddressAdvancedParams = {
+  nextRouteOverride?: keyof RootNavigatorParamList;
+  loadedProfileMap?: Map<string, ProfileData>;
+};
+
+const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
+  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
@@ -53,13 +59,16 @@ const ConnectAddressAdvanced = () => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+              nextRouteOverride,
+              loadedProfileMap,
+            });
           }}>
           {t('general')}
         </Typography.Button2>
       </View>
     );
-  }, []);
+  }, [nextRouteOverride, loadedProfileMap]);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -81,9 +90,9 @@ const ConnectAddressAdvanced = () => {
       const {change, account, addressIndex} = formValues;
 
       if (
-        isNaN(parseInt(change)) ||
-        isNaN(parseInt(account)) ||
-        isNaN(parseInt(addressIndex))
+        isNaN(parseInt(change, 10)) ||
+        isNaN(parseInt(account, 10)) ||
+        isNaN(parseInt(addressIndex, 10))
       ) {
         setInvalidField(true);
         return;
@@ -104,11 +113,21 @@ const ConnectAddressAdvanced = () => {
   );
 
   const handlePressConfirm = React.useCallback(() => {
-    if (generatedAccount) {
-      setSelectedExternalAccount(generatedAccount.serialize);
-      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+    if (!generatedAccount) return;
+
+    if (nextRouteOverride) {
+      if (loadedProfileMap?.has(generatedAccount.bech32Address)) {
+        return navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: generatedAccount.bech32Address,
+        });
+      }
+
+      return navigate(nextRouteOverride);
     }
-  }, []);
+
+    setSelectedExternalAccount(generatedAccount.serialize);
+    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+  }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
 
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>

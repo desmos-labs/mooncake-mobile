@@ -1,15 +1,26 @@
-import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {clearMMKV} from 'lib/MMKVStorage';
 import {resetSecureStorage} from 'lib/SecureStorage';
 import ROUTES from 'navigation/routes';
-import React from 'react';
-import {Alert, FlatList, Text, TouchableOpacity} from 'react-native';
+import React, {FC} from 'react';
+import {
+  Alert,
+  FlatList,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import {mnemonicState, signerState} from '@recoil/connectChainState';
+import {useResetRecoilState} from 'recoil';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -40,16 +51,31 @@ const routesToRender = [
   ROUTES.REPORT_POST,
   ROUTES.FOLLOWING_AND_FOLLOWERS,
   ROUTES.NO_DTAG_FOUND,
+  ROUTES.ADD_PROFILE,
 ];
 
-const DevScreen = () => {
-  const {navigate} = useNavigation<any>();
+const styles: {[styleName: string]: ViewStyle | TextStyle} = {
+  button: {padding: 18, borderWidth: 1, borderColor: 'grey'},
+  flatList: {padding: 16},
+  text: {color: 'black'},
+};
+
+type DevScreenProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.DEV_SCREEN
+>;
+
+const DevScreen: FC<DevScreenProps> = ({navigation}) => {
+  const {navigate} = navigation;
   const {revokeAllGrants} = useAddOrUpdateGrants();
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
 
   console.log(_.includes(b, a)); */
+
+  const resetSigner = useResetRecoilState(signerState);
+  const resetMnemonic = useResetRecoilState(mnemonicState);
 
   const showToast = () => {
     toast.show('I am a toast', {
@@ -59,6 +85,8 @@ const DevScreen = () => {
       },
     });
   };
+
+  const {activeAddress} = useActiveAccount();
 
   const renderItem = ({item}: any) => {
     return (
@@ -70,21 +98,22 @@ const DevScreen = () => {
                 headerTitle: '@Raffaello',
                 initialTabRouteName: ROUTES.FOLLOWING,
                 subspaceID: 5,
-                userAddress: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
+                userAddress: activeAddress,
                 username: '@Raffaello',
               });
+              break;
+            case ROUTES.ADD_PROFILE:
+              resetSigner();
+              resetMnemonic();
+              navigate(item);
               break;
             default:
               navigate(item);
               break;
           }
         }}
-        style={{
-          padding: 18,
-          borderWidth: 1,
-          borderColor: 'grey',
-        }}>
-        <Text style={{color: 'black'}}>{item}</Text>
+        style={styles.button}>
+        <Text style={styles.text}>{item}</Text>
       </TouchableOpacity>
     );
   };
@@ -97,9 +126,7 @@ const DevScreen = () => {
   return (
     <DView>
       <FlatList
-        contentContainerStyle={{
-          padding: 16,
-        }}
+        contentContainerStyle={styles.flatList}
         data={routesToRender}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
