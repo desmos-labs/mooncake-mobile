@@ -27,12 +27,17 @@ import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import * as Yup from 'yup';
+import ROUTES from 'navigation/routes';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
+
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
-  const {goBack} = useNavigation();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
@@ -175,7 +180,9 @@ const Signup = () => {
                     )}
 
                     <Typography.Body6
-                      onPress={() => {}}
+                      onPress={() => {
+                        navigate(ROUTES.CREATE_DESMOS_PROFILE);
+                      }}
                       style={styles.completeProfileButton}>
                       {t('signup:completeProfile')}
                     </Typography.Body6>

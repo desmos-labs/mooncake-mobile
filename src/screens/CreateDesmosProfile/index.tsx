@@ -68,7 +68,15 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push} = navigation;
+  const {goBack, navigate, reset, push, getState} = navigation;
+
+  const fromSignUp = React.useMemo(() => {
+    const {routes} = getState();
+
+    return routes[routes.length - 2].name === ROUTES.SIGNUP;
+  }, []);
+
+  console.log(fromSignUp);
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
     useImageFromDevice({});
