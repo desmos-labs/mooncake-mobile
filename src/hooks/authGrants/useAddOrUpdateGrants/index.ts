@@ -16,6 +16,7 @@ import {
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
+import {Alert} from 'react-native';
 
 /**
  * MVP msg authorizations
@@ -90,6 +91,12 @@ const useAddOrUpdateGrants = () => {
     if (!broadcastResult) {
       throw new Error('Error deleting grants');
     }
+
+    // placeholder message as th ere is no handler for the success case
+    Alert.alert(
+      '[PLACEHOLDER] SUCCESS',
+      `All grants belonging to the account ${grantee} have been revoked. You may close this screen`,
+    );
   }, [chainAccount, butterConfig.desmos_address]);
 
   /**
