@@ -46,7 +46,7 @@ export default function useUnlockWallet(): (
 
   return useCallback(
     async (
-      account,
+      chainAccount,
       shouldReplaceRoute,
       titleLabelOverride,
       buttonLabelOverride,
@@ -55,12 +55,12 @@ export default function useUnlockWallet(): (
       const navigate = shouldReplaceRoute
         ? navigation.replace
         : navigation.navigate;
-      if (account.type === ChainAccountType.Local) {
+      if (chainAccount.type === ChainAccountType.Local) {
         return new Promise(resolve => {
           navigate(ROUTES.AUTHORIZE_WALLET, {
             screen: ROUTES.AUTH_UNLOCK_LOCAL_WALLET,
             params: {
-              address: account.address,
+              address: chainAccount.address,
               provideWallet: true,
               provideMnemonic: true,
               titleLabelOverride,
@@ -73,6 +73,9 @@ export default function useUnlockWallet(): (
                   wallet: result.wallet!,
                   mnemonic: result.mnemonic,
                 });
+              },
+              onFailedAuthentication: () => {
+                resolve(undefined);
               },
             },
           });
@@ -89,7 +92,7 @@ export default function useUnlockWallet(): (
                 wallet: new LedgerSigner(transport!, {
                   minLedgerAppVersion: DesmosLedgerApp!.minVersion,
                   ledgerAppName: DesmosLedgerApp!.name,
-                  hdPaths: [toCosmjsHdPath(account.hdPath)],
+                  hdPaths: [toCosmjsHdPath(chainAccount.hdPath)],
                   prefix: 'desmos',
                 }),
               });

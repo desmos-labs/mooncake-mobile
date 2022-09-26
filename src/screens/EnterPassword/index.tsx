@@ -59,6 +59,7 @@ export type EnterPasswordParams = {
 
 const EnterPassword = () => {
   const [loading, setLoading] = useState(false);
+  const [resolved, setResolved] = useState(false);
   const {t} = useTranslation('enterPassword');
   const {
     params: {
@@ -75,6 +76,16 @@ const EnterPassword = () => {
 
   const styles = useStyles();
   const theme = useTheme();
+
+  // Fail the authentication request if the screen is unmounted (i.e user presses back)
+  // the resolved state will ensure that this is only run if the unlock promise has not been resolved
+  React.useEffect(() => {
+    return () => {
+      if (!resolved) {
+        onFailedAuthentication && onFailedAuthentication();
+      }
+    };
+  }, [resolved]);
 
   const onFormSubmit = React.useCallback(
     async (
@@ -96,7 +107,8 @@ const EnterPassword = () => {
 
           const mnemonic = await getMnemonic(address, password);
 
-          if (onSuccessfulAuthentication) {
+          if (wallet && onSuccessfulAuthentication) {
+            setResolved(true);
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
