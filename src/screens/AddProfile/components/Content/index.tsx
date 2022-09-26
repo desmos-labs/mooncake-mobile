@@ -81,8 +81,6 @@ const ContentGroup: FC<ContentGroupProps> = ({
 /**
  * @property {OfflineSigner} signer - The offline signer that will be used to sign the transaction.
  * @property {string | undefined} mnemonic - The mnemonic phrase that was generated for the account.
- * @property {ChainAccountType} accountType - The type of account you want to create.
- * @property signAlgorithm - The algorithm used to sign the transaction.
  */
 type ContentProps = {
   signer: OfflineSigner;
