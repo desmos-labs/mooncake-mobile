@@ -83,7 +83,7 @@ import FollowingAndFollowers, {
   FollowingAndFollowersParams,
   FollowingAndFollowersHeader,
 } from 'screens/FollowingAndFollowers';
-import {Dimensions} from 'react-native';
+import {Dimensions, ViewStyle} from 'react-native';
 import {FollowingParams} from 'screens/Following';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
@@ -166,6 +166,12 @@ export type RootNavigatorParamList = {
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
+
+const styles: {[key: string]: ViewStyle} = {
+  addProfileCard: {
+    backgroundColor: 'rgb(245,246,249)',
+  },
+};
 
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
@@ -436,7 +442,11 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
-      <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} />
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE}
+        component={AddProfile}
+        options={{cardStyle: styles.addProfileCard}}
+      />
     </Stack.Navigator>
   );
 };
