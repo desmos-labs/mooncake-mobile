@@ -4,6 +4,8 @@ type AccountCreationAtom = {
   mnemonic: string;
 
   password?: string;
+
+  useExternalAccount?: boolean;
 };
 
 /**

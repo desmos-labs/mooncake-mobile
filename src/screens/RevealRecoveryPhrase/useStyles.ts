@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
   disabled: {
     opacity: 0.3,
   },
-  bodyText: {marginBottom: 52, marginTop: 20},
+  bodyText: {marginTop: theme.spacing.l},
 }));
 
 export default useStyles;

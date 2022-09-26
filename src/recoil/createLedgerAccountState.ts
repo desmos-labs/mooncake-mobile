@@ -3,6 +3,8 @@ import {atom} from 'recoil';
 
 type CreateLedgerAccountAtom = {
   account?: ChainAccount;
+
+  useExternalAccount?: boolean;
 };
 
 /**

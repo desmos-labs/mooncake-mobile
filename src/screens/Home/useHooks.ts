@@ -93,7 +93,7 @@ const useHooks = () => {
   const handlePressAuthor = useCallback(
     (address: string) => {
       if (activeAddress === address) {
-        navigate(ROUTES.USER_PROFILE, {});
+        navigate(ROUTES.USER_PROFILE);
       } else {
         navigate(ROUTES.USER_PROFILE, {
           visitingProfileAddress: address,
@@ -171,7 +171,7 @@ const useHooks = () => {
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE, {});
+    navigate(ROUTES.USER_PROFILE);
   }, []);
 
   const handlePressCreatePost = React.useCallback(async () => {
