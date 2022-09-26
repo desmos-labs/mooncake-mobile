@@ -5,6 +5,7 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: theme.spacing.m,
     paddingBottom: 80,
     flexGrow: 1,
+    backgroundColor: 'rgb(245,246,249)',
   },
   topBar: {
     backgroundColor: 'transparent',
