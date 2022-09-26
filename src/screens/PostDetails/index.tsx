@@ -153,6 +153,7 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          liked={true}
           repliesCounter={item.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
@@ -160,7 +161,7 @@ const PostDetails = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => console.log('reaction')}
+          handlePressLike={() => handleAddReaction(item.id)}
           handlePressTip={() => {
             console.log('hello world');
           }}
