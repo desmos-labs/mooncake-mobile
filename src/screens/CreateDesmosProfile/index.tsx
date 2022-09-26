@@ -220,106 +220,85 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
           setLoading(false);
         }
       } else {
-        try {
-          if (!accountCreation && !createLedgerAccount) {
-            throw new Error('No account creation data');
-          }
-          if (accountCreation) {
-            const {password, mnemonic} = accountCreation;
-            if (!mnemonic) throw new Error('mnemonic is missing');
-            const wallet = await LocalWallet.fromMnemonic(mnemonic);
-            const address = wallet.bech32Address;
-            const messages = getMessage(
-              address,
-              dTag,
-              nickname,
-              bio,
-              profilePictureUrl,
-              coverPictureUrl,
-            );
-
-            navigate(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: wallet,
-              // save newly created account data and navigate to home page
-              async successAction() {
-                const newAccount: ChainAccount = {
-                  address,
-                  pubKey: toBase64(wallet.publicKey),
-                  type: ChainAccountType.Local,
-                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                  signAlgorithm: 'secp256k1',
-                };
-
-                await saveLocalWallet(wallet, password!);
-                await saveNewAccount(newAccount);
-                await saveMnemonic(address, mnemonic, password!);
-                setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
-
-                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('common:congratulations'),
-                  subtitle: t('common:dtag created'),
-                  buttonLabel: t('resultModal:enterApp'),
-                  handleButtonPress: () => {
-                    reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME,
-                        },
-                      ],
-                    });
-                  },
-                });
-              },
-              failureAction,
-            });
-          } else {
-            const {account: ledgerAccount} = createLedgerAccount;
-            if (!ledgerAccount) throw new Error('ledgerAccount is missing');
-
-            const wallet = (await unlockWallet(ledgerAccount))
-              ?.wallet as LocalWallet;
-            const messages = getMessage(
-              wallet.bech32Address,
-              dTag,
-              nickname,
-              bio,
-              profilePictureUrl,
-              coverPictureUrl,
-            );
-            navigate(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: wallet,
-              // save newly created account data and navigate to home page
-              async successAction() {
-                await saveNewAccount(ledgerAccount);
-
-                push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('common:congratulations'),
-                  subtitle: t('common:dtag created'),
-                  buttonLabel: t('resultModal:enterApp'),
-                  handleButtonPress: () => {
-                    reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME,
-                        },
-                      ],
-                    });
-                  },
-                });
-              },
-              failureAction,
-            });
-          }
-        } catch (error) {
-          console.error('handlFormSubmit', error);
-          throw error;
-        } finally {
-          setLoading(false);
+        let wallet: LocalWallet;
+        if (accountCreation && accountCreation.mnemonic) {
+          const {mnemonic} = accountCreation;
+          wallet = await LocalWallet.fromMnemonic(mnemonic);
+        } else if (createLedgerAccount && createLedgerAccount.account) {
+          const {account: ledgerAccount} = createLedgerAccount;
+          wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
         }
+
+        // Save new wallet as last selected wallet
+        // Build save profile message
+        const saveProfileMessage: MsgSaveProfileEncodeObject = {
+          typeUrl: GenericMsgEnums.MsgSaveProfile,
+          value: {
+            creator: wallet!.bech32Address,
+            dtag: dTag,
+            nickname: nickname || '[do-not-modify]',
+            bio: bio || '[do-not-modify]',
+            profilePicture: profilePictureUrl || '[do-not-modify]',
+            coverPicture: coverPictureUrl || '[do-not-modify]',
+          },
+        };
+
+        const messages = [saveProfileMessage];
+
+        // delay setLoading false so it occurs while the screen is in background
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+
+        navigate(ROUTES.BROADCAST_TX, {
+          messages,
+          offlineSigner: wallet!,
+          // save newly created account data and navigate to home page
+          successAction: async () => {
+            if (accountCreation && accountCreation.mnemonic) {
+              const {password, mnemonic} = accountCreation;
+              // wallet = await LocalWallet.fromMnemonic(mnemonic);
+
+              const newAccount: ChainAccount = {
+                address: wallet.bech32Address,
+                pubKey: toBase64(wallet.publicKey),
+                type: ChainAccountType.Local,
+                hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                signAlgorithm: 'secp256k1',
+              };
+
+              await saveLocalWallet(wallet, password!);
+              await saveNewAccount(newAccount);
+              await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+            } else if (createLedgerAccount && createLedgerAccount.account) {
+              const {account: ledgerAccount} = createLedgerAccount;
+
+              // wallet = (await unlockWallet(ledgerAccount))!
+              //   .wallet as LocalWallet;
+              await saveNewAccount(ledgerAccount);
+            }
+
+            push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+              title: t('common:congratulations'),
+              subtitle: t('common:dtag created'),
+              buttonLabel: t('resultModal:enterApp'),
+              handleButtonPress: () => {
+                reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: ROUTES.HOME,
+                    },
+                  ],
+                });
+              },
+            });
+          },
+          failureAction: () => {
+            goBack();
+          },
+        });
       }
     },
     [
