@@ -20,7 +20,7 @@ const FollowButton: FC<Props> = props => {
   const styles = useStyles();
   const {t} = useTranslation('followingAndFollowers');
   const [styleOfButton, styleOfLabel, label] =
-    type !== 'follow'
+    type === 'follow'
       ? [styles.follow, styles.followLabel, t('follow')]
       : [styles.unfollow, styles.unfollowLabel, t('unfollow')];
   return (
