@@ -1,12 +1,12 @@
 import {makeStyle} from 'config/theme';
 
-const useStyles = makeStyle(theme => ({
+const useStyles = makeStyle(() => ({
   contentContainer: {
     flexGrow: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
   },
   flatList: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
   },
 }));
 

@@ -95,6 +95,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
           switch (item) {
             case ROUTES.FOLLOWING_AND_FOLLOWERS:
               navigate(item, {
+                headerTitle: '@Raffaello',
                 initialTabRouteName: ROUTES.FOLLOWING,
                 subspaceID: 5,
                 userAddress: activeAddress,
