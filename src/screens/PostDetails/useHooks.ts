@@ -1,17 +1,18 @@
-import {useQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
+import EnvConfig from 'config/EnvConfig';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
-import useAddReaction from 'services/axios/requests/CentralizedBroadcastTx/AddReaction/useAddReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import useManangeReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManangeReaction';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import {
@@ -26,11 +27,10 @@ const useHooks = ({
   postID: number;
   subspaceID: number;
 }) => {
-  const [userLiked, setUserLiked] = useState<boolean>(false);
   const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
-  const {manageReaction} = useAddReaction();
+  const {manageReaction} = useManangeReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {checkGrants} = useCheckGrants();
 
@@ -67,18 +67,34 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    fetchPolicy: 'no-cache',
   });
 
-  const {data: reactionAdded, refetch: reactionAddedRefetch} = useQuery(
+  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
-      variables: {
-        postID,
-        subspaceID,
-        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
-      },
       fetchPolicy: 'no-cache',
     },
+  );
+
+  const getReaction = useCallback(
+    async ({
+      id,
+      subspace_id,
+    }: {
+      id: number;
+      subspace_id: number;
+      address: string;
+    }) => {
+      return getReactionForPostAndAuthor({
+        variables: {
+          postID: id,
+          subspaceID: subspace_id,
+          address: profile?.address,
+        },
+      });
+    },
+    [profile?.address],
   );
 
   const post = React.useMemo(() => {
@@ -92,19 +108,10 @@ const useHooks = ({
   }, [postComments]);
 
   const reactions = useMemo(() => {
+    console.log('reactions');
     if (!postReactions) return [];
     return postReactions.reaction;
   }, [postReactions, profile?.address]);
-
-  const reactionIdFromUser: number | undefined = useMemo(() => {
-    if (reactionAdded?.reaction.length === 0 || !reactionAdded) {
-      setUserLiked(false);
-      return undefined;
-    } else {
-      setUserLiked(true);
-      return reactionAdded.reaction[0].id;
-    }
-  }, [reactionAdded, profile?.address]);
 
   const pageRefetch = async () => {
     await postRefetch({
@@ -119,11 +126,11 @@ const useHooks = ({
       postID,
       subspaceID,
     });
-    await reactionAddedRefetch({
+    /*    await reactionAddedRefetch({
       postID,
       subspaceID,
       address: profile?.address,
-    });
+    }); */
   };
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
@@ -163,6 +170,12 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
+      await getReaction({
+        id: postId,
+        subspace_id: EnvConfig.APP_SUBSPACE_ID,
+        address: profile?.address!,
+      });
+
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgAddReaction,
         GrantEnums.MsgRemoveReaction,
@@ -178,7 +191,9 @@ const useHooks = ({
             await manageReaction({
               postId: Long.fromNumber(postId),
               user: profile?.address!,
-              reactionId: reactionIdFromUser,
+              reactionId: reactionAdded?.reaction[0]
+                ? reactionAdded?.reaction[0].id
+                : undefined,
             });
             pop();
           },
@@ -191,11 +206,13 @@ const useHooks = ({
         await manageReaction({
           postId: Long.fromNumber(postId),
           user: profile?.address!,
-          reactionId: reactionIdFromUser,
+          reactionId: reactionAdded?.reaction[0]
+            ? reactionAdded?.reaction[0].id
+            : undefined,
         });
       }
     },
-    [postID, profile?.address, reactionIdFromUser],
+    [postID, profile?.address, reactionAdded],
   );
 
   React.useEffect(() => {
@@ -244,7 +261,6 @@ const useHooks = ({
     handleAddReaction,
     postCommentLoading: loading,
     pageRefetch,
-    userLiked,
   };
 };
 

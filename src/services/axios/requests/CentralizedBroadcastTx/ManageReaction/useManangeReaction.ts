@@ -16,9 +16,9 @@ import React, {useCallback} from 'react';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
- * Hook that creates a new post
+ * Hook that manange a reaction, adding or removing it.
  */
-const useAddReaction = () => {
+const useManangeReaction = () => {
   const {activeAddress} = useActiveAccount();
   const [reactionLoading, setReactionLoading] = React.useState(false);
 
@@ -86,6 +86,11 @@ const useAddReaction = () => {
     [activeAddress],
   );
 
+  /**
+   * @param {number} postId The ID of the post
+   * @param {string} user The address of the user managing the reaction
+   * @param {number} reactionId (OPTIONAL, required only for removing a reaction) The ID of the reaction to be removed
+   * */
   const manageReaction = useCallback(
     async ({
       postId,
@@ -100,10 +105,10 @@ const useAddReaction = () => {
       let result;
       try {
         if (reactionId) {
-          console.log('rimuovo', reactionId);
+          console.log('remove reaction with ID: ', reactionId);
           result = await removeReaction({postId, user, reactionId});
         } else {
-          console.log('aggiungo', reactionId);
+          console.log('add reaction');
           result = await addReaction({postId, user});
         }
       } catch (err: any) {
@@ -119,4 +124,4 @@ const useAddReaction = () => {
   return {manageReaction, reactionLoading};
 };
 
-export default useAddReaction;
+export default useManangeReaction;

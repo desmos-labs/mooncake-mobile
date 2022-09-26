@@ -100,7 +100,6 @@ const PostDetails = () => {
     handleAddReaction,
     postCommentLoading,
     pageRefetch,
-    userLiked,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -153,7 +152,6 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
-          liked={true}
           repliesCounter={item.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
@@ -206,7 +204,7 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
-          postLiked={userLiked}
+          postLiked={false}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');
@@ -226,7 +224,7 @@ const PostDetails = () => {
         <Spacer paddingBottom={16} />
       </>
     ),
-    [post, reactions, likesImages, userLiked],
+    [post, reactions, likesImages],
   );
 
   const CustomTopBar = React.useMemo(() => {
