@@ -118,8 +118,9 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
   return (
     <DView
       style={styles.container}
+      topBar={<TopBar style={styles.topBar} />}
       scrollable={false}
-      topBar={<TopBar style={styles.topBar} />}>
+      disableHideKeyboardTouchable={true}>
       <Typography.H3 style={styles.title}>
         {t('addProfile:title')}
       </Typography.H3>
