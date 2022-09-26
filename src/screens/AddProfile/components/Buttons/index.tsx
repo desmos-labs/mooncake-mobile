@@ -2,32 +2,35 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
 import Typography from 'components/Typography';
+import {saveNewAccount} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {FC, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
+import {ChainAccount} from 'types/chains';
 import useStyles from './useStyles';
 
 type ButtonProps = {
   canAddProfile: boolean;
-  selectedProfiles: ProfileData[];
+  selectedProfileMap: Map<string, ProfileData>;
   loadedProfileMap: Map<string, ProfileData>;
+  accountsByPage: Array<ChainAccount[]>;
 };
 
 const Buttons: FC<ButtonProps> = ({
   canAddProfile,
-  selectedProfiles,
+  selectedProfileMap,
   loadedProfileMap,
+  accountsByPage,
 }) => {
   const styles = useStyles();
   const theme = useTheme();
   const {navigate} =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation();
-
-  const setLoadedProfiles = useSetRecoilState(profilesState);
+  const setProfiles = useSetRecoilState(profilesState);
 
   /* boardcast the MsgSaveProfile after an address is selected */
   /* Navigating to the connect address general screen. */
@@ -42,19 +45,23 @@ const Buttons: FC<ButtonProps> = ({
 
   /* Adding the selected profiles to the loaded profiles. */
   const handleConfirmPressed = useCallback(async () => {
-    setLoadedProfiles(prev => {
-      if (!selectedProfiles.length) return prev;
-      const prevAddreses = prev.reduce(
-        (set, {address}) => set.add(address),
-        new Set<string>(),
-      );
-      const newProfiles = selectedProfiles.filter(
-        ({address}) => !prevAddreses.has(address),
-      );
-      if (!newProfiles.length) return prev;
-      return prev.concat(newProfiles);
+    if (!selectedProfileMap.size) return;
+    const tasks: Array<Promise<void>> = [];
+    accountsByPage.forEach(accounts => {
+      accounts.forEach(account => {
+        if (selectedProfileMap.has(account.address)) {
+          tasks.push(saveNewAccount(account));
+        }
+      });
     });
-  }, [selectedProfiles]);
+    await Promise.all(tasks);
+    setProfiles(prev => {
+      const prevWithoutSelected = prev.filter(
+        p => !selectedProfileMap.has(p.address),
+      );
+      return prevWithoutSelected.concat(...selectedProfileMap.values());
+    });
+  }, [selectedProfileMap, accountsByPage]);
 
   if (canAddProfile) {
     return (
@@ -72,7 +79,7 @@ const Buttons: FC<ButtonProps> = ({
           mode="contained"
           color={theme.colors.surfaceBlack}
           style={styles.button}
-          disabled={selectedProfiles.length === 0}
+          disabled={selectedProfileMap.size === 0}
           onPress={handleConfirmPressed}>
           <Typography.Button2 style={styles.buttonLabel}>
             {t('common:confirm')}
