@@ -2,8 +2,8 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
-    paddingVertical: theme.spacing.m,
-    paddingBottom: 80,
+    paddingTop: theme.spacing.m,
+    paddingBottom: theme.spacing.xl,
     flexGrow: 1,
   },
   topBar: {
@@ -21,7 +21,6 @@ const useStyles = makeStyle(theme => ({
   },
   title: {
     paddingHorizontal: theme.spacing.m,
-    marginBottom: theme.spacing.m,
   },
   headerBackImage: {
     marginHorizontal: 8,
