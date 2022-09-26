@@ -84,6 +84,7 @@ const PostDetails = () => {
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
 
   const {
+    profile,
     post,
     postLoading,
     comments,
@@ -150,8 +151,12 @@ const PostDetails = () => {
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
+      const liked = item.reactions.find(
+        (reaction: any) => reaction.author.address === profile?.address,
+      );
       return (
         <CommentItem
+          liked={liked}
           repliesCounter={item.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
@@ -182,7 +187,7 @@ const PostDetails = () => {
         />
       );
     },
-    [comments],
+    [comments, profile?.address],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -204,7 +209,9 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
-          postLiked={false}
+          postLiked={reactions.find(
+            (reaction: any) => reaction.author.address === profile?.address,
+          )}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');

@@ -3,11 +3,13 @@ import {useNavigation} from '@react-navigation/native';
 import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
 import EnvConfig from 'config/EnvConfig';
-import useCheckGrants from 'hooks/authGrants/useCheckGrants';
+import ToastConfig from 'config/ToastConfig';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
+import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
@@ -26,12 +28,13 @@ const useHooks = ({
   postID: number;
   subspaceID: number;
 }) => {
-  const {navigate, pop} = useNavigation<NavProps['navigation']>();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
   const {manageReaction} = useManangeReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
-  const {checkGrants} = useCheckGrants();
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const toast = useToast();
 
   const {
     data: originalPost,
@@ -54,6 +57,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    pollInterval: 500,
     fetchPolicy: 'no-cache',
   });
 
@@ -66,6 +70,7 @@ const useHooks = ({
       postID,
       subspaceID,
     },
+    pollInterval: 500,
     fetchPolicy: 'no-cache',
   });
 
@@ -107,7 +112,6 @@ const useHooks = ({
   }, [postComments]);
 
   const reactions = useMemo(() => {
-    console.log('reactions');
     if (!postReactions) return [];
     return postReactions.reaction;
   }, [postReactions, profile?.address]);
@@ -125,11 +129,6 @@ const useHooks = ({
       postID,
       subspaceID,
     });
-    /*    await reactionAddedRefetch({
-      postID,
-      subspaceID,
-      address: profile?.address,
-    }); */
   };
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
@@ -169,7 +168,7 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      await getReaction({
+      const {data} = await getReaction({
         id: postId,
         subspace_id: EnvConfig.APP_SUBSPACE_ID,
         address: profile?.address!,
@@ -180,34 +179,20 @@ const useHooks = ({
         GrantEnums.MsgRemoveReaction,
       ];
       // check if user has grants first
-      const grantsRequired = await checkGrants(grantsToRequest);
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
+        address: profile?.address!,
+      });
 
-      if (grantsRequired.length > 0) {
-        navigate(ROUTES.ACTION_AUTHORIZATION, {
-          grants: grantsRequired,
-
-          onApprove: async () => {
-            await manageReaction({
-              postId,
-              user: profile?.address!,
-              reactionId: reactionAdded?.reaction[0]
-                ? reactionAdded?.reaction[0].id
-                : undefined,
-            });
-            pop();
-          },
-          onCancel: () => {
-            pop();
-            console.log('cancelled');
-          },
-        });
-      } else {
+      if (success) {
         await manageReaction({
           postId,
           user: profile?.address!,
-          reactionId: reactionAdded?.reaction[0]
-            ? reactionAdded?.reaction[0].id
-            : undefined,
+          reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
+        });
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
         });
       }
     },
@@ -241,6 +226,7 @@ const useHooks = ({
   }, []);
 
   return {
+    profile,
     post,
     postLoading,
     postRefetch,
@@ -260,6 +246,7 @@ const useHooks = ({
     handleAddReaction,
     postCommentLoading: loading,
     pageRefetch,
+    getReaction,
   };
 };
 
