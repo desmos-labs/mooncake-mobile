@@ -30,10 +30,12 @@ type NavProps = StackScreenProps<
 export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
+  titleLabelOverride?: string;
 };
 
 const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
@@ -62,13 +64,14 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
               nextRouteOverride,
               loadedProfileMap,
+              titleLabelOverride,
             });
           }}>
           {t('general')}
         </Typography.Button2>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileMap]);
+  }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -132,7 +135,9 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   return (
     <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>{t('header')}</Typography.H5>
+        <Typography.H5 style={styles.textStyle}>
+          {titleLabelOverride || t('header')}
+        </Typography.H5>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
           <Typography.Body6 style={styles.textStyle}>

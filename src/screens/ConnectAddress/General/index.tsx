@@ -28,10 +28,12 @@ type NavProps = StackScreenProps<
 export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
+  titleLabelOverride?: string;
 };
 
 const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap} = route?.params ?? {};
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
   // placeholder
   const {navigate} = useNavigation<NavProps['navigation']>();
 
@@ -70,13 +72,14 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
             navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
               loadedProfileMap,
+              titleLabelOverride,
             });
           }}>
           {t('advanced')}
         </Typography.Button2>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileMap]);
+  }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const renderItem = React.useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
@@ -115,7 +118,9 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   return (
     <DView topBar={<TopBar rightElement={SwitchToAdvancedButton} />}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>{t('header')}</Typography.H5>
+        <Typography.H5 style={styles.textStyle}>
+          {titleLabelOverride || t('header')}
+        </Typography.H5>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
           <Typography.Body6 style={styles.textStyle}>

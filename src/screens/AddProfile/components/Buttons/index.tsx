@@ -36,6 +36,7 @@ const Buttons: FC<ButtonProps> = ({
     navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
       nextRouteOverride: ROUTES.CREATE_DESMOS_PROFILE,
       loadedProfileMap,
+      titleLabelOverride: t('addProfile:title'),
     });
   }, [loadedProfileMap]);
 
