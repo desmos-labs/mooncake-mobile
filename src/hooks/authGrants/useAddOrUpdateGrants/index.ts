@@ -95,7 +95,7 @@ const useAddOrUpdateGrants = () => {
     // placeholder message as th ere is no handler for the success case
     Alert.alert(
       '[PLACEHOLDER] SUCCESS',
-      `All grants belonging to the account ${grantee} have been revoked. You may close this screen`,
+      `All grants belonging to the account ${granter} have been revoked. You may close this screen`,
     );
   }, [chainAccount, butterConfig.desmos_address]);
 
