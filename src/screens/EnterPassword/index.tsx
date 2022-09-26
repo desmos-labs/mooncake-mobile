@@ -12,7 +12,7 @@ import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
-import React, {useState} from 'react';
+import React, {ComponentProps, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -34,17 +34,26 @@ type NavProps = StackScreenProps<
 >;
 
 /**
- * These optional params are for unlocking a specific wallet
+ * `These optional params are for unlocking a specific wallet
+ * @property {string} address - The address of the account to authenticate.
+ * @property {boolean} provideWallet - If true, wallet will be return on successful authentication.
+ * @property {boolean} provideMnemonic - If true, mnemonic will be return on successful authentication.
+ * @property {string} titleLabelOverride - The title of the screen.
+ * @property {string} confirmButtonLabelOverride - The label of the button that will be used to confirm the input.
+ * @property dViewProps - This is the props that will be passed to the DView component.
+ * @property onSuccessfulAuthentication - A callback function that is called when the user successfully
+ * enters the password.
+ * @property onFailedAuthentication - A callback function that is called when the user fails to
+ * authenticate.
  */
 export type EnterPasswordParams = {
   address?: string;
-
   provideWallet?: boolean;
-
   provideMnemonic?: boolean;
-
+  titleLabelOverride?: string;
+  buttonLabelOverride?: string;
+  dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
-
   onFailedAuthentication?: () => void;
 };
 
@@ -55,9 +64,12 @@ const EnterPassword = () => {
     params: {
       address,
       provideWallet,
+      provideMnemonic,
+      titleLabelOverride,
+      buttonLabelOverride,
+      dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
-      provideMnemonic,
     },
   } = useRoute<NavProps['route']>();
 
@@ -67,7 +79,7 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
-      {setErrors}: FormikHelpers<any>,
+      {setErrors}: FormikHelpers<typeof formValues>,
     ) => {
       setLoading(true);
       const {password} = formValues;
@@ -76,31 +88,41 @@ const EnterPassword = () => {
         MMKVKEYS.USE_BIOMETRICS,
       ) as boolean;
 
-      if (address) {
-        try {
+      try {
+        if (address) {
           const wallet = await getLocalWallet(address, password, useBiometrics);
 
           if (!wallet) throw new Error('Error unlocking wallet');
 
           const mnemonic = await getMnemonic(address, password);
 
-          if (wallet && onSuccessfulAuthentication) {
+          if (onSuccessfulAuthentication) {
             onSuccessfulAuthentication({
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
               authorized: true,
             });
+          } else {
+            onFailedAuthentication && onFailedAuthentication();
+            setErrors({password: t('error:incorrectPassword')});
           }
-        } catch (err) {
-          setLoading(false);
-          onFailedAuthentication && onFailedAuthentication();
-          setErrors({password: t('error:incorrectPassword')});
-        } finally {
-          setLoading(false);
+        } else {
+          throw new Error('address is empty'); // instead of do nothing
         }
+      } catch (err) {
+        onFailedAuthentication && onFailedAuthentication();
+        setErrors({password: String(err)});
+      } finally {
+        setLoading(false);
       }
     },
-    [],
+    [
+      address,
+      provideWallet,
+      provideMnemonic,
+      onSuccessfulAuthentication,
+      onFailedAuthentication,
+    ],
   );
 
   const onPressForgotPassword = () => {
@@ -114,8 +136,10 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.H3 style={styles.headerText}>{t('header')}</Typography.H3>
+    <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
+      <Typography.H3 style={styles.headerText}>
+        {titleLabelOverride || t('header')}
+      </Typography.H3>
 
       <Formik
         initialValues={initialFormValues}
@@ -127,6 +151,7 @@ const EnterPassword = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              autoFocus={true}
               placeholder={t('inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {
@@ -154,7 +179,7 @@ const EnterPassword = () => {
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:next')}
+                  {buttonLabelOverride || t('common:next')}
                 </Typography.Button1>
               </Button>
 

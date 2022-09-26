@@ -78,19 +78,19 @@ const Profile = () => {
   /** Animations end * */
 
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
-    params.visitingProfileAddress || '',
+    params?.visitingProfileAddress || '',
   );
   const {activeAddress, profileData, loading} = useActiveAccount();
 
   const screenMode = useMemo(() => {
-    if (params.visitingProfileAddress) {
+    if (params?.visitingProfileAddress) {
       return activeAddress !== params.visitingProfileAddress
         ? 'guestProfile'
         : 'myProfile';
     }
 
     return 'myProfile';
-  }, [params.visitingProfileAddress, activeAddress]);
+  }, [params?.visitingProfileAddress, activeAddress]);
 
   const {
     address,
@@ -162,7 +162,7 @@ const Profile = () => {
       userAddress:
         screenMode === 'myProfile'
           ? activeAddress!
-          : params.visitingProfileAddress!,
+          : params?.visitingProfileAddress!,
       initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
     });
   }, [activeAddress]);
