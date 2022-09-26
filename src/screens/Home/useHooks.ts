@@ -12,6 +12,9 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 
 /**
  * Hooks for the Home screen.
@@ -25,12 +28,16 @@ const useHooks = () => {
   } = useGetPosts();
   const {following} = useGetFollowing();
   const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
-  const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
+  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
+
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+
+  const toast = useToast();
 
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
@@ -168,25 +175,27 @@ const useHooks = () => {
   }, []);
 
   const handlePressCreatePost = React.useCallback(async () => {
+    if (!activeAddress) return;
+
     resetSharedPostState();
     setLoading(true);
 
     const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
 
-    const grantsRequired = await checkGrants(grantsToRequest);
+    const {success} = await checkAndUpdateGrants({
+      grantsToRequest,
+      address: activeAddress,
+    });
     setLoading(false);
 
-    if (grantsRequired.length > 0) {
-      navigate(ROUTES.ACTION_AUTHORIZATION, {
-        grants: grantsRequired,
-
-        onApprove: () => {
-          // regular follow flow
-          replace(ROUTES.CREATE_TEXT_POST);
-        },
+    if (success) {
+      navigate(ROUTES.CREATE_TEXT_POST);
+    } else {
+      toast.show('[PLACEHOLDER]Authorization is required.', {
+        type: ToastConfig.ERROR_NO_RETRY,
       });
-    } else navigate(ROUTES.CREATE_TEXT_POST);
-  }, []);
+    }
+  }, [activeAddress]);
 
   // Throttle this function to max one call every 3 seconds
   const onOverscrollRight = React.useCallback(() => {

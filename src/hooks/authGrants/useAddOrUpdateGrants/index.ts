@@ -16,6 +16,7 @@ import {
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
+import {Alert} from 'react-native';
 
 /**
  * MVP msg authorizations
@@ -90,6 +91,12 @@ const useAddOrUpdateGrants = () => {
     if (!broadcastResult) {
       throw new Error('Error deleting grants');
     }
+
+    // placeholder message as th ere is no handler for the success case
+    Alert.alert(
+      '[PLACEHOLDER] SUCCESS',
+      `All grants belonging to the account ${granter} have been revoked. You may close this screen`,
+    );
   }, [chainAccount, butterConfig.desmos_address]);
 
   /**
@@ -105,17 +112,12 @@ const useAddOrUpdateGrants = () => {
 
       const {has_fee_grant} = grantsData;
 
-      // if (_.difference(grantsToRequest, existingGrantsArray).length === 0) {
-      //   console.log('no difference');
-      //   return;
-      // }
-
       const grantee = butterConfig.desmos_address;
       const granter = chainAccount.address;
       const grants = grantsToRequest;
 
       /**
-       * If user already has a fee grant, we need to revoke it by creating a MsgRevokeallowanceEncodeObject
+       * If user already has a fee grant, we need to revoke it by creating a MsgRevokeAllowanceEncodeObject
        * Otherwise, do nothing.
        */
       const msgRevokeAllowanceEncode:

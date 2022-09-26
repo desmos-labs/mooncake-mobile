@@ -13,6 +13,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
@@ -35,11 +37,13 @@ const ActionAuthorization = () => {
 
   const {t} = useTranslation('authorization');
 
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {pop} = useNavigation<NavProps['navigation']>();
 
   const [loading, setLoading] = React.useState(false);
 
   const {addOrUpdateGrants} = useAddOrUpdateGrants();
+
+  const toast = useToast();
 
   const {
     params: {grants, onCancel, onApprove},
@@ -67,20 +71,25 @@ const ActionAuthorization = () => {
   }, [grants]);
 
   const handleCancel = React.useCallback(() => {
-    // do cancel things here
-    goBack();
     // run onCancel last
     onCancel && onCancel();
   }, [onCancel]);
 
   const handleApprove = React.useCallback(async () => {
     setLoading(true);
-    await addOrUpdateGrants({grantsToRequest: grants});
-    setLoading(false);
-    goBack();
-
-    // run onApprove last
-    onApprove && onApprove();
+    try {
+      await addOrUpdateGrants({grantsToRequest: grants});
+      pop();
+      // run onApprove last
+      onApprove && onApprove();
+    } catch (err: any) {
+      toast.show('[PLACEHOLDER]Error authenticating wallet', {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
+      console.log(err.toString());
+    } finally {
+      setLoading(false);
+    }
   }, [onApprove, grants, addOrUpdateGrants]);
 
   return (
