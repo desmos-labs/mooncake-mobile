@@ -30,6 +30,8 @@ import * as Yup from 'yup';
 import ROUTES from 'navigation/routes';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {useResetRecoilState, useSetRecoilState} from 'recoil';
+import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -43,6 +45,15 @@ const Signup = () => {
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
+
+  const setSignUpDTag = useSetRecoilState(signUpDTagState);
+  const resetSignUpInfo = useResetRecoilState(signUpInfoState);
+
+  // reset recoil state on entry
+  React.useEffect(() => {
+    resetSignUpInfo();
+  }, []);
+
   const scrollViewRef = useRef<ScrollView>(null);
   const {
     handlePressPP,
@@ -51,6 +62,7 @@ const Signup = () => {
     openInfoModal,
     validateForm,
     initialFormValues,
+    loading,
   } = useHooks();
 
   const {profileParams} = useGetProfileParams();
@@ -168,6 +180,7 @@ const Signup = () => {
                       onChangeText={(value: string) => {
                         checkAvailability(value);
                         setFieldValue('dTag', value, true);
+                        setSignUpDTag(value);
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
@@ -284,6 +297,7 @@ const Signup = () => {
                 </View>
                 <Button
                   onPress={handleSubmit}
+                  loading={loading}
                   color={theme.colors.surfaceBlack}
                   disabled={
                     !values.dTag ||

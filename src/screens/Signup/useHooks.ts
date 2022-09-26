@@ -12,6 +12,10 @@ import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
 import {toBase64} from '@cosmjs/encoding';
+import {useRecoilValue} from 'recoil';
+import signUpInfoState from '@recoil/signUpInfoState';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import _ from 'lodash';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
@@ -19,6 +23,10 @@ const useHooks = () => {
   const {navigate, reset, goBack, push} =
     useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
+
+  const signUpInfo = useRecoilValue(signUpInfoState);
+
+  const [loading, setLoading] = React.useState(false);
 
   const initialFormValues = {
     dTag: '',
@@ -29,6 +37,7 @@ const useHooks = () => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
+      setLoading(true);
       // First time user, create new wallet
       const mnemonic = randomMnemonic();
 
@@ -54,6 +63,16 @@ const useHooks = () => {
       await saveMnemonic(newWallet.bech32Address, confirmPassword, mnemonic);
       setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
+      const {nickname, coverPicture, profilePicture, bio} = signUpInfo;
+
+      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
+        profilePicture && UploadMedia({mediaFile: profilePicture}),
+        coverPicture && UploadMedia({mediaFile: coverPicture}),
+      ]);
+
+      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+
       // Save new wallet as last selected wallet
       // Build save profile message
       const saveProfileMessage: MsgSaveProfileEncodeObject = {
@@ -61,14 +80,16 @@ const useHooks = () => {
         value: {
           creator: address,
           dtag: dTag,
-          nickname: '[do-not-modify]',
-          bio: '[do-not-modify]',
-          profilePicture: '[do-not-modify]',
-          coverPicture: '[do-not-modify]',
+          nickname: nickname || '[do-not-modify]',
+          bio: bio || '[do-not-modify]',
+          profilePicture: profilePictureUrl || '[do-not-modify]',
+          coverPicture: coverPictureUrl || '[do-not-modify]',
         },
       };
 
       const messages = [saveProfileMessage];
+
+      setLoading(false);
 
       navigate(ROUTES.BROADCAST_TX, {
         messages,
@@ -95,7 +116,7 @@ const useHooks = () => {
         },
       });
     },
-    [],
+    [signUpInfo],
   );
 
   const openInfoModal = useCallback(() => {
@@ -130,6 +151,7 @@ const useHooks = () => {
     openInfoModal,
     validateForm,
     initialFormValues,
+    loading,
   };
 };
 
