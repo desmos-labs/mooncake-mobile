@@ -149,9 +149,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
               {
                 text: 'Yes',
                 onPress: async () => {
-                  console.log('revoking grants... please wait');
                   await revokeAllGrants();
-                  console.log('revoke grants completed');
                 },
               },
               {
