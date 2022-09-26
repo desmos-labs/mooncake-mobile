@@ -173,9 +173,16 @@ const Signup = () => {
                         {errors.dTag}
                       </Typography.Caption1>
                     )}
+
+                    <Typography.Body6
+                      onPress={() => {}}
+                      style={styles.completeProfileButton}>
+                      {t('signup:completeProfile')}
+                    </Typography.Body6>
                     <Typography.Caption1 style={styles.errorTextDtag}>
                       {availableDTag ? '' : t('signup:dtag taken')}
                     </Typography.Caption1>
+
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
                         {t('enterNewPw')}
