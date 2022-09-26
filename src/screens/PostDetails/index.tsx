@@ -136,14 +136,14 @@ const PostDetails = () => {
       return (
         <ProfileHeaderButton
           imageSrc={{uri: post?.author.profile_pic}}
-          onPress={() => navigateToProfile()}
+          onPress={() => navigateToProfile(post?.author?.address)}
         />
       );
     }
     return (
       <ProfileHeaderButton
         imageSrc={defaultProfilePic}
-        onPress={() => navigateToProfile()}
+        onPress={() => navigateToProfile(post?.author?.address)}
       />
     );
   }, [post?.author?.profile_pic]);

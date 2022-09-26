@@ -6,7 +6,6 @@ import EnvConfig from 'config/EnvConfig';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import Long from 'long';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useRecoilState, useResetRecoilState} from 'recoil';
@@ -189,7 +188,7 @@ const useHooks = ({
 
           onApprove: async () => {
             await manageReaction({
-              postId: Long.fromNumber(postId),
+              postId,
               user: profile?.address!,
               reactionId: reactionAdded?.reaction[0]
                 ? reactionAdded?.reaction[0].id
@@ -204,7 +203,7 @@ const useHooks = ({
         });
       } else {
         await manageReaction({
-          postId: Long.fromNumber(postId),
+          postId,
           user: profile?.address!,
           reactionId: reactionAdded?.reaction[0]
             ? reactionAdded?.reaction[0].id
@@ -219,9 +218,9 @@ const useHooks = ({
     resetSharedPostState();
   }, []);
 
-  const navigateToProfile = React.useCallback(() => {
+  const navigateToProfile = React.useCallback((authorAddress: string) => {
     navigate(ROUTES.USER_PROFILE, {
-      visitingProfileAddress: post?.author.address,
+      visitingProfileAddress: authorAddress,
     });
   }, []);
 

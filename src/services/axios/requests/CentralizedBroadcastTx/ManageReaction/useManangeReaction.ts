@@ -97,7 +97,7 @@ const useManangeReaction = () => {
       user,
       reactionId,
     }: {
-      postId: Long;
+      postId: number;
       user: string;
       reactionId?: number;
     }) => {
@@ -106,10 +106,14 @@ const useManangeReaction = () => {
       try {
         if (reactionId) {
           console.log('remove reaction with ID: ', reactionId);
-          result = await removeReaction({postId, user, reactionId});
+          result = await removeReaction({
+            postId: Long.fromNumber(postId),
+            user,
+            reactionId,
+          });
         } else {
           console.log('add reaction');
-          result = await addReaction({postId, user});
+          result = await addReaction({postId: Long.fromNumber(postId), user});
         }
       } catch (err: any) {
         throw new Error(err.toString());
