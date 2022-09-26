@@ -67,6 +67,7 @@ const DevScreen = () => {
           switch (item) {
             case ROUTES.FOLLOWING_AND_FOLLOWERS:
               navigate(item, {
+                headerTitle: '@Raffaello',
                 initialTabRouteName: ROUTES.FOLLOWING,
                 subspaceID: 5,
                 userAddress: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',

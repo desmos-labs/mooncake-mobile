@@ -1,6 +1,6 @@
 import {makeStyle} from 'config/theme';
 
-const useStyles = makeStyle(() => {
+const useStyles = makeStyle(theme => {
   return {
     svg: {
       position: 'absolute',
@@ -10,50 +10,43 @@ const useStyles = makeStyle(() => {
     },
     follow: {
       /* Auto layout */
-      flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
       padding: 0,
       width: 83,
       height: 32,
 
-      /* Primary color/Desmos Orange Gradient 02 */
       borderRadius: 12,
-      background: '#FF844F',
-
-      /* Inside auto layout */
-      flexGrow: 0,
+      /* Primary Orange* /Butter Orange 01 */
+      backgroundColor: theme.colors.butterOrange01,
     },
     followLabel: {
-      /* Neutral Color/White */
-      color: '#FFFFFF',
-
-      /* Inside auto layout */
-      flexGrow: 0,
+      margin: 0,
+      pading: 0,
+      minWidth: '100%',
+      textAlign: 'center',
+      /* Neutral Color/white */
+      color: theme.colors.white,
     },
     unfollow: {
       /* Auto layout */
-      flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
       padding: 0,
-
       width: 82,
       height: 32,
 
       /* Neutral Color/white */
-      background: '#FFFFFF',
+      backgroundColor: theme.colors.white,
       borderRadius: 12,
-
-      /* Inside auto layout */
-      flexGrow: 0,
+      /* Neutral Color/Surface Black */
+      borderColor: theme.colors.surfaceBlack,
     },
     unfollowLabel: {
-      /* Primary color/Desmos Orange 01 */
-      color: '#F3725A',
-
-      /* Inside auto layout */
-      flexGrow: 0,
+      margin: 0,
+      padding: 0,
+      minWidth: '100%',
+      textAlign: 'center',
+      /* Neutral Color/Surface Black */
+      color: theme.colors.surfaceBlack,
     },
   };
 });

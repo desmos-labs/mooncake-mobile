@@ -76,14 +76,14 @@ import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
 import FollowingAndFollowers, {
   FollowingAndFollowersParams,
-  FollowingAndFollowersHeader,
 } from 'screens/FollowingAndFollowers';
-import {Dimensions} from 'react-native';
+import {Dimensions, TextStyle, ViewStyle} from 'react-native';
 import {FollowingParams} from 'screens/Following';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
+import {useTheme} from 'react-native-paper';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -184,6 +184,13 @@ const RootNavigator = () => {
     }
     return ROUTES.LANDING;
   }, []);
+
+  const theme = useTheme();
+  const styles: {[key: string]: ViewStyle | TextStyle} = {
+    followingAndFollowers: {
+      backgroundColor: theme.colors.white,
+    },
+  };
 
   return (
     <Stack.Navigator
@@ -413,8 +420,7 @@ const RootNavigator = () => {
         component={FollowingAndFollowers}
         options={{
           gestureResponseDistance,
-          header: FollowingAndFollowersHeader,
-          headerShown: true,
+          cardStyle: styles.followingAndFollowers,
         }}
       />
 
