@@ -81,13 +81,13 @@ import PostTypeSelection from 'screens/PostTypeSelection';
 import CreateTextPost from 'screens/CreateTextPost';
 import FollowingAndFollowers, {
   FollowingAndFollowersParams,
-  FollowingAndFollowersHeader,
 } from 'screens/FollowingAndFollowers';
-import {Dimensions, ViewStyle} from 'react-native';
+import {Dimensions, TextStyle, ViewStyle} from 'react-native';
 import {FollowingParams} from 'screens/Following';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
+import {useTheme} from 'react-native-paper';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -166,12 +166,6 @@ export type RootNavigatorParamList = {
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
-const styles: {[key: string]: ViewStyle} = {
-  addProfileCard: {
-    backgroundColor: 'rgb(245,246,249)',
-  },
-};
-
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
@@ -196,6 +190,16 @@ const RootNavigator = () => {
     }
     return ROUTES.LANDING;
   }, []);
+
+  const theme = useTheme();
+  const styles: {[key: string]: ViewStyle | TextStyle} = {
+    followingAndFollowers: {
+      backgroundColor: theme.colors.white,
+    },
+    addProfileCard: {
+      backgroundColor: 'rgb(245,246,249)',
+    },
+  };
 
   return (
     <Stack.Navigator
@@ -421,8 +425,7 @@ const RootNavigator = () => {
         component={FollowingAndFollowers}
         options={{
           gestureResponseDistance,
-          header: FollowingAndFollowersHeader,
-          headerShown: true,
+          cardStyle: styles.followingAndFollowers,
         }}
       />
 

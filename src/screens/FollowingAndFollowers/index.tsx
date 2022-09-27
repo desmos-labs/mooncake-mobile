@@ -4,12 +4,11 @@ import {
 } from '@react-navigation/material-top-tabs';
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import {
-  Header,
-  StackHeaderProps,
-  StackScreenProps,
-} from '@react-navigation/stack';
+import {StackScreenProps} from '@react-navigation/stack';
 import numOfFollowerState from '@recoil/numOfFollowerState';
+import DView from 'components/DView';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -20,10 +19,8 @@ import {
   I18nManager,
   PanResponder,
   PanResponderGestureState,
-  View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {useRecoilValue} from 'recoil';
 import FollowingTab from '../Following';
 import useStyles from './useStyles';
@@ -53,43 +50,10 @@ type NavProps = StackScreenProps<
   ROUTES.FOLLOWING_AND_FOLLOWERS
 >;
 
-const HeaderBackImage = () => {
-  const styles = useStyles(numOfTabs);
-  return (
-    <Icon
-      name="angle-left"
-      color="black"
-      size={24}
-      allowFontScaling
-      style={styles.headerBackImage}
-    />
-  );
-};
-
-/* A React component that renders the header for the following and followers screen. */
-export const FollowingAndFollowersHeader: FC<StackHeaderProps> = ({
-  options,
-  ...rest
-}) => {
-  const {headerTitle} = rest.route.params as FollowingAndFollowersParams;
-  return (
-    <Header
-      {...rest}
-      options={{
-        ...options,
-        title: headerTitle,
-        headerShadowVisible: false,
-        headerStyle: {borderWidth: 0},
-        headerBackImage: HeaderBackImage,
-        headerBackTitleVisible: false,
-      }}
-    />
-  );
-};
-
 /* A React component for the following and followers screen. */
 const FollowingAndFollowers: FC<NavProps> = ({route}) => {
-  const {initialTabRouteName, subspaceID, userAddress} = route.params;
+  const {headerTitle, initialTabRouteName, subspaceID, userAddress} =
+    route.params;
 
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
@@ -147,15 +111,24 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
     swipeEnabled,
   };
 
+  const centerElement = (
+    <Typography.Subtitle3>{headerTitle}</Typography.Subtitle3>
+  );
+
   return (
-    <View
+    <DView
+      topBar={<TopBar style={styles.topBar} centerElement={centerElement} />}
+      disableHideKeyboardTouchable={true}
       style={styles.container}
-      {...panResponder.panHandlers}
-      onTouchStart={disableParentSwipeLeft}>
+      backgroundColor="transparent"
+      scrollable={false}
+      onTouchStart={disableParentSwipeLeft}
+      {...panResponder.panHandlers}>
       <Tab.Navigator
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
-        initialRouteName={initialTabRouteName}>
+        initialRouteName={initialTabRouteName}
+        sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
@@ -169,7 +142,7 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
           initialParams={{subspaceID, userAddress, type: 'followers'}}
         />
       </Tab.Navigator>
-    </View>
+    </DView>
   );
 };
 

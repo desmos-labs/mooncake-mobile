@@ -3,6 +3,7 @@ import {Image, ListRenderItemInfo, View} from 'react-native';
 import FollowButton from 'components/FollowButton';
 import useFollowUser from 'hooks/useFollowUser';
 import Typography from 'components/Typography';
+import {defaultProfilePic} from 'assets/images';
 import useStyles from './useStyles';
 
 export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {
@@ -25,15 +26,16 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
   }, [error]);
   return (
     <View style={styles.contentContainer}>
-      {profile_pic ? (
-        <Image
-          source={{uri: profile_pic, width: 40, height: 40}}
-          borderRadius={40}
-          style={styles.pic}
-        />
-      ) : (
-        <View style={styles.emptyPic} />
-      )}
+      <Image
+        source={
+          profile_pic
+            ? {uri: profile_pic, width: 40, height: 40}
+            : defaultProfilePic
+        }
+        resizeMode="contain"
+        borderRadius={40}
+        style={styles.pic}
+      />
       <View style={styles.names}>
         <Typography.Caption3 numberOfLines={1} ellipsizeMode="tail">
           {nickname}

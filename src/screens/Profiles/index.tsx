@@ -102,9 +102,7 @@ const Profiles: React.FC<Props> = props => {
   return (
     <DView style={styles.root} topBar={<TopBar />}>
       <View style={styles.titleBar}>
-        <Typography.H3 style={styles.title}>
-          {t('addProfile:title')}
-        </Typography.H3>
+        <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity
           style={styles.plusButton}
           onPress={navigateToAddProfile}>

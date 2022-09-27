@@ -40,7 +40,7 @@ export type ProfilesByPage = {
 type ContentGroupProps = {
   page: number;
   accounts: ChainAccount[] | undefined;
-  selectedProfiles: ProfileData[];
+  selectedProfileMap: Map<string, ProfileData>;
   handleSelect: (profile: ProfileData) => void;
   setProfileCount: (page: number, count: number) => void;
   loadMoreAccounts: () => void;
@@ -50,7 +50,7 @@ type ContentGroupProps = {
 const ContentGroup: FC<ContentGroupProps> = ({
   page,
   accounts,
-  selectedProfiles,
+  selectedProfileMap,
   handleSelect,
   setProfileCount,
   loadMoreAccounts,
@@ -66,7 +66,7 @@ const ContentGroup: FC<ContentGroupProps> = ({
         <AddProfileBadgeGroup
           page={page}
           addresses={addresses}
-          selectedProfiles={selectedProfiles}
+          selectedProfileMap={selectedProfileMap}
           onSelect={handleSelect}
           setProfileCount={setProfileCount}
           loadMoreAccounts={loadMoreAccounts}
@@ -146,6 +146,16 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
     setProfileCountByPage(prev => ({...prev, [page]: count}));
   }, []);
 
+  /* Creating a map of the selected profiles. */
+  const selectedProfileMap = useMemo(
+    () =>
+      selectedProfiles.reduce(
+        (map, profile) => map.set(profile.address, profile),
+        new Map<string, ProfileData>(),
+      ),
+    [selectedProfiles],
+  );
+
   const loadedProfileMap = useMemo(
     () =>
       loadedProfiles.reduce(
@@ -177,7 +187,7 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
               <ContentGroup
                 page={page}
                 accounts={accounts}
-                selectedProfiles={selectedProfiles}
+                selectedProfileMap={selectedProfileMap}
                 handleSelect={handleSelect}
                 setProfileCount={setProfileCount}
                 loadMoreAccounts={loadMoreAccounts}
@@ -199,8 +209,9 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
         canAddProfile={Object.values(profileCountByPage).some(
           count => count > 0,
         )}
-        selectedProfiles={selectedProfiles}
+        selectedProfileMap={selectedProfileMap}
         loadedProfileMap={loadedProfileMap}
+        accountsByPage={accountsByPage}
       />
     </View>
   );

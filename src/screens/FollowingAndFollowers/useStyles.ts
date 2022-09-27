@@ -3,32 +3,30 @@ import {makeStyleWithProps} from 'config/theme';
 const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {
     flexGrow: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
   },
-  headerBackImage: {
-    marginHorizontal: 8,
-    padding: 12,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
+  topBar: {
+    backgroundColor: 'transparent',
+    shadowOpacity: 0,
   },
   tabBar: {
     margin: 0,
     marginBottom: 10,
     padding: 0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: 'transparent',
   },
   tabBarItem: {
     margin: 0,
     padding: 0,
-    backgroundColor: 'rgba(0,0,0,0)',
     flexDirection: 'row',
     alignItems: 'flex-end',
     height: 52,
   },
+  tabContainerStyle: {
+    backgroundColor: 'transparent',
+  },
   tabBarLabel: {
     marginBottom: 10,
-    backgroundColor: 'rgba(0,0,0,0)',
     fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
     fontStyle: 'normal',
