@@ -31,5 +31,6 @@
   "noActiveAccountFound": "No active account found",
   "desmosProfileCreated" : "Your Desmos profile is created!",
   "goToProfile": "Go to profile",
-  "oopsSomethingWentWrongPleaseTryAgainLater": "Oops...! Something Went Wrong. Please try again later."
+  "oopsSomethingWentWrongPleaseTryAgainLater": "Oops...! Something Went Wrong. Please try again later.",
+  "tryAgain": "Try Again",
 }

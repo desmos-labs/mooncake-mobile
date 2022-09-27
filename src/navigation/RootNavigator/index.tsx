@@ -199,6 +199,9 @@ const RootNavigator = () => {
     addProfileCard: {
       backgroundColor: 'rgb(245,246,249)',
     },
+    statusScreen: {
+      backgroundColor: 'rgb(175,175,175)',
+    },
   };
 
   return (
@@ -225,6 +228,7 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.FULLSCREEN_STATUS_SCREEN}
         component={FullscreenStatusScreen}
+        options={{cardStyle: styles.statusScreen}}
       />
       <Stack.Screen
         initialParams={{

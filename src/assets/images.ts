@@ -208,3 +208,5 @@ export const twitterIcon = require('./images/twitter.png');
 export const mediumIcon = require('./images/medium.png');
 
 export const githubIcon = require('./images/github.png');
+
+export const unfortunately = require('./images/unfortunately.png');

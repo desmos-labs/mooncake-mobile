@@ -9,6 +9,7 @@ import {
   cameraButton,
   createProfileBanner,
   defaultProfilePic,
+  unfortunately,
 } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -25,7 +26,7 @@ import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useRef} from 'react';
+import React, {FC, useCallback, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
@@ -65,7 +66,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push} = navigation;
+  const {goBack, navigate, reset, push, replace} = navigation;
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
     useImageFromDevice({});
@@ -117,35 +118,41 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
 
+  const failureAction = useCallback((errorMessage?: string) => {
+    replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+      title: t('resultModal:fail'),
+      subtitle:
+        errorMessage ?? t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
+      buttonLabel: t('common:retry'),
+      handleButtonPress: goBack,
+      secondaryButtonLabel: t('common:goToProfile'),
+      image: unfortunately,
+      handleSecondaryButtonPress: () => {
+        navigate(ROUTES.USER_PROFILE);
+      },
+    });
+  }, []);
+
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
       setLoading(true);
 
       const {dTag, nickname, bio} = formValues;
 
-      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        profilePicture && UploadMedia({mediaFile: profilePicture}),
-        coverPicture && UploadMedia({mediaFile: coverPicture}),
-      ]);
+      try {
+        const [uploadProfilePicResult, uploadCoverPicResult] =
+          await Promise.all([
+            profilePicture && UploadMedia({mediaFile: profilePicture}),
+            coverPicture && UploadMedia({mediaFile: coverPicture}),
+          ]);
 
-      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
-      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+        const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+        const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+        const useExternalAccount =
+          accountCreation?.useExternalAccount ??
+          createLedgerAccount?.useExternalAccount;
 
-      const failureAction = goBack;
-      const useExternalAccount =
-        accountCreation?.useExternalAccount ??
-        createLedgerAccount?.useExternalAccount;
-
-      if (useExternalAccount) {
-        /**
-         * Profile
-         * Since a Profile extends the Cosmos SDK AccountI interface, we store profiles inside the x/auth module using the AccountKeeper.
-         * For this reason, there will only be a single profile for each on-chain account and having multiple profiles require to have different on-chain accounts for each one.
-         * In order to make it possible for users to search a profile based on the DTag, we also store the following reference:
-         * DTag: 0x10 | DTag | -> Address
-         * https://github.com/desmos-labs/desmos/blob/95711e2da7a83479d01be213f29f30df9a964b86/x/profiles/spec/03-state.md#profile
-         */
-        try {
+        if (useExternalAccount) {
           if (!accountCreation && !createLedgerAccount) {
             throw new Error('No account creation data');
           }
@@ -161,18 +168,19 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             profilePictureUrl,
             coverPictureUrl,
           );
+          console.log('messages', messages);
           // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
           navigate(ROUTES.BROADCAST_TX, {
             messages,
             offlineSigner: externalWallet,
             async successAction() {
               const newProfile: ProfileData = {
-                address: messages[0].value.creator,
-                bio: messages[0].value.bio,
-                cover_pic: messages[0].value.coverPicture,
-                dtag: messages[0].value.dtag,
-                profile_pic: messages[0].value.profilePicture,
-                nickname: messages[0].value.nickname,
+                address,
+                bio,
+                cover_pic: coverPictureUrl ?? '',
+                dtag: dTag,
+                profile_pic: profilePictureUrl ?? '',
+                nickname,
                 followage: [],
                 following: [],
                 creation_time: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), // TO DO: get creation time
@@ -197,104 +205,106 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             },
             failureAction,
           });
-        } catch (error) {
-          const errorMessage = ((err): err is Error =>
-            !!(err as Error).message)(error)
-            ? error.message
-            : String(error);
-          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-            title: t('resultModal:fail'),
-            subtitle: errorMessage,
-            buttonLabel: t('common:retry'),
-            handleButtonPress: goBack,
-            secondaryButtonLabel: t('common:goToProfile'),
-            handleSecondaryButtonPress: () => {
-              navigate(ROUTES.USER_PROFILE);
+        } else {
+          let wallet: LocalWallet;
+          if (accountCreation && accountCreation.mnemonic) {
+            const {mnemonic} = accountCreation;
+            wallet = await LocalWallet.fromMnemonic(mnemonic);
+          } else if (createLedgerAccount && createLedgerAccount.account) {
+            const {account: ledgerAccount} = createLedgerAccount;
+            wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
+          }
+
+          // Save new wallet as last selected wallet
+          // Build save profile message
+          const saveProfileMessage: MsgSaveProfileEncodeObject = {
+            typeUrl: GenericMsgEnums.MsgSaveProfile,
+            value: {
+              creator: wallet!.bech32Address,
+              dtag: dTag,
+              nickname: nickname || '[do-not-modify]',
+              bio: bio || '[do-not-modify]',
+              profilePicture: profilePictureUrl || '[do-not-modify]',
+              coverPicture: coverPictureUrl || '[do-not-modify]',
+            },
+          };
+
+          const messages = [saveProfileMessage];
+
+          // delay setLoading false so it occurs while the screen is in background
+          setTimeout(() => {
+            setLoading(false);
+          }, 500);
+
+          navigate(ROUTES.BROADCAST_TX, {
+            messages,
+            offlineSigner: wallet!,
+            // save newly created account data and navigate to home page
+            successAction: async () => {
+              if (accountCreation && accountCreation.mnemonic) {
+                const {password, mnemonic} = accountCreation;
+                // wallet = await LocalWallet.fromMnemonic(mnemonic);
+
+                const newAccount: ChainAccount = {
+                  address: wallet.bech32Address,
+                  pubKey: toBase64(wallet.publicKey),
+                  type: ChainAccountType.Local,
+                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                  signAlgorithm: 'secp256k1',
+                };
+
+                await saveLocalWallet(wallet, password!);
+                await saveNewAccount(newAccount);
+                await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+                setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+              } else if (createLedgerAccount && createLedgerAccount.account) {
+                const {account: ledgerAccount} = createLedgerAccount;
+
+                // wallet = (await unlockWallet(ledgerAccount))!
+                //   .wallet as LocalWallet;
+                await saveNewAccount(ledgerAccount);
+              }
+
+              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                title: t('common:congratulations'),
+                subtitle: t('common:dtag created'),
+                buttonLabel: t('resultModal:enterApp'),
+                handleButtonPress: () => {
+                  reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: ROUTES.HOME,
+                      },
+                    ],
+                  });
+                },
+              });
+            },
+            failureAction: () => {
+              goBack();
             },
           });
-        } finally {
-          setLoading(false);
         }
-      } else {
-        let wallet: LocalWallet;
-        if (accountCreation && accountCreation.mnemonic) {
-          const {mnemonic} = accountCreation;
-          wallet = await LocalWallet.fromMnemonic(mnemonic);
-        } else if (createLedgerAccount && createLedgerAccount.account) {
-          const {account: ledgerAccount} = createLedgerAccount;
-          wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
-        }
-
-        // Save new wallet as last selected wallet
-        // Build save profile message
-        const saveProfileMessage: MsgSaveProfileEncodeObject = {
-          typeUrl: GenericMsgEnums.MsgSaveProfile,
-          value: {
-            creator: wallet!.bech32Address,
-            dtag: dTag,
-            nickname: nickname || '[do-not-modify]',
-            bio: bio || '[do-not-modify]',
-            profilePicture: profilePictureUrl || '[do-not-modify]',
-            coverPicture: coverPictureUrl || '[do-not-modify]',
-          },
-        };
-
-        const messages = [saveProfileMessage];
-
-        // delay setLoading false so it occurs while the screen is in background
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
-
-        navigate(ROUTES.BROADCAST_TX, {
-          messages,
-          offlineSigner: wallet!,
-          // save newly created account data and navigate to home page
-          successAction: async () => {
-            if (accountCreation && accountCreation.mnemonic) {
-              const {password, mnemonic} = accountCreation;
-              // wallet = await LocalWallet.fromMnemonic(mnemonic);
-
-              const newAccount: ChainAccount = {
-                address: wallet.bech32Address,
-                pubKey: toBase64(wallet.publicKey),
-                type: ChainAccountType.Local,
-                hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                signAlgorithm: 'secp256k1',
-              };
-
-              await saveLocalWallet(wallet, password!);
-              await saveNewAccount(newAccount);
-              await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-            } else if (createLedgerAccount && createLedgerAccount.account) {
-              const {account: ledgerAccount} = createLedgerAccount;
-
-              // wallet = (await unlockWallet(ledgerAccount))!
-              //   .wallet as LocalWallet;
-              await saveNewAccount(ledgerAccount);
-            }
-
-            push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-              title: t('common:congratulations'),
-              subtitle: t('common:dtag created'),
-              buttonLabel: t('resultModal:enterApp'),
-              handleButtonPress: () => {
-                reset({
-                  index: 0,
-                  routes: [
-                    {
-                      name: ROUTES.HOME,
-                    },
-                  ],
-                });
-              },
-            });
-          },
-          failureAction: () => {
-            goBack();
+      } catch (error) {
+        const errorMessage = ((err): err is Error => !!(err as Error).message)(
+          error,
+        )
+          ? error.message
+          : String(error);
+        push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+          title: t('resultModal:fail'),
+          subtitle: errorMessage,
+          buttonLabel: t('common:tryAgain'),
+          handleButtonPress: goBack,
+          secondaryButtonLabel: t('common:goToProfile'),
+          image: unfortunately,
+          handleSecondaryButtonPress: () => {
+            navigate(ROUTES.USER_PROFILE);
           },
         });
+      } finally {
+        setLoading(false);
       }
     },
     [

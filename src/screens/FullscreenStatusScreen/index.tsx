@@ -49,29 +49,32 @@ const FullscreenStatusScreen = () => {
   } = useRoute<NavProps['route']>();
 
   return (
-    <DView style={styles.root}>
-      <Image source={image || modalSuccess} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Typography.H4>{title}</Typography.H4>
-        <Typography.Body6
-          style={{marginTop: theme.spacing.s, textAlign: 'center'}}>
-          {subtitle}
-        </Typography.Body6>
-      </View>
-      <Button
-        containerStyle={{marginTop: theme.spacing.l}}
-        mode="gradientFilled"
-        onPress={handleButtonPress}>
-        {buttonLabel}
-      </Button>
-      {!!secondaryButtonLabel && (
+    <DView style={styles.root} backgroundColor="transparent">
+      <View style={styles.cardContainer}>
+        <Typography.H4 style={styles.title}>{title}</Typography.H4>
+        <Image
+          source={image || modalSuccess}
+          style={styles.image}
+          resizeMode="contain"
+        />
+        <Typography.Body6 style={styles.subtitle}>{subtitle}</Typography.Body6>
         <Button
-          containerStyle={{marginTop: theme.spacing.l}}
+          style={styles.button}
+          color={theme.colors.surfaceBlack}
           mode="contained"
-          onPress={handleSecondaryButtonPress}>
-          {secondaryButtonLabel}
+          onPress={handleButtonPress}>
+          {buttonLabel}
         </Button>
-      )}
+        {!!secondaryButtonLabel && (
+          <Button
+            style={styles.button}
+            color={theme.colors.surfaceBlack}
+            mode="outlined"
+            onPress={handleSecondaryButtonPress}>
+            <Typography.Button2>{secondaryButtonLabel}</Typography.Button2>
+          </Button>
+        )}
+      </View>
     </DView>
   );
 };
