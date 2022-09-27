@@ -150,7 +150,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
     if (fromSignUp) {
       return {
         nickname: signUpInfo.nickname,
-        dTag: signUpInfo.dTag,
+        dTag: '',
         bio: signUpInfo.bio,
       };
     }
