@@ -20,10 +20,8 @@ export const POST_FIELDS = gql`
     reactions {
       id
       value
-    }
-    reactions_aggregate {
-      aggregate {
-        count
+      author {
+        address
       }
     }
     text
