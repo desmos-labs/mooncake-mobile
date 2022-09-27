@@ -12,9 +12,8 @@ const useStyles = makeStyle(theme => ({
   },
   innerContainer: {
     justifyContent: 'center',
-    paddingHorizontal: theme.spacing.xl,
-    paddingTop: theme.spacing.m,
-    paddingBottom: theme.spacing.l,
+    paddingHorizontal: 40,
+    paddingVertical: theme.spacing.xl,
     backgroundColor: theme.colors.background,
     borderRadius: 12,
   },
