@@ -30,16 +30,22 @@ import useStyles from './useStyles';
 
 // refactor into hook
 const checkPermissions = async () => {
-  const permission = Platform.select({
-    android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    ios: PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
+  const permissions = Platform.select({
+    android: [
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+    ],
+    ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
   });
 
-  // @ts-ignore
-  const grantedPermissions = await requestMultiple([permission]);
+  const grantedPermissions = await requestMultiple(permissions!);
 
-  // @ts-ignore
-  return grantedPermissions[permission] === 'granted';
+  const grantedPermissionCount = Object.values(grantedPermissions).filter(
+    x => x === 'granted',
+  ).length;
+
+  return grantedPermissionCount === permissions!.length;
 };
 
 export type LookingForDevicesParams = {
