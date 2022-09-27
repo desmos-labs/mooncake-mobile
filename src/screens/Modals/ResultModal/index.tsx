@@ -1,12 +1,13 @@
-import React, {ReactNode} from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {iconCross, modalSuccess} from 'assets/images';
+import {modalSuccess} from 'assets/images';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import React, {ReactNode} from 'react';
+import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type ResultModalParams = {
@@ -53,7 +54,7 @@ const ResultModal = () => {
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
-
+  const theme = useTheme();
   const {goBack} = useNavigation<NavProps['navigation']>();
 
   return (
@@ -62,19 +63,21 @@ const ResultModal = () => {
         <TouchableOpacity
           style={styles.dismissButton}
           hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
-          onPress={onDismiss || goBack}>
-          <Image style={styles.dismissButtonImage} source={iconCross} />
-        </TouchableOpacity>
+          onPress={onDismiss || goBack}
+        />
         <Typography.H5 style={styles.textStyle}>{title}</Typography.H5>
         <Image style={styles.image} source={image || modalSuccess} />
         <Typography.Body5 style={[styles.textStyle, styles.subtitleText]}>
           {subtitle}
         </Typography.Body5>
         <Button
+          color={theme.colors.surfaceBlack}
           style={styles.primaryButton}
-          mode="gradientFilled"
+          mode="contained"
           onPress={onPressPrimary || goBack}>
-          {primaryButtonLabel}
+          <Typography.Button2 style={{color: theme.colors.white}}>
+            {primaryButtonLabel}
+          </Typography.Button2>
         </Button>
       </View>
     </View>
