@@ -24,11 +24,6 @@ export const POST_FIELDS = gql`
         address
       }
     }
-    reactions_aggregate {
-      aggregate {
-        count
-      }
-    }
     text
     conversation {
       author {

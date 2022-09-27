@@ -15,7 +15,7 @@ import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import useManangeReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManangeReaction';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
-import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
+import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -40,10 +40,15 @@ const useHooks = ({
     data: originalPost,
     loading: postLoading,
     refetch: postRefetch,
-  } = useQuery(GetPostBySubspaceIDandPostID, {
+  } = useQuery(GetPostDetailsAndReactionPresence, {
     variables: {
       postID,
       subspaceID,
+      user: profile?.address,
+      reaction: {
+        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+        registered_reaction_id: 9,
+      },
     },
     fetchPolicy: 'no-cache',
   });
@@ -56,8 +61,12 @@ const useHooks = ({
     variables: {
       postID,
       subspaceID,
+      user: profile?.address,
+      reaction: {
+        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+        registered_reaction_id: 9,
+      },
     },
-    pollInterval: 500,
     fetchPolicy: 'no-cache',
   });
 
@@ -70,7 +79,6 @@ const useHooks = ({
       postID,
       subspaceID,
     },
-    pollInterval: 500,
     fetchPolicy: 'no-cache',
   });
 
@@ -168,12 +176,6 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      const {data} = await getReaction({
-        id: postId,
-        subspace_id: EnvConfig.APP_SUBSPACE_ID,
-        address: profile?.address!,
-      });
-
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgAddReaction,
         GrantEnums.MsgRemoveReaction,
@@ -185,6 +187,11 @@ const useHooks = ({
       });
 
       if (success) {
+        const {data} = await getReaction({
+          id: postId,
+          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          address: profile?.address!,
+        });
         await manageReaction({
           postId,
           user: profile?.address!,
@@ -196,7 +203,7 @@ const useHooks = ({
         });
       }
     },
-    [postID, profile?.address, reactionAdded],
+    [profile?.address, reactionAdded],
   );
 
   React.useEffect(() => {

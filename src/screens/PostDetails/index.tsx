@@ -151,13 +151,10 @@ const PostDetails = () => {
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
-      const liked = item.reactions.find(
-        (reaction: any) => reaction.author.address === profile?.address,
-      );
       return (
         <CommentItem
-          liked={liked}
-          repliesCounter={item.repliesCount.aggregate.count}
+          liked={item?.reactionPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
           }}
@@ -209,9 +206,7 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
-          postLiked={reactions.find(
-            (reaction: any) => reaction.author.address === profile?.address,
-          )}
+          postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');

@@ -64,6 +64,7 @@ const CommentReplies = () => {
     handleCommentReply,
     commentReplyLoading,
     pageRefetch,
+    handleAddReaction,
   } = useHooks({
     subspaceID: params.subspaceId,
     commentID: params.commentId,
@@ -123,6 +124,7 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          liked={item?.post?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={item.post.repliesCount.aggregate.count}
           loading={commentsLoading}
           disableInnerComment={true}
@@ -130,9 +132,7 @@ const CommentReplies = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => {
-            console.log('hello world');
-          }}
+          handlePressLike={() => handleAddReaction(item.post.id)}
           handlePressTip={() => {
             console.log('hello world');
           }}
@@ -157,15 +157,14 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
+          liked={mainComment?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={mainComment?.repliesCount?.aggregate?.count}
           loading={mainCommentLoading}
           handlePressMore={() => console.log('test')}
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => {
-            console.log('hello world');
-          }}
+          handlePressLike={() => handleAddReaction(mainComment.id)}
           handlePressTip={() => {
             console.log('hello world');
           }}
@@ -182,10 +181,8 @@ const CommentReplies = () => {
           {...mainComment}
         />
         <PostActionButtonsBar
-          postLiked={false}
-          handleLikePress={() => {
-            console.log('hello world');
-          }}
+          postLiked={mainComment?.reactionPresence?.aggregate?.count > 0}
+          handleLikePress={() => handleAddReaction(mainComment.id)}
           handleCommentPress={() => {
             console.log('hello world');
           }}
