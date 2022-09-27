@@ -21,6 +21,7 @@
   "browsePosts": "Browse posts",
   "createPost": "Create a post",
   "noLikesYet": "No posts liked yet",
+  "noUserPosts": "You don't have any posts yet",
   "chains and apps connected": "{{connectedChainsCounter}} Chains and {{connectedAppsCounter}} App connected"
 
 }
