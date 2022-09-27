@@ -15,8 +15,9 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 12,
   },
   image: {
-    height: 163.55,
+    marginTop: theme.spacing.xl,
     alignSelf: 'center',
+    height: 189,
   },
   title: {
     textAlign: 'center',

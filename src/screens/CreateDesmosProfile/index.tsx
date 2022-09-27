@@ -1,6 +1,6 @@
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {StackScreenProps} from '@react-navigation/stack';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {profileParamsState} from '@recoil/profileParams';
@@ -9,7 +9,7 @@ import {
   cameraButton,
   createProfileBanner,
   defaultProfilePic,
-  unfortunately,
+  modalFail,
 } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -55,6 +55,7 @@ import signUpInfoState, {
   signUpNicknameState,
   signUpProfilePicState,
 } from '@recoil/signUpInfoState';
+import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -62,11 +63,12 @@ type NavProps = StackScreenProps<
   ROUTES.CREATE_DESMOS_PROFILE
 >;
 
-const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
+const CreateDesmosProfile: FC<NavProps> = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push, getState, replace} = navigation;
+  const {goBack, push, reset, getState, replace} =
+    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   const signUpInfo = useRecoilValue(signUpInfoState);
   const setCoverPic = useSetRecoilState(signUpCoverPicState);
@@ -146,20 +148,6 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
 
   const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
-  const failureAction = useCallback((errorMessage?: string) => {
-    replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-      title: t('resultModal:fail'),
-      subtitle:
-        errorMessage ?? t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
-      buttonLabel: t('common:retry'),
-      handleButtonPress: goBack,
-      secondaryButtonLabel: t('common:goToProfile'),
-      image: unfortunately,
-      handleSecondaryButtonPress: () => {
-        navigate(ROUTES.USER_PROFILE);
-      },
-    });
-  }, []);
 
   const initialFormState = React.useMemo(() => {
     if (fromSignUp) {
@@ -176,6 +164,35 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
       bio: '',
     };
   }, []);
+
+  const boardcastAction =
+    useRef<(pushOrReplace: typeof push | typeof replace) => void>();
+  const failureAction = useCallback(
+    (errorMessage?: string) => {
+      replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+        title: t('resultModal:failed'),
+        subtitle: errorMessage
+          ? t('yourDesmosProfileIsNotCreated', {
+              error: errorMessage.replace(/[.,]\s*$/, ''),
+            })
+          : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
+        buttonLabel: t('common:retry'),
+        handleButtonPress() {
+          if (boardcastAction.current) {
+            boardcastAction.current(replace);
+          } else {
+            goBack();
+          }
+        },
+        secondaryButtonLabel: t('common:goToProfile'),
+        image: modalFail,
+        handleSecondaryButtonPress: () => {
+          replace(ROUTES.USER_PROFILE);
+        },
+      });
+    },
+    [boardcastAction],
+  );
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -212,43 +229,44 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             profilePictureUrl,
             coverPictureUrl,
           );
-          console.log('messages', messages);
-          // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
-          navigate(ROUTES.BROADCAST_TX, {
-            messages,
-            offlineSigner: externalWallet,
-            async successAction() {
-              const newProfile: ProfileData = {
-                address,
-                bio,
-                cover_pic: coverPictureUrl ?? '',
-                dtag: dTag,
-                profile_pic: profilePictureUrl ?? '',
-                nickname,
-                followage: [],
-                following: [],
-                creation_time: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), // TO DO: get creation time
-              };
-              setLoadedProfiles(prev => {
-                const prevWithExternal = prev.filter(
-                  profile => profile.address !== externalWallet.bech32Address,
-                );
-                return prevWithExternal.concat([newProfile]);
-              });
+          boardcastAction.current = pushOrReplace => {
+            pushOrReplace(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: externalWallet,
+              async successAction() {
+                const newProfile: ProfileData = {
+                  address,
+                  bio,
+                  cover_pic: coverPictureUrl ?? '',
+                  dtag: dTag,
+                  profile_pic: profilePictureUrl ?? '',
+                  nickname,
+                  followage: [],
+                  following: [],
+                  creation_time: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'"), // TO DO: get creation time
+                };
+                setLoadedProfiles(prev => {
+                  const prevWithExternal = prev.filter(
+                    profile => profile.address !== externalWallet.bech32Address,
+                  );
+                  return prevWithExternal.concat([newProfile]);
+                });
 
-              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                title: t('resultModal:success'),
-                subtitle: t('common:desmosProfileCreated'),
-                buttonLabel: t('common:goToProfile'),
-                handleButtonPress: () => {
-                  navigate(ROUTES.USER_PROFILE, {
-                    visitingProfileAddress: address,
-                  });
-                },
-              });
-            },
-            failureAction,
-          });
+                replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('resultModal:success'),
+                  subtitle: t('common:desmosProfileCreated'),
+                  buttonLabel: t('common:goToProfile'),
+                  handleButtonPress: () => {
+                    replace(ROUTES.USER_PROFILE, {
+                      visitingProfileAddress: address,
+                    });
+                  },
+                });
+              },
+              failureAction,
+            });
+          };
+          boardcastAction.current(push);
         } else {
           let wallet: LocalWallet;
           if (accountCreation && accountCreation.mnemonic) {
@@ -280,55 +298,56 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
             setLoading(false);
           }, 500);
 
-          navigate(ROUTES.BROADCAST_TX, {
-            messages,
-            offlineSigner: wallet!,
-            // save newly created account data and navigate to home page
-            successAction: async () => {
-              if (accountCreation && accountCreation.mnemonic) {
-                const {password, mnemonic} = accountCreation;
-                // wallet = await LocalWallet.fromMnemonic(mnemonic);
+          boardcastAction.current = pushOrReplace => {
+            pushOrReplace(ROUTES.BROADCAST_TX, {
+              messages,
+              offlineSigner: wallet!,
+              // save newly created account data and navigate to home page
+              successAction: async () => {
+                if (accountCreation && accountCreation.mnemonic) {
+                  const {password, mnemonic} = accountCreation;
+                  // wallet = await LocalWallet.fromMnemonic(mnemonic);
 
-                const newAccount: ChainAccount = {
-                  address: wallet.bech32Address,
-                  pubKey: toBase64(wallet.publicKey),
-                  type: ChainAccountType.Local,
-                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                  signAlgorithm: 'secp256k1',
-                };
+                  const newAccount: ChainAccount = {
+                    address: wallet.bech32Address,
+                    pubKey: toBase64(wallet.publicKey),
+                    type: ChainAccountType.Local,
+                    hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                    signAlgorithm: 'secp256k1',
+                  };
 
-                await saveLocalWallet(wallet, password!);
-                await saveNewAccount(newAccount);
-                await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-                setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-              } else if (createLedgerAccount && createLedgerAccount.account) {
-                const {account: ledgerAccount} = createLedgerAccount;
+                  await saveLocalWallet(wallet, password!);
+                  await saveNewAccount(newAccount);
+                  await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+                  setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+                } else if (createLedgerAccount && createLedgerAccount.account) {
+                  const {account: ledgerAccount} = createLedgerAccount;
 
-                // wallet = (await unlockWallet(ledgerAccount))!
-                //   .wallet as LocalWallet;
-                await saveNewAccount(ledgerAccount);
-              }
+                  // wallet = (await unlockWallet(ledgerAccount))!
+                  //   .wallet as LocalWallet;
+                  await saveNewAccount(ledgerAccount);
+                }
 
-              push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                title: t('common:congratulations'),
-                subtitle: t('common:dtag created'),
-                buttonLabel: t('resultModal:enterApp'),
-                handleButtonPress: () => {
-                  reset({
-                    index: 0,
-                    routes: [
-                      {
-                        name: ROUTES.HOME,
-                      },
-                    ],
-                  });
-                },
-              });
-            },
-            failureAction: () => {
-              goBack();
-            },
-          });
+                replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                  title: t('common:congratulations'),
+                  subtitle: t('common:dtag created'),
+                  buttonLabel: t('resultModal:enterApp'),
+                  handleButtonPress: () => {
+                    reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: ROUTES.HOME,
+                        },
+                      ],
+                    });
+                  },
+                });
+              },
+              failureAction,
+            });
+          };
+          boardcastAction.current(push);
         }
       } catch (error) {
         const errorMessage = ((err): err is Error => !!(err as Error).message)(
@@ -336,17 +355,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         )
           ? error.message
           : String(error);
-        push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-          title: t('resultModal:fail'),
-          subtitle: errorMessage,
-          buttonLabel: t('common:tryAgain'),
-          handleButtonPress: goBack,
-          secondaryButtonLabel: t('common:goToProfile'),
-          image: unfortunately,
-          handleSecondaryButtonPress: () => {
-            navigate(ROUTES.USER_PROFILE);
-          },
-        });
+        failureAction(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -357,6 +366,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
       profilePicture,
       coverPicture,
       setLoadedProfiles,
+      boardcastAction,
     ],
   );
 

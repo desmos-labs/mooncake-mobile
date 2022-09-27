@@ -6,5 +6,6 @@
   "dTag": "dTag*",
   "enterDTag": "Enter dTag",
   "bio": "Bio",
-  "addBio": "Add a bio to your profile (optional)"
+  "addBio": "Add a bio to your profile (optional)",
+  "yourDesmosProfileIsNotCreated": "{{error}}, your Desmos profile is not created"
 }
