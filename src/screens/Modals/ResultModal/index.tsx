@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
+import {Image, ImageSourcePropType, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -43,14 +43,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.RESULT_MODAL>;
 
 const ResultModal = () => {
   const {
-    params: {
-      title,
-      subtitle,
-      image,
-      primaryButtonLabel,
-      onDismiss,
-      onPressPrimary,
-    },
+    params: {title, subtitle, image, primaryButtonLabel, onPressPrimary},
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
@@ -60,11 +53,6 @@ const ResultModal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <TouchableOpacity
-          style={styles.dismissButton}
-          hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
-          onPress={onDismiss || goBack}
-        />
         <Typography.H5 style={styles.textStyle}>{title}</Typography.H5>
         <Image style={styles.image} source={image || modalSuccess} />
         <Typography.Body5 style={[styles.textStyle, styles.subtitleText]}>
