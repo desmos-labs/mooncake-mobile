@@ -122,7 +122,7 @@ const ConnectChainTxDetail = () => {
       failureAction: (errorMessage?: string) => {
         navigate(ROUTES.RESULT_MODAL, {
           image: errorImage,
-          title: t('resultModal:fail'),
+          title: t('resultModal:failed'),
           subtitle: errorMessage,
           onPressPrimary: () => goBack(),
           primaryButtonLabel: t('common:retry') as string,

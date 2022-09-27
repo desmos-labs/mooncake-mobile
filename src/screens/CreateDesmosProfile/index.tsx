@@ -167,32 +167,29 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
   const boardcastAction =
     useRef<(pushOrReplace: typeof push | typeof replace) => void>();
-  const failureAction = useCallback(
-    (errorMessage?: string) => {
-      replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-        title: t('resultModal:failed'),
-        subtitle: errorMessage
-          ? t('yourDesmosProfileIsNotCreated', {
-              error: errorMessage.replace(/[.,]\s*$/, ''),
-            })
-          : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
-        buttonLabel: t('common:retry'),
-        handleButtonPress() {
-          if (boardcastAction.current) {
-            boardcastAction.current(replace);
-          } else {
-            goBack();
-          }
-        },
-        secondaryButtonLabel: t('common:goToProfile'),
-        image: modalFail,
-        handleSecondaryButtonPress: () => {
-          replace(ROUTES.USER_PROFILE);
-        },
-      });
-    },
-    [boardcastAction],
-  );
+  const failureAction = useCallback((errorMessage?: string) => {
+    replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+      title: t('resultModal:failed'),
+      subtitle: errorMessage
+        ? t('yourDesmosProfileIsNotCreated', {
+            error: errorMessage.replace(/[.,]\s*$/, ''),
+          })
+        : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
+      buttonLabel: t('common:retry'),
+      handleButtonPress() {
+        if (boardcastAction.current) {
+          boardcastAction.current(replace);
+        } else {
+          goBack();
+        }
+      },
+      secondaryButtonLabel: t('common:goToProfile'),
+      image: modalFail,
+      handleSecondaryButtonPress: () => {
+        replace(ROUTES.USER_PROFILE);
+      },
+    });
+  }, []);
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -360,14 +357,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         setLoading(false);
       }
     },
-    [
-      accountCreation,
-      createLedgerAccount,
-      profilePicture,
-      coverPicture,
-      setLoadedProfiles,
-      boardcastAction,
-    ],
+    [accountCreation, createLedgerAccount, profilePicture, coverPicture],
   );
 
   const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
