@@ -26,7 +26,7 @@ const useStyles = makeStyle(theme => ({
     paddingTop: theme.spacing.s,
     marginRight: theme.spacing.m,
   },
-  profilePicture: {
+  avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
