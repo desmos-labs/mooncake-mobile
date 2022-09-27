@@ -27,17 +27,33 @@ import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import * as Yup from 'yup';
+import ROUTES from 'navigation/routes';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {useResetRecoilState, useSetRecoilState} from 'recoil';
+import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
+
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
-  const {goBack} = useNavigation();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
+
+  const setSignUpDTag = useSetRecoilState(signUpDTagState);
+  const resetSignUpInfo = useResetRecoilState(signUpInfoState);
+
+  // reset recoil state on entry
+  React.useEffect(() => {
+    resetSignUpInfo();
+  }, []);
+
   const scrollViewRef = useRef<ScrollView>(null);
   const {
     handlePressPP,
@@ -46,6 +62,7 @@ const Signup = () => {
     openInfoModal,
     validateForm,
     initialFormValues,
+    loading,
   } = useHooks();
 
   const {profileParams} = useGetProfileParams();
@@ -163,6 +180,7 @@ const Signup = () => {
                       onChangeText={(value: string) => {
                         checkAvailability(value);
                         setFieldValue('dTag', value, true);
+                        setSignUpDTag(value);
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
@@ -173,9 +191,18 @@ const Signup = () => {
                         {errors.dTag}
                       </Typography.Caption1>
                     )}
+
+                    <Typography.Body6
+                      onPress={() => {
+                        navigate(ROUTES.CREATE_DESMOS_PROFILE);
+                      }}
+                      style={styles.completeProfileButton}>
+                      {t('signup:completeProfile')}
+                    </Typography.Body6>
                     <Typography.Caption1 style={styles.errorTextDtag}>
                       {availableDTag ? '' : t('signup:dtag taken')}
                     </Typography.Caption1>
+
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
                         {t('enterNewPw')}
@@ -270,6 +297,7 @@ const Signup = () => {
                 </View>
                 <Button
                   onPress={handleSubmit}
+                  loading={loading}
                   color={theme.colors.surfaceBlack}
                   disabled={
                     !values.dTag ||
