@@ -49,6 +49,12 @@ import * as Yup from 'yup';
 import {selectedExternalAccountState} from '@recoil/connectChainState';
 import {format} from 'date-fns';
 import profilesState from '@recoil/profiles';
+import signUpInfoState, {
+  signUpBioState,
+  signUpCoverPicState,
+  signUpNicknameState,
+  signUpProfilePicState,
+} from '@recoil/signUpInfoState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -56,23 +62,33 @@ type NavProps = StackScreenProps<
   ROUTES.CREATE_DESMOS_PROFILE
 >;
 
-const initialFormState = {
-  nickname: '',
-  dTag: '',
-  bio: '',
-};
-
 const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, navigate, reset, push, replace} = navigation;
+  const {goBack, navigate, reset, push, getState, replace} = navigation;
+
+  const signUpInfo = useRecoilValue(signUpInfoState);
+  const setCoverPic = useSetRecoilState(signUpCoverPicState);
+  const setProfilePic = useSetRecoilState(signUpProfilePicState);
+  const setBio = useSetRecoilState(signUpBioState);
+  const setNickname = useSetRecoilState(signUpNicknameState);
+
+  const fromSignUp = React.useMemo(() => {
+    const {routes} = getState();
+
+    return routes[routes.length - 2].name === ROUTES.SIGNUP;
+  }, []);
 
   const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
-    useImageFromDevice({});
+    useImageFromDevice({
+      onImageSelected: image => setCoverPic(image),
+    });
 
   const {imageAsset: profilePicture, imageFromLibrary: selectProfilePicture} =
-    useImageFromDevice({});
+    useImageFromDevice({
+      onImageSelected: image => setProfilePic(image),
+    });
 
   const [loading, setLoading] = React.useState(false);
 
@@ -89,6 +105,19 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const nicknameMaxLength = 30; // override the value (1000) from query, 30 for App
 
   const validationSchema = React.useMemo(() => {
+    if (fromSignUp) {
+      return Yup.object().shape({
+        nickname: Yup.string()
+          .min(profileParams.nickname.min_length)
+          .max(nicknameMaxLength),
+        bio: Yup.string().max(
+          parseInt(profileParams.bio.max_length, 10),
+          t('error:maxLength', {
+            numChars: profileParams.bio.max_length,
+          }),
+        ),
+      });
+    }
     return Yup.object().shape({
       nickname: Yup.string()
         .min(profileParams.nickname.min_length)
@@ -117,7 +146,6 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
 
   const selectedExternalAccount = useRecoilValue(selectedExternalAccountState);
   const setLoadedProfiles = useSetRecoilState(profilesState);
-
   const failureAction = useCallback((errorMessage?: string) => {
     replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
       title: t('resultModal:fail'),
@@ -131,6 +159,22 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         navigate(ROUTES.USER_PROFILE);
       },
     });
+  }, []);
+
+  const initialFormState = React.useMemo(() => {
+    if (fromSignUp) {
+      return {
+        nickname: signUpInfo.nickname,
+        dTag: '',
+        bio: signUpInfo.bio,
+      };
+    }
+
+    return {
+      nickname: '',
+      dTag: '',
+      bio: '',
+    };
   }, []);
 
   const handleFormSubmit = React.useCallback(
@@ -340,10 +384,21 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         backgroundColor="transparent"
         translucent={true}
       />
-      <Image
-        source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
-        style={styles.bannerImage}
-      />
+      {fromSignUp ? (
+        <Image
+          source={
+            signUpInfo.coverPicture
+              ? {uri: signUpInfo.coverPicture.uri}
+              : createProfileBanner
+          }
+          style={styles.bannerImage}
+        />
+      ) : (
+        <Image
+          source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
+          style={styles.bannerImage}
+        />
+      )}
 
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton imageSrc={backButton} onPress={goBack} />
@@ -355,10 +410,23 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         />
       </View>
 
-      <CreateAvatar
-        avatar={profilePicture ? {uri: profilePicture.uri} : defaultProfilePic}
-        handlePressEdit={selectProfilePicture}
-      />
+      {fromSignUp ? (
+        <CreateAvatar
+          avatar={
+            signUpInfo.profilePicture
+              ? {uri: signUpInfo.profilePicture.uri}
+              : defaultProfilePic
+          }
+          handlePressEdit={selectProfilePicture}
+        />
+      ) : (
+        <CreateAvatar
+          avatar={
+            profilePicture ? {uri: profilePicture.uri} : defaultProfilePic
+          }
+          handlePressEdit={selectProfilePicture}
+        />
+      )}
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -389,6 +457,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                     placeholder={t('enterNickname')}
                     onChangeText={value => {
                       setFieldValue('nickname', value, true);
+                      fromSignUp && setNickname(value);
                     }}
                     error={!!errors.nickname}
                   />
@@ -406,19 +475,23 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                     </View>
                   )}
 
-                  <Typography.Subtitle2 style={styles.inputLabel}>
-                    {t('dTag')}
-                  </Typography.Subtitle2>
-                  <DTextInput
-                    value={values.dTag}
-                    placeholder={t('enterDTag')}
-                    onChangeText={value => {
-                      setFieldValue('dTag', value, true);
-                    }}
-                    error={!!errors.dTag}
-                    inputRef={dTagInputRef}
-                    autoCapitalize="none"
-                  />
+                  {!fromSignUp && (
+                    <>
+                      <Typography.Subtitle2 style={styles.inputLabel}>
+                        {t('dTag')}
+                      </Typography.Subtitle2>
+                      <DTextInput
+                        value={values.dTag}
+                        placeholder={t('enterDTag')}
+                        onChangeText={value => {
+                          setFieldValue('dTag', value, true);
+                        }}
+                        error={!!errors.dTag}
+                        inputRef={dTagInputRef}
+                        autoCapitalize="none"
+                      />
+                    </>
+                  )}
                   {errors.dTag && (
                     <Typography.Caption1 style={inlineStyles.errorText}>
                       {errors.dTag}
@@ -445,6 +518,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                     placeholder={t('addBio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
+                      fromSignUp && setBio(value);
                     }}
                     error={!!errors.bio}
                     style={inlineStyles.bioDTextInput}
@@ -468,7 +542,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                 <Button
                   color={theme.colors.surfaceBlack}
                   mode="contained"
-                  onPress={handleSubmit}
+                  onPress={fromSignUp ? goBack : handleSubmit}
                   loading={loading}>
                   {t('common:confirm')}
                 </Button>

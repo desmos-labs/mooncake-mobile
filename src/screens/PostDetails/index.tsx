@@ -84,6 +84,7 @@ const PostDetails = () => {
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
 
   const {
+    profile,
     post,
     postLoading,
     comments,
@@ -97,6 +98,7 @@ const PostDetails = () => {
     handlePressSendTips,
     navigateToProfile,
     handlePostComment,
+    handleAddReaction,
     postCommentLoading,
     pageRefetch,
   } = useHooks({
@@ -135,14 +137,14 @@ const PostDetails = () => {
       return (
         <ProfileHeaderButton
           imageSrc={{uri: post?.author.profile_pic}}
-          onPress={() => navigateToProfile()}
+          onPress={() => navigateToProfile(post?.author?.address)}
         />
       );
     }
     return (
       <ProfileHeaderButton
         imageSrc={defaultProfilePic}
-        onPress={() => navigateToProfile()}
+        onPress={() => navigateToProfile(post?.author?.address)}
       />
     );
   }, [post?.author?.profile_pic]);
@@ -151,16 +153,15 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
-          repliesCounter={item.repliesCount.aggregate.count}
+          liked={item?.reactionPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount.aggregate.count}
           handlePressMore={() => {
             console.log('hello world');
           }}
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => {
-            console.log('hello world');
-          }}
+          handlePressLike={() => handleAddReaction(item.id)}
           handlePressTip={() => {
             console.log('hello world');
           }}
@@ -183,7 +184,7 @@ const PostDetails = () => {
         />
       );
     },
-    [comments],
+    [comments, profile?.address],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -205,10 +206,8 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
-          postLiked={false}
-          handleLikePress={() => {
-            console.log('hello world');
-          }}
+          postLiked={post?.reactionPresence?.aggregate?.count > 0}
+          handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');
           }}

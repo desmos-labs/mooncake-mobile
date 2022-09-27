@@ -78,6 +78,10 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
     margin: theme.spacing.s,
   },
+  completeProfileButton: {
+    alignSelf: 'flex-end',
+    color: theme.colors.butterOrange01,
+  },
 }));
 
 export default useStyles;
