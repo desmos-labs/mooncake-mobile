@@ -45,10 +45,7 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
-import {
-  selectedExternalAccountState,
-  signerState,
-} from '@recoil/connectChainState';
+import {selectedExternalAccountState} from '@recoil/connectChainState';
 import {format} from 'date-fns';
 import profilesState from '@recoil/profiles';
 import useStyles from './useStyles';
@@ -81,7 +78,6 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
   const profileParams = useRecoilValue(profileParamsState);
   const accountCreation = useRecoilValue(createLocalWalletState);
   const createLedgerAccount = useRecoilValue(createLedgerAccountState);
-  const signer = useRecoilValue(signerState);
   const unlockWallet = useUnlockWallet();
   const nicknameInputRef = React.useRef<TextInput>(null);
   const dTagInputRef = React.useRef<TextInput>(null);
@@ -168,7 +164,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
           // TO DO: Query failed with (22): rpc error: code = NotFound desc = account desmos1ulg2sp2clwkxwdh9vsn2r5rwdmx0g7w4ksp5yc not found: key not found
           navigate(ROUTES.BROADCAST_TX, {
             messages,
-            offlineSigner: signer,
+            offlineSigner: externalWallet,
             async successAction() {
               const newProfile: ProfileData = {
                 address: messages[0].value.creator,
@@ -304,7 +300,6 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
     [
       accountCreation,
       createLedgerAccount,
-      signer,
       profilePicture,
       coverPicture,
       setLoadedProfiles,

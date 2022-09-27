@@ -122,7 +122,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
       scrollable={false}
       disableHideKeyboardTouchable={true}>
       <Typography.H3 style={styles.title}>
-        {t('addProfile:title')}
+        {t('addProfile:availableProfiles')}
       </Typography.H3>
       <ErrorBoundary
         fallback={

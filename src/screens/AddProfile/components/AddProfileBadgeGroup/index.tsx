@@ -17,7 +17,7 @@ import AddProfileBadge, {
 /**
  * @property {number} page - The current page number.
  * @property {string[]} addresses - An array of addresses that we want to search for.
- * @property {ProfileData[]} selectedProfiles - The list of profiles that have been selected by the
+ * @property {Map<string, ProfileData>} selectedAddresses - The map of profiles that have been selected by the
  * user.
  * @property onSelect - This is a function that is called when a profile is selected.
  * @property setProfileCount - This is a function that will be called when the component is mounted. It
@@ -27,7 +27,7 @@ import AddProfileBadge, {
 export type AddProfileBadgeGroupProps = {
   page: number;
   addresses: string[];
-  selectedProfiles: ProfileData[];
+  selectedProfileMap: Map<string, ProfileData>;
   onSelect: (profile: ProfileData) => void;
   setProfileCount: (page: number, count: number) => void;
   loadMoreAccounts: () => void;
@@ -36,7 +36,7 @@ export type AddProfileBadgeGroupProps = {
 const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   page,
   addresses,
-  selectedProfiles,
+  selectedProfileMap,
   onSelect,
   setProfileCount,
   loadMoreAccounts,
@@ -52,9 +52,9 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
   const values = useMemo<ProfileRadioValue[]>(() => {
     return profiles.map(profile => ({
       ...profileToRadioValue(profile),
-      isSelected: selectedProfiles.some(p => p.address === profile.address),
+      isSelected: selectedProfileMap.has(profile.address),
     }));
-  }, [profiles, selectedProfiles]);
+  }, [profiles, selectedProfileMap]);
 
   /* A callback function that is used to handle the selection of a profile. */
   const handleSelect = useCallback(
@@ -62,7 +62,7 @@ const AddProfileBadgeGroup: FC<AddProfileBadgeGroupProps> = ({
       const profile = profiles.find(p => p.address === id);
       if (profile) onSelect(profile);
     },
-    [selectedProfiles, onSelect],
+    [profiles, onSelect],
   );
 
   const isLoadedRef = useRef(false);
