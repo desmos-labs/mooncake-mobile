@@ -18,7 +18,7 @@ import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcast
 /**
  * Hook that manange a reaction, adding or removing it.
  */
-const useManangeReaction = () => {
+const useManageReactions = () => {
   const {activeAddress} = useActiveAccount();
   const [reactionLoading, setReactionLoading] = React.useState(false);
 
@@ -128,4 +128,4 @@ const useManangeReaction = () => {
   return {manageReaction, reactionLoading};
 };
 
-export default useManangeReaction;
+export default useManageReactions;

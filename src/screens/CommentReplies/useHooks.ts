@@ -12,7 +12,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import useManangeReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManangeReaction';
+import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
 import {
@@ -31,7 +31,7 @@ const useHooks = ({
   const {createPost, loading} = useCreatePost();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const {manageReaction} = useManangeReaction();
+  const {manageReaction} = useManageReactions();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
 

@@ -13,7 +13,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import useManangeReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManangeReaction';
+import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
 import {
@@ -31,7 +31,7 @@ const useHooks = ({
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
-  const {manageReaction} = useManangeReaction();
+  const {manageReaction} = useManageReactions();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
