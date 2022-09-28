@@ -2,6 +2,8 @@ enum ROUTES {
   // Root Navigator start
   LANDING = 'LANDING',
 
+  LOGIN = 'LOGIN',
+
   SIGNUP = 'SIGNUP',
 
   MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',

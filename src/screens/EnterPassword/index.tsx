@@ -24,10 +24,6 @@ import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
-const initialFormValues = {
-  password: '',
-};
-
 type NavProps = StackScreenProps<
   AuthorizeWalletParamList,
   ROUTES.AUTH_UNLOCK_LOCAL_WALLET
@@ -55,6 +51,10 @@ export type EnterPasswordParams = {
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
+};
+
+const initialFormValues = {
+  password: '',
 };
 
 const EnterPassword = () => {

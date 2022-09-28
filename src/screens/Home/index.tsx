@@ -64,6 +64,7 @@ const Home = () => {
   const [{registeredReactions}] = useRecoilState(appSettingsState);
   const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
 
+  // marked for cleanup
   useEffect(() => {
     console.log(registeredReactions);
   }, []);
