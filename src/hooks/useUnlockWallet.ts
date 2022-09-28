@@ -94,7 +94,6 @@ export default function useUnlockWallet(): (
                 titleLabelOverride,
                 buttonLabelOverride,
                 dViewProps,
-                prefilledPassword,
                 onSuccessfulAuthentication: (
                   result: LocalAccountAuthenticationArgs,
                 ) => {

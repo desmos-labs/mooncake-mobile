@@ -1,5 +1,5 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps, TransitionPresets} from '@react-navigation/stack';
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
@@ -53,7 +53,10 @@ export type EnterPasswordParams = {
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
-  prefilledPassword?: string;
+};
+
+const initialFormValues = {
+  password: '',
 };
 
 const EnterPassword = () => {
@@ -70,11 +73,8 @@ const EnterPassword = () => {
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
-      prefilledPassword,
     },
   } = useRoute<NavProps['route']>();
-
-  const {setOptions} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -88,67 +88,6 @@ const EnterPassword = () => {
       }
     };
   }, [resolved]);
-
-  React.useEffect(() => {
-    setOptions({
-      cardStyle: {
-        backgroundColor: 'transparent',
-      },
-      presentation: 'transparentModal',
-      cardOverlayEnabled: true,
-      ...TransitionPresets.BottomSheetAndroid,
-    });
-
-    const unlockWalletWithPrefilledPw = async () => {
-      if (prefilledPassword) {
-        setLoading(true);
-        const password = prefilledPassword;
-
-        const useBiometrics = getMMKV<boolean>(
-          MMKVKEYS.USE_BIOMETRICS,
-        ) as boolean;
-
-        try {
-          if (address) {
-            const wallet = await getLocalWallet(
-              address,
-              password,
-              useBiometrics,
-            );
-
-            if (!wallet) throw new Error('Error unlocking wallet');
-
-            const mnemonic = await getMnemonic(address, password);
-
-            if (wallet && onSuccessfulAuthentication) {
-              setResolved(true);
-              onSuccessfulAuthentication({
-                wallet: provideWallet ? wallet : undefined,
-                mnemonic: provideMnemonic ? mnemonic : undefined,
-                authorized: true,
-              });
-            } else {
-              onFailedAuthentication && onFailedAuthentication();
-            }
-          } else {
-            throw new Error('address is empty'); // instead of do nothing
-          }
-        } catch (err) {
-          onFailedAuthentication && onFailedAuthentication();
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    setTimeout(() => {
-      unlockWalletWithPrefilledPw();
-    }, 250);
-  }, []);
-
-  const initialFormValues = {
-    password: prefilledPassword,
-  };
 
   const onFormSubmit = React.useCallback(
     async (
