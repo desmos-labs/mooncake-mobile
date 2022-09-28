@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: BackButton renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <RNGestureHandlerButton
+    collapsable={false}
+    exclusive={true}
+    handlerTag={1}
+    handlerType="NativeViewGestureHandler"
+    hitSlop={
+      Object {
+        "bottom": 50,
+        "left": 50,
+        "right": 50,
+        "top": 50,
+      }
+    }
+    onGestureEvent={[Function]}
+    onGestureHandlerEvent={[Function]}
+    onGestureHandlerStateChange={[Function]}
+    onHandlerStateChange={[Function]}
+    rippleColor={0}
+    touchSoundDisabled={false}
+  >
+    <View
+      accessibilityLabel="back-button"
+      accessible={true}
+      collapsable={false}
+      hitSlop={
+        Object {
+          "bottom": 50,
+          "left": 50,
+          "right": 50,
+          "top": 50,
+        }
+      }
+      style={
+        Object {
+          "opacity": 1,
+          "padding": 6,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={true}
+        selectable={false}
+        style={
+          Array [
+            Object {
+              "color": "#25282D",
+              "fontSize": 32,
+            },
+            undefined,
+            Object {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </RNGestureHandlerButton>
+</View>
+`;

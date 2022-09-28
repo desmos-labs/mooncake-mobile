@@ -16,6 +16,7 @@ export const BackButton: React.FC<Props> = ({onPress, style, iconColor}) => {
   const styles = useStyles();
   return (
     <TouchableOpacity
+      accessibilityLabel="back-button"
       hitSlop={{top: 50, bottom: 50, right: 50, left: 50}}
       onPress={onPress}
       style={[styles.button, style]}>
