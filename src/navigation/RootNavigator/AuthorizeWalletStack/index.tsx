@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import LookingForDevices, {
   LookingForDevicesParams,
 } from 'screens/LookingForDevices';
@@ -13,8 +13,6 @@ export type AuthorizeWalletParamList = {
   [ROUTES.AUTH_CONNECT_TO_LEDGER]: ConnectToLedgerParams;
 
   [ROUTES.AUTH_UNLOCK_LOCAL_WALLET]: EnterPasswordParams;
-
-  [ROUTES.AUTH_UNLOCK_LOCAL_WALLET_SILENT]: EnterPasswordParams;
 };
 
 const Stack = createStackNavigator<AuthorizeWalletParamList>();
@@ -40,21 +38,6 @@ const AuthorizeWalletStack = () => {
         name={ROUTES.AUTH_UNLOCK_LOCAL_WALLET}
         component={EnterPassword}
       />
-
-      <Stack.Group
-        screenOptions={{
-          cardStyle: {
-            backgroundColor: 'transparent',
-          },
-          presentation: 'transparentModal',
-          cardOverlayEnabled: true,
-          ...TransitionPresets.BottomSheetAndroid,
-        }}>
-        <Stack.Screen
-          name={ROUTES.AUTH_UNLOCK_LOCAL_WALLET_SILENT}
-          component={EnterPassword}
-        />
-      </Stack.Group>
     </Stack.Navigator>
   );
 };
