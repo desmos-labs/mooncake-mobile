@@ -14,6 +14,8 @@ import {ChainAccount, ChainAccountType} from 'types/chains';
 import {toBase64} from '@cosmjs/encoding';
 import {useSetRecoilState} from 'recoil';
 import createLocalWalletState from '@recoil/createLocalWalletState';
+import {useLazyQuery} from '@apollo/client';
+import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useStyles from './useStyles';
 
 /**
@@ -24,6 +26,8 @@ const useHooks = () => {
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation('passwordManipulation');
   const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
+
+  const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
 
   const {
     params: {mode, mnemonic},
@@ -133,25 +137,38 @@ const useHooks = () => {
 
         const results = await Promise.allSettled(accountsToSearch);
 
-        const accountsWithWalletData = results
+        const accountsOnChain = results
           .filter(x => x.status === 'fulfilled')
           .map((y: any) => ({
             wallet: y.value.wallet,
             chainAccount: y.value.chainAccount,
           }));
 
+        const addressesOfAccounts = accountsOnChain.map(
+          x => x.chainAccount.address,
+        );
+
+        const existingAccounts = await getProfileForAddresses({
+          variables: {
+            addresses: addressesOfAccounts,
+          },
+        });
+
         setCreateLocalWalletState({
           mnemonic,
           password: confirmPassword,
         });
 
-        if (accountsWithWalletData.length === 0) {
+        if (
+          existingAccounts.data &&
+          existingAccounts.data.profile.length === 0
+        ) {
           setLoading(false);
           navigate(ROUTES.NO_DTAG_FOUND);
         } else {
           setLoading(false);
           navigate(ROUTES.SELECT_DTAG, {
-            accountsWithWalletData,
+            accountsWithWalletData: accountsOnChain,
             password: confirmPassword,
           });
         }
