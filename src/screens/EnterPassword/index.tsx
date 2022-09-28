@@ -22,11 +22,9 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {buildingBlockAnim} from 'assets/animations';
 import useStyles from './useStyles';
-
-const initialFormValues = {
-  password: '',
-};
 
 type NavProps = StackScreenProps<
   AuthorizeWalletParamList,
@@ -55,6 +53,10 @@ export type EnterPasswordParams = {
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
+};
+
+const initialFormValues = {
+  password: '',
 };
 
 const EnterPassword = () => {
@@ -146,6 +148,19 @@ const EnterPassword = () => {
       password: Yup.string().required(t('error:required')),
     });
   }, []);
+
+  if (prefilledPassword) {
+    return (
+      <DView
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(0,0,0,0.2)',
+        }}>
+        <ThemedLottieView source={buildingBlockAnim} />
+      </DView>
+    );
+  }
 
   return (
     <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
