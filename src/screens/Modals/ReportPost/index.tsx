@@ -1,5 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
 import CustomRadioGroup, {RadioValue} from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
@@ -7,14 +8,17 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {useRecoilState} from 'recoil';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -25,15 +29,17 @@ export type ReportPostParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.REPORT_POST>;
 
 const ReportPost = () => {
-  const [selectedReport, setSelectedReport] = React.useState({
+  const [selectedReport, setSelectedReport] = useState({
     value: 'scam',
     index: 0,
   });
-  const [message, setMessage] = React.useState<string>('');
+  const [message, setMessage] = useState<string>('');
   const {t} = useTranslation('reportPost');
   const styles = useStyles();
+  const theme = useTheme();
   const {goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
+  const [{registeredReports}] = useRecoilState(appSettingsState);
 
   const initialiRadioValues: RadioValue[] = [
     {label: t('spam'), value: 'spam'},
@@ -52,6 +58,7 @@ const ReportPost = () => {
   useEffect(() => {
     console.log(selectedReport);
     console.log(params);
+    console.log(registeredReports);
   }, [selectedReport]);
 
   return (
@@ -65,7 +72,10 @@ const ReportPost = () => {
         style={styles.container}>
         {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
         {/* parts of the modal content are pressed */}
-        <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.innerContainer}
+          onPress={() => Keyboard.dismiss()}>
           <View style={styles.tabIcon} />
           <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
           <Spacer paddingBottom={10} />
@@ -77,7 +87,7 @@ const ReportPost = () => {
               onSelect={(index, value) => setSelectedReport({value, index})}
             />
 
-            <Spacer paddingBottom={20} />
+            <Spacer paddingBottom={theme.spacing.s} />
             <DTextInput
               editable={selectedReport.index === 4}
               inputStyle={styles.messageInput}
@@ -89,7 +99,10 @@ const ReportPost = () => {
             />
           </View>
           <Spacer paddingVertical={30}>
-            <Button mode="gradientFilled" onPress={onSubmit}>
+            <Button
+              color={theme.colors.surfaceBlack}
+              mode="contained"
+              onPress={onSubmit}>
               {t('submit')}
             </Button>
           </Spacer>
