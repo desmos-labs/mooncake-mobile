@@ -8,7 +8,7 @@ type Props = {
   /**
    * Is the checkbox checked?
    */
-  checked: boolean;
+  checked?: boolean;
 
   /**
    * What to do when the checkbox is pressed.
@@ -19,12 +19,23 @@ type Props = {
    * Whether to show the error version of the checkbox.
    */
   error?: boolean;
+
+  /**
+   * Override a11y label for unit testing/screen readers
+   * @default custom-checkbox
+   */
+  accessibilityLabel?: string;
 };
 
 /**
  * A checkmark component with a custom animation when checked/unchecked.
  */
-const CustomCheckbox = ({checked, handlePress, error}: Props) => {
+const CustomCheckbox = ({
+  checked,
+  handlePress,
+  error,
+  accessibilityLabel = 'custom-checkbox',
+}: Props) => {
   const styles = useStyles();
 
   const animatedCheckStyle = useAnimatedStyle(() => {
@@ -39,7 +50,9 @@ const CustomCheckbox = ({checked, handlePress, error}: Props) => {
   });
 
   return (
-    <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity
+      accessibilityLabel={accessibilityLabel}
+      onPress={handlePress}>
       <Image
         source={checkboxUnchecked}
         style={[
