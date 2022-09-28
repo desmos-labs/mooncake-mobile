@@ -212,13 +212,7 @@ const RootNavigator = () => {
       )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
 
-      <Stack.Screen
-        options={{
-          gestureEnabled: false,
-        }}
-        name={ROUTES.LOGIN}
-        component={Login}
-      />
+      <Stack.Screen name={ROUTES.LOGIN} component={Login} />
 
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
