@@ -42,6 +42,10 @@ const useStyles = makeStyle(theme => ({
   forgotPwButton: {
     alignSelf: 'center',
   },
+  errorStyle: {
+    marginTop: theme.spacing.s,
+    color: theme.colors.white,
+  },
 }));
 
 export default useStyles;

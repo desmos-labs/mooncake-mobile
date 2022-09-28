@@ -1,5 +1,5 @@
-import {useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {StackScreenProps, TransitionPresets} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
@@ -22,11 +22,9 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {buildingBlockAnim} from 'assets/animations';
 import useStyles from './useStyles';
-
-const initialFormValues = {
-  password: '',
-};
 
 type NavProps = StackScreenProps<
   AuthorizeWalletParamList,
@@ -55,6 +53,7 @@ export type EnterPasswordParams = {
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
+  prefilledPassword?: string;
 };
 
 const EnterPassword = () => {
@@ -71,8 +70,11 @@ const EnterPassword = () => {
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
+      prefilledPassword,
     },
   } = useRoute<NavProps['route']>();
+
+  const {setOptions} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -86,6 +88,67 @@ const EnterPassword = () => {
       }
     };
   }, [resolved]);
+
+  React.useEffect(() => {
+    setOptions({
+      cardStyle: {
+        backgroundColor: 'transparent',
+      },
+      presentation: 'transparentModal',
+      cardOverlayEnabled: true,
+      ...TransitionPresets.BottomSheetAndroid,
+    });
+
+    const unlockWalletWithPrefilledPw = async () => {
+      if (prefilledPassword) {
+        setLoading(true);
+        const password = prefilledPassword;
+
+        const useBiometrics = getMMKV<boolean>(
+          MMKVKEYS.USE_BIOMETRICS,
+        ) as boolean;
+
+        try {
+          if (address) {
+            const wallet = await getLocalWallet(
+              address,
+              password,
+              useBiometrics,
+            );
+
+            if (!wallet) throw new Error('Error unlocking wallet');
+
+            const mnemonic = await getMnemonic(address, password);
+
+            if (wallet && onSuccessfulAuthentication) {
+              setResolved(true);
+              onSuccessfulAuthentication({
+                wallet: provideWallet ? wallet : undefined,
+                mnemonic: provideMnemonic ? mnemonic : undefined,
+                authorized: true,
+              });
+            } else {
+              onFailedAuthentication && onFailedAuthentication();
+            }
+          } else {
+            throw new Error('address is empty'); // instead of do nothing
+          }
+        } catch (err) {
+          onFailedAuthentication && onFailedAuthentication();
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    setTimeout(() => {
+      unlockWalletWithPrefilledPw();
+    }, 250);
+  }, []);
+
+  const initialFormValues = {
+    password: prefilledPassword,
+  };
 
   const onFormSubmit = React.useCallback(
     async (
@@ -146,6 +209,19 @@ const EnterPassword = () => {
       password: Yup.string().required(t('error:required')),
     });
   }, []);
+
+  if (prefilledPassword) {
+    return (
+      <DView
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(0,0,0,0.2)',
+        }}>
+        <ThemedLottieView source={buildingBlockAnim} />
+      </DView>
+    );
+  }
 
   return (
     <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>

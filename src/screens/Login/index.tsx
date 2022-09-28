@@ -8,12 +8,56 @@ import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import DSecureTextInput from 'components/DSecureTextInput';
 import Button from 'components/Button';
+import useLogin from 'services/axios/requests/Login/useLogin';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
 const Login = () => {
   const styles = useStyles();
   const {t} = useTranslation('login');
   const theme = useTheme();
+  const {activeAddress} = useActiveAccount();
+
+  const toast = useToast();
+
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const {login} = useLogin();
+  const {replace} = useNavigation<NavProps['navigation']>();
+
+  const handleSubmit = React.useCallback(async () => {
+    if (!activeAddress) {
+      return toast.show(
+        t('toast:errorSystemBusy', {type: ToastConfig.ERROR_NO_RETRY}),
+      );
+    }
+    try {
+      setLoading(true);
+      setError('');
+      const loginResponse = await login(activeAddress, password);
+
+      if (!loginResponse) {
+        toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});
+      } else {
+        replace(ROUTES.HOME);
+      }
+    } catch (err: any) {
+      if (err.toString().includes('Incorrect')) {
+        setError(t('error:incorrectPassword'));
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [password, activeAddress]);
 
   return (
     <DView
@@ -34,12 +78,24 @@ const Login = () => {
         <Typography.Subtitle2 style={styles.labelStyle}>
           {t('password')}
         </Typography.Subtitle2>
-        <DSecureTextInput placeholder={t('enterPassword')} />
+        <DSecureTextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder={t('enterPassword')}
+        />
+
+        {error && (
+          <Typography.Caption1 style={styles.errorStyle}>
+            {error}
+          </Typography.Caption1>
+        )}
 
         <Spacer paddingTop={theme.spacing.m}>
           <Button
+            disabled={loading || !password}
+            loading={loading}
             style={{borderColor: theme.colors.white}}
-            onPress={() => {}}
+            onPress={handleSubmit}
             mode="outlined">
             <Typography.Button2 style={{color: theme.colors.white}}>
               {t('common:confirm')}
@@ -48,7 +104,7 @@ const Login = () => {
         </Spacer>
       </View>
       <View style={styles.bottomContentContainer}>
-        <TouchableOpacity style={styles.forgotPwButton}>
+        <TouchableOpacity disabled={loading} style={styles.forgotPwButton}>
           <Typography.Button1 style={styles.labelStyle}>
             {t('forgotPassword')}
           </Typography.Button1>
