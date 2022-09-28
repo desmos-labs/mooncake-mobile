@@ -5,9 +5,10 @@ import {makeStyle} from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    flex: 1,
+    flexBasis: '100%',
     justifyContent: 'center',
     paddingHorizontal: theme.spacing.m,
+    paddingBottom: theme.spacing.m,
   },
   cardContainer: {
     backgroundColor: theme.colors.white,

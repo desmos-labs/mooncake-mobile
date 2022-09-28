@@ -5,7 +5,12 @@ import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React, {ReactNode} from 'react';
-import {Image, ImageSourcePropType, View} from 'react-native';
+import {
+  GestureResponderEvent,
+  Image,
+  ImageSourcePropType,
+  Pressable,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import ROUTES from 'navigation/routes';
 import {useRoute} from '@react-navigation/native';
@@ -16,20 +21,28 @@ type NavProps = StackScreenProps<
   ROUTES.FULLSCREEN_STATUS_SCREEN
 >;
 
+/**
+ * @property {ImageSourcePropType} image - The image to display in the background.
+ * @property {ReactNode | string} title - The title of the screen.
+ * @property {ReactNode | string} subtitle - The subtitle of the screen.
+ * @property {ReactNode | string} buttonLabel - The label for the primary button.
+ * @property handleButtonPress - This is the function that will be called when the primary button is
+ * pressed.
+ * @property {ReactNode | string} secondaryButtonLabel - The label for the secondary button.
+ * @property handleSecondaryButtonPress - This is the function that will be called when the secondary
+ * button is pressed.
+ * @property handleBackgroundPress - This is the function that will be called when the user taps on the
+ * background.
+ */
 export type FullscreenStatusScreenParams = {
   image?: ImageSourcePropType;
-
   title: ReactNode | string;
-
   subtitle: ReactNode | string;
-
   buttonLabel: ReactNode | string;
-
   handleButtonPress: () => void;
-
   secondaryButtonLabel?: ReactNode | string;
-
   handleSecondaryButtonPress?: () => void;
+  handleBackgroundPress?: () => void;
 };
 
 const FullscreenStatusScreen = () => {
@@ -45,12 +58,19 @@ const FullscreenStatusScreen = () => {
       handleButtonPress,
       secondaryButtonLabel,
       handleSecondaryButtonPress,
+      handleBackgroundPress,
     },
   } = useRoute<NavProps['route']>();
 
   return (
-    <DView style={styles.root} backgroundColor="transparent">
-      <View style={styles.cardContainer}>
+    <DView
+      backgroundColor="transparent"
+      onBackgroundPress={handleBackgroundPress}
+      style={styles.root}>
+      <Pressable
+        style={styles.cardContainer}
+        onPressIn={stopEventPropagation}
+        android_disableSound>
         <Typography.H4 style={styles.title}>{title}</Typography.H4>
         <Image
           source={image || modalSuccess}
@@ -74,9 +94,13 @@ const FullscreenStatusScreen = () => {
             <Typography.Button2>{secondaryButtonLabel}</Typography.Button2>
           </Button>
         )}
-      </View>
+      </Pressable>
     </DView>
   );
 };
+
+function stopEventPropagation(event: GestureResponderEvent) {
+  event.stopPropagation();
+}
 
 export default FullscreenStatusScreen;

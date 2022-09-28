@@ -1,5 +1,7 @@
+import {nanoid} from 'nanoid/non-secure';
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
+import {StackNavigationState, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
@@ -55,7 +57,6 @@ import signUpInfoState, {
   signUpNicknameState,
   signUpProfilePicState,
 } from '@recoil/signUpInfoState';
-import {useNavigation} from '@react-navigation/native';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -67,7 +68,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const {goBack, push, reset, getState, replace} =
+  const navigation =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   const signUpInfo = useRecoilValue(signUpInfoState);
@@ -77,7 +78,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
   const setNickname = useSetRecoilState(signUpNicknameState);
 
   const fromSignUp = React.useMemo(() => {
-    const {routes} = getState();
+    const {routes} = navigation.getState();
 
     return routes[routes.length - 2].name === ROUTES.SIGNUP;
   }, []);
@@ -165,31 +166,42 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     };
   }, []);
 
-  const boardcastAction =
-    useRef<(pushOrReplace: typeof push | typeof replace) => void>();
-  const failureAction = useCallback((errorMessage?: string) => {
-    replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-      title: t('resultModal:failed'),
-      subtitle: errorMessage
-        ? t('yourDesmosProfileIsNotCreated', {
-            error: errorMessage.replace(/[.,]\s*$/, ''),
-          })
-        : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
-      buttonLabel: t('common:retry'),
-      handleButtonPress() {
-        if (boardcastAction.current) {
-          boardcastAction.current(replace);
-        } else {
-          goBack();
-        }
-      },
-      secondaryButtonLabel: t('common:goToProfile'),
-      image: modalFail,
-      handleSecondaryButtonPress: () => {
-        replace(ROUTES.USER_PROFILE);
-      },
-    });
-  }, []);
+  const resetFromRoute = useResetFromRoute();
+
+  type navigateType = typeof navigation.push | typeof navigation.replace;
+  const boardcastAction = useRef<(pushOrReplace: navigateType) => void>();
+  const failureAction = useCallback(
+    (errorMessage?: string) => {
+      resetFromRoute(ROUTES.SETTINGS_PROFILES, {
+        name: ROUTES.FULLSCREEN_STATUS_SCREEN,
+        params: {
+          title: t('resultModal:failed'),
+          subtitle: errorMessage
+            ? t('yourDesmosProfileIsNotCreated', {
+                error: errorMessage.replace(/[.,]\s*$/, ''),
+              })
+            : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
+          buttonLabel: t('common:retry'),
+          handleButtonPress() {
+            if (boardcastAction.current) {
+              boardcastAction.current(navigation.replace);
+            } else {
+              navigation.goBack();
+            }
+          },
+          secondaryButtonLabel: t('common:goToProfile'),
+          image: modalFail,
+          handleSecondaryButtonPress() {
+            navigation.navigate(ROUTES.SETTINGS_PROFILES);
+          },
+          handleBackgroundPress() {
+            navigation.navigate(ROUTES.SETTINGS_PROFILES);
+          },
+        },
+      });
+    },
+    [navigation],
+  );
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -249,21 +261,27 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   return prevWithExternal.concat([newProfile]);
                 });
 
-                replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('resultModal:success'),
-                  subtitle: t('common:desmosProfileCreated'),
-                  buttonLabel: t('common:goToProfile'),
-                  handleButtonPress: () => {
-                    replace(ROUTES.USER_PROFILE, {
-                      visitingProfileAddress: address,
-                    });
+                resetFromRoute(ROUTES.SETTINGS_PROFILES, {
+                  name: ROUTES.FULLSCREEN_STATUS_SCREEN,
+                  params: {
+                    title: t('resultModal:success'),
+                    subtitle: t('common:desmosProfileCreated'),
+                    buttonLabel: t('common:goToProfile'),
+                    handleButtonPress() {
+                      navigation.replace(ROUTES.USER_PROFILE, {
+                        visitingProfileAddress: address,
+                      });
+                    },
+                    handleBackgroundPress() {
+                      navigation.navigate(ROUTES.SETTINGS_PROFILES);
+                    },
                   },
                 });
               },
               failureAction,
             });
           };
-          boardcastAction.current(push);
+          boardcastAction.current(navigation.push);
         } else {
           let wallet: LocalWallet;
           if (accountCreation && accountCreation.mnemonic) {
@@ -325,12 +343,12 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   await saveNewAccount(ledgerAccount);
                 }
 
-                replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                navigation.replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
                   title: t('common:congratulations'),
                   subtitle: t('common:dtag created'),
                   buttonLabel: t('resultModal:enterApp'),
                   handleButtonPress: () => {
-                    reset({
+                    navigation.reset({
                       index: 0,
                       routes: [
                         {
@@ -344,7 +362,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               failureAction,
             });
           };
-          boardcastAction.current(push);
+          boardcastAction.current(navigation.push);
         }
       } catch (error) {
         const errorMessage = ((err): err is Error => !!(err as Error).message)(
@@ -357,7 +375,13 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         setLoading(false);
       }
     },
-    [accountCreation, createLedgerAccount, profilePicture, coverPicture],
+    [
+      accountCreation,
+      createLedgerAccount,
+      profilePicture,
+      coverPicture,
+      navigation,
+    ],
   );
 
   const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
@@ -401,7 +425,10 @@ const CreateDesmosProfile: FC<NavProps> = () => {
       )}
 
       <View style={styles.headerButtonGroup}>
-        <ProfileHeaderButton imageSrc={backButton} onPress={goBack} />
+        <ProfileHeaderButton
+          imageSrc={backButton}
+          onPress={navigation.goBack}
+        />
 
         <ProfileHeaderButton
           imageSrc={cameraButton}
@@ -542,7 +569,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                 <Button
                   color={theme.colors.surfaceBlack}
                   mode="contained"
-                  onPress={fromSignUp ? goBack : handleSubmit}
+                  onPress={fromSignUp ? navigation.goBack : handleSubmit}
                   loading={loading}>
                   {t('common:confirm')}
                 </Button>
@@ -554,6 +581,49 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     </SafeAreaView>
   );
 };
+
+type NavigationRoute =
+  StackNavigationState<RootNavigatorParamList>['routes'][number];
+
+/**
+ * It resets the navigation stack to a given route, and optionally adds new routes to the stack
+ * @returns A function that takes in a routeName and newRoutes and resets the navigation stack to the
+ * routeName and newRoutes.
+ */
+function useResetFromRoute() {
+  const navigation =
+    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  return useCallback(
+    (
+      routeName: keyof RootNavigatorParamList,
+      ...newRoutes: Omit<NavigationRoute, 'key'>[]
+    ) => {
+      const state = navigation.getState();
+      const routes = state.routes.slice();
+      const profilesRouteIndex = _.findLastIndex(
+        routes,
+        r => r.name === routeName,
+      );
+      if (profilesRouteIndex === -1) {
+        routes.splice(-1);
+      } else {
+        routes.splice(profilesRouteIndex + 1);
+      }
+      routes.push(
+        ...newRoutes.map(route => ({
+          key: `${route.name}-${nanoid()}`,
+          ...route,
+        })),
+      );
+      navigation.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    },
+    [navigation],
+  );
+}
 
 // Save new wallet as last selected wallet
 // Build save profile message

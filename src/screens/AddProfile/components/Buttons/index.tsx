@@ -27,7 +27,7 @@ const Buttons: FC<ButtonProps> = ({
 }) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {navigate} =
+  const navigation =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation();
   const setProfiles = useSetRecoilState(profilesState);
@@ -36,12 +36,12 @@ const Buttons: FC<ButtonProps> = ({
   /* Navigating to the connect address general screen. */
   /* TO DO: add Ledger support */
   const handleCreateDesmosProfile = useCallback(async () => {
-    navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+    navigation.navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
       nextRouteOverride: ROUTES.CREATE_DESMOS_PROFILE,
       loadedProfileMap,
       titleLabelOverride: t('addProfile:title'),
     });
-  }, [loadedProfileMap]);
+  }, [navigation, loadedProfileMap]);
 
   /* Adding the selected profiles to the loaded profiles. */
   const handleConfirmPressed = useCallback(async () => {
