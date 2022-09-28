@@ -6,7 +6,13 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {Image, ImageSourcePropType, View} from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -52,6 +58,11 @@ const ResultModal = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={goBack}
+        activeOpacity={1}
+        style={StyleSheet.absoluteFillObject}
+      />
       <View style={styles.innerContainer}>
         <Typography.H5 style={styles.textStyle}>{title}</Typography.H5>
         <Image style={styles.image} source={image || modalSuccess} />
