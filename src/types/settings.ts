@@ -22,4 +22,5 @@ export type AppSettings = {
   dataInitialized: boolean;
   currentTimezone: string;
   registeredReactions: [];
+  registeredReports: [];
 };
