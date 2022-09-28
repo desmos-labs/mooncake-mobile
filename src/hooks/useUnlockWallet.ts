@@ -43,7 +43,7 @@ export default function useUnlockWallet(): (
   buttonLabelOverride?: string,
   /* A prop that is passed to the DView component. */
   dViewProps?: ComponentProps<typeof DView>,
-
+  /* Skips asking user for password using EnterPassword screen if truthy */
   prefilledPassword?: string,
 ) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
