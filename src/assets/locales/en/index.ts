@@ -37,6 +37,7 @@ import comment from './comment.json';
 import followingAndFollowers from './followingAndFollowers.json';
 import nft from './nft.json';
 import addProfile from './addProfile.json';
+import login from './login.json';
 
 const en = {
   common,
@@ -78,6 +79,7 @@ const en = {
   followingAndFollowers,
   nft,
   addProfile,
+  login
 };
 
 export default en;
