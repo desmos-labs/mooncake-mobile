@@ -2,10 +2,14 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
-import CustomRadioGroup, {RadioValue} from 'components/CustomRadioGroup';
+import CustomRadioGroup from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import ToastConfig from 'config/ToastConfig';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useState} from 'react';
@@ -18,7 +22,9 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
+import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/ReportPost/useReportPost';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -29,10 +35,7 @@ export type ReportPostParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.REPORT_POST>;
 
 const ReportPost = () => {
-  const [selectedReport, setSelectedReport] = useState({
-    value: 'scam',
-    index: 0,
-  });
+  const [reportReasons, setReportReasons] = useState<any[]>([]);
   const [message, setMessage] = useState<string>('');
   const {t} = useTranslation('reportPost');
   const styles = useStyles();
@@ -40,26 +43,53 @@ const ReportPost = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const [{registeredReports}] = useRecoilState(appSettingsState);
-
-  const initialiRadioValues: RadioValue[] = [
-    {label: t('spam'), value: 'spam'},
-    {label: t('scam'), value: 'scam'},
-    {label: t('nudity'), value: 'nudity'},
-    {label: t('violence'), value: 'violent'},
-    {label: t('others'), value: 'others'},
-  ];
-
-  const onSubmit = React.useCallback(() => {
-    console.log('report', selectedReport);
-    console.log('message', message);
+  const {activeAddress} = useActiveAccount();
+  const {manageReport, reportPostLoading} = useReportPost();
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const toast = useToast();
+  const [selectedReport, setSelectedReport] = useState({
+    value: registeredReports[0].id,
+    index: 0,
+  });
+  const onSubmit = React.useCallback(async () => {
+    await handleSubmitReport(params.postId);
     goBack();
   }, []);
 
   useEffect(() => {
-    console.log(selectedReport);
-    console.log(params);
-    console.log(registeredReports);
-  }, [selectedReport]);
+    const newState: any[] = registeredReports.map(reason => {
+      return {
+        label: t(reason.description),
+        value: reason.id,
+      };
+    });
+    setReportReasons(newState);
+  }, [registeredReports]);
+
+  const handleSubmitReport = React.useCallback(
+    async (postId: number) => {
+      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreateReport];
+      // check if user has grants first
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
+        address: activeAddress!,
+      });
+
+      if (success) {
+        await manageReport({
+          postId,
+          user: activeAddress!,
+          reasonsIds: [selectedReport.value],
+          message,
+        });
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    },
+    [activeAddress],
+  );
 
   return (
     <KeyboardAvoidingView
@@ -82,7 +112,7 @@ const ReportPost = () => {
 
           <View>
             <CustomRadioGroup
-              values={initialiRadioValues}
+              values={reportReasons}
               selectedValue={selectedReport.index}
               onSelect={(index, value) => setSelectedReport({value, index})}
             />
@@ -100,6 +130,7 @@ const ReportPost = () => {
           </View>
           <Spacer paddingVertical={30}>
             <Button
+              loading={reportPostLoading}
               color={theme.colors.surfaceBlack}
               mode="contained"
               onPress={onSubmit}>
