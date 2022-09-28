@@ -6,21 +6,20 @@ import {fireEvent} from '@testing-library/react-native';
 import {
   advanceAnimationByTime,
   withReanimatedTimer,
+  // @ts-ignore
 } from 'react-native-reanimated/lib/reanimated2/jestUtils';
 
 describe('component: CustomCheckbox', () => {
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
   it('renders checked', () => {
-    const tree = render(
-      <>
-        <CustomCheckbox checked handlePress={jest.fn} />,
-      </>,
-    ).toJSON();
+    withReanimatedTimer(() => {
+      const tree = render(
+        <>
+          <CustomCheckbox checked handlePress={jest.fn} />,
+        </>,
+      ).toJSON();
 
-    expect(tree).toMatchSnapshot();
+      expect(tree).toMatchSnapshot();
+    });
   });
 
   it('renders unchecked', () => {
