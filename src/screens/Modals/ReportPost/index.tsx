@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import CustomRadioGroup, {RadioValue} from 'components/CustomRadioGroup';
@@ -17,7 +17,12 @@ import {
 } from 'react-native';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
+export type ReportPostParams = {
+  postId: number;
+  subspaceId: number;
+};
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.REPORT_POST>;
 
 const ReportPost = () => {
   const [selectedReport, setSelectedReport] = React.useState({
@@ -28,6 +33,7 @@ const ReportPost = () => {
   const {t} = useTranslation('reportPost');
   const styles = useStyles();
   const {goBack} = useNavigation<NavProps['navigation']>();
+  const {params} = useRoute<NavProps['route']>();
 
   const initialiRadioValues: RadioValue[] = [
     {label: t('spam'), value: 'spam'},
@@ -45,6 +51,7 @@ const ReportPost = () => {
 
   useEffect(() => {
     console.log(selectedReport);
+    console.log(params);
   }, [selectedReport]);
 
   return (

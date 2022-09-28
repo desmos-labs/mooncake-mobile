@@ -1,5 +1,5 @@
 import Typography from 'components/Typography';
-import React, {Fragment} from 'react';
+import React, {Fragment, useCallback} from 'react';
 import {Image, ImageSourcePropType, TouchableOpacity} from 'react-native';
 import {Divider, Menu} from 'react-native-paper';
 import useStyles from './useStyles';
@@ -18,6 +18,15 @@ const PopupMenu: React.FC<Props> = ({
   menuItems,
 }) => {
   const styles = useStyles();
+
+  const onPressButton = useCallback(
+    (item: any) => {
+      closeMenu();
+      item.onPress();
+    },
+    [closeMenu],
+  );
+
   return (
     <Menu
       contentStyle={styles.container}
@@ -28,7 +37,9 @@ const PopupMenu: React.FC<Props> = ({
         const last = index === menuItems.length - 1;
         return (
           <Fragment key={item.label}>
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => onPressButton(item)}>
               <Image source={item.icon} style={styles.icon} />
               <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
             </TouchableOpacity>
