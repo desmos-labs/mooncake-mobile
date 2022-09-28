@@ -7,7 +7,6 @@ import React, {useCallback} from 'react';
 import {NavProps} from 'screens/Home/index';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
-import useLogin from 'services/axios/requests/Login/useLogin';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useResetRecoilState} from 'recoil';
@@ -28,7 +27,7 @@ const useHooks = () => {
   } = useGetPosts();
   const {following} = useGetFollowing();
   const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
-  const {navigate, pop} = useNavigation<NavProps['navigation']>();
+  const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
@@ -58,24 +57,15 @@ const useHooks = () => {
     );
   }, [posts, following, selectedFilterIndex]);
 
-  // useLogin is called here instead of useHooks for better visibility.
-  const {login} = useLogin();
-
   // calculate carousel offset
   React.useEffect(() => {
     maxOffset.current =
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
   }, [posts.length]);
 
-  // Check if we need to login the user
   React.useEffect(() => {
     if (bearerToken) return;
-    login(activeAddress!).then(result => {
-      if (result) {
-        console.log('login successful');
-        pop();
-      }
-    });
+    replace(ROUTES.LOGIN);
   }, []);
 
   // fetch new posts before the user reaches the last post so they

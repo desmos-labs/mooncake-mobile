@@ -16,27 +16,25 @@ const EmptyPostComponent = ({textLabel, buttonLabel}: Props) => {
 
   return (
     <View style={{flex: 1}}>
-      <Spacer paddingVertical={theme.spacing.xl} />
+      <Spacer paddingVertical={theme.spacing.m} />
       <Image
         style={{
-          width: 335,
-          height: 116,
+          height: 140,
           resizeMode: 'contain',
           marginVertical: theme.spacing.m,
           alignSelf: 'center',
         }}
         source={errorImage}
       />
-
-      <Typography.Subtitle1 style={{textAlign: 'center'}}>
+      <Typography.Body6 style={{textAlign: 'center'}}>
         {textLabel}
-      </Typography.Subtitle1>
+      </Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
       <Button
         mode="outlined"
         style={{
           borderColor: theme.colors.surfaceBlack,
-          marginHorizontal: 80,
+          marginHorizontal: 100,
           height: 44,
           justifyContent: 'center',
         }}>

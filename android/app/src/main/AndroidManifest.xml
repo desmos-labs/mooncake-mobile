@@ -4,11 +4,21 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!--   START For ledger BLE connection-->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"
+                     android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+                     android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--    END For ledger BLE connection-->
+
+    <!-- Android 12 BLE permission -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+                     android:usesPermissionFlags="neverForLocation"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- END Android 12 BLE permission -->
+
 
     <!-- RN camera roll -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>

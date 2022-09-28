@@ -12,15 +12,15 @@ const useStyles = makeStyle(theme => ({
   },
   innerContainer: {
     justifyContent: 'center',
-    paddingHorizontal: theme.spacing.l,
-    paddingTop: theme.spacing.m,
-    paddingBottom: theme.spacing.l,
+    paddingHorizontal: 50,
+    paddingTop: theme.spacing.l,
+    paddingBottom: theme.spacing.xl,
     backgroundColor: theme.colors.background,
     borderRadius: 8,
   },
   dismissButton: {
     alignSelf: 'flex-end',
-    left: 4,
+    left: 28,
   },
   dismissButtonImage: {
     width: 11,
@@ -31,8 +31,8 @@ const useStyles = makeStyle(theme => ({
   // may need standardize the dimensions if
   // the image gets changed
   image: {
-    width: 181,
-    height: 103,
+    width: 126,
+    height: 125,
     resizeMode: 'contain',
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.l,
@@ -51,6 +51,7 @@ const useStyles = makeStyle(theme => ({
   },
   primaryButton: {
     alignSelf: 'stretch',
+    justifyContent: 'center',
   },
 }));
 

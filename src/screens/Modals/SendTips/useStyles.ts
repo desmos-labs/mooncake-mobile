@@ -32,6 +32,7 @@ const useStyles = makeStyle(theme => ({
   tipButton: {minWidth: 106, borderColor: theme.colors.surfaceBlack},
   tipButtonContent: {height: 42},
   textInput: {
+    borderWidth: 1,
     backgroundColor: theme.colors.background,
     borderColor: theme.colors.lightGrey01,
   },

@@ -88,9 +88,11 @@ import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
+import Login from 'screens/Login';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
+  [ROUTES.LOGIN]: undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -212,6 +214,8 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+
+      <Stack.Screen name={ROUTES.LOGIN} component={Login} />
 
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
