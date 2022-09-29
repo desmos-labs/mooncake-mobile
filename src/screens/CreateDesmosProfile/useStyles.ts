@@ -40,6 +40,10 @@ const useStyles = makeStyle(theme => ({
     height: 30,
     resizeMode: 'contain',
   },
+  inputStyle: {
+    borderWidth: 1,
+    borderColor: theme.colors.lightGrey01,
+  },
 }));
 
 export default useStyles;

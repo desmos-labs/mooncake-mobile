@@ -150,7 +150,11 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
+    <DView
+      style={styles.container}
+      backgroundColor={theme.colors.white}
+      topBar={<TopBar />}
+      {...dViewProps}>
       <Typography.H3 style={styles.headerText}>
         {titleLabelOverride || t('header')}
       </Typography.H3>
