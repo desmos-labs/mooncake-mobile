@@ -50,7 +50,7 @@ import ConsentAgreement, {
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
-import ReportPost from 'screens/Modals/ReportPost';
+import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import SendTips from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
@@ -126,7 +126,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: undefined;
-  [ROUTES.REPORT_POST]: undefined;
+  [ROUTES.REPORT_POST]: ReportPostParams;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;

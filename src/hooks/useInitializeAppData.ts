@@ -1,4 +1,5 @@
 import {useQuery} from '@apollo/client';
+import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import * as RNLocalize from 'react-native-localize';
 import {useSetRecoilState} from 'recoil';
@@ -7,17 +8,26 @@ import {useGetProfileParams} from '@recoil/profileParams';
 import {useGetButterConfig} from '@recoil/butterConfigState';
 import GetRegisteredReactions from 'services/graphql/queries/GetRegisteredReactions';
 import {useInitializePostParams} from '@recoil/postParamsState';
+import GetRegisteredReports from 'services/graphql/queries/GetRegisteredReports';
 import {useInitializeAxios} from 'services/axios';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
-  const {data, loading} = useQuery(GetRegisteredReactions, {
-    variables: {
-      subspaceID: 5,
-      limit: 99,
-      offset: 0,
+  const {data: registeredReactions, loading: registeredReactionsLoading} =
+    useQuery(GetRegisteredReactions, {
+      variables: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      },
+    });
+
+  const {data: registeredReports, loading: registeredReportsLoading} = useQuery(
+    GetRegisteredReports,
+    {
+      variables: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      },
     },
-  });
+  );
   const profileParams = useGetProfileParams();
   useInitializePostParams();
   useInitializeAxios();
@@ -38,16 +48,21 @@ const useInitializeAppData = () => {
    * This is a naive solution. There is most likely a better way to do this.
    */
   React.useEffect(() => {
-    if (profileParams && !loading) {
+    if (
+      profileParams &&
+      !registeredReportsLoading &&
+      !registeredReactionsLoading
+    ) {
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting
         currentTimezone: RNLocalize.getTimeZone(),
-        registeredReactions: data?.subspace_registered_reaction,
+        registeredReactions: registeredReactions?.subspace_registered_reaction,
+        registeredReports: registeredReports?.subspace_report_reason,
         dataInitialized: true,
       }));
     }
-  }, [profileParams, data]);
+  }, [profileParams, registeredReactions, registeredReports]);
 };
 
 export default useInitializeAppData;

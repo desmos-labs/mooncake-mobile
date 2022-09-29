@@ -81,7 +81,11 @@ const PostDetails = () => {
     x: number;
     y: number;
   }>();
-  const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
+  const [anchor, setAnchor] = useState<{x: number; y: number}>();
+  const [popupMenuParams, setPopupMenuParams] = useState<{
+    postId: number;
+    subspaceId: number;
+  }>();
 
   const {
     profile,
@@ -100,6 +104,7 @@ const PostDetails = () => {
     handlePostComment,
     handleAddReaction,
     postCommentLoading,
+    handlePressReport,
     pageRefetch,
   } = useHooks({
     postID: params.postId,
@@ -110,8 +115,12 @@ const PostDetails = () => {
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
+      setPopupMenuParams({
+        postId: post.id,
+        subspaceId: post.subspace_id,
+      });
       pageRefetch();
-    }, [params]),
+    }, [post, params]),
   );
 
   useEffect(() => {
@@ -155,8 +164,13 @@ const PostDetails = () => {
         <CommentItem
           liked={item?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={item?.repliesCount.aggregate.count}
-          handlePressMore={() => {
-            console.log('hello world');
+          handlePressMore={event => {
+            setAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setMenuVisible(true);
+            setPopupMenuParams({postId: item.id, subspaceId: item.subspace_id});
           }}
           handlePressComment={() => {
             console.log('hello world');
@@ -172,19 +186,13 @@ const PostDetails = () => {
               subspaceId: item.subspace_id,
             })
           }
-          handleLongPress={event => {
-            setAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setMenuVisible(true);
-          }}
+          handleLongPress={() => console.log('longPress')}
           loading={commentsLoading}
           {...item}
         />
       );
     },
-    [comments, profile?.address],
+    [comments, profile?.address, popupMenuParams],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -268,7 +276,7 @@ const PostDetails = () => {
         </View>
       </View>
     );
-  }, [Avatar, formattedDate, post?.author]);
+  }, [Avatar, formattedDate, post?.author, popupMenuParams]);
 
   return postLoading || !post ? (
     <SafeAreaView>
@@ -320,7 +328,11 @@ const PostDetails = () => {
           },
           {
             label: t('report'),
-            onPress: () => console.log('test'),
+            onPress: () =>
+              handlePressReport(
+                popupMenuParams?.postId!,
+                popupMenuParams?.subspaceId!,
+              ),
             icon: reportIcon,
           },
         ]}
@@ -332,12 +344,16 @@ const PostDetails = () => {
         menuItems={[
           {
             label: t('share'),
-            onPress: () => console.log('test'),
+            onPress: () => console.log('share'),
             icon: shareBlackIcon,
           },
           {
             label: t('report'),
-            onPress: () => console.log('test'),
+            onPress: () =>
+              handlePressReport(
+                popupMenuParams?.postId!,
+                popupMenuParams?.subspaceId!,
+              ),
             icon: reportIcon,
           },
         ]}

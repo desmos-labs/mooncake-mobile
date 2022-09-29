@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -73,6 +73,7 @@ const EnterPassword = () => {
       onFailedAuthentication,
     },
   } = useRoute<NavProps['route']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -114,6 +115,7 @@ const EnterPassword = () => {
               mnemonic: provideMnemonic ? mnemonic : undefined,
               authorized: true,
             });
+            goBack();
           } else {
             onFailedAuthentication && onFailedAuthentication();
             setErrors({password: t('error:incorrectPassword')});

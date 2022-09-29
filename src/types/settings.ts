@@ -21,5 +21,6 @@ export type AppSettings = {
   // Has app data been initialized yet?
   dataInitialized: boolean;
   currentTimezone: string;
-  registeredReactions: [];
+  registeredReactions: any[];
+  registeredReports: any[];
 };
