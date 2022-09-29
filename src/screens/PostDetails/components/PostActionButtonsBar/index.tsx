@@ -1,4 +1,9 @@
-import {commentIcon, commentLiked, optionsIcon, tipIcon} from 'assets/images';
+import {
+  commentIcon,
+  commentLiked,
+  commentLikeEmptyIcon,
+  tipIcon,
+} from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -30,7 +35,7 @@ const PostActionButtonsBar = ({
       <View style={styles.container}>
         <TouchableOpacity onPress={handleLikePress} style={styles.button}>
           <Image
-            source={postLiked ? commentLiked : optionsIcon}
+            source={postLiked ? commentLiked : commentLikeEmptyIcon}
             style={styles.icon}
           />
           <Typography.Subtitle3 style={styles.text}>

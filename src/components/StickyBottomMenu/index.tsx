@@ -1,4 +1,4 @@
-import {commentIcon, optionsIcon, tipIcon} from 'assets/images';
+import {commentIcon, commentLikeEmptyIcon, tipIcon} from 'assets/images';
 import MenuButton from 'components/StickyBottomMenu/components/MenuButton';
 import React from 'react';
 import {View} from 'react-native';
@@ -49,7 +49,7 @@ const StickyBottomMenu: React.FC<Props> = props => {
         <MenuButton
           onPress={middleButtonAction}
           interactionCount={middleButtonInteractions}
-          icon={optionsIcon}
+          icon={commentLikeEmptyIcon}
         />
         <MenuButton
           onPress={rightButtonAction}
