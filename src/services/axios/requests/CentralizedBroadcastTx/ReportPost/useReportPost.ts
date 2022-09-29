@@ -9,7 +9,7 @@ import React, {useCallback} from 'react';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
- * Hook that manange a reaction, adding or removing it.
+ * Hook that manange a report
  */
 const useReportPost = () => {
   const {activeAddress} = useActiveAccount();
