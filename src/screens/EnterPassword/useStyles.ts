@@ -33,6 +33,10 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.s,
     color: theme.colors.error,
   },
+  textInput: {
+    borderWidth: 1,
+    borderColor: theme.colors.lightGrey01,
+  },
 }));
 
 export default useStyles;

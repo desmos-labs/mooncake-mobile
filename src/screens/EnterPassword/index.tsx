@@ -169,6 +169,7 @@ const EnterPassword = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              style={styles.textInput}
               autoFocus={true}
               placeholder={t('inputPlaceholder')}
               value={values.password}
