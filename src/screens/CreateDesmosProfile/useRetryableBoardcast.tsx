@@ -3,7 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {modalFail} from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useCallback, useRef} from 'react';
+import {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import useResetAfterRoute from './NavigationRoute';
 
@@ -12,7 +12,8 @@ function useRetryableBoardcast() {
   const navigation =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const resetAfterRoute = useResetAfterRoute();
-  const boardcastAction = useRef<(pushOrReplace: navigateType) => void>();
+  const [boardcastAction, setBoardcastAction] =
+    useState<(pushOrReplace: navigateType) => void>();
   const {t} = useTranslation();
   const failureAction = useCallback(
     (errorMessage?: string) => {
@@ -27,8 +28,8 @@ function useRetryableBoardcast() {
             : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
           buttonLabel: t('common:retry'),
           handleButtonPress() {
-            if (boardcastAction.current) {
-              boardcastAction.current(navigation.replace);
+            if (boardcastAction) {
+              boardcastAction(navigation.replace);
             } else {
               navigation.goBack();
             }
@@ -44,9 +45,9 @@ function useRetryableBoardcast() {
         },
       });
     },
-    [navigation],
+    [navigation, boardcastAction],
   );
-  return {boardcastAction, failureAction};
+  return {boardcastAction, setBoardcastAction, failureAction};
 }
 
 export default useRetryableBoardcast;
