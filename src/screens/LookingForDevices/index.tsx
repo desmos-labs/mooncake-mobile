@@ -1,54 +1,29 @@
-import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {btDevice, ledgerIcon, noLedgerFound} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {DesmosLedgerApp} from 'config/LedgerApps';
-import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Image,
-  Linking,
   ListRenderItemInfo,
-  Platform,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
-import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-// refactor into hook
-const checkPermissions = async () => {
-  const permissions = Platform.select({
-    android: [
-      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-    ],
-    ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
-  });
-
-  const grantedPermissions = await requestMultiple(permissions!);
-
-  const grantedPermissionCount = Object.values(grantedPermissions).filter(
-    x => x === 'granted',
-  ).length;
-
-  return grantedPermissionCount === permissions!.length;
-};
 
 export type LookingForDevicesParams = {
   ledgerApp?: LedgerApp;
@@ -80,67 +55,15 @@ const LookingForDevices = () => {
   const styles = useStyles();
 
   const theme = useTheme();
-  const {scan, scanning, devices} = useStartBleScan();
 
-  const [screenReady, setScreenReady] = React.useState(false);
-  const [isBTOn, setIsBTOn] = React.useState(false);
-
-  const isFocused = useIsFocused();
-
-  React.useEffect(() => {
-    const checkEnabledAndPermissions = async () => {
-      if (!isFocused) return;
-
-      const state = await BluetoothStateManager.getState();
-
-      if (state === 'PoweredOff') {
-        handlePressEnableBT();
-      } else {
-        setIsBTOn(true);
-      }
-    };
-
-    checkEnabledAndPermissions();
-  }, [isFocused]);
-
-  React.useEffect(() => {
-    if (isBTOn) {
-      checkPermissions()
-        .then(permissions => {
-          console.log(permissions);
-          if (permissions) return scan();
-          else {
-            Alert.alert(t('permissionsDialog'), '', [
-              {
-                text: 'Go Back',
-                onPress: () => {},
-              },
-            ]);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(() => {
-          setScreenReady(true);
-        });
-    }
-  }, [isBTOn]);
-
-  const onPressRetry = React.useCallback(() => {
-    scan().then();
-  }, []);
-
-  const handlePressEnableBT = React.useCallback(async () => {
-    // don't do anything if BT is already on
-    if (isBTOn) return;
-
-    if (Platform.OS === 'ios') {
-      await Linking.openURL('App-Prefs:Bluetooth');
-    } else {
-      await BluetoothStateManager.openSettings();
-    }
-  }, [isBTOn]);
+  const {
+    isBTOn,
+    screenReady,
+    scanning,
+    devices,
+    handlePressEnableBT,
+    onPressRetry,
+  } = useHooks();
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<BleLedger>) => {
@@ -263,7 +186,7 @@ const LookingForDevices = () => {
         />
       </>
     );
-  }, [scanning, devices.length, screenReady]);
+  }, [scanning, devices.length, screenReady, isBTOn]);
 
   return <DView>{screenContent}</DView>;
 };
