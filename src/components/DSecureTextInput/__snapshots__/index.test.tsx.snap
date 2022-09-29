@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: DSecureTextInput renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 14,
+          "display": "flex",
+          "flexDirection": "row",
+          "minHeight": 48,
+        },
+        Array [
+          Object {
+            "backgroundColor": "#FFFFFF",
+          },
+          undefined,
+        ],
+      ]
+    }
+  >
+    <TextInput
+      onBlur={[Function]}
+      onFocus={[Function]}
+      placeHolderColor="#AFAFAF"
+      placeholderTextColor="#AFAFAF"
+      rightElement={
+        <withTheme(IconButton)
+          accessibilityLabel="undefined-hidden"
+          color="#AFAFAF"
+          icon={
+            Object {
+              "testUri": "../../../src/assets/images/eyeOpen.png",
+            }
+          }
+          onPress={[Function]}
+        />
+      }
+      secureTextEntry={true}
+      style={
+        Array [
+          undefined,
+          Object {
+            "color": "#25282D",
+            "flex": 0.95,
+            "flexGrow": 1,
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.025,
+            "lineHeight": 21,
+            "minHeight": undefined,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          },
+        ]
+      }
+      textAlignVertical="center"
+    />
+    <View
+      style={
+        Object {
+          "margin": 0,
+          "padding": 0,
+          "paddingRight": 4,
+        }
+      }
+    >
+      <View
+        accessibilityLabel="undefined-hidden"
+        accessibilityRole="button"
+        accessibilityState={
+          Object {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        focusable={true}
+        hitSlop={
+          Object {
+            "bottom": 6,
+            "left": 6,
+            "right": 6,
+            "top": 6,
+          }
+        }
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Array [
+              Object {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "margin": 6,
+                "overflow": "hidden",
+              },
+              Object {
+                "borderRadius": 18,
+                "height": 36,
+                "width": 36,
+              },
+              undefined,
+              undefined,
+            ],
+          ]
+        }
+      >
+        <View />
+      </View>
+    </View>
+  </View>
+</View>
+`;
