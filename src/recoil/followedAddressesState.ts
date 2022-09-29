@@ -5,7 +5,7 @@ const followedAddressesState = selector({
   key: 'followedAddressesState',
   get: ({get}) => {
     const following = get(followingState);
-    return new Set(following);
+    return new Set(following.map(f => f.address));
   },
 });
 
