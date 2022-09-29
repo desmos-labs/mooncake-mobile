@@ -10,7 +10,7 @@ import {
   ReplySetting,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {DesmosClient, MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import UploadMedia, {
   Params,
@@ -27,6 +27,7 @@ import {useTranslation} from 'react-i18next';
  */
 const useCreatePost = () => {
   const {activeAddress} = useActiveAccount();
+  const {centralizedBroadcastTx} = useCentralizedBroadcastTx();
 
   const toast = useToast();
 
@@ -93,7 +94,7 @@ const useCreatePost = () => {
 
         const aminoEncodedMsg = client.encodeToAmino([msg]);
 
-        return await CentralizedBroadcastTx({
+        return await centralizedBroadcastTx({
           messages: aminoEncodedMsg,
         });
       } catch (err: any) {

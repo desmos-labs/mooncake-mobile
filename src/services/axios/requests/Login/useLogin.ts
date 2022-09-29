@@ -49,6 +49,9 @@ const useLogin = () => {
         signedBytes,
       });
 
+      // TODO: remove before commit
+      console.log('token:', token);
+
       if (!token) {
         throw new Error('[LOGIN] No token received from Login request');
       }
