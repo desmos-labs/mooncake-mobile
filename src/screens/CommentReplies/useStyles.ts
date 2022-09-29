@@ -22,8 +22,8 @@ const useStyles = makeStyle(theme => ({
   },
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {
-    borderColor: theme.colors.surfaceGrey,
-    borderWidth: 1,
+    borderColor: 'rgba(239, 239, 239, 1)',
+    borderWidth: 0.5,
     marginHorizontal: -30,
   },
 }));

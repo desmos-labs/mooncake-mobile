@@ -17,6 +17,7 @@ const useStyles = makeStyle(theme => ({
     width: 24,
     height: 24,
     resizeMode: 'contain',
+    tintColor: theme.colors.white,
   },
   countText: {
     marginTop: theme.spacing.xs,

@@ -5,7 +5,7 @@ import {
   commentMore,
   commentTip,
   defaultProfilePic,
-  optionsIcon,
+  commentLikeEmptyIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -158,7 +158,7 @@ const CommentItem = ({
               onPress={handlePressLike}
               style={styles.interactionButton}>
               <Image
-                source={liked ? commentLiked : optionsIcon}
+                source={liked ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
                   liked ? styles.likedButton : {},

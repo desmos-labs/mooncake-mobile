@@ -3,7 +3,7 @@ import appSettingsState from '@recoil/settings';
 import {
   commentIcon,
   defaultProfilePic,
-  optionsIcon,
+  commentLikeEmptyIcon,
   plusWhiteIcon,
   tipIcon,
 } from 'assets/images';
@@ -150,7 +150,7 @@ const Home = () => {
           <InteractionButton
             onPress={handlePressReactions}
             interactionCount={100}
-            icon={optionsIcon}
+            icon={commentLikeEmptyIcon}
           />
 
           <InteractionButton

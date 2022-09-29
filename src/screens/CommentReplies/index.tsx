@@ -24,7 +24,6 @@ import {
 import {Divider, useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
-import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
@@ -184,23 +183,15 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(mainComment.id)}
-          handlePressTip={() => {
-            console.log('hello world');
-          }}
+          handlePressTip={() => handlePressSendTips()}
           handlePress={() => {
             console.log('hello world');
           }}
           handleLongPress={() => console.log('longPress')}
           {...mainComment}
         />
-        <PostActionButtonsBar
-          postLiked={mainComment?.reactionPresence?.aggregate?.count > 0}
-          handleLikePress={() => handleAddReaction(mainComment.id)}
-          handleCommentPress={() => {
-            console.log('hello world');
-          }}
-          handleTipPress={() => handlePressSendTips()}
-        />
+        <Spacer paddingVertical={16} />
+        <Divider style={styles.divider} />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
             loading={reactionsLoading}
