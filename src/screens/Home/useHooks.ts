@@ -65,7 +65,7 @@ const useHooks = () => {
 
   React.useEffect(() => {
     if (bearerToken) return;
-    replace(ROUTES.LOGIN);
+    replace(ROUTES.LOGIN, {onSuccess: () => replace(ROUTES.HOME)});
   }, []);
 
   // fetch new posts before the user reaches the last post so they

@@ -10,7 +10,7 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import Button from 'components/Button';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useNavigation} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -20,11 +20,20 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
+export type LoginParams = {
+  // Callback to be executed if login is successful
+  onSuccess: () => void;
+};
+
 const Login = () => {
   const styles = useStyles();
   const {t} = useTranslation('login');
   const theme = useTheme();
   const {activeAddress} = useActiveAccount();
+
+  const {
+    params: {onSuccess},
+  } = useRoute<NavProps['route']>();
 
   const toast = useToast();
 
@@ -32,7 +41,6 @@ const Login = () => {
   const [error, setError] = React.useState('');
   const [password, setPassword] = React.useState('');
   const {login} = useLogin();
-  const {replace} = useNavigation<NavProps['navigation']>();
 
   const handleSubmit = React.useCallback(async () => {
     if (!activeAddress) {
@@ -48,7 +56,7 @@ const Login = () => {
       if (!loginResponse) {
         toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});
       } else {
-        replace(ROUTES.HOME);
+        onSuccess();
       }
     } catch (err: any) {
       if (err.toString().includes('Incorrect')) {
