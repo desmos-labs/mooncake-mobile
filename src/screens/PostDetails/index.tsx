@@ -115,8 +115,12 @@ const PostDetails = () => {
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
+      setPopupMenuParams({
+        postId: post.id,
+        subspaceId: post.subspace_id,
+      });
       pageRefetch();
-    }, [params]),
+    }, [post, params]),
   );
 
   useEffect(() => {
@@ -263,10 +267,6 @@ const PostDetails = () => {
               setProfileMenuAnchor({
                 x: Dimensions.get('window').width * 0.95,
                 y: verticalScale(35) + top,
-              });
-              setPopupMenuParams({
-                postId: post.id,
-                subspaceId: post.subspace_id,
               });
               setProfileMenuVisible(true);
             }}

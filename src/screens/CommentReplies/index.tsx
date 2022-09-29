@@ -162,7 +162,7 @@ const CommentReplies = () => {
     [comments],
   );
 
-  const headerComponent = React.useMemo(() => {
+  const headerComponent = React.useCallback(() => {
     return (
       <>
         <CommentItem
