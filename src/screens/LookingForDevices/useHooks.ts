@@ -30,7 +30,7 @@ const checkPermissions = async () => {
     x => x === 'granted',
   ).length;
 
-  return grantedPermissionCount === permissions!.length;
+  return grantedPermissionCount === permissions.length;
 };
 
 const useHooks = () => {
