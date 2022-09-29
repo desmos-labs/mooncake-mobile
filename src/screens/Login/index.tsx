@@ -35,7 +35,7 @@ const Login = () => {
   const theme = useTheme();
   const {activeAddress} = useActiveAccount();
 
-  const {pop} = useNavigation<NavProps['navigation']>();
+  const {goBack, getState, navigate} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
 
   const toast = useToast();
@@ -60,7 +60,12 @@ const Login = () => {
         toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});
       } else {
         if (!_.get(params, 'noPop')) {
-          pop();
+          const {routes} = getState();
+          if (routes.length > 1) {
+            goBack();
+          } else {
+            navigate(ROUTES.HOME);
+          }
         }
 
         const onSuccessFn = _.get(params, 'onSuccess');
@@ -73,7 +78,7 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  }, [password, activeAddress]);
+  }, [password, activeAddress, getState()]);
 
   return (
     <DView

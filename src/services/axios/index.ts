@@ -1,34 +1,17 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {MMKVKEYS, setMMKV, useMMKVStorage} from 'lib/MMKVStorage';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import _ from 'lodash';
+import ROUTES from 'navigation/routes';
 
 const axiosInstance = axios.create({
   baseURL: EnvConfig.DESMOS_REST,
   timeout: 15000,
 });
-
-/**
- * Load bearer token from storage.
- */
-export const initializeAxiosInstance = async () => {
-  // Load previous auth token
-
-  const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
-
-  axiosInstance.interceptors.response.use(
-    response => response,
-    error => {
-      console.warn(`[AXIOS]: ${error.response.data}`);
-      return Promise.reject(error);
-    },
-  );
-  // Don't do anything if bearerToken is not found
-  if (!bearerToken) return;
-
-  axiosInstance.defaults.headers.common = {
-    Authorization: `Bearer ${bearerToken}`,
-  };
-};
 
 /**
  * Updates the bearer token of the axios instance and also saves it to MMKV storage.
@@ -39,6 +22,43 @@ export const updateAuthToken = (newToken: string) => {
   axiosInstance.defaults.headers.common = {
     Authorization: `Bearer ${newToken}`,
   };
+};
+
+// Some possible token related error messages
+const invalidAuthMsgs = ['Wrong Authorization header value', 'Invalid token'];
+
+type NavProps = StackScreenProps<RootNavigatorParamList, any>;
+// A hook that augments the interceptors of the axiosInstance with react hook
+// functionality
+export const useInitializeAxios = () => {
+  const {navigate} = useNavigation<NavProps['navigation']>();
+  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
+
+  React.useEffect(() => {
+    if (!bearerToken) return;
+    console.log('setting new bearer token');
+
+    axiosInstance.defaults.headers.common = {
+      Authorization: `Bearer ${bearerToken}`,
+    };
+  }, [bearerToken]);
+
+  React.useEffect(() => {
+    axiosInstance.interceptors.response.use(
+      response => response,
+      error => {
+        const responseMsg = _.get(error, 'response.data');
+
+        if (invalidAuthMsgs.includes(responseMsg)) {
+          navigate(ROUTES.LOGIN);
+          return Promise.reject(error);
+        } else {
+          console.warn(`[AXIOS]: ${error.response.data}`);
+          return Promise.reject(error);
+        }
+      },
+    );
+  }, [axiosInstance]);
 };
 
 export default axiosInstance;
