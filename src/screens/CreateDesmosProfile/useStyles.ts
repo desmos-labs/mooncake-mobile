@@ -40,6 +40,17 @@ const useStyles = makeStyle(theme => ({
     height: 30,
     resizeMode: 'contain',
   },
+  kbView: {
+    flex: 1,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    backgroundColor: theme.colors.white,
+  },
+  header: {paddingTop: 68, paddingHorizontal: theme.spacing.m},
+  scrollContainer: {flex: 1},
+  bioInput: {alignSelf: 'flex-start'},
+  bioDTextInput: {minHeight: 120},
+  errorText: {color: theme.colors.pink01, flex: 1},
 }));
 
 export default useStyles;
