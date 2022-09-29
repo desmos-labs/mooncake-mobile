@@ -15,9 +15,21 @@ describe('component: DSecureTextInput', () => {
     const {getByLabelText} = render(
       <DSecureTextInput accessibilityLabel="testInput" value="hello world" />,
     );
-    fireEvent.press(getByLabelText('testInput-closed'));
+    fireEvent.press(getByLabelText('testInput-hidden'));
 
     expect(getByLabelText('testInput').props.secureEntry).toBeFalsy();
+  });
+
+  it('eye button changes depending if values are hidden or visible', () => {
+    const {getByLabelText} = render(
+      <DSecureTextInput accessibilityLabel="testInput" value="hello world" />,
+    );
+
+    expect(getByLabelText('testInput-hidden')).toBeTruthy();
+
+    fireEvent.press(getByLabelText('testInput-hidden'));
+
+    expect(getByLabelText('testInput-visible')).toBeTruthy();
   });
 
   it('calls on outerFocus when focused', () => {
@@ -44,14 +56,14 @@ describe('component: DSecureTextInput', () => {
 
     expect(
       // @ts-ignore
-      getByLabelText('testInput-closed').children[0].props.children.props.color,
+      getByLabelText('testInput-hidden').children[0].props.children.props.color,
     ).toBe(LightTheme.colors.surfaceBlack);
 
     fireEvent(getByLabelText('testInput'), 'onBlur');
 
     expect(
       // @ts-ignore
-      getByLabelText('testInput-closed').children[0].props.children.props.color,
+      getByLabelText('testInput-hidden').children[0].props.children.props.color,
     ).toBe(LightTheme.colors.iconGrey);
   });
 });

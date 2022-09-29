@@ -37,7 +37,7 @@ exports[`component: DSecureTextInput renders 1`] = `
       placeholderTextColor="#AFAFAF"
       rightElement={
         <withTheme(IconButton)
-          accessibilityLabel="undefined-closed"
+          accessibilityLabel="undefined-hidden"
           color="#AFAFAF"
           icon={
             Object {
@@ -79,7 +79,7 @@ exports[`component: DSecureTextInput renders 1`] = `
       }
     >
       <View
-        accessibilityLabel="undefined-closed"
+        accessibilityLabel="undefined-hidden"
         accessibilityRole="button"
         accessibilityState={
           Object {

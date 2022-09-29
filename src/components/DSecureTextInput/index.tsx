@@ -37,7 +37,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
       ]}
       rightElement={
         <IconButton
-          accessibilityLabel={`${a11yLabel}-${hideText ? 'closed' : 'open'}`}
+          accessibilityLabel={`${a11yLabel}-${hideText ? 'hidden' : 'visible'}`}
           icon={hideText ? eyeOpen : eyeClosed}
           color={iconColor}
           onPress={() => {
