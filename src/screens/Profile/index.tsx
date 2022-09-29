@@ -264,7 +264,7 @@ const Profile = () => {
                     <ChainsCountersBar
                       loading={false}
                       connectedChainsCounter={chainLinks.length}
-                      connectedAppsCounter={6}
+                      connectedAppsCounter={0}
                       connectedChainsImages={[
                         stargazeIcon,
                         cosmosIcon,
