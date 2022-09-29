@@ -55,7 +55,9 @@ export default function useStartBleScan() {
 
   const scan = useCallback(
     async (durationMs = 10000) => {
-      if (scanError?.cause === ScanErrorCause.PoweredOff) {
+      const state = await BluetoothStateManager.getState();
+
+      if (state === 'PoweredOff') {
         if (Platform.OS === 'ios') {
           await Linking.openURL('App-Prefs:Bluetooth');
         } else {
@@ -73,8 +75,6 @@ export default function useStartBleScan() {
         setScanning(true);
         setDevices([]);
         setScanError(undefined);
-
-        const state = await BluetoothStateManager.getState();
 
         if (state === 'PoweredOn') {
           setScanSubscription(
@@ -145,12 +145,6 @@ export default function useStartBleScan() {
               stopScan();
             }, durationMs),
           );
-        } else if (state === 'PoweredOff') {
-          setScanError({
-            cause: ScanErrorCause.PoweredOff,
-            message: t('turn on bluetooth'),
-          });
-          setScanning(false);
         } else if (state === 'Unauthorized') {
           let message: string;
           if (Platform.OS === 'android') {

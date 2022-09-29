@@ -14,6 +14,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Linking,
   ListRenderItemInfo,
   Platform,
   View,
@@ -24,6 +25,7 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import LoadingIndicator from './components/LoadingIndicator';
 import useStyles from './useStyles';
@@ -81,35 +83,64 @@ const LookingForDevices = () => {
   const {scan, scanning, devices} = useStartBleScan();
 
   const [screenReady, setScreenReady] = React.useState(false);
+  const [isBTOn, setIsBTOn] = React.useState(false);
 
   const isFocused = useIsFocused();
 
   React.useEffect(() => {
-    // user will get stuck in an infinite loop if they never give consent
-    if (!isFocused) return;
-    checkPermissions()
-      .then(permissions => {
-        if (permissions) return scan();
-        else {
-          Alert.alert(t('permissionsDialog'), '', [
-            {
-              text: 'Go Back',
-              onPress: () => {},
-            },
-          ]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      .finally(() => {
-        setScreenReady(true);
-      });
+    const checkEnabledAndPermissions = async () => {
+      if (!isFocused) return;
+
+      const state = await BluetoothStateManager.getState();
+
+      if (state === 'PoweredOff') {
+        handlePressEnableBT();
+      } else {
+        setIsBTOn(true);
+      }
+    };
+
+    checkEnabledAndPermissions();
   }, [isFocused]);
+
+  React.useEffect(() => {
+    if (isBTOn) {
+      checkPermissions()
+        .then(permissions => {
+          console.log(permissions);
+          if (permissions) return scan();
+          else {
+            Alert.alert(t('permissionsDialog'), '', [
+              {
+                text: 'Go Back',
+                onPress: () => {},
+              },
+            ]);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setScreenReady(true);
+        });
+    }
+  }, [isBTOn]);
 
   const onPressRetry = React.useCallback(() => {
     scan().then();
   }, []);
+
+  const handlePressEnableBT = React.useCallback(async () => {
+    // don't do anything if BT is already on
+    if (isBTOn) return;
+
+    if (Platform.OS === 'ios') {
+      await Linking.openURL('App-Prefs:Bluetooth');
+    } else {
+      await BluetoothStateManager.openSettings();
+    }
+  }, [isBTOn]);
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<BleLedger>) => {
@@ -144,6 +175,31 @@ const LookingForDevices = () => {
 
   const screenContent = React.useMemo(() => {
     // Show a loading indicator instead of the "no devices found" screen on load
+
+    if (!isBTOn) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.graphicGroup}>
+            <Image source={noLedgerFound} style={styles.noDeviceImage} />
+          </View>
+          <Typography.H4 style={[styles.headerStyle, styles.noDevicesText]}>
+            {t('btNotOn')}
+          </Typography.H4>
+
+          <Typography.Body6 style={styles.descriptionStyle}>
+            {t('pleaseEnableBT')}
+          </Typography.Body6>
+
+          <Button
+            mode="gradientFilled"
+            containerStyle={styles.retryButton}
+            onPress={handlePressEnableBT}>
+            {t('enableBT')}
+          </Button>
+        </View>
+      );
+    }
+
     if (!screenReady) {
       return (
         <View style={styles.centeredContainer}>
