@@ -169,8 +169,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
   const resetAfterRoute = useResetAfterRoute();
 
-  const {boardcastAction, setBoardcastAction, failureAction} =
-    useRetryableBoardcast();
+  const {boardcastActionRef, failureAction} = useRetryableBoardcast();
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -207,7 +206,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
             profilePictureUrl,
             coverPictureUrl,
           );
-          const newBaordcastAction: typeof boardcastAction = pushOrReplace => {
+          boardcastActionRef.current = pushOrReplace => {
             pushOrReplace(ROUTES.BROADCAST_TX, {
               messages,
               offlineSigner: externalWallet,
@@ -250,8 +249,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               failureAction,
             });
           };
-          setBoardcastAction(newBaordcastAction);
-          newBaordcastAction(navigation.push);
+          boardcastActionRef.current(navigation.push);
         } else {
           let wallet: LocalWallet;
           if (accountCreation && accountCreation.mnemonic) {
@@ -350,7 +348,6 @@ const CreateDesmosProfile: FC<NavProps> = () => {
       profilePicture,
       coverPicture,
       navigation,
-      boardcastAction,
     ],
   );
 
