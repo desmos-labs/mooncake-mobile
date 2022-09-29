@@ -32,7 +32,7 @@ const Buttons: FC<ButtonProps> = ({
   const {t} = useTranslation();
   const setProfiles = useSetRecoilState(profilesState);
 
-  /* boardcast the MsgSaveProfile after an address is selected */
+  /* broadcast the MsgSaveProfile after an address is selected */
   /* Navigating to the connect address general screen. */
   /* TO DO: add Ledger support */
   const handleCreateDesmosProfile = useCallback(async () => {

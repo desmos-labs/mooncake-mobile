@@ -58,7 +58,7 @@ import signUpInfoState, {
 import useStyles from './useStyles';
 import useResetAfterRoute from './NavigationRoute';
 import getMessage from './getMessage';
-import useRetryableBoardcast from './useRetryableBoardcast';
+import useRetryableBroadcast from './useRetryableBroadcast';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -169,7 +169,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
   const resetAfterRoute = useResetAfterRoute();
 
-  const {boardcastActionRef, failureAction} = useRetryableBoardcast();
+  const {broadcastActionRef, failureAction} = useRetryableBroadcast();
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -206,7 +206,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
             profilePictureUrl,
             coverPictureUrl,
           );
-          boardcastActionRef.current = pushOrReplace => {
+          broadcastActionRef.current = pushOrReplace => {
             pushOrReplace(ROUTES.BROADCAST_TX, {
               messages,
               offlineSigner: externalWallet,
@@ -249,7 +249,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               failureAction,
             });
           };
-          boardcastActionRef.current(navigation.push);
+          broadcastActionRef.current(navigation.push);
         } else {
           let wallet: LocalWallet;
           if (accountCreation && accountCreation.mnemonic) {

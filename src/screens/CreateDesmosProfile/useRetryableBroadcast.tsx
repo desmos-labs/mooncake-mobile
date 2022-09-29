@@ -7,12 +7,12 @@ import {useCallback, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import useResetAfterRoute from './NavigationRoute';
 
-function useRetryableBoardcast() {
+function useRetryableBroadcast() {
   type navigateType = typeof navigation.push | typeof navigation.replace;
   const navigation =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const resetAfterRoute = useResetAfterRoute();
-  const boardcastActionRef = useRef<(pushOrReplace: navigateType) => void>();
+  const broadcastActionRef = useRef<(pushOrReplace: navigateType) => void>();
   const {t} = useTranslation();
   const failureAction = useCallback(
     (errorMessage?: string) => {
@@ -27,8 +27,8 @@ function useRetryableBoardcast() {
             : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
           buttonLabel: t('common:retry'),
           handleButtonPress() {
-            if (boardcastActionRef.current) {
-              boardcastActionRef.current(navigation.replace);
+            if (broadcastActionRef.current) {
+              broadcastActionRef.current(navigation.replace);
             } else {
               navigation.goBack();
             }
@@ -46,7 +46,7 @@ function useRetryableBoardcast() {
     },
     [navigation],
   );
-  return {boardcastActionRef, failureAction};
+  return {broadcastActionRef, failureAction};
 }
 
-export default useRetryableBoardcast;
+export default useRetryableBroadcast;
