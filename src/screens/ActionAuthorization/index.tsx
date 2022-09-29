@@ -62,7 +62,9 @@ const ActionAuthorization = () => {
           case GrantEnums.MsgCreatePost:
             return t('createPost');
           case GrantEnums.MsgAddReaction:
-            return t('addReactions');
+            return t('addReaction');
+          case GrantEnums.MsgRemoveReaction:
+            return t('removeReaction');
           default:
             return 'unmapped';
         }

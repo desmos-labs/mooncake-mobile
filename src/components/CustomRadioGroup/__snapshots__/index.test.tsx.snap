@@ -35,7 +35,7 @@ exports[`component: CustomRadioGroup renders 1`] = `
             Object {
               "alignItems": "center",
               "alignSelf": "center",
-              "borderColor": "#25282D",
+              "borderColor": "#FEB027",
               "borderRadius": 11,
               "borderWidth": 1,
               "height": 22,
@@ -63,7 +63,7 @@ exports[`component: CustomRadioGroup renders 1`] = `
                   "width": 12,
                 },
                 Object {
-                  "backgroundColor": "#25282D",
+                  "backgroundColor": "#FEB027",
                 },
               ]
             }

@@ -206,6 +206,17 @@ const useHooks = ({
     [profile?.address, reactionAdded],
   );
 
+  const handlePressReport = React.useCallback(
+    (postId: number, subspaceId: number) => {
+      console.log('report');
+      navigate(ROUTES.REPORT_POST, {
+        postId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
   React.useEffect(() => {
     resetSharedPostState();
   }, []);
@@ -254,6 +265,7 @@ const useHooks = ({
     postCommentLoading: loading,
     pageRefetch,
     getReaction,
+    handlePressReport,
   };
 };
 

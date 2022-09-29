@@ -13,6 +13,7 @@ export const DefaultAppSettings: AppSettings = {
   dataInitialized: false,
   currentTimezone: '',
   registeredReactions: [],
+  registeredReports: [],
 };
 
 /**

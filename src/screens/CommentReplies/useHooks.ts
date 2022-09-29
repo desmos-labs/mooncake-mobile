@@ -148,6 +148,16 @@ const useHooks = ({
     });
   }, []);
 
+  const handlePressReport = React.useCallback(
+    (postId: number, subspaceId: number) => {
+      navigate(ROUTES.REPORT_POST, {
+        postId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
   const handleCommentReply = React.useCallback(async () => {
     await createPost({conversationId: commentID, referencedPostId: commentID});
   }, [commentID]);
@@ -219,6 +229,7 @@ const useHooks = ({
     commentReplyLoading: loading,
     pageRefetch,
     handleAddReaction,
+    handlePressReport,
   };
 };
 

@@ -54,12 +54,12 @@ const CustomRadioGroup = (props: Props) => {
               borderWidth={1}
               buttonInnerColor={
                 selectedValue === index
-                  ? theme.colors.surfaceBlack
+                  ? theme.colors.butterOrange01
                   : theme.colors.white
               }
               buttonOuterColor={
                 selectedValue === index
-                  ? theme.colors.surfaceBlack
+                  ? theme.colors.butterOrange01
                   : theme.colors.surfaceBlack
               }
             />
