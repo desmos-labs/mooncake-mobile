@@ -169,7 +169,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
   const resetAfterRoute = useResetAfterRoute();
 
-  const {boardcastAction, retryBoardcast} = useRetryableBoardcast();
+  const {boardcastAction, failureAction} = useRetryableBoardcast();
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -246,7 +246,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   },
                 });
               },
-              failureAction: retryBoardcast,
+              failureAction,
             });
           };
           boardcastAction.current(navigation.push);
@@ -337,7 +337,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         )
           ? error.message
           : String(error);
-        retryBoardcast(errorMessage);
+        failureAction(errorMessage);
       } finally {
         setLoading(false);
       }

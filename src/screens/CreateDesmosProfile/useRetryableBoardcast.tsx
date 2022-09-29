@@ -14,7 +14,7 @@ function useRetryableBoardcast() {
   const resetAfterRoute = useResetAfterRoute();
   const boardcastAction = useRef<(pushOrReplace: navigateType) => void>();
   const {t} = useTranslation();
-  const retryBoardcast = useCallback(
+  const failureAction = useCallback(
     (errorMessage?: string) => {
       resetAfterRoute(ROUTES.SETTINGS_PROFILES, {
         name: ROUTES.FULLSCREEN_STATUS_SCREEN,
@@ -46,7 +46,7 @@ function useRetryableBoardcast() {
     },
     [navigation],
   );
-  return {boardcastAction, retryBoardcast};
+  return {boardcastAction, failureAction};
 }
 
 export default useRetryableBoardcast;
