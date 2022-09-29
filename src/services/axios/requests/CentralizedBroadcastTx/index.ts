@@ -28,6 +28,7 @@ const CentralizedBroadcastTx = async ({
   return _response.data;
 };
 
+// Some possible token related error messages
 const invalidAuthMsgs = ['Wrong Authorization header value', 'Invalid Token'];
 
 /**
@@ -45,6 +46,7 @@ export const useCentralizedBroadcastTx = () => {
       const {messages} = params;
 
       try {
+        // this is so if the request fails, it can be caught by the try/catch
         const response = await CentralizedBroadcastTx({messages});
 
         return response;
