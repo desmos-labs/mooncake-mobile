@@ -20,7 +20,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.xl,
   },
   innerContainer: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: theme.spacing.l,
@@ -33,7 +33,7 @@ const useStyles = makeStyle(theme => ({
   tipButtonContent: {height: 42},
   textInput: {
     borderWidth: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     borderColor: theme.colors.lightGrey01,
   },
   messageInput: {

@@ -150,7 +150,11 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
+    <DView
+      style={styles.container}
+      backgroundColor={theme.colors.white}
+      topBar={<TopBar />}
+      {...dViewProps}>
       <Typography.H3 style={styles.headerText}>
         {titleLabelOverride || t('header')}
       </Typography.H3>
@@ -165,6 +169,7 @@ const EnterPassword = () => {
               {t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              style={styles.textInput}
               autoFocus={true}
               placeholder={t('inputPlaceholder')}
               value={values.password}

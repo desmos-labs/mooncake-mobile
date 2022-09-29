@@ -1,9 +1,17 @@
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import {StackScreenProps} from '@react-navigation/stack';
+import {selectedExternalAccountState} from '@recoil/connectChainState';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {profileParamsState} from '@recoil/profileParams';
+import profilesState from '@recoil/profiles';
+import signUpInfoState, {
+  signUpBioState,
+  signUpCoverPicState,
+  signUpNicknameState,
+  signUpProfilePicState,
+} from '@recoil/signUpInfoState';
 import {
   backButton,
   cameraButton,
@@ -15,6 +23,7 @@ import DTextInput from 'components/DTextInput';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
+import {format} from 'date-fns';
 import {Formik} from 'formik';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useUnlockWallet from 'hooks/useUnlockWallet';
@@ -45,15 +54,6 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import * as Yup from 'yup';
-import {selectedExternalAccountState} from '@recoil/connectChainState';
-import {format} from 'date-fns';
-import profilesState from '@recoil/profiles';
-import signUpInfoState, {
-  signUpBioState,
-  signUpCoverPicState,
-  signUpNicknameState,
-  signUpProfilePicState,
-} from '@recoil/signUpInfoState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -181,6 +181,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
         accountCreation?.useExternalAccount ??
         createLedgerAccount?.useExternalAccount;
 
+      // Personally i don't like this logic here, we should use a useHooks TODO: refactor
       if (useExternalAccount) {
         /**
          * Profile
@@ -351,6 +352,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
     ],
   );
 
+  // I dont't understand these things too...
   const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
     kbView: {
       flex: 1,
@@ -364,7 +366,11 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
     dTag: {opacity: dTagInputRef.current?.isFocused() ? 1 : 0},
     bioInput: {alignSelf: 'flex-start'},
     bio: {opacity: bioInputRef.current?.isFocused() ? 1 : 0},
-    bioDTextInput: {minHeight: 120},
+    bioDTextInput: {
+      minHeight: 120,
+      borderWidth: 1,
+      borderColor: theme.colors.lightGrey01,
+    },
     errorText: {color: theme.colors.pink01, flex: 1},
   };
 
@@ -443,6 +449,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                     {t('nickname')}
                   </Typography.Subtitle2>
                   <DTextInput
+                    style={styles.inputStyle}
                     inputRef={nicknameInputRef}
                     value={values.nickname}
                     placeholder={t('enterNickname')}
@@ -472,6 +479,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
                         {t('dTag')}
                       </Typography.Subtitle2>
                       <DTextInput
+                        style={styles.inputStyle}
                         value={values.dTag}
                         placeholder={t('enterDTag')}
                         onChangeText={value => {
@@ -531,6 +539,7 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
               </ScrollView>
               <View style={{padding: theme.spacing.m}}>
                 <Button
+                  disabled={!values.dTag}
                   color={theme.colors.surfaceBlack}
                   mode="contained"
                   onPress={fromSignUp ? goBack : handleSubmit}
@@ -545,6 +554,8 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+// Same as before, do not place these functions here
 
 // Save new wallet as last selected wallet
 // Build save profile message
