@@ -56,7 +56,7 @@ function useValidationSchema(
         }),
       ),
     });
-  }, [profileParams]);
+  }, [fromSignUp, profileParams, nicknameMaxLength, dtagMinLength]);
 }
 
 export default useValidationSchema;

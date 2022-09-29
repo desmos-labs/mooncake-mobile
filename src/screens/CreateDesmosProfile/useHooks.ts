@@ -73,7 +73,7 @@ function useHooks() {
       dTag: '',
       bio: '',
     };
-  }, []);
+  }, [fromSignUp, signUpInfo]);
 
   return {
     signUpInfo,
