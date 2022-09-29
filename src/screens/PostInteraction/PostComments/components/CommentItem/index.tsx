@@ -27,7 +27,7 @@ import useStyles from './useStyles';
 type Props = {
   disableInnerComment: boolean;
 
-  handlePressMore: () => void;
+  handlePressMore: (event: GestureResponderEvent) => void;
 
   handlePressComment: () => void;
 

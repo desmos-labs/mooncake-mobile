@@ -10,7 +10,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -50,6 +50,10 @@ const CommentReplies = () => {
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
   const [profileData] = useRecoilState(activeProfileState);
+  const [popupMenuParams, setPopupMenuParams] = useState<{
+    postId: number;
+    subspaceId: number;
+  }>();
 
   const {
     mainComment,
@@ -58,13 +62,14 @@ const CommentReplies = () => {
     commentsLoading,
     reactions,
     reactionsLoading,
+    commentReplyLoading,
+    pageRefetch,
     handlePressCounters,
     handleExpandComment,
     handlePressSendTips,
     handleCommentReply,
-    commentReplyLoading,
-    pageRefetch,
     handleAddReaction,
+    handlePressReport,
   } = useHooks({
     subspaceID: params.subspaceId,
     commentID: params.commentId,
@@ -128,7 +133,17 @@ const CommentReplies = () => {
           repliesCounter={item.post.repliesCount.aggregate.count}
           loading={commentsLoading}
           disableInnerComment={true}
-          handlePressMore={() => console.log('test')}
+          handlePressMore={event => {
+            setAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setPopupMenuParams({
+              postId: item.post.id,
+              subspaceId: item.post.subspace_id,
+            });
+            setMenuVisible(true);
+          }}
           handlePressComment={() => {
             console.log('hello world');
           }}
@@ -139,13 +154,7 @@ const CommentReplies = () => {
           handlePress={() => {
             console.log('hello world');
           }}
-          handleLongPress={event => {
-            setAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setMenuVisible(true);
-          }}
+          handleLongPress={() => console.log('longPress')}
           {...item.post}
         />
       );
@@ -153,14 +162,24 @@ const CommentReplies = () => {
     [comments],
   );
 
-  const headerComponent = React.useMemo(() => {
+  const headerComponent = React.useCallback(() => {
     return (
       <>
         <CommentItem
           liked={mainComment?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={mainComment?.repliesCount?.aggregate?.count}
           loading={mainCommentLoading}
-          handlePressMore={() => console.log('test')}
+          handlePressMore={event => {
+            setAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setPopupMenuParams({
+              postId: mainComment.id,
+              subspaceId: mainComment.subspace_id,
+            });
+            setMenuVisible(true);
+          }}
           handlePressComment={() => {
             console.log('hello world');
           }}
@@ -171,13 +190,7 @@ const CommentReplies = () => {
           handlePress={() => {
             console.log('hello world');
           }}
-          handleLongPress={event => {
-            setAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setMenuVisible(true);
-          }}
+          handleLongPress={() => console.log('longPress')}
           {...mainComment}
         />
         <PostActionButtonsBar
@@ -257,7 +270,11 @@ const CommentReplies = () => {
           },
           {
             label: t('report'),
-            onPress: () => console.log('test'),
+            onPress: () =>
+              handlePressReport(
+                popupMenuParams?.postId!,
+                popupMenuParams?.subspaceId!,
+              ),
             icon: reportIcon,
           },
         ]}

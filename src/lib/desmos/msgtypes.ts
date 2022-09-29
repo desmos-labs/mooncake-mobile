@@ -10,7 +10,7 @@ export enum GrantEnums {
   MsgAddReaction = '/desmos.reactions.v1.MsgAddReaction',
   MsgRemoveReaction = '/desmos.reactions.v1.MsgRemoveReaction',
 
-  MsgCreateReport = '/desmos.reports.v1.AminoMsgCreateReport',
+  MsgCreateReport = '/desmos.reports.v1.MsgCreateReport',
 }
 
 export enum GenericMsgEnums {
