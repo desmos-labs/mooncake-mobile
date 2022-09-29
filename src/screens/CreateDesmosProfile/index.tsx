@@ -1,7 +1,6 @@
-import {nanoid} from 'nanoid/non-secure';
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {StackNavigationState, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
@@ -11,7 +10,6 @@ import {
   cameraButton,
   createProfileBanner,
   defaultProfilePic,
-  modalFail,
 } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -28,7 +26,7 @@ import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useRef} from 'react';
+import React, {FC, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
@@ -58,6 +56,9 @@ import signUpInfoState, {
   signUpProfilePicState,
 } from '@recoil/signUpInfoState';
 import useStyles from './useStyles';
+import useResetAfterRoute from './NavigationRoute';
+import getMessage from './getMessage';
+import useRetryableBoardcast from './useRetryableBoardcast';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -166,42 +167,9 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     };
   }, []);
 
-  const resetFromRoute = useResetFromRoute();
+  const resetAfterRoute = useResetAfterRoute();
 
-  type navigateType = typeof navigation.push | typeof navigation.replace;
-  const boardcastAction = useRef<(pushOrReplace: navigateType) => void>();
-  const failureAction = useCallback(
-    (errorMessage?: string) => {
-      resetFromRoute(ROUTES.SETTINGS_PROFILES, {
-        name: ROUTES.FULLSCREEN_STATUS_SCREEN,
-        params: {
-          title: t('resultModal:failed'),
-          subtitle: errorMessage
-            ? t('yourDesmosProfileIsNotCreated', {
-                error: errorMessage.replace(/[.,]\s*$/, ''),
-              })
-            : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
-          buttonLabel: t('common:retry'),
-          handleButtonPress() {
-            if (boardcastAction.current) {
-              boardcastAction.current(navigation.replace);
-            } else {
-              navigation.goBack();
-            }
-          },
-          secondaryButtonLabel: t('common:goToProfile'),
-          image: modalFail,
-          handleSecondaryButtonPress() {
-            navigation.navigate(ROUTES.SETTINGS_PROFILES);
-          },
-          handleBackgroundPress() {
-            navigation.navigate(ROUTES.SETTINGS_PROFILES);
-          },
-        },
-      });
-    },
-    [navigation],
-  );
+  const {boardcastAction, retryBoardcast} = useRetryableBoardcast();
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormState) => {
@@ -261,7 +229,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   return prevWithExternal.concat([newProfile]);
                 });
 
-                resetFromRoute(ROUTES.SETTINGS_PROFILES, {
+                resetAfterRoute(ROUTES.SETTINGS_PROFILES, {
                   name: ROUTES.FULLSCREEN_STATUS_SCREEN,
                   params: {
                     title: t('resultModal:success'),
@@ -278,7 +246,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   },
                 });
               },
-              failureAction,
+              failureAction: retryBoardcast,
             });
           };
           boardcastAction.current(navigation.push);
@@ -313,56 +281,55 @@ const CreateDesmosProfile: FC<NavProps> = () => {
             setLoading(false);
           }, 500);
 
-          boardcastAction.current = pushOrReplace => {
-            pushOrReplace(ROUTES.BROADCAST_TX, {
-              messages,
-              offlineSigner: wallet!,
-              // save newly created account data and navigate to home page
-              successAction: async () => {
-                if (accountCreation && accountCreation.mnemonic) {
-                  const {password, mnemonic} = accountCreation;
-                  // wallet = await LocalWallet.fromMnemonic(mnemonic);
+          navigation.navigate(ROUTES.BROADCAST_TX, {
+            messages,
+            offlineSigner: wallet!,
+            // save newly created account data and navigate to home page
+            successAction: async () => {
+              if (accountCreation && accountCreation.mnemonic) {
+                const {password, mnemonic} = accountCreation;
+                // wallet = await LocalWallet.fromMnemonic(mnemonic);
 
-                  const newAccount: ChainAccount = {
-                    address: wallet.bech32Address,
-                    pubKey: toBase64(wallet.publicKey),
-                    type: ChainAccountType.Local,
-                    hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
-                    signAlgorithm: 'secp256k1',
-                  };
+                const newAccount: ChainAccount = {
+                  address: wallet.bech32Address,
+                  pubKey: toBase64(wallet.publicKey),
+                  type: ChainAccountType.Local,
+                  hdPath: DEFAULT_WALLET_OPTIONS.hdPath,
+                  signAlgorithm: 'secp256k1',
+                };
 
-                  await saveLocalWallet(wallet, password!);
-                  await saveNewAccount(newAccount);
-                  await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-                  setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
-                } else if (createLedgerAccount && createLedgerAccount.account) {
-                  const {account: ledgerAccount} = createLedgerAccount;
+                await saveLocalWallet(wallet, password!);
+                await saveNewAccount(newAccount);
+                await saveMnemonic(wallet.bech32Address, mnemonic, password!);
+                setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+              } else if (createLedgerAccount && createLedgerAccount.account) {
+                const {account: ledgerAccount} = createLedgerAccount;
 
-                  // wallet = (await unlockWallet(ledgerAccount))!
-                  //   .wallet as LocalWallet;
-                  await saveNewAccount(ledgerAccount);
-                }
+                // wallet = (await unlockWallet(ledgerAccount))!
+                //   .wallet as LocalWallet;
+                await saveNewAccount(ledgerAccount);
+              }
 
-                navigation.replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-                  title: t('common:congratulations'),
-                  subtitle: t('common:dtag created'),
-                  buttonLabel: t('resultModal:enterApp'),
-                  handleButtonPress: () => {
-                    navigation.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: ROUTES.HOME,
-                        },
-                      ],
-                    });
-                  },
-                });
-              },
-              failureAction,
-            });
-          };
-          boardcastAction.current(navigation.push);
+              navigation.replace(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+                title: t('common:congratulations'),
+                subtitle: t('common:dtag created'),
+                buttonLabel: t('resultModal:enterApp'),
+                handleButtonPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: ROUTES.HOME,
+                      },
+                    ],
+                  });
+                },
+              });
+            },
+            failureAction: () => {
+              navigation.goBack();
+            },
+          });
         }
       } catch (error) {
         const errorMessage = ((err): err is Error => !!(err as Error).message)(
@@ -370,7 +337,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         )
           ? error.message
           : String(error);
-        failureAction(errorMessage);
+        retryBoardcast(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -581,74 +548,5 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     </SafeAreaView>
   );
 };
-
-type NavigationRoute =
-  StackNavigationState<RootNavigatorParamList>['routes'][number];
-
-/**
- * It resets the navigation stack to a given route, and optionally adds new routes to the stack
- * @returns A function that takes in a routeName and newRoutes and resets the navigation stack to the
- * routeName and newRoutes.
- */
-function useResetFromRoute() {
-  const navigation =
-    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  return useCallback(
-    (
-      routeName: keyof RootNavigatorParamList,
-      ...newRoutes: Omit<NavigationRoute, 'key'>[]
-    ) => {
-      const state = navigation.getState();
-      const routes = state.routes.slice();
-      const profilesRouteIndex = _.findLastIndex(
-        routes,
-        r => r.name === routeName,
-      );
-      if (profilesRouteIndex === -1) {
-        routes.splice(-1);
-      } else {
-        routes.splice(profilesRouteIndex + 1);
-      }
-      routes.push(
-        ...newRoutes.map(route => ({
-          key: `${route.name}-${nanoid()}`,
-          ...route,
-        })),
-      );
-      navigation.reset({
-        ...state,
-        routes,
-        index: routes.length - 1,
-      });
-    },
-    [navigation],
-  );
-}
-
-// Save new wallet as last selected wallet
-// Build save profile message
-function getMessage(
-  creator: string,
-  dTag: string,
-  nickname: string,
-  bio: string,
-  profilePictureUrl: string | undefined,
-  coverPictureUrl: string | undefined,
-): MsgSaveProfileEncodeObject[] {
-  // Save new wallet as last selected wallet
-  // Build save profile message
-  const saveProfileMessage: MsgSaveProfileEncodeObject = {
-    typeUrl: GenericMsgEnums.MsgSaveProfile,
-    value: {
-      creator,
-      dtag: dTag,
-      nickname: nickname || '[do-not-modify]',
-      bio: bio || '[do-not-modify]',
-      profilePicture: profilePictureUrl || '[do-not-modify]',
-      coverPicture: coverPictureUrl || '[do-not-modify]',
-    },
-  };
-  return [saveProfileMessage];
-}
 
 export default CreateDesmosProfile;
