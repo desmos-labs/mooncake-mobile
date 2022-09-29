@@ -14,6 +14,7 @@ import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import {useRefreshSession} from 'services/axios/requests/RefreshSession';
 
 /**
  * Hooks for the Home screen.
@@ -33,6 +34,7 @@ const useHooks = () => {
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
+  const {refreshSession} = useRefreshSession();
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
@@ -63,9 +65,11 @@ const useHooks = () => {
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
   }, [posts.length]);
 
+  // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
-    if (bearerToken) return;
-    replace(ROUTES.LOGIN, {onSuccess: () => replace(ROUTES.HOME)});
+    if (bearerToken) {
+      refreshSession();
+    } else replace(ROUTES.LOGIN);
   }, []);
 
   // fetch new posts before the user reaches the last post so they

@@ -92,7 +92,7 @@ import Login, {LoginParams} from 'screens/Login';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.LOGIN]: LoginParams;
+  [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;

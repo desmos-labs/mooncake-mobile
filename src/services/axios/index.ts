@@ -1,7 +1,6 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import RefreshSession from 'services/axios/requests/RefreshSession';
 
 const axiosInstance = axios.create({
   baseURL: EnvConfig.DESMOS_REST,
@@ -29,8 +28,6 @@ export const initializeAxiosInstance = async () => {
   axiosInstance.defaults.headers.common = {
     Authorization: `Bearer ${bearerToken}`,
   };
-
-  await RefreshSession();
 };
 
 /**

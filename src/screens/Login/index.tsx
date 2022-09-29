@@ -10,19 +10,23 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import Button from 'components/Button';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
 export type LoginParams = {
-  // Callback to be executed if login is successful
-  onSuccess: () => void;
+  // Callback to be executed if login is successful.
+  onSuccess?: () => void;
+
+  // Do not call pop() on successful login.
+  noPop?: boolean;
 };
 
 const Login = () => {
@@ -31,9 +35,8 @@ const Login = () => {
   const theme = useTheme();
   const {activeAddress} = useActiveAccount();
 
-  const {
-    params: {onSuccess},
-  } = useRoute<NavProps['route']>();
+  const {pop} = useNavigation<NavProps['navigation']>();
+  const {params} = useRoute<NavProps['route']>();
 
   const toast = useToast();
 
@@ -56,7 +59,12 @@ const Login = () => {
       if (!loginResponse) {
         toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});
       } else {
-        onSuccess();
+        if (!_.get(params, 'noPop')) {
+          pop();
+        }
+
+        const onSuccessFn = _.get(params, 'onSuccess');
+        onSuccessFn && onSuccessFn();
       }
     } catch (err: any) {
       if (err.toString().includes('Incorrect')) {
