@@ -21,7 +21,7 @@ function useRetryableBoardcast() {
         params: {
           title: t('resultModal:failed'),
           subtitle: errorMessage
-            ? t('yourDesmosProfileIsNotCreated', {
+            ? t('createProfile:yourDesmosProfileIsNotCreated', {
                 error: errorMessage.replace(/[.,]\s*$/, ''),
               })
             : t('common:oopsSomethingWentWrongPleaseTryAgainLater'),
