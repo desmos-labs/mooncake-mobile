@@ -35,7 +35,7 @@ const Login = () => {
   const theme = useTheme();
   const {activeAddress} = useActiveAccount();
 
-  const {goBack, getState, navigate} = useNavigation<NavProps['navigation']>();
+  const {pop, getState, navigate} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
 
   const toast = useToast();
@@ -62,7 +62,7 @@ const Login = () => {
         if (!_.get(params, 'noPop')) {
           const {routes} = getState();
           if (routes.length > 1) {
-            goBack();
+            pop();
           } else {
             navigate(ROUTES.HOME);
           }
