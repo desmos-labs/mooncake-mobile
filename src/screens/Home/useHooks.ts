@@ -14,6 +14,7 @@ import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import RefreshSession from 'services/axios/requests/RefreshSession';
 
 /**
  * Hooks for the Home screen.
@@ -63,9 +64,11 @@ const useHooks = () => {
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
   }, [posts.length]);
 
+  // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
-    if (bearerToken) return;
-    replace(ROUTES.LOGIN);
+    if (bearerToken) {
+      RefreshSession();
+    } else replace(ROUTES.LOGIN);
   }, []);
 
   // fetch new posts before the user reaches the last post so they
