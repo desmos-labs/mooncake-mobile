@@ -53,6 +53,7 @@ export default function useStartBleScan() {
     setScanSubscription(undefined);
   }, []);
 
+  // The error handling portion of this callback can be simplified
   const scan = useCallback(
     async (durationMs = 10000) => {
       const state = await BluetoothStateManager.getState();
