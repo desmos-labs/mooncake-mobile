@@ -58,7 +58,7 @@ export const useInitializeAxios = () => {
         }
       },
     );
-  }, [axiosInstance]);
+  }, []);
 };
 
 export default axiosInstance;

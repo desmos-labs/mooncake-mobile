@@ -78,7 +78,7 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  }, [password, activeAddress, getState()]);
+  }, [password, activeAddress]);
 
   return (
     <DView
