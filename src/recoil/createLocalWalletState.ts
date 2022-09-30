@@ -1,3 +1,4 @@
+import ROUTES from 'navigation/routes';
 import {atom} from 'recoil';
 
 type AccountCreationAtom = {
@@ -5,7 +6,7 @@ type AccountCreationAtom = {
 
   password?: string;
 
-  useExternalAccount?: boolean;
+  source?: ROUTES.ADD_PROFILE | undefined;
 };
 
 /**

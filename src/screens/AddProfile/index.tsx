@@ -37,8 +37,6 @@ type AddProfileProps = StackScreenProps<
 
 /* A React component for the Add Profile screen. */
 const AddProfile: FC<AddProfileProps> = ({navigation}) => {
-  const {pop, replace} = navigation;
-
   const {t} = useTranslation();
   const styles = useStyles();
 
@@ -82,7 +80,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
 
       // ledger cancelled
       if (!res?.wallet) {
-        return pop();
+        return navigation.pop();
       }
 
       const {wallet, mnemonic: mnemonicRes} = res;
@@ -95,7 +93,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         setCreateLocalWallet(prev => ({
           ...prev,
           mnemonic: mnemonicRes,
-          useExternalAccount: true,
+          source: ROUTES.ADD_PROFILE,
         }));
       } else {
         const accounts = await wallet.getAccounts();
@@ -109,14 +107,15 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
             pubKey: toBase64(accounts[0].pubkey),
             signAlgorithm: accounts[0].algo,
           },
-          useExternalAccount: true,
+          source: ROUTES.ADD_PROFILE,
         }));
       }
       setSelectedChain(desmosChain());
 
-      replace(ROUTES.ADD_PROFILE);
+      // PASSWORD_MANIPULATION > ADD_PROFILE
+      navigation.replace(ROUTES.ADD_PROFILE);
     })();
-  }, [isWalletUnlocked, chainAccount]);
+  }, [isWalletUnlocked, chainAccount, navigation]);
 
   return (
     <DView
