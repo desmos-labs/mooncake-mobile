@@ -94,7 +94,8 @@ const ConnectChainTxDetail = () => {
   }, [fee]);
 
   const handlePressNext = React.useCallback(async () => {
-    const unlockResponse = await unlockWallet(chainAccount!);
+    if (!chainAccount) return;
+    const unlockResponse = await unlockWallet({chainAccount});
 
     // handle case here
     if (!unlockResponse || !unlockResponse.wallet) return;

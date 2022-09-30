@@ -2,5 +2,6 @@
   "connectAddress": "Connect Address",
   "selectMethodToConnect": "Select a method to connect your address",
   "connectWithLedger": "Connect with Ledger",
-  "usePw": "Use Password"
+  "usePw": "Use Password",
+  "connectChain": "Connect Chain"
 }
