@@ -82,14 +82,18 @@ const ConnectChainMethod = () => {
   }
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.H5 style={styles.textStyle}>
+    <DView
+      style={styles.container}
+      topBar={<TopBar />}
+      backgroundColor={theme.colors.white}>
+      <Typography.H3 style={styles.textStyle}>
         {t('connectAddress')}
-      </Typography.H5>
+      </Typography.H3>
+      <Spacer paddingBottom={theme.spacing.s} />
       <Typography.Body6 style={[styles.textStyle, styles.descriptionText]}>
         {t('selectMethodToConnect')}
       </Typography.Body6>
-
+      <Spacer paddingBottom={theme.spacing.m} />
       <ConnectChainMethodButton
         method="ledger"
         handlePress={handlePressLedger}
