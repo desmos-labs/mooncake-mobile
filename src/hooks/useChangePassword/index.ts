@@ -9,6 +9,9 @@ import {
   saveMnemonic,
 } from 'lib/SecureStorage';
 
+/**
+ * A hook that allows the user to change the password of the current active account
+ */
 const useChangePassword = () => {
   const {activeAddress} = useActiveAccount();
 
