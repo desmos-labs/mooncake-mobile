@@ -33,6 +33,7 @@ export type LocalAccountAuthenticationArgs = {
  * Hooks that provides a function to unlock and access the user wallet.
  */
 export default function useUnlockWallet(): (
+  // TODO: refactor into an object
   /* A type of account that is being used. */
   chainAccount: ChainAccount,
   /* A boolean that is used to determine whether the current route should be replaced or not. */
