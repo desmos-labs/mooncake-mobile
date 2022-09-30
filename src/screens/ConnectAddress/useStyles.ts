@@ -5,7 +5,7 @@ import {makeStyle} from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    padding: theme.spacing.m,
+    paddingHorizontal: theme.spacing.m,
   },
   textStyle: {
     color: theme.colors.surfaceBlack,

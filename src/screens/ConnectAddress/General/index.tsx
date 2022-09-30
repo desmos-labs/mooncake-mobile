@@ -119,13 +119,14 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <DView topBar={<TopBar rightElement={SwitchToAdvancedButton} />}>
+    <DView
+      topBar={<TopBar rightElement={SwitchToAdvancedButton} />}
+      backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
+        <Typography.H3 style={styles.textStyle}>
           {titleLabelOverride || t('header')}
-        </Typography.H5>
-
-        <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
+        </Typography.H3>
+        <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.s}>
           <Typography.Body6 style={styles.textStyle}>
             {t('selectAnAccount')}
           </Typography.Body6>
@@ -137,7 +138,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
         contentContainerStyle={{
-          paddingHorizontal: theme.spacing.m,
+          padding: theme.spacing.m,
         }}
         onEndReached={() => {
           generateAccountsFromMnemonic();

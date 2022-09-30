@@ -20,7 +20,7 @@ const AddressItem = ({index, address, handlePress}: Props) => {
   const theme = useTheme();
 
   return (
-    <DropShadowWrapper customColor="#1018280D" disableInnerWrapper>
+    <DropShadowWrapper customColor="rgba(16, 24, 40, 0.01)">
       <TouchableOpacity onPress={handlePress} style={styles.container}>
         <View style={styles.innerContainer}>
           <Typography.Body7 style={styles.indexStyle}>
