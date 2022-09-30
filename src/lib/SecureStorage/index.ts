@@ -147,7 +147,6 @@ export const getLocalWallet = async (
   password?: string,
   useBiometrics?: boolean,
 ): Promise<LocalWallet | undefined> => {
-  console.log(address, password);
   let walletPassword = password;
   const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 

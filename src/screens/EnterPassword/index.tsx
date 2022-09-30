@@ -133,7 +133,7 @@ const EnterPassword = () => {
           throw new Error('address is empty'); // instead of do nothing
         }
       } catch (err) {
-        onFailedAuthentication && onFailedAuthentication();
+        // onFailedAuthentication && onFailedAuthentication();
         if (String(err).includes('Malformed UTF-8 data')) {
           setErrors({password: t('error:incorrectPassword')});
         } else {
@@ -148,7 +148,7 @@ const EnterPassword = () => {
       provideWallet,
       provideMnemonic,
       onSuccessfulAuthentication,
-      onFailedAuthentication,
+      // onFailedAuthentication,
     ],
   );
 

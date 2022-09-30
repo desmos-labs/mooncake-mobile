@@ -35,6 +35,8 @@ const useHooks = () => {
     params: {mode, mnemonic, oldPassword},
   } = useRoute<NavProps['route']>();
 
+  const {reset} = useNavigation<NavProps['navigation']>();
+
   const initialFormValues = React.useMemo(
     () => ({
       newPassword: '',
@@ -97,6 +99,19 @@ const useHooks = () => {
           title: t('resultModal:success'),
           subtitle: t('resultModal:passwordWasChanged'),
           primaryButtonLabel: t('resultModal:goToProfile') as string,
+          onPressPrimary: () => {
+            reset({
+              index: 1,
+              routes: [
+                {
+                  name: ROUTES.HOME,
+                },
+                {
+                  name: ROUTES.USER_PROFILE,
+                },
+              ],
+            });
+          },
           onDismiss: () => {
             // finish implementation when change pw feature is added
           },
