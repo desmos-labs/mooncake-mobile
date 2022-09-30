@@ -21,14 +21,11 @@ const useLogin = () => {
         );
       }
 
-      const unlockResult = await unlockWallet(
-        activeAccount!,
-        false,
-        undefined,
-        undefined,
-        undefined,
-        password,
-      );
+      const unlockResult = await unlockWallet({
+        chainAccount: activeAccount,
+        shouldReplaceRoute: false,
+        prefilledPassword: password,
+      });
 
       if (!unlockResult || !unlockResult.wallet) {
         throw new Error('[LOGIN] Unable to resolve wallet from unlock request');

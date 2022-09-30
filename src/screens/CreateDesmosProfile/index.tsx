@@ -268,7 +268,8 @@ const CreateDesmosProfile: FC<NavProps> = ({navigation}) => {
           wallet = await LocalWallet.fromMnemonic(mnemonic);
         } else if (createLedgerAccount && createLedgerAccount.account) {
           const {account: ledgerAccount} = createLedgerAccount;
-          wallet = (await unlockWallet(ledgerAccount))!.wallet as LocalWallet;
+          wallet = (await unlockWallet({chainAccount: ledgerAccount}))!
+            .wallet as LocalWallet;
         }
 
         // Save new wallet as last selected wallet

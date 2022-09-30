@@ -66,7 +66,7 @@ const useAddOrUpdateGrants = () => {
       grants: grantsToRevoke,
     });
 
-    const unlockResult = await unlockWallet(chainAccount);
+    const unlockResult = await unlockWallet({chainAccount});
 
     if (!unlockResult) {
       throw new Error(
@@ -141,7 +141,7 @@ const useAddOrUpdateGrants = () => {
 
       const msgsGrantEncodes = buildGrantMsgEncodes({grants, grantee, granter});
 
-      const unlockResult = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet({chainAccount});
 
       if (!unlockResult) {
         throw new Error(

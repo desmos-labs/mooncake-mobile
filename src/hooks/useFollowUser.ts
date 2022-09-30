@@ -131,7 +131,7 @@ function useBoardcastEncodeObject() {
   const boardcastEncodeObject = useCallback(
     async (uncodeObject: EncodeObject, chainAccount: ChainAccount) => {
       /* Unlocking the wallet and getting the offlineSigner. */
-      const unlockedWallet = await unlockWallet(chainAccount);
+      const unlockedWallet = await unlockWallet({chainAccount});
       const offlineSigner = unlockedWallet?.wallet;
       if (!offlineSigner) throw new Error(t('pleaseUnlockYourWallet'));
       const signer = chainAccount.address;
