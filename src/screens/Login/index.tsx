@@ -100,6 +100,7 @@ const Login = () => {
           {t('password')}
         </Typography.Subtitle2>
         <DSecureTextInput
+          style={styles.input}
           value={password}
           onChangeText={setPassword}
           placeholder={t('enterPassword')}
