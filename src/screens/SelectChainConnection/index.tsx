@@ -1,22 +1,22 @@
-import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {selectedChainState} from '@recoil/connectChainState';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo} from 'react-native';
-import LinkableChains from 'config/LinkableChains';
-import {ChainAsset, LinkableChain} from 'types/chains';
-import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
 import {getDenomSymbol} from 'config/ChainAssets';
-import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
-import SearchBar from 'screens/SelectChainConnection/components/SearchBar';
-import {StackScreenProps} from '@react-navigation/stack';
+import LinkableChains from 'config/LinkableChains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
-import {selectedChainState} from '@recoil/connectChainState';
+import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
+import SearchBar from 'screens/SelectChainConnection/components/SearchBar';
+import {ChainAsset, LinkableChain} from 'types/chains';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_CHAIN>;
 
@@ -59,7 +59,7 @@ const SelectChainConnection = () => {
       return 0;
     });
 
-    const filteredItems = sortedItems.filter(chain => {
+    return sortedItems.filter(chain => {
       const {symbol} = denomSymbols[chain.name];
 
       const lowercaseFilter = filter.toLowerCase();
@@ -69,14 +69,22 @@ const SelectChainConnection = () => {
         chain.name.toLowerCase().includes(lowercaseFilter)
       );
     });
-
-    return filteredItems;
   }, [filter]);
 
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<LinkableChain>) => {
       if (index === 0) {
-        return <SearchBar handleChange={setFilter} />;
+        return (
+          <View
+            style={{
+              backgroundColor: 'white',
+              paddingHorizontal: theme.spacing.m,
+              marginHorizontal: -theme.spacing.m,
+              paddingBottom: theme.spacing.m,
+            }}>
+            <SearchBar handleChange={setFilter} />
+          </View>
+        );
       }
       return (
         <ChainItem
@@ -95,20 +103,21 @@ const SelectChainConnection = () => {
   }, []);
 
   return (
-    <DView topBar={<TopBar />}>
+    <DView topBar={<TopBar />} backgroundColor={theme.colors.white}>
       <FlatList
         // create a dummy first index item, so that the renderItem functions
         // can render the search bar without replacing the first item of the list
         data={[0 as any, ...listItems]}
         renderItem={renderItem}
         ListHeaderComponent={
-          <Spacer paddingBottom={16}>
+          <Spacer paddingBottom={theme.spacing.m}>
             <Typography.H3>{t('header')}</Typography.H3>
+            <Spacer paddingVertical={theme.spacing.s} />
             <Typography.Body6>{t('selectChain')}</Typography.Body6>
           </Spacer>
         }
         contentContainerStyle={{
-          paddingHorizontal: 16,
+          paddingHorizontal: theme.spacing.m,
         }}
         ItemSeparatorComponent={ItemSeparatorComponent}
         stickyHeaderIndices={[1]}

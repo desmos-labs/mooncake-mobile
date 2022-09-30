@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import React, {FC} from 'react';
 import DView from 'components/DView';
 import {useNavigation} from '@react-navigation/native';
@@ -66,8 +67,8 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
-        <Typography.Button2
-          style={styles.modeButtonText}
+        <Button
+          mode="text"
           onPress={() => {
             navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
@@ -75,8 +76,10 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
               titleLabelOverride,
             });
           }}>
-          {t('advanced')}
-        </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>
+            {t('advanced')}
+          </Typography.Button2>
+        </Button>
       </View>
     );
   }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);

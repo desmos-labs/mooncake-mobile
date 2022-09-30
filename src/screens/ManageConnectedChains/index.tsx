@@ -2,6 +2,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
+import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useChainLinks from 'hooks/useChainLinks';
@@ -9,7 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {Snackbar} from 'react-native-paper';
+import {Snackbar, useTheme} from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import {ChainLink} from 'types/link';
@@ -29,7 +30,7 @@ type NavProps = StackScreenProps<
 const ManageConnectedChains = () => {
   const {t} = useTranslation('manageChains');
   const styles = useStyles();
-
+  const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {refetch, chainLinks} = useChainLinks();
@@ -75,18 +76,19 @@ const ManageConnectedChains = () => {
 
   const ListEmptyComponent = React.useMemo(() => {
     return (
-      <View>
+      <Spacer paddingTop={80}>
         <NoConnections />
 
         <View style={styles.buttonContainer}>
           <Button
+            color={theme.colors.surfaceBlack}
             onPress={() => navigate(ROUTES.SELECT_CHAIN)}
-            mode="gradientFilled"
+            mode="contained"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}
           </Button>
         </View>
-      </View>
+      </Spacer>
     );
   }, []);
 

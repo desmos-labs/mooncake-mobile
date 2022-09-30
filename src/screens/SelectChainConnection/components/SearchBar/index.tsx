@@ -20,6 +20,7 @@ const SearchBar = ({handleChange}: Props) => {
     <View style={styles.container}>
       <Image style={styles.magnifyingGlass} source={magnifyingGlass} />
       <TextInput
+        style={styles.input}
         onChangeText={handleChange}
         placeholderTextColor={theme.colors.grey02}
         placeholder={t('searchPlaceholder')}

@@ -9,7 +9,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 12,
   },
   indexStyle: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   textStyle: {
     color: theme.colors.surfaceBlack,

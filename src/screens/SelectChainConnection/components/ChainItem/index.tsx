@@ -17,7 +17,7 @@ type Props = {
 const ChainItem = ({chainName, symbol, icon, handlePress}: Props) => {
   const styles = useStyles();
   return (
-    <DropShadowWrapper disableInnerWrapper>
+    <DropShadowWrapper customColor="rgba(37, 87, 188, 0.05)">
       <TouchableOpacity onPress={handlePress} style={styles.container}>
         <Image source={icon} style={styles.iconStyle} />
         <View style={styles.textGroup}>
