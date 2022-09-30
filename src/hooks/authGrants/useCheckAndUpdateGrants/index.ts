@@ -4,6 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import {checkGrants} from './utils';
 
+/**
+ * A Hook that checks and updates missing/expired grants. It will redirect
+ * the user to the authorization popup and carry out the necessary steps (unlocking wallet, broadcast tx, etc)
+ */
 const useCheckAndUpdateGrants = () => {
   const {navigate, pop} = useNavigation<any>();
 
@@ -11,10 +15,12 @@ const useCheckAndUpdateGrants = () => {
     async ({
       grantsToRequest,
       address,
+      stayOnCurrentScreen,
     }: {
       grantsToRequest: GrantEnums[];
       onCancel?: () => void;
       address: string;
+      stayOnCurrentScreen?: boolean;
     }): Promise<{success: boolean}> => {
       const missingOrExpiredGrants = await checkGrants(
         grantsToRequest,
@@ -28,11 +34,11 @@ const useCheckAndUpdateGrants = () => {
           navigate(ROUTES.ACTION_AUTHORIZATION, {
             grants: missingOrExpiredGrants,
             onApprove: () => {
-              pop();
+              !stayOnCurrentScreen && pop();
               resolve({success: true});
             },
             onCancel: () => {
-              pop();
+              !stayOnCurrentScreen && pop();
               resolve({success: false});
             },
           });
