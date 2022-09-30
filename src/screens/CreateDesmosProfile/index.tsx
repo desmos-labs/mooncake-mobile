@@ -23,9 +23,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  TextStyle,
   View,
-  ViewStyle,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
@@ -39,7 +37,6 @@ type NavProps = StackScreenProps<
 >;
 
 const CreateDesmosProfile: FC<NavProps> = () => {
-  const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
   const navigation =
@@ -73,11 +70,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     coverPicture,
   );
 
-  const inlineStyles: {[key: string]: ViewStyle | TextStyle} = {
-    nickname: {opacity: nicknameInputRef.current?.isFocused() ? 1 : 0},
-    dTag: {opacity: dTagInputRef.current?.isFocused() ? 1 : 0},
-    bio: {opacity: bioInputRef.current?.isFocused() ? 1 : 0},
-  };
+  const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
 
   return (
     <SafeAreaView style={styles.container}>
@@ -157,6 +150,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     {t('nickname')}
                   </Typography.Subtitle2>
                   <DTextInput
+                    style={styles.inputStyle}
                     inputRef={nicknameInputRef}
                     value={values.nickname}
                     placeholder={t('enterNickname')}
@@ -172,7 +166,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     </Typography.Caption1>
                   )}
                   {nicknameInputRef.current && (
-                    <View style={inlineStyles.nickname}>
+                    <View style={styles.nickname}>
                       <TextCounter
                         maxChar={nicknameMaxLength}
                         textToCount={values.nickname}
@@ -186,6 +180,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                         {t('dTag')}
                       </Typography.Subtitle2>
                       <DTextInput
+                        style={styles.inputStyle}
                         value={values.dTag}
                         placeholder={t('enterDTag')}
                         onChangeText={value => {
@@ -203,7 +198,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     </Typography.Caption1>
                   )}
                   {dTagInputRef.current && (
-                    <View style={inlineStyles.dTag}>
+                    <View style={styles.dTag}>
                       <TextCounter
                         maxChar={profileParams.dtag.max_length}
                         textToCount={values.dTag}
@@ -234,7 +229,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     </Typography.Caption1>
                   )}
                   {bioInputRef.current && (
-                    <View style={inlineStyles.bio}>
+                    <View style={styles.bio}>
                       <TextCounter
                         maxChar={profileParams.bio.max_length}
                         textToCount={values.bio}
@@ -245,6 +240,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               </ScrollView>
               <View style={{padding: theme.spacing.m}}>
                 <Button
+                  disabled={!values.dTag}
                   color={theme.colors.surfaceBlack}
                   mode="contained"
                   onPress={fromSignUp ? navigation.goBack : handleSubmit}

@@ -138,11 +138,14 @@ const Signup = () => {
 
   return (
     <DView
+      backgroundColor={theme.colors.white}
       style={styles.container}
       topBar={
-        <Spacer paddingLeft={theme.spacing.m} paddingTop={theme.spacing.s}>
-          <BackButton onPress={goBack} />
-        </Spacer>
+        <View style={{backgroundColor: theme.colors.white}}>
+          <Spacer paddingLeft={theme.spacing.m} paddingTop={theme.spacing.s}>
+            <BackButton onPress={goBack} />
+          </Spacer>
+        </View>
       }
       statusBarProps={{
         barStyle: 'dark-content',
@@ -151,7 +154,7 @@ const Signup = () => {
         {t('signup:signup')}
       </Typography.H3>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.buttonGroup}>
         <Formik
@@ -191,14 +194,17 @@ const Signup = () => {
                         {errors.dTag}
                       </Typography.Caption1>
                     )}
-
-                    <Typography.Body6
+                    <Button
+                      mode="text"
+                      style={styles.completeProfileButton}
                       onPress={() => {
                         navigate(ROUTES.CREATE_DESMOS_PROFILE);
-                      }}
-                      style={styles.completeProfileButton}>
-                      {t('signup:completeProfile')}
-                    </Typography.Body6>
+                      }}>
+                      <Typography.Body6 style={styles.completeProfileButton}>
+                        {t('signup:completeProfile')}
+                      </Typography.Body6>
+                    </Button>
+
                     <Typography.Caption1 style={styles.errorTextDtag}>
                       {availableDTag ? '' : t('signup:dtag taken')}
                     </Typography.Caption1>
@@ -233,7 +239,8 @@ const Signup = () => {
 
                     <PasswordReqGroup passwordToCheck={values.newPassword} />
 
-                    <Typography.Subtitle2 style={styles.inputLabel}>
+                    <Typography.Subtitle2
+                      style={{marginBottom: theme.spacing.s}}>
                       {t('confirmPw')}
                     </Typography.Subtitle2>
                     <DSecureTextInput

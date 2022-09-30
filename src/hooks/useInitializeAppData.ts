@@ -5,11 +5,11 @@ import * as RNLocalize from 'react-native-localize';
 import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
 import {useGetProfileParams} from '@recoil/profileParams';
-import {initializeAxiosInstance} from 'services/axios';
 import {useGetButterConfig} from '@recoil/butterConfigState';
 import GetRegisteredReactions from 'services/graphql/queries/GetRegisteredReactions';
 import {useInitializePostParams} from '@recoil/postParamsState';
 import GetRegisteredReports from 'services/graphql/queries/GetRegisteredReports';
+import {useInitializeAxios} from 'services/axios';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
@@ -30,12 +30,13 @@ const useInitializeAppData = () => {
   );
   const profileParams = useGetProfileParams();
   useInitializePostParams();
+  useInitializeAxios();
 
   const {getButterConfig} = useGetButterConfig();
 
   // Not the most elegant way, but it will do for now
   React.useEffect(() => {
-    Promise.all([initializeAxiosInstance(), getButterConfig()]).then(() => {
+    Promise.all([getButterConfig()]).then(() => {
       console.log('app initialized');
     });
   }, []);

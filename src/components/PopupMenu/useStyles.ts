@@ -19,7 +19,7 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: theme.spacing.s,
   },
   divider: {
-    borderColor: theme.colors.lightGrey01,
+    borderColor: theme.colors.dividerGrey,
     borderWidth: 0.5,
   },
 }));

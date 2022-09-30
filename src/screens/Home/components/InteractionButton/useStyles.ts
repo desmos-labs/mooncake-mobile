@@ -14,9 +14,10 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.butterOrange01,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     resizeMode: 'contain',
+    tintColor: theme.colors.white,
   },
   countText: {
     marginTop: theme.spacing.xs,

@@ -1,7 +1,7 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import React from 'react';
-import {View} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 
 import ToastConfig from 'config/ToastConfig';
@@ -16,8 +16,16 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
   const styles = useStyles({type, toast});
   const theme = useTheme();
 
+  const handlePress = React.useCallback(() => {
+    if (type === ToastConfig.SUCCESS) return;
+    Alert.alert('Error details', toast.message);
+  }, [toast.message]);
+
   return (
-    <View style={styles.commonToastStyle}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={handlePress}
+      style={styles.commonToastStyle}>
       <Typography.Body6
         style={{color: theme.colors.surfaceBlack, alignSelf: 'center'}}>
         {toast.message}
@@ -27,7 +35,7 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
           <Typography.Subtitle3>Retry</Typography.Subtitle3>
         </Button>
       ) : null}
-    </View>
+    </TouchableOpacity>
   );
 };
 

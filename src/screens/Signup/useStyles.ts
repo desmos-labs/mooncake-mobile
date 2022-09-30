@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     padding: theme.spacing.m,
     paddingTop: 0, // override top padding
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
   },
   headerText: {
     marginBottom: theme.spacing.m,
@@ -17,6 +17,8 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   inputLabel: {
+    borderColor: theme.colors.lightGrey01,
+    borderWidth: 1,
     marginBottom: theme.spacing.s,
   },
   buttonGroup: {

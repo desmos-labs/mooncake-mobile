@@ -66,7 +66,7 @@ export const tipIcon = require('./images/tipIcon.png');
 
 export const commentIcon = require('./images/commentIcon.png');
 
-export const optionsIcon = require('./images/optionsIcon.png');
+export const commentLikeEmptyIcon = require('./images/commentLikeIconEmpty.png');
 
 export const defaultBanner = require('./images/defaultBanner.png');
 

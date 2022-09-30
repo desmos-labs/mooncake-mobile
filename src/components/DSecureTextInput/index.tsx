@@ -15,6 +15,8 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
   const [hideText, setHideText] = useState(true);
   const iconColor = focused ? theme.colors.surfaceBlack : theme.colors.iconGrey;
 
+  const a11yLabel = rest.accessibilityLabel;
+
   return (
     <DTextInput
       {...rest}
@@ -35,6 +37,7 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
       ]}
       rightElement={
         <IconButton
+          accessibilityLabel={`${a11yLabel}-${hideText ? 'hidden' : 'visible'}`}
           icon={hideText ? eyeOpen : eyeClosed}
           color={iconColor}
           onPress={() => {

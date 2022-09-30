@@ -39,7 +39,7 @@ const useStyles = makeStyle(theme => ({
   },
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {
-    borderColor: theme.colors.surfaceGrey,
+    borderColor: theme.colors.dividerGrey,
     borderWidth: 0.5,
     marginHorizontal: -30,
   },
