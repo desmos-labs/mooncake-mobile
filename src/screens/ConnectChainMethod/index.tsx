@@ -54,6 +54,7 @@ const ConnectChainMethod = () => {
         shouldReplaceRoute: false,
         enterPwScreenOptions: {
           titleLabelOverride: t('connectChain:connectChain'),
+          inputLabelOverride: t('login:enterPassword'),
         },
       });
 
