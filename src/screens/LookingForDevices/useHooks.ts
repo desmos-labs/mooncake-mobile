@@ -1,14 +1,12 @@
 import React from 'react';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import {Alert, Linking, Platform} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
 import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import useStartBleScan from 'hooks/ledger/useStartBleScan';
 import {useTranslation} from 'react-i18next';
-import useInterval from 'hooks/useInterval';
 
 const checkPermissions = async () => {
-  const permissions = () => {
+  const buildPermissions = () => {
     if (Platform.OS === 'android') {
       if (parseInt(Platform.constants.Release, 10) > 11) {
         return [
@@ -24,11 +22,17 @@ const checkPermissions = async () => {
     }
   };
 
-  const grantedPermissions = await requestMultiple(permissions());
+  const permissions = buildPermissions();
+
+  const grantedPermissions = await requestMultiple(permissions);
 
   const grantedPermissionCount = Object.values(grantedPermissions).filter(
     x => x === 'granted',
   ).length;
+
+  console.log(permissions);
+  console.log(grantedPermissions);
+  console.log(grantedPermissionCount, permissions.length);
 
   return grantedPermissionCount === permissions.length;
 };
@@ -40,17 +44,26 @@ const useHooks = () => {
   const [screenReady, setScreenReady] = React.useState(false);
   const [isBTOn, setIsBTOn] = React.useState(false);
 
-  const isFocused = useIsFocused();
-  useInterval(async () => {
-    if (!isFocused) return;
-    const state = await BluetoothStateManager.getState();
+  const btStateManagerRef = React.useRef<any>(undefined);
 
-    if (state === 'PoweredOff') {
-      setIsBTOn(false);
-    } else {
-      setIsBTOn(true);
-    }
-  }, 2000);
+  React.useEffect(() => {
+    btStateManagerRef.current = BluetoothStateManager.onStateChange(
+      bluetoothState => {
+        switch (bluetoothState) {
+          case 'PoweredOff':
+            return setIsBTOn(false);
+          case 'PoweredOn':
+            return setIsBTOn(true);
+        }
+      },
+      true,
+    );
+
+    return () => {
+      console.log('clear ref');
+      if (btStateManagerRef.current) btStateManagerRef.current.remove();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (isBTOn) {

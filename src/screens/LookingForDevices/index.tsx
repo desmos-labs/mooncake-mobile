@@ -98,7 +98,6 @@ const LookingForDevices = () => {
 
   const screenContent = React.useMemo(() => {
     // Show a loading indicator instead of the "no devices found" screen on load
-
     if (!isBTOn) {
       return (
         <View style={styles.container}>
