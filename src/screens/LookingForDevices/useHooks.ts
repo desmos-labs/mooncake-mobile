@@ -56,7 +56,6 @@ const useHooks = () => {
     );
 
     return () => {
-      console.log('clear ref');
       if (btStateManagerRef.current) btStateManagerRef.current.remove();
     };
   }, []);
