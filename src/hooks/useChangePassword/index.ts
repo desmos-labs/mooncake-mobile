@@ -22,7 +22,7 @@ const useChangePassword = () => {
     }: {
       oldPassword: string;
       newPassword: string;
-    }) => {
+    }): Promise<{success: boolean; reason: string}> => {
       if (!activeAddress) {
         return {success: false, reason: 'no active address found'};
       }
@@ -41,7 +41,7 @@ const useChangePassword = () => {
         await saveMnemonic(activeAddress, mnemonic!, newPassword),
       ]);
 
-      return {success: true};
+      return {success: true, reason: 'success'};
     },
     [activeAddress],
   );
