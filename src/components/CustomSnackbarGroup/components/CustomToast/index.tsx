@@ -1,10 +1,11 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+
+import ToastConfig from 'config/ToastConfig';
 import React from 'react';
 import {Alert, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
-
-import ToastConfig from 'config/ToastConfig';
+import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
 export interface Props {
@@ -22,20 +23,25 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
   }, [toast.message]);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={handlePress}
-      style={styles.commonToastStyle}>
-      <Typography.Body6
-        style={{color: theme.colors.surfaceBlack, alignSelf: 'center'}}>
-        {toast.message}
-      </Typography.Body6>
-      {type === ToastConfig.ERROR ? (
-        <Button style={styles.button} mode="text" onPress={toast.onPress}>
-          <Typography.Subtitle3>Retry</Typography.Subtitle3>
-        </Button>
-      ) : null}
-    </TouchableOpacity>
+    <Shadow
+      startColor="rgba(133, 133, 133, 0.06)"
+      distance={12}
+      offset={[0, 10]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={handlePress}
+        style={styles.commonToastStyle}>
+        <Typography.Body6
+          style={{color: theme.colors.surfaceBlack, alignSelf: 'center'}}>
+          {toast.message}
+        </Typography.Body6>
+        {type === ToastConfig.ERROR ? (
+          <Button style={styles.button} mode="text" onPress={toast.onPress}>
+            <Typography.Subtitle3>Retry</Typography.Subtitle3>
+          </Button>
+        ) : null}
+      </TouchableOpacity>
+    </Shadow>
   );
 };
 
