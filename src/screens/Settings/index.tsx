@@ -71,6 +71,7 @@ const Settings: React.FC<NavProps> = props => {
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+          oldPassword: unlockResult.password,
         });
       }
     }

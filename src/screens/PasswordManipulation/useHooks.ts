@@ -4,7 +4,7 @@ import {passwordStrength} from 'check-password-strength';
 import {
   NavProps,
   PASSWORD_MANIPULATION_MODE,
-} from 'screens/PasswordManipulation/index';
+} from 'screens/PasswordManipulation';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import LocalWallet from 'lib/LocalWallet';
@@ -16,6 +16,7 @@ import {useSetRecoilState} from 'recoil';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useLazyQuery} from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
+import useChangePassword from 'hooks/useChangePassword';
 import useStyles from './useStyles';
 
 /**
@@ -27,10 +28,11 @@ const useHooks = () => {
   const {t} = useTranslation('passwordManipulation');
   const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
 
+  const {changePassword} = useChangePassword();
   const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
 
   const {
-    params: {mode, mnemonic},
+    params: {mode, mnemonic, oldPassword},
   } = useRoute<NavProps['route']>();
 
   const initialFormValues = React.useMemo(
@@ -86,6 +88,11 @@ const useHooks = () => {
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
+        await changePassword({
+          oldPassword: oldPassword as string,
+          newPassword: formValues.newPassword,
+        });
+
         navigate(ROUTES.RESULT_MODAL, {
           title: t('resultModal:success'),
           subtitle: t('resultModal:passwordWasChanged'),

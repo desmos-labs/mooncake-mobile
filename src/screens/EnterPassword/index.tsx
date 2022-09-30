@@ -122,6 +122,7 @@ const EnterPassword = () => {
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
               authorized: true,
+              password,
             });
             goBack();
           } else {
@@ -133,7 +134,11 @@ const EnterPassword = () => {
         }
       } catch (err) {
         onFailedAuthentication && onFailedAuthentication();
-        setErrors({password: String(err)});
+        if (String(err).includes('Malformed UTF-8 data')) {
+          setErrors({password: t('error:incorrectPassword')});
+        } else {
+          setErrors({password: String(err)});
+        }
       } finally {
         setLoading(false);
       }

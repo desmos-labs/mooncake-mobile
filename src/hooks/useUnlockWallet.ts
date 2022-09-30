@@ -51,7 +51,9 @@ type useUnlockWalletParams = {
  */
 export default function useUnlockWallet(): (
   params: useUnlockWalletParams,
-) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
+) => Promise<
+  {wallet?: OfflineSigner; mnemonic?: string; password?: string} | undefined
+> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   const useBiometrics = getMMKV<boolean>(MMKVKEYS.USE_BIOMETRICS);
@@ -102,6 +104,7 @@ export default function useUnlockWallet(): (
                   resolve({
                     wallet: result.wallet!,
                     mnemonic: result.mnemonic,
+                    password: result.password,
                   });
                 },
                 onFailedAuthentication: () => {

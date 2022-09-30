@@ -147,6 +147,7 @@ export const getLocalWallet = async (
   password?: string,
   useBiometrics?: boolean,
 ): Promise<LocalWallet | undefined> => {
+  console.log(address, password);
   let walletPassword = password;
   const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
@@ -216,4 +217,11 @@ export const getMnemonic = async (
 
 export const deleteMnemonic = async (address: string) => {
   return deleteItem(`${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`);
+};
+
+export const deleteLocalWallet = async (address: string) => {
+  return Promise.all([
+    deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`),
+    deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`),
+  ]);
 };
