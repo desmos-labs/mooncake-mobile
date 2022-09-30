@@ -1,4 +1,8 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -22,11 +26,13 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  AuthorizeWalletParamList,
-  ROUTES.AUTH_UNLOCK_LOCAL_WALLET
+type NavProps = CompositeScreenProps<
+  StackScreenProps<AuthorizeWalletParamList, ROUTES.AUTH_UNLOCK_LOCAL_WALLET>,
+  StackScreenProps<RootNavigatorParamList>
 >;
 
 /**
@@ -73,7 +79,7 @@ const EnterPassword = () => {
       onFailedAuthentication,
     },
   } = useRoute<NavProps['route']>();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -139,9 +145,12 @@ const EnterPassword = () => {
     ],
   );
 
-  const onPressForgotPassword = () => {
-    // TODO: implementation once forgot password flow is defined
-  };
+  const onPressForgotPassword = React.useCallback(() => {
+    // possible memory leak as the unlock promise will never get resolved this way
+    replace(ROUTES.MNEMONIC_INPUT, {
+      mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+    });
+  }, []);
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
