@@ -54,6 +54,7 @@ export type EnterPasswordParams = {
   provideMnemonic?: boolean;
   titleLabelOverride?: string;
   buttonLabelOverride?: string;
+  inputLabelOverride?: string;
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
@@ -77,6 +78,7 @@ const EnterPassword = () => {
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
+      inputLabelOverride,
     },
   } = useRoute<NavProps['route']>();
   const {goBack, replace} = useNavigation<NavProps['navigation']>();
@@ -175,7 +177,7 @@ const EnterPassword = () => {
         {({handleSubmit, errors, setValues, values}) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>
-              {t('inputLabel')}
+              {inputLabelOverride || t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
               style={styles.textInput}

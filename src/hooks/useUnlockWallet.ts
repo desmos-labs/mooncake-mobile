@@ -38,7 +38,10 @@ type useUnlockWalletParams = {
 
   enterPwScreenOptions?: Pick<
     EnterPasswordParams,
-    'titleLabelOverride' | 'buttonLabelOverride' | 'dViewProps'
+    | 'titleLabelOverride'
+    | 'buttonLabelOverride'
+    | 'dViewProps'
+    | 'inputLabelOverride'
   >;
 };
 
@@ -59,10 +62,6 @@ export default function useUnlockWallet(): (
       prefilledPassword,
       shouldReplaceRoute,
     }: useUnlockWalletParams) => {
-      const titleLabelOverride = enterPwScreenOptions?.titleLabelOverride;
-      const buttonLabelOverride = enterPwScreenOptions?.buttonLabelOverride;
-      const dViewProps = enterPwScreenOptions?.dViewProps;
-
       const navigate = shouldReplaceRoute
         ? navigation.replace
         : navigation.navigate;
@@ -92,12 +91,10 @@ export default function useUnlockWallet(): (
             navigate(ROUTES.AUTHORIZE_WALLET, {
               screen: ROUTES.AUTH_UNLOCK_LOCAL_WALLET,
               params: {
+                ...enterPwScreenOptions,
                 address: chainAccount.address,
                 provideWallet: true,
                 provideMnemonic: true,
-                titleLabelOverride,
-                buttonLabelOverride,
-                dViewProps,
                 onSuccessfulAuthentication: (
                   result: LocalAccountAuthenticationArgs,
                 ) => {
