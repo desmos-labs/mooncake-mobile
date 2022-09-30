@@ -112,9 +112,6 @@ const useHooks = () => {
               ],
             });
           },
-          onDismiss: () => {
-            // finish implementation when change pw feature is added
-          },
         });
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
