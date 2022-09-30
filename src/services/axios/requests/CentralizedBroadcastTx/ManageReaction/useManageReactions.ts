@@ -122,7 +122,7 @@ const useManageReactions = () => {
         console.log(result);
       }
     },
-    [],
+    [addReaction, removeReaction],
   );
 
   return {manageReaction, reactionLoading};

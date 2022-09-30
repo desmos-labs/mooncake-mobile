@@ -87,7 +87,7 @@ const useReportPost = () => {
         console.log(result);
       }
     },
-    [],
+    [reportPost],
   );
 
   return {manageReport, reportPostLoading};

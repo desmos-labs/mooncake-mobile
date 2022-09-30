@@ -18,6 +18,7 @@ const useInitializeAppData = () => {
       variables: {
         subspaceID: EnvConfig.APP_SUBSPACE_ID,
       },
+      fetchPolicy: 'no-cache',
     });
 
   const {data: registeredReports, loading: registeredReportsLoading} = useQuery(
@@ -26,6 +27,7 @@ const useInitializeAppData = () => {
       variables: {
         subspaceID: EnvConfig.APP_SUBSPACE_ID,
       },
+      fetchPolicy: 'no-cache',
     },
   );
   const profileParams = useGetProfileParams();
@@ -53,6 +55,7 @@ const useInitializeAppData = () => {
       !registeredReportsLoading &&
       !registeredReactionsLoading
     ) {
+      console.log(registeredReports?.subspace_report_reason);
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting
