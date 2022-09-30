@@ -69,13 +69,16 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         backgroundColor: 'transparent',
         style: styles.dView,
       };
-      const res = await unlockWallet(
+
+      const res = await unlockWallet({
         chainAccount,
         shouldReplaceRoute,
-        titleLabelOverride,
-        buttonLabelOverride,
-        dViewProps,
-      );
+        enterPwScreenOptions: {
+          titleLabelOverride,
+          buttonLabelOverride,
+          dViewProps,
+        },
+      });
 
       // ledger cancelled
       if (!res?.wallet) {

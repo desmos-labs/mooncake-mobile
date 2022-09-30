@@ -43,7 +43,7 @@ const ManageConnectedChains = () => {
     (chainLink: ChainLink) => async () => {
       if (!chainAccount) return;
 
-      const unlockResponse = await unlockWallet(chainAccount);
+      const unlockResponse = await unlockWallet({chainAccount});
 
       if (!unlockResponse || !unlockResponse.wallet) return;
       await disconnectChainLink(unlockResponse.wallet, chainLink);

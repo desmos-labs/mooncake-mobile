@@ -49,11 +49,13 @@ const ConnectChainMethod = () => {
     if (chainAccount) {
       setConnectChainMethod('PASSWORD');
 
-      const unlockResult = await unlockWallet(
+      const unlockResult = await unlockWallet({
         chainAccount,
-        false,
-        t('connectChain:connectChain'),
-      );
+        shouldReplaceRoute: false,
+        enterPwScreenOptions: {
+          titleLabelOverride: t('connectChain:connectChain'),
+        },
+      });
 
       if (unlockResult) {
         const {mnemonic, wallet} = unlockResult;

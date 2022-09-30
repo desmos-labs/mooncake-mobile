@@ -50,7 +50,7 @@ const Settings: React.FC<NavProps> = props => {
 
   const handleChangePassword = useCallback(async () => {
     if (chainAccount) {
-      const unlockResult = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet({chainAccount});
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
