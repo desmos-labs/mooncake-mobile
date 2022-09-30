@@ -11,6 +11,7 @@ import {
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import React, {useCallback} from 'react';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
@@ -36,7 +37,7 @@ const useManageReactions = () => {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const msg: MsgAddReactionEncodeObject = {
-          typeUrl: '/desmos.reactions.v1.MsgAddReaction',
+          typeUrl: GrantEnums.MsgAddReaction,
           value: MsgAddReaction.fromPartial({
             subspaceId: EnvConfig.APP_SUBSPACE_ID,
             postId,
@@ -65,7 +66,7 @@ const useManageReactions = () => {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const msg: MsgRemoveReactionEncodeObject = {
-          typeUrl: '/desmos.reactions.v1.MsgRemoveReaction',
+          typeUrl: GrantEnums.MsgRemoveReaction,
           value: MsgRemoveReaction.fromPartial({
             subspaceId: EnvConfig.APP_SUBSPACE_ID,
             postId,
