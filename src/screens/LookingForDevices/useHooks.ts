@@ -30,10 +30,6 @@ const checkPermissions = async () => {
     x => x === 'granted',
   ).length;
 
-  console.log(permissions);
-  console.log(grantedPermissions);
-  console.log(grantedPermissionCount, permissions.length);
-
   return grantedPermissionCount === permissions.length;
 };
 
