@@ -28,6 +28,10 @@ import {Alert} from 'react-native';
  * report content
  */
 
+/**
+ * Add or update a user's grant authorizations on chain.
+ * @deprecated Use useCheckAndUpdateGrants for a better all-in-one solution for requesting grants
+ */
 const useAddOrUpdateGrants = () => {
   const {butterConfig} = useButterConfig();
   const {chainAccount, loading} = useActiveAccount();
