@@ -30,12 +30,13 @@ export type LocalAccountAuthenticationArgs = {
 };
 
 type useUnlockWalletParams = {
+  // A type of account that is being used.
   chainAccount: ChainAccount;
-
+  // A boolean that is used to determine whether the current route should be replaced or not.
   shouldReplaceRoute?: boolean;
-
+  // Skips asking user for password using EnterPassword screen if truthy
   prefilledPassword?: string;
-
+  // ScreenParams that are passed into the EnterPasswordScreen
   enterPwScreenOptions?: Pick<
     EnterPasswordParams,
     | 'titleLabelOverride'
