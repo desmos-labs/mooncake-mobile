@@ -11,6 +11,12 @@ import {checkGrants} from './utils';
 const useCheckAndUpdateGrants = () => {
   const {navigate, pop} = useNavigation<any>();
 
+  /**
+   * Check and update a user's on-chain grants
+   * @param {GrantEnums[]} Object.grantsToRequest - An Array of grants to request.
+   * @param {string} Object.address - The address of the granter (i.e active address).
+   * @param {boolean} Object.stayOnCurrentScreen - If true, will not call pop() after grant request process is completed.
+   */
   const checkAndUpdateGrants = React.useCallback(
     async ({
       grantsToRequest,
