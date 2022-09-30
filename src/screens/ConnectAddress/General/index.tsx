@@ -35,7 +35,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
     route?.params ?? {};
   // placeholder
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const navigation = useNavigation<NavProps['navigation']>();
 
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
 
@@ -69,7 +69,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         <Typography.Button2
           style={styles.modeButtonText}
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
               loadedProfileMap,
               titleLabelOverride,
@@ -79,7 +79,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         </Typography.Button2>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
+  }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const renderItem = React.useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
@@ -92,22 +92,22 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           handlePress={() => {
             if (nextRouteOverride) {
               if (loadedProfileMap?.has(item.bech32Address)) {
-                return navigate(ROUTES.USER_PROFILE, {
+                return navigation.navigate(ROUTES.USER_PROFILE, {
                   visitingProfileAddress: item.bech32Address,
                 });
               }
 
               setSelectedExternalAccount(item.serialize());
-              return navigate(nextRouteOverride);
+              return navigation.navigate(nextRouteOverride);
             }
 
             setSelectedExternalAccount(item.serialize());
-            navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+            navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
           }}
         />
       );
     },
-    [nextRouteOverride, loadedProfileMap],
+    [navigation, nextRouteOverride, loadedProfileMap],
   );
 
   const ItemSeparatorComponent = React.useCallback(

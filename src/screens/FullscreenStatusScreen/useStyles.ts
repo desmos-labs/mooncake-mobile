@@ -5,19 +5,30 @@ import {makeStyle} from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    backgroundColor: theme.colors.background,
-    flex: 1,
+    flexBasis: '100%',
     justifyContent: 'center',
     paddingHorizontal: theme.spacing.m,
+    paddingBottom: theme.spacing.m,
+  },
+  cardContainer: {
+    backgroundColor: theme.colors.white,
+    padding: theme.spacing.xl,
+    borderRadius: 12,
   },
   image: {
-    width: 213.84,
-    height: 125.04,
+    marginTop: theme.spacing.xl,
     alignSelf: 'center',
+    height: 189,
   },
-  textContainer: {
-    alignItems: 'center',
-    marginTop: theme.spacing.m,
+  title: {
+    textAlign: 'center',
+  },
+  subtitle: {
+    marginTop: theme.spacing.l,
+    textAlign: 'center',
+  },
+  button: {
+    marginTop: theme.spacing.l,
   },
 }));
 

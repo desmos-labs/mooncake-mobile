@@ -34,7 +34,7 @@ export default function useFollowUser(
   );
 
   const {chainAccount} = useActiveAccount();
-  const boardcastEncodeObject = useBoardcastEncodeObject();
+  const broadcastEncodeObject = useBroadcastEncodeObject();
   const {t} = useTranslation('followingAndFollowers');
 
   /* A function that is used to follow a user. */
@@ -56,7 +56,7 @@ export default function useFollowUser(
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
-          boardcastEncodeObject(uncodeObject, chainAccount);
+          broadcastEncodeObject(uncodeObject, chainAccount);
 
           /* Adding the counterParty to the followingState. */
           set(followingState, curVal => {
@@ -94,7 +94,7 @@ export default function useFollowUser(
               subspaceId: Long.fromNumber(subspaceID),
             },
           };
-          boardcastEncodeObject(uncodeObject, chainAccount);
+          broadcastEncodeObject(uncodeObject, chainAccount);
 
           /* Removing the counterParty to the followingState. */
           set(followingState, curVal => {
@@ -122,13 +122,13 @@ export default function useFollowUser(
  * @returns A function that is used to calculate the gas and fees for the transaction and broadcasting
  * it.
  */
-function useBoardcastEncodeObject() {
+function useBroadcastEncodeObject() {
   const broadcastMessages = useBroadcastMessages();
   const unlockWallet = useUnlockWallet();
   const {t} = useTranslation('followingAndFollowers');
 
   /* A function that is used to calculate the gas and fees for the transaction and broadcasting it. */
-  const boardcastEncodeObject = useCallback(
+  const broadcastEncodeObject = useCallback(
     async (uncodeObject: EncodeObject, chainAccount: ChainAccount) => {
       /* Unlocking the wallet and getting the offlineSigner. */
       const unlockedWallet = await unlockWallet({chainAccount});
@@ -145,5 +145,5 @@ function useBoardcastEncodeObject() {
     [],
   );
 
-  return boardcastEncodeObject;
+  return broadcastEncodeObject;
 }

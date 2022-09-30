@@ -135,6 +135,6 @@ export default function useUnlockWallet(): (
         });
       });
     },
-    [],
+    [navigation],
   );
 }
