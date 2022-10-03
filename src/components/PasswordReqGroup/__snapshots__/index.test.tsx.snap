@@ -1,0 +1,241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: PasswordReqGroup renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "paddingBottom": 16,
+        "paddingTop": 8,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginVertical": 4,
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../src/assets/images/validCheck.png",
+          }
+        }
+        style={
+          Object {
+            "height": 16,
+            "marginRight": 4,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#25282D",
+              },
+              Object {
+                "fontFamily": "Poppins-Regular",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "400",
+                "letterSpacing": 0.004,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            Array [
+              Object {
+                "color": "#878787",
+              },
+              Object {
+                "color": "#1EC490",
+              },
+            ],
+          ]
+        }
+      >
+        At least 10 characters in length
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginVertical": 4,
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../src/assets/images/validCheck.png",
+          }
+        }
+        style={
+          Object {
+            "height": 16,
+            "marginRight": 4,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#25282D",
+              },
+              Object {
+                "fontFamily": "Poppins-Regular",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "400",
+                "letterSpacing": 0.004,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            Array [
+              Object {
+                "color": "#878787",
+              },
+              Object {
+                "color": "#1EC490",
+              },
+            ],
+          ]
+        }
+      >
+        At least 1 lowercase
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginVertical": 4,
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../src/assets/images/validCheck.png",
+          }
+        }
+        style={
+          Object {
+            "height": 16,
+            "marginRight": 4,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#25282D",
+              },
+              Object {
+                "fontFamily": "Poppins-Regular",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "400",
+                "letterSpacing": 0.004,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            Array [
+              Object {
+                "color": "#878787",
+              },
+              Object {
+                "color": "#1EC490",
+              },
+            ],
+          ]
+        }
+      >
+        At least 1 uppercase
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "marginVertical": 4,
+        }
+      }
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../src/assets/images/check.png",
+          }
+        }
+        style={
+          Object {
+            "height": 16,
+            "marginRight": 4,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
+      <Text
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#25282D",
+              },
+              Object {
+                "fontFamily": "Poppins-Regular",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "400",
+                "letterSpacing": 0.004,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            Array [
+              Object {
+                "color": "#878787",
+              },
+              false,
+            ],
+          ]
+        }
+      >
+        At least 1 special character (~|!’,;\\/@#$%^&+=)
+      </Text>
+    </View>
+  </View>
+</View>
+`;
