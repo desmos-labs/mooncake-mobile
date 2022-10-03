@@ -21,6 +21,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  alignRight: {right: 0, marginLeft: 'auto'},
 }));
 
 export default useStyles;
