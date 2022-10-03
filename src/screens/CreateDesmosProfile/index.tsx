@@ -30,6 +30,7 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import useStyles from './useStyles';
 import useHooks from './useHooks';
 import useHandleFormSubmit from './useHandleFormSubmit';
+import useHandleAddProfileSubmit from './useHandleAddProfileSubmit';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -61,6 +62,8 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     nicknameMaxLength,
     validationSchema,
     initialFormState,
+    accountCreation,
+    createLedgerAccount,
   } = useHooks();
 
   const handleFormSubmit = useHandleFormSubmit(
@@ -68,9 +71,25 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     setLoading,
     profilePicture,
     coverPicture,
+    accountCreation,
+    createLedgerAccount,
+  );
+  const handleAddProfileSubmit = useHandleAddProfileSubmit(
+    initialFormState,
+    setLoading,
+    profilePicture,
+    coverPicture,
+    accountCreation,
+    createLedgerAccount,
   );
 
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
+
+  const submitHandler =
+    ROUTES.ADD_PROFILE ===
+    (accountCreation?.source ?? createLedgerAccount?.source)
+      ? handleAddProfileSubmit
+      : handleFormSubmit;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -132,7 +151,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
-          onSubmit={handleFormSubmit}>
+          onSubmit={submitHandler}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
               <View style={styles.header}>

@@ -111,9 +111,9 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const rightButtonComponent = useMemo(() => {
     return (
       <Button
-        mode="gradientFilled"
+        mode="contained"
         disabled={comment.length === 0}
-        containerStyle={styles.postButton}
+        style={styles.postButton}
         loading={loading}
         onPress={handlePostComment}>
         <Typography.Button3 style={{color: theme.colors.white}}>

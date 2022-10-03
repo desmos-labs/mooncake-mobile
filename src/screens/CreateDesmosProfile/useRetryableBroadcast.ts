@@ -5,18 +5,18 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useCallback, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import useResetAfterRoute from './NavigationRoute';
+import useResetAfterRoute from './useResetAfterRoute';
 
 function useRetryableBroadcast() {
   type navigateType = typeof navigation.push | typeof navigation.replace;
   const navigation =
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const resetAfterRoute = useResetAfterRoute();
   const broadcastActionRef = useRef<(pushOrReplace: navigateType) => void>();
   const {t} = useTranslation();
+  const resetAfterRoute = useResetAfterRoute();
   const failureAction = useCallback(
     (errorMessage?: string) => {
-      resetAfterRoute(ROUTES.SETTINGS_PROFILES, {
+      resetAfterRoute(ROUTES.ADD_PROFILE, {
         name: ROUTES.FULLSCREEN_STATUS_SCREEN,
         params: {
           title: t('resultModal:failed'),
@@ -30,16 +30,19 @@ function useRetryableBroadcast() {
             if (broadcastActionRef.current) {
               broadcastActionRef.current(navigation.replace);
             } else {
+              // ADD_PROFILE > CONNECT_ADDRESS_GENERAL > CREATE_DESMOS_PROFILE
               navigation.goBack();
             }
           },
           secondaryButtonLabel: t('common:goToProfile'),
           image: modalFail,
           handleSecondaryButtonPress() {
-            navigation.navigate(ROUTES.SETTINGS_PROFILES);
+            // User taps on the Go to Profile to get redirected to their profile page
+            navigation.navigate(ROUTES.ADD_PROFILE);
           },
           handleBackgroundPress() {
-            navigation.navigate(ROUTES.SETTINGS_PROFILES);
+            // User taps on the background to get redirected to the Add profile page
+            navigation.navigate(ROUTES.ADD_PROFILE);
           },
         },
       });
