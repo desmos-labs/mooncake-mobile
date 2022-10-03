@@ -1,10 +1,11 @@
 import {ChainAccount} from 'types/chains';
 import {atom} from 'recoil';
+import ROUTES from 'navigation/routes';
 
 type CreateLedgerAccountAtom = {
   account?: ChainAccount;
 
-  useExternalAccount?: boolean;
+  source?: ROUTES.ADD_PROFILE | undefined;
 };
 
 /**

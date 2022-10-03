@@ -13,6 +13,8 @@ import signUpInfoState, {
   signUpNicknameState,
   signUpProfilePicState,
 } from '@recoil/signUpInfoState';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useValidationSchema from './useValidationSchema';
 
 function useHooks() {
@@ -75,6 +77,9 @@ function useHooks() {
     };
   }, [fromSignUp, signUpInfo]);
 
+  const accountCreation = useRecoilValue(createLocalWalletState);
+  const createLedgerAccount = useRecoilValue(createLedgerAccountState);
+
   return {
     signUpInfo,
     setNickname,
@@ -94,6 +99,8 @@ function useHooks() {
     nicknameMaxLength,
     validationSchema,
     initialFormState,
+    accountCreation,
+    createLedgerAccount,
   };
 }
 
