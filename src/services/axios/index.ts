@@ -1,6 +1,6 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import {MMKVKEYS, setMMKV, useMMKVStorage} from 'lib/MMKVStorage';
+import {deleteMMKV, MMKVKEYS, setMMKV, useMMKVStorage} from 'lib/MMKVStorage';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {useNavigation} from '@react-navigation/native';
@@ -21,6 +21,14 @@ export const updateAuthToken = (newToken: string) => {
 
   axiosInstance.defaults.headers.common = {
     Authorization: `Bearer ${newToken}`,
+  };
+};
+
+export const deleteAuthToken = () => {
+  deleteMMKV(MMKVKEYS.REST_AUTH_TOKEN);
+
+  axiosInstance.defaults.headers.common = {
+    Authorization: '',
   };
 };
 

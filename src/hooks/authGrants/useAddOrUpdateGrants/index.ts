@@ -28,6 +28,10 @@ import {Alert} from 'react-native';
  * report content
  */
 
+/**
+ * Add or update a user's grant authorizations on chain.
+ * @deprecated Use useCheckAndUpdateGrants for a better all-in-one solution for requesting grants
+ */
 const useAddOrUpdateGrants = () => {
   const {butterConfig} = useButterConfig();
   const {chainAccount, loading} = useActiveAccount();
@@ -62,7 +66,7 @@ const useAddOrUpdateGrants = () => {
       grants: grantsToRevoke,
     });
 
-    const unlockResult = await unlockWallet(chainAccount);
+    const unlockResult = await unlockWallet({chainAccount});
 
     if (!unlockResult) {
       throw new Error(
@@ -137,7 +141,7 @@ const useAddOrUpdateGrants = () => {
 
       const msgsGrantEncodes = buildGrantMsgEncodes({grants, grantee, granter});
 
-      const unlockResult = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet({chainAccount});
 
       if (!unlockResult) {
         throw new Error(

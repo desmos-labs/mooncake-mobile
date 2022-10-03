@@ -3,16 +3,16 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ComponentProps, useCallback} from 'react';
+import {useCallback} from 'react';
 import {DesmosLedgerApp} from 'config/LedgerApps';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
-import DView from 'components/DView';
 import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import {EnterPasswordParams} from 'screens/EnterPassword';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -29,36 +29,40 @@ export type LocalAccountAuthenticationArgs = {
   password?: string;
 };
 
+type useUnlockWalletParams = {
+  // A type of account that is being used.
+  chainAccount: ChainAccount;
+  // A boolean that is used to determine whether the current route should be replaced or not.
+  shouldReplaceRoute?: boolean;
+  // Skips asking user for password using EnterPassword screen if truthy
+  prefilledPassword?: string;
+  // ScreenParams that are passed into the EnterPasswordScreen
+  enterPwScreenOptions?: Pick<
+    EnterPasswordParams,
+    | 'titleLabelOverride'
+    | 'buttonLabelOverride'
+    | 'dViewProps'
+    | 'inputLabelOverride'
+  >;
+};
+
 /**
  * Hooks that provides a function to unlock and access the user wallet.
  */
 export default function useUnlockWallet(): (
-  /* A type of account that is being used. */
-  chainAccount: ChainAccount,
-  /* A boolean that is used to determine whether the current route should be replaced or not. */
-  shouldReplaceRoute?: boolean,
-  /* A prop that is passed to Enter Password Screen. */
-  titleLabelOverride?: string,
-  /* A prop that is passed to the Enter Password Screen. */
-  buttonLabelOverride?: string,
-  /* A prop that is passed to the DView component. */
-  dViewProps?: ComponentProps<typeof DView>,
-  /* Skips asking user for password using EnterPassword screen if truthy */
-  prefilledPassword?: string,
+  params: useUnlockWalletParams,
 ) => Promise<{wallet?: OfflineSigner; mnemonic?: string} | undefined> {
   const navigation = useNavigation<NavProps['navigation']>();
 
   const useBiometrics = getMMKV<boolean>(MMKVKEYS.USE_BIOMETRICS);
 
   return useCallback(
-    async (
+    async ({
       chainAccount,
-      shouldReplaceRoute,
-      titleLabelOverride,
-      buttonLabelOverride,
-      dViewProps,
+      enterPwScreenOptions,
       prefilledPassword,
-    ) => {
+      shouldReplaceRoute,
+    }: useUnlockWalletParams) => {
       const navigate = shouldReplaceRoute
         ? navigation.replace
         : navigation.navigate;
@@ -88,12 +92,10 @@ export default function useUnlockWallet(): (
             navigate(ROUTES.AUTHORIZE_WALLET, {
               screen: ROUTES.AUTH_UNLOCK_LOCAL_WALLET,
               params: {
+                ...enterPwScreenOptions,
                 address: chainAccount.address,
                 provideWallet: true,
                 provideMnemonic: true,
-                titleLabelOverride,
-                buttonLabelOverride,
-                dViewProps,
                 onSuccessfulAuthentication: (
                   result: LocalAccountAuthenticationArgs,
                 ) => {
@@ -133,6 +135,6 @@ export default function useUnlockWallet(): (
         });
       });
     },
-    [],
+    [navigation],
   );
 }

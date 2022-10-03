@@ -148,20 +148,12 @@ const Content: FC<ContentProps> = ({signer, mnemonic}) => {
 
   /* Creating a map of the selected profiles. */
   const selectedProfileMap = useMemo(
-    () =>
-      selectedProfiles.reduce(
-        (map, profile) => map.set(profile.address, profile),
-        new Map<string, ProfileData>(),
-      ),
+    () => new Map(selectedProfiles.map(profile => [profile.address, profile])),
     [selectedProfiles],
   );
 
   const loadedProfileMap = useMemo(
-    () =>
-      loadedProfiles.reduce(
-        (map, profile) => map.set(profile.address, profile),
-        new Map<string, ProfileData>(),
-      ),
+    () => new Map(loadedProfiles.map(profile => [profile.address, profile])),
     [loadedProfiles],
   );
 

@@ -48,6 +48,8 @@ export const moreIcon = require('./images/more.png');
 
 export const modalSuccess = require('./images/modalSuccess.png');
 
+export const modalFail = require('./images/modalFail.png');
+
 export const iconCross = require('./images/iconCross.png');
 
 export const btDevice = require('./images/btDevice.png');

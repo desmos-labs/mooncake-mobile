@@ -22,6 +22,8 @@ import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import {AppSettings} from 'types/settings';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
+import {deleteAuthToken} from 'services/axios';
+import {useNavigation} from '@react-navigation/native';
 
 declare type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -38,6 +40,7 @@ const Settings: React.FC<NavProps> = props => {
   const styles = useStyles();
   const theme = useTheme();
   const unlockWallet = useUnlockWallet();
+  const {reset} = useNavigation<NavProps['navigation']>();
 
   const formattedAccountCreationDate = useFormatDateToTZ(
     profileData?.creation_time || '',
@@ -48,9 +51,23 @@ const Settings: React.FC<NavProps> = props => {
     console.log('checkIfBiometricsAreSupported');
   }, []); */
 
+  const handlePressSignOut = () => {
+    deleteAuthToken();
+
+    // Home screen will request user to login if no bearer token is detected
+    reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.HOME,
+        },
+      ],
+    });
+  };
+
   const handleChangePassword = useCallback(async () => {
     if (chainAccount) {
-      const unlockResult = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet({chainAccount});
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
@@ -77,7 +94,7 @@ const Settings: React.FC<NavProps> = props => {
         primaryButtonLabel: t('confirmModal:goToBackup'),
         secondaryButtonLabel: t('confirmModal:signout'),
         onPressPrimary: () => console.log('primary'),
-        onPressSecondary: () => console.log('secondary'),
+        onPressSecondary: handlePressSignOut,
       },
     });
   }, []);

@@ -94,7 +94,8 @@ const ConnectChainTxDetail = () => {
   }, [fee]);
 
   const handlePressNext = React.useCallback(async () => {
-    const unlockResponse = await unlockWallet(chainAccount!);
+    if (!chainAccount) return;
+    const unlockResponse = await unlockWallet({chainAccount});
 
     // handle case here
     if (!unlockResponse || !unlockResponse.wallet) return;
@@ -122,7 +123,7 @@ const ConnectChainTxDetail = () => {
       failureAction: (errorMessage?: string) => {
         navigate(ROUTES.RESULT_MODAL, {
           image: errorImage,
-          title: t('resultModal:fail'),
+          title: t('resultModal:failed'),
           subtitle: errorMessage,
           onPressPrimary: () => goBack(),
           primaryButtonLabel: t('common:retry') as string,

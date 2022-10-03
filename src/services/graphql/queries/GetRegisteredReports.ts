@@ -4,7 +4,7 @@ const GetRegisteredReports = gql`
   query ReportingReasons($subspaceID: bigint!) @api(name: desmos) {
     subspace_report_reason(where: {subspace_id: {_eq: $subspaceID}}) {
       id
-      description
+      title
     }
   }
 `;

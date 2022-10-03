@@ -1,6 +1,6 @@
 {
   "success": "Success",
-  "fail": "Fail",
+  "failed": "Failed",
   "passwordWasChanged": "Your password was changed",
   "goToProfile": "Go to Profile",
   "congrats": "Congratulations!",
