@@ -1,6 +1,6 @@
 import {makeStyle} from 'config/theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Platform} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 
 const useStyles = makeStyle(theme => {
   const {bottom} = useSafeAreaInsets();
@@ -22,6 +22,7 @@ const useStyles = makeStyle(theme => {
       width: '100%',
       // Add spacing for devices that do not require bottom safe-area
       marginBottom: bottom === 0 ? theme.spacing.s : 0,
+      maxHeight: Dimensions.get('screen').height * 0.2,
     },
     textInputContainer: {
       flex: 1,
