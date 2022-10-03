@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   KeyboardEventName,
   Platform,
+  ScrollView,
   TextInput,
   View,
 } from 'react-native';
@@ -60,7 +61,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   loading,
 }) => {
   const {t} = useTranslation('comment');
-  const styles = useStyles();
   const {bottom} = useSafeAreaInsets();
   const theme = useTheme();
   const [comment, setComment] = useRecoilState(postTextState);
@@ -69,6 +69,8 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const resetCommentAttachment = useResetRecoilState(postAttachmentsState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
   const textInputRef = useRef<any>();
+
+  const styles = useStyles({keyboardShow, bottomInset: bottom});
 
   const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
     onImageSelected: setCommentAttachment,
@@ -146,9 +148,10 @@ const EnterCommentBottomBar: React.FC<Props> = ({
               <SelectedCommentImage
                 handlePress={resetCommentAttachment}
                 source={{uri: commentAttachment.uri}}
+                containerMargin={12}
               />
             )}
-            <View style={{flexDirection: 'row'}}>
+            <ScrollView contentContainerStyle={styles.textInputScrollContainer}>
               <TextInput
                 ref={textInputRef}
                 maxLength={EnvConfig.MAX_COMMENT_LENGTH}
@@ -165,25 +168,14 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
               <View
                 pointerEvents={keyboardShow ? 'auto' : 'none'}
-                style={{
-                  opacity: keyboardShow ? 1 : 0,
-                  alignSelf: 'flex-end',
-                }}>
+                style={styles.expandButtonContainer}>
                 <ImageButton
-                  style={{
-                    width: 24,
-                    height: 24,
-                    opacity: keyboardShow ? 1 : 0,
-                    bottom: Platform.select({
-                      ios: 0,
-                      android: 8,
-                    }),
-                  }}
+                  style={styles.expandButton}
                   image={expandCommentIcon}
                   onPress={onIconPress}
                 />
               </View>
-            </View>
+            </ScrollView>
           </View>
         </View>
         {keyboardShow && (
