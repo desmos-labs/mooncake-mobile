@@ -153,7 +153,9 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 ref={textInputRef}
                 maxLength={EnvConfig.MAX_COMMENT_LENGTH}
                 value={comment}
-                onChangeText={text => setComment(text)}
+                onChangeText={text => {
+                  setComment(text);
+                }}
                 multiline
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.grey02}
