@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: SectionSwitch renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Array [
+            Object {
+              "color": "#25282D",
+            },
+            Object {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 16,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.0015,
+              "lineHeight": 24,
+              "textAlign": "left",
+            },
+          ],
+          Array [
+            Object {
+              "flex": 1,
+            },
+            null,
+          ],
+        ]
+      }
+    >
+      label
+    </Text>
+    <RCTSwitch
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#FEB027"
+      style={
+        Object {
+          "height": 31,
+          "width": 51,
+        }
+      }
+      thumbTintColor="white"
+      value={true}
+    />
+  </View>
+</View>
+`;
