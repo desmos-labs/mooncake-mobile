@@ -19,10 +19,10 @@ interface Props extends Omit<ImageProps, 'style'> {
 
 const COMPONENT_SIZE = 100;
 
-const SelectedCommentImage = ({handlePress, ...rest}: Props) => {
+const SelectedCommentImage = (props: Props) => {
+  const {handlePress, ...rest} = props;
   const styles = useStyles();
   const theme = useTheme();
-
   const {bottom} = useSafeAreaInsets();
 
   return (
@@ -50,7 +50,7 @@ const SelectedCommentImage = ({handlePress, ...rest}: Props) => {
   );
 };
 
-const useStyles = makeStyle(theme => ({
+const useStyles = makeStyle(() => ({
   closeButton: {
     height: 12,
     resizeMode: 'contain',
@@ -69,7 +69,6 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 12,
     height: COMPONENT_SIZE,
     width: COMPONENT_SIZE,
-    margin: theme.spacing.m,
     zIndex: 2,
   },
   imageStyle: {
