@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import React, {FC} from 'react';
 import DView from 'components/DView';
 import {useNavigation} from '@react-navigation/native';
@@ -66,8 +67,8 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
-        <Typography.Button2
-          style={styles.modeButtonText}
+        <Button
+          mode="text"
           onPress={() => {
             navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
@@ -75,8 +76,10 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
               titleLabelOverride,
             });
           }}>
-          {t('advanced')}
-        </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>
+            {t('advanced')}
+          </Typography.Button2>
+        </Button>
       </View>
     );
   }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);
@@ -116,13 +119,14 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <DView topBar={<TopBar rightElement={SwitchToAdvancedButton} />}>
+    <DView
+      topBar={<TopBar rightElement={SwitchToAdvancedButton} />}
+      backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
+        <Typography.H3 style={styles.textStyle}>
           {titleLabelOverride || t('header')}
-        </Typography.H5>
-
-        <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
+        </Typography.H3>
+        <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.s}>
           <Typography.Body6 style={styles.textStyle}>
             {t('selectAnAccount')}
           </Typography.Body6>
@@ -134,7 +138,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
         contentContainerStyle={{
-          paddingHorizontal: theme.spacing.m,
+          padding: theme.spacing.m,
         }}
         onEndReached={() => {
           generateAccountsFromMnemonic();

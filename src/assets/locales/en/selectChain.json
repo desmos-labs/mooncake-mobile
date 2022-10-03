@@ -1,5 +1,5 @@
 {
-  "header": "Connect Address",
+  "header": "Connect Chain",
   "selectChain": "Select a chain to connect your Desmos profile ",
   "searchPlaceholder": "Search for token, chain"
 }

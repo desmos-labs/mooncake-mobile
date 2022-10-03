@@ -36,7 +36,7 @@ const ConnectChainMethodButton = ({method, handlePress}: Props) => {
   }, [method]);
 
   return (
-    <DropShadowWrapper>
+    <DropShadowWrapper customColor="rgba(37, 87, 188, 0.05)">
       <TouchableOpacity onPress={handlePress} style={styles.container}>
         <Image source={buttonImage} style={styles.buttonImage} />
 

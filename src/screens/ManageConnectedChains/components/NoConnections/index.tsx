@@ -1,8 +1,8 @@
-import React from 'react';
-import {View, Image} from 'react-native';
+import {modalSuccess} from 'assets/images';
 import Typography from 'components/Typography';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {noConnectedAddresses} from 'assets/images';
+import {Image, View} from 'react-native';
 
 const NoConnections = () => {
   const {t} = useTranslation('manageChains');
@@ -10,7 +10,7 @@ const NoConnections = () => {
   return (
     <View style={{alignItems: 'center'}}>
       <Image
-        source={noConnectedAddresses}
+        source={modalSuccess}
         style={{
           width: 190,
           height: 152,

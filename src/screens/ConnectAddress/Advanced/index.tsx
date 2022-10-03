@@ -58,8 +58,8 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   const SwitchToGeneralButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
-        <Typography.Button2
-          style={styles.modeButtonText}
+        <Button
+          mode="text"
           onPress={() => {
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
               nextRouteOverride,
@@ -67,8 +67,11 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
               titleLabelOverride,
             });
           }}>
-          {t('general')}
-        </Typography.Button2>
+          {' '}
+          <Typography.Button2 style={styles.modeButtonText}>
+            {t('general')}
+          </Typography.Button2>
+        </Button>
       </View>
     );
   }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
@@ -133,7 +136,9 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
 
   return (
-    <DView topBar={<TopBar rightElement={SwitchToGeneralButton} />}>
+    <DView
+      topBar={<TopBar rightElement={SwitchToGeneralButton} />}
+      backgroundColor={theme.colors.white}>
       <View style={styles.container}>
         <Typography.H5 style={styles.textStyle}>
           {titleLabelOverride || t('header')}
@@ -204,7 +209,8 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
         </Spacer>
 
         <Button
-          mode="gradientFilled"
+          color={theme.colors.surfaceBlack}
+          mode="contained"
           loading={generating || !generatedAccount}
           disabled={invalidField}
           onPress={handlePressConfirm}>

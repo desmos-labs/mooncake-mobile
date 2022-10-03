@@ -117,6 +117,8 @@ const HDDerivPathInputGroup = ({
 
 const useStyles = makeStyle(theme => ({
   textInput: {
+    borderColor: theme.colors.lightGrey01,
+    borderWidth: 1,
     backgroundColor: theme.colors.white,
     alignItems: 'center',
     justifyContent: 'center',
