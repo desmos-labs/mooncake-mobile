@@ -32,8 +32,7 @@ const imagePostData: PostItem = {
       id: 1,
       content: {
         uri: 'https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg',
-        '@type': '/desmos.posts.v1.Media',
-        mime_type: 'image/png',
+        mimeType: 'image/png',
       },
     },
   ],
