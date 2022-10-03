@@ -1,5 +1,5 @@
 import {makeStyleWithProps} from 'config/theme';
-import {Props} from 'components/MaterialButton/index';
+import {Props} from 'components/Button/components/MaterialButton/index';
 import {StyleSheet} from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => {

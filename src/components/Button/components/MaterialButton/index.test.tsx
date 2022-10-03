@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'jest/utils/CustomRender';
-import MaterialButton from 'components/MaterialButton/index';
+import MaterialButton from 'components/Button/components/MaterialButton/index';
 
 describe('component: MaterialButton', () => {
   it('renders', () => {
