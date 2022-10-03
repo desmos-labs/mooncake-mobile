@@ -1,30 +1,31 @@
+import {toBase64} from '@cosmjs/encoding';
+import {LedgerSigner} from '@cosmjs/ledger-amino';
+import {DesmosClient} from '@desmoslabs/desmjs';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import {pairDevicesAnim, unlockLedgerAnimation} from 'assets/animations';
+import {iconCrossBlack, ledgerConnectionError} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
+import ImageButton from 'components/ImageButton';
+import Spacer from 'components/Spacer';
+import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
+import EnvConfig from 'config/EnvConfig';
+import {DesmosLedgerApp} from 'config/LedgerApps';
 import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
+import {toCosmjsHdPath} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
-import {ledgerConnectionError, ledgerDevice} from 'assets/images';
-import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
-import ThemedLottieView from 'components/ThemedLottieView';
-import {LedgerSigner} from '@cosmjs/ledger-amino';
-import {DesmosLedgerApp} from 'config/LedgerApps';
-import {HdPath} from 'types/hdpath';
-import {ChainAccount, ChainAccountType} from 'types/chains';
-import {toBase64} from '@cosmjs/encoding';
-import {DesmosClient} from '@desmoslabs/desmjs';
-import EnvConfig from 'config/EnvConfig';
 import {useSetRecoilState} from 'recoil';
-import createLedgerAccountState from '@recoil/createLedgerAccountState';
-import {toCosmjsHdPath} from 'lib/FormatUtils';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {pairDevicesAnim} from 'assets/animations';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {HdPath} from 'types/hdpath';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -107,7 +108,6 @@ const ConnectToLedger = () => {
         minLedgerAppVersion: DesmosLedgerApp.minVersion,
         ledgerAppName: DesmosLedgerApp.name,
         prefix: 'desmos',
-        ledgerApp: undefined,
         hdPaths: hdPaths.map(toCosmjsHdPath),
       });
 
@@ -167,7 +167,7 @@ const ConnectToLedger = () => {
     navigate(ROUTES.BOTTOM_MODAL, {
       title: t('modalTitle'),
       body: t('modalDescription'),
-      primaryButtonLabel: t('modalButton'),
+      primaryButtonLabel: t('modalButton')!,
     });
   }, []);
 
@@ -175,10 +175,16 @@ const ConnectToLedger = () => {
     if (!paired) {
       return (
         <>
-          <Spacer paddingBottom={theme.spacing.l}>
+          <ImageButton
+            onPress={goBack}
+            image={iconCrossBlack}
+            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+          />
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={60}>
             <ThemedLottieView
               source={pairDevicesAnim}
               style={styles.lottieAnimation}
+              autoSize
               autoPlay
               loop
             />
@@ -200,7 +206,7 @@ const ConnectToLedger = () => {
       return (
         <>
           <Image source={ledgerConnectionError} style={styles.errorImage} />
-
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
           <View
             style={[styles.centeredGroup, {marginBottom: theme.spacing.xl}]}>
             <Typography.H4 style={styles.headerText}>
@@ -210,7 +216,8 @@ const ConnectToLedger = () => {
           </View>
 
           <Button
-            mode="gradientFilled"
+            color={theme.colors.surfaceBlack}
+            mode="contained"
             onPress={retry}
             disabled={connecting}
             loading={connecting}>
@@ -221,22 +228,43 @@ const ConnectToLedger = () => {
     }
     if (paired && !connected) {
       return (
-        <View style={styles.centeredGroup}>
-          <Spacer paddingBottom={54}>
-            <Image source={ledgerDevice} style={styles.ledgerImage} />
-          </Spacer>
-          <Typography.H4 style={{textAlign: 'center'}}>
-            {instruction}
-          </Typography.H4>
-
-          {instructionsIndex % 2 !== 0 && (
-            <Typography.H4
-              onPress={handlePressHowToDL}
-              style={[styles.howToDLText, {textAlign: 'center'}]}>
-              {t('howToDL')}
+        <>
+          <ImageButton
+            onPress={goBack}
+            image={iconCrossBlack}
+            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+          />
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
+          <View style={styles.centeredGroup}>
+            <Spacer paddingBottom={54}>
+              <ThemedLottieView
+                source={unlockLedgerAnimation}
+                style={styles.lottieAnimation}
+                autoSize
+                autoPlay
+                loop
+              />
+            </Spacer>
+            <Typography.H4 style={{textAlign: 'center'}}>
+              {instruction}
             </Typography.H4>
-          )}
-        </View>
+
+            {instructionsIndex % 2 !== 0 && (
+              <Button
+                mode="text"
+                style={styles.howToDLText}
+                onPress={handlePressHowToDL}>
+                <Typography.Button1
+                  style={{
+                    textAlign: 'center',
+                    color: theme.colors.butterOrange01,
+                  }}>
+                  {t('howToDL')}
+                </Typography.Button1>
+              </Button>
+            )}
+          </View>
+        </>
       );
     }
 

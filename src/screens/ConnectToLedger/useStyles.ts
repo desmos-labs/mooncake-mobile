@@ -8,7 +8,6 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     padding: theme.spacing.m,
-    paddingTop: 80,
   },
   image: {
     width: '60%',
@@ -16,12 +15,11 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
   },
   lottieAnimation: {
-    width: '100%',
-    height: verticalScale(150),
     alignSelf: 'center',
   },
   centeredGroup: {
     alignSelf: 'center',
+    marginBottom: 60,
   },
   status: {
     marginTop: theme.spacing.m,
@@ -52,7 +50,8 @@ const useStyles = makeStyle(theme => ({
   },
   howToDLText: {
     marginTop: theme.spacing.l,
-    color: theme.colors.desmosOrange01,
+    marginHorizontal: theme.spacing.m,
+    color: theme.colors.butterOrange01,
   },
 }));
 
