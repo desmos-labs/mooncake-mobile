@@ -26,6 +26,7 @@ import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import Spacer from 'components/Spacer';
+import useDTextInputStyles from 'components/DTextInput/useStyles';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -71,7 +72,13 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
   const textInputRef = useRef<any>();
 
-  const styles = useStyles({keyboardShow, bottomInset: bottom});
+  const dTextInputStyles = useDTextInputStyles({});
+
+  const styles = useStyles({
+    baseTextInputStyle: dTextInputStyles.input,
+    keyboardShow,
+    bottomInset: bottom,
+  });
 
   const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
     onImageSelected: setCommentAttachment,
@@ -154,7 +161,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
               </Spacer>
             )}
             <ScrollView
-              keyboardShouldPersistTaps
+              keyboardShouldPersistTaps="always"
               overScrollMode="never"
               showsVerticalScrollIndicator
               contentContainerStyle={styles.textInputScrollContainer}>
@@ -166,6 +173,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                   setComment(text);
                 }}
                 multiline
+                textBreakStrategy={undefined}
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}

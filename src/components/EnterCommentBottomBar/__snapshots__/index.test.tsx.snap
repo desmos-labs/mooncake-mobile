@@ -659,12 +659,11 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               contentContainerStyle={
                 Object {
                   "flexDirection": "row",
-                  "flexGrow": 1,
-                  "marginRight": 24,
                   "maxHeight": 266.8,
+                  "paddingRight": 24,
                 }
               }
-              keyboardShouldPersistTaps={true}
+              keyboardShouldPersistTaps="always"
               overScrollMode="never"
               showsVerticalScrollIndicator={true}
             >
@@ -679,7 +678,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                     Object {
                       "color": "#25282D",
                       "flex": 1,
+                      "flexGrow": 1,
+                      "fontFamily": "Poppins-Regular",
+                      "fontSize": 14,
+                      "fontStyle": "normal",
+                      "fontWeight": "400",
+                      "letterSpacing": 0.025,
+                      "lineHeight": 21,
+                      "minHeight": undefined,
+                      "paddingHorizontal": 0,
                       "paddingVertical": 0,
+                      "textAlign": "left",
                     }
                   }
                   textAlignVertical="center"

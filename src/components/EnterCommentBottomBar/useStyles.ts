@@ -2,7 +2,14 @@ import {makeStyleWithProps} from 'config/theme';
 import {Dimensions, Platform} from 'react-native';
 
 const useStyles = makeStyleWithProps(
-  (props: {keyboardShow: boolean; bottomInset: number}, theme) => {
+  (
+    props: {
+      baseTextInputStyle: any;
+      keyboardShow: boolean;
+      bottomInset: number;
+    },
+    theme,
+  ) => {
     return {
       postButton: {
         height: 30,
@@ -32,12 +39,11 @@ const useStyles = makeStyleWithProps(
         padding: 12,
       },
       textInput: {
+        ...props.baseTextInputStyle,
         flex: 1,
         color: theme.colors.surfaceBlack,
-        paddingVertical: Platform.select({
-          android: 0,
-          ios: 0,
-        }),
+        paddingVertical: 0,
+        paddingHorizontal: 0,
       },
       profilePic: {
         width: 38,
@@ -61,11 +67,10 @@ const useStyles = makeStyleWithProps(
         }),
       },
       textInputScrollContainer: {
-        flexGrow: 1,
         maxHeight: Dimensions.get('screen').height * 0.2,
         flexDirection: 'row',
         // spacing for expand button
-        marginRight: 24,
+        paddingRight: 24,
       },
     };
   },
