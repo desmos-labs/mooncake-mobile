@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: DView renders 1`] = `
+<RNCSafeAreaView
+  accessible={true}
+  edges={
+    Array [
+      "bottom",
+      "left",
+      "right",
+      "top",
+    ]
+  }
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#f6f6f6",
+        "flexDirection": "column",
+        "flexGrow": 1,
+      },
+      Object {},
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "flex": 1,
+          "flexDirection": "column",
+          "flexGrow": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <Text>
+      Hello world
+    </Text>
+  </View>
+</RNCSafeAreaView>
+`;
