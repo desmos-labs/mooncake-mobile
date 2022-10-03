@@ -14,7 +14,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: theme.spacing.l,
+    marginVertical: 40,
   },
   connectIcon: {
     width: 24,
@@ -32,7 +32,9 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.xl,
   },
   buttonContainer: {
+    flex: 1,
     marginTop: theme.spacing.m,
+    justifyContent: 'flex-end',
   },
 }));
 

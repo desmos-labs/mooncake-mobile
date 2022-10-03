@@ -4,12 +4,12 @@ import {scale} from 'react-native-size-matters';
 const useStyles = makeStyle(theme => ({
   container: {
     backgroundColor: theme.colors.white,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: 18,
     paddingHorizontal: theme.spacing.m,
     borderRadius: 12,
   },
   indexStyle: {
-    color: theme.colors.desmosOrange01,
+    color: theme.colors.butterOrange01,
   },
   textStyle: {
     color: theme.colors.surfaceBlack,
@@ -21,6 +21,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  alignRight: {right: 0, marginLeft: 'auto'},
 }));
 
 export default useStyles;

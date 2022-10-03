@@ -61,8 +61,8 @@ const DropShadowWrapper: React.FC<Props> = props => {
       radius={theme.roundness}>
       <Shadow
         viewStyle={[innerStyle, styles.innerShadow]}
-        startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.05)'}
-        distance={customDistance || 10}
+        startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.04)'}
+        distance={customDistance || 6}
         offset={[0, 1]}
         // fix for android crash
         // nested shadows can't have the same radius, it seems
