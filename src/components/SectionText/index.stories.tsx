@@ -6,8 +6,8 @@ import SectionText from './index';
 type CompProps = React.ComponentProps<typeof SectionText>;
 
 const StandardProps: CompProps = {
-  label: 'Left side',
-  value: 'Right side',
+  leftText: 'Left side',
+  rightText: 'Right side',
 };
 
 storiesOf('components/Section', module)
