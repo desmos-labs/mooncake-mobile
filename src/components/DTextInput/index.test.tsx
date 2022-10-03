@@ -8,4 +8,16 @@ describe('component: DTextInput', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('renders error style', () => {
+    const tree = render(<DTextInput error />).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders numberOfLines style', () => {
+    const tree = render(<DTextInput numberOfLines={1} />).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
 });
