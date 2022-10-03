@@ -153,7 +153,11 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 />
               </Spacer>
             )}
-            <ScrollView contentContainerStyle={styles.textInputScrollContainer}>
+            <ScrollView
+              keyboardShouldPersistTaps
+              overScrollMode="never"
+              showsVerticalScrollIndicator
+              contentContainerStyle={styles.textInputScrollContainer}>
               <TextInput
                 ref={textInputRef}
                 maxLength={EnvConfig.MAX_COMMENT_LENGTH}
@@ -167,17 +171,16 @@ const EnterCommentBottomBar: React.FC<Props> = ({
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
               />
-
-              <View
-                pointerEvents={keyboardShow ? 'auto' : 'none'}
-                style={styles.expandButtonContainer}>
-                <ImageButton
-                  style={styles.expandButton}
-                  image={expandCommentIcon}
-                  onPress={onIconPress}
-                />
-              </View>
             </ScrollView>
+            <View
+              pointerEvents={keyboardShow ? 'auto' : 'none'}
+              style={styles.expandButtonContainer}>
+              <ImageButton
+                style={styles.expandButton}
+                image={expandCommentIcon}
+                onPress={onIconPress}
+              />
+            </View>
           </View>
         </View>
         {keyboardShow && (

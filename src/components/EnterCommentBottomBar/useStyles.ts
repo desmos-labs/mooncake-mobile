@@ -46,6 +46,9 @@ const useStyles = makeStyleWithProps(
         alignSelf: 'flex-start',
       },
       expandButtonContainer: {
+        position: 'absolute',
+        right: 12,
+        bottom: 12,
         opacity: props.keyboardShow ? 1 : 0,
         alignSelf: 'flex-end',
       },
@@ -61,6 +64,8 @@ const useStyles = makeStyleWithProps(
         flexGrow: 1,
         maxHeight: Dimensions.get('screen').height * 0.2,
         flexDirection: 'row',
+        // spacing for expand button
+        marginRight: 24,
       },
     };
   },

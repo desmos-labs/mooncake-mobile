@@ -660,9 +660,13 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 Object {
                   "flexDirection": "row",
                   "flexGrow": 1,
+                  "marginRight": 24,
                   "maxHeight": 266.8,
                 }
               }
+              keyboardShouldPersistTaps={true}
+              overScrollMode="never"
+              showsVerticalScrollIndicator={true}
             >
               <View>
                 <TextInput
@@ -681,50 +685,53 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                   textAlignVertical="center"
                   value=""
                 />
-                <View
-                  pointerEvents="none"
-                  style={
-                    Object {
-                      "alignSelf": "flex-end",
-                      "opacity": 0,
-                    }
-                  }
-                >
-                  <View
-                    accessible={true}
-                    collapsable={false}
-                    focusable={true}
-                    onClick={[Function]}
-                    onResponderGrant={[Function]}
-                    onResponderMove={[Function]}
-                    onResponderRelease={[Function]}
-                    onResponderTerminate={[Function]}
-                    onResponderTerminationRequest={[Function]}
-                    onStartShouldSetResponder={[Function]}
-                    style={
-                      Object {
-                        "opacity": 1,
-                      }
-                    }
-                  >
-                    <Image
-                      source={
-                        Object {
-                          "testUri": "../../../src/assets/images/expandComment.png",
-                        }
-                      }
-                      style={
-                        Object {
-                          "bottom": 0,
-                          "height": 24,
-                          "width": 24,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
               </View>
             </RCTScrollView>
+            <View
+              pointerEvents="none"
+              style={
+                Object {
+                  "alignSelf": "flex-end",
+                  "bottom": 12,
+                  "opacity": 0,
+                  "position": "absolute",
+                  "right": 12,
+                }
+              }
+            >
+              <View
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "testUri": "../../../src/assets/images/expandComment.png",
+                    }
+                  }
+                  style={
+                    Object {
+                      "bottom": 0,
+                      "height": 24,
+                      "width": 24,
+                    }
+                  }
+                />
+              </View>
+            </View>
           </View>
         </View>
       </View>
