@@ -9,6 +9,7 @@ const useStyles = makeStyleWithProps(
         width: 70,
         justifyContent: 'center',
         marginLeft: 12,
+        backgroundColor: theme.colors.primary,
       },
       shadow: {
         backgroundColor: theme.colors.white,
@@ -28,11 +29,15 @@ const useStyles = makeStyleWithProps(
         borderRadius: 12,
         justifyContent: 'space-between',
         marginLeft: theme.spacing.s,
+        padding: 12,
       },
       textInput: {
         flex: 1,
         color: theme.colors.surfaceBlack,
-        padding: 12,
+        paddingVertical: Platform.select({
+          android: 0,
+          ios: 0,
+        }),
       },
       profilePic: {
         width: 38,
@@ -43,8 +48,6 @@ const useStyles = makeStyleWithProps(
       expandButtonContainer: {
         opacity: props.keyboardShow ? 1 : 0,
         alignSelf: 'flex-end',
-        marginRight: 12,
-        marginBottom: 12,
       },
       expandButton: {
         width: 24,

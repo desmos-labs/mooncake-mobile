@@ -9,21 +9,19 @@ import {
   Platform,
 } from 'react-native';
 import {whiteCross} from 'assets/images';
-import {makeStyleWithProps} from 'config/theme';
+import {makeStyle} from 'config/theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTheme} from 'react-native-paper';
 
 interface Props extends Omit<ImageProps, 'style'> {
   handlePress: () => void;
-
-  containerMargin?: number;
 }
 
 const COMPONENT_SIZE = 100;
 
 const SelectedCommentImage = (props: Props) => {
   const {handlePress, ...rest} = props;
-  const styles = useStyles(props);
+  const styles = useStyles();
   const theme = useTheme();
   const {bottom} = useSafeAreaInsets();
 
@@ -52,7 +50,7 @@ const SelectedCommentImage = (props: Props) => {
   );
 };
 
-const useStyles = makeStyleWithProps((props: Props, theme) => ({
+const useStyles = makeStyle(() => ({
   closeButton: {
     height: 12,
     resizeMode: 'contain',
@@ -71,9 +69,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     borderRadius: 12,
     height: COMPONENT_SIZE,
     width: COMPONENT_SIZE,
-    margin: props.containerMargin || theme.spacing.m,
     zIndex: 2,
-    backgroundColor: 'red',
   },
   imageStyle: {
     ...StyleSheet.absoluteFillObject,

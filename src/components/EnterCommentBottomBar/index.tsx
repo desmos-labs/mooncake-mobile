@@ -25,6 +25,7 @@ import {useRecoilState, useResetRecoilState} from 'recoil';
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import useImageFromDevice from 'hooks/useImageFromDevice';
+import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -145,11 +146,12 @@ const EnterCommentBottomBar: React.FC<Props> = ({
           )}
           <View style={styles.textInputContainer}>
             {commentAttachment && (
-              <SelectedCommentImage
-                handlePress={resetCommentAttachment}
-                source={{uri: commentAttachment.uri}}
-                containerMargin={12}
-              />
+              <Spacer paddingBottom={12}>
+                <SelectedCommentImage
+                  handlePress={resetCommentAttachment}
+                  source={{uri: commentAttachment.uri}}
+                />
+              </Spacer>
             )}
             <ScrollView contentContainerStyle={styles.textInputScrollContainer}>
               <TextInput
