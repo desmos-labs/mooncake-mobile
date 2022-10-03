@@ -4,6 +4,7 @@ import DarkTheme from 'config/theme/DarkTheme';
 import LightTheme from 'config/theme/LightTheme';
 import {Switch, ColorValue, View, Text} from 'react-native';
 import {useMMKVBoolean} from 'react-native-mmkv';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface Props {
   children?: ReactNode;
@@ -32,44 +33,46 @@ const SbContainer: React.FC<Props> = ({
   const theme = isDarkMode ? DarkTheme : LightTheme;
 
   return (
-    <PaperProvider theme={isDarkMode ? DarkTheme : LightTheme}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent,
-          alignItems,
-          padding,
-          backgroundColor: backgroundColor
-            ? backgroundColor
-            : theme.colors.background,
-        }}>
-        {children}
+    <SafeAreaProvider>
+      <PaperProvider theme={isDarkMode ? DarkTheme : LightTheme}>
         <View
           style={{
-            position: 'absolute',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bottom: 4,
-            left: 0,
-            right: 0,
+            flex: 1,
+            justifyContent,
+            alignItems,
+            padding,
+            backgroundColor: backgroundColor
+              ? backgroundColor
+              : theme.colors.background,
           }}>
-          <Text
+          {children}
+          <View
             style={{
-              color: theme.colors.surfaceBlack,
+              position: 'absolute',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              bottom: 4,
+              left: 0,
+              right: 0,
             }}>
-            {`Theme: ${isDarkMode ? 'Dark' : 'Light'}`}
-          </Text>
-          <Switch
-            style={{
-              alignSelf: 'center',
-            }}
-            value={isDarkMode}
-            onValueChange={() => setIsDarkMode(!isDarkMode)}
-          />
+            <Text
+              style={{
+                color: theme.colors.surfaceBlack,
+              }}>
+              {`Theme: ${isDarkMode ? 'Dark' : 'Light'}`}
+            </Text>
+            <Switch
+              style={{
+                alignSelf: 'center',
+              }}
+              value={isDarkMode}
+              onValueChange={() => setIsDarkMode(!isDarkMode)}
+            />
+          </View>
         </View>
-      </View>
-    </PaperProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 };
 
