@@ -651,6 +651,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "flex": 1,
                 "justifyContent": "space-between",
                 "marginLeft": 8,
+                "padding": 12,
               }
             }
           >
@@ -674,7 +675,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                     Object {
                       "color": "#25282D",
                       "flex": 1,
-                      "padding": 12,
+                      "paddingVertical": 0,
                     }
                   }
                   textAlignVertical="center"
@@ -685,8 +686,6 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                   style={
                     Object {
                       "alignSelf": "flex-end",
-                      "marginBottom": 12,
-                      "marginRight": 12,
                       "opacity": 0,
                     }
                   }
