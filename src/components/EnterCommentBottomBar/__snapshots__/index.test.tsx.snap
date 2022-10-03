@@ -635,7 +635,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             }
             style={
               Object {
-                "alignSelf": "center",
+                "alignSelf": "flex-start",
                 "borderRadius": 38,
                 "height": 38,
                 "width": 38,
@@ -651,77 +651,81 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "flex": 1,
                 "justifyContent": "space-between",
                 "marginLeft": 8,
-                "paddingHorizontal": 8,
-                "paddingVertical": 8,
               }
             }
           >
-            <View
-              style={
+            <RCTScrollView
+              contentContainerStyle={
                 Object {
                   "flexDirection": "row",
+                  "flexGrow": 1,
+                  "maxHeight": 266.8,
                 }
               }
             >
-              <TextInput
-                maxLength={500}
-                multiline={true}
-                onChangeText={[Function]}
-                placeholder="Write a comment..."
-                placeholderTextColor="#878787"
-                style={
-                  Object {
-                    "color": "#25282D",
-                    "flex": 1,
-                  }
-                }
-                textAlignVertical="center"
-                value=""
-              />
-              <View
-                pointerEvents="none"
-                style={
-                  Object {
-                    "alignSelf": "flex-end",
-                    "opacity": 0,
-                  }
-                }
-              >
-                <View
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
+              <View>
+                <TextInput
+                  maxLength={500}
+                  multiline={true}
+                  onChangeText={[Function]}
+                  placeholder="Write a comment..."
+                  placeholderTextColor="#878787"
                   style={
                     Object {
-                      "opacity": 1,
+                      "color": "#25282D",
+                      "flex": 1,
+                      "padding": 12,
+                    }
+                  }
+                  textAlignVertical="center"
+                  value=""
+                />
+                <View
+                  pointerEvents="none"
+                  style={
+                    Object {
+                      "alignSelf": "flex-end",
+                      "marginBottom": 12,
+                      "marginRight": 12,
+                      "opacity": 0,
                     }
                   }
                 >
-                  <Image
-                    source={
-                      Object {
-                        "testUri": "../../../src/assets/images/expandComment.png",
-                      }
-                    }
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
                     style={
                       Object {
-                        "bottom": 0,
-                        "height": 24,
-                        "opacity": 0,
-                        "width": 24,
+                        "opacity": 1,
                       }
                     }
-                  />
+                  >
+                    <Image
+                      source={
+                        Object {
+                          "testUri": "../../../src/assets/images/expandComment.png",
+                        }
+                      }
+                      style={
+                        Object {
+                          "bottom": 0,
+                          "height": 24,
+                          "width": 24,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
+            </RCTScrollView>
           </View>
         </View>
       </View>
