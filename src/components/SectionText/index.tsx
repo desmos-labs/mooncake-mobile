@@ -14,7 +14,7 @@ export type Props = {
   rightText: string;
 };
 
-// [Kevin] Is this component even used?
+// Unused component
 const SectionText: React.FC<Props> = props => {
   const {leftText, rightText} = props;
   const styles = useStyles();
