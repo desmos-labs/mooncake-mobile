@@ -29,7 +29,7 @@ export type Props = SafeAreaViewProps & {
   /**
    * Image that will be displayed as background
    */
-  background?: React.ComponentProps<typeof ImageBackground>['source'];
+  backgroundImage?: React.ComponentProps<typeof ImageBackground>['source'];
 
   /**
    * Override themed background color
@@ -51,7 +51,7 @@ const DView: React.FC<Props> = props => {
   const {
     scrollable,
     topBar,
-    background,
+    backgroundImage,
     children,
     backgroundColor,
     style,
@@ -88,8 +88,11 @@ const DView: React.FC<Props> = props => {
             translucent={true}
             {...statusBarProps}
           />
-          {background !== undefined && (
-            <ImageBackground style={styles.background} source={background} />
+          {backgroundImage !== undefined && (
+            <ImageBackground
+              style={styles.background}
+              source={backgroundImage}
+            />
           )}
           {topBar}
           <View style={[styles.content, style]}>
