@@ -1,7 +1,6 @@
 import {Coin} from '@cosmjs/stargate';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import activeProfileState from '@recoil/activeProfileState';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
@@ -9,7 +8,6 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useToast} from 'react-native-toast-notifications';
-import {useRecoilState} from 'recoil';
 import useSendTip from 'services/axios/requests/CentralizedBroadcastTx/SendTip/useSendTip';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
@@ -18,7 +16,6 @@ const useHooks = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const {manageTips, sendTipLoading} = useSendTip();
   const {goBack} = useNavigation<NavProps['navigation']>();
-  const [profile] = useRecoilState(activeProfileState);
   const toast = useToast();
 
   const handleSendTip = React.useCallback(
@@ -34,7 +31,7 @@ const useHooks = () => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: profile?.address!,
+        address: sender,
       });
 
       if (success) {
@@ -56,13 +53,12 @@ const useHooks = () => {
         });
       }
     },
-    [profile?.address],
+    [],
   );
 
   return {
     handleSendTip,
     sendTipLoading,
-    profile,
     goBack,
   };
 };

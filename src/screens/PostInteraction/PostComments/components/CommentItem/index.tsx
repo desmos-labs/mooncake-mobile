@@ -35,9 +35,9 @@ type Props = {
 
   handlePressTip: () => void;
 
-  handlePress: () => void;
+  handlePress?: () => void;
 
-  handleLongPress: (event: GestureResponderEvent) => void;
+  handleLongPress?: (event: GestureResponderEvent) => void;
 
   repliesCounter: number;
 
@@ -94,7 +94,7 @@ const CommentItem = ({
     <TouchableOpacity
       onPress={handlePress}
       onLongPress={handleLongPress}
-      activeOpacity={0.8}
+      activeOpacity={handlePress ? 0.8 : 1}
       style={[styles.container, styles.flexRow]}>
       <Image
         source={

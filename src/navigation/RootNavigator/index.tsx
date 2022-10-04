@@ -52,7 +52,7 @@ import DisconnectChainModal, {
 } from 'screens/Modals/DisconnectChainModal';
 import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
-import SendTips from 'screens/Modals/SendTips';
+import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
@@ -125,7 +125,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SELECT_CHAIN]: undefined;
-  [ROUTES.SEND_TIPS]: undefined;
+  [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;

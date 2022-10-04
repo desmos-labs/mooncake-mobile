@@ -1,11 +1,14 @@
 import {useQuery} from '@apollo/client';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {formatNumShorthand} from 'lib/FormatUtils';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -20,8 +23,15 @@ import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
+export type SendTipsParams = {
+  postAuthor: string;
+};
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
+
 const SendTips = () => {
   const {activeAddress} = useActiveAccount();
+  const {params} = useRoute<NavProps['route']>();
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
@@ -30,7 +40,7 @@ const SendTips = () => {
   });
   const styles = useStyles();
   const theme = useTheme();
-  const {handleSendTip, sendTipLoading, profile, goBack} = useHooks();
+  const {handleSendTip, sendTipLoading, goBack} = useHooks();
 
   const editable = useMemo(() => {
     return !(loading || data.action_account_balance.coins[0].amount <= 0);
@@ -56,10 +66,10 @@ const SendTips = () => {
   const handlePressConfirm = React.useCallback(() => {
     handleSendTip({
       amount: parseInt(tipAmount, 10),
-      receiver: profile?.address!,
-      sender: profile?.address!,
+      receiver: params.postAuthor,
+      sender: activeAddress!,
     });
-  }, [profile, tipAmount]);
+  }, [activeAddress, tipAmount, params.postAuthor]);
 
   return (
     <KeyboardAvoidingView

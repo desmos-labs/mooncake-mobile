@@ -147,13 +147,9 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(item.post.id)}
-          handlePressTip={() => {
-            console.log('hello world');
-          }}
-          handlePress={() => {
-            console.log('hello world');
-          }}
-          handleLongPress={() => console.log('longPress')}
+          handlePressTip={() =>
+            handlePressSendTips(item?.post?.author?.address)
+          }
           {...item.post}
         />
       );
@@ -183,11 +179,9 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(mainComment.id)}
-          handlePressTip={() => handlePressSendTips()}
-          handlePress={() => {
-            console.log('hello world');
-          }}
-          handleLongPress={() => console.log('longPress')}
+          handlePressTip={() =>
+            handlePressSendTips(mainComment?.author?.address)
+          }
           {...mainComment}
         />
         <Spacer paddingVertical={16} />

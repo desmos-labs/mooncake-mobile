@@ -227,8 +227,8 @@ const useHooks = ({
     });
   }, []);
 
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
+  const handlePressSendTips = React.useCallback((postAuthor: string) => {
+    navigate(ROUTES.SEND_TIPS, {postAuthor});
   }, []);
 
   const handlePressCounters = React.useCallback(() => {
