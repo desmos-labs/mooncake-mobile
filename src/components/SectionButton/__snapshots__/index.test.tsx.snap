@@ -80,3 +80,99 @@ exports[`component: SectionButton renders 1`] = `
   </View>
 </View>
 `;
+
+exports[`component: SectionButton renders left icon 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={false}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "opacity": 1,
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <Image
+      resizeMode="contain"
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/desmosIcon.png",
+        }
+      }
+      style={
+        Object {
+          "height": 24,
+          "marginRight": 8,
+          "width": 24,
+        }
+      }
+    />
+    <Text
+      style={
+        Array [
+          Array [
+            Object {
+              "color": "#25282D",
+            },
+            Object {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 16,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.0015,
+              "lineHeight": 24,
+              "textAlign": "left",
+            },
+          ],
+          Object {
+            "flex": 1,
+          },
+        ]
+      }
+    >
+      label
+    </Text>
+    <Text
+      allowFontScaling={true}
+      selectable={false}
+      style={
+        Array [
+          Object {
+            "color": "#25282D",
+            "fontSize": 24,
+          },
+          undefined,
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;

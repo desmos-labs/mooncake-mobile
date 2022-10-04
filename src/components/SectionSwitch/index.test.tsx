@@ -10,4 +10,12 @@ describe('component: SectionSwitch', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('renders disabled', () => {
+    const tree = render(
+      <SectionSwitch label="label" value disabled onValueChange={jest.fn()} />,
+    ).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
 });
