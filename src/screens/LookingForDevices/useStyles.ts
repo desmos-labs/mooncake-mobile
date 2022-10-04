@@ -7,9 +7,12 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: theme.colors.white,
   },
   container: {
+    flex: 1,
     padding: theme.spacing.m,
+    backgroundColor: theme.colors.white,
   },
   headerStyle: {
     color: theme.colors.surfaceBlack,
@@ -18,6 +21,7 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   descriptionStyle: {
+    marginHorizontal: theme.spacing.m,
     color: theme.colors.surfaceBlack,
     textAlign: 'center',
   },
@@ -48,10 +52,11 @@ const useStyles = makeStyle(theme => ({
     marginTop: 22,
   },
   flatlistContainer: {
+    flex: 1,
     marginTop: 22,
   },
   noDevicesText: {
-    color: theme.colors.butterOrange01,
+    color: theme.colors.surfaceBlack,
   },
   noDeviceImage: {
     width: 110,
@@ -61,6 +66,7 @@ const useStyles = makeStyle(theme => ({
   retryButton: {
     color: theme.colors.white,
     marginTop: theme.spacing.xl,
+    marginHorizontal: theme.spacing.m,
   },
   contentContainer: {
     flexGrow: 1,
