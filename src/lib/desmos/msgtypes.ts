@@ -2,15 +2,14 @@
 export enum GrantEnums {
   // see desmjs/build/encodeObjects
   MsgCreatePost = '/desmos.posts.v2.MsgCreatePost',
-
   // follow/unfollow
   MsgCreateRelationship = '/desmos.relationships.v1.MsgCreateRelationship',
   MsgDeleteRelationship = '/desmos.relationships.v1.MsgDeleteRelationship',
-
   MsgAddReaction = '/desmos.reactions.v1.MsgAddReaction',
   MsgRemoveReaction = '/desmos.reactions.v1.MsgRemoveReaction',
-
   MsgCreateReport = '/desmos.reports.v1.MsgCreateReport',
+  // contracts
+  MsgExecuteContract = '/cosmwasm.wasm.v1.MsgExecuteContract',
 }
 
 export enum GenericMsgEnums {
@@ -22,7 +21,6 @@ export enum GenericMsgEnums {
   MsgSaveProfile = '/desmos.profiles.v3.MsgSaveProfile',
   MsgLinkChainAccount = '/desmos.profiles.v3.MsgLinkChainAccount',
   MsgUnlinkChainAccount = '/desmos.profiles.v3.MsgUnlinkChainAccount',
-
   MsgGrant = '/cosmos.authz.v1beta1.MsgGrant',
 }
 

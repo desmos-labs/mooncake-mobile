@@ -1,14 +1,11 @@
 import {useQuery} from '@apollo/client';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import {useFocusEffect} from '@react-navigation/native';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -20,9 +17,8 @@ import {
 } from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
 import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
   const {activeAddress} = useActiveAccount();
@@ -34,8 +30,7 @@ const SendTips = () => {
   });
   const styles = useStyles();
   const theme = useTheme();
-
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {handleSendTip, sendTipLoading, profile, goBack} = useHooks();
 
   const editable = useMemo(() => {
     return !(loading || data.action_account_balance.coins[0].amount <= 0);
@@ -59,9 +54,12 @@ const SendTips = () => {
   );
 
   const handlePressConfirm = React.useCallback(() => {
-    goBack();
-    // implementation
-  }, []);
+    handleSendTip({
+      amount: parseInt(tipAmount, 10),
+      receiver: profile?.address!,
+      sender: profile?.address!,
+    });
+  }, [profile, tipAmount]);
 
   return (
     <KeyboardAvoidingView
@@ -183,6 +181,7 @@ const SendTips = () => {
           />
           <Spacer paddingVertical={40}>
             <Button
+              loading={sendTipLoading}
               mode="contained"
               color={theme.colors.surfaceBlack}
               onPress={handlePressConfirm}

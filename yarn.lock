@@ -1024,7 +1024,7 @@
     "@cosmjs/math" "^0.25.6"
     "@cosmjs/utils" "^0.25.6"
 
-"@cosmjs/cosmwasm-stargate@^0.28.11":
+"@cosmjs/cosmwasm-stargate@0.28.11", "@cosmjs/cosmwasm-stargate@^0.28.11":
   version "0.28.11"
   resolved "https://registry.yarnpkg.com/@cosmjs/cosmwasm-stargate/-/cosmwasm-stargate-0.28.11.tgz#73e30208a0f7668c0550c5a2410e5289ae46cbd2"
   integrity sha512-sZ04c9ZvwAC7IngNeOhTnHJLBu7PXX3QfWM2vCVGd9puP9f3Hj3nbre75WKjHZ3DDVvxfS3u3JUJ6LjVWeIRuQ==
@@ -1206,10 +1206,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.3.11":
-  version "4.3.11"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.3.11.tgz#4a80a55f60caa5a293c2102fd8eb43719d871223"
-  integrity sha512-dmnm0nMiw6vPMvpW7U0uUg92YahqXh5WQBw05jisrLo6gIymuG23uNE8qEnwaOGtVYO3974HxfUolT5Si0lhXA==
+"@desmoslabs/desmjs-types@4.5.1-beta.3":
+  version "4.5.1-beta.3"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.5.1-beta.3.tgz#31b27e4a32536f312b5a9ed5a7acec2d0a9fbf41"
+  integrity sha512-BHNBOz8INwcf5Cgs0lyIT2DC+X/hpcIbR54MSbh3Pa8G9ad3bWTaS6x4WuNj/9RIgeDsAPexBLwHEx3YqgbNuA==
   dependencies:
     long "^4.0.0"
     protobufjs "^7.1.0"
@@ -1222,10 +1222,10 @@
     long "^4.0.0"
     protobufjs "^7.1.0"
 
-"@desmoslabs/desmjs@4.3.11":
-  version "4.3.11"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.3.11.tgz#a132588fdc1cbc2e0c6c8c10bfa1e672b937e275"
-  integrity sha512-v0J5D591Yl6pFktlOxyGBbfcJClfPBl/ijj8PMF/NdM+bLGS8DSvSZre4y47XGjpnx8pP7B+kS1H7Epb5x2ozQ==
+"@desmoslabs/desmjs@4.5.1-beta.3":
+  version "4.5.1-beta.3"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.5.1-beta.3.tgz#a535926146aba15de9563d9c8605ebe2575e9f12"
+  integrity sha512-HwBE7j9+f23eBGAlRBveXG4pYf6K5f9i2g3LoM44uVI0amZ7AAcyN5ZsBviS/blCai7RAx0h7mOtzNM7VMtDoQ==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"
@@ -5489,6 +5489,11 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   version "2.0.6"
   resolved "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
+
+fastestsmallesttextencoderdecoder@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.22.tgz#59b47e7b965f45258629cc6c127bf783281c5e93"
+  integrity sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==
 
 fastq@^1.6.0:
   version "1.13.0"
