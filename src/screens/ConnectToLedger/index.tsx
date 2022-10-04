@@ -178,7 +178,7 @@ const ConnectToLedger = () => {
           <ImageButton
             onPress={goBack}
             image={iconCrossBlack}
-            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+            style={styles.crossIcon}
           />
           <Spacer paddingBottom={theme.spacing.l} paddingTop={60}>
             <ThemedLottieView
@@ -205,6 +205,12 @@ const ConnectToLedger = () => {
     if (connectionError && !connectionError.includes('Please close BOLOS')) {
       return (
         <>
+          <ImageButton
+            onPress={goBack}
+            image={iconCrossBlack}
+            style={styles.crossIcon}
+          />
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
           <Image source={ledgerConnectionError} style={styles.errorImage} />
           <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
           <View
@@ -232,7 +238,7 @@ const ConnectToLedger = () => {
           <ImageButton
             onPress={goBack}
             image={iconCrossBlack}
-            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+            style={styles.crossIcon}
           />
           <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
           <View style={styles.centeredGroup}>

@@ -186,8 +186,8 @@ const LookingForDevices = () => {
     }
 
     return (
-      <>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <>
           <ImageButton
             onPress={goBack}
             image={iconCrossBlack}
@@ -209,7 +209,7 @@ const LookingForDevices = () => {
               {t('description')}
             </Typography.Body6>
           </View>
-        </View>
+        </>
 
         <FlatList
           style={styles.flatlistContainer}
@@ -218,7 +218,7 @@ const LookingForDevices = () => {
           data={devices}
           renderItem={renderItem}
         />
-      </>
+      </View>
     );
   }, [scanning, devices.length, screenReady]);
 

@@ -52,6 +52,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: 22,
   },
   flatlistContainer: {
+    flex: 1,
     marginTop: 22,
   },
   noDevicesText: {

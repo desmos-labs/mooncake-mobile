@@ -53,6 +53,7 @@ const useStyles = makeStyle(theme => ({
     marginHorizontal: theme.spacing.m,
     color: theme.colors.butterOrange01,
   },
+  crossIcon: {height: 24, width: 24, right: 0, marginLeft: 'auto'},
 }));
 
 export default useStyles;
