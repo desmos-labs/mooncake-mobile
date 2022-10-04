@@ -55,7 +55,6 @@ const useInitializeAppData = () => {
       !registeredReportsLoading &&
       !registeredReactionsLoading
     ) {
-      console.log(registeredReports?.subspace_report_reason);
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting

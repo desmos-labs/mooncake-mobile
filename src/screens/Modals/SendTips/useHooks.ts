@@ -1,3 +1,4 @@
+import {Coin} from '@cosmjs/stargate';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
@@ -31,7 +32,6 @@ const useHooks = () => {
       receiver: string;
     }) => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
-      // check if user has grants first
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
         address: profile?.address!,
@@ -43,7 +43,7 @@ const useHooks = () => {
             {
               denom: 'udaric',
               amount: (amount * 1000000).toString(),
-            },
+            } as Coin,
           ],
           sender,
           receiver,
