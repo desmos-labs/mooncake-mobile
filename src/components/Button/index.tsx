@@ -1,4 +1,4 @@
-import MaterialButton from 'components/MaterialButton';
+import MaterialButton from 'components/Button/components/MaterialButton';
 import React from 'react';
 import {Platform, TouchableOpacity} from 'react-native';
 

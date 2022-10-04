@@ -165,6 +165,10 @@
     "setupFiles": [
       "<rootDir>/jest/setup.js",
       "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/assets/"
     ]
   },
   "lint-staged": {

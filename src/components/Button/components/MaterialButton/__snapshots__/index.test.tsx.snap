@@ -1,0 +1,621 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: MaterialButton renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "borderColor": "#FEB027",
+        "borderRadius": 14,
+        "borderStyle": "solid",
+        "borderWidth": 0,
+        "elevation": 0,
+        "minWidth": 64,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+      }
+    }
+  >
+    <View
+      accessibilityRole="button"
+      accessibilityState={
+        Object {
+          "disabled": true,
+        }
+      }
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "borderRadius": 14,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            Array [
+              Object {
+                "height": 52,
+              },
+              undefined,
+            ],
+          ]
+        }
+      >
+        <Text
+          numberOfLines={1}
+          selectable={false}
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+                "fontFamily": "System",
+                "fontWeight": "400",
+              },
+              Object {
+                "textAlign": "left",
+              },
+              Array [
+                Object {
+                  "letterSpacing": 1,
+                  "marginHorizontal": 16,
+                  "marginVertical": 9,
+                  "textAlign": "center",
+                },
+                undefined,
+                Object {
+                  "textTransform": "uppercase",
+                },
+                Object {
+                  "color": "#FEB027",
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Object {
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Array [
+                  Object {
+                    "color": "#FEB027",
+                    "fontFamily": "Poppins-SemiBold",
+                    "fontSize": 16,
+                    "fontStyle": "normal",
+                    "fontWeight": "600",
+                    "letterSpacing": 0.015,
+                    "lineHeight": 20,
+                    "textTransform": "capitalize",
+                  },
+                  undefined,
+                ],
+              ],
+            ]
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`component: MaterialButton renders mode: backgroundComponent 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={Object {}}
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "justifyContent": "center",
+          },
+          undefined,
+        ]
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`component: MaterialButton renders mode: gradient 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignSelf": "stretch",
+          "justifyContent": "center",
+        },
+        undefined,
+        undefined,
+      ]
+    }
+  >
+    <RNCMaskedView
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        pointerEvents="none"
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "flex": 1,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignSelf": "stretch",
+                "borderColor": "black",
+                "borderRadius": 14,
+                "borderWidth": 1,
+                "padding": 24,
+              }
+            }
+          />
+        </View>
+      </View>
+      <BVLinearGradient
+        colors={
+          Array [
+            4294952795,
+            4294935631,
+            4294935631,
+            4294935631,
+          ]
+        }
+        endPoint={
+          Object {
+            "x": 0.5,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          Object {
+            "x": 0.5,
+            "y": 0,
+          }
+        }
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+      />
+    </RNCMaskedView>
+    <View
+      collapsable={false}
+      style={
+        Object {
+          "backgroundColor": "transparent",
+          "borderColor": "#FEB027",
+          "borderRadius": 14,
+          "borderStyle": "solid",
+          "borderWidth": 0,
+          "elevation": 0,
+          "minWidth": 64,
+          "shadowColor": "#000000",
+          "shadowOffset": Object {
+            "height": 0,
+            "width": 0,
+          },
+          "shadowOpacity": 0,
+          "shadowRadius": 0,
+        }
+      }
+    >
+      <View
+        accessibilityRole="button"
+        accessibilityState={
+          Object {
+            "disabled": true,
+          }
+        }
+        accessible={true}
+        focusable={false}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "borderRadius": 14,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
+              Array [
+                Object {
+                  "height": 52,
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <Text
+            numberOfLines={1}
+            selectable={false}
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                  "fontFamily": "System",
+                  "fontWeight": "400",
+                },
+                Object {
+                  "textAlign": "left",
+                },
+                Array [
+                  Object {
+                    "letterSpacing": 1,
+                    "marginHorizontal": 16,
+                    "marginVertical": 9,
+                    "textAlign": "center",
+                  },
+                  undefined,
+                  Object {
+                    "textTransform": "uppercase",
+                  },
+                  Object {
+                    "color": "#FEB027",
+                    "fontFamily": "System",
+                    "fontWeight": "500",
+                  },
+                  Object {
+                    "fontFamily": "System",
+                    "fontWeight": "500",
+                  },
+                  Array [
+                    Object {
+                      "color": "#FEB027",
+                      "fontFamily": "Poppins-SemiBold",
+                      "fontSize": 16,
+                      "fontStyle": "normal",
+                      "fontWeight": "600",
+                      "letterSpacing": 0.015,
+                      "lineHeight": 20,
+                      "textTransform": "capitalize",
+                    },
+                    undefined,
+                  ],
+                ],
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "borderRadius": 14,
+          "overflow": "hidden",
+        },
+        undefined,
+        undefined,
+      ]
+    }
+  >
+    <BVLinearGradient
+      colors={
+        Array [
+          4294942482,
+          4294498880,
+        ]
+      }
+      endPoint={
+        Object {
+          "x": 0.5,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        Object {
+          "x": 0.5,
+          "y": 0,
+        }
+      }
+      style={
+        Array [
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          Object {
+            "flex": 1,
+          },
+        ]
+      }
+    />
+    <View
+      collapsable={false}
+      style={
+        Object {
+          "backgroundColor": "transparent",
+          "borderColor": "#FEB027",
+          "borderRadius": 14,
+          "borderStyle": "solid",
+          "borderWidth": 0,
+          "elevation": 0,
+          "minWidth": 64,
+          "shadowColor": "#000000",
+          "shadowOffset": Object {
+            "height": 0,
+            "width": 0,
+          },
+          "shadowOpacity": 0,
+          "shadowRadius": 0,
+        }
+      }
+    >
+      <View
+        accessibilityRole="button"
+        accessibilityState={
+          Object {
+            "disabled": true,
+          }
+        }
+        accessible={true}
+        focusable={false}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "borderRadius": 14,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
+              Array [
+                Object {
+                  "height": 52,
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <Text
+            numberOfLines={1}
+            selectable={false}
+            style={
+              Array [
+                Object {
+                  "color": "#000000",
+                  "fontFamily": "System",
+                  "fontWeight": "400",
+                },
+                Object {
+                  "textAlign": "left",
+                },
+                Array [
+                  Object {
+                    "letterSpacing": 1,
+                    "marginHorizontal": 16,
+                    "marginVertical": 9,
+                    "textAlign": "center",
+                  },
+                  undefined,
+                  Object {
+                    "textTransform": "uppercase",
+                  },
+                  Object {
+                    "color": "#FEB027",
+                    "fontFamily": "System",
+                    "fontWeight": "500",
+                  },
+                  Object {
+                    "fontFamily": "System",
+                    "fontWeight": "500",
+                  },
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Poppins-SemiBold",
+                      "fontSize": 16,
+                      "fontStyle": "normal",
+                      "fontWeight": "600",
+                      "letterSpacing": 0.015,
+                      "lineHeight": 20,
+                      "textTransform": "capitalize",
+                    },
+                    undefined,
+                  ],
+                ],
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`component: MaterialButton renders mode: text 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={false}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignSelf": "center",
+        "borderColor": "#FEB027",
+        "borderWidth": 0,
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#FEB027",
+            "fontFamily": "Poppins-SemiBold",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "600",
+            "letterSpacing": 0.015,
+            "lineHeight": 20,
+            "textTransform": "capitalize",
+          },
+          undefined,
+        ]
+      }
+    />
+  </View>
+</View>
+`;

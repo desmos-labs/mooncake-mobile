@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: DView renders 1`] = `
+<RNCSafeAreaView
+  accessible={true}
+  edges={
+    Array [
+      "bottom",
+      "left",
+      "right",
+      "top",
+    ]
+  }
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#f6f6f6",
+        "flexDirection": "column",
+        "flexGrow": 1,
+      },
+      Object {},
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "flex": 1,
+          "flexDirection": "column",
+          "flexGrow": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <Text>
+      Hello world
+    </Text>
+  </View>
+</RNCSafeAreaView>
+`;
+
+exports[`component: DView renders background prop 1`] = `
+<RNCSafeAreaView
+  accessible={true}
+  edges={
+    Array [
+      "bottom",
+      "left",
+      "right",
+      "top",
+    ]
+  }
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#f6f6f6",
+        "flexDirection": "column",
+        "flexGrow": 1,
+      },
+      Object {},
+    ]
+  }
+>
+  <View
+    accessibilityIgnoresInvertColors={true}
+    style={
+      Object {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../src/assets/images/desmosIcon.png",
+        }
+      }
+      style={
+        Array [
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          Object {
+            "height": undefined,
+            "width": undefined,
+          },
+          undefined,
+        ]
+      }
+    />
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "flex": 1,
+          "flexDirection": "column",
+          "flexGrow": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <Text>
+      Hello world
+    </Text>
+  </View>
+</RNCSafeAreaView>
+`;

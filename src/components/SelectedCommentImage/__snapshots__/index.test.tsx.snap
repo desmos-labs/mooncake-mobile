@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: SelectedCommentImage renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "bottom": 0,
+        }
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "borderRadius": 12,
+            "height": 100,
+            "opacity": 1,
+            "overflow": "hidden",
+            "width": 100,
+            "zIndex": 2,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "testUri": "../../../src/assets/images/desmosIcon.png",
+            }
+          }
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "resizeMode": "cover",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            Object {
+              "backgroundColor": "rgba(0,0,0,0.3)",
+              "borderRadius": 8,
+              "padding": 7.5,
+              "position": "absolute",
+              "right": 8,
+              "top": 8,
+            }
+          }
+        >
+          <Image
+            source={
+              Object {
+                "testUri": "../../../src/assets/images/whiteCross.png",
+              }
+            }
+            style={
+              Object {
+                "height": 12,
+                "resizeMode": "contain",
+                "width": 12,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`component: SelectedCommentImage renders nothing if source is undefined 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "bottom": 0,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "opacity": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;

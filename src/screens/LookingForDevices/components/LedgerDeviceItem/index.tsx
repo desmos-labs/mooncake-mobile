@@ -37,7 +37,7 @@ const LedgerDeviceItem = ({name, onPress, showCheck, ...rest}: Props) => {
   } = useStyles();
 
   return (
-    <DropShadowWrapper customColor="rgba(16, 24, 40,0.05)" disableInnerWrapper>
+    <DropShadowWrapper customColor="rgba(16, 24, 40, 0.03)" customDistance={6}>
       <TouchableOpacity
         style={container}
         onPress={onPress || undefined}

@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: MnemonicWordBard renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={false}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 8,
+        "minWidth": 24,
+        "opacity": 1,
+        "paddingHorizontal": 8,
+        "paddingVertical": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "color": "#25282D",
+          },
+          Object {
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.025,
+            "lineHeight": 21,
+            "textAlign": "left",
+          },
+        ]
+      }
+    >
+      hello
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "#000000",
+          "fontSize": 8,
+          "position": "absolute",
+          "right": 8,
+          "top": 8,
+        }
+      }
+    />
+  </View>
+</View>
+`;

@@ -7,21 +7,22 @@ export type Props = {
   /**
    * Label to display on the left side
    */
-  label: string;
+  leftText: string;
   /**
    * Value to display on the right side
    */
-  value: string;
+  rightText: string;
 };
 
+// Unused component
 const SectionText: React.FC<Props> = props => {
-  const {label, value} = props;
+  const {leftText, rightText} = props;
   const styles = useStyles();
 
   return (
     <View style={styles.root}>
-      <Typography.Button1 style={styles.label}>{label}</Typography.Button1>
-      <Typography.Button1 style={styles.value}>{value}</Typography.Button1>
+      <Typography.Button1 style={styles.label}>{leftText}</Typography.Button1>
+      <Typography.Button1 style={styles.value}>{rightText}</Typography.Button1>
     </View>
   );
 };

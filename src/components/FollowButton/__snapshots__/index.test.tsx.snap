@@ -1,0 +1,371 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: FollowButton renders follow version 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "backgroundColor": undefined,
+        "borderColor": undefined,
+        "borderRadius": 12,
+        "borderStyle": "solid",
+        "borderWidth": 1,
+        "elevation": 0,
+        "height": 32,
+        "justifyContent": "center",
+        "minWidth": 64,
+        "padding": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+        "width": 83,
+      }
+    }
+  >
+    <View
+      accessibilityRole="button"
+      accessibilityState={
+        Object {
+          "disabled": true,
+        }
+      }
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "borderRadius": 12,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            Array [
+              Object {
+                "height": 52,
+              },
+              undefined,
+            ],
+          ]
+        }
+      >
+        <Text
+          numberOfLines={1}
+          selectable={false}
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+                "fontFamily": "System",
+                "fontWeight": "400",
+              },
+              Object {
+                "textAlign": "left",
+              },
+              Array [
+                Object {
+                  "letterSpacing": 1,
+                  "marginHorizontal": 16,
+                  "marginVertical": 9,
+                  "textAlign": "center",
+                },
+                undefined,
+                Object {
+                  "textTransform": "uppercase",
+                },
+                Object {
+                  "color": "#6200ee",
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Object {
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontFamily": "Poppins-SemiBold",
+                    "fontSize": 16,
+                    "fontStyle": "normal",
+                    "fontWeight": "600",
+                    "letterSpacing": 0.015,
+                    "lineHeight": 20,
+                    "textTransform": "capitalize",
+                  },
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "margin": 0,
+                      "minWidth": "100%",
+                      "pading": 0,
+                      "textAlign": "center",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Array [
+                  Object {
+                    "color": undefined,
+                  },
+                  Object {
+                    "fontFamily": "Poppins-SemiBold",
+                    "fontSize": 12,
+                    "fontStyle": "normal",
+                    "fontWeight": "600",
+                    "letterSpacing": 0.04,
+                    "lineHeight": 16,
+                    "textAlign": "left",
+                  },
+                ],
+                Array [
+                  Object {
+                    "color": undefined,
+                    "margin": 0,
+                    "minWidth": "100%",
+                    "pading": 0,
+                    "textAlign": "center",
+                  },
+                  undefined,
+                ],
+              ]
+            }
+          >
+            Follow
+          </Text>
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`component: FollowButton renders unfollow version 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "backgroundColor": undefined,
+        "borderColor": undefined,
+        "borderRadius": 12,
+        "borderStyle": "solid",
+        "borderWidth": 1,
+        "elevation": 0,
+        "height": 32,
+        "justifyContent": "center",
+        "minWidth": 64,
+        "padding": 0,
+        "shadowColor": "#000000",
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 0,
+        "shadowRadius": 0,
+        "width": 82,
+      }
+    }
+  >
+    <View
+      accessibilityRole="button"
+      accessibilityState={
+        Object {
+          "disabled": true,
+        }
+      }
+      accessible={true}
+      focusable={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "borderRadius": 12,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            Array [
+              Object {
+                "height": 52,
+              },
+              undefined,
+            ],
+          ]
+        }
+      >
+        <Text
+          numberOfLines={1}
+          selectable={false}
+          style={
+            Array [
+              Object {
+                "color": "#000000",
+                "fontFamily": "System",
+                "fontWeight": "400",
+              },
+              Object {
+                "textAlign": "left",
+              },
+              Array [
+                Object {
+                  "letterSpacing": 1,
+                  "marginHorizontal": 16,
+                  "marginVertical": 9,
+                  "textAlign": "center",
+                },
+                undefined,
+                Object {
+                  "textTransform": "uppercase",
+                },
+                Object {
+                  "color": "#6200ee",
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Object {
+                  "fontFamily": "System",
+                  "fontWeight": "500",
+                },
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontFamily": "Poppins-SemiBold",
+                    "fontSize": 16,
+                    "fontStyle": "normal",
+                    "fontWeight": "600",
+                    "letterSpacing": 0.015,
+                    "lineHeight": 20,
+                    "textTransform": "capitalize",
+                  },
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "margin": 0,
+                      "minWidth": "100%",
+                      "padding": 0,
+                      "textAlign": "center",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Array [
+                  Object {
+                    "color": undefined,
+                  },
+                  Object {
+                    "fontFamily": "Poppins-SemiBold",
+                    "fontSize": 12,
+                    "fontStyle": "normal",
+                    "fontWeight": "600",
+                    "letterSpacing": 0.04,
+                    "lineHeight": 16,
+                    "textAlign": "left",
+                  },
+                ],
+                Array [
+                  Object {
+                    "color": undefined,
+                    "margin": 0,
+                    "minWidth": "100%",
+                    "padding": 0,
+                    "textAlign": "center",
+                  },
+                  undefined,
+                ],
+              ]
+            }
+          >
+            Unfollow
+          </Text>
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

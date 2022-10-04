@@ -52,6 +52,8 @@ export const modalFail = require('./images/modalFail.png');
 
 export const iconCross = require('./images/iconCross.png');
 
+export const iconCrossBlack = require('./images/iconCrossBlack.png');
+
 export const btDevice = require('./images/btDevice.png');
 
 export const ledgerIcon = require('./images/ledgerIcon.png');

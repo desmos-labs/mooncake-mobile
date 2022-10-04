@@ -48,4 +48,16 @@ describe('component: CustomCheckbox', () => {
       expect(handlePressFn).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('renders error', () => {
+    withReanimatedTimer(() => {
+      const tree = render(
+        <>
+          <CustomCheckbox checked error handlePress={jest.fn} />,
+        </>,
+      ).toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+  });
 });
