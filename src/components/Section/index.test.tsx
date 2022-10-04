@@ -8,4 +8,12 @@ describe('component: Section', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('renders with title', () => {
+    const tree = render(
+      <Section title="hello world">Hello world</Section>,
+    ).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
 });
