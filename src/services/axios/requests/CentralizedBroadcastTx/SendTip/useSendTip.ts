@@ -19,11 +19,13 @@ const useSendTip = () => {
   const sendTip = React.useCallback(
     async ({
       amount,
+      fee,
       sender,
       receiver,
       message,
     }: {
       amount: Coin[];
+      fee: Coin[];
       sender: string;
       receiver: string;
       message?: string;
@@ -49,7 +51,7 @@ const useSendTip = () => {
                 },
               }),
             ),
-            funds: [],
+            funds: fee,
           }),
         };
         const aminoEncodedMsg = client.encodeToAmino([msg]);
@@ -74,11 +76,13 @@ const useSendTip = () => {
   const manageTips = useCallback(
     async ({
       amount,
+      fee,
       sender,
       receiver,
       message,
     }: {
       amount: Coin[];
+      fee: Coin[];
       sender: string;
       receiver: string;
       message?: string;
@@ -86,7 +90,7 @@ const useSendTip = () => {
       setSendTipLoading(true);
       let result;
       try {
-        result = await sendTip({amount, sender, receiver, message});
+        result = await sendTip({amount, sender, receiver, message, fee});
       } catch (err: any) {
         throw new Error(err.toString());
       } finally {

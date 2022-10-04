@@ -45,6 +45,12 @@ const useHooks = () => {
           sender,
           receiver,
           message: '',
+          fee: [
+            {
+              denom: 'udaric',
+              amount: (amount * 1000000 + amount * 10000).toString(),
+            } as Coin,
+          ],
         });
         goBack();
       } else {

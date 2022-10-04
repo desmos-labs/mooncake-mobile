@@ -1,4 +1,6 @@
 import {useQuery} from '@apollo/client';
+import {convertCoin} from '@desmoslabs/desmjs';
+import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
@@ -6,7 +8,6 @@ import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {formatNumShorthand} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
@@ -60,7 +61,7 @@ const SendTips = () => {
   useFocusEffect(
     useCallback(() => {
       refetch({address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n'});
-    }, []),
+    }, [data]),
   );
 
   const handlePressConfirm = React.useCallback(() => {
@@ -71,9 +72,19 @@ const SendTips = () => {
     });
   }, [activeAddress, tipAmount, params.postAuthor]);
 
+  const convertedBalance = useMemo(() => {
+    if (data && !loading) {
+      return convertCoin(
+        data?.action_account_balance?.coins[0],
+        6,
+        MorpheusApollo2.denomUnits,
+      );
+    }
+  }, [data, loading]);
+
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? -40 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? -20 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{flex: 1}}>
       <TouchableOpacity
@@ -171,9 +182,8 @@ const SendTips = () => {
           ) : (
             <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
               {/* we will need to format accordingly this number */}
-              {t('available')}{' '}
-              {formatNumShorthand(data.action_account_balance.coins[0].amount)}{' '}
-              {data.action_account_balance.coins[0].denom.toUpperCase()}
+              {t('available')} {convertedBalance?.amount}{' '}
+              {convertedBalance?.denom.toUpperCase()}
             </Typography.Body7>
           )}
 
@@ -189,7 +199,14 @@ const SendTips = () => {
             multiline
             placeholder={t('message')}
           />
-          <Spacer paddingVertical={40}>
+          <Spacer paddingVertical={10}>
+            <Typography.Body7
+              style={{
+                color: theme.colors.surfaceBlack,
+                marginVertical: theme.spacing.s,
+              }}>
+              {t('warning fee')}
+            </Typography.Body7>
             <Button
               loading={sendTipLoading}
               mode="contained"
