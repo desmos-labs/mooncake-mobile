@@ -1,3 +1,4 @@
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import React from 'react';
 import {atom, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
@@ -16,6 +17,7 @@ const POSTS_PER_FETCH = 3;
 
 // Get posts up to a given timestamp
 export const useGetPosts = () => {
+  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [posts, setPosts] = useRecoilState(postsState);
 
   // in the future, this value should be passed as either a prop or loaded from
@@ -31,6 +33,11 @@ export const useGetPosts = () => {
       offset: 0,
       limit: POSTS_PER_FETCH,
       subspaceID,
+      user: activeAddress!,
+      reaction: {
+        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+        registered_reaction_id: 9,
+      },
     },
     fetchPolicy: 'no-cache',
     errorPolicy: 'ignore',

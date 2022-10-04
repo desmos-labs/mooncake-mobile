@@ -6,6 +6,7 @@ import {
   commentLikeEmptyIcon,
   plusWhiteIcon,
   tipIcon,
+  commentLiked,
 } from 'assets/images';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -47,7 +48,7 @@ const Home = () => {
     handlePressFollow,
     handlePressAuthor,
     handlePressTip,
-    handlePressReactions,
+    handleAddReaction,
     handlePressProfile,
     handlePressComments,
     selectedFilterIndex,
@@ -143,19 +144,28 @@ const Home = () => {
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}
-            interactionCount={10500}
+            interactionCount={
+              postData[selectedPostIndex]?.repliesCount.aggregate.count
+            }
             icon={commentIcon}
           />
 
           <InteractionButton
-            onPress={handlePressReactions}
-            interactionCount={100}
-            icon={commentLikeEmptyIcon}
+            onPress={() => handleAddReaction(postData[selectedPostIndex]?.id)}
+            interactionCount={postData[selectedPostIndex]?.reactions?.length}
+            icon={
+              postData[selectedPostIndex]?.reactionPresence?.aggregate?.count >
+              0
+                ? commentLiked
+                : commentLikeEmptyIcon
+            }
           />
 
           <InteractionButton
-            onPress={handlePressTip}
-            interactionCount={100000000}
+            onPress={() =>
+              handlePressTip(postData[selectedPostIndex]?.author.address)
+            }
+            interactionCount={0}
             icon={tipIcon}
           />
         </View>

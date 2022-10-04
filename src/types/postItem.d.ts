@@ -22,6 +22,17 @@ declare global {
     creation_date: string;
 
     conversation: any;
+
+    repliesCount: {
+      aggregate: {
+        count: number;
+      };
+    };
+    reactionPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
   }
 
   interface PostAuthor {

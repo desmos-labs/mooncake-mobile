@@ -1,6 +1,8 @@
+import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import {useGetFollowing} from '@recoil/following';
 import {useGetPosts} from '@recoil/posts';
+import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
@@ -14,7 +16,9 @@ import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import RefreshSession from 'services/axios/requests/RefreshSession';
+import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
 
 /**
  * Hooks for the Home screen.
@@ -34,7 +38,7 @@ const useHooks = () => {
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
-
+  const {manageReaction} = useManageReactions();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   const toast = useToast();
@@ -57,6 +61,33 @@ const useHooks = () => {
       x => followedAddresses.indexOf(x.author_address) !== -1,
     );
   }, [posts, following, selectedFilterIndex]);
+
+  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+    GetReactionForPostAndAuthor,
+    {
+      fetchPolicy: 'no-cache',
+    },
+  );
+
+  const getReaction = useCallback(
+    async ({
+      id,
+      subspace_id,
+    }: {
+      id: number;
+      subspace_id: number;
+      address: string;
+    }) => {
+      return getReactionForPostAndAuthor({
+        variables: {
+          postID: id,
+          subspaceID: subspace_id,
+          address: activeAddress!,
+        },
+      });
+    },
+    [activeAddress],
+  );
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -147,9 +178,37 @@ const useHooks = () => {
     [],
   );
 
-  const handlePressReactions = React.useCallback(() => {
-    console.log('like');
-  }, []);
+  const handleAddReaction = React.useCallback(
+    async (postId: number) => {
+      const grantsToRequest: GrantEnums[] = [
+        GrantEnums.MsgAddReaction,
+        GrantEnums.MsgRemoveReaction,
+      ];
+      // check if user has grants first
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
+        address: activeAddress!,
+      });
+
+      if (success) {
+        const {data} = await getReaction({
+          id: postId,
+          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          address: activeAddress!,
+        });
+        await manageReaction({
+          postId,
+          user: activeAddress!,
+          reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
+        });
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    },
+    [activeAddress, reactionAdded],
+  );
 
   const handlePressComments = React.useCallback(() => {
     navigate(ROUTES.POST_DETAILS, {
@@ -159,8 +218,8 @@ const useHooks = () => {
     });
   }, [selectedPostIndex, postData]);
 
-  const handlePressTip = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
+  const handlePressTip = React.useCallback((postAuthor: string) => {
+    navigate(ROUTES.SEND_TIPS, {postAuthor});
   }, []);
 
   const handlePressProfile = React.useCallback(() => {
@@ -224,7 +283,7 @@ const useHooks = () => {
     handlePressComments,
     handlePressProfile,
     handlePressTip,
-    handlePressReactions,
+    handleAddReaction,
     selectedFilterIndex,
     setSelectedFilterIndex,
     handlePressCreatePost,
