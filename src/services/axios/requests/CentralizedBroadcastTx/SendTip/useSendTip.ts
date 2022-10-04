@@ -52,8 +52,6 @@ const useSendTip = () => {
             funds: [],
           }),
         };
-        console.log('msg', msg);
-
         const aminoEncodedMsg = client.encodeToAmino([msg]);
 
         return await CentralizedBroadcastTx({

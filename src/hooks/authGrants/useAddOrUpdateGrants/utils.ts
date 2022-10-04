@@ -124,7 +124,6 @@ export const buildGrantMsgEncodes = ({
               msg: grant,
             }),
           );
-    console.log(content);
     const _grant: Grant = {
       authorization: content,
       expiration: timestampFromDate(
