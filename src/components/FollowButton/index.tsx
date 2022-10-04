@@ -9,14 +9,7 @@ type Props = ComponentProps<typeof Button> & {
 };
 
 const FollowButton: FC<Props> = props => {
-  const {
-    style,
-    labelStyle,
-    children,
-    type = 'follow',
-    onPress,
-    ...rest
-  } = props;
+  const {style, labelStyle, children, type, onPress, ...rest} = props;
   const styles = useStyles();
   const {t} = useTranslation('followingAndFollowers');
   const [styleOfButton, styleOfLabel, label] =
