@@ -10,6 +10,10 @@ type Params = {
    * Amino encoded messages to send
    */
   messages: AminoMsg[];
+  /**
+   * Memo message (Optional)
+   */
+  memo?: string;
 };
 
 /**
@@ -17,8 +21,9 @@ type Params = {
  */
 const CentralizedBroadcastTx = async ({
   messages,
+  memo,
 }: Params): Promise<Response> => {
-  const _response = await axiosInstance.post('/broadcast', {messages});
+  const _response = await axiosInstance.post('/broadcast', {messages, memo});
 
   return _response.data;
 };

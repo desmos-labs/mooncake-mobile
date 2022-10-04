@@ -10,7 +10,7 @@ import React, {useCallback} from 'react';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
- * Hook that manange a report
+ * Hook that manange tips
  */
 const useSendTip = () => {
   const {activeAddress} = useActiveAccount();
@@ -29,7 +29,6 @@ const useSendTip = () => {
       message?: string;
     }) => {
       if (!activeAddress) return;
-      console.log(message);
       try {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
         const msg: MsgExecuteContractEncodeObject = {
@@ -38,7 +37,6 @@ const useSendTip = () => {
             sender,
             contract:
               'desmos1fuyxwxlsgjkfjmxfthq8427dm2am3ya3cwcdr8gls29l7jadtazsh8p7x5',
-            // json utf8
             msg: toUtf8(
               JSON.stringify({
                 send_tip: {
@@ -60,6 +58,7 @@ const useSendTip = () => {
 
         return await CentralizedBroadcastTx({
           messages: aminoEncodedMsg,
+          memo: message,
         });
       } catch (err: any) {
         throw new Error(err.toString());
