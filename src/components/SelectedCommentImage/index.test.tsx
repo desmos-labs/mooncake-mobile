@@ -11,4 +11,12 @@ describe('component: SelectedCommentImage', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('renders nothing if source is undefined', () => {
+    const tree = render(
+      <SelectedCommentImage handlePress={jest.fn()} source={undefined} />,
+    ).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
 });

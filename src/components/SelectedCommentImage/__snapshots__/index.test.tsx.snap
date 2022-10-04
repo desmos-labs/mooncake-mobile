@@ -91,3 +91,35 @@ exports[`component: SelectedCommentImage renders 1`] = `
   </View>
 </View>
 `;
+
+exports[`component: SelectedCommentImage renders nothing if source is undefined 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+  >
+    <View
+      style={
+        Object {
+          "bottom": 0,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "opacity": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
