@@ -26,6 +26,7 @@ import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {HdPath} from 'types/hdpath';
+import {verticalScale} from 'react-native-size-matters';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -172,6 +173,9 @@ const ConnectToLedger = () => {
   }, []);
 
   const content = React.useMemo(() => {
+    // equivalent to 100 units on iphone 13
+    const topSpacing = verticalScale(80);
+
     if (!paired) {
       return (
         <>
@@ -180,7 +184,7 @@ const ConnectToLedger = () => {
             image={iconCrossBlack}
             style={styles.crossIcon}
           />
-          <Spacer paddingBottom={theme.spacing.l} paddingTop={60}>
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={topSpacing}>
             <ThemedLottieView
               source={pairDevicesAnim}
               style={styles.lottieAnimation}
@@ -210,9 +214,9 @@ const ConnectToLedger = () => {
             image={iconCrossBlack}
             style={styles.crossIcon}
           />
-          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
-          <Image source={ledgerConnectionError} style={styles.errorImage} />
-          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
+          <Spacer paddingTop={topSpacing} paddingBottom={theme.spacing.l}>
+            <Image source={ledgerConnectionError} style={styles.errorImage} />
+          </Spacer>
           <View
             style={[styles.centeredGroup, {marginBottom: theme.spacing.xl}]}>
             <Typography.H4 style={styles.headerText}>
@@ -232,6 +236,7 @@ const ConnectToLedger = () => {
         </>
       );
     }
+
     if (paired && !connected) {
       return (
         <>
@@ -240,7 +245,7 @@ const ConnectToLedger = () => {
             image={iconCrossBlack}
             style={styles.crossIcon}
           />
-          <Spacer paddingBottom={theme.spacing.l} paddingTop={100} />
+          <Spacer paddingBottom={theme.spacing.l} paddingTop={topSpacing} />
           <View style={styles.centeredGroup}>
             <Spacer paddingBottom={54}>
               <ThemedLottieView
