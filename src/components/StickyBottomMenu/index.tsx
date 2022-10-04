@@ -23,6 +23,7 @@ interface Props {
   rightButtonInteractions: number;
 }
 
+// unused component
 const StickyBottomMenu: React.FC<Props> = props => {
   const {
     leftButtonAction,

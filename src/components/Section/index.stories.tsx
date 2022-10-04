@@ -45,7 +45,7 @@ const MixedPlaceholder = (
       disabled={false}
       onValueChange={() => console.log('valueChange')}
     />
-    <SectionText label="Left" value="Right" />
+    <SectionText leftText="Left" rightText="Right" />
   </>
 );
 

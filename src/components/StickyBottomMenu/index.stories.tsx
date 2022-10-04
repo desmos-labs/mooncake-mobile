@@ -27,8 +27,11 @@ const RenderComponent = () => {
       </ScrollView>
       <StickyBottomMenu
         leftButtonAction={() => console.log('left')}
+        leftButtonInteractions={100}
         middleButtonAction={() => console.log('middle')}
+        middleButtonInteractions={100}
         rightButtonAction={() => console.log('right')}
+        rightButtonInteractions={100}
       />
     </>
   );

@@ -59,3 +59,125 @@ exports[`component: DTextInput renders 1`] = `
   </View>
 </View>
 `;
+
+exports[`component: DTextInput renders error style 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 14,
+          "display": "flex",
+          "flexDirection": "row",
+          "minHeight": 48,
+        },
+        undefined,
+      ]
+    }
+  >
+    <TextInput
+      error={true}
+      placeholderTextColor="#9D9D9D"
+      style={
+        Array [
+          undefined,
+          Object {
+            "color": "#F359A8",
+            "flex": 0.95,
+            "flexGrow": 1,
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.025,
+            "lineHeight": 21,
+            "minHeight": undefined,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Object {
+          "margin": 0,
+          "padding": 0,
+          "paddingRight": 4,
+        }
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`component: DTextInput renders numberOfLines style 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 14,
+          "display": "flex",
+          "flexDirection": "row",
+          "minHeight": 48,
+        },
+        undefined,
+      ]
+    }
+  >
+    <TextInput
+      numberOfLines={1}
+      placeholderTextColor="#9D9D9D"
+      style={
+        Array [
+          undefined,
+          Object {
+            "color": "#25282D",
+            "flex": 0.95,
+            "flexGrow": 1,
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 14,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.025,
+            "lineHeight": 21,
+            "minHeight": 25,
+            "paddingHorizontal": 11,
+            "textAlign": "left",
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Object {
+          "margin": 0,
+          "padding": 0,
+          "paddingRight": 4,
+        }
+      }
+    />
+  </View>
+</View>
+`;

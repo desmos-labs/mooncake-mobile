@@ -39,6 +39,7 @@ const PopupMenu: React.FC<Props> = ({
           <Fragment key={item.label}>
             <TouchableOpacity
               style={styles.item}
+              accessibilityLabel={`${item.label} button`}
               onPress={() => onPressButton(item)}>
               <Image source={item.icon} style={styles.icon} />
               <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
