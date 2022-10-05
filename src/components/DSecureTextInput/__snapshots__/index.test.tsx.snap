@@ -74,7 +74,7 @@ exports[`component: DSecureTextInput renders 1`] = `
         Object {
           "margin": 0,
           "padding": 0,
-          "paddingRight": 4,
+          "paddingRight": 8,
         }
       }
     >
