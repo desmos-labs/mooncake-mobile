@@ -2,19 +2,25 @@ import {MsgExecuteContractEncodeObject} from '@cosmjs/cosmwasm-stargate';
 import {toUtf8} from '@cosmjs/encoding';
 import {Coin} from '@cosmjs/stargate';
 import {DesmosClient} from '@desmoslabs/desmjs';
+import {useButterConfig} from '@recoil/butterConfigState';
+import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
 import {MsgExecuteContract} from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import React, {useCallback} from 'react';
+import {useRecoilState} from 'recoil';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import NumberToPlainCoin from 'services/axios/requests/CentralizedBroadcastTx/SendTip/tipsUtil';
 
 /**
  * Hook that manange tips
  */
 const useSendTip = () => {
   const {activeAddress} = useActiveAccount();
+  const [appSettings] = useRecoilState(appSettingsState);
   const [sendTipLoading, setSendTipLoading] = React.useState(false);
+  const {butterConfig} = useButterConfig();
 
   const sendTipToPost = React.useCallback(
     async ({
@@ -37,8 +43,7 @@ const useSendTip = () => {
           typeUrl: GrantEnums.MsgExecuteContract,
           value: MsgExecuteContract.fromPartial({
             sender,
-            contract:
-              'desmos1fuyxwxlsgjkfjmxfthq8427dm2am3ya3cwcdr8gls29l7jadtazsh8p7x5',
+            contract: butterConfig.contracts.tips.address,
             msg: toUtf8(
               JSON.stringify({
                 send_tip: {
@@ -64,7 +69,7 @@ const useSendTip = () => {
         throw new Error(err.toString());
       }
     },
-    [activeAddress],
+    [activeAddress, butterConfig],
   );
 
   const sendTipToUser = React.useCallback(
@@ -88,8 +93,7 @@ const useSendTip = () => {
           typeUrl: GrantEnums.MsgExecuteContract,
           value: MsgExecuteContract.fromPartial({
             sender,
-            contract:
-              'desmos1fuyxwxlsgjkfjmxfthq8427dm2am3ya3cwcdr8gls29l7jadtazsh8p7x5',
+            contract: butterConfig.contracts.tips.address,
             msg: toUtf8(
               JSON.stringify({
                 send_tip: {
@@ -115,12 +119,11 @@ const useSendTip = () => {
         throw new Error(err.toString());
       }
     },
-    [activeAddress],
+    [activeAddress, butterConfig],
   );
 
   /**
    * @param {Coin[]} amount The amount object, a single value inside an array
-   * @param {Coin[]} fee The fee object, a single value inside an array
    * @param {string} sender The address of the sender
    * @param {string} receiver (OPTIONAL only if sending tips to an user) The address of the receiver
    * @param {string} message (OPTIONAL) A message to send with the tip (will be stored as a MEMO)
@@ -129,14 +132,12 @@ const useSendTip = () => {
   const manageTips = useCallback(
     async ({
       amount,
-      fee,
       sender,
       receiver,
       message,
       postId,
     }: {
-      amount: Coin[];
-      fee: Coin[];
+      amount: number;
       sender: string;
       receiver?: string;
       message?: string;
@@ -145,21 +146,31 @@ const useSendTip = () => {
       setSendTipLoading(true);
       let result;
       try {
+        console.log(butterConfig);
+        const convertedAmount = [
+          NumberToPlainCoin(amount, appSettings.currentChain.stakingDenom),
+        ];
+        const convertedFee = [
+          NumberToPlainCoin(
+            amount + amount * butterConfig.contracts.tips.fees.percentage,
+            appSettings.currentChain.stakingDenom,
+          ),
+        ];
         if (postId) {
           result = await sendTipToPost({
-            amount,
+            amount: convertedAmount,
+            fee: convertedFee,
             sender,
             message,
-            fee,
             postId,
           });
         } else if (receiver) {
           result = await sendTipToUser({
-            amount,
+            amount: convertedAmount,
+            fee: convertedFee,
             sender,
             receiver,
             message,
-            fee,
           });
         }
       } catch (err: any) {
@@ -169,7 +180,7 @@ const useSendTip = () => {
         console.log(result);
       }
     },
-    [sendTipToPost, sendTipToUser],
+    [sendTipToPost, sendTipToUser, butterConfig, appSettings],
   );
 
   return {manageTips, sendTipLoading};

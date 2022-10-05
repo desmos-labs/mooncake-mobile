@@ -1,4 +1,3 @@
-import {Coin} from '@cosmjs/stargate';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import ToastConfig from 'config/ToastConfig';
@@ -38,22 +37,11 @@ const useHooks = () => {
 
       if (success) {
         await manageTips({
-          amount: [
-            {
-              denom: 'udaric',
-              amount: (amount * 1000000).toString(),
-            } as Coin,
-          ],
+          amount,
           postId,
           sender,
           receiver,
           message: '',
-          fee: [
-            {
-              denom: 'udaric',
-              amount: (amount * 1000000 + amount * 10000).toString(),
-            } as Coin,
-          ],
         });
         goBack();
       } else {
