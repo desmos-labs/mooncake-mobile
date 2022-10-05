@@ -1,0 +1,249 @@
+import {
+  deleteLocalWallet,
+  deleteMnemonic,
+  getAccounts,
+  getLocalWallet,
+  getMnemonic,
+  resetSecureStorage,
+  saveLocalWallet,
+  saveMnemonic,
+  saveNewAccount,
+} from 'lib/SecureStorage';
+import {
+  getAllGenericPasswordServices,
+  getGenericPassword,
+  resetGenericPassword,
+  setGenericPassword,
+} from 'react-native-keychain';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {
+  decryptData,
+  deriveSecurePassword,
+  encryptData,
+} from 'lib/EncryptionUtils';
+import LocalWallet from 'lib/LocalWallet';
+
+jest.mock('lib/EncryptionUtils', () => ({
+  deriveSecurePassword: jest.fn(),
+  encryptData: jest.fn(),
+  decryptData: jest.fn(),
+}));
+
+describe('lib/SecureStorage', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('resetSecureStorage', () => {
+    it('resets all keychain values', async () => {
+      (getAllGenericPasswordServices as jest.Mock).mockResolvedValue([
+        'hello',
+        'world',
+      ]);
+
+      await resetSecureStorage();
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'hello',
+      });
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'world',
+      });
+    });
+  });
+
+  describe('saveNewAccount', () => {
+    it('saves a new account', async () => {
+      (getGenericPassword as jest.Mock).mockResolvedValue(undefined);
+
+      const mockAccountData: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: '123',
+        hdPath: {
+          coinType: 0,
+          account: 0,
+          change: 0,
+          addressIndex: 0,
+        },
+        pubKey: 'test',
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveNewAccount(mockAccountData);
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        JSON.stringify([mockAccountData]),
+        {
+          service: 'ACCOUNTS',
+        },
+      );
+    });
+
+    it('saves appends new accounts to existing accounts list', async () => {
+      (getGenericPassword as jest.Mock).mockResolvedValue({password: '[{}]'});
+
+      const mockAccountData: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: '123',
+        hdPath: {
+          coinType: 0,
+          account: 0,
+          change: 0,
+          addressIndex: 0,
+        },
+        pubKey: 'test',
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveNewAccount(mockAccountData);
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        JSON.stringify([{}, mockAccountData]),
+        {
+          service: 'ACCOUNTS',
+        },
+      );
+    });
+  });
+
+  describe('getAccounts', () => {
+    it('retrieves all accounts stored in keychain', async () => {
+      await getAccounts();
+
+      expect(getGenericPassword).toHaveBeenCalledWith({service: 'ACCOUNTS'});
+    });
+  });
+
+  describe('saveLocalWallet', () => {
+    it('saves a new wallet if no existing wallets are found', async () => {
+      (deriveSecurePassword as jest.Mock).mockReturnValue(
+        'mockDerivedSecurePassword',
+      );
+
+      (encryptData as jest.Mock).mockReturnValue({
+        value: 'mockEncrypteddWalletData',
+      });
+      const wallet: any = {
+        bech32Address: 'wallet_addr',
+        serialize: () => 'serializedWallet',
+      };
+
+      await saveLocalWallet(wallet, '123');
+
+      // expect a derived secure password from the user's entered password
+      expect(deriveSecurePassword).toHaveBeenCalledWith('123');
+
+      // expect the derived password to have been saved
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        '"mockDerivedSecurePassword"',
+        {
+          accessControl: undefined,
+          accessible: 0,
+          authenticationPrompt: {title: 'Biometric Authentication'},
+          service: 'wallet_addr_WALLET_PASSWORD',
+        },
+      );
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        '{"value":"mockEncrypteddWalletData"}',
+        {
+          service: 'wallet_addr_KEY',
+        },
+      );
+    });
+  });
+
+  // TODO: write test for retrieving with biometrics
+  describe('getLocalWallet', () => {
+    it('returns deserialized localWallet by key', async () => {
+      (getGenericPassword as jest.Mock).mockResolvedValue({password: '[]'});
+      (decryptData as jest.Mock).mockReturnValue(
+        JSON.stringify({
+          version: 3,
+          privateKey: 'BvgXa2OYRQyhWcfRVhnA8OZ1fLERoaFs+ZzmUlDMsKY=',
+          publicKey: 'AyjdXn3Ddz1xXE85rNichgHvEYBg9O4scWQLeEq7z2BA',
+          prefix: 'desmos',
+        }),
+      );
+
+      const deserializeSpy = jest.spyOn(LocalWallet, 'deserialize');
+
+      await getLocalWallet('mockAddress', '123');
+
+      // expect a derived secure password from the user's entered password
+      expect(deriveSecurePassword).toHaveBeenCalledWith('123');
+
+      // expect the wallet data to be deserialized
+      expect(deserializeSpy).toHaveBeenCalledWith(
+        '{"version":3,"privateKey":"BvgXa2OYRQyhWcfRVhnA8OZ1fLERoaFs+ZzmUlDMsKY=","publicKey":"AyjdXn3Ddz1xXE85rNichgHvEYBg9O4scWQLeEq7z2BA","prefix":"desmos"}',
+      );
+    });
+  });
+
+  describe('saveMnemonic', () => {
+    it('saves a mnemonic to secure storage', async () => {
+      (encryptData as jest.Mock).mockReturnValue('mockEncryptedMnemonic');
+
+      await saveMnemonic('mockAddress', 'mockMnemonic', 'mockPassword');
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        '"mockEncryptedMnemonic"',
+        {service: 'mockAddress_MNEMONIC'},
+      );
+    });
+  });
+
+  // TODO: write tests for biometrics
+  describe('getMnemonic', () => {
+    it('retrieves a stored mnemonic from secure storage', async () => {
+      (deriveSecurePassword as jest.Mock).mockReturnValue(
+        'mockDerivedSecurePassword',
+      );
+
+      (getGenericPassword as jest.Mock).mockResolvedValue({
+        password: JSON.stringify({value: 'mockStoredMnemonic'}),
+      });
+
+      await getMnemonic('mockAddress', 'mockPassword');
+
+      expect(deriveSecurePassword).toHaveBeenCalledWith('mockPassword');
+
+      expect(decryptData).toHaveBeenCalledWith(
+        {value: 'mockStoredMnemonic'},
+        'mockDerivedSecurePassword',
+      );
+    });
+  });
+
+  describe('deleteMnemonic', () => {
+    it('deletes a mnemonic from secure storage', async () => {
+      await deleteMnemonic('mockAddress');
+
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'mockAddress_MNEMONIC',
+      });
+    });
+  });
+
+  describe('deleteLocalWallet', () => {
+    it('deletes a local wallet, associated password, and mnemonic from local storage', async () => {
+      await deleteLocalWallet('mockAddress');
+
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'mockAddress_KEY',
+      });
+
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'mockAddress_WALLET_PASSWORD',
+      });
+
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: 'mockAddress_MNEMONIC',
+      });
+    });
+  });
+});

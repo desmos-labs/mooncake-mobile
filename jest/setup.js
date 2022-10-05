@@ -1,6 +1,7 @@
 import '../src/assets/locales/i18n';
 import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
+import mockKeychain from "jest/mocks/react-native-keychain/index";
 
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard);
 
@@ -10,3 +11,5 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('react-native-permissions', () => require('react-native-permissions/mock'));
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
+
+jest.mock('react-native-keychain', () => mockKeychain);
