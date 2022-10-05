@@ -78,9 +78,13 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         },
       });
 
-      // ledger cancelled
       if (!res?.wallet) {
-        return navigation.pop();
+        // ledger cancelled
+        if (chainAccount.type === ChainAccountType.Ledger) {
+          return navigation.pop();
+        }
+        // forgot password clicked
+        return;
       }
 
       const {wallet, mnemonic: mnemonicRes} = res;
