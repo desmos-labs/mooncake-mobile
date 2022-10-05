@@ -4,8 +4,11 @@ import {
   getAllGenericPasswordServices,
   resetGenericPassword,
   Result,
+  getGenericPassword,
+  setGenericPassword,
+  Options,
 } from 'react-native-keychain';
-import * as Keychain from 'react-native-keychain';
+import _ from 'lodash';
 
 import LocalWallet from 'lib/LocalWallet';
 import {ChainAccount} from 'types/chains';
@@ -16,7 +19,7 @@ import {
 } from 'lib/EncryptionUtils';
 import {Platform} from 'react-native';
 
-const defaultOptions: Keychain.Options = {
+const defaultOptions: Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
   },
@@ -56,7 +59,7 @@ async function getItem<T>(
   options?: StoreOptions | undefined,
 ): Promise<T | undefined> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
-  const value = await Keychain.getGenericPassword({
+  const value = await getGenericPassword({
     service: key,
     ...moreOptions,
   });
@@ -80,7 +83,7 @@ async function setItem(
 ): Promise<false | Result> {
   const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
 
-  return Keychain.setGenericPassword('secureValue', JSON.stringify(value), {
+  return setGenericPassword('secureValue', JSON.stringify(value), {
     service: key,
     ...moreOptions,
   });
@@ -113,7 +116,7 @@ export const saveNewAccount = async (_account: ChainAccount) => {
     const filteredAccounts = oldAccounts.filter(
       x => x.address !== _account.address,
     );
-    const newAccounts = [...filteredAccounts, _account];
+    const newAccounts = _.compact([...filteredAccounts, _account]);
 
     await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, newAccounts);
   } else await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, [_account]);
@@ -222,5 +225,6 @@ export const deleteLocalWallet = async (address: string) => {
   return Promise.all([
     deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`),
     deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`),
+    deleteMnemonic(address),
   ]);
 };
