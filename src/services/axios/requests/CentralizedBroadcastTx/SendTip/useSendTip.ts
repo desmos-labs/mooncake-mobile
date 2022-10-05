@@ -151,7 +151,8 @@ const useSendTip = () => {
         ];
         const convertedFee = [
           NumberToPlainCoin(
-            amount + amount * butterConfig.contracts.tips.fees.percentage,
+            amount +
+              (amount * butterConfig.contracts.tips.fees.percentage) / 100,
             appSettings.currentChain.stakingDenom,
           ),
         ];
