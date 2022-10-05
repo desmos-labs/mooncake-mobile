@@ -146,7 +146,6 @@ const useSendTip = () => {
       setSendTipLoading(true);
       let result;
       try {
-        console.log(butterConfig);
         const convertedAmount = [
           NumberToPlainCoin(amount, appSettings.currentChain.stakingDenom),
         ];
