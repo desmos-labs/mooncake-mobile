@@ -4,6 +4,7 @@ import {useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 export const followingState = atom<CounterParty[]>({
   key: 'following',
@@ -14,19 +15,17 @@ export const followingState = atom<CounterParty[]>({
  * Get the list of followed accounts for the active account
  */
 export const useGetFollowing = () => {
+  const {activeAddress} = useActiveAccount();
   const [following, setFollowing] = useRecoilState(followingState);
-
-  // The address of the user's active account
-  // hardcoded for now, but it should be a recoil value in the future
-  const userAddress = 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4';
 
   const {refetch, loading} = useQuery<GetFollowedUsersForAddressData>(
     GetFollowedUsersForAddress,
     {
       pollInterval: 500,
       variables: {
-        userAddress,
+        userAddress: activeAddress,
       },
+      fetchPolicy: 'no-cache',
       onCompleted: result => {
         const {user_relationship} = result;
 
@@ -44,8 +43,8 @@ export const useGetFollowing = () => {
 
   // refetch following list if userAddress has changed
   React.useEffect(() => {
-    refetch({userAddress});
-  }, [userAddress]);
+    refetch({userAddress: activeAddress});
+  }, [activeAddress]);
 
   return {
     following,

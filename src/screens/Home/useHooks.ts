@@ -6,7 +6,6 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {NavProps} from 'screens/Home/index';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useResetRecoilState} from 'recoil';
@@ -15,6 +14,7 @@ import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import RefreshSession from 'services/axios/requests/RefreshSession';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 
 /**
  * Hooks for the Home screen.
@@ -28,12 +28,14 @@ const useHooks = () => {
   } = useGetPosts();
   const {following} = useGetFollowing();
   const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
-  const {navigate, pop, replace} = useNavigation<NavProps['navigation']>();
+  const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
+
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
@@ -41,8 +43,6 @@ const useHooks = () => {
 
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
-
-  const {checkGrants} = useCheckGrants();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -98,39 +98,10 @@ const useHooks = () => {
 
   const handlePressFollow = React.useCallback(
     async (address: string) => {
-      setLoading(true);
-      const followedAddresses = following.map(x => x.address);
-
-      // placeholder to avoid eslint error
-      console.log(address, followedAddresses);
-
-      const grantsToRequest: GrantEnums[] = [
-        GrantEnums.MsgCreateRelationship,
-        GrantEnums.MsgDeleteRelationship,
-      ];
-      // check if user has grants first
-
-      const grantsRequired = await checkGrants(grantsToRequest);
-      setLoading(false);
-
-      if (grantsRequired.length > 0) {
-        navigate(ROUTES.ACTION_AUTHORIZATION, {
-          grants: grantsRequired,
-
-          onApprove: () => {
-            // regular follow flow
-            console.log('approved');
-            pop();
-          },
-          onCancel: () => {
-            console.log('cancelled');
-          },
-        });
-      } else {
-        // regular follow flow
-      }
+      const result = await followOrUnfollowUser({addrToFollow: address});
+      console.log('Home/handlePressFollow result', result);
     },
-    [following],
+    [followOrUnfollowUser],
   );
 
   const handlePressDetails = React.useCallback(
