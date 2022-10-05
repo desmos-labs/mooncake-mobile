@@ -26,6 +26,7 @@ import useStyles from './useStyles';
 
 export type SendTipsParams = {
   postAuthor: string;
+  postId?: number;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
@@ -69,6 +70,7 @@ const SendTips = () => {
       amount: parseInt(tipAmount, 10),
       receiver: params.postAuthor,
       sender: activeAddress!,
+      postId: params.postId!,
     });
   }, [activeAddress, tipAmount, params.postAuthor]);
 

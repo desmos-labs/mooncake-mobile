@@ -1,5 +1,5 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Spacer from 'components/Spacer';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -16,11 +16,20 @@ import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
 export type PostInteractionTabsParamList = {
-  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
-  [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
+  /**
+   * Fully expand the post interaction tab window on open
+   */
+  expandOnOpen: boolean;
+
+  /**
+   * Should the user be able to drag the tab window in and out?
+   */
+  allowPanning: boolean;
+  postId: number;
+  subspaceId: number;
 };
 
-const Tab = createMaterialTopTabNavigator<PostInteractionTabsParamList>();
+const Tab = createMaterialTopTabNavigator();
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -56,6 +65,7 @@ export type PostInteractionTipsTabsParams = {
 };
 
 const PostInteractionTabs = () => {
+  const {params} = useRoute<NavProps['route']>();
   const {goBack} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const {panGesture, animatedStyle} = useAnimations();
@@ -79,6 +89,7 @@ const PostInteractionTabs = () => {
             </View>
           </GestureDetector>
           <Tab.Navigator
+            initialRouteName={ROUTES.POST_REACTIONS}
             sceneContainerStyle={styles.sceneContainerStyle}
             tabBar={CustomTabBar}>
             <Tab.Screen
@@ -86,6 +97,7 @@ const PostInteractionTabs = () => {
               options={{
                 tabBarLabel: 'Reactions',
               }}
+              initialParams={params}
               component={PostReactions}
             />
             <Tab.Screen
@@ -94,6 +106,7 @@ const PostInteractionTabs = () => {
                 tabBarLabel: 'Tips',
               }}
               component={PostTips}
+              initialParams={params}
             />
           </Tab.Navigator>
         </SafeAreaView>

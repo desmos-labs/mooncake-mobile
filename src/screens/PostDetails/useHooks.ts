@@ -227,19 +227,19 @@ const useHooks = ({
     });
   }, []);
 
-  const handlePressSendTips = React.useCallback((postAuthor: string) => {
-    navigate(ROUTES.SEND_TIPS, {postAuthor});
-  }, []);
+  const handlePressSendTips = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_REACTIONS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-        postId: postID,
-        subspaceId: subspaceID,
-      },
+      expandOnOpen: true,
+      allowPanning: true,
+      postId: postID,
+      subspaceId: subspaceID,
     });
   }, []);
 

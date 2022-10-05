@@ -176,7 +176,9 @@ const PostDetails = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(item.id)}
-          handlePressTip={() => handlePressSendTips(item?.author?.address)}
+          handlePressTip={() =>
+            handlePressSendTips(item?.author?.address, item.id)
+          }
           handlePress={() =>
             handlePressSelectedComment({
               postId: post.id,
@@ -217,7 +219,9 @@ const PostDetails = () => {
           handleCommentPress={() => {
             console.log('hello world');
           }}
-          handleTipPress={() => handlePressSendTips(post?.author?.address)}
+          handleTipPress={() =>
+            handlePressSendTips(post?.author?.address, post.id)
+          }
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar

@@ -23,10 +23,12 @@ const useHooks = () => {
       amount,
       sender,
       receiver,
+      postId,
     }: {
       amount: number;
       sender: string;
       receiver: string;
+      postId: number;
     }) => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
       const {success} = await checkAndUpdateGrants({
@@ -42,6 +44,7 @@ const useHooks = () => {
               amount: (amount * 1000000).toString(),
             } as Coin,
           ],
+          postId,
           sender,
           receiver,
           message: '',

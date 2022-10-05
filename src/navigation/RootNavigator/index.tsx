@@ -6,7 +6,9 @@ import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import PostInteractionTabs, {
+  PostInteractionReactionsTabsParams,
   PostInteractionTabsParamList,
+  PostInteractionTipsTabsParams,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -140,7 +142,7 @@ export type RootNavigatorParamList = {
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
-  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+  [ROUTES.POST_INTERACTION]: PostInteractionTabsParamList;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -153,6 +155,10 @@ export type RootNavigatorParamList = {
 
   /* Followers tab route. */
   [ROUTES.FOLLOWERS]: FollowingParams;
+
+  /* Counters Params */
+  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
+  [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
 
   // Profile posts
   [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;

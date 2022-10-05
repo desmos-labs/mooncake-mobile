@@ -16,19 +16,70 @@ const useSendTip = () => {
   const {activeAddress} = useActiveAccount();
   const [sendTipLoading, setSendTipLoading] = React.useState(false);
 
-  const sendTip = React.useCallback(
+  const sendTipToPost = React.useCallback(
     async ({
       amount,
       fee,
       sender,
-      receiver,
       message,
+      postId,
     }: {
       amount: Coin[];
       fee: Coin[];
       sender: string;
-      receiver: string;
       message?: string;
+      postId: number;
+    }) => {
+      if (!activeAddress) return;
+      try {
+        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+        const msg: MsgExecuteContractEncodeObject = {
+          typeUrl: GrantEnums.MsgExecuteContract,
+          value: MsgExecuteContract.fromPartial({
+            sender,
+            contract:
+              'desmos1fuyxwxlsgjkfjmxfthq8427dm2am3ya3cwcdr8gls29l7jadtazsh8p7x5',
+            msg: toUtf8(
+              JSON.stringify({
+                send_tip: {
+                  amount,
+                  target: {
+                    content_target: {
+                      post_id: postId.toString(),
+                    },
+                  },
+                },
+              }),
+            ),
+            funds: fee,
+          }),
+        };
+        const aminoEncodedMsg = client.encodeToAmino([msg]);
+
+        return await CentralizedBroadcastTx({
+          messages: aminoEncodedMsg,
+          memo: message,
+        });
+      } catch (err: any) {
+        throw new Error(err.toString());
+      }
+    },
+    [activeAddress],
+  );
+
+  const sendTipToUser = React.useCallback(
+    async ({
+      amount,
+      fee,
+      sender,
+      message,
+      receiver,
+    }: {
+      amount: Coin[];
+      fee: Coin[];
+      sender: string;
+      message?: string;
+      receiver: string;
     }) => {
       if (!activeAddress) return;
       try {
@@ -68,10 +119,12 @@ const useSendTip = () => {
   );
 
   /**
-   * @param {number} postId The ID of the post
-   * @param {string} user The address of the user managing the report
-   * @param {number[]} reasonsIds IDs of the reasons related to the report
-   * @param {string} message Optional message
+   * @param {Coin[]} amount The amount object, a single value inside an array
+   * @param {Coin[]} fee The fee object, a single value inside an array
+   * @param {string} sender The address of the sender
+   * @param {string} receiver (OPTIONAL only if sending tips to an user) The address of the receiver
+   * @param {string} message (OPTIONAL) A message to send with the tip (will be stored as a MEMO)
+   * @param {number} postId (OPTIONAL only if sending tips to a post) The id of the post
    * */
   const manageTips = useCallback(
     async ({
@@ -80,17 +133,35 @@ const useSendTip = () => {
       sender,
       receiver,
       message,
+      postId,
     }: {
       amount: Coin[];
       fee: Coin[];
       sender: string;
-      receiver: string;
+      receiver?: string;
       message?: string;
+      postId?: number;
     }) => {
       setSendTipLoading(true);
       let result;
       try {
-        result = await sendTip({amount, sender, receiver, message, fee});
+        if (postId) {
+          result = await sendTipToPost({
+            amount,
+            sender,
+            message,
+            fee,
+            postId,
+          });
+        } else if (receiver) {
+          result = await sendTipToUser({
+            amount,
+            sender,
+            receiver,
+            message,
+            fee,
+          });
+        }
       } catch (err: any) {
         throw new Error(err.toString());
       } finally {
@@ -98,7 +169,7 @@ const useSendTip = () => {
         console.log(result);
       }
     },
-    [sendTip],
+    [sendTipToPost, sendTipToUser],
   );
 
   return {manageTips, sendTipLoading};
