@@ -5,8 +5,9 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
-import {useGetFollowing} from '@recoil/following';
+import {followingState} from '@recoil/following';
 import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useManageRelationship';
+import {useRecoilValue} from 'recoil';
 
 type FollowOrUnfollowParams = {
   addrToFollow: string;
@@ -17,7 +18,7 @@ const useFollowOrUnfollowUser = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
   const {t} = useTranslation('toast');
-  const {following} = useGetFollowing();
+  const following = useRecoilValue(followingState);
   const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
 
@@ -64,7 +65,7 @@ const useFollowOrUnfollowUser = () => {
         setLoading(false);
       }
     },
-    [activeAddress],
+    [activeAddress, following],
   );
 
   return {
