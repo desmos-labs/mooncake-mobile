@@ -3,7 +3,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -22,23 +22,42 @@ const PostTips = () => {
   const [activeAddress] = useMMKVStorage<string | undefined>(
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
+  const [tipsData, setTipsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(params);
-    GetTipsByPostID({postID: params.postId}).then(r => console.log(r));
+  const fetchTipsData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await GetTipsByPostID({postID: params.postId});
+      if (data) {
+        setTipsData(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   }, [params.postId]);
 
-  const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
-    return (
-      <TipItem
-        tipAmount={item.tipAmount}
-        avatar={item.avatar}
-        nickname={item.nickname}
-        dTag={item.dTag}
-        timestamp={item.timestamp}
-      />
-    );
-  }, []);
+  useEffect(() => {
+    fetchTipsData();
+  }, [params.postId]);
+
+  const renderItem = React.useCallback(
+    ({item}: ListRenderItemInfo<any>) => {
+      return (
+        <TipItem
+          address={item.sender}
+          tipAmount={item.amount[0]}
+          avatar={item.avatar}
+          nickname={item.nickname}
+          dTag={item.dTag}
+          timestamp={item.timestamp}
+        />
+      );
+    },
+    [tipsData],
+  );
 
   const handlePressSendTips = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS, {postAuthor: activeAddress!});
@@ -57,7 +76,9 @@ const PostTips = () => {
 
   return (
     <FlatList
-      data={[]}
+      refreshing={loading}
+      onRefresh={fetchTipsData}
+      data={tipsData}
       renderItem={renderItem}
       ListEmptyComponent={ListEmptyComponent}
       ItemSeparatorComponent={ItemSeparatorComponent}

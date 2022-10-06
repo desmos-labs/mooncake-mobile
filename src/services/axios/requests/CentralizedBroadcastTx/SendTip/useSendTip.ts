@@ -5,10 +5,12 @@ import {DesmosClient} from '@desmoslabs/desmjs';
 import {useButterConfig} from '@recoil/butterConfigState';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
+import ToastConfig from 'config/ToastConfig';
 import {MsgExecuteContract} from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import React, {useCallback} from 'react';
+import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 import NumberToPlainCoin from 'services/axios/requests/CentralizedBroadcastTx/SendTip/tipsUtil';
@@ -21,6 +23,7 @@ const useSendTip = () => {
   const [appSettings] = useRecoilState(appSettingsState);
   const [sendTipLoading, setSendTipLoading] = React.useState(false);
   const {butterConfig} = useButterConfig();
+  const toast = useToast();
 
   const sendTipToPost = React.useCallback(
     async ({
@@ -116,7 +119,9 @@ const useSendTip = () => {
           memo: message,
         });
       } catch (err: any) {
-        throw new Error(err.toString());
+        toast.show('[PLACEHOLDER]Tip failed.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
       }
     },
     [activeAddress, butterConfig],
@@ -151,11 +156,11 @@ const useSendTip = () => {
         ];
         const convertedFee = [
           NumberToPlainCoin(
-            amount +
-              (amount * butterConfig.contracts.tips.fees.percentage) / 100,
+            amount + amount * butterConfig.contracts.tips.fees.percentage,
             appSettings.currentChain.stakingDenom,
           ),
         ];
+        console.log(convertedFee);
         if (postId) {
           result = await sendTipToPost({
             amount: convertedAmount,

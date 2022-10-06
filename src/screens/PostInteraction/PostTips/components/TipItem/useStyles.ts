@@ -15,6 +15,7 @@ const useStyles = makeStyle(theme => ({
     marginRight: theme.spacing.s,
   },
   textStyle: {
+    maxWidth: 150,
     color: theme.colors.surfaceBlack,
   },
   subTextStyle: {
