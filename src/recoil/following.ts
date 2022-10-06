@@ -26,12 +26,9 @@ export const useGetFollowing = () => {
       },
       pollInterval: 2000,
       fetchPolicy: 'no-cache',
-      notifyOnNetworkStatusChange: true,
       onCompleted: result => {
-        console.log('finished fetching following users');
         const {user_relationship} = result;
 
-        console.log(user_relationship);
         const mapped = user_relationship
           .map(x => x.counterparty)
           .filter(d => !!d);
