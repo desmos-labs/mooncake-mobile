@@ -1,4 +1,3 @@
-import React from 'react';
 import {atom, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
@@ -18,13 +17,14 @@ export const useGetFollowing = () => {
   const {activeAddress} = useActiveAccount();
   const [following, setFollowing] = useRecoilState(followingState);
 
-  const {refetch, loading} = useQuery<GetFollowedUsersForAddressData>(
+  const {loading} = useQuery<GetFollowedUsersForAddressData>(
     GetFollowedUsersForAddress,
     {
       variables: {
         userAddress: activeAddress,
       },
       pollInterval: 2000,
+      notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
       onCompleted: result => {
         const {user_relationship} = result;
@@ -42,9 +42,9 @@ export const useGetFollowing = () => {
   );
 
   // refetch following list if userAddress has changed
-  React.useEffect(() => {
-    refetch({userAddress: activeAddress});
-  }, [activeAddress]);
+  // React.useEffect(() => {
+  //   refetch({userAddress: activeAddress});
+  // }, [activeAddress]);
 
   return {
     following,

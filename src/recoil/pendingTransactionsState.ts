@@ -6,7 +6,7 @@ import _ from 'lodash';
 interface BasePendingTx {
   msgType: GrantEnums;
 
-  timestamp: string;
+  timestamp: number;
 
   txHash: string;
 }
@@ -48,6 +48,11 @@ const usePendingTransactions = () => {
   const [pendingTransactions, setPendingTransaction] = useRecoilState(
     pendingTransactionsState,
   );
+
+  // debug
+  React.useEffect(() => {
+    console.log('[PENDING TRANSACTIONS]:', pendingTransactions);
+  }, [pendingTransactions]);
 
   /**
    * Add a new pending relationship to recoil state.

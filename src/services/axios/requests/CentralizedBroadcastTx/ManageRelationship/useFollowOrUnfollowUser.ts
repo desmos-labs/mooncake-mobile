@@ -8,6 +8,7 @@ import ToastConfig from 'config/ToastConfig';
 import {followingState} from '@recoil/following';
 import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useManageRelationship';
 import {useRecoilValue} from 'recoil';
+import usePendingTransactions from '@recoil/pendingTransactionsState';
 
 type FollowOrUnfollowParams = {
   addrToFollow: string;
@@ -21,6 +22,7 @@ const useFollowOrUnfollowUser = () => {
   const following = useRecoilValue(followingState);
   const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
+  const {addNewPendingTx} = usePendingTransactions();
 
   const followOrUnfollowUser = React.useCallback(
     async ({addrToFollow}: FollowOrUnfollowParams) => {
@@ -48,7 +50,7 @@ const useFollowOrUnfollowUser = () => {
 
       setLoading(true);
       try {
-        let result;
+        let result: any;
 
         if (isAlreadyFollowing) {
           result = await deleteRelationship({counterPartyAddr: addrToFollow});
@@ -56,16 +58,27 @@ const useFollowOrUnfollowUser = () => {
           result = await createRelationship({counterPartyAddr: addrToFollow});
         }
 
-        console.log(result);
+        if (result) {
+          addNewPendingTx({
+            counterPartyAddr: addrToFollow,
+            msgType: isAlreadyFollowing
+              ? GrantEnums.MsgDeleteRelationship
+              : GrantEnums.MsgCreateRelationship,
+            timestamp: new Date().getTime(),
+            txHash: result.tx_hash,
+          });
 
-        return true;
+          return true;
+        }
+
+        throw new Error('Error broadcasting transaction');
       } catch (err: any) {
         console.log('useFollowOrUnfollowUser', err.toString());
       } finally {
         setLoading(false);
       }
     },
-    [activeAddress, following],
+    [activeAddress, following, addNewPendingTx],
   );
 
   return {
