@@ -1,7 +1,8 @@
 import React from 'react';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {atom, selector, useRecoilState} from 'recoil';
+import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import _ from 'lodash';
+import {followedAddressesState} from '@recoil/following';
 
 interface BasePendingTx {
   msgType: GrantEnums;
@@ -21,59 +22,54 @@ interface PendingRelationship extends BasePendingTx {
 type PendingTx = PendingRelationship;
 
 /**
- * The master atom that contains all pending transactions.
+ * A selector that only returns pending transactions related to Creating/Deleting relationships
  */
-const pendingTransactionsState = atom<PendingTx[]>({
-  key: 'pendingTransactionsState',
+const pendingRelationshipsState = atom<PendingRelationship[]>({
+  key: 'pendingRelationships',
   default: [],
 });
 
-/**
- * A selector that only returns pending transactions related to Creating/Deleting relationships
- */
-const pendingRelationships = selector<PendingRelationship[]>({
-  key: 'pendingRelationships',
-  get: ({get}) => {
-    const pendingTransactions = get(pendingTransactionsState);
-
-    return pendingTransactions.filter(
-      x =>
-        x.msgType === GrantEnums.MsgCreateRelationship ||
-        x.msgType === GrantEnums.MsgDeleteRelationship,
-    );
-  },
-});
-
 const usePendingTransactions = () => {
-  const [pendingTransactions, setPendingTransaction] = useRecoilState(
-    pendingTransactionsState,
+  const followedAddresses = useRecoilValue(followedAddressesState);
+  const [pendingRelationships, setPendingRelationships] = useRecoilState(
+    pendingRelationshipsState,
   );
 
-  // debug
+  // Clear pending relationship transactions
   React.useEffect(() => {
-    console.log('[PENDING TRANSACTIONS]:', pendingTransactions);
-  }, [pendingTransactions]);
+    // If address is in followedAddresses, it means it has been successfully followed
+    setPendingRelationships(prev =>
+      prev.filter(
+        x =>
+          (x.msgType === GrantEnums.MsgCreateRelationship &&
+            followedAddresses.has(x.counterPartyAddr)) ||
+          (x.msgType === GrantEnums.MsgDeleteRelationship &&
+            !followedAddresses.has(x.counterPartyAddr)),
+      ),
+    );
+    console.log(followedAddresses);
+  }, [followedAddresses]);
 
   /**
    * Add a new pending relationship to recoil state.
    * @param {PendingTx} newRelationship - The new relationship to be added.
    */
-  const addNewPendingTx = React.useCallback(
+  const addNewPendingRelationship = React.useCallback(
     (newTx: PendingTx) => {
-      setPendingTransaction(prev => [...prev, newTx]);
+      setPendingRelationships(prev => [...prev, newTx]);
     },
-    [pendingTransactions],
+    [pendingRelationships],
   );
 
   /**
-   * Remove a pending transaction by its txHash.
+   * Remove a pending relationship by its txHash.
    * @param {string} txHash - The txHash to remove.
    */
   const resolveByTxHash = React.useCallback(
     (txHash: string) => {
-      setPendingTransaction(prev => prev.filter(x => x.txHash !== txHash));
+      setPendingRelationships(prev => prev.filter(x => x.txHash !== txHash));
     },
-    [pendingTransactions],
+    [pendingRelationships],
   );
 
   /**
@@ -81,24 +77,23 @@ const usePendingTransactions = () => {
    * @param {string} counterPartyAddr - The address of the counter party.
    */
   const resolveRelationshipTxByAddr = React.useCallback(
-    (counterPartyAddr: string) => {
+    (
+      counterPartyAddr: string,
+      type: GrantEnums.MsgCreateRelationship | GrantEnums.MsgDeleteRelationship,
+    ) => {
       // could get expensive as list grows, POC
-      setPendingTransaction(prev =>
+      setPendingRelationships(prev =>
         _.remove(
           prev,
-          x =>
-            (x.msgType === GrantEnums.MsgCreateRelationship &&
-              x.counterPartyAddr === counterPartyAddr) ||
-            (x.msgType === GrantEnums.MsgDeleteRelationship &&
-              x.counterPartyAddr === counterPartyAddr),
+          x => x.msgType === type && x.counterPartyAddr === counterPartyAddr,
         ),
       );
     },
-    [pendingTransactions],
+    [pendingRelationships],
   );
 
   return {
-    addNewPendingTx,
+    addNewPendingRelationship,
     resolveByTxHash,
     resolveRelationshipTxByAddr,
   };
@@ -106,4 +101,4 @@ const usePendingTransactions = () => {
 
 export default usePendingTransactions;
 
-export {pendingRelationships};
+export {pendingRelationshipsState};

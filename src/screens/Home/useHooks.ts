@@ -8,13 +8,14 @@ import {NavProps} from 'screens/Home/index';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
-import {useResetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import {pendingRelationshipsState} from '@recoil/pendingTransactionsState';
 
 /**
  * Hooks for the Home screen.
@@ -34,6 +35,12 @@ const useHooks = () => {
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
+
+  const pendingRelationships = useRecoilValue(pendingRelationshipsState);
+
+  React.useEffect(() => {
+    console.log('pending relationships', pendingRelationships);
+  }, [pendingRelationships]);
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 

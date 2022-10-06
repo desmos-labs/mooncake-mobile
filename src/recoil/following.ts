@@ -1,4 +1,5 @@
-import {atom, useRecoilState} from 'recoil';
+import React from 'react';
+import {atom, selector, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
@@ -10,6 +11,14 @@ export const followingState = atom<CounterParty[]>({
   default: [],
 });
 
+export const followedAddressesState = selector({
+  key: 'followedAddressesState',
+  get: ({get}) => {
+    const following = get(followingState);
+    return new Set(following.map(f => f.address));
+  },
+});
+
 /**
  * Get the list of followed accounts for the active account
  */
@@ -17,29 +26,27 @@ export const useGetFollowing = () => {
   const {activeAddress} = useActiveAccount();
   const [following, setFollowing] = useRecoilState(followingState);
 
-  const {loading} = useQuery<GetFollowedUsersForAddressData>(
+  const {data, loading} = useQuery<GetFollowedUsersForAddressData>(
     GetFollowedUsersForAddress,
     {
       variables: {
         userAddress: activeAddress,
       },
       pollInterval: 2000,
-      notifyOnNetworkStatusChange: true,
       fetchPolicy: 'no-cache',
-      onCompleted: result => {
-        const {user_relationship} = result;
-
-        const mapped = user_relationship
-          .map(x => x.counterparty)
-          .filter(d => !!d);
-
-        setFollowing(mapped);
-      },
-      onError: error => {
-        console.log(error);
-      },
     },
   );
+
+  React.useEffect(() => {
+    if (!data) return;
+    const {user_relationship} = data;
+
+    const newFollowing = user_relationship
+      .map(x => x.counterparty)
+      .filter(d => !!d);
+
+    setFollowing(newFollowing);
+  }, [data]);
 
   // refetch following list if userAddress has changed
   // React.useEffect(() => {
