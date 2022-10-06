@@ -22,7 +22,7 @@ const useFollowOrUnfollowUser = () => {
   const following = useRecoilValue(followingState);
   const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
-  const {addNewPendingTx} = usePendingTransactions();
+  const {addNewPendingRelationship} = usePendingTransactions();
 
   const followOrUnfollowUser = React.useCallback(
     async ({addrToFollow}: FollowOrUnfollowParams) => {
@@ -59,7 +59,7 @@ const useFollowOrUnfollowUser = () => {
         }
 
         if (result) {
-          addNewPendingTx({
+          addNewPendingRelationship({
             counterPartyAddr: addrToFollow,
             msgType: isAlreadyFollowing
               ? GrantEnums.MsgDeleteRelationship
@@ -78,7 +78,7 @@ const useFollowOrUnfollowUser = () => {
         setLoading(false);
       }
     },
-    [activeAddress, following, addNewPendingTx],
+    [activeAddress, following, addNewPendingRelationship],
   );
 
   return {

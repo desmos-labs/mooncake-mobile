@@ -37,17 +37,15 @@ const usePendingTransactions = () => {
 
   // Clear pending relationship transactions
   React.useEffect(() => {
-    // If address is in followedAddresses, it means it has been successfully followed
     setPendingRelationships(prev =>
       prev.filter(
         x =>
           (x.msgType === GrantEnums.MsgCreateRelationship &&
-            followedAddresses.has(x.counterPartyAddr)) ||
+            !followedAddresses.has(x.counterPartyAddr)) ||
           (x.msgType === GrantEnums.MsgDeleteRelationship &&
-            !followedAddresses.has(x.counterPartyAddr)),
+            followedAddresses.has(x.counterPartyAddr)),
       ),
     );
-    console.log(followedAddresses);
   }, [followedAddresses]);
 
   /**
