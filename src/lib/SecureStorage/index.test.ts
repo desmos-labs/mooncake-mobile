@@ -37,16 +37,16 @@ describe('lib/SecureStorage', () => {
   describe('resetSecureStorage', () => {
     it('resets all keychain values', async () => {
       (getAllGenericPasswordServices as jest.Mock).mockResolvedValue([
-        'hello',
-        'world',
+        'mockService1',
+        'mockService2',
       ]);
 
       await resetSecureStorage();
       expect(resetGenericPassword).toHaveBeenCalledWith({
-        service: 'hello',
+        service: 'mockService1',
       });
       expect(resetGenericPassword).toHaveBeenCalledWith({
-        service: 'world',
+        service: 'mockService2',
       });
     });
   });
@@ -57,14 +57,14 @@ describe('lib/SecureStorage', () => {
 
       const mockAccountData: ChainAccount = {
         type: ChainAccountType.Local,
-        address: '123',
+        address: 'mockAddress',
         hdPath: {
           coinType: 0,
           account: 0,
           change: 0,
           addressIndex: 0,
         },
-        pubKey: 'test',
+        pubKey: 'mockPubkey',
         signAlgorithm: 'secp256k1',
       };
 
@@ -84,14 +84,14 @@ describe('lib/SecureStorage', () => {
 
       const mockAccountData: ChainAccount = {
         type: ChainAccountType.Local,
-        address: '123',
+        address: 'mockAddress',
         hdPath: {
           coinType: 0,
           account: 0,
           change: 0,
           addressIndex: 0,
         },
-        pubKey: 'test',
+        pubKey: 'mockPubkey',
         signAlgorithm: 'secp256k1',
       };
 
@@ -125,7 +125,7 @@ describe('lib/SecureStorage', () => {
         value: 'mockEncrypteddWalletData',
       });
       const wallet: any = {
-        bech32Address: 'wallet_addr',
+        bech32Address: 'mockWalletAddress',
         serialize: () => 'serializedWallet',
       };
 
@@ -142,7 +142,7 @@ describe('lib/SecureStorage', () => {
           accessControl: undefined,
           accessible: 0,
           authenticationPrompt: {title: 'Biometric Authentication'},
-          service: 'wallet_addr_WALLET_PASSWORD',
+          service: 'mockWalletAddress_WALLET_PASSWORD',
         },
       );
 
@@ -150,7 +150,7 @@ describe('lib/SecureStorage', () => {
         'secureValue',
         '{"value":"mockEncrypteddWalletData"}',
         {
-          service: 'wallet_addr_KEY',
+          service: 'mockWalletAddress_KEY',
         },
       );
     });
