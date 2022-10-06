@@ -10,6 +10,7 @@ import {useTranslation} from 'react-i18next';
 import {Button, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import {ChainAccount} from 'types/chains';
+import isEqual from 'lodash/isEqual';
 import useStyles from './useStyles';
 
 type ButtonProps = {
@@ -46,21 +47,26 @@ const Buttons: FC<ButtonProps> = ({
   /* Adding the selected profiles to the loaded profiles. */
   const handleConfirmPressed = useCallback(async () => {
     if (!selectedProfileMap.size) return;
-    const tasks: Array<Promise<void>> = [];
+    let tasks = Promise.resolve(); // to avoid await in a loop
     accountsByPage.forEach(accounts => {
       accounts.forEach(account => {
         if (selectedProfileMap.has(account.address)) {
-          tasks.push(saveNewAccount(account));
+          tasks = tasks.then(() => saveNewAccount(account));
         }
       });
     });
-    await Promise.all(tasks);
+    await tasks; // wait for all tasks to complete
     setProfiles(prev => {
       const prevWithoutSelected = prev.filter(
         p => !selectedProfileMap.has(p.address),
       );
-      return prevWithoutSelected.concat(...selectedProfileMap.values());
+      const newProfiles = [
+        ...prevWithoutSelected,
+        ...selectedProfileMap.values(),
+      ];
+      return isEqual(newProfiles, prev) ? prev : newProfiles;
     });
+    navigation.pop(); // remove this screen from the stack and go to profiles list
   }, [selectedProfileMap, accountsByPage]);
 
   if (canAddProfile) {
