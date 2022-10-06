@@ -64,6 +64,7 @@ const MediaBottomPanel = ({
       <SafeAreaView edges={['bottom']} style={[style, styles.container]}>
         <View style={styles.leftGroup}>
           <ImageButton
+            accessibilityLabel="use image from gallery"
             hitSlopValue={8}
             disabled={imageSelected}
             onPress={handlePressGallery}
@@ -71,6 +72,7 @@ const MediaBottomPanel = ({
             style={styles.imageButtonStyle}
           />
           <ImageButton
+            accessibilityLabel="use image from camera"
             hitSlopValue={8}
             disabled={imageSelected}
             onPress={handlePressCamera}
@@ -78,6 +80,7 @@ const MediaBottomPanel = ({
             style={styles.imageButtonStyle}
           />
           <ImageButton
+            accessibilityLabel="mention a user"
             hitSlopValue={8}
             onPress={handlePressMention}
             image={tagIcon}

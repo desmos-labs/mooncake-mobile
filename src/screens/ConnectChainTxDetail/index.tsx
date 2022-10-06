@@ -10,6 +10,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {connectChainState} from '@recoil/connectChainState';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
@@ -44,7 +45,7 @@ const ConnectChainTxDetail = () => {
   const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
   const styles = useStyles();
-
+  const theme = useTheme();
   const [message, setMessage] = React.useState<any>(undefined);
   const [deserializedExternalWallet, setDeserializedExternalWallet] =
     React.useState<LocalWallet | undefined>(undefined);
@@ -94,7 +95,8 @@ const ConnectChainTxDetail = () => {
   }, [fee]);
 
   const handlePressNext = React.useCallback(async () => {
-    const unlockResponse = await unlockWallet(chainAccount!);
+    if (!chainAccount) return;
+    const unlockResponse = await unlockWallet({chainAccount});
 
     // handle case here
     if (!unlockResponse || !unlockResponse.wallet) return;
@@ -122,7 +124,7 @@ const ConnectChainTxDetail = () => {
       failureAction: (errorMessage?: string) => {
         navigate(ROUTES.RESULT_MODAL, {
           image: errorImage,
-          title: t('resultModal:fail'),
+          title: t('resultModal:failed'),
           subtitle: errorMessage,
           onPressPrimary: () => goBack(),
           primaryButtonLabel: t('common:retry') as string,
@@ -132,7 +134,7 @@ const ConnectChainTxDetail = () => {
   }, [chainAccount, message, fee, deserializedExternalWallet]);
 
   return (
-    <DView scrollable style={styles.container} topBar={<TopBar />}>
+    <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t('header')}</Typography.H3>
 
       <View style={styles.chainImageGroup}>
@@ -144,14 +146,18 @@ const ConnectChainTxDetail = () => {
       <Typography.Subtitle2 style={styles.textStyle}>
         {t('from')}
       </Typography.Subtitle2>
-      <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
+      <Typography.Body6
+        style={[styles.textStyle, styles.valueStyle]}
+        numberOfLines={1}>
         {activeAddr}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>
         {t('connectTo')}
       </Typography.Subtitle2>
-      <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
+      <Typography.Body6
+        style={[styles.textStyle, styles.valueStyle]}
+        numberOfLines={1}>
         {deserializedExternalWallet ? (
           deserializedExternalWallet.bech32Address
         ) : (
@@ -176,10 +182,11 @@ const ConnectChainTxDetail = () => {
 
       <View style={styles.buttonContainer}>
         <Button
+          color={theme.colors.surfaceBlack}
           disabled={
             !chainAccount || !message || !fee || !deserializedExternalWallet
           }
-          mode="gradientFilled"
+          mode="contained"
           onPress={handlePressNext}>
           {t('common:next')}
         </Button>

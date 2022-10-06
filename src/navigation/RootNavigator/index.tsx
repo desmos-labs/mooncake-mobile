@@ -88,11 +88,11 @@ import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
-import Login from 'screens/Login';
+import Login, {LoginParams} from 'screens/Login';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.LOGIN]: undefined;
+  [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -201,6 +201,9 @@ const RootNavigator = () => {
     addProfileCard: {
       backgroundColor: 'rgb(245,246,249)',
     },
+    statusScreen: {
+      backgroundColor: 'rgb(175,175,175)',
+    },
   };
 
   return (
@@ -229,6 +232,7 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.FULLSCREEN_STATUS_SCREEN}
         component={FullscreenStatusScreen}
+        options={{cardStyle: styles.statusScreen}}
       />
       <Stack.Screen
         initialParams={{

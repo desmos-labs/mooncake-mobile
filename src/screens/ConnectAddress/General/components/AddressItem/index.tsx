@@ -1,9 +1,12 @@
-import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import Typography from 'components/Typography';
-import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
+import {useLazyQuery} from '@apollo/client';
 import DropShadowWrapper from 'components/DropShadowWrapper';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import {formatNumShorthand} from 'lib/FormatUtils';
+import React, {useEffect, useMemo} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
+import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useStyles from './useStyles';
 
 type Props = {
@@ -15,12 +18,26 @@ type Props = {
 };
 
 const AddressItem = ({index, address, handlePress}: Props) => {
+  const [getBalance, {data, loading}] = useLazyQuery(getAccountBalance, {
+    variables: {address},
+  });
   const styles = useStyles();
 
   const theme = useTheme();
 
+  useEffect(() => {
+    if (address.includes('desmos')) {
+      getBalance();
+    }
+  }, [address]);
+
+  const balanceData = useMemo(() => {
+    if (!data?.action_account_balance) return null;
+    return data?.action_account_balance?.coins[0]?.amount;
+  }, [data]);
+
   return (
-    <DropShadowWrapper customColor="#1018280D" disableInnerWrapper>
+    <DropShadowWrapper customColor="rgba(16, 24, 40, 0.01)">
       <TouchableOpacity onPress={handlePress} style={styles.container}>
         <View style={styles.innerContainer}>
           <Typography.Body7 style={styles.indexStyle}>
@@ -34,6 +51,18 @@ const AddressItem = ({index, address, handlePress}: Props) => {
               {address}
             </Typography.Body6>
           </Spacer>
+          {balanceData &&
+            (loading ? (
+              <ActivityIndicator
+                style={styles.alignRight}
+                size="small"
+                color={theme.colors.butterOrange01}
+              />
+            ) : (
+              <Typography.Subtitle4 style={styles.alignRight}>
+                {formatNumShorthand(balanceData)} DSM
+              </Typography.Subtitle4>
+            ))}
         </View>
       </TouchableOpacity>
     </DropShadowWrapper>

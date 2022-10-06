@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <BVLinearGradient
+    colors={
+      Array [
+        4294441210,
+        871889146,
+      ]
+    }
+    endPoint={
+      Object {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    startPoint={
+      Object {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      Object {
+        "height": 50,
+        "width": "100%",
+      }
+    }
+  />
+</View>
+`;

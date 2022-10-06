@@ -15,8 +15,8 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
   },
   headerText: {
-    textAlign: 'center',
-    marginBottom: theme.spacing.m,
+    textAlign: 'left',
+    marginBottom: theme.spacing.l,
     marginTop: theme.spacing.xl,
   },
   innerContainer: {

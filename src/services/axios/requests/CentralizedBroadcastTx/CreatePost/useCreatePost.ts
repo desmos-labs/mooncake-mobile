@@ -10,7 +10,6 @@ import {
   ReplySetting,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {DesmosClient, MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import UploadMedia, {
   Params,
@@ -21,6 +20,9 @@ import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
 import {useTranslation} from 'react-i18next';
+import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 
 /**
  * Hook that creates a new post
@@ -34,6 +36,8 @@ const useCreatePost = () => {
 
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const [loading, setLoading] = React.useState(false);
+
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   /**
    * Uploads an image and returns an object that is compatible with the Media.fromPartial helper function.
@@ -73,11 +77,21 @@ const useCreatePost = () => {
     }: Partial<MsgCreatePost>) => {
       if (!activeAddress) return;
 
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest: [GrantEnums.MsgCreatePost],
+        address: activeAddress,
+        stayOnCurrentScreen: true,
+      });
+
+      if (!success) {
+        throw new Error('User did not grant MsgCreatePost Authorization');
+      }
+
       try {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
         const msg: MsgCreatePostEncodeObject = {
-          typeUrl: '/desmos.posts.v2.MsgCreatePost',
+          typeUrl: GrantEnums.MsgCreatePost,
           value: MsgCreatePost.fromPartial({
             subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
             sectionId: 0,

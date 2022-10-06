@@ -1,5 +1,5 @@
 import LoadingOverlay from 'components/LoadingOverlay';
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useCallback} from 'react';
 import {
   ColorValue,
   ImageBackground,
@@ -29,7 +29,7 @@ export type Props = SafeAreaViewProps & {
   /**
    * Image that will be displayed as background
    */
-  background?: React.ComponentProps<typeof ImageBackground>['source'];
+  backgroundImage?: React.ComponentProps<typeof ImageBackground>['source'];
 
   /**
    * Override themed background color
@@ -44,13 +44,14 @@ export type Props = SafeAreaViewProps & {
   disableHideKeyboardTouchable?: boolean;
 
   showLoadingOverlay?: boolean;
+  onBackgroundPress?: () => void;
 };
 // TODO fix statusBarStyle accordingly with the theme
 const DView: React.FC<Props> = props => {
   const {
     scrollable,
     topBar,
-    background,
+    backgroundImage,
     children,
     backgroundColor,
     style,
@@ -61,16 +62,22 @@ const DView: React.FC<Props> = props => {
     enableRefreshControl,
     edges,
     showLoadingOverlay,
+    onBackgroundPress,
     ...rest
   } = props;
   const styles = useStyles(props);
+
+  const handleBackgroundPress = useCallback(() => {
+    Keyboard.dismiss();
+    onBackgroundPress?.();
+  }, [onBackgroundPress]);
 
   return (
     <>
       <TouchableWithoutFeedback
         touchSoundDisabled
         disabled={disableHideKeyboardTouchable}
-        onPress={() => Keyboard.dismiss()}>
+        onPress={handleBackgroundPress}>
         <SafeAreaView
           edges={edges ?? ['bottom', 'left', 'right', 'top']}
           style={[styles.root, backgroundColor ? {backgroundColor} : {}]}
@@ -81,8 +88,11 @@ const DView: React.FC<Props> = props => {
             translucent={true}
             {...statusBarProps}
           />
-          {background !== undefined && (
-            <ImageBackground style={styles.background} source={background} />
+          {backgroundImage !== undefined && (
+            <ImageBackground
+              style={styles.background}
+              source={backgroundImage}
+            />
           )}
           {topBar}
           <View style={[styles.content, style]}>
@@ -91,7 +101,7 @@ const DView: React.FC<Props> = props => {
                 refreshControl={
                   enableRefreshControl ? (
                     <RefreshControl
-                      enabled={enableRefreshControl || false}
+                      enabled
                       onRefresh={onRefresh}
                       refreshing={refreshing || false}
                     />

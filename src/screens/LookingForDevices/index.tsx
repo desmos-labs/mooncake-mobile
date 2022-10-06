@@ -1,8 +1,13 @@
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {btDevice, ledgerIcon, noLedgerFound} from 'assets/images';
+import {StackScreenProps} from '@react-navigation/stack';
+import {lookingForDevicesAnimation} from 'assets/animations';
+import {iconCrossBlack, noLedgerFound} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
+import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
+import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import {DesmosLedgerApp} from 'config/LedgerApps';
 import ROUTES from 'navigation/routes';
@@ -16,12 +21,9 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
-import LoadingIndicator from './components/LoadingIndicator';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -51,6 +53,7 @@ type AuthNavProps = StackScreenProps<
 const LookingForDevices = () => {
   const {navigate, replace} = useNavigation<any>();
   const {params} = useRoute<NavProps['route'] | AuthNavProps['route']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('lookingForDevices');
   const styles = useStyles();
 
@@ -133,6 +136,11 @@ const LookingForDevices = () => {
     if (!scanning && devices.length === 0) {
       return (
         <View style={styles.container}>
+          <ImageButton
+            onPress={goBack}
+            image={iconCrossBlack}
+            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+          />
           <View style={styles.graphicGroup}>
             <Image source={noLedgerFound} style={styles.noDeviceImage} />
           </View>
@@ -145,8 +153,9 @@ const LookingForDevices = () => {
           </Typography.Body6>
 
           <Button
-            mode="gradientFilled"
-            containerStyle={styles.retryButton}
+            color={theme.colors.surfaceBlack}
+            mode="contained"
+            style={styles.retryButton}
             onPress={onPressRetry}>
             {t('common:retry')}
           </Button>
@@ -155,26 +164,30 @@ const LookingForDevices = () => {
     }
 
     return (
-      <>
-        <View style={styles.container}>
-          <View style={styles.graphicGroup}>
-            <Image source={btDevice} style={styles.btDeviceImg} />
-            <LoadingIndicator
-              numDots={5}
-              dotSize={8}
-              hideActiveDots={!scanning}
-              inactiveColor={theme.colors.butterOrange03}
-              activeColor={theme.colors.butterOrange03}
+      <View style={styles.container}>
+        <>
+          <ImageButton
+            onPress={goBack}
+            image={iconCrossBlack}
+            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+          />
+          <View style={{alignSelf: 'center', marginTop: 60}}>
+            <ThemedLottieView
+              source={lookingForDevicesAnimation}
+              autoPlay
+              autoSize
+              loop
             />
-            <Image source={ledgerIcon} style={styles.ledgerImg} />
           </View>
-          <Typography.H4 style={styles.headerStyle}>
-            {t('header')}
-          </Typography.H4>
-          <Typography.Body6 style={styles.descriptionStyle}>
-            {t('description')}
-          </Typography.Body6>
-        </View>
+          <View style={{marginHorizontal: theme.spacing.m}}>
+            <Typography.H4 style={styles.headerStyle}>
+              {t('header')}
+            </Typography.H4>
+            <Typography.Body6 style={styles.descriptionStyle}>
+              {t('description')}
+            </Typography.Body6>
+          </View>
+        </>
 
         <FlatList
           style={styles.flatlistContainer}
@@ -183,11 +196,11 @@ const LookingForDevices = () => {
           data={devices}
           renderItem={renderItem}
         />
-      </>
+      </View>
     );
   }, [scanning, devices.length, screenReady, isBTOn]);
 
-  return <DView>{screenContent}</DView>;
+  return <DView backgroundColor={theme.colors.white}>{screenContent}</DView>;
 };
 
 export default LookingForDevices;

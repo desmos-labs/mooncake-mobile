@@ -4,6 +4,8 @@ import { Options } from "@testing-library/react-native/build/render";
 import {Provider as PaperProvider} from 'react-native-paper';
 import LightTheme from "config/theme/LightTheme";
 import { RecoilRoot } from "recoil";
+import {SafeAreaProvider} from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
 
 /**
  * A custom render function for use in unit tests for components that
@@ -11,11 +13,15 @@ import { RecoilRoot } from "recoil";
  */
 const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <RecoilRoot>
-      <PaperProvider theme={LightTheme}>
-        {children}
-      </PaperProvider>
-    </RecoilRoot>
+      <RecoilRoot>
+        <NavigationContainer>
+          <PaperProvider theme={LightTheme}>
+            <SafeAreaProvider style={{flex:1}}>
+            {children}
+            </SafeAreaProvider>
+          </PaperProvider>
+        </NavigationContainer>
+      </RecoilRoot>
   );
 };
 

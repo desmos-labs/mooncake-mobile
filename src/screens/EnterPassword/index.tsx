@@ -1,4 +1,8 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -22,11 +26,13 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  AuthorizeWalletParamList,
-  ROUTES.AUTH_UNLOCK_LOCAL_WALLET
+type NavProps = CompositeScreenProps<
+  StackScreenProps<AuthorizeWalletParamList, ROUTES.AUTH_UNLOCK_LOCAL_WALLET>,
+  StackScreenProps<RootNavigatorParamList>
 >;
 
 /**
@@ -48,6 +54,7 @@ export type EnterPasswordParams = {
   provideMnemonic?: boolean;
   titleLabelOverride?: string;
   buttonLabelOverride?: string;
+  inputLabelOverride?: string;
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
@@ -71,9 +78,10 @@ const EnterPassword = () => {
       dViewProps,
       onSuccessfulAuthentication,
       onFailedAuthentication,
+      inputLabelOverride,
     },
   } = useRoute<NavProps['route']>();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -114,6 +122,7 @@ const EnterPassword = () => {
               wallet: provideWallet ? wallet : undefined,
               mnemonic: provideMnemonic ? mnemonic : undefined,
               authorized: true,
+              password,
             });
             goBack();
           } else {
@@ -124,8 +133,12 @@ const EnterPassword = () => {
           throw new Error('address is empty'); // instead of do nothing
         }
       } catch (err) {
-        onFailedAuthentication && onFailedAuthentication();
-        setErrors({password: String(err)});
+        // onFailedAuthentication && onFailedAuthentication();
+        if (String(err).includes('Malformed UTF-8 data')) {
+          setErrors({password: t('error:incorrectPassword')});
+        } else {
+          setErrors({password: String(err)});
+        }
       } finally {
         setLoading(false);
       }
@@ -135,13 +148,16 @@ const EnterPassword = () => {
       provideWallet,
       provideMnemonic,
       onSuccessfulAuthentication,
-      onFailedAuthentication,
+      // onFailedAuthentication,
     ],
   );
 
-  const onPressForgotPassword = () => {
-    // TODO: implementation once forgot password flow is defined
-  };
+  const onPressForgotPassword = React.useCallback(() => {
+    // possible memory leak as the unlock promise will never get resolved this way
+    replace(ROUTES.MNEMONIC_INPUT, {
+      mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+    });
+  }, []);
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -150,7 +166,11 @@ const EnterPassword = () => {
   }, []);
 
   return (
-    <DView style={styles.container} topBar={<TopBar />} {...dViewProps}>
+    <DView
+      style={styles.container}
+      backgroundColor={theme.colors.white}
+      topBar={<TopBar />}
+      {...dViewProps}>
       <Typography.H3 style={styles.headerText}>
         {titleLabelOverride || t('header')}
       </Typography.H3>
@@ -162,9 +182,10 @@ const EnterPassword = () => {
         {({handleSubmit, errors, setValues, values}) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>
-              {t('inputLabel')}
+              {inputLabelOverride || t('inputLabel')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              style={styles.textInput}
               autoFocus={true}
               placeholder={t('inputPlaceholder')}
               value={values.password}

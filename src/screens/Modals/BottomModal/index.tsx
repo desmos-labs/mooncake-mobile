@@ -7,6 +7,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode, useCallback} from 'react';
 import {TouchableOpacity, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type BottomModalParams = {
@@ -36,6 +37,7 @@ const BottomModal = () => {
     params: {title, body, primaryButtonLabel, onPressPrimary},
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
+  const theme = useTheme();
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
@@ -57,7 +59,10 @@ const BottomModal = () => {
         <Typography.Body5>{body}</Typography.Body5>
 
         <Spacer paddingVertical={40}>
-          <Button mode="gradientFilled" onPress={onPressButton}>
+          <Button
+            color={theme.colors.surfaceBlack}
+            mode="contained"
+            onPress={onPressButton}>
             {primaryButtonLabel}
           </Button>
         </Spacer>

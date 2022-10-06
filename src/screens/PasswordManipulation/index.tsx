@@ -39,6 +39,11 @@ export type PasswordManipulationParams = {
    * it means the user is importing an account using a recovery phrase
    */
   mnemonic?: string;
+
+  /**
+   * Old password passed from origin screen.
+   */
+  oldPassword?: string;
 };
 
 export type NavProps = StackScreenProps<

@@ -49,7 +49,14 @@ const ConnectChainMethod = () => {
     if (chainAccount) {
       setConnectChainMethod('PASSWORD');
 
-      const unlockResult = await unlockWallet(chainAccount);
+      const unlockResult = await unlockWallet({
+        chainAccount,
+        shouldReplaceRoute: false,
+        enterPwScreenOptions: {
+          titleLabelOverride: t('connectChain:connectChain'),
+          inputLabelOverride: t('login:enterPassword'),
+        },
+      });
 
       if (unlockResult) {
         const {mnemonic, wallet} = unlockResult;
@@ -75,14 +82,18 @@ const ConnectChainMethod = () => {
   }
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.H5 style={styles.textStyle}>
+    <DView
+      style={styles.container}
+      topBar={<TopBar />}
+      backgroundColor={theme.colors.white}>
+      <Typography.H3 style={styles.textStyle}>
         {t('connectAddress')}
-      </Typography.H5>
+      </Typography.H3>
+      <Spacer paddingBottom={theme.spacing.s} />
       <Typography.Body6 style={[styles.textStyle, styles.descriptionText]}>
         {t('selectMethodToConnect')}
       </Typography.Body6>
-
+      <Spacer paddingBottom={theme.spacing.m} />
       <ConnectChainMethodButton
         method="ledger"
         handlePress={handlePressLedger}

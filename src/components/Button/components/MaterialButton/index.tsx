@@ -190,7 +190,7 @@ const MaterialButton: React.FC<Props> = props => {
   if (mode === 'backgroundComponent') {
     // TouchableOpacity in FlatList causing 'Excessive number of pending callbacks: 501. Some pending callbacks that might have leaked by never being called from native code:' ...startAnimatingNode...{}
     return (
-      <Pressable onPress={onPress} style={pressableFeekback}>
+      <Pressable onPress={onPress} style={pressableFeedback}>
         <View style={[styles.backgroundComponentButton, style]}>
           {!!BackgroundComponent && (
             <BackgroundComponent
@@ -221,7 +221,7 @@ const MaterialButton: React.FC<Props> = props => {
   );
 };
 
-function pressableFeekback({
+function pressableFeedback({
   pressed,
 }: PressableStateCallbackType): StyleProp<ViewStyle> {
   if (!pressed) return {};

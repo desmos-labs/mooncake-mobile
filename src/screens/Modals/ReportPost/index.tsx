@@ -12,7 +12,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Keyboard,
@@ -51,22 +51,18 @@ const ReportPost = () => {
     value: registeredReports[0].id,
     index: 0,
   });
-  const onSubmit = React.useCallback(async () => {
-    await handleSubmitReport(params.postId);
-    goBack();
-  }, []);
 
   useEffect(() => {
     const newState: any[] = registeredReports.map(reason => {
       return {
-        label: t(reason.description),
+        label: t(reason.title),
         value: reason.id,
       };
     });
     setReportReasons(newState);
   }, [registeredReports]);
 
-  const handleSubmitReport = React.useCallback(
+  const handleSubmitReport = useCallback(
     async (postId: number) => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreateReport];
       // check if user has grants first
@@ -88,8 +84,20 @@ const ReportPost = () => {
         });
       }
     },
-    [activeAddress],
+    [
+      activeAddress,
+      checkAndUpdateGrants,
+      manageReport,
+      message,
+      selectedReport.value,
+      toast,
+    ],
   );
+
+  const onSubmit = useCallback(async () => {
+    await handleSubmitReport(params.postId);
+    goBack();
+  }, [handleSubmitReport, params.postId, goBack]);
 
   return (
     <KeyboardAvoidingView
@@ -119,7 +127,7 @@ const ReportPost = () => {
 
             <Spacer paddingBottom={theme.spacing.s} />
             <DTextInput
-              editable={selectedReport.index === 4}
+              editable={true}
               inputStyle={styles.messageInput}
               value={message}
               onChangeText={text => setMessage(text)}

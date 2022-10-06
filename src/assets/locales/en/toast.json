@@ -1,5 +1,6 @@
 {
   "errorLogin": "[PLACEHOLDER]An error occurred while logging in. Please try again.",
   "errorWrongPw": "[PLACEHOLDER]Password is incorrect.",
-  "errorSystemBusy": "[PLACEHOLDER]System busy. Please try again."
+  "errorSystemBusy": "[PLACEHOLDER]System busy. Please try again.",
+  "errorInvalidSession": "[PLACEHOLDER]Session has expired. Please login again."
 }

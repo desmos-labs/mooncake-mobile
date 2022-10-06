@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import React, {FC} from 'react';
 import DView from 'components/DView';
 import {useNavigation} from '@react-navigation/native';
@@ -35,7 +36,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
     route?.params ?? {};
   // placeholder
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const navigation = useNavigation<NavProps['navigation']>();
 
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
 
@@ -66,20 +67,22 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
-        <Typography.Button2
-          style={styles.modeButtonText}
+        <Button
+          mode="text"
           onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
               nextRouteOverride,
               loadedProfileMap,
               titleLabelOverride,
             });
           }}>
-          {t('advanced')}
-        </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>
+            {t('advanced')}
+          </Typography.Button2>
+        </Button>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
+  }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const renderItem = React.useCallback(
     // eslint-disable-next-line react/no-unused-prop-types
@@ -92,22 +95,22 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           handlePress={() => {
             if (nextRouteOverride) {
               if (loadedProfileMap?.has(item.bech32Address)) {
-                return navigate(ROUTES.USER_PROFILE, {
+                return navigation.navigate(ROUTES.USER_PROFILE, {
                   visitingProfileAddress: item.bech32Address,
                 });
               }
 
               setSelectedExternalAccount(item.serialize());
-              return navigate(nextRouteOverride);
+              return navigation.navigate(nextRouteOverride);
             }
 
             setSelectedExternalAccount(item.serialize());
-            navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
+            navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
           }}
         />
       );
     },
-    [nextRouteOverride, loadedProfileMap],
+    [navigation, nextRouteOverride, loadedProfileMap],
   );
 
   const ItemSeparatorComponent = React.useCallback(
@@ -116,13 +119,14 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <DView topBar={<TopBar rightElement={SwitchToAdvancedButton} />}>
+    <DView
+      topBar={<TopBar rightElement={SwitchToAdvancedButton} />}
+      backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
+        <Typography.H3 style={styles.textStyle}>
           {titleLabelOverride || t('header')}
-        </Typography.H5>
-
-        <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
+        </Typography.H3>
+        <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.s}>
           <Typography.Body6 style={styles.textStyle}>
             {t('selectAnAccount')}
           </Typography.Body6>
@@ -134,7 +138,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
         contentContainerStyle={{
-          paddingHorizontal: theme.spacing.m,
+          padding: theme.spacing.m,
         }}
         onEndReached={() => {
           generateAccountsFromMnemonic();

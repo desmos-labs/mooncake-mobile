@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   KeyboardEventName,
   Platform,
+  ScrollView,
   TextInput,
   View,
 } from 'react-native';
@@ -24,6 +25,8 @@ import {useRecoilState, useResetRecoilState} from 'recoil';
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import useImageFromDevice from 'hooks/useImageFromDevice';
+import Spacer from 'components/Spacer';
+import useDTextInputStyles from 'components/DTextInput/useStyles';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -60,7 +63,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   loading,
 }) => {
   const {t} = useTranslation('comment');
-  const styles = useStyles();
   const {bottom} = useSafeAreaInsets();
   const theme = useTheme();
   const [comment, setComment] = useRecoilState(postTextState);
@@ -69,6 +71,14 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const resetCommentAttachment = useResetRecoilState(postAttachmentsState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
   const textInputRef = useRef<any>();
+
+  const dTextInputStyles = useDTextInputStyles({});
+
+  const styles = useStyles({
+    baseTextInputStyle: dTextInputStyles.input,
+    keyboardShow,
+    bottomInset: bottom,
+  });
 
   const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
     onImageSelected: setCommentAttachment,
@@ -111,9 +121,9 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const rightButtonComponent = useMemo(() => {
     return (
       <Button
-        mode="gradientFilled"
+        mode="contained"
         disabled={comment.length === 0}
-        containerStyle={styles.postButton}
+        style={styles.postButton}
         loading={loading}
         onPress={handlePostComment}>
         <Typography.Button3 style={{color: theme.colors.white}}>
@@ -143,44 +153,41 @@ const EnterCommentBottomBar: React.FC<Props> = ({
           )}
           <View style={styles.textInputContainer}>
             {commentAttachment && (
-              <SelectedCommentImage
-                handlePress={resetCommentAttachment}
-                source={{uri: commentAttachment.uri}}
-              />
+              <Spacer paddingBottom={12}>
+                <SelectedCommentImage
+                  handlePress={resetCommentAttachment}
+                  source={{uri: commentAttachment.uri}}
+                />
+              </Spacer>
             )}
-            <View style={{flexDirection: 'row'}}>
+            <ScrollView
+              keyboardShouldPersistTaps="always"
+              overScrollMode="never"
+              showsVerticalScrollIndicator
+              contentContainerStyle={styles.textInputScrollContainer}>
               <TextInput
                 ref={textInputRef}
                 maxLength={EnvConfig.MAX_COMMENT_LENGTH}
                 value={comment}
-                onChangeText={text => setComment(text)}
+                onChangeText={text => {
+                  setComment(text);
+                }}
                 multiline
+                textBreakStrategy={undefined}
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.grey02}
                 placeholder={t('write a comment')}
                 textAlignVertical="center"
               />
-
-              <View
-                pointerEvents={keyboardShow ? 'auto' : 'none'}
-                style={{
-                  opacity: keyboardShow ? 1 : 0,
-                  alignSelf: 'flex-end',
-                }}>
-                <ImageButton
-                  style={{
-                    width: 24,
-                    height: 24,
-                    opacity: keyboardShow ? 1 : 0,
-                    bottom: Platform.select({
-                      ios: 0,
-                      android: 8,
-                    }),
-                  }}
-                  image={expandCommentIcon}
-                  onPress={onIconPress}
-                />
-              </View>
+            </ScrollView>
+            <View
+              pointerEvents={keyboardShow ? 'auto' : 'none'}
+              style={styles.expandButtonContainer}>
+              <ImageButton
+                style={styles.expandButton}
+                image={expandCommentIcon}
+                onPress={onIconPress}
+              />
             </View>
           </View>
         </View>

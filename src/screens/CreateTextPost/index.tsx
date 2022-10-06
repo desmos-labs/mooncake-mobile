@@ -42,6 +42,7 @@ const CreateTextPost = () => {
   const [sharedComment, setSharedComment] = useRecoilState(postTextState);
   const {createPost, loading} = useCreatePost();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const [inputFocused, setInputFocused] = React.useState(false);
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
@@ -63,7 +64,11 @@ const CreateTextPost = () => {
 
       if (focused) {
         inputRef.current?.blur();
-      } else inputRef.current?.focus();
+        setInputFocused(false);
+      } else {
+        inputRef.current?.focus();
+        setInputFocused(true);
+      }
     }
   }, [inputRef.current]);
 
@@ -108,7 +113,7 @@ const CreateTextPost = () => {
               value={sharedComment}
               multiline
               onChangeText={setSharedComment}
-              placeholder={t('tapToType')}
+              placeholder={inputFocused ? '' : t('tapToType')}
               style={[styles.inputStyle, {opacity: inputOpacity}]}
               placeholderTextColor="#FFFFFF"
             />

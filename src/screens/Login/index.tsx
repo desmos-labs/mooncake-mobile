@@ -10,15 +10,24 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import Button from 'components/Button';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
+
+export type LoginParams = {
+  // Callback to be executed if login is successful.
+  onSuccess?: () => void;
+
+  // Do not call pop() on successful login.
+  noPop?: boolean;
+};
 
 const Login = () => {
   const styles = useStyles();
@@ -26,13 +35,15 @@ const Login = () => {
   const theme = useTheme();
   const {activeAddress} = useActiveAccount();
 
+  const {pop, getState, navigate} = useNavigation<NavProps['navigation']>();
+  const {params} = useRoute<NavProps['route']>();
+
   const toast = useToast();
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
   const [password, setPassword] = React.useState('');
   const {login} = useLogin();
-  const {replace} = useNavigation<NavProps['navigation']>();
 
   const handleSubmit = React.useCallback(async () => {
     if (!activeAddress) {
@@ -48,7 +59,17 @@ const Login = () => {
       if (!loginResponse) {
         toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});
       } else {
-        replace(ROUTES.HOME);
+        if (!_.get(params, 'noPop')) {
+          const {routes} = getState();
+          if (routes.length > 1) {
+            pop();
+          } else {
+            navigate(ROUTES.HOME);
+          }
+        }
+
+        const onSuccessFn = _.get(params, 'onSuccess');
+        onSuccessFn && onSuccessFn();
       }
     } catch (err: any) {
       if (err.toString().includes('Incorrect')) {
@@ -62,7 +83,7 @@ const Login = () => {
   return (
     <DView
       statusBarProps={{translucent: true}}
-      background={landingBG}
+      backgroundImage={landingBG}
       style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.logo} />
       <Spacer paddingVertical={theme.spacing.s}>
@@ -79,6 +100,7 @@ const Login = () => {
           {t('password')}
         </Typography.Subtitle2>
         <DSecureTextInput
+          style={styles.input}
           value={password}
           onChangeText={setPassword}
           placeholder={t('enterPassword')}
