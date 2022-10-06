@@ -5,7 +5,7 @@ import {
   defaultBanner,
   defaultProfilePic,
   editButton,
-  followOrangeFilledIcon,
+  followIconOrange,
   stargazeIcon,
   twitterIcon,
 } from 'assets/images';
@@ -125,11 +125,6 @@ const Profile = () => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
-  // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
-  const followButton = useMemo(() => {
-    return followOrangeFilledIcon;
-  }, []);
-
   /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
   const subspaceID = 5;
 
@@ -194,14 +189,15 @@ const Profile = () => {
       </Animated.View>
 
       <Animated.ScrollView
+        scrollEnabled={false}
         onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.contentGroup}>
-          <View style={{paddingHorizontal: theme.spacing.m}}>
+          <View style={{paddingHorizontal: 20}}>
             <ImageButton
-              image={screenMode === 'myProfile' ? editButton : followButton}
+              image={screenMode === 'myProfile' ? editButton : followIconOrange}
               style={styles.editButton}
             />
 
@@ -218,9 +214,8 @@ const Profile = () => {
                 externalCallback={() => setShowSnackbar(true)}
               />
             </Spacer>
-
+            <Spacer paddingVertical={6} />
             <UserBio content={bio || ''} />
-
             <View style={styles.socialCounterGroup}>
               <TouchableOpacity onPress={handleFollowingPressed}>
                 <SocialCounter
@@ -244,7 +239,8 @@ const Profile = () => {
                 <View style={styles.connectButtonGroup}>
                   <Button
                     mode="outlined"
-                    style={styles.connectButton}
+                    style={{borderColor: theme.colors.surfaceBlack}}
+                    contentStyle={styles.connectButton}
                     onPress={handlePressConnectAddress}>
                     <Typography.Button2>
                       {t('connectAddress')}
@@ -252,7 +248,8 @@ const Profile = () => {
                   </Button>
                   <Button
                     mode="outlined"
-                    style={styles.connectButton}
+                    style={{borderColor: theme.colors.surfaceBlack}}
+                    contentStyle={styles.connectButton}
                     onPress={() => console.log('connectTwitter')}>
                     <Typography.Button2>
                       {t('connectTwitter')}
@@ -260,7 +257,7 @@ const Profile = () => {
                   </Button>
                 </View>
                 {chainLinks.length !== 0 && (
-                  <View style={{marginTop: 12}}>
+                  <View style={{marginTop: 16}}>
                     <ChainsCountersBar
                       loading={false}
                       connectedChainsCounter={chainLinks.length}
@@ -279,6 +276,7 @@ const Profile = () => {
           </View>
         </View>
         <Spacer paddingVertical={4} />
+        {screenMode !== 'myProfile' && <Spacer paddingVertical={16} />}
         <ProfileSectionButton
           onPress={handlePostsSectionPressed}
           titleLabel={t('posts')}

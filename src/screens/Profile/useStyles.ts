@@ -1,10 +1,11 @@
 import {makeStyle} from 'config/theme';
 import {Dimensions, StyleSheet} from 'react-native';
+import {scale} from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.backgroundGrey,
+    backgroundColor: theme.colors.white,
   },
   avatarContainer: {
     zIndex: 2,
@@ -37,7 +38,7 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   socialCounterGroup: {
-    marginTop: theme.spacing.m,
+    marginTop: theme.spacing.s,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
@@ -45,11 +46,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.iconGrey,
     width: StyleSheet.hairlineWidth,
     height: '90%',
-  },
-  connectButtonGroup: {
-    marginTop: theme.spacing.m,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
   },
   bannerImage: {
     position: 'absolute',
@@ -62,15 +58,21 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.surface,
   },
   contentContainerStyle: {
-    backgroundColor: theme.colors.background,
+    flexGrow: 1,
+    backgroundColor: theme.colors.white,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
   },
+  connectButtonGroup: {
+    flex: 1,
+    marginTop: theme.spacing.m,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   connectButton: {
-    height: 40,
-    width: 170,
-    justifyContent: 'center',
-    borderColor: theme.colors.surfaceBlack,
+    height: 42,
+    width: scale(150),
+    flex: 1,
   },
 }));
 
