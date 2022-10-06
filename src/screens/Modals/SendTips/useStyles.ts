@@ -17,7 +17,7 @@ const useStyles = makeStyle(theme => ({
   headerText: {
     textAlign: 'center',
     marginBottom: theme.spacing.m,
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.m,
   },
   innerContainer: {
     backgroundColor: theme.colors.white,

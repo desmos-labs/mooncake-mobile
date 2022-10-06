@@ -86,7 +86,7 @@ const SendTips = () => {
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? -20 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? -40 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{flex: 1}}>
       <TouchableOpacity
@@ -105,6 +105,13 @@ const SendTips = () => {
           <Typography.Body6>{t('description')}</Typography.Body6>
           <Spacer paddingBottom={30} />
           <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+          <Typography.Body7
+            style={{
+              color: theme.colors.surfaceBlack,
+              marginVertical: theme.spacing.s,
+            }}>
+            {t('warning fee')}
+          </Typography.Body7>
           <Spacer paddingBottom={14} />
           <View style={styles.buttonGroup}>
             <Button
@@ -201,14 +208,7 @@ const SendTips = () => {
             multiline
             placeholder={t('message')}
           />
-          <Spacer paddingVertical={10}>
-            <Typography.Body7
-              style={{
-                color: theme.colors.surfaceBlack,
-                marginVertical: theme.spacing.s,
-              }}>
-              {t('warning fee')}
-            </Typography.Body7>
+          <Spacer paddingVertical={30}>
             <Button
               loading={sendTipLoading}
               mode="contained"

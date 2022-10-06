@@ -36,11 +36,13 @@ const PostReactions = () => {
 
   return (
     <>
-      <Typography.Body6 style={styles.countText}>
-        {t('totalReactions', {
-          numReactions: formatNumShorthand(reactions.length),
-        })}
-      </Typography.Body6>
+      {reactions.length > 0 && (
+        <Typography.Body6 style={styles.countText}>
+          {t('totalReactions', {
+            numReactions: formatNumShorthand(reactions.length),
+          })}
+        </Typography.Body6>
+      )}
       <FlatList
         refreshing={reactionsLoading}
         onRefresh={() =>
