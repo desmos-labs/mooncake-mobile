@@ -1,5 +1,5 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {lookingForDevicesAnimation} from 'assets/animations';
 import {iconCrossBlack, noLedgerFound} from 'assets/images';
@@ -10,45 +10,22 @@ import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import {DesmosLedgerApp} from 'config/LedgerApps';
-import useStartBleScan from 'hooks/ledger/useStartBleScan';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Image,
   ListRenderItemInfo,
-  Platform,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-// refactor into hook
-const checkPermissions = async () => {
-  const permissions = Platform.select({
-    android: [
-      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-    ],
-    ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
-  });
-
-  const grantedPermissions = await requestMultiple(permissions!);
-
-  const grantedPermissionCount = Object.values(grantedPermissions).filter(
-    x => x === 'granted',
-  ).length;
-
-  return grantedPermissionCount === permissions!.length;
-};
 
 export type LookingForDevicesParams = {
   ledgerApp?: LedgerApp;
@@ -81,38 +58,15 @@ const LookingForDevices = () => {
   const styles = useStyles();
 
   const theme = useTheme();
-  const {scan, scanning, devices} = useStartBleScan();
 
-  const [screenReady, setScreenReady] = React.useState(false);
-
-  const isFocused = useIsFocused();
-
-  React.useEffect(() => {
-    // user will get stuck in an infinite loop if they never give consent
-    if (!isFocused) return;
-    checkPermissions()
-      .then(permissions => {
-        if (permissions) return scan();
-        else {
-          Alert.alert(t('permissionsDialog'), '', [
-            {
-              text: 'Go Back',
-              onPress: () => {},
-            },
-          ]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      .finally(() => {
-        setScreenReady(true);
-      });
-  }, [isFocused]);
-
-  const onPressRetry = React.useCallback(() => {
-    scan().then();
-  }, []);
+  const {
+    isBTOn,
+    screenReady,
+    scanning,
+    devices,
+    handlePressEnableBT,
+    onPressRetry,
+  } = useHooks();
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<BleLedger>) => {
@@ -147,6 +101,30 @@ const LookingForDevices = () => {
 
   const screenContent = React.useMemo(() => {
     // Show a loading indicator instead of the "no devices found" screen on load
+    if (!isBTOn) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.graphicGroup}>
+            <Image source={noLedgerFound} style={styles.noDeviceImage} />
+          </View>
+          <Typography.H4 style={[styles.headerStyle, styles.noDevicesText]}>
+            {t('btNotOn')}
+          </Typography.H4>
+
+          <Typography.Body6 style={styles.descriptionStyle}>
+            {t('pleaseEnableBT')}
+          </Typography.Body6>
+
+          <Button
+            mode="gradientFilled"
+            containerStyle={styles.retryButton}
+            onPress={handlePressEnableBT}>
+            {t('enableBT')}
+          </Button>
+        </View>
+      );
+    }
+
     if (!screenReady) {
       return (
         <View style={styles.centeredContainer}>
@@ -220,7 +198,7 @@ const LookingForDevices = () => {
         />
       </View>
     );
-  }, [scanning, devices.length, screenReady]);
+  }, [scanning, devices.length, screenReady, isBTOn]);
 
   return <DView backgroundColor={theme.colors.white}>{screenContent}</DView>;
 };

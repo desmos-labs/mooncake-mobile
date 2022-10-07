@@ -15,8 +15,8 @@ const useStyles = makeStyle(theme => ({
     minHeight: 80,
   },
   sectionGroup: {
-    marginHorizontal: theme.spacing.m,
-    marginBottom: theme.spacing.m,
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
 }));
 

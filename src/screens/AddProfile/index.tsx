@@ -78,9 +78,13 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
         },
       });
 
-      // ledger cancelled
       if (!res?.wallet) {
-        return navigation.pop();
+        // ledger cancelled
+        if (chainAccount.type === ChainAccountType.Ledger) {
+          return navigation.pop();
+        }
+        // forgot password clicked
+        return;
       }
 
       const {wallet, mnemonic: mnemonicRes} = res;
@@ -113,7 +117,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
       setSelectedChain(desmosChain());
 
       // PASSWORD_MANIPULATION > ADD_PROFILE
-      navigation.replace(ROUTES.ADD_PROFILE);
+      navigation.navigate(ROUTES.ADD_PROFILE);
     })();
   }, [isWalletUnlocked, chainAccount, navigation]);
 
