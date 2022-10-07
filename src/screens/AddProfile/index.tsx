@@ -117,7 +117,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
       setSelectedChain(desmosChain());
 
       // PASSWORD_MANIPULATION > ADD_PROFILE
-      navigation.replace(ROUTES.ADD_PROFILE);
+      navigation.navigate(ROUTES.ADD_PROFILE);
     })();
   }, [isWalletUnlocked, chainAccount, navigation]);
 
