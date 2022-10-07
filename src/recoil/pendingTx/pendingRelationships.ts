@@ -1,25 +1,7 @@
 import React from 'react';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {atom, useRecoilState, useRecoilValue} from 'recoil';
+import {atom, useRecoilState} from 'recoil';
 import _ from 'lodash';
-import {followedAddressesState} from '@recoil/following';
-
-interface BasePendingTx {
-  msgType: GrantEnums;
-
-  timestamp: number;
-
-  txHash: string;
-}
-
-interface PendingRelationship extends BasePendingTx {
-  counterPartyAddr: string;
-
-  msgType: GrantEnums.MsgCreateRelationship | GrantEnums.MsgDeleteRelationship;
-}
-
-// future union type
-type PendingTx = PendingRelationship;
 
 /**
  * A selector that only returns pending transactions related to Creating/Deleting relationships
@@ -29,24 +11,10 @@ const pendingRelationshipsState = atom<PendingRelationship[]>({
   default: [],
 });
 
-const usePendingTransactions = () => {
-  const followedAddresses = useRecoilValue(followedAddressesState);
+const usePendingRelationships = () => {
   const [pendingRelationships, setPendingRelationships] = useRecoilState(
     pendingRelationshipsState,
   );
-
-  // Clear pending relationship transactions
-  React.useEffect(() => {
-    setPendingRelationships(prev =>
-      prev.filter(
-        x =>
-          (x.msgType === GrantEnums.MsgCreateRelationship &&
-            !followedAddresses.has(x.counterPartyAddr)) ||
-          (x.msgType === GrantEnums.MsgDeleteRelationship &&
-            followedAddresses.has(x.counterPartyAddr)),
-      ),
-    );
-  }, [followedAddresses]);
 
   /**
    * Add a new pending relationship to recoil state.
@@ -55,6 +23,26 @@ const usePendingTransactions = () => {
   const addNewPendingRelationship = React.useCallback(
     (newTx: PendingTx) => {
       setPendingRelationships(prev => [...prev, newTx]);
+    },
+    [pendingRelationships],
+  );
+
+  /**
+   * Compare and remove any pending relationship tx with incoming data.
+   *
+   * @param {string[]} newFollowing - An array of addresses the use is currently following
+   */
+  const syncPendingRelationships = React.useCallback(
+    (newFollowingAddrs: string[]) => {
+      setPendingRelationships(prev =>
+        prev.filter(
+          x =>
+            (x.msgType === GrantEnums.MsgCreateRelationship &&
+              !newFollowingAddrs.includes(x.counterPartyAddr)) ||
+            (x.msgType === GrantEnums.MsgDeleteRelationship &&
+              newFollowingAddrs.includes(x.counterPartyAddr)),
+        ),
+      );
     },
     [pendingRelationships],
   );
@@ -73,6 +61,7 @@ const usePendingTransactions = () => {
   /**
    * Remove a pending relationship transaction by counter party address
    * @param {string} counterPartyAddr - The address of the counter party.
+   * @param {GrantEnums.MsgCreateRelationship | GrantEnums.MsgDeleteRelationship}
    */
   const resolveRelationshipTxByAddr = React.useCallback(
     (
@@ -90,13 +79,26 @@ const usePendingTransactions = () => {
     [pendingRelationships],
   );
 
+  /**
+   * Check if a given address has a pending relationship related transaction.
+   * @param {string} address - The address to check.
+   */
+  const checkIfAddressIsPendingRelationship = React.useCallback(
+    (address: string) => {
+      return !!pendingRelationships.find(x => x.counterPartyAddr === address);
+    },
+    [pendingRelationships],
+  );
+
   return {
     addNewPendingRelationship,
     resolveByTxHash,
     resolveRelationshipTxByAddr,
+    syncPendingRelationships,
+    checkIfAddressIsPendingRelationship,
   };
 };
 
-export default usePendingTransactions;
+export default usePendingRelationships;
 
 export {pendingRelationshipsState};

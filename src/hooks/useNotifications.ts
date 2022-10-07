@@ -6,12 +6,12 @@ import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import {Result} from 'types/transaction';
 import ToastConfig from 'config/ToastConfig';
-import usePendingTransactions from '@recoil/pendingTransactionsState';
+import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 
 const useNotifications = () => {
   const [transactions, setTransactions] = useRecoilState(resultTransactions);
   const toast = useToast();
-  const {resolveByTxHash} = usePendingTransactions();
+  const {resolveByTxHash} = usePendingRelationships();
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {

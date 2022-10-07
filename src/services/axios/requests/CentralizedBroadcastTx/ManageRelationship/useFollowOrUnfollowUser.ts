@@ -8,7 +8,7 @@ import ToastConfig from 'config/ToastConfig';
 import {followingState} from '@recoil/following';
 import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useManageRelationship';
 import {useRecoilValue} from 'recoil';
-import usePendingTransactions from '@recoil/pendingTransactionsState';
+import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 
 type FollowOrUnfollowParams = {
   addrToFollow: string;
@@ -22,7 +22,7 @@ const useFollowOrUnfollowUser = () => {
   const following = useRecoilValue(followingState);
   const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
-  const {addNewPendingRelationship} = usePendingTransactions();
+  const {addNewPendingRelationship} = usePendingRelationships();
 
   const followOrUnfollowUser = React.useCallback(
     async ({addrToFollow}: FollowOrUnfollowParams) => {
@@ -57,6 +57,7 @@ const useFollowOrUnfollowUser = () => {
         } else {
           result = await createRelationship({counterPartyAddr: addrToFollow});
         }
+        console.log(addNewPendingRelationship);
 
         if (result) {
           addNewPendingRelationship({

@@ -5,6 +5,7 @@ import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
 import useActiveAccount from 'hooks/useActiveAccount';
+import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 
 export const followingState = atom<CounterParty[]>({
   key: 'following',
@@ -25,6 +26,7 @@ export const followedAddressesState = selector({
 export const useGetFollowing = () => {
   const {activeAddress} = useActiveAccount();
   const [following, setFollowing] = useRecoilState(followingState);
+  const {syncPendingRelationships} = usePendingRelationships();
 
   const {data, loading} = useQuery<GetFollowedUsersForAddressData>(
     GetFollowedUsersForAddress,
@@ -46,6 +48,8 @@ export const useGetFollowing = () => {
       .filter(d => !!d);
 
     setFollowing(newFollowing);
+
+    syncPendingRelationships(newFollowing.map(x => x.address));
   }, [data]);
 
   // refetch following list if userAddress has changed
