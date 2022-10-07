@@ -19,12 +19,11 @@ import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import {followedAddressesState} from '@recoil/following';
 import PostTypeTab from './components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -64,7 +63,6 @@ const Home = () => {
   const {profileData} = useActiveAccount();
   const [{registeredReactions}] = useRecoilState(appSettingsState);
   const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
-  const followedAddresses = useRecoilValue(followedAddressesState);
 
   // marked for cleanup
   useEffect(() => {
@@ -84,7 +82,6 @@ const Home = () => {
             handlePressDetails(info.item.id, info.item.subspace_id)
           }
           onPressFollow={() => handlePressFollow(info.item.author_address)}
-          followed={followedAddresses.has(info.item.author_address)}
         />
       );
     },

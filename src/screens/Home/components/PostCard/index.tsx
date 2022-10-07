@@ -6,6 +6,8 @@ import {TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
 import useStyles from './useStyles';
 
 type Props = {
@@ -28,11 +30,6 @@ type Props = {
    * What to do if the post details button is pressed.
    */
   onPressDetails: () => void;
-
-  /**
-   * Is the user following the author?
-   */
-  followed?: boolean;
 };
 
 enum POST_TYPE {
@@ -47,7 +44,6 @@ const PostCard = ({
   onPressAuthor,
   onPressFollow,
   onPressDetails,
-  followed,
 }: Props) => {
   const styles = useStyles();
   const {
@@ -58,6 +54,8 @@ const PostCard = ({
   const {activeAddress} = useActiveAccount();
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
+
+  const isFollowing = useRecoilValue(isFollowingAddr(postData.author_address));
 
   const Avatar = React.useMemo(() => {
     if (profile_pic) {
@@ -99,7 +97,7 @@ const PostCard = ({
     const followUnfollowButton = postData.author_address !== activeAddress && (
       <View>
         <ProfileHeaderButton
-          imageSrc={followed ? followedButton : followIcon}
+          imageSrc={isFollowing ? followedButton : followIcon}
           onPress={onPressFollow}
         />
       </View>
@@ -170,7 +168,7 @@ const PostCard = ({
         </View>
       );
     }
-  }, [followed, postType, onPressFollow, activeAddress]);
+  }, [postType, onPressFollow, activeAddress]);
 
   return (
     <TouchableOpacity

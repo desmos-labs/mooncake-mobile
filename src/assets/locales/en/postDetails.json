@@ -7,6 +7,7 @@
   "tip": "Tip",
   "like": "Like",
   "follow": "Follow",
+  "unfollow": "Unfollow",
   "report": "Report",
   "share": "Share",
   "likes and tips": "{{likesCounter}} Likes and {{tipsCounter}} Tips"

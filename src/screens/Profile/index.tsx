@@ -5,7 +5,8 @@ import {
   defaultBanner,
   defaultProfilePic,
   editButton,
-  followOrangeFilledIcon,
+  followedButton,
+  followIcon,
   stargazeIcon,
   twitterIcon,
 } from 'assets/images';
@@ -30,6 +31,10 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
+import EnvConfig from 'config/EnvConfig';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -125,13 +130,25 @@ const Profile = () => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
-  // TODO WIP WIP WIP TO BE INTEGRATED WITH FOLLOW FUNCTIONALITY
-  const followButton = useMemo(() => {
-    return followOrangeFilledIcon;
-  }, []);
+  const isFollowing = useRecoilValue(isFollowingAddr(address));
 
-  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
-  const subspaceID = 5;
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+
+  const FollowButton = useMemo(() => {
+    if (screenMode === 'myProfile') {
+      return <ImageButton image={editButton} style={styles.editButton} />;
+    }
+
+    return (
+      <ImageButton
+        image={isFollowing ? followedButton : followIcon}
+        style={styles.editButton}
+        onPress={() => followOrUnfollowUser({addrToFollow: address})}
+      />
+    );
+  }, [followOrUnfollowUser]);
+
+  const subspaceID = EnvConfig.APP_SUBSPACE_ID;
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
@@ -200,10 +217,7 @@ const Profile = () => {
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
-            <ImageButton
-              image={screenMode === 'myProfile' ? editButton : followButton}
-              style={styles.editButton}
-            />
+            {FollowButton}
 
             <Typography.H3
               style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>

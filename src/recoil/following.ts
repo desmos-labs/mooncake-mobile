@@ -1,5 +1,5 @@
 import React from 'react';
-import {atom, selector, useRecoilState} from 'recoil';
+import {atom, selector, selectorFamily, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
@@ -18,6 +18,17 @@ export const followedAddressesState = selector({
     const following = get(followingState);
     return new Set(following.map(f => f.address));
   },
+});
+
+export const isFollowingAddr = selectorFamily({
+  key: 'isFollowingAddr',
+  get:
+    (address: string) =>
+    ({get}) => {
+      const followedAddresses = get(followedAddressesState);
+
+      return followedAddresses.has(address);
+    },
 });
 
 /**

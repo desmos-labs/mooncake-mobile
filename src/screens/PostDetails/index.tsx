@@ -45,7 +45,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import {followedAddressesState} from '@recoil/following';
+import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import useHooks from './useHooks';
@@ -89,7 +89,6 @@ const PostDetails = () => {
     postId: number;
     subspaceId: number;
   }>();
-  const followedAddresses = useRecoilValue(followedAddressesState);
   const {activeAddress} = useActiveAccount();
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
@@ -116,6 +115,10 @@ const PostDetails = () => {
     postID: params.postId,
     subspaceID: params.subspaceID,
   });
+
+  const isFollowingAddress = useRecoilValue(
+    isFollowingAddr(post?.author?.address),
+  );
 
   const {top} = useSafeAreaInsets();
   const scrollViewRef = useRef<FlatList>(null);
@@ -267,7 +270,7 @@ const PostDetails = () => {
             <ImageButton
               style={[
                 styles.followIcon,
-                followedAddresses.has(post?.author?.address) && {
+                isFollowingAddress && {
                   tintColor: theme.colors.primary,
                 },
               ]}
@@ -344,8 +347,10 @@ const PostDetails = () => {
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
-            label: t('follow'),
-            onPress: () => console.log('test'),
+            label: isFollowingAddress ? t('unfollow') : t('follow'),
+            onPress: () => {
+              followOrUnfollowUser(post?.author?.address);
+            },
             icon: followBlackIcon,
           },
           {
