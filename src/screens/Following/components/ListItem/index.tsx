@@ -6,6 +6,7 @@ import {defaultProfilePic} from 'assets/images';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useStyles from './useStyles';
 
 export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {};
@@ -20,6 +21,8 @@ const ListItem: FC<ListItemProps> = ({item}) => {
   const isFollowing = useRecoilValue(isFollowingAddr(counterParty.address));
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+
+  const {activeAddress} = useActiveAccount();
 
   return (
     <View style={styles.contentContainer}>
@@ -42,12 +45,15 @@ const ListItem: FC<ListItemProps> = ({item}) => {
         </Typography.Caption2>
       </View>
 
-      <FollowButton
-        onPress={() =>
-          followOrUnfollowUser({addrToFollow: counterParty.address})
-        }
-        type={isFollowing ? 'unfollow' : 'follow'}
-      />
+      {/* don't show follow button if its the user */}
+      {activeAddress !== counterParty.address && (
+        <FollowButton
+          onPress={() =>
+            followOrUnfollowUser({addrToFollow: counterParty.address})
+          }
+          type={isFollowing ? 'unfollow' : 'follow'}
+        />
+      )}
     </View>
   );
 };
