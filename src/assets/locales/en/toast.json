@@ -3,5 +3,7 @@
   "errorWrongPw": "[PLACEHOLDER]Password is incorrect.",
   "errorSystemBusy": "[PLACEHOLDER]System busy. Please try again.",
   "errorInvalidSession": "[PLACEHOLDER]Session has expired. Please login again.",
-  "errorAuthRequired": "[PLACEHOLDER]Authorization is required."
+  "errorAuthRequired": "[PLACEHOLDER]Authorization is required.",
+  "successProcessFollow": "[PLACEHOLDER]Processing follow user.",
+  "successProcessUnfollow": "[PLACEHOLDER]Processing unfollow user."
 }

@@ -15,7 +15,7 @@ import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
-import {pendingRelationshipsState} from '@recoil/pendingTransactionsState';
+import pendingTxState from '@recoil/pendingTx/pendingTxState';
 
 /**
  * Hooks for the Home screen.
@@ -36,11 +36,12 @@ const useHooks = () => {
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
 
-  const pendingRelationships = useRecoilValue(pendingRelationshipsState);
+  // debug use
+  const pendingTx = useRecoilValue(pendingTxState);
 
   React.useEffect(() => {
-    console.log('pending relationships', pendingRelationships);
-  }, [pendingRelationships]);
+    console.log('pending tx', pendingTx);
+  }, [pendingTx]);
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 

@@ -5,6 +5,7 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useStyles from './useStyles';
 
 type Props = {
@@ -54,6 +55,8 @@ const PostCard = ({
     attachments,
   } = postData;
 
+  const {activeAddress} = useActiveAccount();
+
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
   const Avatar = React.useMemo(() => {
@@ -93,6 +96,14 @@ const PostCard = ({
 
   // Hopefully we come up with a more elegant way to do this in the future
   const content = React.useMemo(() => {
+    const followUnfollowButton = postData.author_address !== activeAddress && (
+      <View>
+        <ProfileHeaderButton
+          imageSrc={followed ? followedButton : followIcon}
+          onPress={onPressFollow}
+        />
+      </View>
+    );
     if (postType === POST_TYPE.TEXT || postType === POST_TYPE.IMAGE) {
       return (
         <>
@@ -119,12 +130,7 @@ const PostCard = ({
               </View>
             </TouchableOpacity>
 
-            <View>
-              <ProfileHeaderButton
-                imageSrc={followed ? followedButton : followIcon}
-                onPress={onPressFollow}
-              />
-            </View>
+            {followUnfollowButton}
           </View>
         </>
       );
@@ -159,17 +165,12 @@ const PostCard = ({
               </Typography.Body7>
             </View>
 
-            <View>
-              <ProfileHeaderButton
-                imageSrc={followIcon}
-                onPress={onPressFollow}
-              />
-            </View>
+            {followUnfollowButton}
           </View>
         </View>
       );
     }
-  }, [followed, postType, onPressFollow]);
+  }, [followed, postType, onPressFollow, activeAddress]);
 
   return (
     <TouchableOpacity
