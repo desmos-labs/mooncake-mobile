@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: ItemSeparator renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "rgb(239,239,239)",
+        "flexGrow": 1,
+        "height": 1,
+        "margin": 7,
+        "maxHeight": 1,
+        "minHeight": 1,
+      }
+    }
+  />
+</View>
+`;
