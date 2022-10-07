@@ -23,7 +23,6 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -61,13 +60,13 @@ const Profile = () => {
   const AVATAR_TOP_OFFSET = 100 + top;
 
   // Calculate the percentage of scroll and set it to shared value
-  const scrollHandler = useAnimatedScrollHandler(event => {
+  /*  const scrollHandler = useAnimatedScrollHandler(event => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  });
+  }); */
 
   const animatedAvatarStyle = useAnimatedStyle(() => {
     return {
@@ -189,8 +188,7 @@ const Profile = () => {
       </Animated.View>
 
       <Animated.ScrollView
-        scrollEnabled={false}
-        onScroll={scrollHandler}
+        //        onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
         style={{paddingTop: 100 + top}}
         contentContainerStyle={styles.contentContainerStyle}>
