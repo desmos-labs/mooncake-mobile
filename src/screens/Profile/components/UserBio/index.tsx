@@ -36,6 +36,7 @@ const UserBio = ({content}: Props) => {
 
   return (
     <TouchableOpacity
+      style={{alignSelf: 'center'}}
       activeOpacity={0.9}
       onPress={() => {
         if (showMoreLess) setExpanded(prev => !prev);
