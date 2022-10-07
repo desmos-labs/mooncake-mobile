@@ -10,7 +10,7 @@ import EmptyFollowers from './components/EmptyFollowers';
 import EmptyFollowing from './components/EmptyFollowing';
 import Error from './components/Error';
 import ItemSeparator from './components/ItemSeparator';
-import ListItem from './components/ListItem';
+import FollowingListItem from './components/FollowingListItem';
 import Loading from './components/Loading/Loading';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -53,7 +53,7 @@ export const Following: FC<NavProps> = ({route}) => {
 
   const renderItem = useCallback(
     (props: ListRenderItemInfo<ProfileSummary>) => {
-      return <ListItem {...props} />;
+      return <FollowingListItem {...props} />;
     },
     [subspaceID],
   );

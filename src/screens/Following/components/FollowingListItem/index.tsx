@@ -11,7 +11,7 @@ import useStyles from './useStyles';
 
 export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {};
 
-const ListItem: FC<ListItemProps> = ({item}) => {
+const FollowingListItem: FC<ListItemProps> = ({item}) => {
   const styles = useStyles();
 
   /* Getting the following state and then it is getting the addresses of the following. */
@@ -58,4 +58,4 @@ const ListItem: FC<ListItemProps> = ({item}) => {
   );
 };
 
-export default ListItem;
+export default FollowingListItem;
