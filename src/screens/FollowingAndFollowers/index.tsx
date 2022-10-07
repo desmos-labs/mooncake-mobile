@@ -3,7 +3,7 @@ import {
   MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -11,7 +11,7 @@ import Typography from 'components/Typography';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -21,23 +21,13 @@ import {
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useNumRelationships from '@recoil/numRelationshipState';
-import FollowingTab from '../Following';
+import _ from 'lodash';
+import FollowingTab, {FollowingParams} from '../Following';
 import useStyles from './useStyles';
 
-/**
- * @property {ROUTES.FOLLOWING | ROUTES.FOLLOWERS} initialTabRouteName - The initial tab route name.
- * @property {number} subspaceID - The subspace ID of the user whose following/followers you
- * want to view.
- * @property {string} userAddress - The address of the user whose following/followers you want
- * to see.
- * @property {string} username - The username of the user whose followers/following you want to
- * see.
- */
 export type FollowingAndFollowersParams = {
-  initialTabRouteName: ROUTES.FOLLOWING | ROUTES.FOLLOWERS;
-  subspaceID: number;
-  userAddress: string;
-  headerTitle: string;
+  [ROUTES.FOLLOWING]: FollowingParams;
+  [ROUTES.FOLLOWERS]: FollowingParams;
 };
 
 /* Creating a new React component that is a tab navigator. */
@@ -50,9 +40,15 @@ type NavProps = StackScreenProps<
 >;
 
 /* A React component for the following and followers screen. */
-const FollowingAndFollowers: FC<NavProps> = ({route}) => {
-  const {headerTitle, initialTabRouteName, subspaceID, userAddress} =
-    route.params;
+const FollowingAndFollowers = () => {
+  const route = useRoute<NavProps['route']>();
+
+  const {
+    params: {params},
+  } = route;
+
+  const userAddress = _.get(params, 'userAddress', '');
+  const headerTitle = _.get(params, 'headerTitle', '');
 
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
@@ -79,12 +75,11 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
     /* A callback function that is called when the user start to swipe left.
       It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent. */
     const enableParentSwipeLeft = (
-      _: GestureResponderEvent,
+      _gestureResponderEvent: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
-      const focusedRouteName =
-        getFocusedRouteNameFromRoute(route) ?? route.params.initialTabRouteName;
+      const focusedRouteName = getFocusedRouteNameFromRoute(route);
       setSwipeEnabled(focusedRouteName !== ROUTES.FOLLOWING || diffX < 0);
       return false;
     };
@@ -122,19 +117,18 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
       <Tab.Navigator
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
-        initialRouteName={initialTabRouteName}
         sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
           options={{tabBarLabel: followingTabName}}
-          initialParams={{subspaceID, userAddress, type: 'following'}}
+          initialParams={params}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowingTab}
           options={{tabBarLabel: followersTabName}}
-          initialParams={{subspaceID, userAddress, type: 'followers'}}
+          initialParams={params}
         />
       </Tab.Navigator>
     </DView>

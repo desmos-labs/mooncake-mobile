@@ -151,27 +151,25 @@ const Profile = () => {
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressed = useCallback(
-    () =>
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-        initialTabRouteName: ROUTES.FOLLOWING,
+  const handleFollowingPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWING,
+      params: {
         subspaceID,
         userAddress: address,
-        headerTitle: nickname || `@${dtag}`,
-      }),
-    [subspaceID, activeAddress, nickname, dtag],
-  );
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
 
-  const handleFollowersPressed = useCallback(
-    () =>
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-        initialTabRouteName: ROUTES.FOLLOWERS,
+  const handleFollowersPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWERS,
+      params: {
         subspaceID,
         userAddress: address,
-        headerTitle: nickname || `@${dtag}`,
-      }),
-    [subspaceID, activeAddress, nickname, dtag],
-  );
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
 
   const handlePostsSectionPressed = useCallback(() => {
     navigate(ROUTES.PROFILE_POSTS, {
