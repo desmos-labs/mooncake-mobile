@@ -39,12 +39,15 @@ import {
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import {followedAddressesState} from '@recoil/following';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -86,6 +89,9 @@ const PostDetails = () => {
     postId: number;
     subspaceId: number;
   }>();
+  const followedAddresses = useRecoilValue(followedAddressesState);
+  const {activeAddress} = useActiveAccount();
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const {
     profile,
@@ -257,11 +263,20 @@ const PostDetails = () => {
         </View>
 
         <View style={styles.rightContainer}>
-          <ImageButton
-            style={styles.followIcon}
-            image={followOrangeIcon}
-            onPress={() => console.log('add')}
-          />
+          {activeAddress !== post?.author?.address && (
+            <ImageButton
+              style={[
+                styles.followIcon,
+                followedAddresses.has(post?.author?.address) && {
+                  tintColor: theme.colors.primary,
+                },
+              ]}
+              image={followOrangeIcon}
+              onPress={() => {
+                followOrUnfollowUser(post?.author?.address);
+              }}
+            />
+          )}
           <ImageButton
             onPress={() => {
               setProfileMenuAnchor({
@@ -276,7 +291,14 @@ const PostDetails = () => {
         </View>
       </View>
     );
-  }, [Avatar, formattedDate, post?.author, popupMenuParams]);
+  }, [
+    followOrUnfollowUser,
+    activeAddress,
+    Avatar,
+    formattedDate,
+    post?.author,
+    popupMenuParams,
+  ]);
 
   return postLoading || !post ? (
     <SafeAreaView>
