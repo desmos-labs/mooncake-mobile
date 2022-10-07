@@ -53,13 +53,7 @@ export const Following: FC<NavProps> = ({route}) => {
 
   const renderItem = useCallback(
     (props: ListRenderItemInfo<ProfileSummary>) => {
-      return (
-        <ListItem
-          {...props}
-          subspaceID={subspaceID}
-          handleError={setItemError}
-        />
-      );
+      return <ListItem {...props} />;
     },
     [subspaceID],
   );

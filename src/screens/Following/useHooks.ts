@@ -47,6 +47,7 @@ const useHooks = (
         limit: ITEMS_PER_FETCH,
         offset: 0,
       },
+      fetchPolicy: 'no-cache',
     });
 
   const dataOrNull = !loading && !error && data ? data : null;

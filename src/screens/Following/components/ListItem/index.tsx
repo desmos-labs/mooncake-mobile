@@ -1,29 +1,26 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {Image, ListRenderItemInfo, View} from 'react-native';
 import FollowButton from 'components/FollowButton';
-import useFollowUser from 'hooks/useFollowUser';
 import Typography from 'components/Typography';
 import {defaultProfilePic} from 'assets/images';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
 import useStyles from './useStyles';
 
-export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {
-  subspaceID: number;
-  handleError: (error: string) => void;
-};
+export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {};
 
-const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
+const ListItem: FC<ListItemProps> = ({item}) => {
   const styles = useStyles();
 
   /* Getting the following state and then it is getting the addresses of the following. */
   const {profile_pic, nickname, dtag, address} = item;
   const counterParty = {address, dtag, nickname};
-  const {following, loading, error, follow, unfollow} = useFollowUser(
-    subspaceID,
-    counterParty,
-  );
-  useEffect(() => {
-    if (error) handleError(error);
-  }, [error]);
+
+  const isFollowing = useRecoilValue(isFollowingAddr(counterParty.address));
+
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+
   return (
     <View style={styles.contentContainer}>
       <Image
@@ -44,11 +41,13 @@ const ListItem: FC<ListItemProps> = ({item, subspaceID, handleError}) => {
           @{dtag}
         </Typography.Caption2>
       </View>
-      {following ? (
-        <FollowButton loading={loading} onPress={unfollow} type="unfollow" />
-      ) : (
-        <FollowButton loading={loading} onPress={follow} type="follow" />
-      )}
+
+      <FollowButton
+        onPress={() =>
+          followOrUnfollowUser({addrToFollow: counterParty.address})
+        }
+        type={isFollowing ? 'unfollow' : 'follow'}
+      />
     </View>
   );
 };
