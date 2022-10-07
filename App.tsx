@@ -8,11 +8,10 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ToastProvider} from 'react-native-toast-notifications';
 import {RecoilRoot} from 'recoil';
-import useApolloClient from 'services/graphql/useApolloClient';
 import ToastConfig from 'config/ToastConfig';
+import client from 'services/graphql/client';
 
 const App = () => {
-  const client = useApolloClient();
   return (
     <SafeAreaProvider>
       <PaperProvider theme={LightTheme}>

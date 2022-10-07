@@ -5,7 +5,6 @@ import {
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import numOfFollowerState from '@recoil/numOfFollowerState';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -21,7 +20,7 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import useNumRelationships from '@recoil/numRelationshipState';
 import FollowingTab from '../Following';
 import useStyles from './useStyles';
 
@@ -58,19 +57,15 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
   const {t} = useTranslation();
   const styles = useStyles(numOfTabs);
 
-  const countOfFollowing = useRecoilValue(
-    numOfFollowerState({type: 'following', subspaceID, userAddress}),
-  );
-  const nameOfFolowing = `${formatNumShorthand(countOfFollowing)} ${t(
-    'profile:following',
-  )}`;
+  const {numRelationships} = useNumRelationships(userAddress);
 
-  const countOfFollowers = useRecoilValue(
-    numOfFollowerState({type: 'followers', subspaceID, userAddress}),
-  );
-  const nameOfFolowers = `${formatNumShorthand(countOfFollowers)} ${t(
-    'profile:followers',
-  )}`;
+  const followingTabName = `${formatNumShorthand(
+    numRelationships?.numFollowing || 0,
+  )} ${t('profile:following')}`;
+
+  const followersTabName = `${formatNumShorthand(
+    numRelationships?.numFollowers || 0,
+  )} ${t('profile:followers')}`;
 
   /* To allow going back to previous screen via swipe left. */
   const [swipeEnabled, setSwipeEnabled] = useState(true);
@@ -132,13 +127,13 @@ const FollowingAndFollowers: FC<NavProps> = ({route}) => {
         <Tab.Screen
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
-          options={{tabBarLabel: nameOfFolowing}}
+          options={{tabBarLabel: followingTabName}}
           initialParams={{subspaceID, userAddress, type: 'following'}}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowingTab}
-          options={{tabBarLabel: nameOfFolowers}}
+          options={{tabBarLabel: followersTabName}}
           initialParams={{subspaceID, userAddress, type: 'followers'}}
         />
       </Tab.Navigator>

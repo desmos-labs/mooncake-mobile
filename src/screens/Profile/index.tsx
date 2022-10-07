@@ -35,6 +35,7 @@ import EnvConfig from 'config/EnvConfig';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useNumRelationships from '@recoil/numRelationshipState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -97,19 +98,17 @@ const Profile = () => {
     return 'myProfile';
   }, [params?.visitingProfileAddress, activeAddress]);
 
-  const {
-    address,
-    bio,
-    dtag,
-    cover_pic,
-    profile_pic,
-    nickname,
-    following,
-    followage,
-  } =
+  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
     screenMode === 'guestProfile'
       ? visitingProfileData
       : (profileData as ProfileData);
+
+  const {numRelationships, refreshNumRelationships} =
+    useNumRelationships(address);
+
+  React.useEffect(() => {
+    refreshNumRelationships();
+  }, []);
 
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
@@ -157,7 +156,7 @@ const Profile = () => {
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWING,
         subspaceID,
-        userAddress: activeAddress ?? '',
+        userAddress: address,
         headerTitle: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
@@ -168,7 +167,7 @@ const Profile = () => {
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         initialTabRouteName: ROUTES.FOLLOWERS,
         subspaceID,
-        userAddress: activeAddress ?? '',
+        userAddress: address,
         headerTitle: nickname || `@${dtag}`,
       }),
     [subspaceID, activeAddress, nickname, dtag],
@@ -238,7 +237,7 @@ const Profile = () => {
             <View style={styles.socialCounterGroup}>
               <TouchableOpacity onPress={handleFollowingPressed}>
                 <SocialCounter
-                  count={following?.length}
+                  count={numRelationships?.numFollowing}
                   label={t('following')}
                 />
               </TouchableOpacity>
@@ -247,7 +246,7 @@ const Profile = () => {
 
               <TouchableOpacity onPress={handleFollowersPressed}>
                 <SocialCounter
-                  count={followage?.length}
+                  count={numRelationships?.numFollowers}
                   label={t('followers')}
                 />
               </TouchableOpacity>
