@@ -52,8 +52,8 @@ export const Following: FC<NavProps> = ({route}) => {
   const resetError = useCallback(() => setItemError(''), []);
 
   const renderItem = useCallback(
-    (props: ListRenderItemInfo<ProfileSummary>) => {
-      return <FollowingListItem {...props} />;
+    ({item}: ListRenderItemInfo<ProfileSummary>) => {
+      return <FollowingListItem {...item} />;
     },
     [subspaceID],
   );

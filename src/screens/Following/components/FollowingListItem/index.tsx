@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Image, ListRenderItemInfo, View} from 'react-native';
+import {Image, View} from 'react-native';
 import FollowButton from 'components/FollowButton';
 import Typography from 'components/Typography';
 import {defaultProfilePic} from 'assets/images';
@@ -9,13 +9,15 @@ import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useStyles from './useStyles';
 
-export type ListItemProps = ListRenderItemInfo<ProfileSummary> & {};
-
-const FollowingListItem: FC<ListItemProps> = ({item}) => {
+const FollowingListItem: FC<ProfileSummary> = ({
+  profile_pic,
+  nickname,
+  dtag,
+  address,
+}) => {
   const styles = useStyles();
 
   /* Getting the following state and then it is getting the addresses of the following. */
-  const {profile_pic, nickname, dtag, address} = item;
   const counterParty = {address, dtag, nickname};
 
   const isFollowing = useRecoilValue(isFollowingAddr(counterParty.address));
