@@ -3,9 +3,25 @@ import {
   validateMin1SpecialChar,
   validateMin1Uppercase,
   validateMinPwLength,
+  validateMnemonic,
 } from 'lib/ValidationUtils/index';
 
-describe('ValidationUtils', () => {
+describe('lib/ValidationUtils', () => {
+  describe('validateMnemonic', () => {
+    it('returns true for valid mnemonics', () => {
+      const mnemonic =
+        'weekend sick lamp smile year apart tail bright loyal suffer narrow six vacant festival true arctic blur car mechanic novel test tongue glance gate';
+      expect(validateMnemonic(mnemonic)).toBeTruthy();
+    });
+
+    it('returns false for invalid mnemonics', () => {
+      const invalidMnemonic =
+        'weekend sick lamp smile year apart tail bright loyal suffer narrow six vacant festival true blur car mechanic novel test tongue glance hello';
+
+      expect(validateMnemonic(invalidMnemonic)).toBeFalsy();
+    });
+  });
+
   describe('validateMinPWLength', () => {
     it('is false if param is undefined', () => {
       expect(validateMinPwLength('')).toBeFalsy();

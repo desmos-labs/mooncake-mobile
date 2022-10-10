@@ -25,8 +25,8 @@ const ProfileSectionButton = ({
   return (
     <View style={styles.sectionGroup}>
       <DropShadowWrapper
-        customColor="rgba(133, 133, 133, 0.001)"
-        customDistance={10}>
+        customColor="rgba(37, 87, 188, 0.07)"
+        customDistance={4}>
         <TouchableOpacity style={styles.button} onPress={onPress}>
           <View style={{flexDirection: 'column'}}>
             <Typography.Subtitle2>{titleLabel}</Typography.Subtitle2>

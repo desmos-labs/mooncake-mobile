@@ -1,8 +1,8 @@
 import {useLazyQuery} from '@apollo/client';
+import {convertCoin, MorpheusApollo2} from '@desmoslabs/desmjs';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/FormatUtils';
 import React, {useEffect, useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
@@ -31,9 +31,17 @@ const AddressItem = ({index, address, handlePress}: Props) => {
     }
   }, [address]);
 
+  // TODO: REFACTOR USE SELECTED CHAIN
   const balanceData = useMemo(() => {
-    if (!data?.action_account_balance) return null;
-    return data?.action_account_balance?.coins[0]?.amount;
+    if (!data?.action_account_balance) {
+      return null;
+    } else if (data?.action_account_balance?.coins[0] && !loading) {
+      return convertCoin(
+        data?.action_account_balance?.coins[0],
+        6,
+        MorpheusApollo2.denomUnits,
+      );
+    }
   }, [data]);
 
   return (
@@ -60,7 +68,7 @@ const AddressItem = ({index, address, handlePress}: Props) => {
               />
             ) : (
               <Typography.Subtitle4 style={styles.alignRight}>
-                {formatNumShorthand(balanceData)} DSM
+                {balanceData.amount} {balanceData.denom.toUpperCase()}
               </Typography.Subtitle4>
             ))}
         </View>
