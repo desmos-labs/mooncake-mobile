@@ -10,7 +10,7 @@ import EmptyFollowers from './components/EmptyFollowers';
 import EmptyFollowing from './components/EmptyFollowing';
 import Error from './components/Error';
 import ItemSeparator from './components/ItemSeparator';
-import ListItem from './components/ListItem';
+import FollowingListItem from './components/FollowingListItem';
 import Loading from './components/Loading/Loading';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -28,7 +28,7 @@ type NavProps = MaterialTopTabScreenProps<
 export type FollowingParams = {
   subspaceID: number;
   userAddress: string;
-  tabName: 'following' | 'followers';
+  headerTitle: string;
 };
 
 /**
@@ -37,32 +37,29 @@ export type FollowingParams = {
  * @returns A list of users that the user is following accounts.
  */
 export const Following: FC<NavProps> = ({route}) => {
-  const {subspaceID, userAddress, tabName} = route.params;
+  const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
   const {t} = useTranslation('common');
+
+  const isFollowing = route.name === (ROUTES.FOLLOWING as string);
+
   const {loading, error, data, fetchMore, refetch} = useHooks(
     subspaceID,
     userAddress,
-    tabName === 'following' ? GetPaginatedFollowing : GetPaginatedFollowers,
+    isFollowing ? GetPaginatedFollowing : GetPaginatedFollowers,
   );
   const [itemError, setItemError] = useState<string>('');
   const resetError = useCallback(() => setItemError(''), []);
 
   const renderItem = useCallback(
-    (props: ListRenderItemInfo<ProfileSummary>) => {
-      return (
-        <ListItem
-          {...props}
-          subspaceID={subspaceID}
-          handleError={setItemError}
-        />
-      );
+    ({item}: ListRenderItemInfo<ProfileSummary>) => {
+      return <FollowingListItem {...item} />;
     },
     [subspaceID],
   );
   const Empty = useMemo(
-    () => (tabName === 'following' ? EmptyFollowing : EmptyFollowers),
-    [tabName],
+    () => (isFollowing ? EmptyFollowing : EmptyFollowers),
+    [isFollowing],
   );
 
   return (
