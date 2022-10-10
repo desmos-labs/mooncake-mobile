@@ -12,6 +12,9 @@ type NumRelationshipType = {
   numFollowers: number;
 };
 
+/**
+ * A selector family that represents the number of followage and following a user has.
+ */
 const numRelationshipState = selectorFamily<
   NumRelationshipType | undefined,
   string
@@ -45,6 +48,10 @@ const numRelationshipState = selectorFamily<
   },
 });
 
+/**
+ * A hook to make the selectorFamily above more reusable, extending it with an
+ * error and loading variable.
+ */
 const useNumRelationships = (
   address: string,
 ): {
