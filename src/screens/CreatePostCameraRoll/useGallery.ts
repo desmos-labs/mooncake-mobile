@@ -44,7 +44,7 @@ export type ImageDto = {
   mimeType: string;
 };
 
-const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
+export const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
   return edges.map(x => ({
     ...x.node.image,
     mimeType: x.node.image.mimeType,

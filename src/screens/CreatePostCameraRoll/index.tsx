@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Platform, TouchableOpacity} from 'react-native';
+import {FlatList, TouchableOpacity} from 'react-native';
 import useGallery, {ImageDto} from 'screens/CreatePostCameraRoll/useGallery';
 import CameraRollItem from 'screens/CreatePostCameraRoll/components/CameraRollItem';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -13,11 +13,10 @@ import CameraButton from 'screens/CreatePostCameraRoll/components/CameraRollItem
 import {useSetRecoilState} from 'recoil';
 import {postAttachmentsState} from '@recoil/sharedPostState';
 import {ImageMedia} from 'services/axios/requests/UploadMedia';
-import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import _ from 'lodash';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import {Asset} from 'react-native-image-picker';
-import DeviceInfo from 'react-native-device-info';
+import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -33,7 +32,6 @@ const convertImageDtoToImageMedia = (imageDto: ImageDto): ImageMedia => {
   return {
     uri: imageDto.uri,
     type: imageDto.mimeType,
-    // TODO: fixme
     fileName: imageDto.filename || '',
   };
 };
@@ -46,6 +44,8 @@ const CreatePostCameraRoll = () => {
   const {goBack, replace} = useNavigation<NavProps['navigation']>();
 
   const setCommentAttachment = useSetRecoilState(postAttachmentsState);
+
+  const {requestStoragePermissions} = useStoragePermissions();
 
   const imageFromCameraCallback = React.useCallback((asset: Asset) => {
     setCommentAttachment(asset);
@@ -60,22 +60,7 @@ const CreatePostCameraRoll = () => {
   });
 
   React.useEffect(() => {
-    const requestPermissions = async () => {
-      const permission: any = Platform.select({
-        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-        ios: PERMISSIONS.IOS.MEDIA_LIBRARY,
-      });
-
-      // @ts-ignore
-      const grantedPermissions = await requestMultiple([permission]);
-
-      // this will fail on ios simulator, so we skip permission check on emulators
-      // https://github.com/zoontek/react-native-permissions/issues/498
-      const isEmulator = await DeviceInfo.isEmulator();
-      if (!isEmulator && grantedPermissions[permission] !== 'granted') goBack();
-    };
-
-    requestPermissions();
+    requestStoragePermissions();
   }, []);
 
   const {photos, hasNextPage, loadNextPagePictures, isLoadingNextPage} =

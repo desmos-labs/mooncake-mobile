@@ -14,8 +14,8 @@ const useStyles = makeStyle(theme => ({
     zIndex: 2,
   },
   postButton: {
-    alignSelf: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     height: 32,
   },
 }));
