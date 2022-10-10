@@ -26,6 +26,9 @@ const BottomBar = ({handlePressGallery, handlePressPost}: Props) => {
       <Button
         style={styles.postButton}
         mode="contained"
+        labelStyle={{
+          lineHeight: 34.7,
+        }}
         onPress={handlePressPost}>
         {t('postInteraction:post')}
       </Button>
