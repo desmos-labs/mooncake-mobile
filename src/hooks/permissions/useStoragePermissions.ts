@@ -4,11 +4,27 @@ import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 import DeviceInfo from 'react-native-device-info';
 import {useNavigation} from '@react-navigation/native';
 
-const useStoragePermissions = () => {
+type PermissionsStateType = 'granted' | 'rejected' | undefined;
+
+/**
+ * @typedef ReturnType
+ * @property {Promise<void>} requestStoragePermissions - A callback that requests required permissions for react-native-camera-roll
+ * @property {PermissionsStateType} permissionsState - The state of the permissions.
+ */
+type ReturnType = {
+  requestStoragePermissions: () => Promise<void>;
+
+  permissionsState: PermissionsStateType;
+};
+
+/**
+ * A hook that requests permissions necessary for react-native-cameral-roll to work
+ * @returns {ReturnType}
+ */
+const useStoragePermissions = (): ReturnType => {
   const {goBack} = useNavigation<any>();
-  const [permissionsState, setPermissionsState] = React.useState<
-    'granted' | 'rejected' | undefined
-  >(undefined);
+  const [permissionsState, setPermissionsState] =
+    React.useState<PermissionsStateType>(undefined);
 
   const requestStoragePermissions = React.useCallback(async () => {
     const permission: any = Platform.select({
