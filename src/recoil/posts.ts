@@ -12,7 +12,7 @@ export const postsState = atom<PostItem[]>({
 /**
  * Increase this to get more posts per query.
  */
-const POSTS_PER_FETCH = 3;
+const POSTS_PER_FETCH = 5;
 
 // Get posts up to a given timestamp
 export const useGetPosts = () => {
@@ -38,15 +38,13 @@ export const useGetPosts = () => {
 
   const fetchMorePosts = React.useCallback(() => {
     // disabled as it breaks fetching additional posts
-    // if (loading) return;
+    if (loading) return;
     refetch({
-      offset: newOffset.current,
+      offset: posts.length,
       limit: POSTS_PER_FETCH,
       subspaceID,
-    }).then(() => {
-      newOffset.current += POSTS_PER_FETCH;
     });
-  }, [newOffset.current]);
+  }, [posts, loading]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -70,7 +68,7 @@ export const useGetPosts = () => {
         newOffset.current += POSTS_PER_FETCH;
       });
     }, 1500),
-    [newOffset.current, loading],
+    [posts, loading],
   );
 
   return {posts, fetchMorePosts, fetchNewestPosts, loading};

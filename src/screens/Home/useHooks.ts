@@ -84,7 +84,7 @@ const useHooks = () => {
   const onPostChanged = React.useCallback(
     (index: number) => {
       setSelectedPostIndex(index);
-      if (index >= posts.length - 3) {
+      if (index >= posts.length - 5) {
         fetchMorePosts();
       }
     },
