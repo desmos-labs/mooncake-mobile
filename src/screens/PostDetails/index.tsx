@@ -88,6 +88,7 @@ const PostDetails = () => {
   const [popupMenuParams, setPopupMenuParams] = useState<{
     postId: number;
     subspaceId: number;
+    authorAddress: string;
   }>();
   const {activeAddress} = useActiveAccount();
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
@@ -117,7 +118,7 @@ const PostDetails = () => {
   });
 
   const isFollowingAddress = useRecoilValue(
-    isFollowingAddr(post?.author?.address),
+    isFollowingAddr(popupMenuParams?.authorAddress || ''),
   );
 
   const {top} = useSafeAreaInsets();
@@ -127,6 +128,7 @@ const PostDetails = () => {
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
+        authorAddress: post?.author?.address,
       });
       pageRefetch();
     }, [post, params]),
@@ -179,7 +181,11 @@ const PostDetails = () => {
               y: event.nativeEvent.pageY,
             });
             setMenuVisible(true);
-            setPopupMenuParams({postId: item.id, subspaceId: item.subspace_id});
+            setPopupMenuParams({
+              postId: item.id,
+              subspaceId: item.subspace_id,
+              authorAddress: item.author.address,
+            });
           }}
           handlePressComment={() => {
             console.log('hello world');
@@ -349,7 +355,11 @@ const PostDetails = () => {
           {
             label: isFollowingAddress ? t('unfollow') : t('follow'),
             onPress: () => {
-              followOrUnfollowUser(post?.author?.address);
+              if (popupMenuParams) {
+                followOrUnfollowUser({
+                  addrToFollow: popupMenuParams.authorAddress,
+                });
+              }
             },
             icon: followBlackIcon,
           },
