@@ -2,9 +2,9 @@ import {Coin} from '@cosmjs/stargate';
 import {convertCoin} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import {defaultProfilePic} from 'assets/images';
-import React, {useEffect, useMemo} from 'react';
-import {View, Image, ImageSourcePropType} from 'react-native';
 import Typography from 'components/Typography';
+import React, {useMemo} from 'react';
+import {Image, ImageSourcePropType, View} from 'react-native';
 import {useRecoilState} from 'recoil';
 import useStyles from './useStyles';
 
@@ -23,11 +23,6 @@ const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
   const convertedAmount = useMemo(() => {
     return convertCoin(tipAmount, 6, settings.currentChain.denomUnits);
   }, [tipAmount, settings]);
-
-  useEffect(() => {
-    console.log(tipAmount);
-    console.log(convertedAmount);
-  }, [convertedAmount]);
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>

@@ -14,7 +14,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 const useHooks = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const {manageTips, sendTipLoading} = useSendTip();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {pop, goBack} = useNavigation<NavProps['navigation']>();
   const toast = useToast();
 
   const handleSendTip = React.useCallback(
@@ -43,7 +43,7 @@ const useHooks = () => {
           receiver,
           message: '',
         });
-        goBack();
+        pop();
       } else {
         toast.show('[PLACEHOLDER]Authorization is required.', {
           type: ToastConfig.ERROR_NO_RETRY,

@@ -61,7 +61,7 @@ const SendTips = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch({address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n'});
+      refetch();
     }, [data]),
   );
 

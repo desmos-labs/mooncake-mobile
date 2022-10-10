@@ -36,7 +36,6 @@ const PostTips = () => {
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
-      console.log(item.sender);
       return (
         <TipItem
           address={item.sender?.address}

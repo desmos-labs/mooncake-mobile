@@ -22,6 +22,7 @@ import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -217,7 +218,7 @@ const PostDetails = () => {
     return <EmptyListComponent label="No comments yet" />;
   }, []);
 
-  const likesImages: [] = useMemo(() => {
+  const countersImages = useMemo(() => {
     const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
         return {uri: reaction.author.profile_pic};
@@ -232,7 +233,7 @@ const PostDetails = () => {
         return defaultProfilePic;
       }
     });
-    return reactionsImages.concat(tipsImages);
+    return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
   }, [reactions, tips]);
 
   const headerComponent = useMemo(
@@ -256,14 +257,14 @@ const PostDetails = () => {
             likesCounter={reactions.length}
             tipsCounter={tips.length}
             handlePressCounters={handlePressCounters}
-            accountsHighlitedPics={likesImages}
+            accountsHighlitedPics={countersImages}
           />
         </Spacer>
         <Divider style={styles.divider} />
         <Spacer paddingBottom={16} />
       </>
     ),
-    [post, reactions, likesImages],
+    [post, reactions, countersImages],
   );
 
   const CustomTopBar = React.useMemo(() => {

@@ -8,6 +8,7 @@ import PopupMenu from 'components/PopupMenu';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -70,6 +71,8 @@ const CommentReplies = () => {
     commentsLoading,
     reactions,
     reactionsLoading,
+    tips,
+    tipsLoading,
     commentReplyLoading,
     pageRefetch,
     handlePressCounters,
@@ -108,15 +111,23 @@ const CommentReplies = () => {
     };
   }, []);
 
-  const likesImages: [] = useMemo(() => {
-    return reactions.map((reaction: any) => {
+  const countersImages = useMemo(() => {
+    const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
         return {uri: reaction.author.profile_pic};
       } else {
         return defaultProfilePic;
       }
     });
-  }, [reactions]);
+    const tipsImages = tips.map((tip: any) => {
+      if (tip.sender.profile_pic) {
+        return {uri: tip.sender.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
+    });
+    return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
+  }, [reactions, tips]);
 
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label={t('no comments yet')} />;
@@ -137,6 +148,7 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          tipped={item?.post?.tipPresence?.aggregate?.count > 0}
           liked={item?.post?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={item.post.repliesCount.aggregate.count}
           loading={commentsLoading}
@@ -171,6 +183,7 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
+          tipped={mainComment?.tipPresence?.aggregate?.count > 0}
           liked={mainComment?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={mainComment?.repliesCount?.aggregate?.count}
           loading={mainCommentLoading}
@@ -199,18 +212,18 @@ const CommentReplies = () => {
         <Divider style={styles.divider} />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={reactionsLoading}
+            loading={reactionsLoading && tipsLoading}
             likesCounter={reactions.length}
-            tipsCounter={0}
+            tipsCounter={tips.length}
             handlePressCounters={() => handlePressCounters()}
-            accountsHighlitedPics={likesImages}
+            accountsHighlitedPics={countersImages}
           />
         </Spacer>
         <Divider style={styles.divider} />
         <Spacer paddingBottom={16} />
       </>
     );
-  }, [mainComment, reactions, likesImages]);
+  }, [mainComment, reactions, countersImages]);
 
   const flatListData = useMemo(() => {
     return comments;

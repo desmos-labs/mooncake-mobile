@@ -15,6 +15,7 @@ import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/Create
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
+import GetPostTips from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -79,6 +80,18 @@ const useHooks = ({
     },
   });
 
+  const {
+    data: postTips,
+    loading: tipsLoading,
+    refetch: tipsRefetch,
+  } = useQuery(GetPostTips, {
+    variables: {
+      postID: commentID,
+      subspaceID,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
   const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
@@ -121,6 +134,11 @@ const useHooks = ({
     return commentReactions.reaction;
   }, [commentReactions]);
 
+  const tips = useMemo(() => {
+    if (!postTips) return [];
+    return postTips.tip_post;
+  }, [postTips]);
+
   const pageRefetch = async () => {
     await mainCommentRefetch({
       postID: commentID,
@@ -134,17 +152,18 @@ const useHooks = ({
       postID: commentID,
       subspaceID,
     });
+    await tipsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
   };
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_REACTIONS,
-      params: {
-        expandOnOpen: true,
-        allowPanning: true,
-        postId: commentID,
-        subspaceId: subspaceID,
-      },
+      expandOnOpen: true,
+      allowPanning: true,
+      postId: commentID,
+      subspaceId: subspaceID,
     });
   }, []);
 
@@ -222,6 +241,9 @@ const useHooks = ({
     reactions,
     reactionsLoading,
     reactionsRefetch,
+    tips,
+    tipsLoading,
+    tipsRefetch,
     handlePressCounters,
     handlePressSendTips,
     handleExpandComment,
