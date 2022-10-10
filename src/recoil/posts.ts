@@ -33,7 +33,6 @@ export const useGetPosts = () => {
   });
 
   const fetchMorePosts = React.useCallback(() => {
-    // disabled as it breaks fetching additional posts
     if (loading) return;
     refetch({
       offset: posts.length,
