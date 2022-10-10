@@ -164,8 +164,9 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          tipped={item?.tipPresence?.aggregate?.count > 0}
           liked={item?.reactionPresence?.aggregate?.count > 0}
-          repliesCounter={item?.repliesCount.aggregate.count}
+          repliesCounter={item?.repliesCount.aggregate.count!}
           handlePressMore={event => {
             setAnchor({
               x: event.nativeEvent.pageX,
@@ -224,6 +225,7 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
+          postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {

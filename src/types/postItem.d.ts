@@ -13,6 +13,8 @@ declare global {
 
     reactions: any[];
 
+    tips: any[];
+
     attachments: PostAttachment[];
 
     text: string;
@@ -29,6 +31,11 @@ declare global {
       };
     };
     reactionPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
+    tipPresence: {
       aggregate: {
         count: number;
       };

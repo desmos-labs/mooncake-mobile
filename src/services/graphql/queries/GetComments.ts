@@ -29,6 +29,11 @@ export const GetPostComments = gql`
           count
         }
       }
+      tipPresence: tips_aggregate(where: {sender_address: {_eq: $user}}) {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;

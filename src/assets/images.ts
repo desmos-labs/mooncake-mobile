@@ -68,6 +68,8 @@ export const followIconOrange = require('./images/followIconOrange.png');
 
 export const tipIcon = require('./images/tipIcon.png');
 
+export const tipIconTipped = require('./images/tipIconTipped.png');
+
 export const commentIcon = require('./images/commentIcon.png');
 
 export const commentLikeEmptyIcon = require('./images/commentLikeIconEmpty.png');

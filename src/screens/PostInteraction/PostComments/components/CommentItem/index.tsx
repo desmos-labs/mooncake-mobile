@@ -2,10 +2,11 @@ import {buildingBlockAnim} from 'assets/animations';
 import {
   commentComment,
   commentLiked,
-  commentMore,
-  commentTip,
-  defaultProfilePic,
   commentLikeEmptyIcon,
+  commentMore,
+  defaultProfilePic,
+  tipIcon,
+  tipIconTipped,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -46,6 +47,8 @@ type Props = {
   // not final
   reactions: {}[];
 
+  tips: {}[];
+
   creation_date: string;
 
   text?: string;
@@ -53,6 +56,8 @@ type Props = {
   attachments?: PostAttachment[];
 
   liked?: boolean;
+
+  tipped?: boolean;
 
   loading?: boolean;
 };
@@ -67,10 +72,12 @@ const CommentItem = ({
   handleLongPress,
   author,
   reactions,
+  tips,
   creation_date,
   text,
   attachments,
   liked,
+  tipped,
   loading,
   repliesCounter,
 }: Props) => {
@@ -175,12 +182,16 @@ const CommentItem = ({
               onPress={handlePressTip}
               style={styles.interactionButton}>
               <Image
-                source={commentTip}
-                style={[styles.buttonImage, styles.interactionImage]}
+                source={tipped ? tipIconTipped : tipIcon}
+                style={[
+                  styles.buttonImage,
+                  styles.interactionImage,
+                  tipped && styles.tipped,
+                ]}
               />
-              <Typography.Subtitle3 style={styles.textStyle}>
-                {/* not implemented yet */}
-                {formatNumShorthand(0)}
+              <Typography.Subtitle3
+                style={tipped ? styles.tipped : styles.textStyle}>
+                {tips ? formatNumShorthand(tips.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
           </View>

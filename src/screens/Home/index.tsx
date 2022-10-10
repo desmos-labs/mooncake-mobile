@@ -7,6 +7,7 @@ import {
   plusWhiteIcon,
   tipIcon,
   commentLiked,
+  tipIconTipped,
 } from 'assets/images';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -165,8 +166,12 @@ const Home = () => {
             onPress={() =>
               handlePressTip(postData[selectedPostIndex]?.author.address)
             }
-            interactionCount={0}
-            icon={tipIcon}
+            interactionCount={postData[selectedPostIndex]?.tips?.length}
+            icon={
+              postData[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
+                ? tipIconTipped
+                : tipIcon
+            }
           />
         </View>
       )}

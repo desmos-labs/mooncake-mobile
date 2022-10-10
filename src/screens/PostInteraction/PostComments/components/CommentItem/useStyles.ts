@@ -79,6 +79,10 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
     width: 24,
     height: 24,
   },
+  tipped: {
+    tintColor: theme.colors.butterOrange01,
+    color: theme.colors.butterOrange01,
+  },
 }));
 
 export default useStyles;

@@ -24,6 +24,9 @@ export const POST_FIELDS = gql`
         address
       }
     }
+    tips {
+      amount
+    }
     text
     conversation {
       author {
@@ -59,6 +62,11 @@ const GetPosts = gql`
       reactionPresence: reactions_aggregate(
         where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
       ) {
+        aggregate {
+          count
+        }
+      }
+      tipPresence: tips_aggregate(where: {sender_address: {_eq: $user}}) {
         aggregate {
           count
         }
