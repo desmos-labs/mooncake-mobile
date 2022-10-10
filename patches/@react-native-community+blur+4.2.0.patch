@@ -1,0 +1,36 @@
+diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManager.java b/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManager.java
+index 15cc966..62edb40 100644
+--- a/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManager.java
++++ b/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManager.java
+@@ -9,7 +9,6 @@ import com.facebook.react.uimanager.ViewGroupManager;
+ import com.facebook.react.uimanager.annotations.ReactProp;
+ 
+ import eightbitlab.com.blurview.BlurView;
+-import eightbitlab.com.blurview.RenderEffectBlur;
+ import eightbitlab.com.blurview.RenderScriptBlur;
+ 
+ import java.util.Objects;
+@@ -37,17 +36,12 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+       .getDecorView();
+     ViewGroup rootView = decorView.findViewById(android.R.id.content);
+     Drawable windowBackground = decorView.getBackground();
+-    if (Build.VERSION.SDK_INT >= 31) {
+-      blurView
+-        .setupWith(rootView, new RenderEffectBlur())
+-        .setFrameClearDrawable(windowBackground)
+-        .setBlurRadius(defaultRadius);
+-    } else {
+-      blurView
+-        .setupWith(rootView, new RenderScriptBlur(ctx))
+-        .setFrameClearDrawable(windowBackground)
+-        .setBlurRadius(defaultRadius);
+-    }
++
++    blurView
++      .setupWith(rootView, new RenderScriptBlur(ctx))
++      .setFrameClearDrawable(windowBackground)
++      .setBlurRadius(defaultRadius);
++
+     return blurView;
+   }
+ 
