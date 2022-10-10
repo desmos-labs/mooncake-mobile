@@ -8,7 +8,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import {postBG} from 'assets/images';
+import {postBG, whiteCross} from 'assets/images';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import RadialTextCounter from 'components/RadialTextCounter';
@@ -23,8 +23,9 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import BackButton from 'components/BackButton';
 import {postTextState} from '@recoil/sharedPostState';
+import ImageButton from 'components/ImageButton';
+import {addAlphaToHex} from 'config/theme';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -91,10 +92,15 @@ const CreateTextPost = () => {
           <Image source={postBG[backgroundIndex]} style={styles.background} />
 
           <View style={styles.headerGroup}>
-            <BackButton
+            <ImageButton
               onPress={goBack}
-              // index 0 is black, which makes the default back button color hard to see
-              iconColor={backgroundIndex === 0 ? theme.colors.white : undefined}
+              hitSlop={{top: 50, bottom: 50, right: 50, left: 50}}
+              image={whiteCross}
+              style={{
+                width: 28,
+                height: 28,
+                resizeMode: 'contain',
+              }}
             />
 
             <TouchableOpacity onPress={handlePressBGButton}>
@@ -115,7 +121,7 @@ const CreateTextPost = () => {
               onChangeText={setSharedComment}
               placeholder={inputFocused ? '' : t('tapToType')}
               style={[styles.inputStyle, {opacity: inputOpacity}]}
-              placeholderTextColor="#FFFFFF"
+              placeholderTextColor={addAlphaToHex('#FFFFFF', 0.5)}
             />
           </KeyboardAvoidingView>
         </TouchableOpacity>
