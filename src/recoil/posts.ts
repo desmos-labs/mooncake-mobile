@@ -22,10 +22,6 @@ export const useGetPosts = () => {
   // recoil
   const subspaceID = 5;
 
-  // useRef instead of state so it doesn't trigger a re-render when the offset
-  // is moved
-  const newOffset = React.useRef(0);
-
   const {data, refetch, loading} = useQuery(GetPosts, {
     variables: {
       offset: 0,
@@ -57,7 +53,6 @@ export const useGetPosts = () => {
   const fetchNewestPosts = React.useCallback(
     _.throttle(() => {
       setPosts([]);
-      newOffset.current = 0;
 
       refetch({
         offset: 0,
@@ -65,7 +60,6 @@ export const useGetPosts = () => {
         subspaceID,
       }).then(a => {
         setPosts(_.get(a, 'data.post'));
-        newOffset.current += POSTS_PER_FETCH;
       });
     }, 1500),
     [posts, loading],
