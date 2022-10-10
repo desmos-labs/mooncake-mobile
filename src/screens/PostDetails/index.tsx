@@ -39,12 +39,15 @@ import {
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import {isFollowingAddr} from '@recoil/following';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -85,7 +88,10 @@ const PostDetails = () => {
   const [popupMenuParams, setPopupMenuParams] = useState<{
     postId: number;
     subspaceId: number;
+    authorAddress: string;
   }>();
+  const {activeAddress} = useActiveAccount();
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const {
     profile,
@@ -113,6 +119,10 @@ const PostDetails = () => {
     subspaceID: params.subspaceID,
   });
 
+  const isFollowingAddress = useRecoilValue(
+    isFollowingAddr(popupMenuParams?.authorAddress || ''),
+  );
+
   const {top} = useSafeAreaInsets();
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
@@ -120,6 +130,7 @@ const PostDetails = () => {
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
+        authorAddress: post?.author?.address,
       });
       pageRefetch();
     }, [post, params]),
@@ -173,7 +184,11 @@ const PostDetails = () => {
               y: event.nativeEvent.pageY,
             });
             setMenuVisible(true);
-            setPopupMenuParams({postId: item.id, subspaceId: item.subspace_id});
+            setPopupMenuParams({
+              postId: item.id,
+              subspaceId: item.subspace_id,
+              authorAddress: item.author.address,
+            });
           }}
           handlePressComment={() => {
             console.log('hello world');
@@ -271,11 +286,20 @@ const PostDetails = () => {
         </View>
 
         <View style={styles.rightContainer}>
-          <ImageButton
-            style={styles.followIcon}
-            image={followOrangeIcon}
-            onPress={() => console.log('add')}
-          />
+          {activeAddress !== post?.author?.address && (
+            <ImageButton
+              style={[
+                styles.followIcon,
+                isFollowingAddress && {
+                  tintColor: theme.colors.primary,
+                },
+              ]}
+              image={followOrangeIcon}
+              onPress={() => {
+                followOrUnfollowUser(post?.author?.address);
+              }}
+            />
+          )}
           <ImageButton
             onPress={() => {
               setProfileMenuAnchor({
@@ -290,7 +314,14 @@ const PostDetails = () => {
         </View>
       </View>
     );
-  }, [Avatar, formattedDate, post?.author, popupMenuParams]);
+  }, [
+    followOrUnfollowUser,
+    activeAddress,
+    Avatar,
+    formattedDate,
+    post?.author,
+    popupMenuParams,
+  ]);
 
   return postLoading || !post ? (
     <SafeAreaView>
@@ -336,8 +367,14 @@ const PostDetails = () => {
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
-            label: t('follow'),
-            onPress: () => console.log('test'),
+            label: isFollowingAddress ? t('unfollow') : t('follow'),
+            onPress: () => {
+              if (popupMenuParams) {
+                followOrUnfollowUser({
+                  addrToFollow: popupMenuParams.authorAddress,
+                });
+              }
+            },
             icon: followBlackIcon,
           },
           {

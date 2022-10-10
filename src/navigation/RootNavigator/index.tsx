@@ -148,7 +148,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DEV_SCREEN]: undefined;
 
   /* Following and followers route. */
-  [ROUTES.FOLLOWING_AND_FOLLOWERS]: FollowingAndFollowersParams;
+  [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
 
   /* Following tab route. */
   [ROUTES.FOLLOWING]: FollowingParams;

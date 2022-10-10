@@ -5,7 +5,8 @@ import {
   defaultBanner,
   defaultProfilePic,
   editButton,
-  followIconOrange,
+  followedButton,
+  followIcon,
   stargazeIcon,
   twitterIcon,
 } from 'assets/images';
@@ -29,6 +30,11 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
+import EnvConfig from 'config/EnvConfig';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useNumRelationships from '@recoil/numRelationshipState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -91,19 +97,17 @@ const Profile = () => {
     return 'myProfile';
   }, [params?.visitingProfileAddress, activeAddress]);
 
-  const {
-    address,
-    bio,
-    dtag,
-    cover_pic,
-    profile_pic,
-    nickname,
-    following,
-    followage,
-  } =
+  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
     screenMode === 'guestProfile'
       ? visitingProfileData
       : (profileData as ProfileData);
+
+  const {numRelationships, refreshNumRelationships} =
+    useNumRelationships(address);
+
+  React.useEffect(() => {
+    refreshNumRelationships();
+  }, []);
 
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
@@ -124,32 +128,47 @@ const Profile = () => {
     return profile_pic ? {uri: profile_pic} : defaultProfilePic;
   }, [profile_pic]);
 
-  /* ToDo: shouldn't hardcode, this is the subspace ID for the Desmos mainnet. */
-  const subspaceID = 5;
+  const isFollowing = useRecoilValue(isFollowingAddr(address));
+
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+
+  const FollowButton = useMemo(() => {
+    if (screenMode === 'myProfile') {
+      return <ImageButton image={editButton} style={styles.editButton} />;
+    }
+
+    return (
+      <ImageButton
+        image={isFollowing ? followedButton : followIcon}
+        style={styles.editButton}
+        onPress={() => followOrUnfollowUser({addrToFollow: address})}
+      />
+    );
+  }, [followOrUnfollowUser]);
+
+  const subspaceID = EnvConfig.APP_SUBSPACE_ID;
 
   /* A hook that returns a props object that can be used to pass to a component that will navigate to
   the following and followers screen. */
-  const handleFollowingPressed = useCallback(
-    () =>
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-        initialTabRouteName: ROUTES.FOLLOWING,
+  const handleFollowingPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWING,
+      params: {
         subspaceID,
-        userAddress: activeAddress ?? '',
-        headerTitle: nickname || `@${dtag}`,
-      }),
-    [subspaceID, activeAddress, nickname, dtag],
-  );
+        userAddress: address,
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
 
-  const handleFollowersPressed = useCallback(
-    () =>
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-        initialTabRouteName: ROUTES.FOLLOWERS,
+  const handleFollowersPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWERS,
+      params: {
         subspaceID,
-        userAddress: activeAddress ?? '',
-        headerTitle: nickname || `@${dtag}`,
-      }),
-    [subspaceID, activeAddress, nickname, dtag],
-  );
+        userAddress: address,
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
 
   const handlePostsSectionPressed = useCallback(() => {
     navigate(ROUTES.PROFILE_POSTS, {
@@ -193,11 +212,8 @@ const Profile = () => {
         style={{paddingTop: 100 + top}}
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.contentGroup}>
-          <View style={{paddingHorizontal: 20}}>
-            <ImageButton
-              image={screenMode === 'myProfile' ? editButton : followIconOrange}
-              style={styles.editButton}
-            />
+          <View style={{paddingHorizontal: theme.spacing.m}}>
+            {FollowButton}
 
             <Typography.H3
               style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
@@ -217,7 +233,7 @@ const Profile = () => {
             <View style={styles.socialCounterGroup}>
               <TouchableOpacity onPress={handleFollowingPressed}>
                 <SocialCounter
-                  count={following?.length}
+                  count={numRelationships?.numFollowing}
                   label={t('following')}
                 />
               </TouchableOpacity>
@@ -226,7 +242,7 @@ const Profile = () => {
 
               <TouchableOpacity onPress={handleFollowersPressed}>
                 <SocialCounter
-                  count={followage?.length}
+                  count={numRelationships?.numFollowers}
                   label={t('followers')}
                 />
               </TouchableOpacity>

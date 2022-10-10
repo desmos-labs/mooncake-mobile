@@ -17,7 +17,7 @@
     "deploy:iosInternal": "fastlane ios closed_beta"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
+    "@apollo/client": "^3.7.0",
     "@cosmjs/cosmwasm-stargate": "0.28.11",
     "@cosmjs/crypto": "0.28.11",
     "@cosmjs/encoding": "0.28.11",

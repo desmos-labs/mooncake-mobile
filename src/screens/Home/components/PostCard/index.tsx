@@ -5,6 +5,9 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
 import useStyles from './useStyles';
 
 type Props = {
@@ -27,11 +30,6 @@ type Props = {
    * What to do if the post details button is pressed.
    */
   onPressDetails: () => void;
-
-  /**
-   * Is the user following the author?
-   */
-  followed?: boolean;
 };
 
 enum POST_TYPE {
@@ -46,7 +44,6 @@ const PostCard = ({
   onPressAuthor,
   onPressFollow,
   onPressDetails,
-  followed,
 }: Props) => {
   const styles = useStyles();
   const {
@@ -54,7 +51,12 @@ const PostCard = ({
     attachments,
   } = postData;
 
+  const {activeAddress} = useActiveAccount();
+
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
+
+  // potentially causing a "too many pending callbacks" warning
+  const isFollowing = useRecoilValue(isFollowingAddr(postData.author_address));
 
   const Avatar = React.useMemo(() => {
     if (profile_pic) {
@@ -93,6 +95,14 @@ const PostCard = ({
 
   // Hopefully we come up with a more elegant way to do this in the future
   const content = React.useMemo(() => {
+    const followUnfollowButton = postData.author_address !== activeAddress && (
+      <View>
+        <ProfileHeaderButton
+          imageSrc={isFollowing ? followedButton : followIcon}
+          onPress={onPressFollow}
+        />
+      </View>
+    );
     if (postType === POST_TYPE.TEXT || postType === POST_TYPE.IMAGE) {
       return (
         <>
@@ -119,12 +129,7 @@ const PostCard = ({
               </View>
             </TouchableOpacity>
 
-            <View>
-              <ProfileHeaderButton
-                imageSrc={followed ? followedButton : followIcon}
-                onPress={onPressFollow}
-              />
-            </View>
+            {followUnfollowButton}
           </View>
         </>
       );
@@ -159,17 +164,12 @@ const PostCard = ({
               </Typography.Body7>
             </View>
 
-            <View>
-              <ProfileHeaderButton
-                imageSrc={followIcon}
-                onPress={onPressFollow}
-              />
-            </View>
+            {followUnfollowButton}
           </View>
         </View>
       );
     }
-  }, [followed, postType, onPressFollow]);
+  }, [postType, onPressFollow, activeAddress]);
 
   return (
     <TouchableOpacity

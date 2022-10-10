@@ -22,11 +22,13 @@ import {
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import {isFollowingAddr} from '@recoil/following';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -52,7 +54,14 @@ const CommentReplies = () => {
   const [popupMenuParams, setPopupMenuParams] = useState<{
     postId: number;
     subspaceId: number;
+    authorAddress: string;
   }>();
+
+  const isFollowingAddress = useRecoilValue(
+    isFollowingAddr(popupMenuParams?.authorAddress || ''),
+  );
+
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const {
     mainComment,
@@ -140,6 +149,7 @@ const CommentReplies = () => {
             setPopupMenuParams({
               postId: item.post.id,
               subspaceId: item.post.subspace_id,
+              authorAddress: item.post.author.address,
             });
             setMenuVisible(true);
           }}
@@ -172,6 +182,7 @@ const CommentReplies = () => {
             setPopupMenuParams({
               postId: mainComment.id,
               subspaceId: mainComment.subspace_id,
+              authorAddress: mainComment?.author.address,
             });
             setMenuVisible(true);
           }}
@@ -249,8 +260,14 @@ const CommentReplies = () => {
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
-            label: t('follow'),
-            onPress: () => console.log('test'),
+            label: isFollowingAddress ? t('unfollow') : t('follow'),
+            onPress: () => {
+              if (popupMenuParams) {
+                followOrUnfollowUser({
+                  addrToFollow: popupMenuParams.authorAddress,
+                });
+              }
+            },
             icon: followBlackIcon,
           },
           {
