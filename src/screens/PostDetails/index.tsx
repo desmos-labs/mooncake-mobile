@@ -95,6 +95,8 @@ const PostDetails = () => {
     commentsLoading,
     reactions,
     reactionsLoading,
+    tips,
+    tipsLoading,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
@@ -200,14 +202,22 @@ const PostDetails = () => {
   }, []);
 
   const likesImages: [] = useMemo(() => {
-    return reactions.map((reaction: any) => {
+    const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
         return {uri: reaction.author.profile_pic};
       } else {
         return defaultProfilePic;
       }
     });
-  }, [reactions]);
+    const tipsImages = tips.map((tip: any) => {
+      if (tip.sender.profile_pic) {
+        return {uri: tip.sender.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
+    });
+    return reactionsImages.concat(tipsImages);
+  }, [reactions, tips]);
 
   const headerComponent = useMemo(
     () => (
@@ -225,9 +235,9 @@ const PostDetails = () => {
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={reactionsLoading}
+            loading={reactionsLoading && tipsLoading}
             likesCounter={reactions.length}
-            tipsCounter={0}
+            tipsCounter={tips.length}
             handlePressCounters={handlePressCounters}
             accountsHighlitedPics={likesImages}
           />

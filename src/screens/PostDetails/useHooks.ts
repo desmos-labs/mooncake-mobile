@@ -16,6 +16,7 @@ import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/Create
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
+import GetPostTips from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -82,6 +83,18 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
+  const {
+    data: postTips,
+    loading: tipsLoading,
+    refetch: tipsRefetch,
+  } = useQuery(GetPostTips, {
+    variables: {
+      postID,
+      subspaceID,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
   const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
@@ -124,6 +137,11 @@ const useHooks = ({
     return postReactions.reaction;
   }, [postReactions, profile?.address]);
 
+  const tips = useMemo(() => {
+    if (!postTips) return [];
+    return postTips.tip_post;
+  }, [postTips]);
+
   const pageRefetch = async () => {
     await postRefetch({
       postID,
@@ -134,6 +152,10 @@ const useHooks = ({
       subspaceID,
     });
     await reactionsRefetch({
+      postID,
+      subspaceID,
+    });
+    await tipsRefetch({
       postID,
       subspaceID,
     });
@@ -254,6 +276,9 @@ const useHooks = ({
     reactions,
     reactionsLoading,
     reactionsRefetch,
+    tips,
+    tipsLoading,
+    tipsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,

@@ -5,7 +5,6 @@ import {defaultProfilePic} from 'assets/images';
 import React, {useEffect, useMemo} from 'react';
 import {View, Image, ImageSourcePropType} from 'react-native';
 import Typography from 'components/Typography';
-import {format} from 'date-fns';
 import {useRecoilState} from 'recoil';
 import useStyles from './useStyles';
 
@@ -15,21 +14,9 @@ type Props = {
   address: string;
   nickname?: string;
   dTag?: string;
-  timestamp?: string;
 };
 
-const formatTime = (timestamp: string) => {
-  return format(new Date(timestamp), 'd LLL, HH:mm');
-};
-
-const TipItem = ({
-  tipAmount,
-  avatar,
-  address,
-  nickname,
-  dTag,
-  timestamp,
-}: Props) => {
+const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
   const [settings] = useRecoilState(appSettingsState);
   const styles = useStyles();
 
@@ -51,7 +38,7 @@ const TipItem = ({
           {nickname || address}
         </Typography.Subtitle3>
         <Typography.Body7 style={styles.subTextStyle}>
-          @{dTag || 'no-dtag'}・{timestamp && formatTime(timestamp)}
+          @{dTag || 'no-dtag'}
         </Typography.Body7>
       </View>
 
