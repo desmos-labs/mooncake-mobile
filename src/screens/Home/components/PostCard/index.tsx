@@ -55,6 +55,7 @@ const PostCard = ({
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
+  // potentially causing a "too many pending callbacks" warning
   const isFollowing = useRecoilValue(isFollowingAddr(postData.author_address));
 
   const Avatar = React.useMemo(() => {

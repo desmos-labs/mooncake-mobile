@@ -12,7 +12,7 @@ export const postsState = atom<PostItem[]>({
 /**
  * Increase this to get more posts per query.
  */
-const POSTS_PER_FETCH = 3;
+const POSTS_PER_FETCH = 5;
 
 // Get posts up to a given timestamp
 export const useGetPosts = () => {
@@ -21,10 +21,6 @@ export const useGetPosts = () => {
   // in the future, this value should be passed as either a prop or loaded from
   // recoil
   const subspaceID = 5;
-
-  // useRef instead of state so it doesn't trigger a re-render when the offset
-  // is moved
-  const newOffset = React.useRef(0);
 
   const {data, refetch, loading} = useQuery(GetPosts, {
     variables: {
@@ -37,16 +33,13 @@ export const useGetPosts = () => {
   });
 
   const fetchMorePosts = React.useCallback(() => {
-    // disabled as it breaks fetching additional posts
-    // if (loading) return;
+    if (loading) return;
     refetch({
-      offset: newOffset.current,
+      offset: posts.length,
       limit: POSTS_PER_FETCH,
       subspaceID,
-    }).then(() => {
-      newOffset.current += POSTS_PER_FETCH;
     });
-  }, [newOffset.current]);
+  }, [posts, loading]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -59,7 +52,6 @@ export const useGetPosts = () => {
   const fetchNewestPosts = React.useCallback(
     _.throttle(() => {
       setPosts([]);
-      newOffset.current = 0;
 
       refetch({
         offset: 0,
@@ -67,10 +59,9 @@ export const useGetPosts = () => {
         subspaceID,
       }).then(a => {
         setPosts(_.get(a, 'data.post'));
-        newOffset.current += POSTS_PER_FETCH;
       });
     }, 1500),
-    [newOffset.current, loading],
+    [posts, loading],
   );
 
   return {posts, fetchMorePosts, fetchNewestPosts, loading};
