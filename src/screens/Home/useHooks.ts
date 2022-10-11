@@ -1,18 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
-import {useGetFollowing} from '@recoil/following';
 import {useGetPosts} from '@recoil/posts';
-import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {NavProps} from 'screens/Home/index';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
-import sharedPostState from '@recoil/sharedPostState';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
@@ -27,13 +20,10 @@ const useHooks = () => {
     fetchNewestPosts,
     loading: postsLoading,
   } = useGetPosts();
-  const {following} = useGetFollowing();
-  const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
   const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
   const maxOffset = React.useRef<number>(0);
 
   // debug use
@@ -45,26 +35,12 @@ const useHooks = () => {
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-
-  const toast = useToast();
-
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
 
-  const [loading, setLoading] = React.useState(false);
-
   const postData = React.useMemo(() => {
-    if (selectedFilterIndex === 0) return posts;
-
-    // Get the list of following accounts
-    const followedAddresses = following.map(x => x.address);
-
-    return _.filter(
-      posts,
-      x => followedAddresses.indexOf(x.author_address) !== -1,
-    );
-  }, [posts, following, selectedFilterIndex]);
+    return posts;
+  }, [posts]);
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -142,33 +118,6 @@ const useHooks = () => {
     navigate(ROUTES.SEND_TIPS);
   }, []);
 
-  const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE);
-  }, []);
-
-  const handlePressCreatePost = React.useCallback(async () => {
-    if (!activeAddress) return;
-
-    resetSharedPostState();
-    setLoading(true);
-
-    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
-
-    const {success} = await checkAndUpdateGrants({
-      grantsToRequest,
-      address: activeAddress,
-    });
-    setLoading(false);
-
-    if (success) {
-      navigate(ROUTES.CREATE_TEXT_POST);
-    } else {
-      toast.show('[PLACEHOLDER]Authorization is required.', {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
-    }
-  }, [activeAddress]);
-
   // Throttle this function to max one call every 3 seconds
   const onOverscrollRight = React.useCallback(() => {
     fetchNewestPosts();
@@ -196,21 +145,15 @@ const useHooks = () => {
   );
 
   return {
-    activeAddress,
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
-    handlePressComments,
-    handlePressProfile,
     handlePressTip,
     handlePressReactions,
-    selectedFilterIndex,
-    setSelectedFilterIndex,
-    handlePressCreatePost,
+    handlePressComments,
     onPostChanged,
     postData,
     selectedPostIndex,
-    loading,
     onCarouselProgressChange,
   };
 };

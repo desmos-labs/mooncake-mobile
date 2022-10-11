@@ -11,7 +11,6 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import LoadingOverlay from 'components/LoadingOverlay';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -38,11 +37,9 @@ const Home = () => {
     handlePressTip,
     handlePressReactions,
     handlePressComments,
-    // setSelectedFilterIndex,
     onPostChanged,
     postData,
     selectedPostIndex,
-    loading,
     onCarouselProgressChange,
   } = useHooks();
 
@@ -110,8 +107,6 @@ const Home = () => {
           />
         </View>
       )}
-
-      <LoadingOverlay isVisible={loading} />
     </View>
   );
 };
