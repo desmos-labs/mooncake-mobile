@@ -38,14 +38,14 @@ const Home = () => {
     handlePressReactions,
     handlePressComments,
     onPostChanged,
-    postData,
+    posts,
     selectedPostIndex,
     onCarouselProgressChange,
   } = useHooks();
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
-      if (info.index === postData.length) {
+      if (info.index === posts.length) {
         return <NoMorePosts />;
       }
       return (
@@ -59,7 +59,7 @@ const Home = () => {
         />
       );
     },
-    [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
+    [posts, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
   const theme = useTheme();
@@ -78,7 +78,7 @@ const Home = () => {
         width={Dimensions.get('window').width}
         height={verticalScale(500)}
         style={styles.carousel}
-        data={[...postData, 0 as any]}
+        data={[...posts, 0 as any]}
         renderItem={renderPost}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -86,7 +86,7 @@ const Home = () => {
         }}
       />
 
-      {selectedPostIndex !== postData.length && (
+      {selectedPostIndex !== posts.length && (
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}

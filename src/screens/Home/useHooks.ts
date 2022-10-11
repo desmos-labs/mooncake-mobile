@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import {useGetPosts} from '@recoil/posts';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {NavProps} from 'screens/Home/index';
@@ -14,17 +14,21 @@ import pendingTxState from '@recoil/pendingTx/pendingTxState';
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {
-    posts,
-    fetchMorePosts,
-    fetchNewestPosts,
-    loading: postsLoading,
-  } = useGetPosts();
+  const {params} = useRoute<NavProps['route']>();
+
   const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const maxOffset = React.useRef<number>(0);
+
+  const {
+    posts,
+    fetchMorePosts,
+    fetchNewestPosts,
+    loading: postsLoading,
+    // @ts-ignore
+  } = useGetPosts({type: params.type});
 
   // debug use
   const pendingTx = useRecoilValue(pendingTxState);
@@ -37,10 +41,6 @@ const useHooks = () => {
 
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
-
-  const postData = React.useMemo(() => {
-    return posts;
-  }, [posts]);
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -109,10 +109,10 @@ const useHooks = () => {
   const handlePressComments = React.useCallback(() => {
     navigate(ROUTES.POST_DETAILS, {
       focusCommentBox: true,
-      postId: postData[selectedPostIndex].id,
-      subspaceID: postData[selectedPostIndex].subspace_id,
+      postId: posts[selectedPostIndex].id,
+      subspaceID: posts[selectedPostIndex].subspace_id,
     });
-  }, [selectedPostIndex, postData]);
+  }, [selectedPostIndex, posts]);
 
   const handlePressTip = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS);
@@ -152,7 +152,7 @@ const useHooks = () => {
     handlePressReactions,
     handlePressComments,
     onPostChanged,
-    postData,
+    posts,
     selectedPostIndex,
     onCarouselProgressChange,
   };
