@@ -134,11 +134,13 @@ const EnterPassword = () => {
         }
       } catch (err) {
         // onFailedAuthentication && onFailedAuthentication();
+        // Add other error case handlers here
         if (String(err).includes('Malformed UTF-8 data')) {
           setErrors({password: t('error:incorrectPassword')});
         } else {
-          setErrors({password: String(err)});
+          setErrors({password: t('error:incorrectPassword')});
         }
+        console.log(String(err));
       } finally {
         setLoading(false);
       }
