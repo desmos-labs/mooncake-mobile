@@ -3,6 +3,7 @@ import {convertCoin} from '@desmoslabs/desmjs';
 import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {useButterConfig} from '@recoil/butterConfigState';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -33,6 +34,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
   const {activeAddress} = useActiveAccount();
+  const {butterConfig} = useButterConfig();
   const {params} = useRoute<NavProps['route']>();
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
@@ -110,7 +112,9 @@ const SendTips = () => {
               color: theme.colors.surfaceBlack,
               marginVertical: theme.spacing.s,
             }}>
-            {t('warning fee')}
+            {t('warning fee', {
+              fee: butterConfig.contracts.tips.fees.percentage,
+            })}
           </Typography.Body7>
           <Spacer paddingBottom={14} />
           <View style={styles.buttonGroup}>
