@@ -34,7 +34,7 @@ export const isFollowingAddr = selectorFamily({
 /**
  * Get the list of followed accounts for the active account
  */
-export const useGetFollowing = () => {
+export const useGetFollowingRepeating = () => {
   const {activeAddress} = useActiveAccount();
   const [following, setFollowing] = useRecoilState(followingState);
   const {syncPendingRelationships} = usePendingRelationships();

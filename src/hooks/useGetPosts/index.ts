@@ -16,7 +16,6 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
   const [posts, setPosts] = React.useState<PostItem[]>([]);
 
   const followingAddrs = useRecoilValue(followedAddressesState);
-
   // in the future, this value should be passed as either a prop or loaded from
   // recoil
   const subspaceID = 5;
@@ -38,7 +37,7 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
           offset: 0,
           limit: POSTS_PER_FETCH,
           subspaceID,
-          following: [],
+          following: Array.from(followingAddrs),
         },
       };
     }
