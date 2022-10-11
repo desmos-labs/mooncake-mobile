@@ -148,6 +148,7 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          commented={item?.post?.commentPresence?.aggregate?.count > 0}
           tipped={item?.post?.tipPresence?.aggregate?.count > 0}
           liked={item?.post?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={item.post.repliesCount.aggregate.count}
@@ -183,6 +184,7 @@ const CommentReplies = () => {
     return (
       <>
         <CommentItem
+          commented={mainComment?.commentPresence?.aggregate?.count > 0}
           tipped={mainComment?.tipPresence?.aggregate?.count > 0}
           liked={mainComment?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={mainComment?.repliesCount?.aggregate?.count}

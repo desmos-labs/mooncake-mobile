@@ -1,5 +1,6 @@
 import {
   commentIcon,
+  commentIconCommented,
   commentLiked,
   commentLikeEmptyIcon,
   tipIcon,
@@ -14,6 +15,7 @@ import {Divider} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
+  postCommented: boolean;
   postLiked: boolean;
   postTipped: boolean;
   handleLikePress: () => void;
@@ -22,6 +24,7 @@ type Props = {
 };
 
 const PostActionButtonsBar = ({
+  postCommented,
   postLiked,
   postTipped,
   handleLikePress,
@@ -47,8 +50,12 @@ const PostActionButtonsBar = ({
           </Typography.Subtitle3>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
-          <Image source={commentIcon} style={styles.icon} />
-          <Typography.Subtitle3 style={styles.text}>
+          <Image
+            source={postCommented ? commentIconCommented : commentIcon}
+            style={[styles.icon, postCommented && styles.orangeIconAndText]}
+          />
+          <Typography.Subtitle3
+            style={[styles.text, postCommented && styles.orangeIconAndText]}>
             {t('comment')}
           </Typography.Subtitle3>
         </TouchableOpacity>

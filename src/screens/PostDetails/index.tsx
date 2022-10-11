@@ -178,6 +178,7 @@ const PostDetails = () => {
         <CommentItem
           tipped={item?.tipPresence?.aggregate?.count > 0}
           liked={item?.reactionPresence?.aggregate?.count > 0}
+          commented={item?.commentPresence?.aggregate?.count > 0}
           repliesCounter={item?.repliesCount.aggregate.count!}
           handlePressMore={event => {
             setAnchor({
@@ -241,6 +242,7 @@ const PostDetails = () => {
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
+          postCommented={post?.commentPresence?.aggregate?.count > 0}
           postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}

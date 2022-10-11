@@ -1,6 +1,7 @@
 import {buildingBlockAnim} from 'assets/animations';
 import {
-  commentComment,
+  commentIcon,
+  commentIconCommented,
   commentLiked,
   commentLikeEmptyIcon,
   commentMore,
@@ -59,6 +60,8 @@ type Props = {
 
   tipped?: boolean;
 
+  commented?: boolean;
+
   loading?: boolean;
 };
 
@@ -78,6 +81,7 @@ const CommentItem = ({
   attachments,
   liked,
   tipped,
+  commented,
   loading,
   repliesCounter,
 }: Props) => {
@@ -153,10 +157,17 @@ const CommentItem = ({
                 onPress={handlePressComment}
                 style={styles.interactionButton}>
                 <Image
-                  source={commentComment}
-                  style={[styles.buttonImage, styles.interactionImage]}
+                  source={commented ? commentIconCommented : commentIcon}
+                  style={[
+                    styles.buttonImage,
+                    styles.interactionImage,
+                    commented ? styles.orangeIconAndText : {},
+                  ]}
                 />
-                <Typography.Subtitle3 style={styles.textStyle}>
+                <Typography.Subtitle3
+                  style={
+                    commented ? styles.orangeIconAndText : styles.textStyle
+                  }>
                   {formatNumShorthand(repliesCounter)}
                 </Typography.Subtitle3>
               </TouchableOpacity>
@@ -168,12 +179,12 @@ const CommentItem = ({
                 source={liked ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
-                  liked ? styles.likedButton : {},
+                  liked ? styles.orangeIconAndText : {},
                   styles.interactionImage,
                 ]}
               />
               <Typography.Subtitle3
-                style={liked ? styles.likedStyle : styles.textStyle}>
+                style={liked ? styles.orangeIconAndText : styles.textStyle}>
                 {reactions ? formatNumShorthand(reactions.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
@@ -186,11 +197,11 @@ const CommentItem = ({
                 style={[
                   styles.buttonImage,
                   styles.interactionImage,
-                  tipped && styles.tipped,
+                  tipped && styles.orangeIconAndText,
                 ]}
               />
               <Typography.Subtitle3
-                style={tipped ? styles.tipped : styles.textStyle}>
+                style={tipped ? styles.orangeIconAndText : styles.textStyle}>
                 {tips ? formatNumShorthand(tips.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>

@@ -14,7 +14,7 @@ import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
-import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
+import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import GetPostTips from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
@@ -40,7 +40,7 @@ const useHooks = ({
     data: originalComment,
     loading: mainCommentLoading,
     refetch: mainCommentRefetch,
-  } = useQuery(GetPostDetailsAndReactionPresence, {
+  } = useQuery(GetPostDetailsAndUserActionsPresence, {
     variables: {
       postID: commentID,
       subspaceID,

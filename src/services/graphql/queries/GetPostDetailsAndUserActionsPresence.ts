@@ -1,9 +1,9 @@
 import {gql} from '@apollo/client';
 import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
-const GetPostDetailsAndReactionPresence = gql`
+const GetPostDetailsAndUserActionsPresence = gql`
   ${POST_FIELDS}
-  query PostDetailsAndReactionPresence(
+  query PostDetailsAndUserActionsPresence(
     $subspaceID: bigint!
     $postID: bigint!
     $user: String
@@ -23,8 +23,15 @@ const GetPostDetailsAndReactionPresence = gql`
           count
         }
       }
+      commentPresence: comments_aggregate(
+        where: {author_address: {_eq: $user}}
+      ) {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;
 
-export default GetPostDetailsAndReactionPresence;
+export default GetPostDetailsAndUserActionsPresence;

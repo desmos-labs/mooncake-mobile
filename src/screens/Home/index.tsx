@@ -7,6 +7,7 @@ import {
   tipIcon,
   commentLiked,
   tipIconTipped,
+  commentIconCommented,
 } from 'assets/images';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -140,7 +141,12 @@ const Home = () => {
             interactionCount={
               postData[selectedPostIndex]?.repliesCount.aggregate.count
             }
-            icon={commentIcon}
+            icon={
+              postData[selectedPostIndex]?.reactionPresence?.aggregate?.count >
+              0
+                ? commentIconCommented
+                : commentIcon
+            }
           />
 
           <InteractionButton

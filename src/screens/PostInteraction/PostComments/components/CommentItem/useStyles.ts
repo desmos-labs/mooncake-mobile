@@ -34,9 +34,6 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
   subTextStyle: {
     color: theme.colors.grey02,
   },
-  likedStyle: {
-    color: theme.colors.butterOrange01,
-  },
   buttonImage: {
     width: 20,
     height: 20,
@@ -45,9 +42,6 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
   },
   interactionImage: {
     marginRight: theme.spacing.xs,
-  },
-  likedButton: {
-    tintColor: theme.colors.butterOrange01,
   },
   attachmentImageStyle: {
     width: 268,
@@ -79,7 +73,7 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
     width: 24,
     height: 24,
   },
-  tipped: {
+  orangeIconAndText: {
     tintColor: theme.colors.butterOrange01,
     color: theme.colors.butterOrange01,
   },

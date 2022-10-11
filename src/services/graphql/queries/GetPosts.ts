@@ -71,6 +71,13 @@ const GetPosts = gql`
           count
         }
       }
+      commentPresence: comments_aggregate(
+        where: {author_address: {_eq: $user}}
+      ) {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;
