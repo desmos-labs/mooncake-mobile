@@ -12,5 +12,6 @@
   "tip": "tip",
   "createPost": "create Posts",
   "removeReaction": "remove Reactions",
-  "addReaction": "add Reactions"
+  "addReaction": "add Reactions",
+  "execute contract": "execute WASM contracts"
 }

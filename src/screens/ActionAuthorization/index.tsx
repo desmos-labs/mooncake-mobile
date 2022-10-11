@@ -65,6 +65,8 @@ const ActionAuthorization = () => {
             return t('addReaction');
           case GrantEnums.MsgRemoveReaction:
             return t('removeReaction');
+          case GrantEnums.MsgExecuteContract:
+            return t('execute contract');
           default:
             return 'unmapped';
         }
