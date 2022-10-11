@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {FlatList, View} from 'react-native';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
-import GetPostsTippedForAddress from 'services/graphql/queries/GetPostsTippedFromAddress';
+import {GetTippedPostsFromAddress} from 'services/graphql/queries/GetPostTips';
 import useStyles from './useStyles';
 
 type NavProps = MaterialTopTabScreenProps<
@@ -31,10 +31,10 @@ export const TippedTab = () => {
     data: postsData,
     loading: postsLoading,
     refetch: postsRefetch,
-  } = useQuery(GetPostsTippedForAddress, {
+  } = useQuery(GetTippedPostsFromAddress, {
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      address: params.userAddress,
+      user: params.userAddress,
     },
     fetchPolicy: 'no-cache',
   });
@@ -46,12 +46,12 @@ export const TippedTab = () => {
   );
 
   const pageRefetch = async () => {
-    await postsRefetch({subspaceID: 5, address: params.userAddress});
+    await postsRefetch();
   };
 
   const posts: [] = React.useMemo(() => {
     if (!postsData) return [];
-    return postsData.reaction;
+    return postsData.tip_post;
   }, [postsData, postsLoading]);
 
   const handlePostPressed = React.useCallback(
@@ -67,11 +67,11 @@ export const TippedTab = () => {
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
-      postData={item}
+      postData={item.post}
       onPress={() =>
         handlePostPressed({
-          subspaceID: item.subspace_id,
-          id: item.id,
+          subspaceID: item.post.subspace_id,
+          id: item.post.id,
         })
       }
     />
@@ -80,6 +80,8 @@ export const TippedTab = () => {
   return (
     <View style={styles.contentContainer}>
       <FlatList
+        refreshing={postsLoading}
+        onRefresh={pageRefetch}
         showsVerticalScrollIndicator={false}
         data={posts}
         renderItem={renderPosts}

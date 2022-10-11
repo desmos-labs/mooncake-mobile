@@ -15,7 +15,7 @@ import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/Create
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
-import GetPostTips from 'services/graphql/queries/GetPostTips';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
