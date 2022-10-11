@@ -120,6 +120,10 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
+  const handlePressEdit = useCallback(() => {
+    navigate(ROUTES.CREATE_DESMOS_PROFILE);
+  }, []);
+
   const bannerImage = useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
