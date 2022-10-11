@@ -189,7 +189,7 @@ const SendTips = () => {
           {loading ? (
             <ActivityIndicator
               style={{left: 0, marginRight: 'auto'}}
-              size="small"
+              size={16}
               color={theme.colors.butterOrange01}
             />
           ) : (
