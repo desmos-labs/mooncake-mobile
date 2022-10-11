@@ -34,7 +34,6 @@ import DevScreen from 'screens/DEV';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
-import Home from 'screens/Home';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -89,6 +88,7 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
+import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -102,7 +102,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
-  [ROUTES.HOME]: undefined;
+  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
   [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
@@ -188,7 +188,7 @@ const RootNavigator = () => {
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
     if (activeAddr) {
-      return ROUTES.HOME;
+      return ROUTES.HOME_TABS;
     }
     return ROUTES.LANDING;
   }, []);
@@ -252,7 +252,7 @@ const RootNavigator = () => {
         component={MnemonicInput}
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.HOME} component={Home} />
+      <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       <Stack.Screen
         initialParams={{
           postId: 1,

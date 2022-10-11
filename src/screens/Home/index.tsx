@@ -1,19 +1,8 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {
-  commentIcon,
-  defaultProfilePic,
-  commentLikeEmptyIcon,
-  plusWhiteIcon,
-  tipIcon,
-} from 'assets/images';
-import DView from 'components/DView';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import useActiveAccount from 'hooks/useActiveAccount';
-import _ from 'lodash';
+import {commentIcon, commentLikeEmptyIcon, tipIcon} from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
 import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
@@ -22,23 +11,25 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import PostTypeTab from './components/PostTypeTab';
+import LoadingOverlay from 'components/LoadingOverlay';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
 // does not affect operation
 LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
-export enum POST_TYPE {
-  DISCOVER = 'DISCOVER_POSTS',
-  FOLLOWING = 'FOLLOWING_POSTS',
-}
+export type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.HOME_TABS
+>;
 
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
+export type HomeParams = {
+  type: 'discover' | 'following';
+};
 
 const Home = () => {
   const styles = useStyles();
-  const {t} = useTranslation('home');
 
   const {
     handlePressDetails,
@@ -46,20 +37,14 @@ const Home = () => {
     handlePressAuthor,
     handlePressTip,
     handlePressReactions,
-    handlePressProfile,
     handlePressComments,
-    selectedFilterIndex,
     // setSelectedFilterIndex,
     onPostChanged,
     postData,
     selectedPostIndex,
-    handlePressCreatePost,
     loading,
     onCarouselProgressChange,
   } = useHooks();
-
-  const {profileData} = useActiveAccount();
-  const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -80,37 +65,10 @@ const Home = () => {
     [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
-  const profilePic = _.get(profileData, 'profile_pic');
+  const theme = useTheme();
 
   return (
-    <DView style={styles.container} showLoadingOverlay={loading}>
-      <View style={styles.headerGroup}>
-        <ProfileHeaderButton
-          style={styles.profileButton}
-          imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
-          onPress={handlePressProfile}
-        />
-
-        <View style={styles.tabContainer}>
-          <PostTypeTab
-            selectedIndex={selectedFilterIndex}
-            setSelectedIndex={() => {
-              // temporarily disable switching to following as there is an
-              // issue where attachments are cached and applied to incorrect posts
-              console.log('disabled for now');
-            }}
-            postTypes={postTypes}
-          />
-        </View>
-
-        <ProfileHeaderButton
-          containerStyle={styles.createPostButton}
-          style={styles.icon}
-          imageSrc={plusWhiteIcon}
-          onPress={handlePressCreatePost}
-        />
-      </View>
-
+    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
       <Carousel
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
@@ -152,7 +110,9 @@ const Home = () => {
           />
         </View>
       )}
-    </DView>
+
+      <LoadingOverlay isVisible={loading} />
+    </View>
   );
 };
 
