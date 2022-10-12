@@ -1,6 +1,3 @@
-import {useQuery} from '@apollo/client';
-import {convertCoin} from '@desmoslabs/desmjs';
-import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useButterConfig} from '@recoil/butterConfigState';
@@ -8,10 +5,11 @@ import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import useActiveAccount from 'hooks/useActiveAccount';
+import {Formik} from 'formik';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Keyboard,
@@ -21,7 +19,6 @@ import {
   View,
 } from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
-import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -33,33 +30,24 @@ export type SendTipsParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
-  const {activeAddress} = useActiveAccount();
   const {butterConfig} = useButterConfig();
   const {params} = useRoute<NavProps['route']>();
-  const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
-  const {refetch, loading, data} = useQuery(getAccountBalance, {
-    variables: {address: activeAddress},
-  });
   const styles = useStyles();
   const theme = useTheme();
-  const {handleSendTip, sendTipLoading, goBack} = useHooks();
-
-  const editable = useMemo(() => {
-    return !(loading || data.action_account_balance.coins[0].amount <= 0);
-  }, [data, loading]);
-
-  const handlePressSetTip = useCallback(
-    (amount: string) => {
-      if (amount === tipAmount) {
-        setTipAmount('');
-      } else {
-        setTipAmount(amount);
-      }
-    },
-    [tipAmount],
-  );
+  const {
+    activeAddress,
+    refetch,
+    loading,
+    editable,
+    handleSendTip,
+    sendTipLoading,
+    goBack,
+    initialFormValues,
+    validateForm,
+    convertedBalance,
+  } = useHooks();
 
   useFocusEffect(
     useCallback(() => {
@@ -67,30 +55,17 @@ const SendTips = () => {
     }, [refetch]),
   );
 
-  const handlePressConfirm = React.useCallback(() => {
-    handleSendTip({
-      amount: parseInt(tipAmount, 10),
-      receiver: params.postAuthor,
-      sender: activeAddress!,
-      postId: params.postId!,
-    });
-  }, [
-    handleSendTip,
-    tipAmount,
-    params.postAuthor,
-    params.postId,
-    activeAddress,
-  ]);
-
-  const convertedBalance = useMemo(() => {
-    if (data && !loading) {
-      return convertCoin(
-        data?.action_account_balance?.coins[0],
-        6,
-        MorpheusApollo2.denomUnits,
-      );
-    }
-  }, [data, loading]);
+  const handlePressConfirm = React.useCallback(
+    (values: any) => {
+      handleSendTip({
+        amount: parseInt(values.amount, 10),
+        receiver: params.postAuthor,
+        sender: activeAddress!,
+        postId: params.postId!,
+      });
+    },
+    [handleSendTip, params.postAuthor, params.postId, activeAddress],
+  );
 
   return (
     <KeyboardAvoidingView
@@ -108,126 +83,159 @@ const SendTips = () => {
           activeOpacity={1}
           style={styles.innerContainer}
           onPress={() => Keyboard.dismiss()}>
-          <View style={styles.tabIcon} />
-          <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-          <Typography.Body6>{t('description')}</Typography.Body6>
-          <Spacer paddingBottom={30} />
-          <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
-          <Typography.Body7
-            style={{
-              color: theme.colors.surfaceBlack,
-              marginVertical: theme.spacing.s,
-            }}>
-            {t('warning fee', {
-              fee: butterConfig.contracts.tips.fees.percentage,
-            })}
-          </Typography.Body7>
-          <Spacer paddingBottom={14} />
-          <View style={styles.buttonGroup}>
-            <Button
-              disabled={!editable}
-              mode={tipAmount === '1' ? 'contained' : 'outlined'}
-              style={styles.tipButton}
-              contentStyle={styles.tipButtonContent}
-              onPress={() => handlePressSetTip('1')}>
-              <Typography.Subtitle3
-                style={{
-                  color:
-                    tipAmount === '1'
-                      ? theme.colors.white
-                      : theme.colors.surfaceBlack,
-                  textTransform: 'uppercase',
-                }}>
-                1 DSM
-              </Typography.Subtitle3>
-            </Button>
-            <Button
-              disabled={!editable}
-              mode={tipAmount === '5' ? 'contained' : 'outlined'}
-              style={styles.tipButton}
-              contentStyle={styles.tipButtonContent}
-              onPress={() => handlePressSetTip('5')}>
-              <Typography.Subtitle3
-                style={{
-                  color:
-                    tipAmount === '5'
-                      ? theme.colors.white
-                      : theme.colors.surfaceBlack,
-                  textTransform: 'uppercase',
-                }}>
-                5 DSM
-              </Typography.Subtitle3>
-            </Button>
-            <Button
-              disabled={!editable}
-              mode={tipAmount === '10' ? 'contained' : 'outlined'}
-              style={styles.tipButton}
-              contentStyle={styles.tipButtonContent}
-              onPress={() => handlePressSetTip('10')}>
-              <Typography.Subtitle3
-                style={{
-                  color:
-                    tipAmount === '10'
-                      ? theme.colors.white
-                      : theme.colors.surfaceBlack,
-                  textTransform: 'uppercase',
-                }}>
-                10 DSM
-              </Typography.Subtitle3>
-            </Button>
-          </View>
-          <Spacer paddingBottom={20} />
-          <DTextInput
-            editable={editable}
-            value={tipAmount}
-            onChangeText={text => setTipAmount(text)}
-            keyboardType="numeric"
-            numberOfLines={1}
-            style={styles.textInput}
-            placeholder={t('insert amount')}
-            rightElement={
-              <Typography.Subtitle3 numberOfLines={1}>DSM</Typography.Subtitle3>
-            }
-          />
-          <Spacer paddingBottom={10} />
+          <Formik
+            initialValues={initialFormValues}
+            onSubmit={handlePressConfirm}
+            validate={validateForm}>
+            {({handleSubmit, values, errors, setFieldValue}) => {
+              return (
+                <>
+                  <View style={styles.tabIcon} />
+                  <Typography.H4 style={styles.headerText}>
+                    {t('header')}
+                  </Typography.H4>
+                  <Typography.Body6>{t('description')}</Typography.Body6>
+                  <Spacer paddingBottom={30} />
+                  <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+                  <Typography.Body7
+                    style={{
+                      color: theme.colors.surfaceBlack,
+                      marginVertical: theme.spacing.s,
+                    }}>
+                    {t('warning fee', {
+                      fee: butterConfig.contracts.tips.fees.percentage,
+                    })}
+                  </Typography.Body7>
+                  <Spacer paddingBottom={14} />
+                  <View style={styles.buttonGroup}>
+                    <Button
+                      disabled={!editable}
+                      mode={values.amount === '1' ? 'contained' : 'outlined'}
+                      style={styles.tipButton}
+                      contentStyle={styles.tipButtonContent}
+                      onPress={() => {
+                        setFieldValue('amount', '1', true);
+                      }}>
+                      <Typography.Subtitle3
+                        style={{
+                          color:
+                            values.amount === '1'
+                              ? theme.colors.white
+                              : theme.colors.surfaceBlack,
+                          textTransform: 'uppercase',
+                        }}>
+                        1 DSM
+                      </Typography.Subtitle3>
+                    </Button>
+                    <Button
+                      disabled={!editable}
+                      mode={values.amount === '5' ? 'contained' : 'outlined'}
+                      style={styles.tipButton}
+                      contentStyle={styles.tipButtonContent}
+                      onPress={() => {
+                        setFieldValue('amount', '5', true);
+                      }}>
+                      <Typography.Subtitle3
+                        style={{
+                          color:
+                            values.amount === '5'
+                              ? theme.colors.white
+                              : theme.colors.surfaceBlack,
+                          textTransform: 'uppercase',
+                        }}>
+                        5 DSM
+                      </Typography.Subtitle3>
+                    </Button>
+                    <Button
+                      disabled={!editable}
+                      mode={values.amount === '10' ? 'contained' : 'outlined'}
+                      style={styles.tipButton}
+                      contentStyle={styles.tipButtonContent}
+                      onPress={() => {
+                        setFieldValue('amount', '10', true);
+                      }}>
+                      <Typography.Subtitle3
+                        style={{
+                          color:
+                            values.amount === '10'
+                              ? theme.colors.white
+                              : theme.colors.surfaceBlack,
+                          textTransform: 'uppercase',
+                        }}>
+                        10 DSM
+                      </Typography.Subtitle3>
+                    </Button>
+                  </View>
+                  <Spacer paddingBottom={20} />
+                  <DTextInput
+                    editable={editable}
+                    value={values.amount}
+                    onChangeText={(value: string) => {
+                      setFieldValue('amount', value, true);
+                    }}
+                    keyboardType="numeric"
+                    numberOfLines={1}
+                    style={styles.textInput}
+                    placeholder={t('insert amount')}
+                    rightElement={
+                      <Typography.Subtitle3 numberOfLines={1}>
+                        DSM
+                      </Typography.Subtitle3>
+                    }
+                  />
+                  {errors.amount && (
+                    <Typography.Caption1
+                      style={{marginTop: 6, color: theme.colors.pink01}}>
+                      {errors.amount}
+                    </Typography.Caption1>
+                  )}
+                  <Spacer paddingBottom={10} />
 
-          {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
-          {loading ? (
-            <ActivityIndicator
-              style={{left: 0, marginRight: 'auto'}}
-              size={16}
-              color={theme.colors.butterOrange01}
-            />
-          ) : (
-            <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
-              {/* we will need to format accordingly this number */}
-              {t('available')} {convertedBalance?.amount}{' '}
-              {convertedBalance?.denom.toUpperCase()}
-            </Typography.Body7>
-          )}
+                  {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
+                  {loading ? (
+                    <ActivityIndicator
+                      style={{left: 0, marginRight: 'auto'}}
+                      size={16}
+                      color={theme.colors.butterOrange01}
+                    />
+                  ) : (
+                    <Typography.Body7
+                      style={{color: theme.colors.accentGreen01}}>
+                      {/* we will need to format accordingly this number */}
+                      {t('available')} {convertedBalance?.amount}{' '}
+                      {convertedBalance?.denom.toUpperCase()}
+                    </Typography.Body7>
+                  )}
 
-          <Spacer paddingVertical={20}>
-            <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
-          </Spacer>
-          <DTextInput
-            editable={editable}
-            inputStyle={styles.messageInput}
-            value={message}
-            onChangeText={text => setMessage(text)}
-            style={styles.textInput}
-            multiline
-            placeholder={t('message')}
-          />
-          <Spacer paddingVertical={30}>
-            <Button
-              loading={sendTipLoading}
-              mode="contained"
-              color={theme.colors.surfaceBlack}
-              onPress={handlePressConfirm}
-              disabled={tipAmount === ''}>
-              {t('common:confirm')}
-            </Button>
-          </Spacer>
+                  <Spacer paddingVertical={20}>
+                    <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
+                  </Spacer>
+                  <DTextInput
+                    editable={editable}
+                    inputStyle={styles.messageInput}
+                    value={message}
+                    onChangeText={text => setMessage(text)}
+                    style={styles.textInput}
+                    multiline
+                    placeholder={t('message')}
+                  />
+                  <Spacer paddingVertical={30}>
+                    <Button
+                      loading={sendTipLoading}
+                      mode="contained"
+                      color={theme.colors.surfaceBlack}
+                      onPress={handleSubmit}
+                      disabled={
+                        values.amount === '' ||
+                        _.flatten(Object.values(errors)).length > 0
+                      }>
+                      {t('common:confirm')}
+                    </Button>
+                  </Spacer>
+                </>
+              );
+            }}
+          </Formik>
         </TouchableOpacity>
       </TouchableOpacity>
     </KeyboardAvoidingView>
