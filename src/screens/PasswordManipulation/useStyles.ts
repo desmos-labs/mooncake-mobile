@@ -24,7 +24,7 @@ const useStyles = makeStyle(theme => ({
   },
   errorText: {
     marginTop: theme.spacing.xs,
-    color: theme.colors.error,
+    color: theme.colors.pink01,
   },
   labelGroup: {
     flexDirection: 'row',
