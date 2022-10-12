@@ -777,7 +777,7 @@ exports[`component: Section renders 1`] = `
                 "left": 0,
                 "position": "absolute",
                 "right": 0,
-                "top": 1,
+                "top": 0,
               },
               undefined,
             ]
@@ -1087,7 +1087,7 @@ exports[`component: Section renders 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,21 a21,21 0 0 1 21 -21 v6 v15 h-15 h-6 Z"
+                d="M0,21 a21,21 0 0 1 21 -21 v6 a15,15 0 0 0 -15,15 h-6 Z"
                 fill={
                   Array [
                     1,
@@ -1166,7 +1166,7 @@ exports[`component: Section renders 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,0 a21,21 0 0 1 21,21 h-6 h-15 v-15 v-6 Z"
+                d="M0,0 a21,21 0 0 1 21,21 h-6 a15,15 0 0 0 -15,-15 v-6 Z"
                 fill={
                   Array [
                     1,
@@ -1245,7 +1245,7 @@ exports[`component: Section renders 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M21,21 a21,21 0 0 1 -21,-21 h6 h15 v15 v6 Z"
+                d="M21,21 a21,21 0 0 1 -21,-21 h6 a15,15 0 0 0 15,15 v6 Z"
                 fill={
                   Array [
                     1,
@@ -1327,7 +1327,7 @@ exports[`component: Section renders 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M21,0 a21,21 0 0 1 -21,21 v-6 v-15 h15 h6 Z"
+                d="M21,0 a21,21 0 0 1 -21,21 v-6 a15,15 0 0 0 15,-15 h6 Z"
                 fill={
                   Array [
                     1,
@@ -1339,159 +1339,6 @@ exports[`component: Section renders 1`] = `
                     "fill",
                   ]
                 }
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <RNSVGSvgView
-            bbHeight="100%"
-            bbWidth="100%"
-            focusable={false}
-            height="100%"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                Object {
-                  "position": "absolute",
-                },
-                Object {
-                  "flex": 0,
-                  "height": "100%",
-                  "width": "100%",
-                },
-              ]
-            }
-            width="100%"
-          >
-            <RNSVGGroup>
-              <RNSVGDefs>
-                <RNSVGMask
-                  height="100%"
-                  maskContentUnits={1}
-                  maskTransform={
-                    Array [
-                      1,
-                      0,
-                      0,
-                      1,
-                      0,
-                      0,
-                    ]
-                  }
-                  maskUnits={0}
-                  name="maskPaintBelow"
-                  width="100%"
-                  x="0%"
-                  y="0%"
-                >
-                  <RNSVGRect
-                    fill={4294967295}
-                    height="100%"
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width="100%"
-                    x={0}
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x={0}
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        -15,
-                        0,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x="100%"
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        -15,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x={0}
-                    y="100%"
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        -15,
-                        -15,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x="100%"
-                    y="100%"
-                  />
-                </RNSVGMask>
-              </RNSVGDefs>
-              <RNSVGRect
-                fill={4279244840}
-                fillOpacity={0.04}
-                height="100%"
-                mask="maskPaintBelow"
-                propList={
-                  Array [
-                    "fill",
-                    "fillOpacity",
-                  ]
-                }
-                width="100%"
-                x={0}
-                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -2307,7 +2154,7 @@ exports[`component: Section renders with title 1`] = `
                 "left": 0,
                 "position": "absolute",
                 "right": 0,
-                "top": 1,
+                "top": 0,
               },
               undefined,
             ]
@@ -2617,7 +2464,7 @@ exports[`component: Section renders with title 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,21 a21,21 0 0 1 21 -21 v6 v15 h-15 h-6 Z"
+                d="M0,21 a21,21 0 0 1 21 -21 v6 a15,15 0 0 0 -15,15 h-6 Z"
                 fill={
                   Array [
                     1,
@@ -2696,7 +2543,7 @@ exports[`component: Section renders with title 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M0,0 a21,21 0 0 1 21,21 h-6 h-15 v-15 v-6 Z"
+                d="M0,0 a21,21 0 0 1 21,21 h-6 a15,15 0 0 0 -15,-15 v-6 Z"
                 fill={
                   Array [
                     1,
@@ -2775,7 +2622,7 @@ exports[`component: Section renders with title 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M21,21 a21,21 0 0 1 -21,-21 h6 h15 v15 v6 Z"
+                d="M21,21 a21,21 0 0 1 -21,-21 h6 a15,15 0 0 0 15,15 v6 Z"
                 fill={
                   Array [
                     1,
@@ -2857,7 +2704,7 @@ exports[`component: Section renders with title 1`] = `
                 />
               </RNSVGDefs>
               <RNSVGPath
-                d="M21,0 a21,21 0 0 1 -21,21 v-6 v-15 h15 h6 Z"
+                d="M21,0 a21,21 0 0 1 -21,21 v-6 a15,15 0 0 0 15,-15 h6 Z"
                 fill={
                   Array [
                     1,
@@ -2869,159 +2716,6 @@ exports[`component: Section renders with title 1`] = `
                     "fill",
                   ]
                 }
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <RNSVGSvgView
-            bbHeight="100%"
-            bbWidth="100%"
-            focusable={false}
-            height="100%"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                Object {
-                  "position": "absolute",
-                },
-                Object {
-                  "flex": 0,
-                  "height": "100%",
-                  "width": "100%",
-                },
-              ]
-            }
-            width="100%"
-          >
-            <RNSVGGroup>
-              <RNSVGDefs>
-                <RNSVGMask
-                  height="100%"
-                  maskContentUnits={1}
-                  maskTransform={
-                    Array [
-                      1,
-                      0,
-                      0,
-                      1,
-                      0,
-                      0,
-                    ]
-                  }
-                  maskUnits={0}
-                  name="maskPaintBelow"
-                  width="100%"
-                  x="0%"
-                  y="0%"
-                >
-                  <RNSVGRect
-                    fill={4294967295}
-                    height="100%"
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width="100%"
-                    x={0}
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x={0}
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        -15,
-                        0,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x="100%"
-                    y={0}
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        -15,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x={0}
-                    y="100%"
-                  />
-                  <RNSVGRect
-                    fill={4278190080}
-                    height={15}
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        -15,
-                        -15,
-                      ]
-                    }
-                    propList={
-                      Array [
-                        "fill",
-                      ]
-                    }
-                    width={15}
-                    x="100%"
-                    y="100%"
-                  />
-                </RNSVGMask>
-              </RNSVGDefs>
-              <RNSVGRect
-                fill={4279244840}
-                fillOpacity={0.04}
-                height="100%"
-                mask="maskPaintBelow"
-                propList={
-                  Array [
-                    "fill",
-                    "fillOpacity",
-                  ]
-                }
-                width="100%"
-                x={0}
-                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
