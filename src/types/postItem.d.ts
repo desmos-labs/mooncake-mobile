@@ -40,6 +40,11 @@ declare global {
         count: number;
       };
     };
+    commentPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
   }
 
   interface PostAuthor {

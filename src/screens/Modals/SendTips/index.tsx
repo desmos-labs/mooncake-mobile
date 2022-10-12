@@ -3,6 +3,7 @@ import {convertCoin} from '@desmoslabs/desmjs';
 import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {useButterConfig} from '@recoil/butterConfigState';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -33,6 +34,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
   const {activeAddress} = useActiveAccount();
+  const {butterConfig} = useButterConfig();
   const {params} = useRoute<NavProps['route']>();
   const [tipAmount, setTipAmount] = React.useState<string>('');
   const [message, setMessage] = React.useState<string>('');
@@ -62,7 +64,7 @@ const SendTips = () => {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [data]),
+    }, [refetch]),
   );
 
   const handlePressConfirm = React.useCallback(() => {
@@ -72,7 +74,13 @@ const SendTips = () => {
       sender: activeAddress!,
       postId: params.postId!,
     });
-  }, [activeAddress, tipAmount, params.postAuthor]);
+  }, [
+    handleSendTip,
+    tipAmount,
+    params.postAuthor,
+    params.postId,
+    activeAddress,
+  ]);
 
   const convertedBalance = useMemo(() => {
     if (data && !loading) {
@@ -110,7 +118,9 @@ const SendTips = () => {
               color: theme.colors.surfaceBlack,
               marginVertical: theme.spacing.s,
             }}>
-            {t('warning fee')}
+            {t('warning fee', {
+              fee: butterConfig.contracts.tips.fees.percentage,
+            })}
           </Typography.Body7>
           <Spacer paddingBottom={14} />
           <View style={styles.buttonGroup}>
@@ -185,7 +195,7 @@ const SendTips = () => {
           {loading ? (
             <ActivityIndicator
               style={{left: 0, marginRight: 'auto'}}
-              size="small"
+              size={16}
               color={theme.colors.butterOrange01}
             />
           ) : (

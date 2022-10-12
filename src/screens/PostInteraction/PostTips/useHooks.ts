@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
 import {useMemo} from 'react';
-import GetPostTips from 'services/graphql/queries/GetPostTips';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 
 const useHooks = ({
   postId,

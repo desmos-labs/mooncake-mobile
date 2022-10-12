@@ -142,8 +142,7 @@ const Home = () => {
               postData[selectedPostIndex]?.repliesCount.aggregate.count
             }
             icon={
-              postData[selectedPostIndex]?.reactionPresence?.aggregate?.count >
-              0
+              postData[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
                 ? commentIconCommented
                 : commentIcon
             }
@@ -162,7 +161,10 @@ const Home = () => {
 
           <InteractionButton
             onPress={() =>
-              handlePressTip(postData[selectedPostIndex]?.author.address)
+              handlePressTip(
+                postData[selectedPostIndex]?.author.address,
+                postData[selectedPostIndex]?.id,
+              )
             }
             interactionCount={postData[selectedPostIndex]?.tips?.length}
             icon={

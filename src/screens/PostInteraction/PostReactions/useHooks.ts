@@ -18,6 +18,7 @@ const useHooks = ({
       postID: postId,
       subspaceID: subspaceId,
     },
+    fetchPolicy: 'no-cache',
   });
 
   const reactions = useMemo(() => {

@@ -50,7 +50,7 @@ const useHooks = () => {
         });
       }
     },
-    [],
+    [checkAndUpdateGrants, manageTips, toast],
   );
 
   return {

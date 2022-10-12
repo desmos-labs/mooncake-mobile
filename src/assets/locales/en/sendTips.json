@@ -6,7 +6,7 @@
   "insert amount": "Insert amount",
   "message": "Message for Author",
   "oops": "Oops!",
-  "warning fee": "Please note that a 10% fee will be included with your tip",
+  "warning fee": "Please note that a {{fee}}% fee will be included with your tip",
   "no dsm": "You don’t have DSM",
   "how to buy dsm": "How to buy DSM?"
 }

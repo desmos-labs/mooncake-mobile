@@ -90,7 +90,7 @@ const CommentReplies = () => {
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
-    }, [params]),
+    }, [pageRefetch]),
   );
 
   useEffect(() => {
@@ -131,7 +131,7 @@ const CommentReplies = () => {
 
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label={t('no comments yet')} />;
-  }, []);
+  }, [t]);
 
   const MiddleElement = useMemo(
     () => (
@@ -141,7 +141,7 @@ const CommentReplies = () => {
         </Typography.Subtitle3>
       </View>
     ),
-    [comments?.length],
+    [comments?.length, t],
   );
 
   const renderItem = React.useCallback(
@@ -171,13 +171,13 @@ const CommentReplies = () => {
           }}
           handlePressLike={() => handleAddReaction(item.post.id)}
           handlePressTip={() =>
-            handlePressSendTips(item?.post?.author?.address)
+            handlePressSendTips(item?.post?.author?.address, item.post.id)
           }
           {...item.post}
         />
       );
     },
-    [comments],
+    [commentsLoading, handleAddReaction, handlePressSendTips],
   );
 
   const headerComponent = React.useCallback(() => {
@@ -206,7 +206,7 @@ const CommentReplies = () => {
           }}
           handlePressLike={() => handleAddReaction(mainComment.id)}
           handlePressTip={() =>
-            handlePressSendTips(mainComment?.author?.address)
+            handlePressSendTips(mainComment?.author?.address, mainComment?.id)
           }
           {...mainComment}
         />
@@ -225,7 +225,16 @@ const CommentReplies = () => {
         <Spacer paddingBottom={16} />
       </>
     );
-  }, [mainComment, reactions, countersImages]);
+  }, [
+    mainComment,
+    mainCommentLoading,
+    reactionsLoading,
+    tipsLoading,
+    countersImages,
+    handleAddReaction,
+    handlePressSendTips,
+    handlePressCounters,
+  ]);
 
   const flatListData = useMemo(() => {
     return comments;

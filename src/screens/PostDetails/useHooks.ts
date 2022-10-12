@@ -16,7 +16,7 @@ import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/Create
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
-import GetPostTips from 'services/graphql/queries/GetPostTips';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -95,7 +95,7 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -135,10 +135,11 @@ const useHooks = ({
   const reactions = useMemo(() => {
     if (!postReactions) return [];
     return postReactions.reaction;
-  }, [postReactions, profile?.address]);
+  }, [postReactions]);
 
   const tips = useMemo(() => {
     if (!postTips) return [];
+    console.log(postTips);
     return postTips.tip_post;
   }, [postTips]);
 
@@ -225,7 +226,7 @@ const useHooks = ({
         });
       }
     },
-    [profile?.address, reactionAdded],
+    [profile?.address],
   );
 
   const handlePressReport = React.useCallback(
