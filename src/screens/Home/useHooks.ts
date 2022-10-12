@@ -1,22 +1,42 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
-import {NavProps} from 'screens/Home/index';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
+import {StackScreenProps} from '@react-navigation/stack';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+
+type DiscoverNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
+  StackScreenProps<RootNavigatorParamList>
+>;
+
+type FollowingNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {params} = useRoute<NavProps['route']>();
+  const {params} = useRoute<
+    DiscoverNavProps['route'] | FollowingNavProps['route']
+  >();
 
-  const {navigate, replace} = useNavigation<NavProps['navigation']>();
+  const {navigate, replace} = useNavigation<
+    DiscoverNavProps['navigation'] | FollowingNavProps['navigation']
+  >();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
@@ -27,7 +47,6 @@ const useHooks = () => {
     fetchMorePosts,
     fetchNewestPosts,
     loading: postsLoading,
-    // @ts-ignore
   } = useGetPosts({type: params.type});
 
   // debug use
