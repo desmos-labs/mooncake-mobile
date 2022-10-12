@@ -18,8 +18,8 @@ const useAnimations = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
 
-  const expandOnOpen = _.get(params, 'expandOnOpen');
-  const allowPanning = _.get(params, 'allowPanning');
+  const expandOnOpen = _.get(params, 'params.expandOnOpen');
+  const allowPanning = _.get(params, 'params.allowPanning');
   // use shared values as calling Dimensions.get in gesture handler causes it
   // to crash
   const yOffset = useSharedValue(expandOnOpen ? 50 : 500);

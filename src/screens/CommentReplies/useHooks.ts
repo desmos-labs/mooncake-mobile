@@ -160,10 +160,13 @@ const useHooks = ({
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
-      expandOnOpen: true,
-      allowPanning: true,
-      postId: commentID,
-      subspaceId: subspaceID,
+      screen: ROUTES.POST_REACTIONS,
+      params: {
+        expandOnOpen: true,
+        allowPanning: true,
+        postId: commentID,
+        subspaceId: subspaceID,
+      },
     });
   }, []);
 

@@ -217,7 +217,7 @@ const CommentReplies = () => {
             loading={reactionsLoading && tipsLoading}
             likesCounter={reactions.length}
             tipsCounter={tips.length}
-            handlePressCounters={() => handlePressCounters()}
+            handlePressCounters={handlePressCounters}
             accountsHighlitedPics={countersImages}
           />
         </Spacer>

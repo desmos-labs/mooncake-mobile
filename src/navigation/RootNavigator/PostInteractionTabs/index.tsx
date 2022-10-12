@@ -15,20 +15,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
-export type PostInteractionTabsParamList = {
-  /**
-   * Fully expand the post interaction tab window on open
-   */
-  expandOnOpen: boolean;
-
-  /**
-   * Should the user be able to drag the tab window in and out?
-   */
-  allowPanning: boolean;
-  postId: number;
-  subspaceId: number;
-};
-
 const Tab = createMaterialTopTabNavigator();
 
 type NavProps = StackScreenProps<
@@ -36,21 +22,13 @@ type NavProps = StackScreenProps<
   ROUTES.POST_INTERACTION
 >;
 
-export type PostInteractionReactionsTabsParams = {
-  /**
-   * Fully expand the post interaction tab window on open
-   */
-  expandOnOpen: boolean;
+export type PostInteractionTabsParamList = {
+  [ROUTES.POST_TIPS]: PostInteractionReactionsTabParams;
 
-  /**
-   * Should the user be able to drag the tab window in and out?
-   */
-  allowPanning: boolean;
-  postId: number;
-  subspaceId: number;
+  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
 };
 
-export type PostInteractionTipsTabsParams = {
+export type PostInteractionReactionsTabParams = {
   /**
    * Fully expand the post interaction tab window on open
    */
@@ -97,7 +75,7 @@ const PostInteractionTabs = () => {
               options={{
                 tabBarLabel: 'Reactions',
               }}
-              initialParams={params}
+              initialParams={params.params}
               component={PostReactions}
             />
             <Tab.Screen
@@ -106,7 +84,7 @@ const PostInteractionTabs = () => {
                 tabBarLabel: 'Tips',
               }}
               component={PostTips}
-              initialParams={params}
+              initialParams={params.params}
             />
           </Tab.Navigator>
         </SafeAreaView>
