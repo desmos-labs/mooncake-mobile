@@ -14,13 +14,12 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     padding: theme.spacing.m,
-    margin: theme.spacing.m,
     backgroundColor: theme.colors.background,
     borderRadius: 12,
   },
   icon: {
-    width: 40,
-    height: 40,
+    width: 46,
+    height: 46,
     resizeMode: 'contain',
   },
   centerGroup: {

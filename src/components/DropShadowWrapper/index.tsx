@@ -34,6 +34,8 @@ export type Props = ViewProps & {
   innerShadowProps?: React.ComponentProps<typeof Shadow>;
 
   outerShadowProps?: React.ComponentProps<typeof Shadow>;
+
+  style?: any;
 };
 
 const DropShadowWrapper: React.FC<Props> = props => {
@@ -49,6 +51,7 @@ const DropShadowWrapper: React.FC<Props> = props => {
     disableInnerWrapper,
     innerShadowProps,
     outerShadowProps,
+    style,
   } = props;
   if (disableInnerWrapper) {
     return (
@@ -65,7 +68,12 @@ const DropShadowWrapper: React.FC<Props> = props => {
   }
 
   return (
-    <Shadow {...outerShadowProps}>
+    <Shadow
+      viewStyle={[style, styles.externalShadow]}
+      startColor={(customColor as any) || 'rgba(37, 87, 188, 0.1)'}
+      distance={40}
+      offset={[10, 20]}
+      {...outerShadowProps}>
       <Shadow
         viewStyle={[innerStyle, styles.innerShadow]}
         startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.04)'}
