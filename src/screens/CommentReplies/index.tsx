@@ -141,7 +141,7 @@ const CommentReplies = () => {
         </Typography.Subtitle3>
       </View>
     ),
-    [comments?.length, t],
+    [comments?.length],
   );
 
   const renderItem = React.useCallback(

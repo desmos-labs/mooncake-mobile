@@ -63,7 +63,7 @@ const PostTips = () => {
         label={t('noTips')}
         additionalButton
         buttonLabel={t('tip')}
-        handleButton={() => handlePressSendTips()}
+        handleButton={handlePressSendTips}
       />
     );
   }, []);

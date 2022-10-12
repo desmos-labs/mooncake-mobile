@@ -6,6 +6,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import EnvConfig from 'config/EnvConfig';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -83,7 +84,7 @@ export const TippedTab = () => {
         refreshing={postsLoading}
         onRefresh={pageRefetch}
         showsVerticalScrollIndicator={false}
-        data={posts}
+        data={_.uniq(posts)}
         renderItem={renderPosts}
         numColumns={3}
         contentContainerStyle={styles.contentContainerStyle}
