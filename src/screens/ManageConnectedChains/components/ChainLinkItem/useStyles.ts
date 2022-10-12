@@ -36,7 +36,7 @@ const useStyles = makeStyle(theme => ({
     width: 16,
     height: 16,
     resizeMode: 'contain',
-    tintColor: theme.colors.grey01,
+    tintColor: theme.colors.surfaceBlack,
   },
   disconnectButton: {
     alignItems: 'center',
