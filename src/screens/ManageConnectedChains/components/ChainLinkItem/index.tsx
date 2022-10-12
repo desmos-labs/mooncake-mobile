@@ -53,7 +53,10 @@ const ChainLinkItem = ({
   }, [chainName]);
 
   return (
-    <DropShadowWrapper>
+    <DropShadowWrapper
+      customColor="rgba(37, 87, 188, 0.1)"
+      customOverlayColor="rgba(16, 24, 40, 0.05)"
+      customDistance={10}>
       <View style={styles.container}>
         <Image style={styles.icon} source={GetChainIcon(chainName)} />
 
