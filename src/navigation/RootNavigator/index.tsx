@@ -89,6 +89,7 @@ import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import usePollingQueries from 'hooks/usePollingQueries';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -174,8 +175,10 @@ const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useNotifications();
-
   // End initialization
+
+  // Start polling queries
+  usePollingQueries();
 
   const {t} = useTranslation();
 

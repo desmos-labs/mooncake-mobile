@@ -6,6 +6,7 @@ import GetFollowedUsersForAddress, {
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
 import useActiveAccount from 'hooks/useActiveAccount';
 import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
+import EnvConfig from 'config/EnvConfig';
 
 export const followingState = atom<CounterParty[]>({
   key: 'following',
@@ -34,18 +35,18 @@ export const isFollowingAddr = selectorFamily({
 /**
  * Get the list of followed accounts for the active account
  */
-export const useGetFollowingRepeating = () => {
+export const useGetFollowingPolling = () => {
   const {activeAddress} = useActiveAccount();
-  const [following, setFollowing] = useRecoilState(followingState);
+  const [, setFollowing] = useRecoilState(followingState);
   const {syncPendingRelationships} = usePendingRelationships();
 
-  const {data, loading} = useQuery<GetFollowedUsersForAddressData>(
+  const {data} = useQuery<GetFollowedUsersForAddressData>(
     GetFollowedUsersForAddress,
     {
       variables: {
         userAddress: activeAddress,
       },
-      pollInterval: 2000,
+      pollInterval: EnvConfig.POLLING_INTERVAL,
       fetchPolicy: 'no-cache',
     },
   );
@@ -67,9 +68,4 @@ export const useGetFollowingRepeating = () => {
   // React.useEffect(() => {
   //   refetch({userAddress: activeAddress});
   // }, [activeAddress]);
-
-  return {
-    following,
-    loading,
-  };
 };

@@ -9,7 +9,6 @@ import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
-import {useGetFollowingRepeating} from '@recoil/following';
 
 /**
  * Hooks for the Home screen.
@@ -17,7 +16,6 @@ import {useGetFollowingRepeating} from '@recoil/following';
 const useHooks = () => {
   const {params} = useRoute<NavProps['route']>();
 
-  useGetFollowingRepeating();
   const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);

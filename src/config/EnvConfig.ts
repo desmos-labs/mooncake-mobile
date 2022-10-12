@@ -15,6 +15,7 @@ const EnvConfig = {
   MAX_COMMENT_LENGTH: 500,
   DESMOS_REST: Config.DESMOS_REST,
   APP_SUBSPACE_ID: 5,
+  POLLING_INTERVAL: 2000,
 };
 
 export default EnvConfig;
