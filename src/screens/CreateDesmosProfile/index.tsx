@@ -122,7 +122,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
         <ProfileHeaderButton
           imageSrc={cameraButton}
-          style={styles.cameraButton}
+          style={styles.topButton}
           onPress={selectCoverPicture}
         />
       </View>

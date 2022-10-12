@@ -11,6 +11,8 @@ export enum GrantEnums {
   MsgRemoveReaction = '/desmos.reactions.v1.MsgRemoveReaction',
 
   MsgCreateReport = '/desmos.reports.v1.MsgCreateReport',
+
+  MsgSaveProfile = '/desmos.profiles.v3.MsgSaveProfile',
 }
 
 export enum GenericMsgEnums {

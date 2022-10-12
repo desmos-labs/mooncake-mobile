@@ -44,7 +44,7 @@ const useStyles = makeStyleWithProps(
     descriptionText: {
       marginBottom: theme.spacing.m,
     },
-    cameraButton: {
+    topButton: {
       width: 30,
       height: 30,
       resizeMode: 'contain',

@@ -3,67 +3,79 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {
   backButton,
   cameraButton,
-  createProfileBanner,
+  defaultBanner,
   defaultProfilePic,
 } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
+import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC} from 'react';
+import React, {FC, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
+  TextInput,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
-import useStyles from './useStyles';
 import useHooks from './useHooks';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.EDIT_PROFILE>;
 
 const EditProfile: FC<NavProps> = () => {
-  const styles = useStyles();
   const theme = useTheme();
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('createProfile');
-
-  const {validationSchema} = useHooks();
+  const {
+    profileParams,
+    validationSchema,
+    initialFormState,
+    onEditProfile,
+    profilePictureUri,
+    coverPictureUri,
+    selectProfilePicture,
+    selectCoverPicture,
+    loading,
+  } = useHooks();
+  const nicknameInputRef = useRef<TextInput>(null);
+  const dTagInputRef = useRef<TextInput>(null);
+  const bioInputRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
-      <Image
-        source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
-        style={styles.bannerImage}
-      />
-
+    <DView
+      showLoadingOverlay={loading}
+      style={styles.container}
+      backgroundImage={coverPictureUri ? {uri: coverPictureUri} : defaultBanner}
+      backgroundColor={theme.colors.white}>
       <View style={styles.headerButtonGroup}>
-        <ProfileHeaderButton imageSrc={backButton} onPress={goBack} />
+        <ProfileHeaderButton
+          imageSrc={backButton}
+          style={styles.topButton}
+          onPress={goBack}
+        />
 
         <ProfileHeaderButton
           imageSrc={cameraButton}
-          style={styles.cameraButton}
+          style={styles.topButton}
           onPress={selectCoverPicture}
         />
       </View>
 
       <CreateAvatar
-        avatar={profilePicture ? {uri: profilePicture.uri} : defaultProfilePic}
+        avatar={
+          profilePictureUri ? {uri: profilePictureUri} : defaultProfilePic
+        }
         handlePressEdit={selectProfilePicture}
       />
 
@@ -73,20 +85,16 @@ const EditProfile: FC<NavProps> = () => {
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
-          onSubmit={submitHandler}>
+          onSubmit={onEditProfile}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
-              <View style={styles.header}>
-                <Typography.H4>{t('header')}</Typography.H4>
-                <Typography.Body6 style={styles.descriptionText}>
-                  {t('description')}
-                </Typography.Body6>
-              </View>
               <ScrollView
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
-                <View style={styles.scrollContainer}>
+                <View
+                  style={styles.scrollContainer}
+                  onStartShouldSetResponder={() => true}>
                   <Typography.Subtitle2 style={styles.inputLabel}>
                     {t('nickname')}
                   </Typography.Subtitle2>
@@ -97,7 +105,6 @@ const EditProfile: FC<NavProps> = () => {
                     placeholder={t('enterNickname')}
                     onChangeText={value => {
                       setFieldValue('nickname', value, true);
-                      fromSignUp && setNickname(value);
                     }}
                     error={!!errors.nickname}
                   />
@@ -109,30 +116,28 @@ const EditProfile: FC<NavProps> = () => {
                   {nicknameInputRef.current && (
                     <View style={styles.nickname}>
                       <TextCounter
-                        maxChar={nicknameMaxLength}
+                        maxChar={profileParams.nickname.max_length}
                         textToCount={values.nickname}
                       />
                     </View>
                   )}
 
-                  {!fromSignUp && (
-                    <>
-                      <Typography.Subtitle2 style={styles.inputLabel}>
-                        {t('dTag')}
-                      </Typography.Subtitle2>
-                      <DTextInput
-                        style={styles.inputStyle}
-                        value={values.dTag}
-                        placeholder={t('enterDTag')}
-                        onChangeText={value => {
-                          setFieldValue('dTag', value, true);
-                        }}
-                        error={!!errors.dTag}
-                        inputRef={dTagInputRef}
-                        autoCapitalize="none"
-                      />
-                    </>
-                  )}
+                  <>
+                    <Typography.Subtitle2 style={styles.inputLabel}>
+                      {t('dTag')}
+                    </Typography.Subtitle2>
+                    <DTextInput
+                      style={styles.inputStyle}
+                      value={values.dTag}
+                      placeholder={t('enterDTag')}
+                      onChangeText={value => {
+                        setFieldValue('dTag', value, true);
+                      }}
+                      error={!!errors.dTag}
+                      inputRef={dTagInputRef}
+                      autoCapitalize="none"
+                    />
+                  </>
                   {errors.dTag && (
                     <Typography.Caption1 style={styles.errorText}>
                       {errors.dTag}
@@ -159,7 +164,6 @@ const EditProfile: FC<NavProps> = () => {
                     placeholder={t('addBio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
-                      fromSignUp && setBio(value);
                     }}
                     error={!!errors.bio}
                     style={styles.bioDTextInput}
@@ -184,8 +188,7 @@ const EditProfile: FC<NavProps> = () => {
                   disabled={!values.dTag}
                   color={theme.colors.surfaceBlack}
                   mode="contained"
-                  onPress={fromSignUp ? navigation.goBack : handleSubmit}
-                  loading={loading}>
+                  onPress={handleSubmit}>
                   {t('common:confirm')}
                 </Button>
               </View>
@@ -193,7 +196,7 @@ const EditProfile: FC<NavProps> = () => {
           )}
         </Formik>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </DView>
   );
 };
 

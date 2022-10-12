@@ -121,7 +121,7 @@ const Profile = () => {
   }, []);
 
   const handlePressEdit = useCallback(() => {
-    navigate(ROUTES.CREATE_DESMOS_PROFILE);
+    navigate(ROUTES.EDIT_PROFILE);
   }, []);
 
   const bannerImage = useMemo(() => {
@@ -138,7 +138,13 @@ const Profile = () => {
 
   const FollowButton = useMemo(() => {
     if (screenMode === 'myProfile') {
-      return <ImageButton image={editButton} style={styles.editButton} />;
+      return (
+        <ImageButton
+          image={editButton}
+          style={styles.editButton}
+          onPress={handlePressEdit}
+        />
+      );
     }
 
     return (

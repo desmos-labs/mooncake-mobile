@@ -31,6 +31,7 @@ import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
+import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';

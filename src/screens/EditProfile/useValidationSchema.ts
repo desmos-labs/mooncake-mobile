@@ -4,24 +4,18 @@ import * as Yup from 'yup';
 
 /**
  * @param {ProfileParams} profileParams - This is the object that contains the validation rules for the profile fields.
- * @param {number} nicknameMaxLength - The maximum length of the nickname.
- * @param {number} dtagMinLength - The minimum length of the dtag.
  * @returns A function that returns a Yup object.
  */
-function useValidationSchema(
-  profileParams: ProfileParams,
-  nicknameMaxLength: number,
-  dtagMinLength: number,
-) {
+function useValidationSchema(profileParams: ProfileParams) {
   const {t} = useTranslation();
   return useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
         .min(profileParams.nickname.min_length)
-        .max(nicknameMaxLength),
+        .max(profileParams.nickname.max_length),
       dTag: Yup.string()
         .required(t('error:required'))
-        .min(dtagMinLength)
+        .min(profileParams.dtag.min_length)
         .max(profileParams.dtag.max_length)
         .test(
           'respect reg_ex',
@@ -39,7 +33,7 @@ function useValidationSchema(
         }),
       ),
     });
-  }, [profileParams, nicknameMaxLength, dtagMinLength]);
+  }, [profileParams]);
 }
 
 export default useValidationSchema;
