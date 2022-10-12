@@ -1,4 +1,5 @@
-import {Component, PropsWithChildren, ReactNode} from 'react';
+import React, {Component, PropsWithChildren, ReactNode} from 'react';
+import {View} from 'react-native';
 
 /* If an error occurs, render the fallback instead of the children. */
 class ErrorBoundary extends Component<
@@ -16,7 +17,7 @@ class ErrorBoundary extends Component<
       return fallback;
     }
     const {children} = this.props;
-    return children;
+    return <View style={{flex: 1}}>{children}</View>;
   }
 }
 
