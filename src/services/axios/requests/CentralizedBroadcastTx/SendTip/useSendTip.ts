@@ -161,8 +161,9 @@ const useSendTip = () => {
             appSettings.currentChain.stakingDenom,
           ),
         ];
-        console.log(convertedFee);
         if (postId) {
+          console.log('sendTipToAPost');
+          console.log(postId);
           result = await sendTipToPost({
             amount: convertedAmount,
             fee: convertedFee,

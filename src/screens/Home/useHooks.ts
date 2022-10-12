@@ -71,7 +71,7 @@ const useHooks = () => {
     );
   }, [posts, following, selectedFilterIndex]);
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -95,7 +95,7 @@ const useHooks = () => {
         },
       });
     },
-    [activeAddress],
+    [activeAddress, getReactionForPostAndAuthor],
   );
 
   // calculate carousel offset
@@ -187,7 +187,7 @@ const useHooks = () => {
         });
       }
     },
-    [activeAddress, reactionAdded],
+    [activeAddress, checkAndUpdateGrants, getReaction, manageReaction, toast],
   );
 
   const handlePressComments = React.useCallback(() => {
@@ -198,9 +198,12 @@ const useHooks = () => {
     });
   }, [selectedPostIndex, postData]);
 
-  const handlePressTip = React.useCallback((postAuthor: string) => {
-    navigate(ROUTES.SEND_TIPS, {postAuthor});
-  }, []);
+  const handlePressTip = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   const handlePressProfile = React.useCallback(() => {
     navigate(ROUTES.USER_PROFILE);

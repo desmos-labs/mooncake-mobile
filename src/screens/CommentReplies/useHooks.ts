@@ -92,7 +92,7 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -116,7 +116,7 @@ const useHooks = ({
         },
       });
     },
-    [profile?.address],
+    [getReactionForPostAndAuthor, profile?.address],
   );
 
   const mainComment = React.useMemo(() => {
@@ -179,7 +179,7 @@ const useHooks = ({
 
   const handleCommentReply = React.useCallback(async () => {
     await createPost({conversationId: commentID, referencedPostId: commentID});
-  }, [commentID]);
+  }, [commentID, createPost]);
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
@@ -210,16 +210,25 @@ const useHooks = ({
         });
       }
     },
-    [profile?.address, reactionAdded],
+    [
+      checkAndUpdateGrants,
+      getReaction,
+      manageReaction,
+      profile?.address,
+      toast,
+    ],
   );
 
   React.useEffect(() => {
     resetSharedPostState();
   }, []);
 
-  const handlePressSendTips = React.useCallback((postAuthor: string) => {
-    navigate(ROUTES.SEND_TIPS, {postAuthor});
-  }, []);
+  const handlePressSendTips = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: number}) => {

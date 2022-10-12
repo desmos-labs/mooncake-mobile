@@ -64,7 +64,7 @@ const SendTips = () => {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [data]),
+    }, [refetch]),
   );
 
   const handlePressConfirm = React.useCallback(() => {
@@ -74,7 +74,13 @@ const SendTips = () => {
       sender: activeAddress!,
       postId: params.postId!,
     });
-  }, [activeAddress, tipAmount, params.postAuthor]);
+  }, [
+    handleSendTip,
+    tipAmount,
+    params.postAuthor,
+    params.postId,
+    activeAddress,
+  ]);
 
   const convertedBalance = useMemo(() => {
     if (data && !loading) {

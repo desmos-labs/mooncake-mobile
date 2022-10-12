@@ -161,7 +161,10 @@ const Home = () => {
 
           <InteractionButton
             onPress={() =>
-              handlePressTip(postData[selectedPostIndex]?.author.address)
+              handlePressTip(
+                postData[selectedPostIndex]?.author.address,
+                postData[selectedPostIndex]?.id,
+              )
             }
             interactionCount={postData[selectedPostIndex]?.tips?.length}
             icon={

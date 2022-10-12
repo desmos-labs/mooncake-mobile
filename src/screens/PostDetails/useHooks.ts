@@ -95,7 +95,7 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -226,7 +226,7 @@ const useHooks = ({
         });
       }
     },
-    [profile?.address, reactionAdded],
+    [profile?.address],
   );
 
   const handlePressReport = React.useCallback(
