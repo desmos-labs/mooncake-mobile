@@ -38,6 +38,7 @@ exports[`component: DView renders 1`] = `
           "flex": 1,
           "flexDirection": "column",
           "flexGrow": 1,
+          "zIndex": 1,
         },
         undefined,
       ]
@@ -84,11 +85,12 @@ exports[`component: DView renders background prop 1`] = `
     accessibilityIgnoresInvertColors={true}
     style={
       Object {
-        "bottom": 0,
-        "left": 0,
+        "height": 451.20588235294116,
         "position": "absolute",
-        "right": 0,
+        "resizeMode": "cover",
         "top": 0,
+        "width": "100%",
+        "zIndex": 1,
       }
     }
   >
@@ -108,8 +110,8 @@ exports[`component: DView renders background prop 1`] = `
             "top": 0,
           },
           Object {
-            "height": undefined,
-            "width": undefined,
+            "height": 451.20588235294116,
+            "width": "100%",
           },
           undefined,
         ]
@@ -124,6 +126,7 @@ exports[`component: DView renders background prop 1`] = `
           "flex": 1,
           "flexDirection": "column",
           "flexGrow": 1,
+          "zIndex": 1,
         },
         undefined,
       ]
