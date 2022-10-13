@@ -69,6 +69,8 @@ const UploadMedia = async ({mediaFile, onUploadProgress}: Params) => {
     onUploadProgress,
     // only resolves if returned status is 200
     validateStatus: status => status === 200,
+    timeout: 15000,
+    timeoutErrorMessage: 'Image upload timedout',
   });
 
   return {

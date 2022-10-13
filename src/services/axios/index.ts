@@ -61,7 +61,7 @@ export const useInitializeAxios = () => {
           navigate(ROUTES.LOGIN);
           return Promise.reject(error);
         } else {
-          console.warn(`[AXIOS]: ${error.response.data}`);
+          console.warn(`[AXIOS]: ${responseMsg}`);
           return Promise.reject(error);
         }
       },
