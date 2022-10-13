@@ -71,7 +71,7 @@ const CreateTextPost = () => {
         setInputFocused(true);
       }
     }
-  }, [inputRef.current]);
+  }, [inputRef?.current?.isFocused()]);
 
   const handleSubmitPost = React.useCallback(async () => {
     const createPostResponse = await createPost({});
@@ -80,6 +80,8 @@ const CreateTextPost = () => {
       goBack();
     }
   }, [createPost, sharedComment]);
+
+  console.log('input focused', inputFocused);
 
   return (
     <View style={styles.container}>
@@ -119,6 +121,7 @@ const CreateTextPost = () => {
               value={sharedComment}
               multiline
               onChangeText={setSharedComment}
+              onPressIn={handlePostPressed}
               placeholder={inputFocused ? '' : t('tapToType')}
               style={[styles.inputStyle, {opacity: inputOpacity}]}
               placeholderTextColor={addAlphaToHex('#FFFFFF', 0.5)}
@@ -141,10 +144,12 @@ const CreateTextPost = () => {
           customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
-      <BottomBar
-        handlePressPost={handleSubmitPost}
-        handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
-      />
+      <TouchableOpacity activeOpacity={1} onPress={handlePostPressed}>
+        <BottomBar
+          handlePressPost={handleSubmitPost}
+          handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
+        />
+      </TouchableOpacity>
 
       <LoadingOverlay isVisible={loading} />
     </View>

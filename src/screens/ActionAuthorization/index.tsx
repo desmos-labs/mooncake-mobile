@@ -1,20 +1,20 @@
-import React from 'react';
-import Typography from 'components/Typography';
-import {Image, TouchableOpacity, View} from 'react-native';
-import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
-import {Trans, useTranslation} from 'react-i18next';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {authorizationImage} from 'assets/images';
 import Button from 'components/Button';
-import {StackScreenProps} from '@react-navigation/stack';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import ToastConfig from 'config/ToastConfig';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {Image, TouchableOpacity, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
@@ -65,6 +65,8 @@ const ActionAuthorization = () => {
             return t('addReaction');
           case GrantEnums.MsgRemoveReaction:
             return t('removeReaction');
+          case GrantEnums.MsgExecuteContract:
+            return t('execute contract');
           default:
             return 'unmapped';
         }

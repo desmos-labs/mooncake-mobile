@@ -5,6 +5,7 @@ import GetPosts from 'services/graphql/queries/GetPosts';
 import _ from 'lodash';
 import {followedAddressesState} from '@recoil/following';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 /**
  * Increase this to get more posts per query.
@@ -15,6 +16,7 @@ const POSTS_PER_FETCH = 5;
 const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
   const [posts, setPosts] = React.useState<PostItem[]>([]);
 
+  const {activeAddress} = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
   // in the future, this value should be passed as either a prop or loaded from
   // recoil
@@ -28,6 +30,11 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
           offset: 0,
           limit: POSTS_PER_FETCH,
           subspaceID,
+          user: activeAddress!,
+          reaction: {
+            '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+            registered_reaction_id: 9,
+          },
         },
       };
     } else {
@@ -38,10 +45,15 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
           limit: POSTS_PER_FETCH,
           subspaceID,
           following: Array.from(followingAddrs),
+          user: activeAddress!,
+          reaction: {
+            '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+            registered_reaction_id: 9,
+          },
         },
       };
     }
-  }, [type, followingAddrs]);
+  }, [type, followingAddrs, activeAddress]);
 
   const {data, refetch, loading} = useQuery(queryVars.query, {
     variables: queryVars.variables,
@@ -51,7 +63,10 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
 
   const fetchMorePosts = React.useCallback(() => {
     if (loading) return;
-    refetch(queryVars.variables);
+    refetch({
+      ...queryVars.variables,
+      offset: posts.length,
+    });
   }, [posts, loading]);
 
   React.useEffect(() => {
@@ -67,9 +82,8 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
       setPosts([]);
 
       refetch({
+        ...queryVars.variables,
         offset: 0,
-        limit: POSTS_PER_FETCH,
-        subspaceID,
       }).then(a => {
         setPosts(_.get(a, 'data.post'));
       });

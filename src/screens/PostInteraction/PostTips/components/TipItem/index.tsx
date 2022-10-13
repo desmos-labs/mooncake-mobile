@@ -1,43 +1,44 @@
-import React from 'react';
-import {View, Image, ImageSourcePropType} from 'react-native';
+import {Coin} from '@cosmjs/stargate';
+import {convertCoin} from '@desmoslabs/desmjs';
+import appSettingsState from '@recoil/settings';
+import {defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
-import {format} from 'date-fns';
+import React, {useMemo} from 'react';
+import {Image, ImageSourcePropType, View} from 'react-native';
+import {useRecoilState} from 'recoil';
 import useStyles from './useStyles';
 
 type Props = {
-  tipAmount: number;
-
-  avatar: ImageSourcePropType;
-
-  nickname: string;
-
-  dTag: string;
-
-  timestamp: string;
+  tipAmount: Coin;
+  avatar?: ImageSourcePropType;
+  address: string;
+  nickname?: string;
+  dTag?: string;
 };
 
-const formatTime = (timestamp: string) => {
-  return format(new Date(timestamp), 'd LLL, HH:mm');
-};
-
-const TipItem = ({tipAmount, avatar, nickname, dTag, timestamp}: Props) => {
+const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
+  const [settings] = useRecoilState(appSettingsState);
   const styles = useStyles();
+
+  const convertedAmount = useMemo(() => {
+    return convertCoin(tipAmount, 6, settings.currentChain.denomUnits);
+  }, [tipAmount, settings]);
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image source={avatar} style={styles.avatarStyle} />
+      <Image source={avatar || defaultProfilePic} style={styles.avatarStyle} />
 
       <View style={styles.textGroup}>
-        <Typography.Subtitle3 style={styles.textStyle}>
-          {nickname}
+        <Typography.Subtitle3 style={styles.textStyle} numberOfLines={1}>
+          {nickname || address}
         </Typography.Subtitle3>
         <Typography.Body7 style={styles.subTextStyle}>
-          @{dTag}・{formatTime(timestamp)}
+          @{dTag || 'no-dtag'}
         </Typography.Body7>
       </View>
 
       <Typography.Subtitle3 style={styles.textStyle}>
-        {tipAmount} DSM
+        {convertedAmount?.amount} {convertedAmount?.denom.toUpperCase()}
       </Typography.Subtitle3>
     </View>
   );

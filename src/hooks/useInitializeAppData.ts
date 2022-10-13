@@ -1,4 +1,6 @@
 import {useQuery} from '@apollo/client';
+import {DesmosMainnet} from '@desmoslabs/desmjs';
+import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
 import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import * as RNLocalize from 'react-native-localize';
@@ -55,7 +57,6 @@ const useInitializeAppData = () => {
       !registeredReportsLoading &&
       !registeredReactionsLoading
     ) {
-      // console.log(registeredReports?.subspace_report_reason);
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting
@@ -63,6 +64,10 @@ const useInitializeAppData = () => {
         registeredReactions: registeredReactions?.subspace_registered_reaction,
         registeredReports: registeredReports?.subspace_report_reason,
         dataInitialized: true,
+        currentChain:
+          EnvConfig.CHAIN_ID === 'desmos-mainnet'
+            ? DesmosMainnet
+            : MorpheusApollo2,
       }));
     }
   }, [profileParams, registeredReactions, registeredReports]);

@@ -13,6 +13,8 @@ declare global {
 
     reactions: any[];
 
+    tips: any[];
+
     attachments: PostAttachment[];
 
     text: string;
@@ -22,6 +24,27 @@ declare global {
     creation_date: string;
 
     conversation: any;
+
+    repliesCount: {
+      aggregate: {
+        count: number;
+      };
+    };
+    reactionPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
+    tipPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
+    commentPresence: {
+      aggregate: {
+        count: number;
+      };
+    };
   }
 
   interface PostAuthor {

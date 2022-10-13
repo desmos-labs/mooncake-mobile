@@ -1,11 +1,13 @@
 import {buildingBlockAnim} from 'assets/animations';
 import {
-  commentComment,
+  commentIcon,
+  commentIconCommented,
   commentLiked,
-  commentMore,
-  commentTip,
-  defaultProfilePic,
   commentLikeEmptyIcon,
+  commentMore,
+  defaultProfilePic,
+  tipIcon,
+  tipIconTipped,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -35,9 +37,9 @@ type Props = {
 
   handlePressTip: () => void;
 
-  handlePress: () => void;
+  handlePress?: () => void;
 
-  handleLongPress: (event: GestureResponderEvent) => void;
+  handleLongPress?: (event: GestureResponderEvent) => void;
 
   repliesCounter: number;
 
@@ -46,6 +48,8 @@ type Props = {
   // not final
   reactions: {}[];
 
+  tips: {}[];
+
   creation_date: string;
 
   text?: string;
@@ -53,6 +57,10 @@ type Props = {
   attachments?: PostAttachment[];
 
   liked?: boolean;
+
+  tipped?: boolean;
+
+  commented?: boolean;
 
   loading?: boolean;
 };
@@ -67,10 +75,13 @@ const CommentItem = ({
   handleLongPress,
   author,
   reactions,
+  tips,
   creation_date,
   text,
   attachments,
   liked,
+  tipped,
+  commented,
   loading,
   repliesCounter,
 }: Props) => {
@@ -94,7 +105,7 @@ const CommentItem = ({
     <TouchableOpacity
       onPress={handlePress}
       onLongPress={handleLongPress}
-      activeOpacity={0.8}
+      activeOpacity={handlePress ? 0.8 : 1}
       style={[styles.container, styles.flexRow]}>
       <Image
         source={
@@ -146,10 +157,17 @@ const CommentItem = ({
                 onPress={handlePressComment}
                 style={styles.interactionButton}>
                 <Image
-                  source={commentComment}
-                  style={[styles.buttonImage, styles.interactionImage]}
+                  source={commented ? commentIconCommented : commentIcon}
+                  style={[
+                    styles.buttonImage,
+                    styles.interactionImage,
+                    commented ? styles.orangeIconAndText : {},
+                  ]}
                 />
-                <Typography.Subtitle3 style={styles.textStyle}>
+                <Typography.Subtitle3
+                  style={
+                    commented ? styles.orangeIconAndText : styles.textStyle
+                  }>
                   {formatNumShorthand(repliesCounter)}
                 </Typography.Subtitle3>
               </TouchableOpacity>
@@ -161,12 +179,12 @@ const CommentItem = ({
                 source={liked ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
-                  liked ? styles.likedButton : {},
+                  liked ? styles.orangeIconAndText : {},
                   styles.interactionImage,
                 ]}
               />
               <Typography.Subtitle3
-                style={liked ? styles.likedStyle : styles.textStyle}>
+                style={liked ? styles.orangeIconAndText : styles.textStyle}>
                 {reactions ? formatNumShorthand(reactions.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
@@ -175,12 +193,16 @@ const CommentItem = ({
               onPress={handlePressTip}
               style={styles.interactionButton}>
               <Image
-                source={commentTip}
-                style={[styles.buttonImage, styles.interactionImage]}
+                source={tipped ? tipIconTipped : tipIcon}
+                style={[
+                  styles.buttonImage,
+                  styles.interactionImage,
+                  tipped && styles.orangeIconAndText,
+                ]}
               />
-              <Typography.Subtitle3 style={styles.textStyle}>
-                {/* not implemented yet */}
-                {formatNumShorthand(0)}
+              <Typography.Subtitle3
+                style={tipped ? styles.orangeIconAndText : styles.textStyle}>
+                {tips ? formatNumShorthand(tips.length) : 0}
               </Typography.Subtitle3>
             </TouchableOpacity>
           </View>

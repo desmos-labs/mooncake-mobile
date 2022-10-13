@@ -1,5 +1,12 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {commentIcon, commentLikeEmptyIcon, tipIcon} from 'assets/images';
+import {
+  commentIcon,
+  commentLikeEmptyIcon,
+  tipIcon,
+  commentLiked,
+  tipIconTipped,
+  commentIconCommented,
+} from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -35,7 +42,7 @@ const Home = () => {
     handlePressFollow,
     handlePressAuthor,
     handlePressTip,
-    handlePressReactions,
+    handleAddReaction,
     handlePressComments,
     onPostChanged,
     posts,
@@ -90,20 +97,39 @@ const Home = () => {
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}
-            interactionCount={10500}
-            icon={commentIcon}
+            interactionCount={
+              posts[selectedPostIndex]?.repliesCount.aggregate.count
+            }
+            icon={
+              posts[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
+                ? commentIconCommented
+                : commentIcon
+            }
           />
 
           <InteractionButton
-            onPress={handlePressReactions}
-            interactionCount={100}
-            icon={commentLikeEmptyIcon}
+            onPress={() => handleAddReaction(posts[selectedPostIndex]?.id)}
+            interactionCount={posts[selectedPostIndex]?.reactions?.length}
+            icon={
+              posts[selectedPostIndex]?.reactionPresence?.aggregate?.count > 0
+                ? commentLiked
+                : commentLikeEmptyIcon
+            }
           />
 
           <InteractionButton
-            onPress={handlePressTip}
-            interactionCount={100000000}
-            icon={tipIcon}
+            onPress={() =>
+              handlePressTip(
+                posts[selectedPostIndex]?.author.address,
+                posts[selectedPostIndex]?.id,
+              )
+            }
+            interactionCount={posts[selectedPostIndex]?.tips?.length}
+            icon={
+              posts[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
+                ? tipIconTipped
+                : tipIcon
+            }
           />
         </View>
       )}

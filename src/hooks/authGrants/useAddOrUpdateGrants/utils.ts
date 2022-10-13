@@ -1,7 +1,3 @@
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import Long from 'long';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import {
   MsgGrantAllowanceEncodeObject,
   MsgGrantEncodeObject,
@@ -9,17 +5,26 @@ import {
   MsgRevokeEncodeObject,
   timestampFromDate,
 } from '@desmoslabs/desmjs';
-import {Grant} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {genericAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
+import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
+import EnvConfig from 'config/EnvConfig';
+import {
+  GenericAuthorization,
+  Grant,
+} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {
   AllowedMsgAllowance,
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import EnvConfig from 'config/EnvConfig';
-import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {
   MsgGrantAllowance,
   MsgRevokeAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import Long from 'long';
 
 /**
  * Build a MsgRevokeAllowanceEncode object.
@@ -106,18 +111,21 @@ export const buildGrantMsgEncodes = ({
   granter: string;
 }): MsgGrantEncodeObject[] => {
   return grants.map(grant => {
-    const subspaceAuthorization: GenericSubspaceAuthorization = {
-      subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
-      msg: grant,
-    };
-
+    const content =
+      grant === GrantEnums.MsgExecuteContract
+        ? genericAuthorizationToAny(
+            GenericAuthorization.fromPartial({
+              msg: grant,
+            }),
+          )
+        : genericSubspaceAuthorizationToAny(
+            GenericSubspaceAuthorization.fromPartial({
+              subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
+              msg: grant,
+            }),
+          );
     const _grant: Grant = {
-      authorization: Any.fromPartial({
-        typeUrl: '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
-        value: GenericSubspaceAuthorization.encode(
-          subspaceAuthorization,
-        ).finish(),
-      }),
+      authorization: content,
       expiration: timestampFromDate(
         new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years expiration
       ),

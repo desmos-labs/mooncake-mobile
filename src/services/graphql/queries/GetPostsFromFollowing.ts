@@ -8,6 +8,8 @@ const GetPostsFromFollowing = gql`
     $limit: Int
     $subspaceID: bigint
     $following: [String!]
+    $user: String
+    $reaction: jsonb!
   ) @api(name: desmos) {
     post(
       offset: $offset
@@ -20,6 +22,25 @@ const GetPostsFromFollowing = gql`
       }
     ) {
       ...PostFields
+      reactionPresence: reactions_aggregate(
+        where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
+      ) {
+        aggregate {
+          count
+        }
+      }
+      tipPresence: tips_aggregate(where: {sender_address: {_eq: $user}}) {
+        aggregate {
+          count
+        }
+      }
+      commentPresence: comments_aggregate(
+        where: {author_address: {_eq: $user}}
+      ) {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;

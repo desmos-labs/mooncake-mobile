@@ -1,11 +1,11 @@
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
-import {Dimensions} from 'react-native';
-import {Gesture} from 'react-native-gesture-handler';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import _ from 'lodash';
+import {Dimensions} from 'react-native';
+import {Gesture} from 'react-native-gesture-handler';
+import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
 
 type NavProps = StackScreenProps<
   RootNavigatorParamList,
