@@ -23,7 +23,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    padding: theme.spacing.l,
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -40,6 +39,9 @@ const useStyles = makeStyle(theme => ({
     minHeight: 80,
     paddingTop: theme.spacing.s,
     paddingBottom: theme.spacing.s,
+  },
+  contentContainer: {
+    padding: theme.spacing.l,
   },
 }));
 
