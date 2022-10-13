@@ -1,13 +1,9 @@
-import {makeStyleWithProps} from 'config/theme';
-
-export type StyleProp = {
-  numTypes: number;
-};
+import {makeStyle} from 'config/theme';
 
 /**
  * Style hook for the PostActionButtonsBar component
  */
-const useStyles = makeStyleWithProps((props: StyleProp, theme) => ({
+const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.backgroundGrey,

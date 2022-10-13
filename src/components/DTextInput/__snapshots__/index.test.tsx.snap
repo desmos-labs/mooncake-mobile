@@ -52,7 +52,7 @@ exports[`component: DTextInput renders 1`] = `
         Object {
           "margin": 0,
           "padding": 0,
-          "paddingRight": 4,
+          "paddingRight": 8,
         }
       }
     />
@@ -113,7 +113,7 @@ exports[`component: DTextInput renders error style 1`] = `
         Object {
           "margin": 0,
           "padding": 0,
-          "paddingRight": 4,
+          "paddingRight": 8,
         }
       }
     />
@@ -174,7 +174,7 @@ exports[`component: DTextInput renders numberOfLines style 1`] = `
         Object {
           "margin": 0,
           "padding": 0,
-          "paddingRight": 4,
+          "paddingRight": 8,
         }
       }
     />

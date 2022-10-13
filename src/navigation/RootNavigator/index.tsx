@@ -35,7 +35,6 @@ import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
-import Home from 'screens/Home';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -53,7 +52,7 @@ import DisconnectChainModal, {
 } from 'screens/Modals/DisconnectChainModal';
 import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
 import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
-import SendTips from 'screens/Modals/SendTips';
+import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
@@ -90,6 +89,8 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
+import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import usePollingQueries from 'hooks/usePollingQueries';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -103,7 +104,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
-  [ROUTES.HOME]: undefined;
+  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
   [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
@@ -126,7 +127,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SELECT_CHAIN]: undefined;
-  [ROUTES.SEND_TIPS]: undefined;
+  [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
   [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
@@ -156,6 +157,11 @@ export type RootNavigatorParamList = {
   /* Followers tab route. */
   [ROUTES.FOLLOWERS]: FollowingParams;
 
+  /* Counters Params */
+  // marked for deletion (unused/belongs under ROUTES.POST_INTERACTION
+  // [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
+  // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
+
   // Profile posts
   [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
   [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
@@ -176,8 +182,10 @@ const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useNotifications();
-
   // End initialization
+
+  // Start polling queries
+  usePollingQueries();
 
   const {t} = useTranslation();
 
@@ -190,7 +198,7 @@ const RootNavigator = () => {
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
     if (activeAddr) {
-      return ROUTES.HOME;
+      return ROUTES.HOME_TABS;
     }
     return ROUTES.LANDING;
   }, []);
@@ -254,7 +262,7 @@ const RootNavigator = () => {
         component={MnemonicInput}
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.HOME} component={Home} />
+      <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       <Stack.Screen
         initialParams={{
           postId: 1,

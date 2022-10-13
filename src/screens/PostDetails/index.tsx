@@ -22,6 +22,7 @@ import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -101,6 +102,8 @@ const PostDetails = () => {
     commentsLoading,
     reactions,
     reactionsLoading,
+    tips,
+    tipsLoading,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
@@ -173,8 +176,10 @@ const PostDetails = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          tipped={item?.tipPresence?.aggregate?.count > 0}
           liked={item?.reactionPresence?.aggregate?.count > 0}
-          repliesCounter={item?.repliesCount.aggregate.count}
+          commented={item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount.aggregate.count!}
           handlePressMore={event => {
             setAnchor({
               x: event.nativeEvent.pageX,
@@ -191,9 +196,9 @@ const PostDetails = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(item.id)}
-          handlePressTip={() => {
-            console.log('hello world');
-          }}
+          handlePressTip={() =>
+            handlePressSendTips(item?.author?.address, item.id)
+          }
           handlePress={() =>
             handlePressSelectedComment({
               postId: post.id,
@@ -214,42 +219,54 @@ const PostDetails = () => {
     return <EmptyListComponent label="No comments yet" />;
   }, []);
 
-  const likesImages: [] = useMemo(() => {
-    return reactions.map((reaction: any) => {
+  const countersImages = useMemo(() => {
+    const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
         return {uri: reaction.author.profile_pic};
       } else {
         return defaultProfilePic;
       }
     });
-  }, [reactions]);
+    const tipsImages = tips.map((tip: any) => {
+      if (tip.sender.profile_pic) {
+        return {uri: tip.sender.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
+    });
+    return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
+  }, [reactions, tips]);
 
   const headerComponent = useMemo(
     () => (
       <>
         <PostComponent postData={post} />
         <PostActionButtonsBar
+          postCommented={post?.commentPresence?.aggregate?.count > 0}
+          postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={() => {
             console.log('hello world');
           }}
-          handleTipPress={() => handlePressSendTips()}
+          handleTipPress={() =>
+            handlePressSendTips(post?.author?.address, post.id)
+          }
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={reactionsLoading}
+            loading={reactionsLoading && tipsLoading}
             likesCounter={reactions.length}
-            tipsCounter={0}
+            tipsCounter={tips.length}
             handlePressCounters={handlePressCounters}
-            accountsHighlitedPics={likesImages}
+            accountsHighlitedPics={countersImages}
           />
         </Spacer>
         <Divider style={styles.divider} />
         <Spacer paddingBottom={16} />
       </>
     ),
-    [post, reactions, likesImages],
+    [post, reactions, countersImages],
   );
 
   const CustomTopBar = React.useMemo(() => {

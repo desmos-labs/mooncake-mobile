@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 
-const GetPostsForAddress = gql`
+const GetPostsLikedForAddress = gql`
   query LikedUserPosts($subspaceID: bigint, $address: String)
   @api(name: desmos) {
     reaction(
@@ -45,4 +45,4 @@ const GetPostsForAddress = gql`
   }
 `;
 
-export default GetPostsForAddress;
+export default GetPostsLikedForAddress;

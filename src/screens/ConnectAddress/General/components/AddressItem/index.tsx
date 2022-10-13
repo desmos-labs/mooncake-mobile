@@ -1,11 +1,13 @@
 import {useLazyQuery} from '@apollo/client';
-import {convertCoin, MorpheusApollo2} from '@desmoslabs/desmjs';
+import {convertCoin} from '@desmoslabs/desmjs';
+import appSettingsState from '@recoil/settings';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React, {useEffect, useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {useRecoilState} from 'recoil';
 import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useStyles from './useStyles';
 
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const AddressItem = ({index, address, handlePress}: Props) => {
+  const [settings] = useRecoilState(appSettingsState);
   const [getBalance, {data, loading}] = useLazyQuery(getAccountBalance, {
     variables: {address},
   });
@@ -31,7 +34,6 @@ const AddressItem = ({index, address, handlePress}: Props) => {
     }
   }, [address]);
 
-  // TODO: REFACTOR USE SELECTED CHAIN
   const balanceData = useMemo(() => {
     if (!data?.action_account_balance) {
       return null;
@@ -39,7 +41,7 @@ const AddressItem = ({index, address, handlePress}: Props) => {
       return convertCoin(
         data?.action_account_balance?.coins[0],
         6,
-        MorpheusApollo2.denomUnits,
+        settings.currentChain.denomUnits,
       );
     }
   }, [data]);

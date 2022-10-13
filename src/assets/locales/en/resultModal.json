@@ -1,7 +1,7 @@
 {
   "success": "Success",
   "failed": "Failed",
-  "passwordWasChanged": "Your password was changed",
+  "passwordWasChanged": "Your password has been changed",
   "goToProfile": "Go to Profile",
   "congrats": "Congratulations!",
   "profileCreated": "Your Desmos profile was created",

@@ -1,40 +1,61 @@
-import {useNavigation} from '@react-navigation/native';
-import {useGetFollowing} from '@recoil/following';
-import {useGetPosts} from '@recoil/posts';
-import _ from 'lodash';
+import {useLazyQuery} from '@apollo/client';
+import EnvConfig from 'config/EnvConfig';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
-import {NavProps} from 'screens/Home/index';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
-import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
+import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
+import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
+import {StackScreenProps} from '@react-navigation/stack';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+
+type DiscoverNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
+  StackScreenProps<RootNavigatorParamList>
+>;
+
+type FollowingNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
+  const {params} = useRoute<
+    DiscoverNavProps['route'] | FollowingNavProps['route']
+  >();
+
+  const {navigate, replace} = useNavigation<
+    DiscoverNavProps['navigation'] | FollowingNavProps['navigation']
+  >();
+  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
+  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
+  const maxOffset = React.useRef<number>(0);
+
   const {
     posts,
     fetchMorePosts,
     fetchNewestPosts,
     loading: postsLoading,
-  } = useGetPosts();
-  const {following} = useGetFollowing();
-  const [selectedFilterIndex, setSelectedFilterIndex] = React.useState(0);
-  const {navigate, replace} = useNavigation<NavProps['navigation']>();
-  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
-  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
-  const maxOffset = React.useRef<number>(0);
+  } = useGetPosts({type: params.type});
 
   // debug use
   const pendingTx = useRecoilValue(pendingTxState);
@@ -45,6 +66,7 @@ const useHooks = () => {
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
+  const {manageReaction} = useManageReactions();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   const toast = useToast();
@@ -52,25 +74,38 @@ const useHooks = () => {
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
 
-  const [loading, setLoading] = React.useState(false);
+  const [getReactionForPostAndAuthor] = useLazyQuery(
+    GetReactionForPostAndAuthor,
+    {
+      fetchPolicy: 'no-cache',
+    },
+  );
 
-  const postData = React.useMemo(() => {
-    if (selectedFilterIndex === 0) return posts;
-
-    // Get the list of following accounts
-    const followedAddresses = following.map(x => x.address);
-
-    return _.filter(
-      posts,
-      x => followedAddresses.indexOf(x.author_address) !== -1,
-    );
-  }, [posts, following, selectedFilterIndex]);
+  const getReaction = useCallback(
+    async ({
+      id,
+      subspace_id,
+    }: {
+      id: number;
+      subspace_id: number;
+      address: string;
+    }) => {
+      return getReactionForPostAndAuthor({
+        variables: {
+          postID: id,
+          subspaceID: subspace_id,
+          address: activeAddress!,
+        },
+      });
+    },
+    [activeAddress, getReactionForPostAndAuthor],
+  );
 
   // calculate carousel offset
   React.useEffect(() => {
     maxOffset.current =
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
-  }, [posts.length]);
+  }, [posts?.length]);
 
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
@@ -88,7 +123,7 @@ const useHooks = () => {
         fetchMorePosts();
       }
     },
-    [posts.length],
+    [posts?.length],
   );
 
   const handlePressAuthor = useCallback(
@@ -126,48 +161,52 @@ const useHooks = () => {
     [],
   );
 
-  const handlePressReactions = React.useCallback(() => {
-    console.log('like');
-  }, []);
+  const handleAddReaction = React.useCallback(
+    async (postId: number) => {
+      const grantsToRequest: GrantEnums[] = [
+        GrantEnums.MsgAddReaction,
+        GrantEnums.MsgRemoveReaction,
+      ];
+      // check if user has grants first
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
+        address: activeAddress!,
+      });
+
+      if (success) {
+        const {data} = await getReaction({
+          id: postId,
+          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          address: activeAddress!,
+        });
+        await manageReaction({
+          postId,
+          user: activeAddress!,
+          reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
+        });
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    },
+    [activeAddress, checkAndUpdateGrants, getReaction, manageReaction, toast],
+  );
 
   const handlePressComments = React.useCallback(() => {
     navigate(ROUTES.POST_DETAILS, {
       focusCommentBox: true,
-      postId: postData[selectedPostIndex].id,
-      subspaceID: postData[selectedPostIndex].subspace_id,
+      postId: posts[selectedPostIndex].id,
+      subspaceID: posts[selectedPostIndex].subspace_id,
     });
-  }, [selectedPostIndex, postData]);
+  }, [selectedPostIndex, posts]);
 
-  const handlePressTip = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
-  }, []);
-
-  const handlePressProfile = React.useCallback(() => {
-    navigate(ROUTES.USER_PROFILE);
-  }, []);
-
-  const handlePressCreatePost = React.useCallback(async () => {
-    if (!activeAddress) return;
-
-    resetSharedPostState();
-    setLoading(true);
-
-    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
-
-    const {success} = await checkAndUpdateGrants({
-      grantsToRequest,
-      address: activeAddress,
-    });
-    setLoading(false);
-
-    if (success) {
-      navigate(ROUTES.CREATE_TEXT_POST);
-    } else {
-      toast.show('[PLACEHOLDER]Authorization is required.', {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
-    }
-  }, [activeAddress]);
+  const handlePressTip = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   // Throttle this function to max one call every 3 seconds
   const onOverscrollRight = React.useCallback(() => {
@@ -196,21 +235,15 @@ const useHooks = () => {
   );
 
   return {
-    activeAddress,
     handlePressDetails,
     handlePressFollow,
     handlePressAuthor,
-    handlePressComments,
-    handlePressProfile,
     handlePressTip,
-    handlePressReactions,
-    selectedFilterIndex,
-    setSelectedFilterIndex,
-    handlePressCreatePost,
+    handleAddReaction,
+    handlePressComments,
     onPostChanged,
-    postData,
+    posts,
     selectedPostIndex,
-    loading,
     onCarouselProgressChange,
   };
 };

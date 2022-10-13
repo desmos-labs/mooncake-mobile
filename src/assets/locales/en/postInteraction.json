@@ -11,5 +11,6 @@
   "replyTo": "Reply {{replyTo}}",
   "text": "Text",
   "totalReactions": "Total {{numReactions}} reactions",
+  "totalTips": "Total {{numTips}} tips",
   "writeSomething": "Write something..."
 }

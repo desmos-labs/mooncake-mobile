@@ -64,7 +64,12 @@ const Login = () => {
           if (routes.length > 1) {
             pop();
           } else {
-            navigate(ROUTES.HOME);
+            navigate(ROUTES.HOME_TABS, {
+              screen: ROUTES.HOME_DISCOVER,
+              params: {
+                type: 'discover',
+              },
+            });
           }
         }
 
@@ -72,9 +77,7 @@ const Login = () => {
         onSuccessFn && onSuccessFn();
       }
     } catch (err: any) {
-      if (err.toString().includes('Incorrect')) {
-        setError(t('error:incorrectPassword'));
-      }
+      setError(t('error:incorrectPassword'));
     } finally {
       setLoading(false);
     }

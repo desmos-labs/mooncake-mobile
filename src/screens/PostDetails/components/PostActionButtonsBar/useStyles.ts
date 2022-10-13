@@ -35,6 +35,10 @@ const useStyles = makeStyle(theme => ({
     borderColor: 'rgba(239, 239, 239, 1)',
     borderWidth: 0.5,
   },
+  orangeIconAndText: {
+    tintColor: theme.colors.butterOrange01,
+    color: theme.colors.butterOrange01,
+  },
 }));
 
 export default useStyles;

@@ -14,7 +14,8 @@ import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
-import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
+import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -39,7 +40,7 @@ const useHooks = ({
     data: originalComment,
     loading: mainCommentLoading,
     refetch: mainCommentRefetch,
-  } = useQuery(GetPostDetailsAndReactionPresence, {
+  } = useQuery(GetPostDetailsAndUserActionsPresence, {
     variables: {
       postID: commentID,
       subspaceID,
@@ -79,7 +80,19 @@ const useHooks = ({
     },
   });
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const {
+    data: postTips,
+    loading: tipsLoading,
+    refetch: tipsRefetch,
+  } = useQuery(GetPostTips, {
+    variables: {
+      postID: commentID,
+      subspaceID,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -103,7 +116,7 @@ const useHooks = ({
         },
       });
     },
-    [profile?.address],
+    [getReactionForPostAndAuthor, profile?.address],
   );
 
   const mainComment = React.useMemo(() => {
@@ -121,6 +134,11 @@ const useHooks = ({
     return commentReactions.reaction;
   }, [commentReactions]);
 
+  const tips = useMemo(() => {
+    if (!postTips) return [];
+    return postTips.tip_post;
+  }, [postTips]);
+
   const pageRefetch = async () => {
     await mainCommentRefetch({
       postID: commentID,
@@ -131,6 +149,10 @@ const useHooks = ({
       subspaceID,
     });
     await reactionsRefetch({
+      postID: commentID,
+      subspaceID,
+    });
+    await tipsRefetch({
       postID: commentID,
       subspaceID,
     });
@@ -160,7 +182,7 @@ const useHooks = ({
 
   const handleCommentReply = React.useCallback(async () => {
     await createPost({conversationId: commentID, referencedPostId: commentID});
-  }, [commentID]);
+  }, [commentID, createPost]);
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
@@ -191,16 +213,25 @@ const useHooks = ({
         });
       }
     },
-    [profile?.address, reactionAdded],
+    [
+      checkAndUpdateGrants,
+      getReaction,
+      manageReaction,
+      profile?.address,
+      toast,
+    ],
   );
 
   React.useEffect(() => {
     resetSharedPostState();
   }, []);
 
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
-  }, []);
+  const handlePressSendTips = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   const handleExpandComment = React.useCallback(
     ({author, postId}: {author: PostAuthor; postId: number}) => {
@@ -222,6 +253,9 @@ const useHooks = ({
     reactions,
     reactionsLoading,
     reactionsRefetch,
+    tips,
+    tipsLoading,
+    tipsRefetch,
     handlePressCounters,
     handlePressSendTips,
     handleExpandComment,
