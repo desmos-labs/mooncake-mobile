@@ -64,7 +64,12 @@ const Login = () => {
           if (routes.length > 1) {
             pop();
           } else {
-            navigate(ROUTES.HOME);
+            navigate(ROUTES.HOME_TABS, {
+              screen: ROUTES.HOME_DISCOVER,
+              params: {
+                type: 'discover',
+              },
+            });
           }
         }
 
