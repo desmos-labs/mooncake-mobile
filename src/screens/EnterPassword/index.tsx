@@ -208,7 +208,12 @@ const EnterPassword = () => {
               style={styles.buttonGroup}>
               <Button
                 loading={loading}
-                color={theme.colors.surfaceBlack}
+                color={
+                  !values.password ||
+                  _.flatten(Object.values(errors)).length > 0
+                    ? theme.colors.lightGrey02
+                    : theme.colors.surfaceBlack
+                }
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
