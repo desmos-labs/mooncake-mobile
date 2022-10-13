@@ -156,8 +156,9 @@ export type RootNavigatorParamList = {
   [ROUTES.FOLLOWERS]: FollowingParams;
 
   /* Counters Params */
-  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
-  [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
+  // marked for deletion (unused/belongs under ROUTES.POST_INTERACTION
+  // [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
+  // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
 
   // Profile posts
   [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
