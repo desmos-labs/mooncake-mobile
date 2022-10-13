@@ -116,7 +116,7 @@ function useHandleFormSubmit(
                   index: 0,
                   routes: [
                     {
-                      name: ROUTES.HOME,
+                      name: ROUTES.HOME_TABS,
                     },
                   ],
                 });

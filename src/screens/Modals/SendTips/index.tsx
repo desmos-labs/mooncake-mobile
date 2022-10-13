@@ -70,7 +70,8 @@ const SendTips = () => {
   );
 
   return (
-    <SafeAreaView edges={['top']} style={{flex: 1}}>
+    // marginTop to offset the tabIcon's top spacing
+    <SafeAreaView edges={['top']} style={{flex: 1, marginTop: theme.spacing.l}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{flex: 1}}>
@@ -85,6 +86,7 @@ const SendTips = () => {
             activeOpacity={1}
             style={styles.innerContainer}
             onPress={() => Keyboard.dismiss()}>
+            <View style={styles.tabIcon} />
             <Formik
               initialValues={initialFormValues}
               onSubmit={handlePressConfirm}
@@ -92,7 +94,6 @@ const SendTips = () => {
               {({handleSubmit, values, errors, setFieldValue}) => {
                 return (
                   <ScrollView contentContainerStyle={styles.contentContainer}>
-                    <View style={styles.tabIcon} />
                     <Typography.H4 style={styles.headerText}>
                       {t('header')}
                     </Typography.H4>

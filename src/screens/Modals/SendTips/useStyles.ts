@@ -13,6 +13,7 @@ const useStyles = makeStyle(theme => ({
     // in the theme colors
     backgroundColor: theme.colors.iconGrey,
     alignSelf: 'center',
+    marginTop: theme.spacing.l,
   },
   headerText: {
     textAlign: 'center',
@@ -42,6 +43,7 @@ const useStyles = makeStyle(theme => ({
   },
   contentContainer: {
     padding: theme.spacing.l,
+    paddingTop: 0,
   },
 }));
 
