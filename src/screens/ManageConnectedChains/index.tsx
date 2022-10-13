@@ -92,6 +92,11 @@ const ManageConnectedChains = () => {
     );
   }, []);
 
+  const ItemSeparatorComponent = React.useCallback(
+    () => <Spacer paddingVertical={theme.spacing.s} />,
+    [],
+  );
+
   // This screen usings a combination of GradientBorder and zIndexWrapper to create
   // a pleasant scrolling experience while on ios. Without it, the dropshadow would
   // appear cut off during overscroll
@@ -99,14 +104,14 @@ const ManageConnectedChains = () => {
     <DView topBar={<TopBar />}>
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
-          <Typography.H3>{t('connectedAddresses')}</Typography.H3>
+          <Typography.H4>{t('connectedAddresses')}</Typography.H4>
 
-          <Typography.Body6 style={styles.descriptionText}>
+          <Typography.Body5 style={styles.descriptionText}>
             {t('description')}
-          </Typography.Body6>
+          </Typography.Body5>
         </View>
 
-        <GradientBorder height={15} />
+        <GradientBorder height={5} />
       </View>
 
       <FlatList
@@ -114,9 +119,9 @@ const ManageConnectedChains = () => {
         renderItem={renderChainLinks}
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
+        ItemSeparatorComponent={ItemSeparatorComponent}
         style={{overflow: 'visible'}}
       />
-
       <Snackbar
         visible={showSnackbar}
         style={styles.snackbar}
