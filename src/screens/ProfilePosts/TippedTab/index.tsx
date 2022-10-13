@@ -66,17 +66,19 @@ export const TippedTab = () => {
     [],
   );
 
-  const renderPosts = ({item}: any) => (
-    <ProfilePostCard
-      postData={item.post}
-      onPress={() =>
-        handlePostPressed({
-          subspaceID: item.post.subspace_id,
-          id: item.post.id,
-        })
-      }
-    />
-  );
+  const renderPosts = ({item}: any) => {
+    return (
+      <ProfilePostCard
+        postData={item.post}
+        onPress={() =>
+          handlePostPressed({
+            subspaceID: item.post.subspace_id,
+            id: item.post.id,
+          })
+        }
+      />
+    );
+  };
 
   return (
     <View style={styles.contentContainer}>
@@ -84,7 +86,7 @@ export const TippedTab = () => {
         refreshing={postsLoading}
         onRefresh={pageRefetch}
         showsVerticalScrollIndicator={false}
-        data={_.uniq(posts)}
+        data={_.uniqBy(posts, 'post.id')}
         renderItem={renderPosts}
         numColumns={3}
         contentContainerStyle={styles.contentContainerStyle}
