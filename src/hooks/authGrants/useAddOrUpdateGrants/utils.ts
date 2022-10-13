@@ -112,7 +112,8 @@ export const buildGrantMsgEncodes = ({
 }): MsgGrantEncodeObject[] => {
   return grants.map(grant => {
     const content =
-      grant === GrantEnums.MsgExecuteContract || GrantEnums.MsgSaveProfile
+      grant === GrantEnums.MsgExecuteContract ||
+      grant === GrantEnums.MsgSaveProfile
         ? genericAuthorizationToAny(
             GenericAuthorization.fromPartial({
               msg: grant,
