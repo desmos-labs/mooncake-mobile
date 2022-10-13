@@ -72,9 +72,7 @@ const Login = () => {
         onSuccessFn && onSuccessFn();
       }
     } catch (err: any) {
-      if (err.toString().includes('Incorrect')) {
-        setError(t('error:incorrectPassword'));
-      }
+      setError(t('error:incorrectPassword'));
     } finally {
       setLoading(false);
     }
