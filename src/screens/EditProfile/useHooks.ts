@@ -14,6 +14,7 @@ import {Asset} from 'react-native-image-picker';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import useEditProfile from 'services/axios/requests/CentralizedBroadcastTx/EditProfile/useEditProfile';
+import UploadMedia from 'services/axios/requests/UploadMedia';
 import ProfileData from 'types/graphqlTypes';
 import useValidationSchema from './useValidationSchema';
 
@@ -89,6 +90,12 @@ const useHooks = () => {
             stayOnCurrentScreen: true,
           });
           if (success) {
+            const profilePicUploaded =
+              profilePic && (await UploadMedia({mediaFile: profilePic}));
+            const coverPicUploaded =
+              coverPic && (await UploadMedia({mediaFile: coverPic}));
+            console.log(profilePicUploaded?.url);
+            console.log(coverPicUploaded?.url);
             const newValues: Partial<ProfileData> = {
               dtag:
                 values.dTag === profileData?.dtag
@@ -102,10 +109,15 @@ const useHooks = () => {
                 values.bio === profileData?.bio
                   ? '[do-not-modify]'
                   : values.bio,
-              profile_pic: profilePic?.uri ? profilePic.uri : '[do-not-modify]',
-              cover_pic: coverPic?.uri ? coverPic.uri : '[do-not-modify]',
+              profile_pic: profilePicUploaded?.url
+                ? profilePicUploaded.url
+                : '[do-not-modify]',
+              cover_pic: coverPicUploaded?.url
+                ? coverPicUploaded.url
+                : '[do-not-modify]',
             };
             await manageProfile({profileData: newValues});
+            goBack();
           } else {
             toast.show('[PLACEHOLDER]Authorization is required.', {
               type: ToastConfig.ERROR_NO_RETRY,
@@ -118,7 +130,7 @@ const useHooks = () => {
         setLoading(false);
       }
     },
-    [chainAccount],
+    [chainAccount, profilePic, coverPic],
   );
 
   return {
