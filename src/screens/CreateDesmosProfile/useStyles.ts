@@ -61,7 +61,10 @@ const useStyles = makeStyleWithProps(
     },
     header: {paddingTop: 68, paddingHorizontal: theme.spacing.m},
     scrollContainer: {flex: 1},
-    bioInput: {alignSelf: 'flex-start'},
+    bioInput: {
+      alignSelf: 'flex-start',
+      height: '100%',
+    },
     bioDTextInput: {
       minHeight: 120,
       borderWidth: 1,
