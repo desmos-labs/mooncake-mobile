@@ -212,11 +212,7 @@ const MaterialButton: React.FC<Props> = props => {
       onPress={onPress}
       mode={mode}
       labelStyle={[styles.labelStyle, labelStyle]}
-      style={[
-        styles.btnStyle,
-        style,
-        disabled && {backgroundColor: theme.colors.lightGrey02},
-      ]}
+      style={[styles.btnStyle, style]}
       contentStyle={[styles.contentStyle, contentStyle]}
       loading={loading}
       disabled={disabled}>
