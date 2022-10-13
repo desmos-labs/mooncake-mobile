@@ -94,8 +94,6 @@ const useHooks = () => {
               profilePic && (await UploadMedia({mediaFile: profilePic}));
             const coverPicUploaded =
               coverPic && (await UploadMedia({mediaFile: coverPic}));
-            console.log(profilePicUploaded?.url);
-            console.log(coverPicUploaded?.url);
             const newValues: Partial<ProfileData> = {
               dtag:
                 values.dTag === profileData?.dtag
