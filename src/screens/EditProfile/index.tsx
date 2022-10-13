@@ -1,5 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import {
   backButton,
   cameraButton,
@@ -13,9 +11,7 @@ import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, {FC, useRef} from 'react';
+import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -29,11 +25,8 @@ import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.EDIT_PROFILE>;
-
-const EditProfile: FC<NavProps> = () => {
+const EditProfile = () => {
   const theme = useTheme();
-  const {goBack} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('createProfile');
   const {
     profileParams,
@@ -45,13 +38,13 @@ const EditProfile: FC<NavProps> = () => {
     selectProfilePicture,
     selectCoverPicture,
     loading,
+    goBack,
   } = useHooks();
   const nicknameInputRef = useRef<TextInput>(null);
   const dTagInputRef = useRef<TextInput>(null);
   const bioInputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
-
   return (
     <DView
       showLoadingOverlay={loading}

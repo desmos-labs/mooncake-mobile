@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {profileParamsState} from '@recoil/profileParams';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
@@ -5,6 +7,8 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import {useCallback, useMemo, useState} from 'react';
 import {Asset} from 'react-native-image-picker';
 import {useToast} from 'react-native-toast-notifications';
@@ -12,6 +16,8 @@ import {useRecoilValue} from 'recoil';
 import useEditProfile from 'services/axios/requests/CentralizedBroadcastTx/EditProfile/useEditProfile';
 import ProfileData from 'types/graphqlTypes';
 import useValidationSchema from './useValidationSchema';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.EDIT_PROFILE>;
 
 const useHooks = () => {
   const profileParams = useRecoilValue(profileParamsState);
@@ -24,6 +30,7 @@ const useHooks = () => {
   const {manageProfile} = useEditProfile();
   const toast = useToast();
   const validationSchema = useValidationSchema(profileParams);
+  const {goBack} = useNavigation<NavProps['navigation']>();
 
   const initialFormState = useMemo(() => {
     return {
@@ -79,6 +86,7 @@ const useHooks = () => {
           const {success} = await checkAndUpdateGrants({
             grantsToRequest,
             address: chainAccount.address,
+            stayOnCurrentScreen: true,
           });
           if (success) {
             const newValues: Partial<ProfileData> = {
@@ -123,6 +131,7 @@ const useHooks = () => {
     coverPictureUri,
     selectProfilePicture,
     selectCoverPicture,
+    goBack,
   };
 };
 

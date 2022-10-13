@@ -72,7 +72,6 @@ const SendTips = () => {
   return (
     <SafeAreaView edges={['top']} style={{flex: 1}}>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? -40 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{flex: 1}}>
         <TouchableOpacity
