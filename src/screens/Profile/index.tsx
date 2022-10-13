@@ -31,6 +31,7 @@ import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Image,
+  ImageBackground,
   RefreshControl,
   TouchableOpacity,
   View,
@@ -217,7 +218,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={bannerImage} style={styles.bannerImage} />
+      <ImageBackground source={bannerImage} style={styles.bannerImage} />
 
       <Animated.ScrollView
         //        onScroll={scrollHandler}

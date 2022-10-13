@@ -1,7 +1,8 @@
 import React from 'react';
-import {Image, ImageSourcePropType, View} from 'react-native';
+import {ImageSourcePropType, View} from 'react-native';
 import {editProfilePic} from 'assets/images';
 import ImageButton from 'components/ImageButton';
+import Image from 'react-native-image-progress';
 
 type Props = {
   avatar: ImageSourcePropType;
@@ -13,7 +14,7 @@ const CreateAvatar = ({avatar, handlePressEdit}: Props) => {
   return (
     <View style={{alignSelf: 'center', zIndex: 2, bottom: -45}}>
       <Image
-        style={{
+        imageStyle={{
           resizeMode: 'cover',
           height: 100,
           width: 100,

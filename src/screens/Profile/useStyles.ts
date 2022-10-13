@@ -51,7 +51,7 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: '100%',
     resizeMode: 'cover',
-    height: Dimensions.get('window').height * 0.7,
+    height: Dimensions.get('window').height * 0.6,
   },
   snackbar: {
     zIndex: 2,
