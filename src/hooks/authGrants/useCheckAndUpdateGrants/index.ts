@@ -2,7 +2,7 @@ import React from 'react';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {useNavigation} from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import {checkGrants} from './utils';
+import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 
 /**
  * A Hook that checks and updates missing/expired grants. It will redirect
@@ -10,6 +10,7 @@ import {checkGrants} from './utils';
  */
 const useCheckAndUpdateGrants = () => {
   const {navigate, pop} = useNavigation<any>();
+  const {checkGrants} = useCheckGrants();
 
   /**
    * Check and update a user's on-chain grants
@@ -28,9 +29,12 @@ const useCheckAndUpdateGrants = () => {
       address: string;
       stayOnCurrentScreen?: boolean;
     }): Promise<{success: boolean}> => {
+      // placeholder
+      console.log(address);
+
       const missingOrExpiredGrants = await checkGrants(
         grantsToRequest,
-        address,
+        // address,
       );
 
       return new Promise(resolve => {

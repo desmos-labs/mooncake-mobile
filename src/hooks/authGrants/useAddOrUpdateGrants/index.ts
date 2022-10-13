@@ -7,7 +7,6 @@ import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {computeGasAndFees} from 'lib/desmos/fees';
 import EnvConfig from 'config/EnvConfig';
 import {OfflineSigner} from '@cosmjs/proto-signing';
-import useGetActiveGrants from 'services/axios/requests/GetActiveGrants/useGetActiveGrants';
 import _ from 'lodash';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
 import {
@@ -17,6 +16,7 @@ import {
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 import {Alert} from 'react-native';
+import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 /**
  * MVP msg authorizations
@@ -37,7 +37,7 @@ const useAddOrUpdateGrants = () => {
   const {chainAccount, loading} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
   const broadcastMessages = useBroadcastMessages();
-  const {getActiveGrants} = useGetActiveGrants();
+  const {getAuthzGrants} = useGetAuthzGrants();
 
   /**
    * Remove all user's grants and authorizations from chain.
@@ -48,7 +48,7 @@ const useAddOrUpdateGrants = () => {
     const grantee = butterConfig.desmos_address;
     const granter = chainAccount.address;
 
-    const grantsData = await getActiveGrants();
+    const grantsData = await getAuthzGrants();
 
     const {grants} = grantsData;
 
@@ -112,7 +112,7 @@ const useAddOrUpdateGrants = () => {
   const addOrUpdateGrants = React.useCallback(
     async ({grantsToRequest}: {grantsToRequest: GrantEnums[]}) => {
       if (!chainAccount) throw new Error('No active chain account found.');
-      const grantsData = await getActiveGrants();
+      const grantsData = await getAuthzGrants();
 
       const {has_fee_grant} = grantsData;
 
