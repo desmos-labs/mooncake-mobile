@@ -1,22 +1,15 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   commentIcon,
-  defaultProfilePic,
   commentLikeEmptyIcon,
-  plusWhiteIcon,
   tipIcon,
   commentLiked,
   tipIconTipped,
   commentIconCommented,
 } from 'assets/images';
-import DView from 'components/DView';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import useActiveAccount from 'hooks/useActiveAccount';
-import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
 import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
@@ -25,23 +18,24 @@ import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import PostTypeTab from './components/PostTypeTab';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
 // does not affect operation
 LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
-export enum POST_TYPE {
-  DISCOVER = 'DISCOVER_POSTS',
-  FOLLOWING = 'FOLLOWING_POSTS',
-}
+export type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.HOME_TABS
+>;
 
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME>;
+export type HomeParams = {
+  type: 'discover' | 'following';
+};
 
 const Home = () => {
   const styles = useStyles();
-  const {t} = useTranslation('home');
 
   const {
     handlePressDetails,
@@ -49,24 +43,16 @@ const Home = () => {
     handlePressAuthor,
     handlePressTip,
     handleAddReaction,
-    handlePressProfile,
     handlePressComments,
-    selectedFilterIndex,
-    // setSelectedFilterIndex,
     onPostChanged,
-    postData,
+    posts,
     selectedPostIndex,
-    handlePressCreatePost,
-    loading,
     onCarouselProgressChange,
   } = useHooks();
 
-  const {profileData} = useActiveAccount();
-  const postTypes = [t(POST_TYPE.DISCOVER), t(POST_TYPE.FOLLOWING)];
-
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
-      if (info.index === postData.length) {
+      if (info.index === posts.length) {
         return <NoMorePosts />;
       }
       return (
@@ -80,40 +66,13 @@ const Home = () => {
         />
       );
     },
-    [postData, handlePressFollow, handlePressAuthor, handlePressDetails],
+    [posts, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
-  const profilePic = _.get(profileData, 'profile_pic');
+  const theme = useTheme();
 
   return (
-    <DView style={styles.container} showLoadingOverlay={loading}>
-      <View style={styles.headerGroup}>
-        <ProfileHeaderButton
-          style={styles.profileButton}
-          imageSrc={profilePic ? {uri: profilePic} : defaultProfilePic}
-          onPress={handlePressProfile}
-        />
-
-        <View style={styles.tabContainer}>
-          <PostTypeTab
-            selectedIndex={selectedFilterIndex}
-            setSelectedIndex={() => {
-              // temporarily disable switching to following as there is an
-              // issue where attachments are cached and applied to incorrect posts
-              console.log('disabled for now');
-            }}
-            postTypes={postTypes}
-          />
-        </View>
-
-        <ProfileHeaderButton
-          containerStyle={styles.createPostButton}
-          style={styles.icon}
-          imageSrc={plusWhiteIcon}
-          onPress={handlePressCreatePost}
-        />
-      </View>
-
+    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
       <Carousel
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
@@ -126,7 +85,7 @@ const Home = () => {
         width={Dimensions.get('window').width}
         height={verticalScale(500)}
         style={styles.carousel}
-        data={[...postData, 0 as any]}
+        data={[...posts, 0 as any]}
         renderItem={renderPost}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -134,26 +93,25 @@ const Home = () => {
         }}
       />
 
-      {selectedPostIndex !== postData.length && (
+      {selectedPostIndex !== posts.length && (
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}
             interactionCount={
-              postData[selectedPostIndex]?.repliesCount.aggregate.count
+              posts[selectedPostIndex]?.repliesCount.aggregate.count
             }
             icon={
-              postData[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
+              posts[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
                 ? commentIconCommented
                 : commentIcon
             }
           />
 
           <InteractionButton
-            onPress={() => handleAddReaction(postData[selectedPostIndex]?.id)}
-            interactionCount={postData[selectedPostIndex]?.reactions?.length}
+            onPress={() => handleAddReaction(posts[selectedPostIndex]?.id)}
+            interactionCount={posts[selectedPostIndex]?.reactions?.length}
             icon={
-              postData[selectedPostIndex]?.reactionPresence?.aggregate?.count >
-              0
+              posts[selectedPostIndex]?.reactionPresence?.aggregate?.count > 0
                 ? commentLiked
                 : commentLikeEmptyIcon
             }
@@ -162,20 +120,20 @@ const Home = () => {
           <InteractionButton
             onPress={() =>
               handlePressTip(
-                postData[selectedPostIndex]?.author.address,
-                postData[selectedPostIndex]?.id,
+                posts[selectedPostIndex]?.author.address,
+                posts[selectedPostIndex]?.id,
               )
             }
-            interactionCount={postData[selectedPostIndex]?.tips?.length}
+            interactionCount={posts[selectedPostIndex]?.tips?.length}
             icon={
-              postData[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
+              posts[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
                 ? tipIconTipped
                 : tipIcon
             }
           />
         </View>
       )}
-    </DView>
+    </View>
   );
 };
 

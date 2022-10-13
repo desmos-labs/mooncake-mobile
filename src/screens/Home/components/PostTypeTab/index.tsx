@@ -1,50 +1,67 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {Animated, TouchableOpacity, View} from 'react-native';
 import Typography from 'components/Typography';
+import {ParamListBase, TabNavigationState} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
 
 type Props = {
-  /**
-   * The currently selected tab index.
-   * Should be managed by the parent container.
-   */
-  selectedIndex: number;
+  state: TabNavigationState<ParamListBase>;
 
-  /**
-   * Callback to set the selected tab index on the parent container.
-   */
-  setSelectedIndex: (idx: number) => void;
+  position: Animated.AnimatedInterpolation;
 
-  /**
-   * Selectable tab types. Component will automatically scale accordingly to
-   * the amount of postTypes, however it will enforce 1 line text for each
-   * label, so beware of truncated text.
-   */
-  postTypes: string[];
+  navigation: any;
 };
 
-const PostTypeTab = ({selectedIndex, setSelectedIndex, postTypes}: Props) => {
-  const styles = useStyles({numTypes: postTypes.length});
+const PostTypeTab = ({state, position, navigation}: Props) => {
+  const styles = useStyles();
+
+  const {t} = useTranslation('home');
 
   return (
     <View style={styles.container}>
-      {postTypes.map((post, idx) => (
-        <TouchableOpacity
-          key={post}
-          onPress={() => setSelectedIndex(idx)}
-          style={styles.tabButton}>
-          <Typography.Button2
-            numberOfLines={1}
-            style={[
-              styles.buttonText,
-              idx === selectedIndex ? styles.selected : styles.unselected,
-            ]}>
-            {post}
-          </Typography.Button2>
+      {state.routes.map((route, idx) => {
+        const inputRange = state.routes.map((_, i) => i);
+        const opacity = position.interpolate({
+          inputRange,
+          outputRange: inputRange.map(i => (i === idx ? 1 : 0)),
+        });
 
-          {selectedIndex === idx && <View style={styles.selectedIndicator} />}
-        </TouchableOpacity>
-      ))}
+        const isFocused = state.index === idx;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            navigation.navigate({name: route.name, merge: true});
+          }
+        };
+
+        return (
+          <TouchableOpacity
+            key={route.key}
+            onPress={onPress}
+            style={styles.tabButton}>
+            <Typography.Button2
+              numberOfLines={1}
+              style={[
+                styles.buttonText,
+                isFocused ? styles.selected : styles.unselected,
+              ]}>
+              {t(route.name)}
+            </Typography.Button2>
+
+            {isFocused && (
+              <Animated.View style={[styles.selectedIndicator, {opacity}]} />
+            )}
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
