@@ -15,7 +15,8 @@ import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
-import GetPostDetailsAndReactionPresence from 'services/graphql/queries/GetPostDetailsAndReactionPresence';
+import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {
   GetPostReactions,
   GetReactionForPostAndAuthor,
@@ -40,7 +41,7 @@ const useHooks = ({
     data: originalPost,
     loading: postLoading,
     refetch: postRefetch,
-  } = useQuery(GetPostDetailsAndReactionPresence, {
+  } = useQuery(GetPostDetailsAndUserActionsPresence, {
     variables: {
       postID,
       subspaceID,
@@ -82,7 +83,19 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
-  const [getReactionForPostAndAuthor, {data: reactionAdded}] = useLazyQuery(
+  const {
+    data: postTips,
+    loading: tipsLoading,
+    refetch: tipsRefetch,
+  } = useQuery(GetPostTips, {
+    variables: {
+      postID,
+      subspaceID,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  const [getReactionForPostAndAuthor] = useLazyQuery(
     GetReactionForPostAndAuthor,
     {
       fetchPolicy: 'no-cache',
@@ -122,7 +135,13 @@ const useHooks = ({
   const reactions = useMemo(() => {
     if (!postReactions) return [];
     return postReactions.reaction;
-  }, [postReactions, profile?.address]);
+  }, [postReactions]);
+
+  const tips = useMemo(() => {
+    if (!postTips) return [];
+    console.log(postTips);
+    return postTips.tip_post;
+  }, [postTips]);
 
   const pageRefetch = async () => {
     await postRefetch({
@@ -134,6 +153,10 @@ const useHooks = ({
       subspaceID,
     });
     await reactionsRefetch({
+      postID,
+      subspaceID,
+    });
+    await tipsRefetch({
       postID,
       subspaceID,
     });
@@ -203,7 +226,7 @@ const useHooks = ({
         });
       }
     },
-    [profile?.address, reactionAdded],
+    [profile?.address],
   );
 
   const handlePressReport = React.useCallback(
@@ -227,9 +250,12 @@ const useHooks = ({
     });
   }, []);
 
-  const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS);
-  }, []);
+  const handlePressSendTips = React.useCallback(
+    (postAuthor: string, postId: number) => {
+      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+    },
+    [],
+  );
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {
@@ -254,6 +280,9 @@ const useHooks = ({
     reactions,
     reactionsLoading,
     reactionsRefetch,
+    tips,
+    tipsLoading,
+    tipsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,

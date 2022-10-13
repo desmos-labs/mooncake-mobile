@@ -1,8 +1,10 @@
 import {
   commentIcon,
+  commentIconCommented,
   commentLiked,
   commentLikeEmptyIcon,
   tipIcon,
+  tipIconTipped,
 } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -13,14 +15,18 @@ import {Divider} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
+  postCommented: boolean;
   postLiked: boolean;
+  postTipped: boolean;
   handleLikePress: () => void;
   handleCommentPress: () => void;
   handleTipPress: () => void;
 };
 
 const PostActionButtonsBar = ({
+  postCommented,
   postLiked,
+  postTipped,
   handleLikePress,
   handleCommentPress,
   handleTipPress,
@@ -36,21 +42,30 @@ const PostActionButtonsBar = ({
         <TouchableOpacity onPress={handleLikePress} style={styles.button}>
           <Image
             source={postLiked ? commentLiked : commentLikeEmptyIcon}
-            style={styles.icon}
+            style={[styles.icon, postLiked && styles.orangeIconAndText]}
           />
-          <Typography.Subtitle3 style={styles.text}>
+          <Typography.Subtitle3
+            style={[styles.text, postLiked && styles.orangeIconAndText]}>
             {t('like')}
           </Typography.Subtitle3>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCommentPress} style={styles.button}>
-          <Image source={commentIcon} style={styles.icon} />
-          <Typography.Subtitle3 style={styles.text}>
+          <Image
+            source={postCommented ? commentIconCommented : commentIcon}
+            style={[styles.icon, postCommented && styles.orangeIconAndText]}
+          />
+          <Typography.Subtitle3
+            style={[styles.text, postCommented && styles.orangeIconAndText]}>
             {t('comment')}
           </Typography.Subtitle3>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleTipPress} style={styles.button}>
-          <Image source={tipIcon} style={styles.icon} />
-          <Typography.Subtitle3 style={styles.text}>
+          <Image
+            source={postTipped ? tipIconTipped : tipIcon}
+            style={[styles.icon, postTipped && styles.orangeIconAndText]}
+          />
+          <Typography.Subtitle3
+            style={[styles.text, postTipped && styles.orangeIconAndText]}>
             {t('tip')}
           </Typography.Subtitle3>
         </TouchableOpacity>

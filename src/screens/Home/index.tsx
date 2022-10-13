@@ -5,6 +5,9 @@ import {
   commentLikeEmptyIcon,
   plusWhiteIcon,
   tipIcon,
+  commentLiked,
+  tipIconTipped,
+  commentIconCommented,
 } from 'assets/images';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -45,7 +48,7 @@ const Home = () => {
     handlePressFollow,
     handlePressAuthor,
     handlePressTip,
-    handlePressReactions,
+    handleAddReaction,
     handlePressProfile,
     handlePressComments,
     selectedFilterIndex,
@@ -135,20 +138,40 @@ const Home = () => {
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}
-            interactionCount={10500}
-            icon={commentIcon}
+            interactionCount={
+              postData[selectedPostIndex]?.repliesCount.aggregate.count
+            }
+            icon={
+              postData[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
+                ? commentIconCommented
+                : commentIcon
+            }
           />
 
           <InteractionButton
-            onPress={handlePressReactions}
-            interactionCount={100}
-            icon={commentLikeEmptyIcon}
+            onPress={() => handleAddReaction(postData[selectedPostIndex]?.id)}
+            interactionCount={postData[selectedPostIndex]?.reactions?.length}
+            icon={
+              postData[selectedPostIndex]?.reactionPresence?.aggregate?.count >
+              0
+                ? commentLiked
+                : commentLikeEmptyIcon
+            }
           />
 
           <InteractionButton
-            onPress={handlePressTip}
-            interactionCount={100000000}
-            icon={tipIcon}
+            onPress={() =>
+              handlePressTip(
+                postData[selectedPostIndex]?.author.address,
+                postData[selectedPostIndex]?.id,
+              )
+            }
+            interactionCount={postData[selectedPostIndex]?.tips?.length}
+            icon={
+              postData[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
+                ? tipIconTipped
+                : tipIcon
+            }
           />
         </View>
       )}

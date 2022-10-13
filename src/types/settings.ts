@@ -4,6 +4,8 @@
  * - dark: Dark color schema (Future release).
  * - auto: Set the color schema according to the system (Future release).
  */
+import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
+
 export type AppTheme = 'light' | 'dark' | 'auto';
 
 /**
@@ -23,4 +25,5 @@ export type AppSettings = {
   currentTimezone: string;
   registeredReactions: any[];
   registeredReports: any[];
+  currentChain: ChainInfo;
 };

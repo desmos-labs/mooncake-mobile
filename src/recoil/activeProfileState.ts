@@ -26,16 +26,10 @@ const activeProfileState = atom<ProfileData | undefined>({
     ({onSet}) => {
       onSet((newValue, oldValue) => {
         if (isProfileData(oldValue)) {
-          messaging()
-            .unsubscribeFromTopic(oldValue?.address)
-            .then(() =>
-              console.log('Unsubscribed to topic!', oldValue?.address),
-            );
+          messaging().unsubscribeFromTopic(oldValue?.address);
         }
         if (newValue?.address) {
-          messaging()
-            .subscribeToTopic(newValue?.address)
-            .then(() => console.log('Subscribed to topic!', newValue?.address));
+          messaging().subscribeToTopic(newValue?.address);
         }
       });
     },

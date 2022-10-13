@@ -1,6 +1,6 @@
 {
   "header": "Connect Address",
-  "selectAnAccount": "Select an account to create a desmos profile",
+  "selectAnAccount": "Select an account",
   "advanced": "Advanced",
   "general": "General",
   "enterDerivPath": "Enter HD derivation path to choose an account",

@@ -1,13 +1,13 @@
+import {
+  MsgCreateRelationship,
+  MsgDeleteRelationship,
+} from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
 import React from 'react';
 import {
   DesmosClient,
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
-import {
-  MsgCreateRelationship,
-  MsgDeleteRelationship,
-} from '@desmoslabs/desmjs-types/desmos/relationships/v1/msg_server';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import EnvConfig from 'config/EnvConfig';

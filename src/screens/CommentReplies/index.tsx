@@ -8,6 +8,7 @@ import PopupMenu from 'components/PopupMenu';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
@@ -70,6 +71,8 @@ const CommentReplies = () => {
     commentsLoading,
     reactions,
     reactionsLoading,
+    tips,
+    tipsLoading,
     commentReplyLoading,
     pageRefetch,
     handlePressCounters,
@@ -87,7 +90,7 @@ const CommentReplies = () => {
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
-    }, [params]),
+    }, [pageRefetch]),
   );
 
   useEffect(() => {
@@ -108,19 +111,27 @@ const CommentReplies = () => {
     };
   }, []);
 
-  const likesImages: [] = useMemo(() => {
-    return reactions.map((reaction: any) => {
+  const countersImages = useMemo(() => {
+    const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
         return {uri: reaction.author.profile_pic};
       } else {
         return defaultProfilePic;
       }
     });
-  }, [reactions]);
+    const tipsImages = tips.map((tip: any) => {
+      if (tip.sender.profile_pic) {
+        return {uri: tip.sender.profile_pic};
+      } else {
+        return defaultProfilePic;
+      }
+    });
+    return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
+  }, [reactions, tips]);
 
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label={t('no comments yet')} />;
-  }, []);
+  }, [t]);
 
   const MiddleElement = useMemo(
     () => (
@@ -137,6 +148,8 @@ const CommentReplies = () => {
     ({item}: ListRenderItemInfo<any>) => {
       return (
         <CommentItem
+          commented={item?.post?.commentPresence?.aggregate?.count > 0}
+          tipped={item?.post?.tipPresence?.aggregate?.count > 0}
           liked={item?.post?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={item.post.repliesCount.aggregate.count}
           loading={commentsLoading}
@@ -157,24 +170,22 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(item.post.id)}
-          handlePressTip={() => {
-            console.log('hello world');
-          }}
-          handlePress={() => {
-            console.log('hello world');
-          }}
-          handleLongPress={() => console.log('longPress')}
+          handlePressTip={() =>
+            handlePressSendTips(item?.post?.author?.address, item.post.id)
+          }
           {...item.post}
         />
       );
     },
-    [comments],
+    [commentsLoading, handleAddReaction, handlePressSendTips],
   );
 
   const headerComponent = React.useCallback(() => {
     return (
       <>
         <CommentItem
+          commented={mainComment?.commentPresence?.aggregate?.count > 0}
+          tipped={mainComment?.tipPresence?.aggregate?.count > 0}
           liked={mainComment?.reactionPresence?.aggregate?.count > 0}
           repliesCounter={mainComment?.repliesCount?.aggregate?.count}
           loading={mainCommentLoading}
@@ -194,29 +205,36 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(mainComment.id)}
-          handlePressTip={() => handlePressSendTips()}
-          handlePress={() => {
-            console.log('hello world');
-          }}
-          handleLongPress={() => console.log('longPress')}
+          handlePressTip={() =>
+            handlePressSendTips(mainComment?.author?.address, mainComment?.id)
+          }
           {...mainComment}
         />
         <Spacer paddingVertical={16} />
         <Divider style={styles.divider} />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={reactionsLoading}
+            loading={reactionsLoading && tipsLoading}
             likesCounter={reactions.length}
-            tipsCounter={0}
-            handlePressCounters={() => handlePressCounters()}
-            accountsHighlitedPics={likesImages}
+            tipsCounter={tips.length}
+            handlePressCounters={handlePressCounters}
+            accountsHighlitedPics={countersImages}
           />
         </Spacer>
         <Divider style={styles.divider} />
         <Spacer paddingBottom={16} />
       </>
     );
-  }, [mainComment, reactions, likesImages]);
+  }, [
+    mainComment,
+    mainCommentLoading,
+    reactionsLoading,
+    tipsLoading,
+    countersImages,
+    handleAddReaction,
+    handlePressSendTips,
+    handlePressCounters,
+  ]);
 
   const flatListData = useMemo(() => {
     return comments;
