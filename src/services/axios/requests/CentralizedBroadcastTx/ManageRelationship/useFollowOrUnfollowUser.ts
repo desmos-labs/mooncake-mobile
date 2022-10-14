@@ -1,5 +1,7 @@
 import React from 'react';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import useCheckAndUpdateGrants, {
+  CheckAndUpdateGrantsArgs,
+} from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
@@ -13,9 +15,15 @@ import usePendingRelationships, {
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
 
-type FollowOrUnfollowParams = {
+/**
+ * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
+ * @property {boolean} [stayOnCurrentScreen = true] - Whether to stay on on the current screen following a grant authorization. Defaults to true.
+ * @property {string} addrToFollow - The counterparty address to follow.
+ */
+interface FollowOrUnfollowUserArgs
+  extends Partial<Pick<CheckAndUpdateGrantsArgs, 'stayOnCurrentScreen'>> {
   addrToFollow: string;
-};
+}
 
 const useFollowOrUnfollowUser = () => {
   const {activeAddress} = useActiveAccount();
@@ -28,8 +36,15 @@ const useFollowOrUnfollowUser = () => {
   const {addNewPendingRelationship} = usePendingRelationships();
   const pendingRelationships = useRecoilValue(pendingRelationshipsState);
 
+  /**
+   * Callback to follow or unfollow (create/delete relationship) a user.
+   * @param {FollowOrUnfollowUserArgs}
+   */
   const followOrUnfollowUser = React.useCallback(
-    async ({addrToFollow}: FollowOrUnfollowParams) => {
+    async ({
+      addrToFollow,
+      stayOnCurrentScreen = true,
+    }: FollowOrUnfollowUserArgs) => {
       if (pendingRelationships.length !== 0) {
         return Alert.alert(
           'PLACEHOLDER',
@@ -45,7 +60,7 @@ const useFollowOrUnfollowUser = () => {
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
         address: activeAddress,
-        stayOnCurrentScreen: true,
+        stayOnCurrentScreen,
       });
 
       if (!success) {
@@ -85,7 +100,7 @@ const useFollowOrUnfollowUser = () => {
 
         throw new Error('Error broadcasting transaction');
       } catch (err: any) {
-        console.log('useFollowOrUnfollowUser', err.toString());
+        console.log('useFollowOrUnfollowUser', String(err));
       } finally {
         setLoading(false);
       }

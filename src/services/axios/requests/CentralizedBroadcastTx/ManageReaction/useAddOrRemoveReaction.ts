@@ -11,7 +11,12 @@ import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions
 import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/utils/useManageReactions';
 import {useToast} from 'react-native-toast-notifications';
 
-interface Params
+/**
+ * @typedef AddOrRemoveReactionArgs - Arguments for the addOrRemoveReaction callback
+ * @property {boolean} [stayOnCurrentScreen = true] - Whether to stay on on the current screen following a grant authorization. Defaults to true.
+ * @property {number} postId - The postId to add a reaction to.
+ */
+interface AddOrRemoveReactionArgs
   extends Partial<Pick<CheckAndUpdateGrantsArgs, 'stayOnCurrentScreen'>> {
   postId: number;
 }
@@ -52,8 +57,12 @@ const useAddOrRemoveReaction = () => {
     [activeAddress, getReactionForPostAndAuthor],
   );
 
+  /**
+   * Callback to add or remove a reaction to/from a post
+   * @param {AddOrRemoveReactionArgs}
+   */
   const addOrRemoveReaction = React.useCallback(
-    async ({postId, stayOnCurrentScreen = true}: Params) => {
+    async ({postId, stayOnCurrentScreen = true}: AddOrRemoveReactionArgs) => {
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgAddReaction,
         GrantEnums.MsgRemoveReaction,
@@ -85,6 +94,8 @@ const useAddOrRemoveReaction = () => {
           user: activeAddress!,
           reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
         });
+      } catch (err: any) {
+        console.log('useAddOrRemoveReaction', String(err));
       } finally {
         setLoading(false);
       }
@@ -93,8 +104,8 @@ const useAddOrRemoveReaction = () => {
   );
 
   return {
-    loading,
     addOrRemoveReaction,
+    loading,
   };
 };
 
