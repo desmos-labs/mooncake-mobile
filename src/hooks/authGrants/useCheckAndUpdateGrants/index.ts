@@ -38,6 +38,8 @@ const useCheckAndUpdateGrants = () => {
 
       const grantsResponse = await getAuthzGrants();
 
+      console.log(JSON.stringify(grantsResponse));
+
       const grants: {
         [index: string]: {msg_type: GrantEnums; expiration: string};
       } = grantsResponse.grants.reduce((acc, cur) => {
@@ -93,7 +95,7 @@ const useCheckAndUpdateGrants = () => {
               resolve({success: true});
             },
             onCancel: () => {
-              !stayOnCurrentScreen && pop();
+              pop();
               resolve({success: false});
             },
           });
