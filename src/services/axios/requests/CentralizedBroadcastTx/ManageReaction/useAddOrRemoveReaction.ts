@@ -19,7 +19,7 @@ interface Params
 const useAddOrRemoveReaction = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {manageReactionV2} = useManageReactions();
+  const {manageReaction} = useManageReactions();
   const toast = useToast();
 
   const [loading, setLoading] = React.useState(false);
@@ -53,7 +53,7 @@ const useAddOrRemoveReaction = () => {
   );
 
   const addOrRemoveReaction = React.useCallback(
-    async ({postId, stayOnCurrentScreen}: Params) => {
+    async ({postId, stayOnCurrentScreen = true}: Params) => {
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgAddReaction,
         GrantEnums.MsgRemoveReaction,
@@ -80,7 +80,7 @@ const useAddOrRemoveReaction = () => {
           address: activeAddress!,
         });
 
-        return manageReactionV2({
+        return manageReaction({
           postId,
           user: activeAddress!,
           reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,

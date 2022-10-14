@@ -19,8 +19,6 @@ import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcast
  * Hook that manange a reaction, adding or removing it.
  */
 const useManageReactions = () => {
-  const [reactionLoading, setReactionLoading] = React.useState(false);
-
   const addReaction = React.useCallback(
     async ({postId, user}: Partial<MsgAddReaction>) => {
       const reaction = convertRegisteredReactionValueToAny(
@@ -82,45 +80,13 @@ const useManageReactions = () => {
   );
 
   /**
+   * Add or remove a reaction depending on whether the active user has already reacted to the post.
+   *
    * @param {number} postId The ID of the post
    * @param {string} user The address of the user managing the reaction
    * @param {number} reactionId (OPTIONAL, required only for removing a reaction) The ID of the reaction to be removed
    * */
   const manageReaction = useCallback(
-    async ({
-      postId,
-      user,
-      reactionId,
-    }: {
-      postId: number;
-      user: string;
-      reactionId?: number;
-    }) => {
-      setReactionLoading(true);
-      let result;
-      try {
-        if (reactionId) {
-          console.log('remove reaction with ID: ', reactionId);
-          result = await removeReaction({
-            postId: Long.fromNumber(postId),
-            user,
-            reactionId,
-          });
-        } else {
-          console.log('add reaction');
-          result = await addReaction({postId: Long.fromNumber(postId), user});
-        }
-      } catch (err: any) {
-        throw new Error(err.toString());
-      } finally {
-        setReactionLoading(false);
-        console.log(result);
-      }
-    },
-    [],
-  );
-
-  const manageReactionV2 = useCallback(
     async ({
       postId,
       user,
@@ -145,7 +111,7 @@ const useManageReactions = () => {
     [],
   );
 
-  return {manageReaction, manageReactionV2, reactionLoading};
+  return {manageReaction};
 };
 
 export default useManageReactions;
