@@ -99,7 +99,6 @@ const useCreatePost = () => {
 
         const {success} = await checkAndUpdateGrants({
           grantsToRequest: [GrantEnums.MsgCreatePost],
-          address: activeAddress,
           stayOnCurrentScreen: true,
         });
 
@@ -155,9 +154,8 @@ const useCreatePost = () => {
             }),
           };
 
-          const sendPostResponse = await encodeAndBroadcastTx([msg]);
+          const sendPostResponse = await encodeAndBroadcastTx({msgs: [msg]});
 
-          console.log('useCreatePost:', sendPostResponse);
           if (sendPostResponse) {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();

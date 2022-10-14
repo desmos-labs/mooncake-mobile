@@ -57,7 +57,7 @@ const useReportPost = () => {
             reporter: activeAddress,
           }),
         };
-        const result = await encodeAndBroadcastTx([msg]);
+        const result = await encodeAndBroadcastTx({msgs: [msg]});
         console.log('useReportPost', result);
         return result;
       } catch (err) {
