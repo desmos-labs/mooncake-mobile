@@ -17,7 +17,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import {useRecoilState} from 'recoil';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 

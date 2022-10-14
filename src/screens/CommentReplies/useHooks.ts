@@ -6,7 +6,7 @@ import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';

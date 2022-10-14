@@ -17,7 +17,7 @@ import _ from 'lodash';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';

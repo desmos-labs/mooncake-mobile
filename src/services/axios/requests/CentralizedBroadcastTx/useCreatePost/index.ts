@@ -9,10 +9,10 @@ import {
   PostReferenceType,
   ReplySetting,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import {DesmosClient, MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
+import {MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import UploadMedia, {
-  Params,
+  UploadMediaParams,
   UploadEvent,
 } from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
@@ -20,12 +20,25 @@ import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
 import {useTranslation} from 'react-i18next';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 
 /**
- * Hook that creates a new post
+ *
+ * @typedef {CreatePostArgs} - Arguments for the createPost callback.
+ * @property {number} conversationId - The conversationId of the post. For comments.
+ * @property {number} referencedPostId - Other posts that this post will be a reference to.
+ * @property {(event: UploadEvent) => void} onUploadProgress - An optional callback to handle image upload updates.
+ */
+interface CreatePostArgs {
+  conversationId?: number;
+  referencedPostId?: number;
+  onUploadProgress?: (event: UploadEvent) => void;
+}
+
+/**
+ * A Hook that exposes a callback that requests necessary grants and creates a post.
  */
 const useCreatePost = () => {
   const {activeAddress} = useActiveAccount();
@@ -38,6 +51,7 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const {encodeAndBroadcastTx} = useCentralizedBroadcastTx();
 
   /**
    * Uploads an image and returns an object that is compatible with the Media.fromPartial helper function.
@@ -46,7 +60,9 @@ const useCreatePost = () => {
     async ({
       mediaFile,
       onUploadProgress,
-    }: Params): Promise<{uri: string; mimeType: string} | undefined> => {
+    }: UploadMediaParams): Promise<
+      {uri: string; mimeType: string} | undefined
+    > => {
       try {
         const uploadResponse = await UploadMedia({
           mediaFile,
@@ -68,55 +84,6 @@ const useCreatePost = () => {
     [],
   );
 
-  const sendPost = React.useCallback(
-    async ({
-      text,
-      conversationId,
-      referencedPosts,
-      attachments,
-    }: Partial<MsgCreatePost>) => {
-      if (!activeAddress) return;
-
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest: [GrantEnums.MsgCreatePost],
-        address: activeAddress,
-        stayOnCurrentScreen: true,
-      });
-
-      if (!success) {
-        throw new Error('User did not grant MsgCreatePost Authorization');
-      }
-
-      try {
-        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
-
-        const msg: MsgCreatePostEncodeObject = {
-          typeUrl: GrantEnums.MsgCreatePost,
-          value: MsgCreatePost.fromPartial({
-            subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-            sectionId: 0,
-            externalId: '',
-            text,
-            referencedPosts,
-            conversationId,
-            author: activeAddress,
-            attachments,
-            replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
-          }),
-        };
-
-        const aminoEncodedMsg = client.encodeToAmino([msg]);
-
-        return await CentralizedBroadcastTx({
-          messages: aminoEncodedMsg,
-        });
-      } catch (err: any) {
-        throw new Error(err.toString());
-      }
-    },
-    [activeAddress],
-  );
-
   /**
    * Helper function that serves as a centralized point to create posts across the app.
    * Under this context, comments are considered posts as well.
@@ -127,11 +94,19 @@ const useCreatePost = () => {
         conversationId,
         referencedPostId,
         onUploadProgress,
-      }: {
-        conversationId?: number;
-        referencedPostId?: number;
-        onUploadProgress?: (event: UploadEvent) => void;
-      }) => {
+      }: CreatePostArgs) => {
+        if (!activeAddress) return;
+
+        const {success} = await checkAndUpdateGrants({
+          grantsToRequest: [GrantEnums.MsgCreatePost],
+          address: activeAddress,
+          stayOnCurrentScreen: true,
+        });
+
+        if (!success) {
+          throw new Error('User did not grant MsgCreatePost Authorization');
+        }
+
         setLoading(true);
         try {
           // get the postText and any attachments from recoil state
@@ -165,13 +140,24 @@ const useCreatePost = () => {
               ]
             : [];
 
-          const sendPostResponse = await sendPost({
-            text: postText,
-            conversationId: _conversationId,
-            referencedPosts: _referencedPosts,
-            attachments: _attachments,
-          });
+          const msg: MsgCreatePostEncodeObject = {
+            typeUrl: GrantEnums.MsgCreatePost,
+            value: MsgCreatePost.fromPartial({
+              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              sectionId: 0,
+              externalId: '',
+              text: postText,
+              referencedPosts: _referencedPosts,
+              conversationId: _conversationId,
+              author: activeAddress,
+              attachments: _attachments,
+              replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
+            }),
+          };
 
+          const sendPostResponse = await encodeAndBroadcastTx([msg]);
+
+          console.log('useCreatePost:', sendPostResponse);
           if (sendPostResponse) {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();
@@ -187,7 +173,7 @@ const useCreatePost = () => {
           setLoading(false);
         }
       },
-    [sendPost],
+    [activeAddress],
   );
 
   return {createPost, loading};
