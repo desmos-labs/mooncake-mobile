@@ -10,7 +10,6 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/reactions/v1/msgs';
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import EnvConfig from 'config/EnvConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import React, {useCallback} from 'react';
@@ -20,13 +19,10 @@ import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcast
  * Hook that manange a reaction, adding or removing it.
  */
 const useManageReactions = () => {
-  const {activeAddress} = useActiveAccount();
   const [reactionLoading, setReactionLoading] = React.useState(false);
 
   const addReaction = React.useCallback(
     async ({postId, user}: Partial<MsgAddReaction>) => {
-      if (!activeAddress) return;
-
       const reaction = convertRegisteredReactionValueToAny(
         RegisteredReactionValue.fromPartial({
           registeredReactionId: 9, // TODO use registered reactions
@@ -55,13 +51,11 @@ const useManageReactions = () => {
         throw new Error(err.toString());
       }
     },
-    [activeAddress],
+    [],
   );
 
   const removeReaction = React.useCallback(
     async ({postId, user, reactionId}: Partial<MsgRemoveReaction>) => {
-      if (!activeAddress) return;
-
       try {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
@@ -84,7 +78,7 @@ const useManageReactions = () => {
         throw new Error(err.toString());
       }
     },
-    [activeAddress],
+    [],
   );
 
   /**
@@ -123,10 +117,35 @@ const useManageReactions = () => {
         console.log(result);
       }
     },
-    [addReaction, removeReaction],
+    [],
   );
 
-  return {manageReaction, reactionLoading};
+  const manageReactionV2 = useCallback(
+    async ({
+      postId,
+      user,
+      reactionId,
+    }: {
+      postId: number;
+      user: string;
+      reactionId?: number;
+    }) => {
+      if (reactionId) {
+        console.log('remove reaction with ID: ', reactionId);
+        return removeReaction({
+          postId: Long.fromNumber(postId),
+          user,
+          reactionId,
+        });
+      } else {
+        console.log('add reaction');
+        return addReaction({postId: Long.fromNumber(postId), user});
+      }
+    },
+    [],
+  );
+
+  return {manageReaction, manageReactionV2, reactionLoading};
 };
 
 export default useManageReactions;

@@ -4,6 +4,18 @@ import {useNavigation} from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import useCheckGrants from 'hooks/authGrants/useCheckGrants';
 
+/*
+ * @typedef CheckAndUpdateGrantsArgs
+ * @param {GrantEnums[]} Object.grantsToRequest - An Array of grants to request.
+ * @param {string} Object.address - The address of the granter (i.e active address).
+ * @param {boolean} Object.stayOnCurrentScreen - If true, will not call pop() after grant request process is completed.
+ */
+export interface CheckAndUpdateGrantsArgs {
+  grantsToRequest: GrantEnums[];
+  address: string;
+  stayOnCurrentScreen?: boolean;
+}
+
 /**
  * A Hook that checks and updates missing/expired grants. It will redirect
  * the user to the authorization popup and carry out the necessary steps (unlocking wallet, broadcast tx, etc)
@@ -14,21 +26,13 @@ const useCheckAndUpdateGrants = () => {
 
   /**
    * Check and update a user's on-chain grants
-   * @param {GrantEnums[]} Object.grantsToRequest - An Array of grants to request.
-   * @param {string} Object.address - The address of the granter (i.e active address).
-   * @param {boolean} Object.stayOnCurrentScreen - If true, will not call pop() after grant request process is completed.
    */
   const checkAndUpdateGrants = React.useCallback(
     async ({
       grantsToRequest,
       address,
       stayOnCurrentScreen,
-    }: {
-      grantsToRequest: GrantEnums[];
-      onCancel?: () => void;
-      address: string;
-      stayOnCurrentScreen?: boolean;
-    }): Promise<{success: boolean}> => {
+    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
       // placeholder
       console.log(address);
 

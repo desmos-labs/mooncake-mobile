@@ -6,7 +6,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
 import {followingState} from '@recoil/following';
-import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useManageRelationship';
+import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/utils/useManageRelationship';
 import {useRecoilValue} from 'recoil';
 import usePendingRelationships, {
   pendingRelationshipsState,
