@@ -33,9 +33,7 @@ const useCheckAndUpdateGrants = () => {
   const checkGrants = React.useCallback(
     async (grantsToCheck: GrantEnums[]): Promise<GrantEnums[]> => {
       if (!activeAddr) throw new Error('[checkGrant]: No active address found');
-
       const grantsResponse = await getAuthzGrants();
-
       const grants: {
         [index: string]: {msg_type: GrantEnums; expiration: string};
       } = grantsResponse.grants.reduce((acc, cur) => {
