@@ -54,7 +54,7 @@ const useAddOrUpdateGrants = () => {
 
     const grantsToRevoke = grants.map(x => x.msg_type);
 
-    console.warn('Revoking the following grants:', grantsToRevoke.join(', '));
+    console.log('Revoking the following grants:', grantsToRevoke.join(', '));
     const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
       grantee,
       granter,
@@ -85,7 +85,6 @@ const useAddOrUpdateGrants = () => {
       msg: combinedMessages,
       denom: EnvConfig.BASE_DENOM,
     });
-
     const broadcastResult = await broadcastMessages(
       wallet as OfflineSigner,
       combinedMessages,

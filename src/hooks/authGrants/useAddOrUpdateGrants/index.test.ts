@@ -4,15 +4,20 @@ import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
+  buildRevokeAllowanceEncode,
+  buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import {MsgGrantAllowance} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import {
+  MsgGrantAllowance,
+  MsgRevokeAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import {
   AllowedMsgAllowance,
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgGrant} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {timestampFromDate} from '@desmoslabs/desmjs';
 import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
 import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
@@ -108,152 +113,215 @@ const mockMsgsGrantEncodes = [
   },
 ];
 
+const mockRevokeAllowanceEncode = {
+  typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
+  value: MsgRevokeAllowance.fromPartial({
+    grantee: mockGrantee,
+    granter: mockGranter,
+  }),
+};
+
+const mockRevokeGrantMsgEncodes = [
+  {
+    typeUrl: '/cosmos.authz.v1beta1.MsgRevoke',
+    value: MsgRevoke.fromPartial({
+      grantee: mockGrantee,
+      granter: mockGranter,
+      msgTypeUrl: mockGrants[0],
+    }),
+  },
+];
+
 describe('hooks: useAddOrUpdateGrants', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('builds a fee grant allowance msg if user does not have one', () => {
-    (useGetAuthzGrants as jest.Mock).mockReturnValue({
-      getAuthzGrants: () => ({
-        has_fee_grant: false,
-        grants: [],
-      }),
+  describe('addOrUpdateGrants', () => {
+    it('builds a fee grant allowance msg if user does not have one', () => {
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      act(() => {
+        result.current.addOrUpdateGrants({grantsToRequest: []});
+      });
+
+      waitFor(() => {
+        expect(buildGrantAllowanceEncode).toBeCalled();
+      });
     });
 
-    const {result} = renderHook(() => useAddOrUpdateGrants());
+    it('does not build a fee grant allowance msg if user has one', () => {
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: true,
+          grants: [],
+        }),
+      });
 
-    act(() => {
-      result.current.addOrUpdateGrants({grantsToRequest: []});
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      act(() => {
+        result.current.addOrUpdateGrants({grantsToRequest: []});
+      });
+
+      waitFor(() => {
+        expect(buildGrantAllowanceEncode).toHaveBeenCalledTimes(0);
+      });
     });
 
-    waitFor(() => {
-      expect(buildGrantAllowanceEncode).toBeCalled();
-    });
-  });
+    it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
 
-  it('does not build a fee grant allowance msg if user has one', () => {
-    (useGetAuthzGrants as jest.Mock).mockReturnValue({
-      getAuthzGrants: () => ({
-        has_fee_grant: true,
-        grants: [],
-      }),
-    });
-
-    const {result} = renderHook(() => useAddOrUpdateGrants());
-
-    act(() => {
-      result.current.addOrUpdateGrants({grantsToRequest: []});
-    });
-
-    waitFor(() => {
-      expect(buildGrantAllowanceEncode).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
-    // simulate a user who is requesting MsgCreatePost grants for the first time
-    (useGetAuthzGrants as jest.Mock).mockReturnValue({
-      getAuthzGrants: () => ({
-        has_fee_grant: false,
-        grants: [],
-      }),
-    });
-
-    (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-      mockGrantAllowanceEncode,
-    );
-
-    (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-    (computeGasAndFees as jest.Mock).mockReturnValue({
-      fee: {low: 0, average: 0, high: 0},
-    });
-
-    (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
-      wallet: true,
-    }));
-
-    const {result} = renderHook(() => useAddOrUpdateGrants());
-
-    act(() => {
-      result.current.addOrUpdateGrants({grantsToRequest: mockGrants});
-    });
-
-    await waitFor(() => {
-      expect(mockBroadcastMessages).toHaveBeenCalledWith(
-        expect.anything(), // wallet
-        [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
-        expect.anything(), // fee
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+        mockGrantAllowanceEncode,
       );
+
+      (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+      (computeGasAndFees as jest.Mock).mockReturnValue({
+        fee: {low: 0, average: 0, high: 0},
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
+        wallet: true,
+      }));
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      act(() => {
+        result.current.addOrUpdateGrants({grantsToRequest: mockGrants});
+      });
+
+      await waitFor(() => {
+        expect(mockBroadcastMessages).toHaveBeenCalledWith(
+          expect.anything(), // wallet
+          [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
+          expect.anything(), // fee
+        );
+      });
     });
-  });
 
-  it('throws an error if wallet failed to unlock', async () => {
-    // simulate a user who is requesting MsgCreatePost grants for the first time
-    (useGetAuthzGrants as jest.Mock).mockReturnValue({
-      getAuthzGrants: () => ({
-        has_fee_grant: false,
-        grants: [],
-      }),
-    });
+    it('throws an error if wallet failed to unlock', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
 
-    (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-      mockGrantAllowanceEncode,
-    );
-
-    (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-    (computeGasAndFees as jest.Mock).mockReturnValue({
-      fee: {low: 0, average: 0, high: 0},
-    });
-
-    (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
-
-    const {result} = renderHook(() => useAddOrUpdateGrants());
-
-    try {
-      await result.current.addOrUpdateGrants({grantsToRequest: []});
-    } catch (err: any) {
-      expect(err.message).toBe(
-        'Error unlocking wallet or user cancelled authentication',
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+        mockGrantAllowanceEncode,
       );
-    }
+
+      (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+      (computeGasAndFees as jest.Mock).mockReturnValue({
+        fee: {low: 0, average: 0, high: 0},
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      } catch (err: any) {
+        expect(err.message).toBe(
+          'Error unlocking wallet or user cancelled authentication',
+        );
+      }
+    });
+
+    it('throws an error if the tx fails to broadcast', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+        mockGrantAllowanceEncode,
+      );
+
+      (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+      (computeGasAndFees as jest.Mock).mockReturnValue({
+        fee: {low: 0, average: 0, high: 0},
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
+        wallet: true,
+      }));
+
+      // @ts-ignore
+      mockBroadcastMessages = jest.fn(() => undefined);
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      } catch (err: any) {
+        console.log(err.messages);
+        expect(err.message).toBe('Error requesting grants');
+      }
+    });
   });
 
-  it('throws an error if the tx fails to broadcast', async () => {
-    // simulate a user who is requesting MsgCreatePost grants for the first time
-    (useGetAuthzGrants as jest.Mock).mockReturnValue({
-      getAuthzGrants: () => ({
-        has_fee_grant: false,
-        grants: [],
-      }),
+  describe('revokeAllGrants', () => {
+    it('successfully revokes all grants from chain', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [{}],
+        }),
+      });
+
+      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(
+        mockRevokeGrantMsgEncodes,
+      );
+
+      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(
+        mockRevokeAllowanceEncode,
+      );
+
+      (computeGasAndFees as jest.Mock).mockReturnValue({
+        fee: {low: 0, average: 0, high: 0},
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
+        wallet: true,
+      }));
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      act(() => {
+        result.current.revokeAllGrants();
+      });
+
+      await waitFor(() => {
+        expect(mockBroadcastMessages).toHaveBeenCalledWith(
+          expect.anything(), // wallet
+          [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
+          expect.anything(), // fee
+        );
+      });
     });
-
-    (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-      mockGrantAllowanceEncode,
-    );
-
-    (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-    (computeGasAndFees as jest.Mock).mockReturnValue({
-      fee: {low: 0, average: 0, high: 0},
-    });
-
-    (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
-      wallet: true,
-    }));
-
-    // @ts-ignore
-    mockBroadcastMessages = jest.fn(() => undefined);
-
-    const {result} = renderHook(() => useAddOrUpdateGrants());
-
-    try {
-      await result.current.addOrUpdateGrants({grantsToRequest: []});
-    } catch (err: any) {
-      console.log(err.messages);
-      expect(err.message).toBe('Error requesting grants');
-    }
   });
 });
