@@ -44,7 +44,7 @@ jest.mock('hooks/useActiveAccount', () =>
 
 jest.mock('hooks/useUnlockWallet', () => jest.fn());
 
-const mockBroadcastMessages = jest.fn(() => true);
+let mockBroadcastMessages = jest.fn(() => true);
 
 jest.mock(
   'hooks/broadcastTx/useBroadcastMessages',
@@ -61,6 +61,52 @@ jest.mock('hooks/authGrants/useAddOrUpdateGrants/utils', () => ({
   buildRevokeAllowanceEncode: jest.fn(),
   buildRevokeGrantMsgEncodes: jest.fn(),
 }));
+
+const mockGrants = [GrantEnums.MsgCreatePost];
+const mockGrantee = 'i-am-a-grantee';
+const mockGranter = 'i-am-a-granter';
+
+const mockGrantAllowanceEncode = {
+  typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
+  value: MsgGrantAllowance.fromPartial({
+    grantee: mockGrantee,
+    granter: mockGranter,
+    allowance: Any.fromPartial({
+      typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
+      value: AllowedMsgAllowance.encode({
+        allowance: Any.fromPartial({
+          typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
+          value: BasicAllowance.encode({
+            spendLimit: [],
+            expiration: undefined,
+          }).finish(),
+        }),
+        allowedMessages: mockGrants,
+      }).finish(),
+    }),
+  }),
+};
+
+const mockMsgsGrantEncodes = [
+  {
+    typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+    value: MsgGrant.fromPartial({
+      grantee: mockGrantee,
+      granter: mockGranter,
+      grant: {
+        authorization: genericSubspaceAuthorizationToAny(
+          GenericSubspaceAuthorization.fromPartial({
+            subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
+            msg: mockGrants[0],
+          }),
+        ),
+        expiration: timestampFromDate(
+          new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years expiration
+        ),
+      },
+    }),
+  },
+];
 
 describe('hooks: useAddOrUpdateGrants', () => {
   afterEach(() => {
@@ -107,53 +153,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
   it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
     // simulate a user who is requesting MsgCreatePost grants for the first time
-
-    const mockGrants = [GrantEnums.MsgCreatePost];
-    const mockGrantee = 'i-am-a-grantee';
-    const mockGranter = 'i-am-a-granter';
-
-    const mockGrantAllowanceEncode = {
-      typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
-      value: MsgGrantAllowance.fromPartial({
-        grantee: mockGrantee,
-        granter: mockGranter,
-        allowance: Any.fromPartial({
-          typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
-          value: AllowedMsgAllowance.encode({
-            allowance: Any.fromPartial({
-              typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
-              value: BasicAllowance.encode({
-                spendLimit: [],
-                expiration: undefined,
-              }).finish(),
-            }),
-            allowedMessages: mockGrants,
-          }).finish(),
-        }),
-      }),
-    };
-
-    const mockMsgsGrantEncodes = [
-      {
-        typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-        value: MsgGrant.fromPartial({
-          grantee: mockGrantee,
-          granter: mockGranter,
-          grant: {
-            authorization: genericSubspaceAuthorizationToAny(
-              GenericSubspaceAuthorization.fromPartial({
-                subspacesIds: [Long.fromNumber(EnvConfig.APP_SUBSPACE_ID)],
-                msg: mockGrants[0],
-              }),
-            ),
-            expiration: timestampFromDate(
-              new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years expiration
-            ),
-          },
-        }),
-      },
-    ];
-
     (useGetAuthzGrants as jest.Mock).mockReturnValue({
       getAuthzGrants: () => ({
         has_fee_grant: false,
@@ -188,5 +187,73 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect.anything(), // fee
       );
     });
+  });
+
+  it('throws an error if wallet failed to unlock', async () => {
+    // simulate a user who is requesting MsgCreatePost grants for the first time
+    (useGetAuthzGrants as jest.Mock).mockReturnValue({
+      getAuthzGrants: () => ({
+        has_fee_grant: false,
+        grants: [],
+      }),
+    });
+
+    (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+      mockGrantAllowanceEncode,
+    );
+
+    (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+    (computeGasAndFees as jest.Mock).mockReturnValue({
+      fee: {low: 0, average: 0, high: 0},
+    });
+
+    (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
+
+    const {result} = renderHook(() => useAddOrUpdateGrants());
+
+    try {
+      await result.current.addOrUpdateGrants({grantsToRequest: []});
+    } catch (err: any) {
+      expect(err.message).toBe(
+        'Error unlocking wallet or user cancelled authentication',
+      );
+    }
+  });
+
+  it('throws an error if the tx fails to broadcast', async () => {
+    // simulate a user who is requesting MsgCreatePost grants for the first time
+    (useGetAuthzGrants as jest.Mock).mockReturnValue({
+      getAuthzGrants: () => ({
+        has_fee_grant: false,
+        grants: [],
+      }),
+    });
+
+    (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+      mockGrantAllowanceEncode,
+    );
+
+    (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+    (computeGasAndFees as jest.Mock).mockReturnValue({
+      fee: {low: 0, average: 0, high: 0},
+    });
+
+    (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
+      wallet: true,
+    }));
+
+    // @ts-ignore
+    mockBroadcastMessages = jest.fn(() => undefined);
+
+    const {result} = renderHook(() => useAddOrUpdateGrants());
+
+    try {
+      await result.current.addOrUpdateGrants({grantsToRequest: []});
+    } catch (err: any) {
+      console.log(err.messages);
+      expect(err.message).toBe('Error requesting grants');
+    }
   });
 });
