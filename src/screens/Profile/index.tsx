@@ -1,5 +1,11 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {isFollowingAddr} from '@recoil/following';
+import useNumRelationships from '@recoil/numRelationshipState';
 import {
   cosmosIcon,
   defaultBanner,
@@ -14,6 +20,7 @@ import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useChainLinks from 'hooks/useChainLinks';
 import useVisitingProfileData from 'hooks/useVisitingProfileData';
@@ -21,20 +28,21 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ImageBackground,
+  RefreshControl,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
-import EnvConfig from 'config/EnvConfig';
-import {useRecoilValue} from 'recoil';
-import {isFollowingAddr} from '@recoil/following';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
-import useNumRelationships from '@recoil/numRelationshipState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -62,8 +70,8 @@ const Profile = () => {
    * The actual animations are created in the component itself.
    * */
   const scrollProgress = useSharedValue(0);
-  const scrollOffset = useSharedValue(0);
-  const AVATAR_TOP_OFFSET = 100 + top;
+  /*  const scrollOffset = useSharedValue(0);
+  const AVATAR_TOP_OFFSET = 100 + top; */
 
   // Calculate the percentage of scroll and set it to shared value
   /*  const scrollHandler = useAnimatedScrollHandler(event => {
@@ -74,18 +82,24 @@ const Profile = () => {
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   }); */
 
-  const animatedAvatarStyle = useAnimatedStyle(() => {
+  /*  const animatedAvatarStyle = useAnimatedStyle(() => {
     return {
       top: AVATAR_TOP_OFFSET - scrollOffset.value,
       transform: [{scale: 1.0 - scrollProgress.value}],
     };
-  });
+  }); */
   /** Animations end * */
 
   const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
     params?.visitingProfileAddress || '',
   );
-  const {activeAddress, profileData, loading} = useActiveAccount();
+  const {activeAddress, profileData, loading, refetch} = useActiveAccount();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const screenMode = useMemo(() => {
     if (params?.visitingProfileAddress) {
@@ -120,6 +134,10 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
+  const handlePressEdit = useCallback(() => {
+    navigate(ROUTES.EDIT_PROFILE);
+  }, []);
+
   const bannerImage = useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
@@ -134,7 +152,13 @@ const Profile = () => {
 
   const FollowButton = useMemo(() => {
     if (screenMode === 'myProfile') {
-      return <ImageButton image={editButton} style={styles.editButton} />;
+      return (
+        <ImageButton
+          image={editButton}
+          style={styles.editButton}
+          onPress={handlePressEdit}
+        />
+      );
     }
 
     return (
@@ -194,23 +218,24 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={bannerImage} style={styles.bannerImage} />
-
-      {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-      <Animated.View
-        style={[
-          styles.avatarContainer,
-          {position: 'absolute', left: 0, right: 0, top: AVATAR_TOP_OFFSET},
-          animatedAvatarStyle,
-        ]}>
-        <Image style={styles.avatar} source={profileImage} />
-      </Animated.View>
+      <ImageBackground source={bannerImage} style={styles.bannerImage} />
 
       <Animated.ScrollView
         //        onScroll={scrollHandler}
         // Hardcoded value to avoid overlapping with header
+        refreshControl={
+          <RefreshControl enabled onRefresh={refetch} refreshing={loading} />
+        }
         style={{paddingTop: 100 + top}}
         contentContainerStyle={styles.contentContainerStyle}>
+        {/* avatar needs to be in a view for positioning and ios zIndex compat */}
+        <Animated.View
+          style={[
+            styles.avatarContainer,
+            {position: 'absolute', left: 0, right: 0},
+          ]}>
+          <Image style={styles.avatar} source={profileImage} />
+        </Animated.View>
         <View style={styles.contentGroup}>
           <View style={{paddingHorizontal: theme.spacing.m}}>
             {FollowButton}

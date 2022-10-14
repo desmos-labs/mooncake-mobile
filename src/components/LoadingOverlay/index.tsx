@@ -30,6 +30,7 @@ const LoadingOverlay = ({isVisible, zIndexOverride = 2}: Props) => {
       <ThemedLottieView
         style={styles.lottieView}
         autoPlay
+        loop={true}
         source={buildingBlockAnim}
         resizeMode="cover"
       />

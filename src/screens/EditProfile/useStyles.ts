@@ -13,12 +13,11 @@ const useStyles = makeStyleWithProps(
   ({nicknameInputRef, dTagInputRef, bioInputRef}: Props, theme) => ({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.white,
     },
     headerButtonGroup: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      top: theme.spacing.l,
+      top: theme.spacing.m,
       paddingHorizontal: theme.spacing.m,
     },
     bannerImage: {
@@ -30,6 +29,8 @@ const useStyles = makeStyleWithProps(
     },
     scrollView: {
       backgroundColor: theme.colors.white,
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
     },
     card: {
       paddingHorizontal: theme.spacing.m,
@@ -45,8 +46,8 @@ const useStyles = makeStyleWithProps(
       marginBottom: theme.spacing.m,
     },
     topButton: {
-      width: 30,
-      height: 30,
+      width: 32,
+      height: 32,
       resizeMode: 'contain',
     },
     inputStyle: {
@@ -59,14 +60,10 @@ const useStyles = makeStyleWithProps(
       borderTopRightRadius: 32,
       backgroundColor: theme.colors.white,
     },
-    header: {paddingTop: 68, paddingHorizontal: theme.spacing.m},
-    scrollContainer: {flex: 1},
-    bioInput: {
-      alignSelf: 'flex-start',
-      height: '100%',
-    },
+    scrollContainer: {flex: 1, marginTop: 60},
+    bioInput: {alignSelf: 'flex-start'},
     bioDTextInput: {
-      minHeight: 120,
+      minHeight: 160,
       borderWidth: 1,
       borderColor: theme.colors.lightGrey01,
     },

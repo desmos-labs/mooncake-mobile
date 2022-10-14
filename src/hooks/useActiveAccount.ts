@@ -34,13 +34,16 @@ const useActiveAccount = () => {
     }
   }, [activeAddress]);
 
-  const {profileData, loading} = useGetProfileData(activeAddress || '');
+  const {profileData, loading, refetch} = useGetProfileData(
+    activeAddress || '',
+  );
 
   return {
     activeAddress,
     profileData,
     loading,
     chainAccount,
+    refetch,
   };
 };
 

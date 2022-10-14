@@ -39,7 +39,7 @@ const activeProfileState = atom<ProfileData | undefined>({
 export default activeProfileState;
 
 export const useGetProfileData = (address: string) => {
-  const {data, loading} = useQuery(GetProfileForAddress, {
+  const {data, loading, refetch} = useQuery(GetProfileForAddress, {
     variables: {address},
   });
 
@@ -56,5 +56,6 @@ export const useGetProfileData = (address: string) => {
   return {
     profileData: activeProfile,
     loading,
+    refetch,
   };
 };

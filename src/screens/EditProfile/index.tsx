@@ -1,123 +1,61 @@
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import {
   backButton,
   cameraButton,
-  createProfileBanner,
+  defaultBanner,
   defaultProfilePic,
 } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
+import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, {FC} from 'react';
+import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
+  TextInput,
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
-import useStyles from './useStyles';
 import useHooks from './useHooks';
-import useHandleFormSubmit from './useHandleFormSubmit';
-import useHandleAddProfileSubmit from './useHandleAddProfileSubmit';
+import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CREATE_DESMOS_PROFILE
->;
-
-const CreateDesmosProfile: FC<NavProps> = () => {
+const EditProfile = () => {
   const theme = useTheme();
   const {t} = useTranslation('createProfile');
-  const navigation =
-    useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
   const {
-    signUpInfo,
-    setNickname,
-    setBio,
-    fromSignUp,
-    coverPicture,
-    selectCoverPicture,
-    profilePicture,
-    selectProfilePicture,
-    loading,
-    setLoading,
     profileParams,
-    nicknameInputRef,
-    dTagInputRef,
-    bioInputRef,
-    scrollViewRef,
-    nicknameMaxLength,
     validationSchema,
     initialFormState,
-    accountCreation,
-    createLedgerAccount,
+    onEditProfile,
+    profilePictureUri,
+    coverPictureUri,
+    selectProfilePicture,
+    selectCoverPicture,
+    loading,
+    goBack,
   } = useHooks();
-
-  const handleFormSubmit = useHandleFormSubmit(
-    initialFormState,
-    setLoading,
-    profilePicture,
-    coverPicture,
-    accountCreation,
-    createLedgerAccount,
-  );
-  const handleAddProfileSubmit = useHandleAddProfileSubmit(
-    initialFormState,
-    setLoading,
-    profilePicture,
-    coverPicture,
-    accountCreation,
-    createLedgerAccount,
-  );
-
+  const nicknameInputRef = useRef<TextInput>(null);
+  const dTagInputRef = useRef<TextInput>(null);
+  const bioInputRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
-
-  const submitHandler =
-    ROUTES.ADD_PROFILE ===
-    (accountCreation?.source ?? createLedgerAccount?.source)
-      ? handleAddProfileSubmit
-      : handleFormSubmit;
-
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
-      {fromSignUp ? (
-        <Image
-          source={
-            signUpInfo.coverPicture
-              ? {uri: signUpInfo.coverPicture.uri}
-              : createProfileBanner
-          }
-          style={styles.bannerImage}
-        />
-      ) : (
-        <Image
-          source={coverPicture ? {uri: coverPicture.uri} : createProfileBanner}
-          style={styles.bannerImage}
-        />
-      )}
-
+    <DView
+      showLoadingOverlay={loading}
+      style={styles.container}
+      backgroundImage={coverPictureUri ? {uri: coverPictureUri} : defaultBanner}
+      backgroundColor={theme.colors.white}>
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton
           imageSrc={backButton}
-          onPress={navigation.goBack}
+          style={styles.topButton}
+          onPress={goBack}
         />
 
         <ProfileHeaderButton
@@ -127,23 +65,12 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         />
       </View>
 
-      {fromSignUp ? (
-        <CreateAvatar
-          avatar={
-            signUpInfo.profilePicture
-              ? {uri: signUpInfo.profilePicture.uri}
-              : defaultProfilePic
-          }
-          handlePressEdit={selectProfilePicture}
-        />
-      ) : (
-        <CreateAvatar
-          avatar={
-            profilePicture ? {uri: profilePicture.uri} : defaultProfilePic
-          }
-          handlePressEdit={selectProfilePicture}
-        />
-      )}
+      <CreateAvatar
+        avatar={
+          profilePictureUri ? {uri: profilePictureUri} : defaultProfilePic
+        }
+        handlePressEdit={selectProfilePicture}
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -151,20 +78,16 @@ const CreateDesmosProfile: FC<NavProps> = () => {
         <Formik
           initialValues={initialFormState}
           validationSchema={validationSchema}
-          onSubmit={submitHandler}>
+          onSubmit={onEditProfile}>
           {({setFieldValue, values, handleSubmit, errors}) => (
             <>
-              <View style={styles.header}>
-                <Typography.H4>{t('header')}</Typography.H4>
-                <Typography.Body6 style={styles.descriptionText}>
-                  {t('description')}
-                </Typography.Body6>
-              </View>
               <ScrollView
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
-                <View style={styles.scrollContainer}>
+                <View
+                  style={styles.scrollContainer}
+                  onStartShouldSetResponder={() => true}>
                   <Typography.Subtitle2 style={styles.inputLabel}>
                     {t('nickname')}
                   </Typography.Subtitle2>
@@ -175,7 +98,6 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     placeholder={t('enterNickname')}
                     onChangeText={value => {
                       setFieldValue('nickname', value, true);
-                      fromSignUp && setNickname(value);
                     }}
                     error={!!errors.nickname}
                   />
@@ -187,30 +109,28 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   {nicknameInputRef.current && (
                     <View style={styles.nickname}>
                       <TextCounter
-                        maxChar={nicknameMaxLength}
+                        maxChar={profileParams.nickname.max_length}
                         textToCount={values.nickname}
                       />
                     </View>
                   )}
 
-                  {!fromSignUp && (
-                    <>
-                      <Typography.Subtitle2 style={styles.inputLabel}>
-                        {t('dTag')}
-                      </Typography.Subtitle2>
-                      <DTextInput
-                        style={styles.inputStyle}
-                        value={values.dTag}
-                        placeholder={t('enterDTag')}
-                        onChangeText={value => {
-                          setFieldValue('dTag', value, true);
-                        }}
-                        error={!!errors.dTag}
-                        inputRef={dTagInputRef}
-                        autoCapitalize="none"
-                      />
-                    </>
-                  )}
+                  <>
+                    <Typography.Subtitle2 style={styles.inputLabel}>
+                      {t('dTag')}
+                    </Typography.Subtitle2>
+                    <DTextInput
+                      style={styles.inputStyle}
+                      value={values.dTag}
+                      placeholder={t('enterDTag')}
+                      onChangeText={value => {
+                        setFieldValue('dTag', value, true);
+                      }}
+                      error={!!errors.dTag}
+                      inputRef={dTagInputRef}
+                      autoCapitalize="none"
+                    />
+                  </>
                   {errors.dTag && (
                     <Typography.Caption1 style={styles.errorText}>
                       {errors.dTag}
@@ -237,7 +157,6 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                     placeholder={t('addBio')}
                     onChangeText={value => {
                       setFieldValue('bio', value, true);
-                      fromSignUp && setBio(value);
                     }}
                     error={!!errors.bio}
                     style={styles.bioDTextInput}
@@ -262,8 +181,7 @@ const CreateDesmosProfile: FC<NavProps> = () => {
                   disabled={!values.dTag}
                   color={theme.colors.surfaceBlack}
                   mode="contained"
-                  onPress={fromSignUp ? navigation.goBack : handleSubmit}
-                  loading={loading}>
+                  onPress={handleSubmit}>
                   {t('common:confirm')}
                 </Button>
               </View>
@@ -271,8 +189,8 @@ const CreateDesmosProfile: FC<NavProps> = () => {
           )}
         </Formik>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </DView>
   );
 };
 
-export default CreateDesmosProfile;
+export default EditProfile;
