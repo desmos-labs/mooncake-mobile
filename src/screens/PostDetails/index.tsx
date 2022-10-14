@@ -48,7 +48,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 

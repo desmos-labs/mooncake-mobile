@@ -33,7 +33,7 @@ import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButto
 import EnvConfig from 'config/EnvConfig';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useNumRelationships from '@recoil/numRelationshipState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';

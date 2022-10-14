@@ -8,7 +8,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
 import {followingState} from '@recoil/following';
-import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/utils/useManageRelationship';
+import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow/utils/useManageRelationship';
 import {useRecoilValue} from 'recoil';
 import usePendingRelationships, {
   pendingRelationshipsState,
@@ -25,7 +25,7 @@ interface FollowOrUnfollowUserArgs
   addrToFollow: string;
 }
 
-const useFollowOrUnfollowUser = () => {
+const useFollowOrUnfollow = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
@@ -114,4 +114,4 @@ const useFollowOrUnfollowUser = () => {
   };
 };
 
-export default useFollowOrUnfollowUser;
+export default useFollowOrUnfollow;

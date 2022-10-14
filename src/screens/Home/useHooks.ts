@@ -10,12 +10,12 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useAddOrRemoveReaction';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,

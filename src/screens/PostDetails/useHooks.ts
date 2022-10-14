@@ -12,7 +12,7 @@ import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useAddOrRemoveReaction';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 
 const useHooks = ({
   postID,
