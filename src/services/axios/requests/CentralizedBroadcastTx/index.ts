@@ -34,13 +34,14 @@ const CentralizedBroadcastTx = async ({
 
 export const useCentralizedBroadcastTx = () => {
   const encodeAndBroadcastTx = React.useCallback(
-    async (msgs: EncodeObject[]) => {
+    async ({msgs, memo}: {msgs: EncodeObject[]; memo?: string}) => {
       const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
 
       const aminoEncodedMsg = client.encodeToAmino(msgs);
 
       return CentralizedBroadcastTx({
         messages: aminoEncodedMsg,
+        memo,
       });
     },
     [],
