@@ -128,6 +128,7 @@ const PostDetails = () => {
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
+      console.log(post?.author?.address);
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
@@ -298,8 +299,10 @@ const PostDetails = () => {
                 },
               ]}
               image={followOrangeIcon}
-              onPress={() => {
-                followOrUnfollowUser(post?.author?.address);
+              onPress={async () => {
+                await followOrUnfollowUser({
+                  addrToFollow: post?.author?.address,
+                });
               }}
             />
           )}
