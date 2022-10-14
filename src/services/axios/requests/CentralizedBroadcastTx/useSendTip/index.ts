@@ -65,7 +65,6 @@ const useSendTip = () => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: sender,
       });
 
       if (!success) {

@@ -99,7 +99,6 @@ const useCreatePost = () => {
 
         const {success} = await checkAndUpdateGrants({
           grantsToRequest: [GrantEnums.MsgCreatePost],
-          stayOnCurrentScreen: true,
         });
 
         if (!success) {

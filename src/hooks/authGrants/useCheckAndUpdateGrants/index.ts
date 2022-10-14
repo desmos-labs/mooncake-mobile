@@ -9,12 +9,10 @@ import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 /*
  * @typedef CheckAndUpdateGrantsArgs
  * @param {GrantEnums[]} Object.grantsToRequest - An Array of grants to request.
- * @param {string} Object.address - The address of the granter (i.e active address).
  * @param {boolean} Object.stayOnCurrentScreen - If true, will not call pop() after grant request process is completed.
  */
 export interface CheckAndUpdateGrantsArgs {
   grantsToRequest: GrantEnums[];
-  address: string;
   stayOnCurrentScreen?: boolean;
 }
 
@@ -37,8 +35,6 @@ const useCheckAndUpdateGrants = () => {
       if (!activeAddr) throw new Error('[checkGrant]: No active address found');
 
       const grantsResponse = await getAuthzGrants();
-
-      console.log(JSON.stringify(grantsResponse));
 
       const grants: {
         [index: string]: {msg_type: GrantEnums; expiration: string};
@@ -73,16 +69,9 @@ const useCheckAndUpdateGrants = () => {
   const checkAndUpdateGrants = React.useCallback(
     async ({
       grantsToRequest,
-      address,
       stayOnCurrentScreen,
     }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
-      // placeholder
-      console.log(address);
-
-      const missingOrExpiredGrants = await checkGrants(
-        grantsToRequest,
-        // address,
-      );
+      const missingOrExpiredGrants = await checkGrants(grantsToRequest);
 
       return new Promise(resolve => {
         if (missingOrExpiredGrants.length === 0) {

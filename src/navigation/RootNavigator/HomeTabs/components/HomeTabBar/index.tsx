@@ -41,7 +41,6 @@ const HomeTabBar = ({state, position, navigation, setLoading}: Props) => {
 
     const {success} = await checkAndUpdateGrants({
       grantsToRequest,
-      address: activeAddress,
     });
 
     if (success) {

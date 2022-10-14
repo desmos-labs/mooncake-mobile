@@ -73,7 +73,6 @@ const useAddOrRemoveReaction = () => {
       // check if user has grants first
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: activeAddress!,
         stayOnCurrentScreen,
       });
 

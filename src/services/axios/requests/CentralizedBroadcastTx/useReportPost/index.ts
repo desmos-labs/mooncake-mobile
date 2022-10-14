@@ -32,7 +32,6 @@ const useReportPost = () => {
       // check if user has grants first
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: activeAddress!,
       });
 
       if (!success) {

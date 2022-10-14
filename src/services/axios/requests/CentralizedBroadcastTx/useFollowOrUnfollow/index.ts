@@ -65,7 +65,6 @@ const useFollowOrUnfollow = () => {
 
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: activeAddress,
         stayOnCurrentScreen,
       });
 
