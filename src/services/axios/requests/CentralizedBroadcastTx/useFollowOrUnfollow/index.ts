@@ -25,6 +25,9 @@ interface FollowOrUnfollowUserArgs
   addrToFollow: string;
 }
 
+/**
+ * A hook that exposes a callback that requests necessary grants and follows/unfollows another user.
+ */
 const useFollowOrUnfollow = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();

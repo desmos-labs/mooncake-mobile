@@ -21,6 +21,9 @@ interface AddOrRemoveReactionArgs
   postId: number;
 }
 
+/**
+ * A hook that exposes a callback that requests necessary grants and adds/removes a reaction from a post.
+ */
 const useAddOrRemoveReaction = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();

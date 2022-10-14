@@ -19,6 +19,7 @@ import {GrantEnums} from 'lib/desmos/msgtypes';
 
 /**
  * A hook that wraps the CreateRelationship and DeleteRelationship flows
+ * Consider using the useFollowOrUnfollow hook for an all-in-one hook that requests grants and handles relationship creation flow.
  */
 const useManageRelationship = () => {
   const {activeAddress} = useActiveAccount();

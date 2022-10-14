@@ -17,6 +17,7 @@ import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcast
 
 /**
  * Hook that manange a reaction, adding or removing it.
+ * Consider using the useAddOrRemoveReaction hook for an all-in-one hook that requests grants and handles adding/removing reactions.
  */
 const useManageReactions = () => {
   const addReaction = React.useCallback(
