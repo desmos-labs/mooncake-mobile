@@ -18,7 +18,7 @@ const ThemedLottieView: React.FC<Props> = props => {
     return source[themeMode];
   }, [theme, source]);
 
-  return <LottieView {...props} source={animation} loop={true} />;
+  return <LottieView {...props} source={animation} />;
 };
 
 export default ThemedLottieView;
