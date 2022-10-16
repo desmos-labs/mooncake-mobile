@@ -13,7 +13,7 @@ import usePendingRelationships, {
   pendingRelationshipsState,
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
-import useManageRelationship from './utils/useManageRelationship';
+import useManageRelationship from './useManageRelationship';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
