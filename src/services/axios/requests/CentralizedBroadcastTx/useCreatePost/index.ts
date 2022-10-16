@@ -11,18 +11,15 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import {MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
-import UploadMedia, {
-  UploadMediaParams,
-  UploadEvent,
-} from 'services/axios/requests/UploadMedia';
+import {UploadEvent} from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
-import {useTranslation} from 'react-i18next';
 import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 
 /**
  *
@@ -45,44 +42,11 @@ const useCreatePost = () => {
 
   const toast = useToast();
 
-  const {t} = useTranslation();
-
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const [loading, setLoading] = React.useState(false);
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const {encodeAndBroadcastTx} = useCentralizedBroadcastTx();
-
-  /**
-   * Uploads an image and returns an object that is compatible with the Media.fromPartial helper function.
-   */
-  const uploadImageForPost = React.useCallback(
-    async ({
-      mediaFile,
-      onUploadProgress,
-    }: UploadMediaParams): Promise<
-      {uri: string; mimeType: string} | undefined
-    > => {
-      try {
-        const uploadResponse = await UploadMedia({
-          mediaFile,
-          onUploadProgress,
-        });
-
-        const {url} = uploadResponse!;
-
-        const {type} = mediaFile;
-
-        return {uri: url, mimeType: type || ''};
-      } catch (err: any) {
-        if (err.toString().includes('413')) {
-          throw new Error(t('error:imageTooLarge'));
-        }
-        throw new Error(err.toString());
-      }
-    },
-    [],
-  );
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
