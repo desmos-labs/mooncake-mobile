@@ -1,5 +1,4 @@
 import {renderHook} from '@testing-library/react-native';
-import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction/utils/useManageReactions';
 import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {
@@ -9,6 +8,7 @@ import {
 import EnvConfig from 'config/EnvConfig';
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
+import useManageReactions from './index';
 
 const mockEncodeToAmino = jest.fn(() => 'mockAminoEncodedMessage');
 const mockCentralizedBroadcastTx = jest.fn();

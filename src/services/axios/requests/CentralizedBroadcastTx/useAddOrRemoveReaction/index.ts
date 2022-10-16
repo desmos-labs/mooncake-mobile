@@ -8,8 +8,8 @@ import EnvConfig from 'config/EnvConfig';
 import ToastConfig from 'config/ToastConfig';
 import {useLazyQuery} from '@apollo/client';
 import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
-import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction/utils/useManageReactions';
 import {useToast} from 'react-native-toast-notifications';
+import useManageReactions from './useManageReactions';
 
 /**
  * @typedef AddOrRemoveReactionArgs - Arguments for the addOrRemoveReaction callback
