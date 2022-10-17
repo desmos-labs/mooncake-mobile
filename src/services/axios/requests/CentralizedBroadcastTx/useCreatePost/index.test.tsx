@@ -15,6 +15,7 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
+import axiosInstance from 'services/axios';
 
 const mockActiveAddress = '123';
 const mockPostText = 'some text';
@@ -26,16 +27,32 @@ const mockPostAttachment = {
 const mockUrl = 'mockUrl';
 
 const mockCheckAndUpdateGrants = {success: true};
-const mockEncodeAndBroadcastTx = jest.fn(() => true);
 
 const mockConversationId = 1;
 const mockReferencedPostId = 1;
 
-jest.mock('services/axios/requests/CentralizedBroadcastTx', () => ({
-  useCentralizedBroadcastTx: () => ({
-    encodeAndBroadcastTx: mockEncodeAndBroadcastTx,
-  }),
+const mockEncodeToAmino = jest.fn(() => 'mockAminoEncodedMessage');
+
+jest.mock('@desmoslabs/desmjs', () => ({
+  DesmosClient: {
+    connect: () => ({
+      encodeToAmino: mockEncodeToAmino,
+      disconnect: () => jest.fn(),
+    }),
+  },
 }));
+
+const mockCentralizedBroadcastTx = jest.fn();
+jest.mock('services/axios/requests/CentralizedBroadcastTx', () => {
+  const actual = jest.requireActual(
+    'services/axios/requests/CentralizedBroadcastTx',
+  );
+
+  return {
+    encodeAndBroadcastTx: actual.encodeAndBroadcastTx,
+    CentralizedBroadcastTx: mockCentralizedBroadcastTx,
+  };
+});
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () =>
   jest.fn(() => ({
@@ -47,7 +64,11 @@ jest.mock('hooks/useActiveAccount', () =>
   jest.fn(() => ({activeAddress: mockActiveAddress})),
 );
 
-jest.mock('react-native-toast-notifications');
+jest.mock('react-native-toast-notifications', () => ({
+  useToast: () => ({show: jest.fn()}),
+}));
+
+jest.mock('services/axios');
 
 jest.mock('services/axios/requests/UploadMedia');
 
@@ -56,6 +77,11 @@ describe('hooks: useCreatePost', () => {
     jest.clearAllMocks();
   });
   it('creates a text post', async () => {
+    const mockTxHash = 'mockTxHash';
+    (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
+      data: {tx_hash: mockTxHash},
+    });
+
     const initializeState = ({set}: any) => {
       set(postTextState, mockPostText);
     };
@@ -95,12 +121,20 @@ describe('hooks: useCreatePost', () => {
       }),
     };
 
-    expect(mockEncodeAndBroadcastTx).toHaveBeenCalledWith({
-      msgs: [mockExpectedMsg],
+    expect(mockEncodeToAmino).toHaveBeenCalledWith([mockExpectedMsg]);
+
+    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
+      memo: undefined,
+      messages: 'mockAminoEncodedMessage',
     });
   });
 
   it('creates an image post', async () => {
+    const mockTxHash = 'mockTxHash';
+    (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
+      data: {tx_hash: mockTxHash},
+    });
+
     const initializeState = ({set}: any) => {
       set(postTextState, mockPostText);
 
@@ -151,8 +185,11 @@ describe('hooks: useCreatePost', () => {
       }),
     };
 
-    expect(mockEncodeAndBroadcastTx).toHaveBeenCalledWith({
-      msgs: [mockExpectedMsg],
+    expect(mockEncodeToAmino).toHaveBeenCalledWith([mockExpectedMsg]);
+
+    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
+      memo: undefined,
+      messages: 'mockAminoEncodedMessage',
     });
   });
 });

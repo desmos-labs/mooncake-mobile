@@ -4,13 +4,13 @@ import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {useToast} from 'react-native-toast-notifications';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import {MsgCreateReportEncodeObject} from '@desmoslabs/desmjs';
 import {MsgCreateReport} from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
 import EnvConfig from 'config/EnvConfig';
 import {convertPostTargetToAny} from '@desmoslabs/desmjs/build/aminomessages/reports';
 import {PostTarget} from '@desmoslabs/desmjs-types/desmos/reports/v1/models';
 import Long from 'long';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 interface ReportPostArgs {
   postId: number;
@@ -22,7 +22,6 @@ const useReportPost = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
   const {activeAddress} = useActiveAccount();
-  const {encodeAndBroadcastTx} = useCentralizedBroadcastTx();
 
   const [loading, setLoading] = React.useState(false);
 

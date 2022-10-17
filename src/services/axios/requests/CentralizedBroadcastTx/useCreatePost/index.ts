@@ -16,10 +16,10 @@ import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
-import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
  *
@@ -46,7 +46,6 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {encodeAndBroadcastTx} = useCentralizedBroadcastTx();
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
@@ -118,7 +117,6 @@ const useCreatePost = () => {
           };
 
           const sendPostResponse = await encodeAndBroadcastTx({msgs: [msg]});
-
           if (sendPostResponse) {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();

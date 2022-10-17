@@ -23,7 +23,7 @@ type Params = {
 /**
  * Authenticated response - requires a valid auth token
  */
-const CentralizedBroadcastTx = async ({
+export const CentralizedBroadcastTx = async ({
   messages,
   memo,
 }: Params): Promise<Response> => {
@@ -48,6 +48,22 @@ export const useCentralizedBroadcastTx = () => {
   );
 
   return {encodeAndBroadcastTx};
+};
+
+export const encodeAndBroadcastTx = async ({
+  msgs,
+  memo,
+}: {
+  msgs: EncodeObject[];
+  memo?: string;
+}) => {
+  const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+  const aminoEncodedMsg = client.encodeToAmino(msgs);
+  client.disconnect();
+  return CentralizedBroadcastTx({
+    messages: aminoEncodedMsg,
+    memo,
+  });
 };
 
 export default CentralizedBroadcastTx;

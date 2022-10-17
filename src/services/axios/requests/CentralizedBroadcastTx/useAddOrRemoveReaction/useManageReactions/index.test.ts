@@ -1,5 +1,4 @@
-import {renderHook} from '@testing-library/react-native';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import {act, renderHook} from '@testing-library/react-native';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {
   MsgAddReaction,
@@ -8,20 +7,33 @@ import {
 import EnvConfig from 'config/EnvConfig';
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
+import axiosInstance from 'services/axios';
 import useManageReactions from './index';
 
 const mockEncodeToAmino = jest.fn(() => 'mockAminoEncodedMessage');
-const mockCentralizedBroadcastTx = jest.fn();
-
-jest.mock('services/axios/requests/CentralizedBroadcastTx');
 
 jest.mock('@desmoslabs/desmjs', () => ({
   DesmosClient: {
     connect: () => ({
       encodeToAmino: mockEncodeToAmino,
+      disconnect: () => true,
     }),
   },
 }));
+
+const mockCentralizedBroadcastTx = jest.fn();
+jest.mock('services/axios/requests/CentralizedBroadcastTx', () => {
+  const actual = jest.requireActual(
+    'services/axios/requests/CentralizedBroadcastTx',
+  );
+
+  return {
+    encodeAndBroadcastTx: actual.encodeAndBroadcastTx,
+    CentralizedBroadcastTx: mockCentralizedBroadcastTx,
+  };
+});
+
+jest.mock('services/axios');
 
 const mockPostId = 1;
 const mockUser = '123';
@@ -32,15 +44,18 @@ describe('hooks: useManageReactions', () => {
   });
 
   it('adds a reaction', async () => {
-    (CentralizedBroadcastTx as jest.Mock).mockImplementation(
-      mockCentralizedBroadcastTx,
-    );
+    const mockTxHash = 'mockTxHash';
+    (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
+      data: {tx_hash: mockTxHash},
+    });
 
     const {result} = renderHook(() => useManageReactions());
 
-    await result.current.manageReaction({
-      postId: mockPostId,
-      user: mockUser,
+    await act(async () => {
+      await result.current.manageReaction({
+        postId: mockPostId,
+        user: mockUser,
+      });
     });
 
     const reaction = convertRegisteredReactionValueToAny(
@@ -49,6 +64,7 @@ describe('hooks: useManageReactions', () => {
       }),
     );
 
+    // expect a proper MsgAddReaction message to be built
     expect(mockEncodeToAmino).toHaveBeenCalledWith([
       {
         typeUrl: GrantEnums.MsgAddReaction,
@@ -61,17 +77,19 @@ describe('hooks: useManageReactions', () => {
       },
     ]);
 
-    expect(mockCentralizedBroadcastTx).toHaveBeenCalledWith({
+    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
       messages: 'mockAminoEncodedMessage',
+      memo: undefined,
     });
   });
 
   it('removes a reaction', async () => {
     const mockReactionId = 123;
 
-    (CentralizedBroadcastTx as jest.Mock).mockImplementation(
-      mockCentralizedBroadcastTx,
-    );
+    const mockTxHash = 'mockTxHash';
+    (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
+      data: {tx_hash: mockTxHash},
+    });
 
     const {result} = renderHook(() => useManageReactions());
 
@@ -81,6 +99,7 @@ describe('hooks: useManageReactions', () => {
       reactionId: mockReactionId,
     });
 
+    // expect a proper MsgRemoveReaction message to be built
     expect(mockEncodeToAmino).toHaveBeenCalledWith([
       {
         typeUrl: GrantEnums.MsgRemoveReaction,
@@ -93,8 +112,9 @@ describe('hooks: useManageReactions', () => {
       },
     ]);
 
-    expect(mockCentralizedBroadcastTx).toHaveBeenCalledWith({
+    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
       messages: 'mockAminoEncodedMessage',
+      memo: undefined,
     });
   });
 });

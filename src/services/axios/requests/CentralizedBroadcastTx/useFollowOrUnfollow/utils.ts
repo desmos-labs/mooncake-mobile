@@ -32,6 +32,8 @@ export const createRelationship = async ({
 
   const messages = client.encodeToAmino([msg]);
 
+  client.disconnect();
+
   return CentralizedBroadcastTx({
     messages,
   });
@@ -56,6 +58,8 @@ export const deleteRelationship = async ({
   };
 
   const messages = client.encodeToAmino([msg]);
+
+  client.disconnect();
 
   return CentralizedBroadcastTx({
     messages,

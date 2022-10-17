@@ -1,5 +1,4 @@
 import {
-  DesmosClient,
   MsgAddReactionEncodeObject,
   MsgRemoveReactionEncodeObject,
 } from '@desmoslabs/desmjs';
@@ -13,7 +12,7 @@ import EnvConfig from 'config/EnvConfig';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import React, {useCallback} from 'react';
-import CentralizedBroadcastTx from 'services/axios/requests/CentralizedBroadcastTx';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
  * Hook that manange a reaction, adding or removing it.
@@ -29,8 +28,6 @@ const useManageReactions = () => {
       );
 
       try {
-        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
-
         const msg: MsgAddReactionEncodeObject = {
           typeUrl: GrantEnums.MsgAddReaction,
           value: MsgAddReaction.fromPartial({
@@ -40,12 +37,7 @@ const useManageReactions = () => {
             user,
           }),
         };
-
-        const aminoEncodedMsg = client.encodeToAmino([msg]);
-
-        return await CentralizedBroadcastTx({
-          messages: aminoEncodedMsg,
-        });
+        return encodeAndBroadcastTx({msgs: [msg]});
       } catch (err: any) {
         throw new Error(err.toString());
       }
@@ -56,8 +48,6 @@ const useManageReactions = () => {
   const removeReaction = React.useCallback(
     async ({postId, user, reactionId}: Partial<MsgRemoveReaction>) => {
       try {
-        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
-
         const msg: MsgRemoveReactionEncodeObject = {
           typeUrl: GrantEnums.MsgRemoveReaction,
           value: MsgRemoveReaction.fromPartial({
@@ -68,11 +58,7 @@ const useManageReactions = () => {
           }),
         };
 
-        const aminoEncodedMsg = client.encodeToAmino([msg]);
-
-        return await CentralizedBroadcastTx({
-          messages: aminoEncodedMsg,
-        });
+        return encodeAndBroadcastTx({msgs: [msg]});
       } catch (err: any) {
         throw new Error(err.toString());
       }
