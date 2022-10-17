@@ -11,7 +11,7 @@ jest.mock('hooks/useActiveAccount', () =>
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () => jest.fn());
 
-jest.mock('./useManageReactions', () => () => ({
+jest.mock('./utils', () => () => ({
   manageReaction: jest.fn(),
 }));
 

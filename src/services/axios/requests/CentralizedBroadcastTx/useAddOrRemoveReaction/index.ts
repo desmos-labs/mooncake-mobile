@@ -9,7 +9,7 @@ import ToastConfig from 'config/ToastConfig';
 import {useLazyQuery} from '@apollo/client';
 import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
 import {useToast} from 'react-native-toast-notifications';
-import useManageReactions from './useManageReactions';
+import {manageReaction} from './utils';
 
 /**
  * @typedef AddOrRemoveReactionArgs - Arguments for the addOrRemoveReaction callback
@@ -27,7 +27,6 @@ interface AddOrRemoveReactionArgs
 const useAddOrRemoveReaction = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {manageReaction} = useManageReactions();
   const toast = useToast();
 
   const [loading, setLoading] = React.useState(false);

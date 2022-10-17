@@ -1,4 +1,3 @@
-import {act, renderHook} from '@testing-library/react-native';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {
   MsgAddReaction,
@@ -8,7 +7,7 @@ import EnvConfig from 'config/EnvConfig';
 import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
 import axiosInstance from 'services/axios';
-import useManageReactions from './index';
+import {manageReaction} from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction/utils';
 
 const mockEncodeToAmino = jest.fn(() => 'mockAminoEncodedMessage');
 
@@ -49,13 +48,9 @@ describe('hooks: useManageReactions', () => {
       data: {tx_hash: mockTxHash},
     });
 
-    const {result} = renderHook(() => useManageReactions());
-
-    await act(async () => {
-      await result.current.manageReaction({
-        postId: mockPostId,
-        user: mockUser,
-      });
+    await manageReaction({
+      postId: mockPostId,
+      user: mockUser,
     });
 
     const reaction = convertRegisteredReactionValueToAny(
@@ -91,14 +86,11 @@ describe('hooks: useManageReactions', () => {
       data: {tx_hash: mockTxHash},
     });
 
-    const {result} = renderHook(() => useManageReactions());
-
-    await result.current.manageReaction({
+    await manageReaction({
       postId: mockPostId,
       user: mockUser,
       reactionId: mockReactionId,
     });
-
     // expect a proper MsgRemoveReaction message to be built
     expect(mockEncodeToAmino).toHaveBeenCalledWith([
       {

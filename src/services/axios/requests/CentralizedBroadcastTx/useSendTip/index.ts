@@ -102,7 +102,6 @@ const useSendTip = () => {
           });
         }
 
-        console.log(msg);
         if (!msg) throw new Error('Invalid tip target');
 
         const result = await encodeAndBroadcastTx({msgs: [msg], memo: message});
