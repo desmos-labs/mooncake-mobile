@@ -26,7 +26,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
 const HomeTabBar = ({state, position, navigation, setLoading}: Props) => {
   const styles = useStyles();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const {activeAddress} = useActiveAccount();
+  const {activeAddress, profileData} = useActiveAccount();
   const toast = useToast();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
@@ -58,7 +58,11 @@ const HomeTabBar = ({state, position, navigation, setLoading}: Props) => {
     <View style={styles.container}>
       <ProfileHeaderButton
         style={styles.profileButton}
-        imageSrc={defaultProfilePic}
+        imageSrc={
+          profileData?.profile_pic
+            ? {uri: profileData?.profile_pic}
+            : defaultProfilePic
+        }
         onPress={() => {
           navigate(ROUTES.USER_PROFILE);
         }}
