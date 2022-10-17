@@ -1,0 +1,14 @@
+{
+  "header": "Connect Address",
+  "selectAnAccount": "Select an account",
+  "advanced": "Advanced",
+  "general": "General",
+  "enterDerivPath": "Enter HD derivation path to choose an account",
+  "hdDerivPath": "HD Derivation Path",
+  "purpose": "Purpose",
+  "coin": "Coin",
+  "account": "Account",
+  "change": "Change",
+  "address": "Address",
+  "hdDerivPathModal": "A derivation path is a piece of data which tells a Hierarchical Deterministic (HD) wallet how to derive multiple accounts from the same Secret Recovery Phrase. \n\nDerivation paths are used as a Bitcoin standard and allows you to theoretically create millions of addresses from the same phrase."
+}
