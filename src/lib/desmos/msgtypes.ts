@@ -10,6 +10,7 @@ export enum GrantEnums {
   MsgCreateReport = '/desmos.reports.v1.MsgCreateReport',
   // contracts
   MsgExecuteContract = '/cosmwasm.wasm.v1.MsgExecuteContract',
+  MsgSaveProfile = '/desmos.profiles.v3.MsgSaveProfile',
 }
 
 export enum GenericMsgEnums {

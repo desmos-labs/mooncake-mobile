@@ -73,7 +73,6 @@ const SendTips = () => {
     // marginTop to offset the tabIcon's top spacing
     <SafeAreaView edges={['top']} style={{flex: 1, marginTop: theme.spacing.l}}>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{flex: 1}}>
         <TouchableOpacity

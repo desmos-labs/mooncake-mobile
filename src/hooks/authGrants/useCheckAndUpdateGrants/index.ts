@@ -82,7 +82,7 @@ const useCheckAndUpdateGrants = () => {
               resolve({success: true});
             },
             onCancel: () => {
-              pop();
+              !stayOnCurrentScreen && pop();
               resolve({success: false});
             },
           });
