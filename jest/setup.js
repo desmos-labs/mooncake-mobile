@@ -17,12 +17,3 @@ jest.mock('react-native-keychain', () => mockKeychain);
 jest.mock('react-native-toast-notifications', () => ({
   useToast: () => ({show: jest.fn()}),
 }));
-
-jest.mock('@desmoslabs/desmjs', () => ({
-  DesmosClient: {
-    connect: () => ({
-      encodeToAmino: mockEncodeToAmino,
-      disconnect: () => jest.fn(),
-    }),
-  },
-}));

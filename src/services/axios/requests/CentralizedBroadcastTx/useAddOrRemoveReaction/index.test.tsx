@@ -15,11 +15,18 @@ jest.mock('./useManageReactions', () => () => ({
   manageReaction: jest.fn(),
 }));
 
-jest.mock('react-native-toast-notifications');
-
 jest.mock('@apollo/client', () => ({
   useLazyQuery: () => [jest.fn(() => ({data: undefined}))],
   gql: () => jest.fn(),
+}));
+
+jest.mock('@desmoslabs/desmjs', () => ({
+  DesmosClient: {
+    connect: () => ({
+      encodeToAmino: jest.fn(),
+      disconnect: () => jest.fn(),
+    }),
+  },
 }));
 
 describe('hooks: useAddOrRemoveReaction', () => {

@@ -16,6 +16,7 @@ import {
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import axiosInstance from 'services/axios';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 const mockActiveAddress = '123';
 const mockPostText = 'some text';
@@ -42,18 +43,6 @@ jest.mock('@desmoslabs/desmjs', () => ({
   },
 }));
 
-const mockCentralizedBroadcastTx = jest.fn();
-jest.mock('services/axios/requests/CentralizedBroadcastTx', () => {
-  const actual = jest.requireActual(
-    'services/axios/requests/CentralizedBroadcastTx',
-  );
-
-  return {
-    encodeAndBroadcastTx: actual.encodeAndBroadcastTx,
-    CentralizedBroadcastTx: mockCentralizedBroadcastTx,
-  };
-});
-
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () =>
   jest.fn(() => ({
     checkAndUpdateGrants: () => mockCheckAndUpdateGrants,
@@ -64,13 +53,20 @@ jest.mock('hooks/useActiveAccount', () =>
   jest.fn(() => ({activeAddress: mockActiveAddress})),
 );
 
-jest.mock('react-native-toast-notifications', () => ({
-  useToast: () => ({show: jest.fn()}),
-}));
-
 jest.mock('services/axios');
 
 jest.mock('services/axios/requests/UploadMedia');
+
+jest.mock('@desmoslabs/desmjs', () => ({
+  DesmosClient: {
+    connect: () => ({
+      encodeToAmino: jest.fn(),
+      disconnect: () => jest.fn(),
+    }),
+  },
+}));
+
+jest.mock('services/axios/requests/CentralizedBroadcastTx');
 
 describe('hooks: useCreatePost', () => {
   beforeEach(() => {
@@ -81,6 +77,8 @@ describe('hooks: useCreatePost', () => {
     (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
       data: {tx_hash: mockTxHash},
     });
+
+    (encodeAndBroadcastTx as jest.Mock).mockReturnValue(true);
 
     const initializeState = ({set}: any) => {
       set(postTextState, mockPostText);
@@ -121,11 +119,8 @@ describe('hooks: useCreatePost', () => {
       }),
     };
 
-    expect(mockEncodeToAmino).toHaveBeenCalledWith([mockExpectedMsg]);
-
-    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
-      memo: undefined,
-      messages: 'mockAminoEncodedMessage',
+    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({
+      msgs: [mockExpectedMsg],
     });
   });
 
@@ -185,11 +180,8 @@ describe('hooks: useCreatePost', () => {
       }),
     };
 
-    expect(mockEncodeToAmino).toHaveBeenCalledWith([mockExpectedMsg]);
-
-    expect(axiosInstance.post).toHaveBeenCalledWith('/broadcast', {
-      memo: undefined,
-      messages: 'mockAminoEncodedMessage',
+    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({
+      msgs: [mockExpectedMsg],
     });
   });
 });

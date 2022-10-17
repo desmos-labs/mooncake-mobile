@@ -19,8 +19,6 @@ jest.mock('hooks/useActiveAccount', () =>
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants');
 
-jest.mock('react-native-toast-notifications');
-
 const mockEncodeToAmino = 'mockAminoEncodedMessage';
 jest.mock('@desmoslabs/desmjs', () => ({
   DesmosClient: {
@@ -40,6 +38,15 @@ jest.mock('services/graphql/queries/GetAuthGrants', () => ({
 }));
 
 jest.mock('services/axios/requests/CentralizedBroadcastTx');
+
+jest.mock('@desmoslabs/desmjs', () => ({
+  DesmosClient: {
+    connect: () => ({
+      encodeToAmino: jest.fn(),
+      disconnect: () => jest.fn(),
+    }),
+  },
+}));
 
 describe('hook: useFollowOrUnfollow', () => {
   it('follows a user', async () => {
