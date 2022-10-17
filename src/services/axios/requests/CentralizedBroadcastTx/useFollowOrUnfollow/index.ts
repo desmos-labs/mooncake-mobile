@@ -13,7 +13,17 @@ import usePendingRelationships, {
   pendingRelationshipsState,
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
-import {createRelationship, deleteRelationship} from './utils';
+import {
+  MsgCreateRelationshipEncodeObject,
+  MsgDeleteRelationshipEncodeObject,
+} from '@desmoslabs/desmjs';
+import {
+  MsgCreateRelationship,
+  MsgDeleteRelationship,
+} from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
+import Long from 'long';
+import EnvConfig from 'config/EnvConfig';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -79,21 +89,31 @@ const useFollowOrUnfollow = () => {
 
       setLoading(true);
       try {
-        let result: any;
+        let msg:
+          | MsgCreateRelationshipEncodeObject
+          | MsgDeleteRelationshipEncodeObject;
 
         if (isAlreadyFollowing) {
-          toast.show(t('successProcessUnfollow'), {type: ToastConfig.SUCCESS});
-          result = await deleteRelationship({
-            counterPartyAddr: addrToFollow,
-            activeAddress,
-          });
+          msg = {
+            typeUrl: GrantEnums.MsgDeleteRelationship,
+            value: MsgDeleteRelationship.fromPartial({
+              signer: activeAddress,
+              counterparty: addrToFollow,
+              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+            }),
+          };
         } else {
-          toast.show(t('successProcessFollow'), {type: ToastConfig.SUCCESS});
-          result = await createRelationship({
-            counterPartyAddr: addrToFollow,
-            activeAddress,
-          });
+          msg = {
+            typeUrl: GrantEnums.MsgCreateRelationship,
+            value: MsgCreateRelationship.fromPartial({
+              signer: activeAddress,
+              counterparty: addrToFollow,
+              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+            }),
+          };
         }
+
+        const result = await encodeAndBroadcastTx({msgs: [msg]});
 
         if (result) {
           addNewPendingRelationship({
