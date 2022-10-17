@@ -26,6 +26,7 @@ import ConnectAddressAdvanced, {
 import ConnectAddressGeneral, {
   ConnectAddressGeneralParams,
 } from 'screens/ConnectAddress/General';
+import ConnectApp, {ConnectAppParams} from 'screens/ConnectApp';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -68,6 +69,7 @@ import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import SelectTweet, {SelectTweetParams} from 'screens/SelectTweet';
 import Settings from 'screens/Settings';
 import ShowRecoveryPhrase, {
   ShowSecretPhraseParams,
@@ -170,6 +172,10 @@ export type RootNavigatorParamList = {
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE]: undefined;
+
+  [ROUTES.CONNECT_APP]: ConnectAppParams;
+
+  [ROUTES.SELECT_TWEET]: SelectTweetParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -323,6 +329,8 @@ const RootNavigator = () => {
         component={ConnectAddressAdvanced}
       />
 
+      <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} />
+
       <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
@@ -354,6 +362,8 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+
+      <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
 
       <Stack.Screen
         name={ROUTES.CREATE_POST_CAMERA_ROLL}

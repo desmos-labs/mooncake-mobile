@@ -59,7 +59,7 @@ const Settings: React.FC<NavProps> = props => {
       index: 0,
       routes: [
         {
-          name: ROUTES.HOME,
+          name: ROUTES.HOME_TABS,
         },
       ],
     });

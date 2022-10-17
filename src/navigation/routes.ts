@@ -131,6 +131,10 @@ enum ROUTES {
   // Profile posts end
 
   ADD_PROFILE = 'ADD_PROFILE',
+
+  CONNECT_APP = 'CONNECT_APP',
+
+  SELECT_TWEET = 'SELECT_TWEET',
 }
 
 export default ROUTES;

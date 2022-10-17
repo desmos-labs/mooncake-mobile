@@ -176,6 +176,8 @@ export const shareBlackIcon = require('./images/shareBlackIcon.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');
 
+export const checkBlackIcon = require('./images/checkBlack.png');
+
 // array of images
 export const postBG = [
   require('./images/postBG/postBG1.png'),

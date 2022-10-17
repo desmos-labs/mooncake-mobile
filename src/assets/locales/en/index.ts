@@ -39,6 +39,7 @@ import nft from './nft.json';
 import addProfile from './addProfile.json';
 import login from './login.json';
 import toast from './toast.json';
+import connectApp from './connectApp.json';
 
 const en = {
   common,
@@ -81,7 +82,8 @@ const en = {
   nft,
   addProfile,
   login,
-  toast
+  toast,
+  connectApp,
 };
 
 export default en;

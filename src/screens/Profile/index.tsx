@@ -120,6 +120,10 @@ const Profile = () => {
     navigate(ROUTES.SETTINGS);
   }, []);
 
+  const handlePressConnectApp = useCallback(() => {
+    navigate(ROUTES.CONNECT_APP, {mode: 'connect'});
+  }, []);
+
   const bannerImage = useMemo(() => {
     return cover_pic ? {uri: cover_pic} : defaultBanner;
   }, [cover_pic]);
@@ -264,7 +268,7 @@ const Profile = () => {
                     mode="outlined"
                     style={{borderColor: theme.colors.surfaceBlack}}
                     contentStyle={styles.connectButton}
-                    onPress={() => console.log('connectTwitter')}>
+                    onPress={handlePressConnectApp}>
                     <Typography.Button2>
                       {t('connectTwitter')}
                     </Typography.Button2>

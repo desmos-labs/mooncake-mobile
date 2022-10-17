@@ -41,6 +41,10 @@ export type ConfirmModalParams = {
    * What to do when the user presses the secondary (bottom-one) modal button.
    */
   onPressSecondary?: () => void;
+  /**
+   * If you want to remove the modal after the primary button press
+   */
+  removeModalAfterButtonPress?: boolean;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -55,6 +59,7 @@ const ConfirmModal = () => {
       onDismiss,
       onPressPrimary,
       onPressSecondary,
+      removeModalAfterButtonPress,
     },
   } = useRoute<NavProps['route']>();
 
@@ -62,6 +67,15 @@ const ConfirmModal = () => {
   const theme = useTheme();
 
   const {goBack} = useNavigation<NavProps['navigation']>();
+
+  const onPressPrimaryButton = () => {
+    if (removeModalAfterButtonPress) {
+      goBack();
+      onPressPrimary && setTimeout(() => onPressPrimary());
+    } else {
+      onPressPrimary && onPressPrimary();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -80,7 +94,7 @@ const ConfirmModal = () => {
           <Button
             style={styles.primaryButton}
             mode="contained"
-            onPress={onPressPrimary}>
+            onPress={onPressPrimaryButton}>
             {primaryButtonLabel}
           </Button>
         )}
