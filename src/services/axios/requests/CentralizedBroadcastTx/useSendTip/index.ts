@@ -5,7 +5,7 @@ import {GrantEnums} from 'lib/desmos/msgtypes';
 import React, {useCallback} from 'react';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
-import {useCentralizedBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import _ from 'lodash';
 import {buildPostTipMsg, buildUserTipMsg, numberToPlainCoin} from './utils';
@@ -19,7 +19,6 @@ const useSendTip = () => {
   const {butterConfig} = useButterConfig();
   const toast = useToast();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {encodeAndBroadcastTx} = useCentralizedBroadcastTx();
 
   /**
    * @param {Coin[]} amount The amount object, a single value inside an array
@@ -55,7 +54,7 @@ const useSendTip = () => {
         stakingDenom,
       };
 
-      // Sanity check just incase one of the depedencies is undefined
+      // Sanity check just incase one of the dependencies is undefined
       Object.keys(depCheckMap).forEach(x => {
         if (depCheckMap[x] === undefined) {
           throw new Error(`useSendTip: Missing depedency: ${x}`);
@@ -86,9 +85,6 @@ const useSendTip = () => {
         let msg;
 
         if (postId) {
-          console.log('sendTipToAPost');
-          console.log(postId);
-
           msg = buildPostTipMsg({
             amount: convertedAmount,
             fee: convertedFee,
@@ -106,6 +102,7 @@ const useSendTip = () => {
           });
         }
 
+        console.log(msg);
         if (!msg) throw new Error('Invalid tip target');
 
         const result = await encodeAndBroadcastTx({msgs: [msg], memo: message});
