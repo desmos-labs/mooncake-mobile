@@ -1,6 +1,7 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useButterConfig} from '@recoil/butterConfigState';
+import {iconButton} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -12,6 +13,7 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -98,17 +100,8 @@ const SendTips = () => {
                       {t('header')}
                     </Typography.H4>
                     <Typography.Body6>{t('description')}</Typography.Body6>
-                    <Spacer paddingBottom={30} />
+                    <Spacer paddingBottom={16} />
                     <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
-                    <Typography.Body7
-                      style={{
-                        color: theme.colors.surfaceBlack,
-                        marginVertical: theme.spacing.s,
-                      }}>
-                      {t('warning fee', {
-                        fee: butterConfig.contracts.tips.fees.percentage,
-                      })}
-                    </Typography.Body7>
                     <Spacer paddingBottom={14} />
                     <View style={styles.buttonGroup}>
                       <Button
@@ -209,6 +202,21 @@ const SendTips = () => {
                         {convertedBalance?.denom.toUpperCase()}
                       </Typography.Body7>
                     )}
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Image
+                        source={iconButton}
+                        style={{width: 16, height: 16, marginRight: 4}}
+                      />
+                      <Typography.Body7
+                        style={{
+                          color: theme.colors.surfaceBlack,
+                          marginVertical: theme.spacing.s,
+                        }}>
+                        {t('warning fee', {
+                          fee: butterConfig.contracts.tips.fees.percentage,
+                        })}
+                      </Typography.Body7>
+                    </View>
 
                     <Spacer paddingVertical={20}>
                       <Typography.Subtitle3>

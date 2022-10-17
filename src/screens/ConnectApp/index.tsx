@@ -73,6 +73,7 @@ const ConnectApp = () => {
   }, [handleUnlockWallet]);
 
   const openTwitterApp = useCallback(() => {
+    setLoading(true);
     Linking.openURL('twitter://post?message=hello%20world')
       .catch(() => {
         Linking.openURL(
@@ -80,8 +81,10 @@ const ConnectApp = () => {
         );
       })
       .finally(() => {
-        setTwitted(true);
-        setLoading(true);
+        setTimeout(() => {
+          setTwitted(true);
+          setLoading(false);
+        }, 1000);
       });
   }, [twitted]);
 
