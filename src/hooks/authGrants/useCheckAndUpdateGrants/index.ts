@@ -61,6 +61,32 @@ const useCheckAndUpdateGrants = () => {
     [activeAddr],
   );
 
+  const updateGrants = React.useCallback(
+    async ({
+      grantsToRequest,
+      stayOnCurrentScreen,
+    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
+      return new Promise(resolve => {
+        if (grantsToRequest.length === 0) {
+          resolve({success: true});
+        } else {
+          navigate(ROUTES.ACTION_AUTHORIZATION, {
+            grants: grantsToRequest,
+            onApprove: () => {
+              !stayOnCurrentScreen && pop();
+              resolve({success: true});
+            },
+            onCancel: () => {
+              pop();
+              resolve({success: false});
+            },
+          });
+        }
+      });
+    },
+    [],
+  );
+
   /**
    * Check and update a user's on-chain grants
    */
@@ -71,28 +97,17 @@ const useCheckAndUpdateGrants = () => {
     }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
       const missingOrExpiredGrants = await checkGrants(grantsToRequest);
 
-      return new Promise(resolve => {
-        if (missingOrExpiredGrants.length === 0) {
-          resolve({success: true});
-        } else {
-          navigate(ROUTES.ACTION_AUTHORIZATION, {
-            grants: missingOrExpiredGrants,
-            onApprove: () => {
-              !stayOnCurrentScreen && pop();
-              resolve({success: true});
-            },
-            onCancel: () => {
-              !stayOnCurrentScreen && pop();
-              resolve({success: false});
-            },
-          });
-        }
+      return updateGrants({
+        grantsToRequest: missingOrExpiredGrants,
+        stayOnCurrentScreen,
       });
     },
     [],
   );
   return {
     checkAndUpdateGrants,
+    checkGrants,
+    updateGrants,
   };
 };
 
