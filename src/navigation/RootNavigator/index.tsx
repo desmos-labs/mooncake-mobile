@@ -32,6 +32,7 @@ import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
+import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
@@ -138,6 +139,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CREATE_TEXT_POST]: undefined;
   [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
   [ROUTES.CREATE_POST_CAMERA_ROLL]: undefined;
+  [ROUTES.EDIT_PROFILE]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -369,6 +371,8 @@ const RootNavigator = () => {
         name={ROUTES.CREATE_POST_CAMERA_ROLL}
         component={CreatePostCameraRoll}
       />
+
+      <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
 
       {/* modals */}
       <Stack.Group

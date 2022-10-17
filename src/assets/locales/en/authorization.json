@@ -13,5 +13,6 @@
   "createPost": "create Posts",
   "removeReaction": "remove Reactions",
   "addReaction": "add Reactions",
+  "edit or save profile": "edit or save profile",
   "execute contract": "execute WASM contracts"
 }

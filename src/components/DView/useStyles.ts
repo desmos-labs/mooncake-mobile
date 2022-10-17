@@ -1,6 +1,6 @@
 import {Props} from 'components/DView/index';
 import {makeStyleWithProps} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {verticalScale} from 'react-native-size-matters';
 
 const useStyles = makeStyleWithProps((background: Props, theme) => ({
   root: {
@@ -9,9 +9,15 @@ const useStyles = makeStyleWithProps((background: Props, theme) => ({
     backgroundColor: theme.colors.background,
   },
   background: {
-    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: verticalScale(230),
+    resizeMode: 'cover',
+    position: 'absolute',
+    top: 0,
+    zIndex: 1,
   },
   content: {
+    zIndex: 1,
     flex: 1,
     flexDirection: 'column',
     flexGrow: 1,
