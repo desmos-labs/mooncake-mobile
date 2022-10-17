@@ -14,10 +14,6 @@ import usePendingRelationships, {
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
 import {
-  MsgCreateRelationshipEncodeObject,
-  MsgDeleteRelationshipEncodeObject,
-} from '@desmoslabs/desmjs';
-import {
   MsgCreateRelationship,
   MsgDeleteRelationship,
 } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
@@ -89,29 +85,22 @@ const useFollowOrUnfollow = () => {
 
       setLoading(true);
       try {
-        let msg:
-          | MsgCreateRelationshipEncodeObject
-          | MsgDeleteRelationshipEncodeObject;
-
-        if (isAlreadyFollowing) {
-          msg = {
-            typeUrl: GrantEnums.MsgDeleteRelationship,
-            value: MsgDeleteRelationship.fromPartial({
-              signer: activeAddress,
-              counterparty: addrToFollow,
-              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-            }),
-          };
-        } else {
-          msg = {
-            typeUrl: GrantEnums.MsgCreateRelationship,
-            value: MsgCreateRelationship.fromPartial({
-              signer: activeAddress,
-              counterparty: addrToFollow,
-              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-            }),
-          };
-        }
+        const msg = {
+          typeUrl: isAlreadyFollowing
+            ? GrantEnums.MsgDeleteRelationship
+            : GrantEnums.MsgCreateRelationship,
+          value: isAlreadyFollowing
+            ? MsgDeleteRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              })
+            : MsgCreateRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              }),
+        };
 
         const result = await encodeAndBroadcastTx({msgs: [msg]});
 
