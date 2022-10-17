@@ -1,0 +1,7 @@
+{
+  "header": "Transaction Details",
+  "from": "From",
+  "connectTo": "Connect to",
+  "fee": "Fee",
+  "note": "Note (Memo)"
+}

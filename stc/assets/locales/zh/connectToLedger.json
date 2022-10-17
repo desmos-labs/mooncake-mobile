@@ -1,0 +1,14 @@
+{
+  "pairYourDevices": "Pair your devices",
+  "followInstructionOnLedger": "Please follow the instructions on your Ledger Nano X",
+  "sorryConnectionFailed": "Sorry, manager connection failed",
+  "makeSureLedgerOn": "Please make sure your Ledger Nano X is unlocked and bluetooth is enabled",
+  "connectInstructions": [
+    "Turn on and unlock your Ledger device",
+    "Open the Desmos APP \non your Ledger"
+  ],
+  "howToDL": "How to download Desmos App on Ledger?",
+  "modalTitle": "How to download Desmos \nApp on Ledger?",
+  "modalDescription": "1. Visit Ledger Live desktop application.\n\n2. You can search “Desmos” in the App catalog in the Ledger Live Manager. \n\n3. After the installation is done, you will see the Desmos Ledger app on your Ledger device.",
+  "modalButton": "I understand"
+}
