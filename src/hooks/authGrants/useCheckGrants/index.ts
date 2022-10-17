@@ -2,11 +2,11 @@ import React from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {differenceInMilliseconds} from 'date-fns';
-import useGetActiveGrants from 'services/axios/requests/GetActiveGrants/useGetActiveGrants';
+import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 const useCheckGrants = () => {
   const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const {getActiveGrants} = useGetActiveGrants();
+  const {getAuthzGrants} = useGetAuthzGrants();
 
   /**
    * Convenience function to check if the user has enabled a grant for a given list
@@ -17,7 +17,7 @@ const useCheckGrants = () => {
     async (grantsToCheck: GrantEnums[]): Promise<GrantEnums[]> => {
       if (!activeAddr) throw new Error('[checkGrant]: No active address found');
 
-      const grantsResponse = await getActiveGrants();
+      const grantsResponse = await getAuthzGrants();
 
       const grants: {
         [index: string]: {msg_type: GrantEnums; expiration: string};
