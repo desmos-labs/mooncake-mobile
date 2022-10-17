@@ -13,7 +13,7 @@ import usePendingRelationships, {
   pendingRelationshipsState,
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
-import useManageRelationship from './useManageRelationship';
+import {createRelationship, deleteRelationship} from './utils';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -34,7 +34,6 @@ const useFollowOrUnfollow = () => {
   const toast = useToast();
   const {t} = useTranslation('toast');
   const following = useRecoilValue(followingState);
-  const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
   const {addNewPendingRelationship} = usePendingRelationships();
   const pendingRelationships = useRecoilValue(pendingRelationshipsState);
@@ -84,10 +83,16 @@ const useFollowOrUnfollow = () => {
 
         if (isAlreadyFollowing) {
           toast.show(t('successProcessUnfollow'), {type: ToastConfig.SUCCESS});
-          result = await deleteRelationship({counterPartyAddr: addrToFollow});
+          result = await deleteRelationship({
+            counterPartyAddr: addrToFollow,
+            activeAddress,
+          });
         } else {
           toast.show(t('successProcessFollow'), {type: ToastConfig.SUCCESS});
-          result = await createRelationship({counterPartyAddr: addrToFollow});
+          result = await createRelationship({
+            counterPartyAddr: addrToFollow,
+            activeAddress,
+          });
         }
 
         if (result) {
@@ -106,6 +111,7 @@ const useFollowOrUnfollow = () => {
         throw new Error('Error broadcasting transaction');
       } catch (err: any) {
         console.log('useFollowOrUnfollowUser', String(err));
+        toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
       } finally {
         setLoading(false);
       }
