@@ -10,7 +10,6 @@ interface Response {
  * For actual implementation and storage in state management, see src/recoil/butterConfigState.ts
  */
 const PostProof = async (proof: any): Promise<Response> => {
-  console.log('proof', proof);
   const _response = await axiosInstance.post('/proof', proof);
 
   return _response.data;

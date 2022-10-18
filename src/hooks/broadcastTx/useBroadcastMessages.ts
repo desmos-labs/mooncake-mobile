@@ -43,6 +43,7 @@ export default function useBroadcastMessages() {
       );
 
       if (isDeliverTxFailure(broadcastResult)) {
+        console.log(broadcastResult);
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }
 

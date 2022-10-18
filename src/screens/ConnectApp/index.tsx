@@ -137,10 +137,17 @@ const ConnectApp = () => {
       setGeneratingProof(true);
       const toUpload = await generateProof();
       const result = await PostProof(toUpload);
-      console.log(result);
       setProofString(result.url);
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      navigate(ROUTES.RESULT_MODAL, {
+        title: t('common:failed'),
+        subtitle: e.toString(),
+        primaryButtonLabel: t('common:retry')!,
+        onPressPrimary: () =>
+          navigate(ROUTES.CONNECT_APP, {
+            mode: 'tweet',
+          }),
+      });
     } finally {
       setGeneratingProof(false);
     }

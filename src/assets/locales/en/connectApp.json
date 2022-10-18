@@ -3,6 +3,8 @@
   "proof": "Proof of Ownership",
   "confirm": "Confirm",
   "username": "Username",
+  "connected": " Your twitter account is successfully connected",
+  "not connected": "Out of gas, your twitter account is not connected",
   "connect twitter account": "Connect Twitter Account",
   "link proof": "I'm linking my Twitter account with #Butter:",
   "tweet content": "Please tweet the text below on your twitter account",

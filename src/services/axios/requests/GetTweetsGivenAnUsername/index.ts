@@ -15,9 +15,7 @@ type Params = {
 const GetTweetsGivenAnUsername = async ({
   username,
 }: Params): Promise<Response> => {
-  console.log('user', username);
   const _response = await axiosInstance.get(`/twitter/tweets/${username}`);
-  console.log(_response.data);
   return _response.data;
 };
 

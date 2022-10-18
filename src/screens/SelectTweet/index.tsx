@@ -77,9 +77,9 @@ const SelectTweet = () => {
                 navigate(ROUTES.USER_PROFILE, {
                   visitingProfileAddress: accounts[0].address,
                 }),
-              title: t('failed'),
+              title: t('common:success'),
               subtitle: t('connected'),
-              primaryButtonLabel: t('go to profile')!,
+              primaryButtonLabel: t('common:goToProfile')!,
             }),
           failureAction: () =>
             navigate(ROUTES.RESULT_MODAL, {
@@ -87,9 +87,9 @@ const SelectTweet = () => {
                 navigate(ROUTES.SELECT_TWEET, {
                   username: user.username,
                 }),
-              title: t('failed'),
+              title: t('common:failed'),
               subtitle: t('not connected'),
-              primaryButtonLabel: t('retry')!,
+              primaryButtonLabel: t('common:retry')!,
             }),
         });
       }

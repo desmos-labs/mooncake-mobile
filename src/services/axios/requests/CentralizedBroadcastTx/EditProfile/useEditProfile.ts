@@ -16,8 +16,6 @@ const useEditProfile = () => {
   const editProfile = React.useCallback(
     async ({profileData}: {profileData: Partial<ProfileData>}) => {
       if (!activeAddress) return;
-      console.log(profileData);
-
       try {
         const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
         const msg: MsgSaveProfileEncodeObject = {
