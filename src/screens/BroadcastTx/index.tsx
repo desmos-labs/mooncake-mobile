@@ -11,8 +11,6 @@ import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
 import ROUTES from 'navigation/routes';
 import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
-import {computeTxFees, messagesGas} from 'lib/desmos/fees';
-import EnvConfig from 'config/EnvConfig';
 import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
@@ -53,13 +51,8 @@ const BroadcastTx: React.FC = () => {
 
   const broadcastTx = React.useCallback(async () => {
     const {messages, granter, offlineSigner} = params;
-
-    const gas = messagesGas(messages);
-    // hardcoded denom for now
-    const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
-
     try {
-      await broadcastMessages(offlineSigner, messages, txFee, '', granter);
+      await broadcastMessages(offlineSigner, messages, '', granter);
 
       params.successAction && params.successAction();
     } catch (err: any) {
