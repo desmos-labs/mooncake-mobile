@@ -55,6 +55,28 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   const {generateAccountFromHDPath, generating, generatedAccount} =
     useGenerateAccountFromHDPath();
 
+  const initialFormValues = React.useMemo(() => {
+    return {
+      account: '0',
+      change: '0',
+      addressIndex: '0',
+    };
+  }, []);
+
+  // generate first account
+  React.useEffect(() => {
+    const {change, account, addressIndex} = initialFormValues;
+
+    generateAccountFromHDPath({
+      mnemonic,
+      coin: selectedChain.hdPath.coinType,
+      prefix: selectedChain.prefix,
+      change: parseInt(change, 10),
+      account: parseInt(account, 10),
+      addressIndex: parseInt(addressIndex, 10),
+    });
+  }, []);
+
   const SwitchToGeneralButton = React.useMemo(() => {
     return (
       <View style={styles.topBarButtonContainer}>
@@ -75,14 +97,6 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
       </View>
     );
   }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
-
-  const initialFormValues = React.useMemo(() => {
-    return {
-      account: '0',
-      change: '0',
-      addressIndex: '0',
-    };
-  }, []);
 
   const onFormSubmit = React.useCallback(
     (formValues: typeof initialFormValues) => {
