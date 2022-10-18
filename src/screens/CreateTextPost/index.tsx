@@ -130,6 +130,16 @@ const CreateTextPost = () => {
         </TouchableOpacity>
       </SafeAreaView>
 
+      <TouchableOpacity
+        style={{zIndex: 2}}
+        activeOpacity={1}
+        onPress={handlePostPressed}>
+        <BottomBar
+          handlePressPost={handleSubmitPost}
+          handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
+        />
+      </TouchableOpacity>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
         style={styles.textCounterContainer}
@@ -144,13 +154,6 @@ const CreateTextPost = () => {
           customFillColor={theme.colors.white}
         />
       </KeyboardAvoidingView>
-      <TouchableOpacity activeOpacity={1} onPress={handlePostPressed}>
-        <BottomBar
-          handlePressPost={handleSubmitPost}
-          handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
-        />
-      </TouchableOpacity>
-
       <LoadingOverlay isVisible={loading} />
     </View>
   );

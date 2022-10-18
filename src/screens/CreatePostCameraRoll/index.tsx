@@ -60,7 +60,7 @@ const CreatePostCameraRoll = () => {
   });
 
   React.useEffect(() => {
-    requestStoragePermissions();
+    requestStoragePermissions(true);
   }, []);
 
   const {photos, hasNextPage, loadNextPagePictures, isLoadingNextPage} =
