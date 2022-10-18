@@ -6,10 +6,6 @@ import CustomRadioGroup from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import ToastConfig from 'config/ToastConfig';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import useActiveAccount from 'hooks/useActiveAccount';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -22,9 +18,8 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
-import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/ReportPost/useReportPost';
+import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/useReportPost';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -43,14 +38,11 @@ const ReportPost = () => {
   const {goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const [{registeredReports}] = useRecoilState(appSettingsState);
-  const {activeAddress} = useActiveAccount();
-  const {manageReport, reportPostLoading} = useReportPost();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const toast = useToast();
   const [selectedReport, setSelectedReport] = useState({
     value: registeredReports[0].id,
     index: 0,
   });
+  const {reportPost, loading} = useReportPost();
 
   useEffect(() => {
     const newState: any[] = registeredReports.map(reason => {
@@ -64,34 +56,13 @@ const ReportPost = () => {
 
   const handleSubmitReport = useCallback(
     async (postId: number) => {
-      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreateReport];
-      // check if user has grants first
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest,
-        address: activeAddress!,
+      await reportPost({
+        postId,
+        message,
+        reasonId: selectedReport.value,
       });
-
-      if (success) {
-        await manageReport({
-          postId,
-          user: activeAddress!,
-          reasonsIds: [selectedReport.value],
-          message,
-        });
-      } else {
-        toast.show('[PLACEHOLDER]Authorization is required.', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
     },
-    [
-      activeAddress,
-      checkAndUpdateGrants,
-      manageReport,
-      message,
-      selectedReport.value,
-      toast,
-    ],
+    [reportPost, message, selectedReport.value],
   );
 
   const onSubmit = useCallback(async () => {
@@ -138,7 +109,7 @@ const ReportPost = () => {
           </View>
           <Spacer paddingVertical={30}>
             <Button
-              loading={reportPostLoading}
+              loading={loading}
               color={theme.colors.surfaceBlack}
               mode="contained"
               onPress={onSubmit}>

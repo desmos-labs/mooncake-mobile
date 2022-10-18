@@ -1,28 +1,21 @@
-import {useLazyQuery} from '@apollo/client';
-import EnvConfig from 'config/EnvConfig';
 import {
   CompositeScreenProps,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
-import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
 import {useRecoilValue} from 'recoil';
 import RefreshSession from 'services/axios/requests/RefreshSession';
-import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -50,6 +43,8 @@ const useHooks = () => {
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const maxOffset = React.useRef<number>(0);
 
+  const {addOrRemoveReaction} = useAddOrRemoveReaction();
+
   const {
     posts,
     fetchMorePosts,
@@ -66,40 +61,8 @@ const useHooks = () => {
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
-  const {manageReaction} = useManageReactions();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-
-  const toast = useToast();
-
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
-
-  const [getReactionForPostAndAuthor] = useLazyQuery(
-    GetReactionForPostAndAuthor,
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
-
-  const getReaction = useCallback(
-    async ({
-      id,
-      subspace_id,
-    }: {
-      id: number;
-      subspace_id: number;
-      address: string;
-    }) => {
-      return getReactionForPostAndAuthor({
-        variables: {
-          postID: id,
-          subspaceID: subspace_id,
-          address: activeAddress!,
-        },
-      });
-    },
-    [activeAddress, getReactionForPostAndAuthor],
-  );
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -163,34 +126,13 @@ const useHooks = () => {
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      const grantsToRequest: GrantEnums[] = [
-        GrantEnums.MsgAddReaction,
-        GrantEnums.MsgRemoveReaction,
-      ];
-      // check if user has grants first
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest,
-        address: activeAddress!,
+      const result = await addOrRemoveReaction({
+        postId,
       });
 
-      if (success) {
-        const {data} = await getReaction({
-          id: postId,
-          subspace_id: EnvConfig.APP_SUBSPACE_ID,
-          address: activeAddress!,
-        });
-        await manageReaction({
-          postId,
-          user: activeAddress!,
-          reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
-        });
-      } else {
-        toast.show('[PLACEHOLDER]Authorization is required.', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
+      console.log(result);
     },
-    [activeAddress, checkAndUpdateGrants, getReaction, manageReaction, toast],
+    [addOrRemoveReaction],
   );
 
   const handlePressComments = React.useCallback(() => {
