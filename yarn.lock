@@ -1207,10 +1207,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.5.1":
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.5.1.tgz#b6f5c0f65c22d664876cee3d10958d1d13fd8d30"
-  integrity sha512-LfR+juDQETjrMyjYpT4/f8IgQz0XSWKEghfta8PaRgrcJk+gTySN9C+hiOYA2eMVJ1KQCPX1mYaaMcOSK01F7w==
+"@desmoslabs/desmjs-types@4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.5.2.tgz#e2e723631e0bf1fb3ec74a68e726f29b64100d7d"
+  integrity sha512-8t9Pz+e2E9Vt4Ufrl0WG39P9TrVkK0ujBcPC/bqJ64PpeA9cM/M2QTAEgJVeRseCIc5Um43E2VgaAJagvla5aA==
   dependencies:
     long "^4.0.0"
     protobufjs "^7.1.0"
@@ -1223,10 +1223,10 @@
     long "^4.0.0"
     protobufjs "^7.1.0"
 
-"@desmoslabs/desmjs@4.5.1":
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.5.1.tgz#19bd91050fb0e71554e064987c4dd7d81b377871"
-  integrity sha512-5REZsN/PdbmgvsxjdQO9PR0sDbYsW5LhDY7Fu38Z6lQ9Pey5IKvY1JPUL02Xc9il3NM7odadQVrpJya3bJU2Ww==
+"@desmoslabs/desmjs@4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.5.2.tgz#f40bf07bb9f9a6283de125f58eda621d8a52964b"
+  integrity sha512-XNraxQ2rX7qjQyF0cJaG42qU+rU/p+EExrLZzVBygD3B4CLl9K3h8CTf3vxSJ4AY24kikSH7D65LhwXUfn7fPw==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"
