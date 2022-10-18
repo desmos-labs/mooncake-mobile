@@ -1,4 +1,17 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {StdFee} from '@cosmjs/amino';
+import {toHex, toUtf8} from '@cosmjs/encoding';
+import {OfflineSigner} from '@cosmjs/proto-signing';
+import {
+  getPubKeyBytes,
+  getSignatureBytes,
+  getSignedBytes,
+  MsgAuthenticateEncodeObject,
+} from '@desmoslabs/desmjs';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {checkBlackIcon, twitterIcon} from 'assets/images';
 import Button from 'components/Button';
@@ -7,6 +20,7 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useSignCustomTx from 'hooks/broadcastTx/useSignCustomTx';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -21,6 +35,7 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import PostProof from 'services/axios/requests/PostProof';
 import useStyles from './useStyles';
 
 export type ConnectAppParams = {
@@ -34,11 +49,15 @@ const ConnectApp = () => {
   const {t} = useTranslation('connectApp');
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [loading, setLoading] = useState(false);
-  const [twitted, setTwitted] = useState(false);
-  const [twitterUsername, setTwitterUsername] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [generatingProof, setGeneratingProof] = useState<boolean>(false);
+  const [twitted, setTwitted] = useState<boolean>(false);
+  const [wallet, setWallet] = useState<OfflineSigner>();
+  const [proofString, setProofString] = useState<string>('');
+  const [twitterUsername, setTwitterUsername] = useState<string>('');
   const {chainAccount} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
+  const signCustomTx = useSignCustomTx();
   const {
     params: {mode},
   } = useRoute<NavProps['route']>();
@@ -51,6 +70,7 @@ const ConnectApp = () => {
         enterPwScreenOptions: {titleLabelOverride: t('proof')},
       });
       if (unlockResult) {
+        setWallet(unlockResult.wallet);
         navigate(ROUTES.CONNECT_APP, {
           mode: 'tweet',
         });
@@ -60,7 +80,7 @@ const ConnectApp = () => {
 
   const handleSelectTweet = useCallback(() => {
     navigate(ROUTES.SELECT_TWEET, {username: twitterUsername});
-  }, []);
+  }, [twitterUsername]);
 
   const handleOnPress = useCallback(() => {
     navigate(ROUTES.CONFIRM_MODAL, {
@@ -88,10 +108,57 @@ const ConnectApp = () => {
       });
   }, [twitted]);
 
+  const generateProof = useCallback(async () => {
+    if (!wallet) return;
+    const accounts = await wallet.getAccounts();
+    const msg: MsgAuthenticateEncodeObject = {
+      typeUrl: '/desmjs.v1.MsgAuthenticate',
+      value: {
+        user: accounts[0].address,
+        nonce: toUtf8(twitterUsername),
+      },
+    };
+    const fee: StdFee = {
+      amount: [],
+      gas: '0',
+    };
+    const signed = await signCustomTx(wallet, [msg], fee);
+
+    return {
+      desmos_address: accounts[0].address,
+      pubkey_bytes: toHex(getPubKeyBytes(signed)),
+      signed_bytes: toHex(getSignedBytes(signed)),
+      signature_bytes: toHex(getSignatureBytes(signed)),
+    };
+  }, [wallet, signCustomTx]);
+
+  const postProof = useCallback(async () => {
+    try {
+      setGeneratingProof(true);
+      const toUpload = await generateProof();
+      const result = await PostProof(toUpload);
+      console.log(result);
+      setProofString(result.url);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setGeneratingProof(false);
+    }
+  }, [generateProof]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (mode === 'tweet') {
+        postProof();
+      }
+    }, [mode]),
+  );
+
   return (
     <DView
       topBar={<TopBar />}
       style={styles.container}
+      showLoadingOverlay={generatingProof}
       backgroundColor={theme.colors.white}>
       {mode === 'connect' ? (
         <>
@@ -142,12 +209,15 @@ const ConnectApp = () => {
             <Spacer paddingVertical={theme.spacing.m} />
             <Typography.Body5>{t('tweet content')}</Typography.Body5>
             <View style={styles.tweetContent}>
-              <Typography.Body5
-                selectable={true}
-                selectionColor={theme.colors.butterOrange01}>
-                I am linking my Twitter account with #Butter:
-                https://butter-social/proof/1eb5ba6aa47439b5395bf66523298221
-              </Typography.Body5>
+              {proofString ? (
+                <Typography.Body5
+                  selectable={true}
+                  selectionColor={theme.colors.butterOrange01}>
+                  {t('link proof')} {proofString}
+                </Typography.Body5>
+              ) : (
+                <Typography.Body5>Generating proof...</Typography.Body5>
+              )}
             </View>
           </View>
           {twitted && (

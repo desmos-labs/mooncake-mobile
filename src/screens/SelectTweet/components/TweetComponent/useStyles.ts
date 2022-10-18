@@ -6,9 +6,7 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    padding: theme.spacing.s,
-    backgroundColor: theme.colors.white,
-    flexDirection: 'column',
+    paddingVertical: theme.spacing.s,
   },
   image: {
     resizeMode: 'contain',
@@ -16,11 +14,12 @@ const useStyles = makeStyle(theme => ({
     height: 24,
     right: 0,
     marginLeft: 'auto',
+    alignSelf: 'flex-start',
   },
   profilePic: {
-    resizeMode: 'contain',
     height: 40,
     width: 40,
+    borderRadius: 20,
   },
 }));
 

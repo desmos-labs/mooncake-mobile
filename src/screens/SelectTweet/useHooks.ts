@@ -1,4 +1,8 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -11,6 +15,7 @@ const useHooks = () => {
   const [loading, setLoading] = React.useState(false);
   const [tweets, setTweets] = React.useState([]);
   const [user, setUser] = React.useState<any>();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const {
     params: {username},
   } = useRoute<NavProps['route']>();
@@ -37,6 +42,7 @@ const useHooks = () => {
   );
 
   return {
+    navigate,
     loading,
     user,
     tweets,

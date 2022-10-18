@@ -22,10 +22,10 @@ export const unlockLedgerAnimation: LottieAnimation = {
 };
 
 export const broadcastAnim: LottieAnimation = {
-  light: require('./animations/broadcast-tx-light.json'),
+  light: require('./animations/broadcastTx.json'),
 
   // TODO: REPLACE WITH DARK ANIMATION ONCE READY
-  dark: require('./animations/broadcast-tx-light.json'),
+  dark: require('./animations/broadcastTx.json'),
 };
 
 export const buildingBlockAnim: LottieAnimation = {

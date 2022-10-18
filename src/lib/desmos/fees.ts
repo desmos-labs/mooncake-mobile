@@ -63,7 +63,6 @@ export function computeTxFees(
  */
 export function messagesGas(msg: EncodeObject[]): number {
   let gas = 0;
-
   msg.forEach(m => {
     switch (m.typeUrl) {
       case GenericMsgEnums.MsgLinkChainAccount:

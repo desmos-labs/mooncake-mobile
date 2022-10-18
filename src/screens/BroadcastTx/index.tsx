@@ -1,5 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -76,6 +77,7 @@ const BroadcastTx: React.FC = () => {
     <DView>
       <View style={styles.container}>
         <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+        <Spacer paddingVertical={12} />
         <Typography.H4>{t('transaction broadcasting')}</Typography.H4>
         <Typography.Body6>{t('please wait')}</Typography.Body6>
       </View>
