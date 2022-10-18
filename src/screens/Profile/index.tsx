@@ -4,8 +4,6 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {isFollowingAddr} from '@recoil/following';
-import useNumRelationships from '@recoil/numRelationshipState';
 import {
   cosmosIcon,
   defaultBanner,
@@ -39,10 +37,12 @@ import {
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import {useRecoilValue} from 'recoil';
+import {isFollowingAddr} from '@recoil/following';
+import useNumRelationships from '@recoil/numRelationshipState';
+import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -152,7 +152,7 @@ const Profile = () => {
 
   const isFollowing = useRecoilValue(isFollowingAddr(address));
 
-  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const {followOrUnfollowUser} = useFollowOrUnfollow();
 
   const FollowButton = useMemo(() => {
     if (screenMode === 'myProfile') {

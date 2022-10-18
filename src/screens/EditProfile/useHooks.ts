@@ -13,7 +13,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {Asset} from 'react-native-image-picker';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
-import useEditProfile from 'services/axios/requests/CentralizedBroadcastTx/EditProfile/useEditProfile';
+import useEditProfile from 'services/axios/requests/CentralizedBroadcastTx/useEditProfile';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import ProfileData from 'types/graphqlTypes';
 import useValidationSchema from './useValidationSchema';
@@ -22,13 +22,13 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.EDIT_PROFILE>;
 
 const useHooks = () => {
   const profileParams = useRecoilValue(profileParamsState);
-  const {profileData, chainAccount} = useActiveAccount();
+  const {activeAddress, profileData, chainAccount} = useActiveAccount();
   const [profilePic, setProfilePic] = useState<Asset>();
   const [coverPic, setCoverPic] = useState<Asset>();
   const [loading, setLoading] = useState(false);
   const unlockWallet = useUnlockWallet();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {manageProfile} = useEditProfile();
+  const {checkGrants, updateGrants} = useCheckAndUpdateGrants();
+  const {editProfile} = useEditProfile();
   const toast = useToast();
   const validationSchema = useValidationSchema(profileParams);
   const {goBack} = useNavigation<NavProps['navigation']>();
@@ -76,51 +76,56 @@ const useHooks = () => {
       try {
         setLoading(true);
         if (chainAccount) {
-          const unlockResult = await unlockWallet({chainAccount});
-          if (!unlockResult) {
-            throw new Error(
-              'Error unlocking wallet or user cancelled authentication',
-            );
-          }
           const grantsToRequest: GrantEnums[] = [GrantEnums.MsgSaveProfile];
-          // check if user has grants first
-          const {success} = await checkAndUpdateGrants({
-            grantsToRequest,
-            address: chainAccount.address,
-            stayOnCurrentScreen: true,
-          });
-          if (success) {
-            const profilePicUploaded =
-              profilePic && (await UploadMedia({mediaFile: profilePic}));
-            const coverPicUploaded =
-              coverPic && (await UploadMedia({mediaFile: coverPic}));
-            const newValues: Partial<ProfileData> = {
-              dtag:
-                values.dTag === profileData?.dtag
-                  ? '[do-not-modify]'
-                  : values.dTag,
-              nickname:
-                values.nickname === profileData?.nickname
-                  ? '[do-not-modify]'
-                  : values.nickname,
-              bio:
-                values.bio === profileData?.bio
-                  ? '[do-not-modify]'
-                  : values.bio,
-              profile_pic: profilePicUploaded?.url
-                ? profilePicUploaded.url
-                : '[do-not-modify]',
-              cover_pic: coverPicUploaded?.url
-                ? coverPicUploaded.url
-                : '[do-not-modify]',
-            };
-            await manageProfile({profileData: newValues});
-            goBack();
-          } else {
-            toast.show('[PLACEHOLDER]Authorization is required.', {
-              type: ToastConfig.ERROR_NO_RETRY,
+
+          const missingGrants = await checkGrants(grantsToRequest);
+          if (missingGrants.length > 0) {
+            const {success} = await updateGrants({
+              grantsToRequest,
+              stayOnCurrentScreen: true,
             });
+
+            if (!success) throw new Error('Authentication is required');
+          } else {
+            const unlockResult = await unlockWallet({chainAccount});
+            if (!unlockResult) {
+              throw new Error(
+                'Error unlocking wallet or user cancelled authentication',
+              );
+            }
           }
+
+          const profilePicUploaded =
+            profilePic && (await UploadMedia({mediaFile: profilePic}));
+          const coverPicUploaded =
+            coverPic && (await UploadMedia({mediaFile: coverPic}));
+          const newValues: Partial<ProfileData> = {
+            dtag:
+              values.dTag === profileData?.dtag
+                ? '[do-not-modify]'
+                : values.dTag,
+            nickname:
+              values.nickname === profileData?.nickname
+                ? '[do-not-modify]'
+                : values.nickname,
+            bio:
+              values.bio === profileData?.bio ? '[do-not-modify]' : values.bio,
+            profile_pic: profilePicUploaded?.url
+              ? profilePicUploaded.url
+              : '[do-not-modify]',
+            cover_pic: coverPicUploaded?.url
+              ? coverPicUploaded.url
+              : '[do-not-modify]',
+          };
+          await editProfile({
+            profileData: newValues,
+            userAddress: activeAddress!,
+          });
+          goBack();
+        } else {
+          toast.show('[PLACEHOLDER]Authorization is required.', {
+            type: ToastConfig.ERROR_NO_RETRY,
+          });
         }
       } catch (e) {
         console.log(e);
@@ -128,7 +133,7 @@ const useHooks = () => {
         setLoading(false);
       }
     },
-    [chainAccount, profilePic, coverPic],
+    [chainAccount, profilePic, coverPic, activeAddress],
   );
 
   return {

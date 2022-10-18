@@ -1,35 +1,58 @@
 import React from 'react';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import useCheckAndUpdateGrants, {
+  CheckAndUpdateGrantsArgs,
+} from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
 import {followingState} from '@recoil/following';
-import useManageRelationship from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useManageRelationship';
 import {useRecoilValue} from 'recoil';
 import usePendingRelationships, {
   pendingRelationshipsState,
 } from '@recoil/pendingTx/pendingRelationships';
 import {Alert} from 'react-native';
+import {
+  MsgCreateRelationship,
+  MsgDeleteRelationship,
+} from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
+import Long from 'long';
+import EnvConfig from 'config/EnvConfig';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
-type FollowOrUnfollowParams = {
+/**
+ * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
+ * @property {boolean} [stayOnCurrentScreen = true] - Whether to stay on on the current screen following a grant authorization. Defaults to true.
+ * @property {string} addrToFollow - The counterparty address to follow.
+ */
+interface FollowOrUnfollowUserArgs
+  extends Partial<Pick<CheckAndUpdateGrantsArgs, 'stayOnCurrentScreen'>> {
   addrToFollow: string;
-};
+}
 
-const useFollowOrUnfollowUser = () => {
+/**
+ * A hook that exposes a callback that requests necessary grants and follows/unfollows another user.
+ */
+const useFollowOrUnfollow = () => {
   const {activeAddress} = useActiveAccount();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
   const {t} = useTranslation('toast');
   const following = useRecoilValue(followingState);
-  const {createRelationship, deleteRelationship} = useManageRelationship();
   const [loading, setLoading] = React.useState(false);
   const {addNewPendingRelationship} = usePendingRelationships();
   const pendingRelationships = useRecoilValue(pendingRelationshipsState);
 
+  /**
+   * Callback to follow or unfollow (create/delete relationship) a user.
+   * @param {FollowOrUnfollowUserArgs}
+   */
   const followOrUnfollowUser = React.useCallback(
-    async ({addrToFollow}: FollowOrUnfollowParams) => {
+    async ({
+      addrToFollow,
+      stayOnCurrentScreen = true,
+    }: FollowOrUnfollowUserArgs) => {
       if (pendingRelationships.length !== 0) {
         return Alert.alert(
           'PLACEHOLDER',
@@ -37,6 +60,9 @@ const useFollowOrUnfollowUser = () => {
         );
       }
       if (!activeAddress) throw new Error('No active address found');
+      if (!addrToFollow) {
+        throw new Error(`Invalid counterparty address: "${addrToFollow}"`);
+      }
       const grantsToRequest = [
         GrantEnums.MsgCreateRelationship,
         GrantEnums.MsgDeleteRelationship,
@@ -44,8 +70,7 @@ const useFollowOrUnfollowUser = () => {
 
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
-        address: activeAddress,
-        stayOnCurrentScreen: true,
+        stayOnCurrentScreen,
       });
 
       if (!success) {
@@ -60,15 +85,24 @@ const useFollowOrUnfollowUser = () => {
 
       setLoading(true);
       try {
-        let result: any;
+        const msg = {
+          typeUrl: isAlreadyFollowing
+            ? GrantEnums.MsgDeleteRelationship
+            : GrantEnums.MsgCreateRelationship,
+          value: isAlreadyFollowing
+            ? MsgDeleteRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              })
+            : MsgCreateRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              }),
+        };
 
-        if (isAlreadyFollowing) {
-          toast.show(t('successProcessUnfollow'), {type: ToastConfig.SUCCESS});
-          result = await deleteRelationship({counterPartyAddr: addrToFollow});
-        } else {
-          toast.show(t('successProcessFollow'), {type: ToastConfig.SUCCESS});
-          result = await createRelationship({counterPartyAddr: addrToFollow});
-        }
+        const result = await encodeAndBroadcastTx({msgs: [msg]});
 
         if (result) {
           addNewPendingRelationship({
@@ -85,7 +119,8 @@ const useFollowOrUnfollowUser = () => {
 
         throw new Error('Error broadcasting transaction');
       } catch (err: any) {
-        console.log('useFollowOrUnfollowUser', err.toString());
+        console.log('useFollowOrUnfollowUser', String(err));
+        toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
       } finally {
         setLoading(false);
       }
@@ -99,4 +134,4 @@ const useFollowOrUnfollowUser = () => {
   };
 };
 
-export default useFollowOrUnfollowUser;
+export default useFollowOrUnfollow;

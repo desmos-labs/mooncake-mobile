@@ -1,26 +1,18 @@
-import {useLazyQuery, useQuery} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
-import EnvConfig from 'config/EnvConfig';
-import ToastConfig from 'config/ToastConfig';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
-import {useToast} from 'react-native-toast-notifications';
+import React, {useMemo} from 'react';
 import {useRecoilState, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/CreatePost/useCreatePost';
-import useManageReactions from 'services/axios/requests/CentralizedBroadcastTx/ManageReaction/useManageReactions';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
-import {
-  GetPostReactions,
-  GetReactionForPostAndAuthor,
-} from 'services/graphql/queries/GetReactions';
+import {GetPostReactions} from 'services/graphql/queries/GetReactions';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 
 const useHooks = ({
   postID,
@@ -32,10 +24,8 @@ const useHooks = ({
   const {navigate} = useNavigation<NavProps['navigation']>();
   const [profile] = useRecoilState(activeProfileState);
   const {createPost, loading} = useCreatePost();
-  const {manageReaction} = useManageReactions();
+  const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const toast = useToast();
 
   const {
     data: originalPost,
@@ -94,33 +84,6 @@ const useHooks = ({
     },
     fetchPolicy: 'no-cache',
   });
-
-  const [getReactionForPostAndAuthor] = useLazyQuery(
-    GetReactionForPostAndAuthor,
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
-
-  const getReaction = useCallback(
-    async ({
-      id,
-      subspace_id,
-    }: {
-      id: number;
-      subspace_id: number;
-      address: string;
-    }) => {
-      return getReactionForPostAndAuthor({
-        variables: {
-          postID: id,
-          subspaceID: subspace_id,
-          address: profile?.address,
-        },
-      });
-    },
-    [profile?.address],
-  );
 
   const post = React.useMemo(() => {
     if (!originalPost) return {};
@@ -199,34 +162,10 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      const grantsToRequest: GrantEnums[] = [
-        GrantEnums.MsgAddReaction,
-        GrantEnums.MsgRemoveReaction,
-      ];
-      // check if user has grants first
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest,
-        address: profile?.address!,
-      });
-
-      if (success) {
-        const {data} = await getReaction({
-          id: postId,
-          subspace_id: EnvConfig.APP_SUBSPACE_ID,
-          address: profile?.address!,
-        });
-        await manageReaction({
-          postId,
-          user: profile?.address!,
-          reactionId: data?.reaction[0] ? data?.reaction[0].id : undefined,
-        });
-      } else {
-        toast.show('[PLACEHOLDER]Authorization is required.', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
+      const result = await addOrRemoveReaction({postId});
+      console.log(result);
     },
-    [profile?.address],
+    [addOrRemoveReaction],
   );
 
   const handlePressReport = React.useCallback(
@@ -273,28 +212,23 @@ const useHooks = ({
     profile,
     post,
     postLoading,
-    postRefetch,
     comments,
     commentsLoading,
-    commentsRefetch,
     reactions,
     reactionsLoading,
-    reactionsRefetch,
     tips,
     tipsLoading,
-    tipsRefetch,
     formattedDate,
     handlePressSelectedComment,
     handleExpandComment,
-    handlePressSendTips,
     handlePressCounters,
+    handlePressSendTips,
     navigateToProfile,
     handlePostComment,
     handleAddReaction,
     postCommentLoading: loading,
-    pageRefetch,
-    getReaction,
     handlePressReport,
+    pageRefetch,
   };
 };
 

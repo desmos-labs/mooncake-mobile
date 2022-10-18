@@ -48,7 +48,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -128,6 +128,7 @@ const PostDetails = () => {
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
+      console.log(post?.author?.address);
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
@@ -298,8 +299,10 @@ const PostDetails = () => {
                 },
               ]}
               image={followOrangeIcon}
-              onPress={() => {
-                followOrUnfollowUser(post?.author?.address);
+              onPress={async () => {
+                await followOrUnfollowUser({
+                  addrToFollow: post?.author?.address,
+                });
               }}
             />
           )}

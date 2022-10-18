@@ -3,7 +3,7 @@ import {Image, View} from 'react-native';
 import FollowButton from 'components/FollowButton';
 import Typography from 'components/Typography';
 import {defaultProfilePic} from 'assets/images';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/ManageRelationship/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
