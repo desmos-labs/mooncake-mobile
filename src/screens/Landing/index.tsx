@@ -41,6 +41,7 @@ const Landing = () => {
     <DView
       statusBarProps={{translucent: true}}
       backgroundImage={landingBG}
+      backgroundFillScreen
       style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
       <Text style={styles.title} allowFontScaling>
