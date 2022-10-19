@@ -94,10 +94,16 @@ const ConnectApp = () => {
 
   const openTwitterApp = useCallback(() => {
     setLoading(true);
-    Linking.openURL('twitter://post?message=hello%20world')
+    Linking.openURL(
+      `twitter://post?message=${encodeURIComponent(
+        t('link proof') + proofString,
+      )}`,
+    )
       .catch(() => {
         Linking.openURL(
-          'https://twitter.com/compose/tweet?message=hello%20world',
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            t('link proof') + proofString,
+          )}`,
         );
       })
       .finally(() => {
@@ -106,7 +112,7 @@ const ConnectApp = () => {
           setLoading(false);
         }, 1000);
       });
-  }, [twitted]);
+  }, [twitted, t, proofString]);
 
   const generateProof = useCallback(async () => {
     if (!wallet) return;
