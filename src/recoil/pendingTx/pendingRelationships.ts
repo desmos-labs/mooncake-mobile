@@ -6,7 +6,7 @@ import _ from 'lodash';
 /**
  * A selector that only returns pending transactions related to Creating/Deleting relationships
  */
-const pendingRelationshipsState = atom<PendingRelationship[]>({
+export const pendingRelationshipsState = atom<PendingRelationship[]>({
   key: 'pendingRelationships',
   default: [],
 });
@@ -21,7 +21,7 @@ const usePendingRelationships = () => {
    * @param {PendingTx} newRelationship - The new relationship to be added.
    */
   const addNewPendingRelationship = React.useCallback(
-    (newTx: PendingTx) => {
+    (newTx: PendingRelationship) => {
       setPendingRelationships(prev => [...prev, newTx]);
     },
     [pendingRelationships],
@@ -100,5 +100,3 @@ const usePendingRelationships = () => {
 };
 
 export default usePendingRelationships;
-
-export {pendingRelationshipsState};

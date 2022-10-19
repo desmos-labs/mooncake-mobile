@@ -19,5 +19,9 @@ declare global {
       | GrantEnums.MsgDeleteRelationship;
   }
 
-  type PendingTx = PendingRelationship;
+  interface PendingPost extends BasePendingTx {
+    postData: PostItem;
+  }
+
+  type PendingTx = PendingRelationship | PendingPost;
 }
