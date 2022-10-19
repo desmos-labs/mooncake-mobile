@@ -18,7 +18,7 @@ const usePendingRelationships = () => {
 
   /**
    * Add a new pending relationship to recoil state.
-   * @param {PendingTx} newRelationship - The new relationship to be added.
+   * @param {PendingRelationship} newRelationship - The new relationship to be added.
    */
   const addNewPendingRelationship = React.useCallback(
     (newTx: PendingRelationship) => {
