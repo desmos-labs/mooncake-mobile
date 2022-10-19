@@ -9,7 +9,6 @@ import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useRecoilValue} from 'recoil';
-import RefreshSession from 'services/axios/requests/RefreshSession';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -35,12 +34,11 @@ const useHooks = () => {
     DiscoverNavProps['route'] | FollowingNavProps['route']
   >();
 
-  const {navigate, replace} = useNavigation<
+  const {navigate} = useNavigation<
     DiscoverNavProps['navigation'] | FollowingNavProps['navigation']
   >();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const maxOffset = React.useRef<number>(0);
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
@@ -69,13 +67,6 @@ const useHooks = () => {
     maxOffset.current =
       Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
   }, [posts?.length]);
-
-  // Refresh the token if we have one, otherwise have the user relog
-  React.useEffect(() => {
-    if (bearerToken) {
-      RefreshSession();
-    } else replace(ROUTES.LOGIN);
-  }, []);
 
   // fetch new posts before the user reaches the last post so they
   // will be enslaved by the app forever

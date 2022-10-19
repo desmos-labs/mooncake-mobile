@@ -87,6 +87,7 @@ const Login = () => {
     <DView
       statusBarProps={{translucent: true}}
       backgroundImage={landingBG}
+      backgroundFillScreen
       style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.logo} />
       <Spacer paddingVertical={theme.spacing.s}>
