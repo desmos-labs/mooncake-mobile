@@ -84,14 +84,17 @@ exports[`component: DView renders background prop 1`] = `
   <View
     accessibilityIgnoresInvertColors={true}
     style={
-      Object {
-        "height": 451.20588235294116,
-        "position": "absolute",
-        "resizeMode": "cover",
-        "top": 0,
-        "width": "100%",
-        "zIndex": 1,
-      }
+      Array [
+        Object {
+          "height": 451.20588235294116,
+          "position": "absolute",
+          "resizeMode": "cover",
+          "top": 0,
+          "width": "100%",
+          "zIndex": 1,
+        },
+        undefined,
+      ]
     }
   >
     <Image
