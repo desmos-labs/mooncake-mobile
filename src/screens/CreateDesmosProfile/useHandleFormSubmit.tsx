@@ -63,7 +63,8 @@ function useHandleFormSubmit(
         const saveProfileMessage: MsgSaveProfileEncodeObject = {
           typeUrl: GenericMsgEnums.MsgSaveProfile,
           value: {
-            creator: wallet!.bech32Address,
+            creator:
+              wallet!.bech32Address || createLedgerAccount.account!.address,
             dtag: dTag,
             nickname: nickname || '[do-not-modify]',
             bio: bio || '[do-not-modify]',
