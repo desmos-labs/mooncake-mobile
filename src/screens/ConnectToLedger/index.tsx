@@ -27,6 +27,8 @@ import {useSetRecoilState} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {HdPath} from 'types/hdpath';
 import {verticalScale} from 'react-native-size-matters';
+import {useLazyQuery} from '@apollo/client';
+import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
 
@@ -53,6 +55,7 @@ const ConnectToLedger = () => {
   } = useRoute<NavProps['route']>();
   const {t} = useTranslation('connectToLedger');
   const theme = useTheme();
+  const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
 
   const {navigate, goBack, addListener} =
     useNavigation<NavProps['navigation']>();
@@ -133,21 +136,31 @@ const ConnectToLedger = () => {
 
       const results = await Promise.allSettled(accountsToSearch);
 
-      const accountsWithWalletData = results
+      const accountsOnChain = results
         .filter(x => x.status === 'fulfilled')
         .map((y: any) => ({
           wallet: y.value.wallet,
           chainAccount: y.value.chainAccount,
         }));
 
-      if (accountsWithWalletData.length === 0) {
+      const addressesOfAccounts = accountsOnChain.map(
+        x => x.chainAccount.address,
+      );
+
+      const existingAccounts = await getProfileForAddresses({
+        variables: {
+          addresses: addressesOfAccounts,
+        },
+      });
+
+      if (existingAccounts.data && existingAccounts.data.profile.length === 0) {
         // Register the first account retrieved from ledger
         setCreateLedgerAccount({account: chainAccounts[0]});
         console.log(chainAccounts[0]);
         navigate(ROUTES.NO_DTAG_FOUND);
       } else {
         navigate(ROUTES.SELECT_DTAG, {
-          accountsWithWalletData,
+          accountsWithWalletData: accountsOnChain,
         });
       }
     };
@@ -280,12 +293,13 @@ const ConnectToLedger = () => {
     }
 
     return (
-      <View style={styles.centeredGroup}>
-        <Spacer paddingBottom={theme.spacing.l}>
+      <View style={[styles.centeredGroup]}>
+        <Spacer paddingTop={topSpacing}>
           <ThemedLottieView
             source={pairDevicesAnim}
             style={styles.lottieAnimation}
             autoPlay
+            autoSize
             loop
           />
         </Spacer>
