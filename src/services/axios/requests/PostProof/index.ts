@@ -1,7 +1,6 @@
 import axiosInstance from 'services/axios';
 
 interface Response {
-  cid: string;
   url: string;
 }
 
