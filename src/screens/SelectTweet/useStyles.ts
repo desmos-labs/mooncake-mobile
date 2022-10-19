@@ -40,6 +40,11 @@ const useStyles = makeStyle(theme => ({
     borderWidth: 1,
     marginBottom: theme.spacing.m,
   },
+  flatlistContainer: {
+    paddingHorizontal: theme.spacing.m,
+    flexGrow: 1,
+  },
+  flatlist: {marginHorizontal: -theme.spacing.m, flexGrow: 1},
 }));
 
 export default useStyles;

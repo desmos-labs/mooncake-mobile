@@ -1,18 +1,3 @@
-import {StdFee} from '@cosmjs/amino';
-import {toHex, toUtf8} from '@cosmjs/encoding';
-import {OfflineSigner} from '@cosmjs/proto-signing';
-import {
-  getPubKeyBytes,
-  getSignatureBytes,
-  getSignedBytes,
-  MsgAuthenticateEncodeObject,
-} from '@desmoslabs/desmjs';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import {checkBlackIcon, twitterIcon} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -20,152 +5,29 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useSignCustomTx from 'hooks/broadcastTx/useSignCustomTx';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  Image,
-  KeyboardAvoidingView,
-  Linking,
-  Platform,
-  View,
-} from 'react-native';
+import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import PostProof from 'services/axios/requests/PostProof';
+import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-export type ConnectAppParams = {
-  mode: 'connect' | 'tweet';
-};
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_APP>;
 
 const ConnectApp = () => {
   const styles = useStyles();
   const {t} = useTranslation('connectApp');
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [generatingProof, setGeneratingProof] = useState<boolean>(false);
-  const [twitted, setTwitted] = useState<boolean>(false);
-  const [wallet, setWallet] = useState<OfflineSigner>();
-  const [proofString, setProofString] = useState<string>('');
-  const [twitterUsername, setTwitterUsername] = useState<string>('');
-  const {chainAccount} = useActiveAccount();
-  const unlockWallet = useUnlockWallet();
-  const signCustomTx = useSignCustomTx();
   const {
-    params: {mode},
-  } = useRoute<NavProps['route']>();
-
-  const handleUnlockWallet = useCallback(async () => {
-    console.log('unlockWallet');
-    if (chainAccount) {
-      const unlockResult = await unlockWallet({
-        chainAccount,
-        enterPwScreenOptions: {titleLabelOverride: t('proof')},
-      });
-      if (unlockResult) {
-        setWallet(unlockResult.wallet);
-        navigate(ROUTES.CONNECT_APP, {
-          mode: 'tweet',
-        });
-      }
-    }
-  }, [chainAccount, unlockWallet]);
-
-  const handleSelectTweet = useCallback(() => {
-    navigate(ROUTES.SELECT_TWEET, {username: twitterUsername});
-  }, [twitterUsername]);
-
-  const handleOnPress = useCallback(() => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('proof'),
-      subtitle: t('proof description'),
-      primaryButtonLabel: 'confirm',
-      onPressPrimary: handleUnlockWallet,
-      removeModalAfterButtonPress: true,
-    });
-  }, [handleUnlockWallet]);
-
-  const openTwitterApp = useCallback(() => {
-    setLoading(true);
-    Linking.openURL(
-      `twitter://post?message=${encodeURIComponent(
-        t('link proof') + proofString,
-      )}`,
-    )
-      .catch(() => {
-        Linking.openURL(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            t('link proof') + proofString,
-          )}`,
-        );
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setTwitted(true);
-          setLoading(false);
-        }, 1000);
-      });
-  }, [twitted, t, proofString]);
-
-  const generateProof = useCallback(async () => {
-    if (!wallet) return;
-    const accounts = await wallet.getAccounts();
-    const msg: MsgAuthenticateEncodeObject = {
-      typeUrl: '/desmjs.v1.MsgAuthenticate',
-      value: {
-        user: accounts[0].address,
-        nonce: toUtf8(twitterUsername),
-      },
-    };
-    const fee: StdFee = {
-      amount: [],
-      gas: '0',
-    };
-    const signed = await signCustomTx(wallet, [msg], fee);
-
-    return {
-      desmos_address: accounts[0].address,
-      pubkey_bytes: toHex(getPubKeyBytes(signed)),
-      signed_bytes: toHex(getSignedBytes(signed)),
-      signature_bytes: toHex(getSignatureBytes(signed)),
-    };
-  }, [wallet, signCustomTx]);
-
-  const postProof = useCallback(async () => {
-    try {
-      setGeneratingProof(true);
-      const toUpload = await generateProof();
-      const result = await PostProof(toUpload);
-      setProofString(result.url);
-    } catch (e: any) {
-      navigate(ROUTES.RESULT_MODAL, {
-        title: t('common:failed'),
-        subtitle: e.toString(),
-        primaryButtonLabel: t('common:retry')!,
-        onPressPrimary: () =>
-          navigate(ROUTES.CONNECT_APP, {
-            mode: 'tweet',
-          }),
-      });
-    } finally {
-      setGeneratingProof(false);
-    }
-  }, [generateProof]);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (mode === 'tweet') {
-        postProof();
-      }
-    }, [mode]),
-  );
+    mode,
+    generatingProof,
+    proofString,
+    openingTwitterApp,
+    handleOnPress,
+    handleSelectTweet,
+    twitterUsername,
+    openTwitterApp,
+    setTwitterUsername,
+    twitted,
+  } = useHooks();
 
   return (
     <DView
@@ -195,7 +57,7 @@ const ConnectApp = () => {
               disabled={!twitterUsername}
               mode="contained"
               color={theme.colors.surfaceBlack}
-              loading={loading}
+              loading={openingTwitterApp}
               onPress={handleOnPress}
               style={styles.button}>
               <Typography.Button2 style={{color: theme.colors.white}}>
@@ -246,7 +108,7 @@ const ConnectApp = () => {
             disabled={!twitterUsername}
             mode="contained"
             color={theme.colors.surfaceBlack}
-            loading={loading}
+            loading={openingTwitterApp}
             onPress={twitted ? handleSelectTweet : openTwitterApp}
             style={styles.button}>
             <Typography.Button2 style={{color: theme.colors.white}}>
