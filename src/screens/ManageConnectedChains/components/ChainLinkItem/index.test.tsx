@@ -3,7 +3,7 @@ import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkIte
 import {render} from 'jest/utils/CustomRender';
 import {fireEvent} from '@testing-library/react-native';
 
-describe('component: ChainLinkItem', () => {
+describe('component: AppConnectedItem', () => {
   it('renders', () => {
     const t = render(
       <ChainLinkItem

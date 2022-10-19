@@ -26,7 +26,8 @@ import ConnectAddressAdvanced, {
 import ConnectAddressGeneral, {
   ConnectAddressGeneralParams,
 } from 'screens/ConnectAddress/General';
-import ConnectApp, {ConnectAppParams} from 'screens/ConnectApp';
+import ConnectApp from 'screens/ConnectApp';
+import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -38,6 +39,7 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
+import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
@@ -48,6 +50,9 @@ import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
   ConsentAgreementParams,
 } from 'screens/Modals/ConsentAgreement';
+import DisconnectAppModal, {
+  DisconnectAppParams,
+} from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
@@ -98,6 +103,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
+  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
@@ -178,6 +184,8 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_APP]: ConnectAppParams;
 
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
+
+  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -287,6 +295,10 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
+      />
+      <Stack.Screen
+        name={ROUTES.MANAGE_CONNECTED_APPS}
+        component={ManageConnectedApps}
       />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
@@ -430,6 +442,11 @@ const RootNavigator = () => {
               externalAddress: 'externalAddress',
             },
           }}
+        />
+
+        <Stack.Screen
+          name={ROUTES.DISCONNECT_APP_MODAL}
+          component={DisconnectAppModal}
         />
 
         <Stack.Screen

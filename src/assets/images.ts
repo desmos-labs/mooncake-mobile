@@ -215,6 +215,8 @@ export const telegramIcon = require('./images/telegram.png');
 
 export const twitterIcon = require('./images/twitter.png');
 
+export const twitterIconBlack = require('./images/twitterBlack.png');
+
 export const mediumIcon = require('./images/medium.png');
 
 export const githubIcon = require('./images/github.png');

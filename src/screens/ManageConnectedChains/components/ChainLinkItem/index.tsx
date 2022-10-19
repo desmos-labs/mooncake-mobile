@@ -56,15 +56,15 @@ const ChainLinkItem = ({
     <DropShadowWrapper
       outerShadowProps={{
         startColor: 'rgba(37, 87, 188, 0.05)',
-        offset: [5, 20],
-        radius: 20,
-        distance: 20,
+        offset: [10, 20],
+        radius: 40,
+        distance: 40,
       }}
       innerShadowProps={{
-        startColor: 'rgba(16, 24, 40, 0.02)',
-        offset: [1, 40],
-        radius: 1,
-        distance: 20,
+        startColor: 'rgba(16, 24, 40, 0.05)',
+        offset: [0, 1],
+        radius: 10,
+        distance: 10,
       }}>
       <View style={styles.container}>
         <Image style={styles.icon} source={GetChainIcon(chainName)} />

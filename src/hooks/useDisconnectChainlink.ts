@@ -1,6 +1,5 @@
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {useCallback} from 'react';
-import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import {MsgUnlinkChainAccountEncodeObject} from '@desmoslabs/desmjs';
 import {ChainLink} from 'types/link';
 import useBroadcastMessages from './broadcastTx/useBroadcastMessages';
@@ -22,10 +21,7 @@ export default function useDisconnectChainLink() {
         } as MsgUnlinkChainAccountEncodeObject,
       ];
 
-      const gas = messagesGas(msgs);
-      // replace with Env value once merged
-      const fee = computeTxFees(gas, 'udaric').average;
-      await broadcastMessages(wallet, msgs, fee);
+      await broadcastMessages(wallet, msgs);
     },
     [broadcastMessages],
   );
