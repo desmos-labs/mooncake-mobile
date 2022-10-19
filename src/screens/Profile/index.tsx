@@ -316,7 +316,7 @@ const Profile = () => {
                       onPress={handleTwitterPress}>
                       <Image
                         source={twitterIcon}
-                        style={{width: 20, height: 20, marginRight: 6}}
+                        style={{width: 24, height: 24, marginRight: 6}}
                       />
                       <Typography.Button2>
                         @{twitterAccount.username}
