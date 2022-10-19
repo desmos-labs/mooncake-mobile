@@ -10,7 +10,7 @@ import {
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {Dimensions, LogBox, View} from 'react-native';
+import {Button, Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import {verticalScale} from 'react-native-size-matters';
@@ -19,6 +19,10 @@ import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import {useTheme} from 'react-native-paper';
+import usePendingPosts from '@recoil/pendingTx/pendingPosts';
+import EnvConfig from 'config/EnvConfig';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import _ from 'lodash';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
@@ -48,7 +52,37 @@ const Home = () => {
     posts,
     selectedPostIndex,
     onCarouselProgressChange,
+    isCurrentPostPending,
   } = useHooks();
+
+  const {addNewPendingPost} = usePendingPosts();
+
+  const debugAddPending = () => {
+    addNewPendingPost({
+      postData: {
+        id: Math.random() * 10000,
+        subspace_id: EnvConfig.APP_SUBSPACE_ID,
+        isPending: true,
+
+        text: 'hello world',
+
+        attachments: [
+          {
+            id: 0,
+            content: {
+              uri: 'https://static.wikia.nocookie.net/mato-seihei-no-slave/images/0/0f/Volume_01.png/revision/latest?cb=20191208175048',
+              mimeType: 'image/jpeg',
+            },
+          },
+        ],
+
+        author_address: '123123',
+      },
+      txHash: 'hashyboi',
+      timestamp: new Date().getTime(),
+      msgType: GrantEnums.MsgCreatePost,
+    });
+  };
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -70,6 +104,10 @@ const Home = () => {
   );
 
   const theme = useTheme();
+
+  const currentPost = posts[selectedPostIndex];
+
+  console.log(_.get(currentPost, 'repliesCount.aggregate.count'));
 
   return (
     <View style={{flex: 1, backgroundColor: theme.colors.background}}>
@@ -93,46 +131,65 @@ const Home = () => {
         }}
       />
 
-      {selectedPostIndex !== posts.length && (
+      {!isCurrentPostPending && selectedPostIndex !== posts.length && (
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => handlePressComments()}
-            interactionCount={
-              posts[selectedPostIndex]?.repliesCount.aggregate.count
-            }
+            interactionCount={_.get(
+              posts,
+              '[selectedPostIndex]?.repliesCount.aggregate.count',
+              0,
+            )}
             icon={
-              posts[selectedPostIndex]?.commentPresence?.aggregate?.count > 0
+              _.get(
+                posts,
+                '[selectedPostIndex]?.repliesCount.aggregate.count',
+                0,
+              ) > 0
                 ? commentIconCommented
                 : commentIcon
             }
           />
 
           <InteractionButton
-            onPress={() => handleAddReaction(posts[selectedPostIndex]?.id)}
-            interactionCount={posts[selectedPostIndex]?.reactions?.length}
+            onPress={() => {
+              if (isCurrentPostPending || !posts[selectedPostIndex]?.id) return;
+              handleAddReaction(posts[selectedPostIndex]?.id);
+            }}
+            interactionCount={_.get(
+              posts,
+              '[selectedPostIndex].reactions.length',
+              0,
+            )}
             icon={
-              posts[selectedPostIndex]?.reactionPresence?.aggregate?.count > 0
+              _.get(posts, '[selectedPostIndex].reactions.length', 0) > 0
                 ? commentLiked
                 : commentLikeEmptyIcon
             }
           />
 
           <InteractionButton
-            onPress={() =>
+            onPress={() => {
+              if (isCurrentPostPending) return;
               handlePressTip(
                 posts[selectedPostIndex]?.author.address,
                 posts[selectedPostIndex]?.id,
-              )
-            }
-            interactionCount={posts[selectedPostIndex]?.tips?.length}
+              );
+            }}
+            interactionCount={_.get(
+              posts,
+              '[selectedPostIndex]?.tips?.length',
+              0,
+            )}
             icon={
-              posts[selectedPostIndex]?.tipPresence?.aggregate?.count > 0
+              _.get(posts, '[selectedPostIndex]?.tips?.length', 0) > 0
                 ? tipIconTipped
                 : tipIcon
             }
           />
         </View>
       )}
+      <Button title="debug add" onPress={debugAddPending} />
     </View>
   );
 };

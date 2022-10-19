@@ -46,12 +46,18 @@ const PostCard = ({
   onPressDetails,
 }: Props) => {
   const styles = useStyles();
-  const {
-    author: {dtag, nickname, profile_pic},
-    attachments,
-  } = postData;
+  const {attachments, isPending} = postData;
 
-  const {activeAddress} = useActiveAccount();
+  const {activeAddress, profileData} = useActiveAccount();
+
+  // Use the current active user's profile data if the post is pending
+  const authorData = React.useMemo(() => {
+    if (isPending) {
+      return profileData || ({} as any);
+    } else return postData.author;
+  }, [postData, profileData]);
+
+  const {profile_pic, nickname, dtag} = authorData;
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
@@ -91,7 +97,7 @@ const PostCard = ({
     // TODO: make this less naive
     console.log('Default post behavior for post id', postData.id);
     return POST_TYPE.TEXT;
-  }, []);
+  }, [postData]);
 
   // Hopefully we come up with a more elegant way to do this in the future
   const content = React.useMemo(() => {

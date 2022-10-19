@@ -20,7 +20,7 @@ declare global {
   }
 
   interface PendingPost extends BasePendingTx {
-    postData: PostItem;
+    postData: Partial<PostItem>;
   }
 
   type PendingTx = PendingRelationship | PendingPost;

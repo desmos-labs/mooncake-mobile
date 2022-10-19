@@ -5,6 +5,8 @@ export {};
 // TODO: replace this with POST type from desmjs
 declare global {
   interface PostItem {
+    isPending?: boolean;
+
     author_address: string;
 
     author: PostAuthor;

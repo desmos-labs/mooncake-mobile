@@ -15,7 +15,9 @@ import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import _ from 'lodash';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -45,6 +47,8 @@ const useHooks = () => {
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
+  const pendingPosts = useRecoilValue(pendingPostsState);
+
   const {
     posts,
     fetchMorePosts,
@@ -63,6 +67,20 @@ const useHooks = () => {
 
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
+
+  // sort and combine pending posts with posts from API
+  const combinedPosts = React.useMemo(() => {
+    const sortedPendingPosts = [...pendingPosts]
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(x => x.postData);
+
+    return [...sortedPendingPosts, ...posts];
+  }, [posts, pendingPosts]);
+
+  const isCurrentPostPending = _.get(
+    combinedPosts[selectedPostIndex],
+    'isPending',
+  );
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -126,6 +144,8 @@ const useHooks = () => {
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
+      if (isCurrentPostPending) return;
+
       const result = await addOrRemoveReaction({
         postId,
       });
@@ -136,15 +156,18 @@ const useHooks = () => {
   );
 
   const handlePressComments = React.useCallback(() => {
+    if (isCurrentPostPending) return;
+
     navigate(ROUTES.POST_DETAILS, {
       focusCommentBox: true,
-      postId: posts[selectedPostIndex].id,
-      subspaceID: posts[selectedPostIndex].subspace_id,
+      postId: _.get(posts, '[selectedPostIndex].id'),
+      subspaceID: _.get(posts, '[selectedPostIndex].subspace_id'),
     });
   }, [selectedPostIndex, posts]);
 
   const handlePressTip = React.useCallback(
     (postAuthor: string, postId: number) => {
+      if (isCurrentPostPending) return;
       navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
     },
     [],
@@ -184,9 +207,10 @@ const useHooks = () => {
     handleAddReaction,
     handlePressComments,
     onPostChanged,
-    posts,
+    posts: combinedPosts,
     selectedPostIndex,
     onCarouselProgressChange,
+    isCurrentPostPending,
   };
 };
 

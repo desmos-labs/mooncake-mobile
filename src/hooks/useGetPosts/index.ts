@@ -91,7 +91,12 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
     [posts, loading],
   );
 
-  return {posts, fetchMorePosts, fetchNewestPosts, loading};
+  return {
+    posts,
+    fetchMorePosts,
+    fetchNewestPosts,
+    loading,
+  };
 };
 
 export default useGetPosts;

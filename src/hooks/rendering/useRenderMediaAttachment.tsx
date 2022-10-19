@@ -28,7 +28,7 @@ const useRenderMediaAttachment = ({
         />
       );
     }
-  }, []);
+  }, [attachments]);
 
   return {
     MediaAttachment,
