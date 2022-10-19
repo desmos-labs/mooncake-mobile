@@ -4,6 +4,9 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {connectedAppsState} from '@recoil/connectedApps';
+import {isFollowingAddr} from '@recoil/following';
+import useNumRelationships from '@recoil/numRelationshipState';
 import {
   cosmosIcon,
   defaultBanner,
@@ -30,6 +33,7 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
+  Linking,
   RefreshControl,
   TouchableOpacity,
   View,
@@ -37,11 +41,9 @@ import {
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {useSharedValue} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
-import {useRecoilValue} from 'recoil';
-import {isFollowingAddr} from '@recoil/following';
-import useNumRelationships from '@recoil/numRelationshipState';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
@@ -64,6 +66,7 @@ const Profile = () => {
   const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
   const {chainLinks} = useChainLinks();
+  const [connectedApps] = useRecoilState(connectedAppsState);
 
   /** Animations start
    * These hooks act as the animation driver for the ProfileHeader component
@@ -122,6 +125,10 @@ const Profile = () => {
   React.useEffect(() => {
     refreshNumRelationships();
   }, []);
+
+  const twitterAccount = useMemo(() => {
+    return connectedApps.find(app => app.application === 'twitter');
+  }, [connectedApps]);
 
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
@@ -216,6 +223,20 @@ const Profile = () => {
     console.log('test');
   }, []);
 
+  const handleTwitterPress = useCallback(() => {
+    if (twitterAccount) {
+      Linking.openURL(
+        `twitter://user?screen_name=${encodeURIComponent(
+          twitterAccount.username,
+        )}`,
+      ).catch(() => {
+        Linking.openURL(
+          `https://twitter.com/${encodeURIComponent(twitterAccount.username)}`,
+        );
+      });
+    }
+  }, [twitterAccount]);
+
   if (profileLoading) {
     return <ActivityIndicator />;
   }
@@ -289,31 +310,46 @@ const Profile = () => {
                       {t('connectAddress')}
                     </Typography.Button2>
                   </Button>
-                  <Button
-                    mode="outlined"
-                    style={{borderColor: theme.colors.surfaceBlack}}
-                    contentStyle={styles.connectButton}
-                    onPress={handlePressConnectApp}>
-                    <Typography.Button2>
-                      {t('connectTwitter')}
-                    </Typography.Button2>
-                  </Button>
+                  {twitterAccount ? (
+                    <TouchableOpacity
+                      style={styles.twitterButton}
+                      onPress={handleTwitterPress}>
+                      <Image
+                        source={twitterIcon}
+                        style={{width: 20, height: 20, marginRight: 6}}
+                      />
+                      <Typography.Button2>
+                        @{twitterAccount.username}
+                      </Typography.Button2>
+                    </TouchableOpacity>
+                  ) : (
+                    <Button
+                      mode="outlined"
+                      style={{borderColor: theme.colors.surfaceBlack}}
+                      contentStyle={styles.connectButton}
+                      onPress={handlePressConnectApp}>
+                      <Typography.Button2>
+                        {t('connectTwitter')}
+                      </Typography.Button2>
+                    </Button>
+                  )}
                 </View>
-                {chainLinks.length !== 0 && (
-                  <View style={{marginTop: 16}}>
-                    <ChainsCountersBar
-                      loading={false}
-                      connectedChainsCounter={chainLinks.length}
-                      connectedAppsCounter={0}
-                      connectedChainsImages={[
-                        stargazeIcon,
-                        cosmosIcon,
-                        twitterIcon,
-                      ]}
-                      handlePressCounters={() => console.log('test')}
-                    />
-                  </View>
-                )}
+                {chainLinks.length !== 0 ||
+                  (connectedApps.length !== 0 && (
+                    <View style={{marginTop: 16}}>
+                      <ChainsCountersBar
+                        loading={false}
+                        connectedChainsCounter={chainLinks.length}
+                        connectedAppsCounter={connectedApps.length}
+                        connectedChainsImages={[
+                          stargazeIcon,
+                          cosmosIcon,
+                          twitterIcon,
+                        ]}
+                        handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+                      />
+                    </View>
+                  ))}
               </>
             )}
           </View>

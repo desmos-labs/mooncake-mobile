@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     justifyContent: 'space-between',
   },
   text: {

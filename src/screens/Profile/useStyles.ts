@@ -74,6 +74,15 @@ const useStyles = makeStyle(theme => ({
     width: scale(150),
     flex: 1,
   },
+  twitterButton: {
+    paddingVertical: 6,
+    marginLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: scale(150),
+    flex: 1,
+  },
 }));
 
 export default useStyles;
