@@ -15,14 +15,26 @@ import {useRecoilValue} from 'recoil';
 import {connectChainState} from '@recoil/connectChainState';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {MsgLinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
-import {generateProof} from 'lib/desmos/chainlink';
 import LocalWallet from 'lib/LocalWallet';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import {formatFeeWithDenoms} from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
+import {
+  DesmosClient,
+  MsgLinkChainAccountEncodeObject,
+  OfflineSignerAdapter,
+} from '@desmoslabs/desmjs';
+import {
+  Bech32Address,
+  Proof,
+  SignatureValueType,
+  SingleSignature,
+} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {toHex} from '@cosmjs/encoding';
+import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -54,27 +66,69 @@ const ConnectChainTxDetail = () => {
     const generateMessage = async () => {
       if (!selectedChain) return;
 
+      const currentAddress = activeAddr!;
+
       const externalWallet = await LocalWallet.deserialize(
         selectedExternalAccount,
       );
 
-      const proof = await generateProof({
-        signerAddress: externalWallet.bech32Address,
-        externalChainWallet: externalWallet,
-        chain: selectedChain,
+      const _signer = new OfflineSignerAdapter(externalWallet);
+      const client = await DesmosClient.connectWithSigner(
+        EnvConfig.DESMOS_RPC,
+        _signer,
+      );
+
+      // sign the tx
+      const {pubKey, txRaw, signDoc} = await client.signTx(
+        externalWallet.bech32Address,
+        [],
+        {amount: [], gas: '0'},
+        currentAddress,
+        undefined,
+      );
+
+      // build signature
+      const signature: SingleSignature = {
+        valueType: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_AMINO, // Proper signature type
+        signature: txRaw.signatures[0], // Signature value
+      };
+
+      const proof: Proof = Proof.fromPartial({
+        pubKey,
+        signature: Any.fromPartial({
+          typeUrl: '/desmos.profiles.v3.SingleSignature',
+          value: SingleSignature.encode(signature).finish(),
+        }),
+        // I don't have access to the JSON.stringify().hexEncode() function so I used this instead
+        plainText: toHex(SignDoc.encode(signDoc as SignDoc).finish()),
       });
+
+      // Create the message
+      const value: MsgLinkChainAccount = MsgLinkChainAccount.fromPartial({
+        chainAddress: Any.fromPartial({
+          typeUrl: '/desmos.profiles.v3.Bech32Address',
+          value: Bech32Address.encode(
+            Bech32Address.fromPartial({
+              value: externalWallet.bech32Address,
+              prefix: selectedChain.prefix,
+            }),
+          ).finish(),
+        }),
+        proof,
+        chainConfig: {
+          name: selectedChain.name.toLowerCase(),
+        },
+        signer: activeAddr!,
+      });
+
+      const msg: MsgLinkChainAccountEncodeObject = {
+        typeUrl: '/desmos.profiles.v3.MsgLinkChainAccount',
+        value,
+      };
 
       setDeserializedExternalWallet(externalWallet);
 
-      setMessage({
-        typeUrl: GenericMsgEnums.MsgLinkChainAccount,
-        value: MsgLinkChainAccount.fromPartial({
-          signer: activeAddr,
-          proof: proof.proof,
-          chainConfig: proof.chainConfig,
-          chainAddress: proof.chainAddress,
-        }),
-      });
+      setMessage(msg);
     };
 
     generateMessage();
