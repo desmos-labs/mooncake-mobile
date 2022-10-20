@@ -18,6 +18,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
 import EnvConfig from 'config/EnvConfig';
+import {POST_TYPE} from '@recoil/posts';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -29,11 +30,16 @@ type FollowingNavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList>
 >;
 
+const postFamilyMap = {
+  [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
+  [ROUTES.HOME_FOLLOWING]: POST_TYPE.FOLLOWING,
+};
+
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {params} = useRoute<
+  const {name: routeName} = useRoute<
     DiscoverNavProps['route'] | FollowingNavProps['route']
   >();
 
@@ -54,7 +60,7 @@ const useHooks = () => {
     fetchMorePosts,
     fetchNewestPosts,
     loading: postsLoading,
-  } = useGetPosts({type: params.type});
+  } = useGetPosts({type: postFamilyMap[routeName]});
 
   // debug use
   const pendingTx = useRecoilValue(pendingTxState);
