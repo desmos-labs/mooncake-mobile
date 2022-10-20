@@ -85,6 +85,8 @@ const Profile = () => {
     const {contentOffset, contentSize, layoutMeasurement} = event;
     const denominator = contentSize.height - layoutMeasurement.height;
     const numerator = contentOffset.y;
+
+    scrollOffset.value = contentOffset.y;
     // clamp value between 0 and 1
     scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
   });
@@ -92,7 +94,7 @@ const Profile = () => {
   const animatedAvatarStyle = useAnimatedStyle(() => {
     return {
       top: AVATAR_TOP_OFFSET - scrollOffset.value,
-      transform: [{scale: 1.0}],
+      // transform: [{scale: 1.0}],
     };
   });
   /** Animations end * */
@@ -252,133 +254,137 @@ const Profile = () => {
       <Animated.View
         style={[
           styles.avatarContainer,
-          animatedAvatarStyle,
           {position: 'absolute', left: 0, right: 0},
+          animatedAvatarStyle,
         ]}>
         <Image style={styles.avatar} source={profileImage} />
       </Animated.View>
       <Animated.ScrollView
         overScrollMode="never"
         onScroll={scrollHandler}
+        scrollEventThrottle={10}
         // Hardcoded value to avoid overlapping with header
         refreshControl={
           <RefreshControl enabled onRefresh={refetch} refreshing={loading} />
         }
-        style={[styles.scrollviewStyle, {marginTop: 100 + top}]}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.contentGroup}>
-          <View style={{paddingHorizontal: theme.spacing.m}}>
-            {FollowButton}
+        <View style={[styles.scrollviewContentWrapper, {marginTop: 100 + top}]}>
+          <View style={styles.contentGroup}>
+            <View style={{paddingHorizontal: theme.spacing.m}}>
+              {FollowButton}
 
-            <Typography.H3
-              style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
-              {nickname}
-            </Typography.H3>
+              <Typography.H3
+                style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
+                {nickname}
+              </Typography.H3>
 
-            <Typography.Body7 style={styles.dTagText}>@{dtag}</Typography.Body7>
+              <Typography.Body7 style={styles.dTagText}>
+                @{dtag}
+              </Typography.Body7>
 
-            <Spacer paddingVertical={theme.spacing.s}>
-              <AddressCopy
-                address={address}
-                externalCallback={() => setShowSnackbar(true)}
-              />
-            </Spacer>
-            <Spacer paddingVertical={6} />
-            <UserBio content={bio || ''} />
-            <View style={styles.socialCounterGroup}>
-              <TouchableOpacity onPress={handleFollowingPressed}>
-                <SocialCounter
-                  count={numRelationships?.numFollowing}
-                  label={t('following')}
+              <Spacer paddingVertical={theme.spacing.s}>
+                <AddressCopy
+                  address={address}
+                  externalCallback={() => setShowSnackbar(true)}
                 />
-              </TouchableOpacity>
+              </Spacer>
+              <Spacer paddingVertical={6} />
+              <UserBio content={bio || ''} />
+              <View style={styles.socialCounterGroup}>
+                <TouchableOpacity onPress={handleFollowingPressed}>
+                  <SocialCounter
+                    count={numRelationships?.numFollowing}
+                    label={t('following')}
+                  />
+                </TouchableOpacity>
 
-              <View style={styles.separator} />
+                <View style={styles.separator} />
 
-              <TouchableOpacity onPress={handleFollowersPressed}>
-                <SocialCounter
-                  count={numRelationships?.numFollowers}
-                  label={t('followers')}
-                />
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity onPress={handleFollowersPressed}>
+                  <SocialCounter
+                    count={numRelationships?.numFollowers}
+                    label={t('followers')}
+                  />
+                </TouchableOpacity>
+              </View>
 
-            {screenMode === 'myProfile' && (
-              <>
-                <View style={styles.connectButtonGroup}>
-                  <Button
-                    mode="outlined"
-                    style={{borderColor: theme.colors.surfaceBlack}}
-                    contentStyle={styles.connectButton}
-                    onPress={handlePressConnectAddress}>
-                    <Typography.Button2>
-                      {t('connectAddress')}
-                    </Typography.Button2>
-                  </Button>
-                  {twitterAccount ? (
-                    <TouchableOpacity
-                      style={styles.twitterButton}
-                      onPress={handleTwitterPress}>
-                      <Image
-                        source={twitterIcon}
-                        style={{width: 24, height: 24, marginRight: 6}}
-                      />
-                      <Typography.Button2>
-                        @{twitterAccount.username}
-                      </Typography.Button2>
-                    </TouchableOpacity>
-                  ) : (
+              {screenMode === 'myProfile' && (
+                <>
+                  <View style={styles.connectButtonGroup}>
                     <Button
                       mode="outlined"
                       style={{borderColor: theme.colors.surfaceBlack}}
                       contentStyle={styles.connectButton}
-                      onPress={handlePressConnectApp}>
+                      onPress={handlePressConnectAddress}>
                       <Typography.Button2>
-                        {t('connectTwitter')}
+                        {t('connectAddress')}
                       </Typography.Button2>
                     </Button>
-                  )}
-                </View>
-                {chainLinks.length !== 0 ||
-                  (connectedApps.length !== 0 && (
-                    <View style={{marginTop: 16}}>
-                      <ChainsCountersBar
-                        loading={false}
-                        connectedChainsCounter={chainLinks.length}
-                        connectedAppsCounter={connectedApps.length}
-                        connectedChainsImages={[
-                          stargazeIcon,
-                          cosmosIcon,
-                          twitterIcon,
-                        ]}
-                        handlePressCounters={() => navigate(ROUTES.SETTINGS)}
-                      />
-                    </View>
-                  ))}
-              </>
-            )}
+                    {twitterAccount ? (
+                      <TouchableOpacity
+                        style={styles.twitterButton}
+                        onPress={handleTwitterPress}>
+                        <Image
+                          source={twitterIcon}
+                          style={{width: 24, height: 24, marginRight: 6}}
+                        />
+                        <Typography.Button2>
+                          @{twitterAccount.username}
+                        </Typography.Button2>
+                      </TouchableOpacity>
+                    ) : (
+                      <Button
+                        mode="outlined"
+                        style={{borderColor: theme.colors.surfaceBlack}}
+                        contentStyle={styles.connectButton}
+                        onPress={handlePressConnectApp}>
+                        <Typography.Button2>
+                          {t('connectTwitter')}
+                        </Typography.Button2>
+                      </Button>
+                    )}
+                  </View>
+                  {chainLinks.length !== 0 ||
+                    (connectedApps.length !== 0 && (
+                      <View style={{marginTop: 16}}>
+                        <ChainsCountersBar
+                          loading={false}
+                          connectedChainsCounter={chainLinks.length}
+                          connectedAppsCounter={connectedApps.length}
+                          connectedChainsImages={[
+                            stargazeIcon,
+                            cosmosIcon,
+                            twitterIcon,
+                          ]}
+                          handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+                        />
+                      </View>
+                    ))}
+                </>
+              )}
+            </View>
           </View>
+          <Spacer paddingVertical={4} />
+          {screenMode !== 'myProfile' && <Spacer paddingVertical={16} />}
+          <ProfileSectionButton
+            onPress={handlePostsSectionPressed}
+            titleLabel={t('posts')}
+            bodyLabel={t('check posts')}
+            screenMode={screenMode}
+          />
+          <ProfileSectionButton
+            onPress={handleNftSectionPressed}
+            titleLabel={t('nft')}
+            bodyLabel={t('link nft')}
+            screenMode={screenMode}
+          />
+          <ProfileSectionButton
+            onPress={handlePoapSectionPressed}
+            titleLabel={t('poap')}
+            bodyLabel={t('claim poap')}
+            screenMode={screenMode}
+          />
         </View>
-        <Spacer paddingVertical={4} />
-        {screenMode !== 'myProfile' && <Spacer paddingVertical={16} />}
-        <ProfileSectionButton
-          onPress={handlePostsSectionPressed}
-          titleLabel={t('posts')}
-          bodyLabel={t('check posts')}
-          screenMode={screenMode}
-        />
-        <ProfileSectionButton
-          onPress={handleNftSectionPressed}
-          titleLabel={t('nft')}
-          bodyLabel={t('link nft')}
-          screenMode={screenMode}
-        />
-        <ProfileSectionButton
-          onPress={handlePoapSectionPressed}
-          titleLabel={t('poap')}
-          bodyLabel={t('claim poap')}
-          screenMode={screenMode}
-        />
       </Animated.ScrollView>
 
       <ProfileHeader

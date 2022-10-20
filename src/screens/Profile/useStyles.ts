@@ -57,11 +57,6 @@ const useStyles = makeStyle(theme => ({
     zIndex: 2,
     backgroundColor: theme.colors.surface,
   },
-  scrollviewStyle: {
-    backgroundColor: theme.colors.white,
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
-  },
   contentContainerStyle: {
     flexGrow: 1,
   },
@@ -84,6 +79,11 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     width: scale(150),
     flex: 1,
+  },
+  scrollviewContentWrapper: {
+    backgroundColor: theme.colors.white,
+    borderTopRightRadius: 32,
+    borderTopLeftRadius: 32,
   },
 }));
 
