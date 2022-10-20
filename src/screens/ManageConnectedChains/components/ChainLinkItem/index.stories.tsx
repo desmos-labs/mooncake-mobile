@@ -13,7 +13,7 @@ const defaultProps: CompProps = {
   showSnackBar: action('showSnackBar'),
 };
 
-storiesOf('components/ChainLinkItem', module)
+storiesOf('components/AppConnectedItem', module)
   .addDecorator(getStories => (
     <SbContainer padding={16} justifyContent="center">
       {getStories()}

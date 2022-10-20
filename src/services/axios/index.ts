@@ -44,7 +44,7 @@ export const useInitializeAxios = () => {
 
   React.useEffect(() => {
     if (!bearerToken) return;
-    console.log('setting new bearer token');
+    console.log('setting new bearer token', bearerToken);
 
     axiosInstance.defaults.headers.common = {
       Authorization: `Bearer ${bearerToken}`,
