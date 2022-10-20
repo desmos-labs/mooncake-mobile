@@ -88,7 +88,11 @@ const Home = () => {
   console.log(_.get(currentPost, 'repliesCount.aggregate.count'));
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}>
       <Carousel
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
