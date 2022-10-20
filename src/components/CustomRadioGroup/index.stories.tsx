@@ -18,9 +18,7 @@ const RenderComponent = () => {
     <CustomRadioGroup
       values={initialiRadioValues}
       selectedValue={state}
-      onSelect={(index, value) => {
-        console.log(index);
-        console.log(value);
+      onSelect={index => {
         setState(index);
       }}
     />

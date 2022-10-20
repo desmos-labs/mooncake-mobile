@@ -59,7 +59,7 @@ const Settings: React.FC<NavProps> = props => {
       index: 0,
       routes: [
         {
-          name: ROUTES.HOME,
+          name: ROUTES.HOME_TABS,
         },
       ],
     });
@@ -131,7 +131,7 @@ const Settings: React.FC<NavProps> = props => {
         />
         <SectionButton
           label={t('manage connected apps')}
-          onPress={() => console.log('manage connected apps')}
+          onPress={() => navigate(ROUTES.MANAGE_CONNECTED_APPS)}
         />
       </Section>
       <Section style={styles.spacer} title={t('security')}>

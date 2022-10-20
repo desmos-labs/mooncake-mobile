@@ -28,7 +28,6 @@ const CentralizedBroadcastTx = async ({
   memo,
 }: Params): Promise<Response> => {
   const _response = await axiosInstance.post('/broadcast', {messages, memo});
-
   return _response.data;
 };
 

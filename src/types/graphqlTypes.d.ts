@@ -61,4 +61,14 @@ declare global {
     following: FollowerType[];
     creation_time: string;
   }
+
+  interface ConnectedApps {
+    application: string;
+    creation_time: string;
+    username: string;
+  }
+
+  interface ConnectedAppsQueryData {
+    application_link: ConnectedApps[];
+  }
 }

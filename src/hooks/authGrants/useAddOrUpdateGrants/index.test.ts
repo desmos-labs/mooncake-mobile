@@ -1,5 +1,18 @@
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import {timestampFromDate} from '@desmoslabs/desmjs';
+import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
 import {act, renderHook, waitFor} from '@testing-library/react-native';
+import EnvConfig from 'config/EnvConfig';
+import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import {
+  AllowedMsgAllowance,
+  BasicAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import {
+  MsgGrantAllowance,
+  MsgRevokeAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
 import {
   buildGrantAllowanceEncode,
@@ -7,24 +20,10 @@ import {
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import {
-  MsgGrantAllowance,
-  MsgRevokeAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {
-  AllowedMsgAllowance,
-  BasicAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import {timestampFromDate} from '@desmoslabs/desmjs';
-import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import Long from 'long';
-import EnvConfig from 'config/EnvConfig';
-import {computeGasAndFees} from 'lib/desmos/fees';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import Long from 'long';
+import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 jest.mock('lib/desmos/fees');
 
@@ -191,10 +190,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
-
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
@@ -209,7 +204,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(mockBroadcastMessages).toHaveBeenCalledWith(
           expect.anything(), // wallet
           [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
-          expect.anything(), // fee
         );
       });
     });
@@ -228,10 +222,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
       );
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
 
@@ -260,10 +250,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
       );
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
@@ -301,10 +287,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
         mockRevokeAllowanceEncode,
       );
 
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
-
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
@@ -319,7 +301,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(mockBroadcastMessages).toHaveBeenCalledWith(
           expect.anything(), // wallet
           [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
-          expect.anything(), // fee
+          // expect.anything(), // fee
         );
       });
     });

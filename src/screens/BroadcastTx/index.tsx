@@ -1,5 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
+import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -10,8 +11,6 @@ import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
 import ROUTES from 'navigation/routes';
 import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
 import {useRoute} from '@react-navigation/native';
-import {computeTxFees, messagesGas} from 'lib/desmos/fees';
-import EnvConfig from 'config/EnvConfig';
 import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
@@ -52,13 +51,8 @@ const BroadcastTx: React.FC = () => {
 
   const broadcastTx = React.useCallback(async () => {
     const {messages, granter, offlineSigner} = params;
-
-    const gas = messagesGas(messages);
-    // hardcoded denom for now
-    const txFee = computeTxFees(gas, EnvConfig.BASE_DENOM).average;
-
     try {
-      await broadcastMessages(offlineSigner, messages, txFee, '', granter);
+      await broadcastMessages(offlineSigner, messages, '', granter);
 
       params.successAction && params.successAction();
     } catch (err: any) {
@@ -76,6 +70,7 @@ const BroadcastTx: React.FC = () => {
     <DView>
       <View style={styles.container}>
         <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+        <Spacer paddingVertical={12} />
         <Typography.H4>{t('transaction broadcasting')}</Typography.H4>
         <Typography.Body6>{t('please wait')}</Typography.Body6>
       </View>

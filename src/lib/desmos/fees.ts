@@ -4,6 +4,7 @@ import {calculateFee} from '@cosmjs/stargate';
 import {GenericMsgEnums} from './msgtypes';
 
 /**
+ * @deprecated
  * Interface that represents the various level
  * of the gas prices.
  */
@@ -14,6 +15,7 @@ export interface GasPrices {
 }
 
 /**
+ * @deprecated
  * Default desmos gas prices.
  * The price are without denom since it depends on the chain selected from the user.
  */
@@ -24,11 +26,13 @@ export const DefaultGasPrice: GasPrices = {
 };
 
 /**
+ * @deprecated
  * Tx price levels.
  */
 export type TxPriceLevel = keyof TxFees;
 
 /**
+ * @deprecated
  * Interface that represents the various level
  * of fees that can be paid for a transaction.
  */
@@ -39,6 +43,7 @@ export interface TxFees {
 }
 
 /**
+ * @deprecated
  * Computes the tx fees for
  * @param gas - The tx gas.
  * @param denom - The chain coin denom.
@@ -58,12 +63,12 @@ export function computeTxFees(
 }
 
 /**
+ * @deprecated
  * Estimates the total gas needed to process the provided messages.
  * @param msg - List of messages.
  */
 export function messagesGas(msg: EncodeObject[]): number {
   let gas = 0;
-
   msg.forEach(m => {
     switch (m.typeUrl) {
       case GenericMsgEnums.MsgLinkChainAccount:
@@ -86,6 +91,7 @@ export function messagesGas(msg: EncodeObject[]): number {
 }
 
 /**
+ * @deprecated
  * Convenience function that returns an object containing the Gas and txFees
  */
 export const computeGasAndFees = ({

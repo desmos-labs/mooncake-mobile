@@ -6,10 +6,13 @@ import EnterCommentBottomBar from './index';
 type CompProps = React.ComponentProps<typeof EnterCommentBottomBar>;
 
 const DefaultProps: CompProps = {
-  imageSrc: {
+  profileImage: {
     uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Alberto_conversi_profile_pic.jpg',
   },
   onIconPress: () => console.log('test'),
+  focusTextInput: false,
+  loading: false,
+  handlePostComment: () => console.log('post'),
 };
 
 // MaterialButton as in Desmos Button
