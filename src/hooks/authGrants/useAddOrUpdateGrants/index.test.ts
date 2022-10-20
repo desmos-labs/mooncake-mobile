@@ -1,30 +1,25 @@
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
-import {act, renderHook, waitFor} from '@testing-library/react-native';
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
-import {
-  buildGrantAllowanceEncode,
-  buildGrantMsgEncodes,
-  buildRevokeAllowanceEncode,
-  buildRevokeGrantMsgEncodes,
-} from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import {
-  MsgGrantAllowance,
-  MsgRevokeAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import {timestampFromDate} from '@desmoslabs/desmjs';
+import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
+import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
+import {act, renderHook, waitFor} from '@testing-library/react-native';
+import EnvConfig from 'config/EnvConfig';
+import {MsgGrant} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {
   AllowedMsgAllowance,
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import {timestampFromDate} from '@desmoslabs/desmjs';
-import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import Long from 'long';
-import EnvConfig from 'config/EnvConfig';
-import {computeGasAndFees} from 'lib/desmos/fees';
+import {MsgGrantAllowance} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
+import {
+  buildGrantAllowanceEncode,
+  buildGrantMsgEncodes,
+} from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import {computeGasAndFees} from 'lib/desmos/fees';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import Long from 'long';
+import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 jest.mock('lib/desmos/fees');
 
@@ -113,7 +108,7 @@ const mockMsgsGrantEncodes = [
   },
 ];
 
-const mockRevokeAllowanceEncode = {
+/* const mockRevokeAllowanceEncode = {
   typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
   value: MsgRevokeAllowance.fromPartial({
     grantee: mockGrantee,
@@ -130,7 +125,7 @@ const mockRevokeGrantMsgEncodes = [
       msgTypeUrl: mockGrants[0],
     }),
   },
-];
+]; */
 
 describe('hooks: useAddOrUpdateGrants', () => {
   afterEach(() => {
@@ -283,7 +278,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
     });
   });
 
-  describe('revokeAllGrants', () => {
+  /*  describe('revokeAllGrants', () => {
     it('successfully revokes all grants from chain', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
@@ -323,5 +318,5 @@ describe('hooks: useAddOrUpdateGrants', () => {
         );
       });
     });
-  });
+  }); */
 });
