@@ -10,7 +10,7 @@ import {
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {Button, Dimensions, LogBox, View} from 'react-native';
+import {Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import {verticalScale} from 'react-native-size-matters';
@@ -19,9 +19,6 @@ import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import {useTheme} from 'react-native-paper';
-import usePendingPosts from '@recoil/pendingTx/pendingPosts';
-import EnvConfig from 'config/EnvConfig';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import _ from 'lodash';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
@@ -57,35 +54,6 @@ const Home = () => {
     onCarouselProgressChange,
     isPostPending,
   } = useHooks();
-
-  const {addNewPendingPost} = usePendingPosts();
-
-  const debugAddPending = () => {
-    addNewPendingPost({
-      postData: {
-        id: Math.random() * 10000,
-        subspace_id: EnvConfig.APP_SUBSPACE_ID,
-        isPending: true,
-
-        text: 'hello world',
-
-        attachments: [
-          {
-            id: 0,
-            content: {
-              uri: 'https://static.wikia.nocookie.net/mato-seihei-no-slave/images/0/0f/Volume_01.png/revision/latest?cb=20191208175048',
-              mimeType: 'image/jpeg',
-            },
-          },
-        ],
-
-        author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
-      },
-      txHash: 'hashyboi',
-      timestamp: new Date().getTime(),
-      msgType: GrantEnums.MsgCreatePost,
-    });
-  };
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -208,7 +176,6 @@ const Home = () => {
             />
           </View>
         )}
-      <Button title="debug add" onPress={debugAddPending} />
     </View>
   );
 };
