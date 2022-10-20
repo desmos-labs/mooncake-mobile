@@ -8,7 +8,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, KeyboardAvoidingView, Platform, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -27,6 +27,9 @@ const ConnectApp = () => {
     openTwitterApp,
     setTwitterUsername,
     twitted,
+    checkingUsername,
+    checkTwitterUsername,
+    twitterUsernameExisting,
   } = useHooks();
 
   return (
@@ -47,8 +50,26 @@ const ConnectApp = () => {
               placeholder={t('username')}
               style={styles.input}
               value={twitterUsername}
-              onChangeText={text => setTwitterUsername(text)}
+              onChangeText={text => {
+                setTwitterUsername(text);
+                checkTwitterUsername(text);
+              }}
             />
+            <Spacer paddingVertical={6} />
+            {checkingUsername ? (
+              <ActivityIndicator
+                style={{alignSelf: 'flex-start', marginLeft: 6}}
+              />
+            ) : (
+              <Typography.Body6
+                style={
+                  twitterUsernameExisting
+                    ? {color: theme.colors.accentGreen01}
+                    : {color: theme.colors.pink01}
+                }>
+                {twitterUsernameExisting ? t('valid') : t('invalid')}
+              </Typography.Body6>
+            )}
           </View>
           <KeyboardAvoidingView
             keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}

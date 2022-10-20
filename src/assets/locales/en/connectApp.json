@@ -13,5 +13,7 @@
   "select one tweet": "Select one of the tweets you made",
   "tweet it now": "Tweet it now",
   "connectedApps": "Connected Apps",
-  "proof description": "In order to connect to your twitter account you need to confirm your ownership over this profile"
+  "proof description": "In order to connect to your twitter account you need to confirm your ownership over this profile",
+  "valid": "Valid twitter username",
+  "invalid": "Invalid twitter username"
 }

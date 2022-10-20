@@ -21,6 +21,7 @@ import ROUTES from 'navigation/routes';
 import {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
+import CheckTwitterUsername from 'services/axios/requests/CheckTwitterUsername';
 import PostProof from 'services/axios/requests/PostProof';
 
 export type ConnectAppParams = {
@@ -40,6 +41,9 @@ const useHooks = () => {
   const [wallet, setWallet] = useState<OfflineSigner>();
   const [proofString, setProofString] = useState<string>('');
   const [twitterUsername, setTwitterUsername] = useState<string>('');
+  const [twitterUsernameExisting, setTwitterUsernameExisting] =
+    useState<boolean>(false);
+  const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
   const {chainAccount} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
   const signCustomTx = useSignCustomTx();
@@ -151,6 +155,23 @@ const useHooks = () => {
     }, [mode]),
   );
 
+  const checkTwitterUsername = useCallback(
+    async (username: string) => {
+      try {
+        setCheckingUsername(true);
+        const result = await CheckTwitterUsername(username);
+        if (result) {
+          setTwitterUsernameExisting(true);
+        }
+      } catch (e) {
+        setTwitterUsernameExisting(false);
+      } finally {
+        setCheckingUsername(false);
+      }
+    },
+    [checkingUsername, twitterUsernameExisting],
+  );
+
   return {
     mode,
     twitterUsername,
@@ -163,6 +184,9 @@ const useHooks = () => {
     proofString,
     openingTwitterApp,
     twitted,
+    checkTwitterUsername,
+    twitterUsernameExisting,
+    checkingUsername,
   };
 };
 
