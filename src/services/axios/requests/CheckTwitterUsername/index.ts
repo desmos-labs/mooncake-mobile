@@ -6,7 +6,6 @@ import axiosInstance from 'services/axios';
 const CheckTwitterUsername = async (username: string): Promise<any> => {
   console.log(username);
   const _response = await axiosInstance.get(`/twitter/tweets/${username}`);
-
   return _response.data;
 };
 
