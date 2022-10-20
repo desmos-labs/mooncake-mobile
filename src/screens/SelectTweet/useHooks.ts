@@ -64,6 +64,7 @@ const useHooks = () => {
           method: 'tweet',
           value: JSON.stringify(selectedTweetId),
         };
+
         const verificationDataHex = Buffer.from(
           JSON.stringify(verificationData),
         ).toString('hex');

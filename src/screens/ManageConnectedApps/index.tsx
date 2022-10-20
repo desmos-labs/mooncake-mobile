@@ -51,8 +51,8 @@ const ManageConnectedApps = () => {
 
   const disconnectApplication = useCallback(
     async (appName: string, username: string) => {
+      if (!chainAccount) return;
       try {
-        if (!chainAccount) return;
         const result = await unlockWallet({chainAccount});
 
         if (result && result.wallet) {
@@ -75,7 +75,7 @@ const ManageConnectedApps = () => {
         console.log(e);
       }
     },
-    [chainAccount],
+    [chainAccount, successDisconnection, unlockWallet],
   );
 
   const handlePressDisconnectApp = React.useCallback(
@@ -85,7 +85,7 @@ const ManageConnectedApps = () => {
         onConfirmDisconnection: () => disconnectApplication(appName, username),
       });
     },
-    [chainAccount, disconnectApplication],
+    [disconnectApplication],
   );
 
   const renderChainLinks = React.useCallback(
@@ -100,7 +100,7 @@ const ManageConnectedApps = () => {
         />
       );
     },
-    [],
+    [handlePressDisconnectApp],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
