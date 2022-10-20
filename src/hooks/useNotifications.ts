@@ -3,15 +3,17 @@ import messaging from '@react-native-firebase/messaging';
 import resultTransactions from '@recoil/resultTransactions';
 import {useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
-import {useRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {Result} from 'types/transaction';
 import ToastConfig from 'config/ToastConfig';
 import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
+import usePendingPosts from '@recoil/pendingTx/pendingPosts';
 
 const useNotifications = () => {
-  const [transactions, setTransactions] = useRecoilState(resultTransactions);
+  const setTransactions = useSetRecoilState(resultTransactions);
   const toast = useToast();
   const {resolveByTxHash} = usePendingRelationships();
+  const {resolveByTxHash: resolvePendingPostsByTxHash} = usePendingPosts();
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -49,13 +51,15 @@ const useNotifications = () => {
           }
         }, 100);
 
+        // TODO: refactor this into one function
         resolveByTxHash(remoteMessage?.data?.tx_hash);
+        resolvePendingPostsByTxHash(remoteMessage?.data?.tx_hash);
 
-        setTransactions([
-          ...transactions,
+        setTransactions(prev => [
+          ...prev,
           {
-            hash: remoteMessage.data.tx_hash,
-            result: {type: remoteMessage.data.type} as Result,
+            hash: remoteMessage?.data?.tx_hash as string,
+            result: {type: remoteMessage?.data?.type} as Result,
           },
         ]);
       }
