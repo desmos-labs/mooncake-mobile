@@ -57,11 +57,13 @@ const useStyles = makeStyle(theme => ({
     zIndex: 2,
     backgroundColor: theme.colors.surface,
   },
-  contentContainerStyle: {
-    flexGrow: 1,
+  scrollviewStyle: {
     backgroundColor: theme.colors.white,
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
+  },
+  contentContainerStyle: {
+    flexGrow: 1,
   },
   connectButtonGroup: {
     flex: 1,

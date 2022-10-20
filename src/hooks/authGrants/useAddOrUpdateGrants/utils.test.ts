@@ -3,6 +3,7 @@ import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
+  buildRevokeGrantMsgEncodes,
 } from './utils';
 
 describe('hooks: useAddOrUpdateGrants utils', () => {
@@ -127,7 +128,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
     });
   });
 
-  /*  describe('buildRevokeGrantMsgEncodes', () => {
+  describe('buildRevokeGrantMsgEncodes', () => {
     it('properly builds an array og MsgRevokeEncodeObjects', () => {
       const msgEO = buildRevokeGrantMsgEncodes({grants, grantee, granter});
 
@@ -150,5 +151,5 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
         },
       ]);
     });
-  }); */
+  });
 });

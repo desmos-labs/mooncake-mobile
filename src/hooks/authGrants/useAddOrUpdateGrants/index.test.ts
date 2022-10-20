@@ -4,19 +4,23 @@ import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
 import {act, renderHook, waitFor} from '@testing-library/react-native';
 import EnvConfig from 'config/EnvConfig';
-import {MsgGrant} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {
   AllowedMsgAllowance,
   BasicAllowance,
 } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {MsgGrantAllowance} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import {
+  MsgGrantAllowance,
+  MsgRevokeAllowance,
+} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
+  buildRevokeAllowanceEncode,
+  buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {computeGasAndFees} from 'lib/desmos/fees';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
@@ -108,7 +112,7 @@ const mockMsgsGrantEncodes = [
   },
 ];
 
-/* const mockRevokeAllowanceEncode = {
+const mockRevokeAllowanceEncode = {
   typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
   value: MsgRevokeAllowance.fromPartial({
     grantee: mockGrantee,
@@ -125,7 +129,7 @@ const mockRevokeGrantMsgEncodes = [
       msgTypeUrl: mockGrants[0],
     }),
   },
-]; */
+];
 
 describe('hooks: useAddOrUpdateGrants', () => {
   afterEach(() => {
@@ -171,7 +175,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       });
     });
 
-    /*    it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
+    it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
         getAuthzGrants: () => ({
@@ -185,10 +189,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
       );
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
@@ -204,10 +204,9 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(mockBroadcastMessages).toHaveBeenCalledWith(
           expect.anything(), // wallet
           [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
-          expect.anything(), // fee
         );
       });
-    }); */
+    });
 
     it('throws an error if wallet failed to unlock', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
@@ -223,10 +222,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
       );
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
-
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
 
@@ -256,10 +251,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
-
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
@@ -278,7 +269,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
     });
   });
 
-  /*  describe('revokeAllGrants', () => {
+  describe('revokeAllGrants', () => {
     it('successfully revokes all grants from chain', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
@@ -296,10 +287,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
         mockRevokeAllowanceEncode,
       );
 
-      (computeGasAndFees as jest.Mock).mockReturnValue({
-        fee: {low: 0, average: 0, high: 0},
-      });
-
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
@@ -314,9 +301,9 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(mockBroadcastMessages).toHaveBeenCalledWith(
           expect.anything(), // wallet
           [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
-          expect.anything(), // fee
+          // expect.anything(), // fee
         );
       });
     });
-  }); */
+  });
 });
