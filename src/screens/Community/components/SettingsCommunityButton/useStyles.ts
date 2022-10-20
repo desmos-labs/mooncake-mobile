@@ -7,13 +7,12 @@ const useStyles = makeStyle(theme => ({
   externalContainer: {
     flex: 1,
     borderRadius: 12,
-    backgroundColor: theme.colors.background,
     marginBottom: 16,
   },
   container: {
     flex: 1,
     borderRadius: 12,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
   },
   button: {
     flexDirection: 'row',
