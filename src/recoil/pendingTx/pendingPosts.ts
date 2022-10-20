@@ -1,9 +1,35 @@
 import {atom, useRecoilState} from 'recoil';
 import React from 'react';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 
 export const pendingPostsState = atom<PendingPost[]>({
   key: 'pendingPosts',
-  default: [],
+  default: [
+    {
+      postData: {
+        id: Math.random() * 10000,
+        subspace_id: 5,
+        isPending: true,
+
+        text: 'hello world',
+
+        attachments: [
+          {
+            id: 0,
+            content: {
+              uri: 'https://static.wikia.nocookie.net/chainsaw-man/images/0/0f/Volume_01.png',
+              mimeType: 'image/jpeg',
+            },
+          },
+        ],
+
+        author_address: '123123',
+      },
+      txHash: 'hashyboi',
+      timestamp: new Date().getTime(),
+      msgType: GrantEnums.MsgCreatePost,
+    },
+  ],
 });
 
 const usePendingPosts = () => {

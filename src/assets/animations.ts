@@ -32,3 +32,8 @@ export const buildingBlockAnim: LottieAnimation = {
   light: require('./animations/buildingBlocks.json'),
   dark: require('./animations/buildingBlocks.json'),
 };
+
+export const loadingWhite: LottieAnimation = {
+  light: require('./animations/loading_white.json'),
+  dark: require('./animations/loading_white.json')
+}

@@ -8,6 +8,8 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {loadingWhite} from 'assets/animations';
 import useStyles from './useStyles';
 
 type Props = {
@@ -184,6 +186,19 @@ const PostCard = ({
       activeOpacity={0.9}>
       {MediaAttachment}
       {content}
+      {isPending && (
+        <ThemedLottieView
+          source={loadingWhite}
+          autoPlay
+          style={{
+            width: 40,
+            height: 40,
+            position: 'absolute',
+            top: 2,
+            left: 2,
+          }}
+        />
+      )}
     </TouchableOpacity>
   );
 };
