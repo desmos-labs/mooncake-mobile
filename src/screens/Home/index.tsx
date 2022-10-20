@@ -107,7 +107,8 @@ const Home = () => {
         }}
       />
 
-      {!isPostPending(posts[selectedPostIndex].id) &&
+      {posts.length > 0 &&
+        !isPostPending(posts[selectedPostIndex].id) &&
         selectedPostIndex !== posts.length && (
           <View style={styles.interactionButtonGroup}>
             <InteractionButton
