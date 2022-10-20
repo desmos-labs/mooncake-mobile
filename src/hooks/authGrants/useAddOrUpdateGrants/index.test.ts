@@ -176,7 +176,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       });
     });
 
-    it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
+    /*    it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
         getAuthzGrants: () => ({
@@ -212,7 +212,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
           expect.anything(), // fee
         );
       });
-    });
+    }); */
 
     it('throws an error if wallet failed to unlock', async () => {
       // simulate a user who is requesting MsgCreatePost grants for the first time
