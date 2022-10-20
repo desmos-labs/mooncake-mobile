@@ -22,6 +22,7 @@ import {useTheme} from 'react-native-paper';
 import _ from 'lodash';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
@@ -40,6 +41,7 @@ export type HomeParams = {
 const Home = () => {
   const styles = useStyles();
   const toast = useToast();
+  const {t} = useTranslation();
 
   const {
     handlePressDetails,
@@ -66,7 +68,7 @@ const Home = () => {
           onPressAuthor={() => handlePressAuthor(info.item.author_address)}
           onPressDetails={() => {
             if (isPostPending(info.item.id)) {
-              return toast.show('Post is being broadcasted...', {
+              return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
@@ -107,76 +109,78 @@ const Home = () => {
         }}
       />
 
-      {posts.length > 0 &&
-        !isPostPending(posts[selectedPostIndex].id) &&
-        selectedPostIndex !== posts.length && (
-          <View style={styles.interactionButtonGroup}>
-            <InteractionButton
-              onPress={() => {
-                if (isPostPending(posts[selectedPostIndex].id)) return;
-                handlePressComments(posts[selectedPostIndex].id);
-              }}
-              interactionCount={_.get(
+      {posts.length > 0 && selectedPostIndex !== posts.length && (
+        <View style={styles.interactionButtonGroup}>
+          <InteractionButton
+            onPress={() => {
+              if (isPostPending(posts[selectedPostIndex].id)) {
+                return toast.show(t('toast:postTxInProgress'), {
+                  type: ToastConfig.ERROR_NO_RETRY,
+                });
+              }
+              handlePressComments(posts[selectedPostIndex].id);
+            }}
+            interactionCount={_.get(
+              posts[selectedPostIndex],
+              'repliesCount.aggregate.count',
+              0,
+            )}
+            icon={
+              _.get(
                 posts[selectedPostIndex],
                 'repliesCount.aggregate.count',
                 0,
-              )}
-              icon={
-                _.get(
-                  posts[selectedPostIndex],
-                  'repliesCount.aggregate.count',
-                  0,
-                ) > 0
-                  ? commentIconCommented
-                  : commentIcon
-              }
-            />
+              ) > 0
+                ? commentIconCommented
+                : commentIcon
+            }
+          />
 
-            <InteractionButton
-              onPress={() => {
-                if (isPostPending(posts[selectedPostIndex].id)) {
-                  return;
-                }
-                handleAddReaction(posts[selectedPostIndex].id);
-              }}
-              interactionCount={_.get(
-                posts[selectedPostIndex],
-                'reactions.length',
-                0,
-              )}
-              icon={
-                _.get(posts[selectedPostIndex], 'reactions.length', 0) > 0
-                  ? commentLiked
-                  : commentLikeEmptyIcon
+          <InteractionButton
+            onPress={() => {
+              if (isPostPending(posts[selectedPostIndex].id)) {
+                return toast.show(t('toast:postTxInProgress'), {
+                  type: ToastConfig.ERROR_NO_RETRY,
+                });
               }
-            />
+              handleAddReaction(posts[selectedPostIndex].id);
+            }}
+            interactionCount={_.get(
+              posts[selectedPostIndex],
+              'reactions.length',
+              0,
+            )}
+            icon={
+              _.get(posts[selectedPostIndex], 'reactions.length', 0) > 0
+                ? commentLiked
+                : commentLikeEmptyIcon
+            }
+          />
 
-            <InteractionButton
-              onPress={() => {
-                if (
-                  isPostPending(posts[selectedPostIndex].id) ||
-                  !posts[selectedPostIndex].author
-                ) {
-                  return;
-                }
-                handlePressTip(
-                  posts[selectedPostIndex].author!.address,
-                  posts[selectedPostIndex].id,
-                );
-              }}
-              interactionCount={_.get(
-                posts[selectedPostIndex],
-                'tips.length',
-                0,
-              )}
-              icon={
-                _.get(posts[selectedPostIndex], 'tips.length', 0) > 0
-                  ? tipIconTipped
-                  : tipIcon
+          <InteractionButton
+            onPress={() => {
+              if (
+                isPostPending(posts[selectedPostIndex].id) ||
+                !posts[selectedPostIndex].author
+              ) {
+                return toast.show(t('toast:postTxInProgress'), {
+                  type: ToastConfig.ERROR_NO_RETRY,
+                });
               }
-            />
-          </View>
-        )}
+              handlePressTip(
+                posts[selectedPostIndex].author!.address,
+                posts[selectedPostIndex].id,
+              );
+            }}
+            interactionCount={_.get(posts[selectedPostIndex], 'tips.length', 0)}
+            icon={
+              _.get(posts[selectedPostIndex], 'tips.length', 0) > 0
+                ? tipIconTipped
+                : tipIcon
+            }
+          />
+        </View>
+      )}
     </View>
   );
 };
