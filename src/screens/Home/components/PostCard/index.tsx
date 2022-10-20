@@ -175,7 +175,7 @@ const PostCard = ({
         </View>
       );
     }
-  }, [postType, onPressFollow, activeAddress]);
+  }, [postType, onPressFollow, activeAddress, postData.author_address]);
 
   return (
     <TouchableOpacity

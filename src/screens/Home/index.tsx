@@ -79,7 +79,7 @@ const Home = () => {
           },
         ],
 
-        author_address: '123123',
+        author_address: 'desmos1dx6h75tkj0cuvyqf6cwn6usc9qynu39v0245m4',
       },
       txHash: 'hashyboi',
       timestamp: new Date().getTime(),

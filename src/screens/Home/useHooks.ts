@@ -79,8 +79,6 @@ const useHooks = () => {
 
   const isPostPending = React.useCallback(
     (postId: number) => {
-      console.log(postId);
-      console.log(combinedPosts.find(x => x.id === postId)?.isPending);
       return combinedPosts.find(x => x.id === postId)?.isPending;
     },
     [combinedPosts],
