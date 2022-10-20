@@ -56,20 +56,21 @@ const ConnectApp = () => {
               }}
             />
             <Spacer paddingVertical={6} />
-            {checkingUsername ? (
-              <ActivityIndicator
-                style={{alignSelf: 'flex-start', marginLeft: 6}}
-              />
-            ) : (
-              <Typography.Body6
-                style={
-                  twitterUsernameExisting
-                    ? {color: theme.colors.accentGreen01}
-                    : {color: theme.colors.pink01}
-                }>
-                {twitterUsernameExisting ? t('valid') : t('invalid')}
-              </Typography.Body6>
-            )}
+            {twitterUsername === '' ||
+              (checkingUsername ? (
+                <ActivityIndicator
+                  style={{alignSelf: 'flex-start', marginLeft: 6}}
+                />
+              ) : (
+                <Typography.Body6
+                  style={
+                    twitterUsernameExisting
+                      ? {color: theme.colors.accentGreen01}
+                      : {color: theme.colors.pink01}
+                  }>
+                  {twitterUsernameExisting ? t('valid') : t('invalid')}
+                </Typography.Body6>
+              ))}
           </View>
           <KeyboardAvoidingView
             keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
