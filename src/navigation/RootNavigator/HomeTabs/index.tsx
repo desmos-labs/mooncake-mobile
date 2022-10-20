@@ -31,7 +31,11 @@ const HomeTabs = () => {
     <SafeAreaView
       style={{flex: 1, backgroundColor: theme.colors.background}}
       edges={['top', 'bottom']}>
-      <Tab.Navigator tabBar={renderTabBar}>
+      <Tab.Navigator
+        tabBar={renderTabBar}
+        screenOptions={{
+          swipeEnabled: false,
+        }}>
         <Tab.Screen
           name={ROUTES.HOME_DISCOVER}
           initialParams={{type: 'discover'}}
