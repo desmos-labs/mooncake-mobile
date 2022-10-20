@@ -45,7 +45,11 @@ const HomeTabs = () => {
 
   return (
     <SafeAreaView
-      style={{flex: 1, backgroundColor: theme.colors.background}}
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+        paddingTop: 16,
+      }}
       edges={['top', 'bottom']}>
       <Tab.Navigator tabBar={renderTabBar}>
         <Tab.Screen
