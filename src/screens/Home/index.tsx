@@ -23,6 +23,8 @@ import usePendingPosts from '@recoil/pendingTx/pendingPosts';
 import EnvConfig from 'config/EnvConfig';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import _ from 'lodash';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
@@ -40,6 +42,7 @@ export type HomeParams = {
 
 const Home = () => {
   const styles = useStyles();
+  const toast = useToast();
 
   const {
     handlePressDetails,
@@ -52,7 +55,7 @@ const Home = () => {
     posts,
     selectedPostIndex,
     onCarouselProgressChange,
-    isCurrentPostPending,
+    isPostPending,
   } = useHooks();
 
   const {addNewPendingPost} = usePendingPosts();
@@ -93,9 +96,14 @@ const Home = () => {
         <PostCard
           postData={info.item}
           onPressAuthor={() => handlePressAuthor(info.item.author_address)}
-          onPressDetails={() =>
-            handlePressDetails(info.item.id, info.item.subspace_id)
-          }
+          onPressDetails={() => {
+            if (isPostPending(info.item.id)) {
+              return toast.show('Post is being broadcasted...', {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handlePressDetails(info.item.id, info.item.subspace_id);
+          }}
           onPressFollow={() => handlePressFollow(info.item.author_address)}
         />
       );
@@ -131,64 +139,75 @@ const Home = () => {
         }}
       />
 
-      {!isCurrentPostPending && selectedPostIndex !== posts.length && (
-        <View style={styles.interactionButtonGroup}>
-          <InteractionButton
-            onPress={() => handlePressComments()}
-            interactionCount={_.get(
-              posts,
-              '[selectedPostIndex]?.repliesCount.aggregate.count',
-              0,
-            )}
-            icon={
-              _.get(
-                posts,
-                '[selectedPostIndex]?.repliesCount.aggregate.count',
+      {!isPostPending(posts[selectedPostIndex].id) &&
+        selectedPostIndex !== posts.length && (
+          <View style={styles.interactionButtonGroup}>
+            <InteractionButton
+              onPress={() => {
+                if (isPostPending(posts[selectedPostIndex].id)) return;
+                handlePressComments(posts[selectedPostIndex].id);
+              }}
+              interactionCount={_.get(
+                posts[selectedPostIndex],
+                'repliesCount.aggregate.count',
                 0,
-              ) > 0
-                ? commentIconCommented
-                : commentIcon
-            }
-          />
+              )}
+              icon={
+                _.get(
+                  posts[selectedPostIndex],
+                  'repliesCount.aggregate.count',
+                  0,
+                ) > 0
+                  ? commentIconCommented
+                  : commentIcon
+              }
+            />
 
-          <InteractionButton
-            onPress={() => {
-              if (isCurrentPostPending || !posts[selectedPostIndex]?.id) return;
-              handleAddReaction(posts[selectedPostIndex]?.id);
-            }}
-            interactionCount={_.get(
-              posts,
-              '[selectedPostIndex].reactions.length',
-              0,
-            )}
-            icon={
-              _.get(posts, '[selectedPostIndex].reactions.length', 0) > 0
-                ? commentLiked
-                : commentLikeEmptyIcon
-            }
-          />
+            <InteractionButton
+              onPress={() => {
+                if (isPostPending(posts[selectedPostIndex].id)) {
+                  return;
+                }
+                handleAddReaction(posts[selectedPostIndex].id);
+              }}
+              interactionCount={_.get(
+                posts[selectedPostIndex],
+                'reactions.length',
+                0,
+              )}
+              icon={
+                _.get(posts[selectedPostIndex], 'reactions.length', 0) > 0
+                  ? commentLiked
+                  : commentLikeEmptyIcon
+              }
+            />
 
-          <InteractionButton
-            onPress={() => {
-              if (isCurrentPostPending) return;
-              handlePressTip(
-                posts[selectedPostIndex]?.author.address,
-                posts[selectedPostIndex]?.id,
-              );
-            }}
-            interactionCount={_.get(
-              posts,
-              '[selectedPostIndex]?.tips?.length',
-              0,
-            )}
-            icon={
-              _.get(posts, '[selectedPostIndex]?.tips?.length', 0) > 0
-                ? tipIconTipped
-                : tipIcon
-            }
-          />
-        </View>
-      )}
+            <InteractionButton
+              onPress={() => {
+                if (
+                  isPostPending(posts[selectedPostIndex].id) ||
+                  !posts[selectedPostIndex].author
+                ) {
+                  return;
+                }
+                handlePressTip(
+                  posts[selectedPostIndex].author!.address,
+                  posts[selectedPostIndex].id,
+                );
+              }}
+              interactionCount={_.get(
+                posts[selectedPostIndex],
+                'tips.length',
+                0,
+              )}
+              icon={
+                _.get(posts[selectedPostIndex], 'tips.length', 0) > 0
+                  ? tipIconTipped
+                  : tipIcon
+              }
+            />
+          </View>
+        )}
       <Button title="debug add" onPress={debugAddPending} />
     </View>
   );
