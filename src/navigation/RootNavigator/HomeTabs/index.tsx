@@ -51,7 +51,11 @@ const HomeTabs = () => {
         paddingTop: 16,
       }}
       edges={['top', 'bottom']}>
-      <Tab.Navigator tabBar={renderTabBar}>
+      <Tab.Navigator
+        tabBar={renderTabBar}
+        screenOptions={{
+          swipeEnabled: false,
+        }}>
         <Tab.Screen
           name={ROUTES.HOME_DISCOVER}
           initialParams={{type: 'discover'}}
