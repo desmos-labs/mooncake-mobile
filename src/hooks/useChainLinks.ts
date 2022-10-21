@@ -23,6 +23,7 @@ export default function useChainLinks() {
           } as ChainLink),
       );
 
+      console.log(cLinks);
       setChainLinks(cLinks);
     },
     onError: () => {},
