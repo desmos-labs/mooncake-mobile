@@ -20,6 +20,9 @@ jobs:
       - name: Fix git permissions
         run: git config --global --add safe.directory /__w/mobile/mobile
 
+      - name: verify git tag exists
+        run: git describe --tags --abbrev=0
+
       - uses: c-hive/gha-yarn-cache@v1
 
       - name: Install node modules
