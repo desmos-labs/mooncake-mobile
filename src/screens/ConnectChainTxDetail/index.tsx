@@ -89,7 +89,7 @@ const ConnectChainTxDetail = () => {
 
       // build signature
       const signature: SingleSignature = {
-        valueType: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_AMINO, // Proper signature type
+        valueType: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_DIRECT, // Proper signature type
         signature: txRaw.signatures[0], // Signature value
       };
 
@@ -164,7 +164,7 @@ const ConnectChainTxDetail = () => {
         navigate(ROUTES.RESULT_MODAL, {
           image: modalSuccess,
           title: t('resultModal:success'),
-          subtitle: t('chainLinked', {
+          subtitle: t('resultModal:chainLinked', {
             interpolation: {
               chain: selectedChain.name.toUpperCase(),
             },
