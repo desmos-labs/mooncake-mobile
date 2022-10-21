@@ -19,19 +19,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Fix git permissions
-        run: git config --global --add safe.directory /__w/flagship/flagship
+        run: git config --global --add safe.directory /__w/mobile/mobile
 
       - uses: c-hive/gha-yarn-cache@v1
 
       - name: Install node modules
         run: |
           yarn install
-          
-      - name: Copy .env from secrets
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: .env
-          encodedString: ${{secrets.ENV_TESTING_BASE64}}
+
+      - name: Copy .env
+        run: |
+          yarn deploy:copyDevEnv
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
