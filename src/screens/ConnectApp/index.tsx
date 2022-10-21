@@ -126,17 +126,36 @@ const ConnectApp = () => {
               />
             </View>
           )}
+
           <Button
             disabled={!twitterUsername}
             mode="contained"
             color={theme.colors.surfaceBlack}
             loading={openingTwitterApp}
             onPress={twitted ? handleSelectTweet : openTwitterApp}
-            style={styles.button}>
+            style={[styles.button, {marginBottom: theme.spacing.m}]}>
             <Typography.Button2 style={{color: theme.colors.white}}>
               {twitted ? t('common:next') : t('tweet it now')}
             </Typography.Button2>
           </Button>
+          {!twitted && (
+            <Button
+              disabled={!twitterUsername}
+              mode="outlined"
+              color={theme.colors.surfaceBlack}
+              onPress={handleSelectTweet}
+              style={[
+                styles.button,
+                {
+                  height: 48,
+                  justifyContent: 'center',
+                },
+              ]}>
+              <Typography.Button2 style={{color: theme.colors.surfaceBlack}}>
+                {t('tweet made go next')}
+              </Typography.Button2>
+            </Button>
+          )}
         </>
       )}
     </DView>
