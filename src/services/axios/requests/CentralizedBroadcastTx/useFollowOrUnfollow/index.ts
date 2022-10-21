@@ -60,9 +60,6 @@ const useFollowOrUnfollow = () => {
         );
       }
       if (!activeAddress) throw new Error('No active address found');
-      if (!addrToFollow) {
-        throw new Error(`Invalid counterparty address: "${addrToFollow}"`);
-      }
       const grantsToRequest = [
         GrantEnums.MsgCreateRelationship,
         GrantEnums.MsgDeleteRelationship,
