@@ -24,6 +24,7 @@ import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 jest.mock('lib/desmos/fees');
 
@@ -42,9 +43,7 @@ jest.mock('@recoil/activeProfileState', () => ({
   loading: false,
 }));
 
-jest.mock('hooks/useActiveAccount', () =>
-  jest.fn(() => ({chainAccount: jest.fn(), loading: false})),
-);
+jest.mock('hooks/useActiveAccount', () => jest.fn());
 
 jest.mock('hooks/useUnlockWallet', () => jest.fn());
 
@@ -136,6 +135,15 @@ describe('hooks: useAddOrUpdateGrants', () => {
     jest.clearAllMocks();
   });
 
+  // reset to default mock values as some tests set chainAccount to undefined
+  // to simulate an error
+  beforeEach(() => {
+    (useActiveAccount as jest.Mock).mockReturnValue({
+      chainAccount: 'mockChainAccount',
+      loading: false,
+    });
+  });
+
   describe('addOrUpdateGrants', () => {
     it('builds a fee grant allowance msg if user does not have one', async () => {
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
@@ -178,6 +186,28 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(err.message).toBe(
           'Error unlocking wallet or user cancelled authentication',
         );
+      }
+    });
+
+    it('throws an error if chainAccount is undefined', async () => {
+      (useActiveAccount as jest.Mock).mockReturnValue({
+        chainAccount: undefined,
+        loading: false,
+      });
+
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      } catch (err: any) {
+        expect(err.message).toBe('No active chain account found.');
       }
     });
 
@@ -355,6 +385,28 @@ describe('hooks: useAddOrUpdateGrants', () => {
         expect(err.message).toBe(
           'Error unlocking wallet or user cancelled authentication',
         );
+      }
+    });
+
+    it('throws an error if chainAccount is undefined', async () => {
+      (useActiveAccount as jest.Mock).mockReturnValue({
+        chainAccount: undefined,
+        loading: false,
+      });
+
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.revokeAllGrants();
+      } catch (err: any) {
+        expect(err.message).toBe('No active chain account found.');
       }
     });
 
