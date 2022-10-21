@@ -26,6 +26,12 @@ jobs:
       - name: Install node modules
         run: |
           yarn install
+          
+      - name: Copy .env from secrets
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: .env
+          encodedString: ${{secrets.ENV_TESTING_BASE64}}
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
