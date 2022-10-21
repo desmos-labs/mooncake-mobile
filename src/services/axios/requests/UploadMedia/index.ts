@@ -23,7 +23,7 @@ export type ImageMedia = {
 
 export type UploadAssetType = ImageMedia;
 
-export type Params = {
+export type UploadMediaParams = {
   /**
    * The media asset to be uploaded.
    * In the future, additional media types should be added here.
@@ -52,7 +52,10 @@ type Response = {
 /**
  * Upload images to web3 storage.
  */
-const UploadMedia = async ({mediaFile, onUploadProgress}: Params) => {
+const UploadMedia = async ({
+  mediaFile,
+  onUploadProgress,
+}: UploadMediaParams) => {
   const {fileName, type, uri} = mediaFile;
 
   const formData = new FormData();

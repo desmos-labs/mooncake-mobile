@@ -32,5 +32,7 @@
   "desmosProfileCreated" : "Your Desmos profile is created",
   "goToProfile": "Go to profile",
   "oopsSomethingWentWrongPleaseTryAgainLater": "Oops...! Something Went Wrong. Please try again later.",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "success": "Success",
+  "failed": "Failed"
 }

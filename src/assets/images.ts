@@ -176,6 +176,8 @@ export const shareBlackIcon = require('./images/shareBlackIcon.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');
 
+export const checkBlackIcon = require('./images/checkBlack.png');
+
 // array of images
 export const postBG = [
   require('./images/postBG/postBG1.png'),
@@ -212,6 +214,8 @@ export const discordIcon = require('./images/discord.png');
 export const telegramIcon = require('./images/telegram.png');
 
 export const twitterIcon = require('./images/twitter.png');
+
+export const twitterIconBlack = require('./images/twitterBlack.png');
 
 export const mediumIcon = require('./images/medium.png');
 

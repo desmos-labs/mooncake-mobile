@@ -13,3 +13,7 @@ jest.mock('react-native-permissions', () => require('react-native-permissions/mo
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 jest.mock('react-native-keychain', () => mockKeychain);
+
+jest.mock('react-native-toast-notifications', () => ({
+  useToast: () => ({show: jest.fn()}),
+}));

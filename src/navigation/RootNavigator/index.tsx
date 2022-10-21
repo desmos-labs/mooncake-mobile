@@ -26,6 +26,8 @@ import ConnectAddressAdvanced, {
 import ConnectAddressGeneral, {
   ConnectAddressGeneralParams,
 } from 'screens/ConnectAddress/General';
+import ConnectApp from 'screens/ConnectApp';
+import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
 import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
@@ -37,6 +39,7 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
+import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
@@ -47,6 +50,9 @@ import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
   ConsentAgreementParams,
 } from 'screens/Modals/ConsentAgreement';
+import DisconnectAppModal, {
+  DisconnectAppParams,
+} from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
@@ -69,6 +75,7 @@ import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import SelectTweet, {SelectTweetParams} from 'screens/SelectTweet';
 import Settings from 'screens/Settings';
 import ShowRecoveryPhrase, {
   ShowSecretPhraseParams,
@@ -96,6 +103,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
+  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.RESULT_MODAL]: ResultModalParams;
@@ -172,6 +180,12 @@ export type RootNavigatorParamList = {
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE]: undefined;
+
+  [ROUTES.CONNECT_APP]: ConnectAppParams;
+
+  [ROUTES.SELECT_TWEET]: SelectTweetParams;
+
+  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -282,6 +296,10 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_CONNECTED_CHAINS}
         component={ManageConnectedChains}
       />
+      <Stack.Screen
+        name={ROUTES.MANAGE_CONNECTED_APPS}
+        component={ManageConnectedApps}
+      />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
@@ -325,6 +343,8 @@ const RootNavigator = () => {
         component={ConnectAddressAdvanced}
       />
 
+      <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} />
+
       <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
@@ -356,6 +376,8 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+
+      <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
 
       <Stack.Screen
         name={ROUTES.CREATE_POST_CAMERA_ROLL}
@@ -420,6 +442,11 @@ const RootNavigator = () => {
               externalAddress: 'externalAddress',
             },
           }}
+        />
+
+        <Stack.Screen
+          name={ROUTES.DISCONNECT_APP_MODAL}
+          component={DisconnectAppModal}
         />
 
         <Stack.Screen

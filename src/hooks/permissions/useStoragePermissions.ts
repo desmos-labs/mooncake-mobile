@@ -12,7 +12,7 @@ type PermissionsStateType = 'granted' | 'rejected' | undefined;
  * @property {PermissionsStateType} permissionsState - The state of the permissions.
  */
 type ReturnType = {
-  requestStoragePermissions: () => Promise<void>;
+  requestStoragePermissions: (goBackOnFail?: boolean) => Promise<void>;
 
   permissionsState: PermissionsStateType;
 };
@@ -26,24 +26,33 @@ const useStoragePermissions = (): ReturnType => {
   const [permissionsState, setPermissionsState] =
     React.useState<PermissionsStateType>(undefined);
 
-  const requestStoragePermissions = React.useCallback(async () => {
-    const permission: any = Platform.select({
-      android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      ios: PERMISSIONS.IOS.MEDIA_LIBRARY,
-    });
+  const requestStoragePermissions = React.useCallback(
+    async (goBackOnFail?: boolean) => {
+      const permission: any = Platform.select({
+        android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+      });
 
-    // @ts-ignore
-    const grantedPermissions = await requestMultiple([permission]);
+      // @ts-ignore
+      const grantedPermissions = await requestMultiple([permission]);
 
-    // this will fail on ios simulator, so we skip permission check on emulators
-    // https://github.com/zoontek/react-native-permissions/issues/498
-    const isEmulator = await DeviceInfo.isEmulator();
-    if (!isEmulator && grantedPermissions[permission] !== 'granted') {
+      // this will fail on ios simulator, so we skip permission check on emulators
+      // https://github.com/zoontek/react-native-permissions/issues/498
+      const isEmulator = await DeviceInfo.isEmulator();
+      console.log(grantedPermissions[permission]);
+      if (
+        isEmulator ||
+        grantedPermissions[permission] === 'granted' ||
+        grantedPermissions[permission] === 'limited'
+      ) {
+        return setPermissionsState('granted');
+      }
+
       setPermissionsState('rejected');
-      goBack();
-    }
-    setPermissionsState('granted');
-  }, []);
+      goBackOnFail && goBack();
+    },
+    [],
+  );
 
   return {
     requestStoragePermissions,

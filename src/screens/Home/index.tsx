@@ -72,7 +72,11 @@ const Home = () => {
   const theme = useTheme();
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}>
       <Carousel
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}

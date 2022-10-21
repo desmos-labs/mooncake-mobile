@@ -59,9 +59,6 @@ const useStyles = makeStyle(theme => ({
   },
   contentContainerStyle: {
     flexGrow: 1,
-    backgroundColor: theme.colors.white,
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
   },
   connectButtonGroup: {
     flex: 1,
@@ -73,6 +70,20 @@ const useStyles = makeStyle(theme => ({
     height: 42,
     width: scale(150),
     flex: 1,
+  },
+  twitterButton: {
+    paddingVertical: 6,
+    marginLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: scale(150),
+    flex: 1,
+  },
+  scrollviewContentWrapper: {
+    backgroundColor: theme.colors.white,
+    borderTopRightRadius: 32,
+    borderTopLeftRadius: 32,
   },
 }));
 

@@ -53,6 +53,10 @@ export const useGetAuthzGrants = () => {
       expiration: string;
     }[];
   }> => {
+    if (!grantsAddress) {
+      return console.log('[DEBUG] not valid grantsAddress found') as any;
+    }
+
     const [feeGrantData, grantsData] = await Promise.all([
       client.query({
         query: GetFeeGrantCount,

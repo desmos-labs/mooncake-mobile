@@ -1,20 +1,18 @@
-import React from 'react';
-import {useButterConfig} from '@recoil/butterConfigState';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
-import {computeGasAndFees} from 'lib/desmos/fees';
-import EnvConfig from 'config/EnvConfig';
 import {OfflineSigner} from '@cosmjs/proto-signing';
-import _ from 'lodash';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
+import {useButterConfig} from '@recoil/butterConfigState';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
+import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import _ from 'lodash';
+import React from 'react';
 import {Alert} from 'react-native';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
@@ -54,7 +52,7 @@ const useAddOrUpdateGrants = () => {
 
     const grantsToRevoke = grants.map(x => x.msg_type);
 
-    console.warn('Revoking the following grants:', grantsToRevoke.join(', '));
+    console.log('Revoking the following grants:', grantsToRevoke.join(', '));
     const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
       grantee,
       granter,
@@ -81,15 +79,9 @@ const useAddOrUpdateGrants = () => {
       ...msgRevokeGrantEncode,
     ]);
 
-    const {fee} = computeGasAndFees({
-      msg: combinedMessages,
-      denom: EnvConfig.BASE_DENOM,
-    });
-
     const broadcastResult = await broadcastMessages(
       wallet as OfflineSigner,
       combinedMessages,
-      fee.average,
     );
 
     if (!broadcastResult) {
@@ -159,15 +151,9 @@ const useAddOrUpdateGrants = () => {
         ...msgsGrantEncodes,
       ]);
 
-      const {fee} = computeGasAndFees({
-        msg: combinedMessages,
-        denom: EnvConfig.BASE_DENOM,
-      });
-
       const broadcastResult = await broadcastMessages(
         wallet as OfflineSigner,
         combinedMessages,
-        fee.average,
       );
 
       if (!broadcastResult) {

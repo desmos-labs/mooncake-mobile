@@ -20,6 +20,7 @@ const SettingsCommunityButton = (props: Props) => {
 
   return (
     <DropShadowWrapper
+      outerShadowProps={{startColor: 'rgba(37, 87, 188, 0.06)', distance: 20}}
       style={styles.externalContainer}
       innerStyle={styles.container}>
       <TouchableOpacity onPress={onPress} style={styles.button}>
