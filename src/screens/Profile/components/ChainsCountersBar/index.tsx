@@ -32,7 +32,7 @@ const ChainsCountersBar = ({
           <View
             style={{
               flexDirection: 'row',
-              marginRight: -6 * connectedChainsImages.length,
+              marginRight: -10 * connectedChainsImages.length,
             }}>
             {connectedChainsImages.map((x, idx) => (
               <Image
