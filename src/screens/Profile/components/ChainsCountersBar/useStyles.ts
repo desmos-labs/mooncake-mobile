@@ -15,7 +15,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-between',
   },
   text: {
-    marginLeft: theme.spacing.xs,
+    marginLeft: theme.spacing.s,
   },
   button: {
     alignItems: 'center',

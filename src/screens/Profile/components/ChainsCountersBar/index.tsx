@@ -36,7 +36,7 @@ const ChainsCountersBar = ({
             }}>
             {connectedChainsImages.map((x, idx) => (
               <Image
-                key={x.toString()}
+                key={`${x.toString()}-${Math.random()}`}
                 source={x}
                 style={[styles.iconStyle, {left: -10 * idx}]}
               />
@@ -44,10 +44,8 @@ const ChainsCountersBar = ({
           </View>
         )}
         <Typography.Button2 style={styles.text}>
-          {t('chains and apps connected', {
-            connectedChainsCounter,
-            connectedAppsCounter,
-          })}
+          {t('connectedChains', {count: connectedChainsCounter})} {t('and')}{' '}
+          {t('connectedApps', {count: connectedAppsCounter})}
         </Typography.Button2>
       </TouchableOpacity>
     </View>
