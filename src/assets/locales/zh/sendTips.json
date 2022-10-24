@@ -1,0 +1,14 @@
+{
+  "header": "Send Tips",
+  "available": "Available",
+  "description": "Support your favorite creator through tipping",
+  "subtitle": "How many token wanna tip?",
+  "insert amount": "Insert amount",
+  "message": "Message for Author",
+  "oops": "Oops!",
+  "warning fee": "a {{fee}}% fee will be included with your tip",
+  "no dsm": "You don’t have DSM",
+  "too much": "The amount is too much",
+  "too few": "The amount is too low",
+  "how to buy dsm": "How to buy DSM?"
+}
