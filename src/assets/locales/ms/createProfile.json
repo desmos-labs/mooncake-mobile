@@ -1,0 +1,11 @@
+{
+  "header": "Create a profile",
+  "description": "Create your decentralized profiles",
+  "nickname": "Nickname",
+  "enterNickname": "Enter nickname",
+  "dTag": "dTag*",
+  "enterDTag": "Enter dTag",
+  "bio": "Bio",
+  "addBio": "Add a bio to your profile (optional)",
+  "yourDesmosProfileIsNotCreated": "{{error}}, your Desmos profile has not been created"
+}
