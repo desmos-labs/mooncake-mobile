@@ -98,6 +98,7 @@ import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
+import RNBootSplash from 'react-native-bootsplash';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -200,7 +201,7 @@ const RootNavigator = () => {
 
   // Start polling queries
   usePollingQueries();
-
+  RNBootSplash.hide({fade: true});
   const {t} = useTranslation();
 
   /* To allow going back to previous screen via swipe left. */

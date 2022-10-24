@@ -515,6 +515,8 @@ PODS:
     - React-perflogger (= 0.69.0)
   - RNBluetoothStateManager (1.3.3):
     - React-Core
+  - RNBootSplash (4.3.2):
+    - React-Core
   - RNCClipboard (1.10.0):
     - React-Core
   - RNCMaskedView (0.2.6):
@@ -659,6 +661,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBluetoothStateManager (from `../node_modules/react-native-bluetooth-state-manager`)
+  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -808,6 +811,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNBluetoothStateManager:
     :path: "../node_modules/react-native-bluetooth-state-manager"
+  RNBootSplash:
+    :path: "../node_modules/react-native-bootsplash"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCMaskedView:
@@ -917,6 +922,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7ad268dee53d001697e13264c6bc8e95a902352e
   ReactCommon: 74a3b8ee497c6d50ce86ef57e15c4c5bf654b83d
   RNBluetoothStateManager: 4f2d73aecf081b97024116cba628e36c5b283791
+  RNBootSplash: 5f346163977573d6b2aeba1b25df9d2245c0d73c
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
