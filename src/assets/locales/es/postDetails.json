@@ -1,0 +1,14 @@
+{
+  "comments": "Comments",
+  "no comments yet": "No comments yet",
+  "comment": "Comment",
+  "reactions": "Reactions",
+  "tips": "Tips",
+  "tip": "Tip",
+  "like": "Like",
+  "follow": "Follow",
+  "unfollow": "Unfollow",
+  "report": "Report",
+  "share": "Share",
+  "likes and tips": "{{likesCounter}} Likes and {{tipsCounter}} Tips"
+}
