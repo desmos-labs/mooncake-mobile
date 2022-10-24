@@ -1,9 +1,11 @@
 import axiosInstance from 'services/axios';
 import Login from './index';
 
+const mockResponse = 'mock-response';
+
 jest.mock('services/axios', () => ({
   post: jest.fn(() => ({
-    data: 'mock-response',
+    data: mockResponse,
   })),
 }));
 
@@ -22,7 +24,7 @@ describe('services-axios: Login', () => {
     jest.clearAllMocks();
   });
 
-  it('calls axios.Post with the correct url and body', async () => {
+  it('posts correct url and body', async () => {
     const result = await Login(mockArgs);
 
     expect(axiosInstance.post).toHaveBeenCalledWith('/login', {
@@ -32,6 +34,6 @@ describe('services-axios: Login', () => {
       signature_bytes: mockArgs.signatureBytes,
     });
 
-    expect(result).toBe('mock-response');
+    expect(result).toBe(mockResponse);
   });
 });
