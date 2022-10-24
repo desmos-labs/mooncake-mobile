@@ -14,7 +14,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert} from 'react-native';
+import {Alert, Linking} from 'react-native';
 import GetTweetsGivenAnUsername from 'services/axios/requests/GetTweetsGivenAnUsername';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_TWEET>;
@@ -113,6 +113,12 @@ const useHooks = () => {
     }
   }, [chainAccount, unlockWallet, user, selectedTweetId]);
 
+  const openTwitterApp = useCallback(() => {
+    Linking.openURL('twitter://').catch(() => {
+      Linking.openURL('https://twitter.com/');
+    });
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       getTweets();
@@ -129,6 +135,7 @@ const useHooks = () => {
     selectedTweetId,
     setSelectedTweetId,
     handleConnectTweet,
+    openTwitterApp,
   };
 };
 

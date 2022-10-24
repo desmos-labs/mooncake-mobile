@@ -44,7 +44,10 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
     flexGrow: 1,
   },
-  flatlist: {marginHorizontal: -theme.spacing.m, flexGrow: 1},
+  flatlist: {
+    marginHorizontal: -theme.spacing.m,
+    flexGrow: 1,
+  },
 }));
 
 export default useStyles;
