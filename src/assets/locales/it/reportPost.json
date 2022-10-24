@@ -1,0 +1,9 @@
+{
+  "header": "What’s wrong with this post?",
+  "spam": "It's spam",
+  "scam": "It’s scam or misleading",
+  "nudity": "It’s nudity or sexually activities",
+  "violence": "It’s violent or prohibited content",
+  "others": "Others",
+  "message": "Add more details"
+}
