@@ -3,9 +3,10 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {FlatList, ListRenderItemInfo} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import NoTweets from 'screens/SelectTweet/components/NoConnections';
 import TweetComponent from 'screens/SelectTweet/components/TweetComponent';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -26,6 +27,7 @@ const SelectTweet = () => {
     setSelectedTweetId,
     handleConnectTweet,
     t,
+    openTwitterApp,
   } = useHooks();
 
   const renderItem = React.useCallback(
@@ -41,6 +43,28 @@ const SelectTweet = () => {
     },
     [user, selectedTweetId],
   );
+
+  const EmptyComponent = useMemo(() => {
+    return (
+      <>
+        <NoTweets />
+        <Spacer paddingVertical={12} />
+        <Button
+          color={theme.colors.surfaceBlack}
+          mode="outlined"
+          onPress={openTwitterApp}
+          style={{
+            alignSelf: 'center',
+            borderColor: theme.colors.surfaceBlack,
+            width: 140,
+            height: 42,
+            justifyContent: 'center',
+          }}>
+          {t('tweet now')}
+        </Button>
+      </>
+    );
+  }, []);
 
   return (
     <DView
@@ -60,6 +84,7 @@ const SelectTweet = () => {
           data={tweets}
           renderItem={renderItem}
           style={styles.flatlist}
+          ListEmptyComponent={EmptyComponent}
           contentContainerStyle={styles.flatlistContainer}
         />
         <Button
