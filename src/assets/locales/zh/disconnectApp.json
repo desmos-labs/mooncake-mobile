@@ -1,0 +1,5 @@
+{
+  "disconnect": "Disconnect",
+  "noConnectedApps": "No apps connected yet",
+  "areYouSure": "Are you sure you want to disconnect your {{appName}} account?"
+}
