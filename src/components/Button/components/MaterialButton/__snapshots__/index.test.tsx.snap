@@ -144,17 +144,19 @@ exports[`component: MaterialButton renders mode: backgroundComponent 1`] = `
   <View
     accessible={true}
     collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
+    focusable={false}
     onClick={[Function]}
-    onFocus={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
-    style={Object {}}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
   >
     <View
       style={
