@@ -6,7 +6,7 @@ const EnvConfig = {
     forbole: Config.FORBOLE_GQL,
     desmos: Config.DESMOS_GQL,
   },
-  CHAIN_ID: Config.CHAIN_ID,
+  CHAIN: Config.CHAIN,
   FEE_GRANTER: Config.FEE_GRANTER,
   DESMOS_RPC: Config.DESMOS_RPC,
   // temporary way to keep track of base denoms for transactions on the

@@ -1,6 +1,6 @@
 import {useQuery} from '@apollo/client';
 import {DesmosMainnet} from '@desmoslabs/desmjs';
-import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
+import {DesmosTestnet} from '@desmoslabs/desmjs/build/types/chains';
 import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import * as RNLocalize from 'react-native-localize';
@@ -65,9 +65,7 @@ const useInitializeAppData = () => {
         registeredReports: registeredReports?.subspace_report_reason,
         dataInitialized: true,
         currentChain:
-          EnvConfig.CHAIN_ID === 'desmos-mainnet'
-            ? DesmosMainnet
-            : MorpheusApollo2,
+          EnvConfig.CHAIN_ID === 'mainnet' ? DesmosMainnet : DesmosTestnet,
       }));
     }
   }, [profileParams, registeredReactions, registeredReports]);
