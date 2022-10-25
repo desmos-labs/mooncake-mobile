@@ -1,0 +1,22 @@
+{
+  "details description": "{{title}} includes the following actions",
+  "contents permission": "Contents Permission",
+  "reactions permission": "Reactions Permission",
+  "profile permission": "Profile Permission",
+  "relationships permission": "Relationships Permission",
+  "report permission": "Report Permission",
+  "contracts permission": "WASM Contracts Permission",
+  "create post": "Create post",
+  "delete post": "Delete post",
+  "edit post": "Edit post",
+  "add comment": "Add comment",
+  "delete comment": "Delete comment",
+  "edit comment": "Edit comment",
+  "add reaction": "Add reaction",
+  "remove reaction": "Remove reaction",
+  "edit profile": "Edit profile",
+  "create relationship": "Create relationship",
+  "delete relationship": "Create relationship",
+  "create report": "Create report",
+  "send tip": "Create post"
+}
