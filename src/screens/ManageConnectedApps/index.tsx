@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {connectedAppsState} from '@recoil/connectedApps';
 import {modalSuccess} from 'assets/images';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
@@ -107,6 +108,15 @@ const ManageConnectedApps = () => {
     return (
       <Spacer paddingTop={140}>
         <NoAppConnections />
+        <View style={styles.buttonContainer}>
+          <Button
+            color={theme.colors.surfaceBlack}
+            onPress={() => navigate(ROUTES.CONNECT_APP, {mode: 'connect'})}
+            mode="contained"
+            labelStyle={styles.buttonStyle}>
+            {t('connect app')}
+          </Button>
+        </View>
       </Spacer>
     );
   }, []);
