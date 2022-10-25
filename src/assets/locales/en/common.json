@@ -34,5 +34,6 @@
   "oopsSomethingWentWrongPleaseTryAgainLater": "Oops...! Something Went Wrong. Please try again later.",
   "tryAgain": "Try Again",
   "success": "Success",
-  "failed": "Failed"
+  "failed": "Failed",
+  "oops":"Oops!"
 }
