@@ -1,6 +1,6 @@
 {
-  "header": "正在查找设备",
-  "description": "请确保您的Ledger Nano X 已解锁并启用蓝牙.",
+  "header": "Looking for devices",
+  "description": "Please make sure your Ledger Nano X is unlocked and Bluetooth is enabled.",
   "noDeviceFound": "Sorry, no devices found",
   "permissionsDialog": "Please grant permissions to pair your ledger device.",
   "btNotOn": "Bluetooth is not enabled",
