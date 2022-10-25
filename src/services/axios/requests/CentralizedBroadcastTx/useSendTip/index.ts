@@ -17,7 +17,6 @@ const useSendTip = () => {
   const [appSettings] = useRecoilState(appSettingsState);
   const [sendTipLoading, setSendTipLoading] = React.useState(false);
   const {butterConfig} = useButterConfig();
-  console.log(useToast);
   const toast = useToast();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
@@ -67,9 +66,8 @@ const useSendTip = () => {
         grantsToRequest,
       });
 
-      console.log(success);
-
       if (!success) {
+        console.log(toast.show);
         return toast.show('[PLACEHOLDER]Authorization is required.', {
           type: ToastConfig.ERROR_NO_RETRY,
         });

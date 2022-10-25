@@ -5,6 +5,7 @@ import {act, renderHook} from '@testing-library/react-native';
 import useSendTip from 'services/axios/requests/CentralizedBroadcastTx/useSendTip/index';
 import {RecoilRoot} from 'recoil';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import {useToast} from 'react-native-toast-notifications';
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () => jest.fn());
 
@@ -31,6 +32,10 @@ jest.mock('./utils', () => ({
 }));
 
 jest.mock('services/axios/requests/CentralizedBroadcastTx');
+
+jest.mock('react-native-toast-notifications', () => ({
+  useToast: jest.fn(),
+}));
 
 describe('hook: useSendTip', () => {
   it('sends post tip', async () => {
@@ -115,6 +120,49 @@ describe('hook: useSendTip', () => {
     });
   });
 
+  it('throws error if grants fail', async () => {
+    const mockCheckAndUpdateGrants = jest.fn(() => ({success: false}));
+
+    (useCheckAndUpdateGrants as jest.Mock).mockImplementation(() => ({
+      checkAndUpdateGrants: mockCheckAndUpdateGrants,
+    }));
+
+    (encodeAndBroadcastTx as jest.Mock).mockReturnValue(true);
+
+    const mockShowToast = jest.fn();
+    (useToast as jest.Mock).mockReturnValue({
+      show: mockShowToast,
+    });
+
+    const initializeState = ({set}: any) => {
+      set(appSettingsState, {
+        currentChain: {
+          stakingDenom: 'test',
+        },
+      });
+    };
+
+    const {result} = renderHook(() => useSendTip(), {
+      wrapper: props => (
+        <RecoilRoot initializeState={initializeState}>
+          {props.children}
+        </RecoilRoot>
+      ),
+    });
+
+    const mockSendTipArgs = {
+      amount: 1,
+      sender: 'sender',
+      receiver: 'receiver',
+      message: 'message',
+    };
+
+    await result.current.sendTip(mockSendTipArgs);
+
+    expect(mockShowToast).toHaveBeenCalled();
+  });
+
+  // Leave this test last as it changes mockContractAddress
   it('throws error if a dependency is missing', async () => {
     // @ts-ignore
     mockContractAddress = undefined;
@@ -157,42 +205,5 @@ describe('hook: useSendTip', () => {
         'Error: useSendTip: Missing depedency: contractAddress',
       );
     }
-  });
-
-  it('throws error if grants fail', async () => {
-    const mockCheckAndUpdateGrants = jest.fn(() => ({success: false}));
-
-    (useCheckAndUpdateGrants as jest.Mock).mockImplementation(() => ({
-      checkAndUpdateGrants: mockCheckAndUpdateGrants,
-    }));
-
-    (encodeAndBroadcastTx as jest.Mock).mockReturnValue(true);
-
-    const initializeState = ({set}: any) => {
-      set(appSettingsState, {
-        currentChain: {
-          stakingDenom: 'test',
-        },
-      });
-    };
-
-    const {result} = renderHook(() => useSendTip(), {
-      wrapper: props => (
-        <RecoilRoot initializeState={initializeState}>
-          {props.children}
-        </RecoilRoot>
-      ),
-    });
-
-    const mockSendTipArgs = {
-      amount: 1,
-      sender: 'sender',
-      receiver: 'receiver',
-      message: 'message',
-    };
-
-    await result.current.sendTip(mockSendTipArgs);
-
-    expect(toast.show).toHaveBeenCalled();
   });
 });
