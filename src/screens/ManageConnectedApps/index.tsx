@@ -106,7 +106,7 @@ const ManageConnectedApps = () => {
 
   const ListEmptyComponent = React.useMemo(() => {
     return (
-      <Spacer paddingTop={140}>
+      <Spacer paddingTop={120}>
         <NoAppConnections />
         <View style={styles.buttonContainer}>
           <Button
