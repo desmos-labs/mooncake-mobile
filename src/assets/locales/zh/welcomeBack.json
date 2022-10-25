@@ -2,6 +2,6 @@
   "header": "Welcome Back!",
   "description": "Log back into your profile dTag",
   "inputLabel": "Password",
-  "inputPlaceholder": "Enter password",
+  "inputPlaceholder": "输入密码",
   "forgotPw": "Forgot Password"
 }
