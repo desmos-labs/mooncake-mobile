@@ -1,7 +1,7 @@
 import Button from 'components/Button';
-import React, {FC} from 'react';
+import React from 'react';
 import DView from 'components/DView';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
@@ -17,6 +17,9 @@ import {
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import LocalWallet from 'lib/LocalWallet';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import {ledgerApps} from 'config/LedgerApps';
+import _ from 'lodash';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -30,13 +33,22 @@ export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
-const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
+const ConnectAddressGeneral = () => {
   // placeholder
   const navigation = useNavigation<NavProps['navigation']>();
+
+  const route = useRoute<NavProps['route']>();
+
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
+
+  const ledgerTransport = _.get(route, 'params.ledgerTransport');
+  const ledgerApp = _.get(route, 'params.ledgerApp');
 
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
 
@@ -54,14 +66,36 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
    * for integration, replace mnemonic with the user's stored mnemonic, and
    * prefix with the correct prefix of the account to be connected
    */
-  const {accounts, generateAccountsFromMnemonic} = useGenerateAccounts({
+  const {accounts, generateAccountsFromMnemonic, generateAccountsFromLedger} =
+    useGenerateAccounts({
+      prefix: selectedChain.prefix,
+      coinType: selectedChain.hdPath.coinType,
+    });
+
+  const generateNewAccounts = React.useCallback(() => {
+    if (ledgerApps) {
+      console.log('generate');
+      try {
+        generateAccountsFromLedger({
+          transport: ledgerTransport,
+          ledgerApp,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      generateAccountsFromMnemonic({mnemonic});
+    }
+  }, [
+    generateAccountsFromLedger,
+    generateAccountsFromMnemonic,
+    ledgerTransport,
     mnemonic,
-    prefix: selectedChain.prefix,
-    coinType: selectedChain.hdPath.coinType,
-  });
+    ledgerApp,
+  ]);
 
   React.useEffect(() => {
-    generateAccountsFromMnemonic();
+    generateNewAccounts();
   }, []);
 
   const SwitchToAdvancedButton = React.useMemo(() => {
@@ -70,11 +104,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         <Button
           mode="text"
           onPress={() => {
-            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
-              nextRouteOverride,
-              loadedProfileMap,
-              titleLabelOverride,
-            });
+            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, route.params);
           }}>
           <Typography.Button2 style={styles.modeButtonText}>
             {t('advanced')}
@@ -141,7 +171,7 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
           padding: theme.spacing.m,
         }}
         onEndReached={() => {
-          generateAccountsFromMnemonic();
+          generateNewAccounts();
         }}
       />
     </DView>

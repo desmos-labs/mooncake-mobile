@@ -79,10 +79,11 @@ const ConnectToLedger = () => {
 
   React.useEffect(() => {
     if (autoClose && transport) {
+      console.log('got transport');
       onConnectionEstablished!(transport);
-      goBack();
+      // goBack();
     }
-  }, [transport, autoClose]);
+  }, [transport, autoClose, onConnectionEstablished]);
 
   React.useEffect(() => {
     if (autoClose) {

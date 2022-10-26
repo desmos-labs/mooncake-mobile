@@ -6,10 +6,11 @@ import {useTranslation} from 'react-i18next';
 import ConnectChainMethodButton from 'screens/ConnectChainMethod/components/ConnectChainMethodButton';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   connectMethodState,
   mnemonicState,
+  selectedChainState,
   signerState,
 } from '@recoil/connectChainState';
 import useUnlockWallet from 'hooks/useUnlockWallet';
@@ -20,6 +21,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
+import {CosmosLedgerApp, ledgerApps} from 'config/LedgerApps';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -37,12 +39,33 @@ const ConnectChainMethod = () => {
   const unlockWallet = useUnlockWallet();
 
   const setConnectChainMethod = useSetRecoilState(connectMethodState);
+  const selectedChain = useRecoilValue(selectedChainState);
 
   const setMnemonic = useSetRecoilState(mnemonicState);
   const setSigner = useSetRecoilState(signerState);
 
   const handlePressLedger = React.useCallback(() => {
     setConnectChainMethod('LEDGER');
+
+    const app =
+      ledgerApps.find(
+        x => x.name.toLowerCase() === selectedChain.name.toLowerCase(),
+      ) || CosmosLedgerApp;
+
+    navigate(ROUTES.AUTHORIZE_WALLET, {
+      screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
+      params: {
+        ledgerApp: app,
+        autoClose: true,
+        onConnectionEstablished: transport => {
+          console.log('hello world');
+          navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+            ledgerApp: app,
+            ledgerTransport: transport,
+          });
+        },
+      },
+    });
   }, []);
 
   const handlePressPassword = React.useCallback(async () => {

@@ -28,13 +28,14 @@ export const TerraLedgerApp: LedgerApp = {
   minVersion: '1.0.0',
 };
 
-export const LedgerApps: LedgerApp[] = [
+export const ledgerApps: LedgerApp[] = [
   // {
   //     name: "band",
   //     icon: require("../assets/chains/band.png"),
   //     uiName: "Band",
   //     minVersion: "1.5.3",
   // },
+  DesmosLedgerApp,
   CosmosLedgerApp,
   CryptoOrgLedgerApp,
   TerraLedgerApp,
