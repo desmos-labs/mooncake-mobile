@@ -1,5 +1,5 @@
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {isDeliverTxFailure} from '@cosmjs/stargate';
+import {GasPrice, isDeliverTxFailure} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
 import {TxRaw} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
@@ -22,6 +22,10 @@ export default function useBroadcastMessages() {
       const client = await DesmosClient.connectWithSigner(
         EnvConfig.DESMOS_RPC,
         _signer,
+        {
+          // placeholder
+          gasPrice: GasPrice.fromString('0.02udaric'),
+        },
       );
 
       const signerAddress = await _signer.getAccounts();
