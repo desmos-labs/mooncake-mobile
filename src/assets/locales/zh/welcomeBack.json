@@ -1,7 +1,7 @@
 {
   "header": "Welcome Back!",
-  "description": "登录到您的个人主页",
+  "description": "Log back into your profile dTag",
   "inputLabel": "Password",
-  "inputPlaceholder": "输入密码",
-  "forgotPw": "忘记密码"
+  "inputPlaceholder": "Enter password",
+  "forgotPw": "Forgot Password"
 }
