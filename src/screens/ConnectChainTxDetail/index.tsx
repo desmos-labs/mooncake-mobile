@@ -165,9 +165,7 @@ const ConnectChainTxDetail = () => {
           image: modalSuccess,
           title: t('resultModal:success'),
           subtitle: t('resultModal:chainLinked', {
-            interpolation: {
-              chain: selectedChain.name.toUpperCase(),
-            },
+            chain: selectedChain.name.toUpperCase(),
           }),
           onPressPrimary: () => {
             navigate(ROUTES.USER_PROFILE);

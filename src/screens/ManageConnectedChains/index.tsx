@@ -16,12 +16,7 @@ import NoConnections from 'screens/ManageConnectedChains/components/NoConnection
 import {ChainLink} from 'types/link';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useDisconnectChainLink from 'hooks/useDisconnectChainlink';
-import {modalSuccess} from 'assets/images';
-import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -35,37 +30,18 @@ const ManageConnectedChains = () => {
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const {refetch, chainLinks} = useChainLinks();
+  const {chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const {chainAccount} = useActiveAccount();
-  const unlockWallet = useUnlockWallet();
-  const disconnectChainLink = useDisconnectChainLink();
-
-  const toast = useToast();
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
       if (!chainAccount) return;
 
-      const unlockResponse = await unlockWallet({chainAccount});
-
-      if (!unlockResponse || !unlockResponse.wallet) return;
-      try {
-        await disconnectChainLink(unlockResponse.wallet, chainLink);
-        // we want the refetch call to run while the user is shown the sucess dialog.
-        refetch();
-
-        navigate(ROUTES.RESULT_MODAL, {
-          image: modalSuccess,
-          primaryButtonLabel: t('resultModal:goToProfile') as string,
-          onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
-        });
-      } catch (err: any) {
-        toast.show(String(err), {
-          type: ToastConfig.ERROR,
-        });
-      }
+      navigate(ROUTES.DISCONNECT_CHAIN_MODAL, {
+        chainLink,
+      });
     },
     [chainAccount],
   );
