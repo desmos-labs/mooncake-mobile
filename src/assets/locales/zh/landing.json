@@ -1,7 +1,7 @@
 {
   "butter": "Butter",
   "header": "Your decentralized social network",
-  "signUp": "注册",
-  "importMnemonic": "导入助记词",
-  "connectLedger": "连接Ledger"
+  "signUp": "Sign up",
+  "importMnemonic": "Import Secret Recovery Phrase",
+  "connectLedger": "Connect Ledger"
 }
