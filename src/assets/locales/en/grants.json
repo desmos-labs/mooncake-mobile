@@ -13,12 +13,12 @@
   "relationships desc": "Follow user, unfollow user, block user, and unblock user",
   "report": "Report",
   "report desc": "Report content",
-  "contracts": "WASM Contracts",
-  "contracts desc": "Execute contracts relating to specific functions of the application, such as sending tips",
+  "contracts": "Smart Contracts",
+  "contracts desc": "Execute smart contracts related to specific functions of the application, such as tips sending, POAP",
   "contents permission": "Contents Permission",
   "reactions permission": "Reactions Permission",
   "profile permission": "Profile Permission",
   "relationships permission": "Relationships Permission",
   "report permission": "Report Permission",
-  "contracts permission": "WASM Contracts Permission"
+  "contracts permission": "Smart Contracts Permission"
 }

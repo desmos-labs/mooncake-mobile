@@ -1,10 +1,12 @@
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -25,21 +27,30 @@ const Grants: React.FC<NavProps> = props => {
   const {t} = useTranslation('grants');
   const styles = useStyles();
   const theme = useTheme();
+  const {pop} = useNavigation<NavProps['navigation']>();
   const [loading, setLoading] = useState(false);
-  const [grantsGiven, setGrantsGiven] = useState<
-    {
-      msg_type: GrantEnums;
-      expiration: string;
-    }[]
-  >([]);
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const {revokeAllGrants} = useAddOrUpdateGrants();
+  const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
+
+  const checkPermission = useCallback(
+    (permission: GrantEnums) => {
+      return grantsGiven.findIndex(grant => grant === permission) !== -1;
+    },
+    [grantsGiven],
+  );
 
   const fetchGrants = useCallback(async () => {
     try {
       setLoading(true);
       const {grants} = await getAuthzGrants();
       if (grants) {
-        setGrantsGiven(grants);
+        setGrantsGiven(
+          grants.map(grant => {
+            return grant.msg_type;
+          }),
+        );
       }
     } catch (e) {
       console.error(e);
@@ -48,6 +59,42 @@ const Grants: React.FC<NavProps> = props => {
     }
   }, [getAuthzGrants]);
 
+  const grantAllPermissions = useCallback(async () => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('grant permissions'),
+      subtitle: t('grant permissions desc'),
+      primaryButtonLabel: t('grant all permissions'),
+      secondaryButtonLabel: t('common:cancel'),
+      removeModalAfterButtonPress: true,
+      onPressPrimary: () =>
+        checkAndUpdateGrants({
+          grantsToRequest: [
+            GrantEnums.MsgCreatePost,
+            GrantEnums.MsgAddReaction,
+            GrantEnums.MsgRemoveReaction,
+            GrantEnums.MsgCreateRelationship,
+            GrantEnums.MsgDeleteRelationship,
+            GrantEnums.MsgCreateReport,
+            GrantEnums.MsgSaveProfile,
+            GrantEnums.MsgExecuteContract,
+          ],
+        }),
+      onPressSecondary: () => pop(),
+    });
+  }, [checkAndUpdateGrants, t]);
+
+  const revokeAllPermissions = useCallback(async () => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('revoke permissions'),
+      subtitle: t('revoke permissions desc'),
+      primaryButtonLabel: t('revoke all permissions'),
+      secondaryButtonLabel: t('common:cancel'),
+      onPressPrimary: () => revokeAllGrants(),
+      onPressSecondary: () => pop(),
+      removeModalAfterButtonPress: true,
+    });
+  }, [checkAndUpdateGrants, t]);
+
   useFocusEffect(
     useCallback(() => {
       fetchGrants();
@@ -55,8 +102,8 @@ const Grants: React.FC<NavProps> = props => {
   );
 
   const navigateToSection = useCallback(
-    async (section: {name: string; grants: {}[]}) => {
-      navigate(ROUTES.GRANTS_DETAILS, {section});
+    async (section: {name: string; grants: {}[]}, checked: boolean) => {
+      navigate(ROUTES.GRANTS_DETAILS, {section, checked});
     },
     [],
   );
@@ -85,109 +132,104 @@ const Grants: React.FC<NavProps> = props => {
           title={t('contents')}
           description={t('contents desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'contents',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'contents',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgCreatePost),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant => grant.msg_type === GrantEnums.MsgCreatePost,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgCreatePost)}
         />
         <GrantSection
           title={t('reactions')}
           description={t('reactions desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'reactions',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'reactions',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgAddReaction),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant =>
-                grant.msg_type === GrantEnums.MsgAddReaction ||
-                grant.msg_type === GrantEnums.MsgRemoveReaction,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgAddReaction)}
         />
         <GrantSection
           title={t('profile')}
           description={t('profile desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'profile',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'profile',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgSaveProfile),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant => grant.msg_type === GrantEnums.MsgSaveProfile,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgSaveProfile)}
         />
         <GrantSection
           title={t('relationships')}
           description={t('relationships desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'relationships',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'relationships',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgCreateRelationship),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant =>
-                grant.msg_type === GrantEnums.MsgCreateRelationship ||
-                grant.msg_type === GrantEnums.MsgDeleteRelationship,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgCreateRelationship)}
         />
         <GrantSection
           title={t('report')}
           description={t('report desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'report',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'report',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgCreateReport),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant => grant.msg_type === GrantEnums.MsgCreateReport,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgCreateReport)}
         />
         <GrantSection
           title={t('contracts')}
           description={t('contracts desc')}
           onPress={() =>
-            navigateToSection({
-              name: 'contracts',
-              grants: grantsGiven,
-            })
+            navigateToSection(
+              {
+                name: 'contracts',
+                grants: grantsGiven,
+              },
+              checkPermission(GrantEnums.MsgExecuteContract),
+            )
           }
-          checked={
-            grantsGiven.findIndex(
-              grant => grant.msg_type === GrantEnums.MsgExecuteContract,
-            ) !== -1
-          }
+          checked={checkPermission(GrantEnums.MsgExecuteContract)}
         />
-        {grantsGiven.length !== 6 && (
-          <View>
-            <Spacer paddingTop={theme.spacing.s} />
-            <Button
-              mode="contained"
-              color={theme.colors.surfaceBlack}
-              style={{justifyContent: 'flex-end'}}>
-              <Typography.Button2 style={{color: theme.colors.white}}>
-                {t('grant all permissions')}
-              </Typography.Button2>
-            </Button>
-          </View>
-        )}
+        <View>
+          <Spacer paddingTop={theme.spacing.s} />
+          <Button
+            mode="contained"
+            color={theme.colors.surfaceBlack}
+            onPress={
+              grantsGiven.length !== 8
+                ? grantAllPermissions
+                : revokeAllPermissions
+            }
+            style={{justifyContent: 'flex-end'}}>
+            <Typography.Button2 style={{color: theme.colors.white}}>
+              {grantsGiven.length !== 8
+                ? t('grant all permissions')
+                : t('revoke all permissions')}
+            </Typography.Button2>
+          </Button>
+        </View>
       </ScrollView>
     </DView>
   );

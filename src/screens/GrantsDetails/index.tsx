@@ -4,7 +4,6 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
@@ -20,6 +19,7 @@ export type GrantsSection = {
 };
 
 export type GrantsDetailsParams = {
+  checked: boolean;
   section: GrantsSection;
 };
 
@@ -56,56 +56,26 @@ const GrantsDetails: React.FC<NavProps> = () => {
   const permissionList = useMemo(() => {
     switch (params.section.name) {
       case 'contents':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgCreatePost,
-          ),
-          list: [
-            t('create post'),
-            t('delete post'),
-            t('edit post'),
-            t('add comment'),
-            t('delete comment'),
-            t('edit comment'),
-          ],
-        };
+        return [
+          t('create post'),
+          t('delete post'),
+          t('edit post'),
+          t('add comment'),
+          t('delete comment'),
+          t('edit comment'),
+        ];
       case 'reactions':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgAddReaction,
-          ),
-          list: [t('add reaction'), t('remove reaction')],
-        };
+        return [t('add reaction'), t('remove reaction')];
       case 'profile':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgSaveProfile,
-          ),
-          list: [t('edit profile')],
-        };
+        return [t('edit profile')];
       case 'relationships':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgCreateRelationship,
-          ),
-          list: [t('create relationship'), t('delete relationship')],
-        };
+        return [t('create relationship'), t('delete relationship')];
       case 'report':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgCreateReport,
-          ),
-          list: [t('create report')],
-        };
+        return [t('create report')];
       case 'contracts':
-        return {
-          given: params.section.grants.findIndex(
-            grant => grant.msg_type === GrantEnums.MsgExecuteContract,
-          ),
-          list: [t('send tip')],
-        };
+        return [t('send tip')];
       default:
-        return {given: false, list: []};
+        return [];
     }
   }, [params, t]);
 
@@ -124,10 +94,10 @@ const GrantsDetails: React.FC<NavProps> = () => {
       </Typography.Body5>
       <Spacer paddingBottom={theme.spacing.s} />
       <ScrollView style={styles.scrollView}>
-        {permissionList.list.map(permissionName => {
+        {permissionList.map(permissionName => {
           return (
             <PermissionComponent
-              checked={permissionList.given !== -1}
+              checked={params.checked}
               permissionName={permissionName}
               key={permissionName}
             />
