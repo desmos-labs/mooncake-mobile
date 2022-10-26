@@ -7,7 +7,13 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -21,6 +27,12 @@ export type ConfirmModalParams = {
    * Additional description for the title.
    */
   subtitle?: string | ReactNode;
+
+  /**
+   * Image to be shown between the title and subtitle
+   */
+  image?: ImageSourcePropType;
+
   /**
    * Label of the primary button.
    */
@@ -45,6 +57,30 @@ export type ConfirmModalParams = {
    * If you want to remove the modal after the primary button press
    */
   removeModalAfterButtonPress?: boolean;
+
+  /**
+   * The mode of the primary button.
+   * @default contained
+   */
+  primaryButtonMode?:
+    | 'text'
+    | 'outlined'
+    | 'contained'
+    | 'gradient'
+    | 'gradientFilled'
+    | 'backgroundComponent';
+
+  /**
+   * The mode of the secondary button.
+   * @default text
+   */
+  secondaryButtonMode?:
+    | 'text'
+    | 'outlined'
+    | 'contained'
+    | 'gradient'
+    | 'gradientFilled'
+    | 'backgroundComponent';
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -60,6 +96,9 @@ const ConfirmModal = () => {
       onPressPrimary,
       onPressSecondary,
       removeModalAfterButtonPress,
+      image,
+      primaryButtonMode = 'contained',
+      secondaryButtonMode = 'text',
     },
   } = useRoute<NavProps['route']>();
 
@@ -87,13 +126,14 @@ const ConfirmModal = () => {
       />
       <View style={styles.innerContainer}>
         <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
+        {image && <Image source={image} style={styles.imageStyle} />}
         <Typography.Body5 style={styles.subtitleText}>
           {subtitle}
         </Typography.Body5>
         {primaryButtonLabel && (
           <Button
             style={styles.primaryButton}
-            mode="contained"
+            mode={primaryButtonMode}
             onPress={onPressPrimaryButton}>
             {primaryButtonLabel}
           </Button>
@@ -102,7 +142,7 @@ const ConfirmModal = () => {
           <Button
             containerStyle={styles.secondaryButton}
             color={theme.colors.surfaceBlack}
-            mode="text"
+            mode={secondaryButtonMode as any}
             onPress={onPressSecondary}>
             {secondaryButtonLabel}
           </Button>
