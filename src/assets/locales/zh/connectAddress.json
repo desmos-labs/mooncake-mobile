@@ -1,6 +1,6 @@
 {
   "header": "Connect Address",
-  "selectAnAccount": "Select an account",
+  "selectAnAccount": "选择一个帐户",
   "advanced": "Advanced",
   "general": "General",
   "enterDerivPath": "Enter HD derivation path to choose an account",
