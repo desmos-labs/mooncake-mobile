@@ -1,5 +1,5 @@
 {
   "header": "Aaaah!",
-  "description": "没有检测到存在的配置文件。\n现在创建一个新的主页。",
-  "createDesmosProfile": "创建一个Desmos 主页"
+  "description": "No existent profiles have been detected.\nCreate a new profile now.",
+  "createDesmosProfile": "Create a Desmos Profile"
 }
