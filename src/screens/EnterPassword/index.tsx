@@ -27,7 +27,7 @@ import {
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
+import useClearUserData from 'hooks/useClearUserData';
 import useStyles from './useStyles';
 
 type NavProps = CompositeScreenProps<
@@ -81,7 +81,8 @@ const EnterPassword = () => {
       inputLabelOverride,
     },
   } = useRoute<NavProps['route']>();
-  const {goBack, replace} = useNavigation<NavProps['navigation']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
+  const clearUserData = useClearUserData();
 
   const styles = useStyles();
   const theme = useTheme();
@@ -154,13 +155,6 @@ const EnterPassword = () => {
     ],
   );
 
-  const onPressForgotPassword = React.useCallback(() => {
-    // possible memory leak as the unlock promise will never get resolved this way
-    replace(ROUTES.MNEMONIC_INPUT, {
-      mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
-    });
-  }, []);
-
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
       password: Yup.string().required(t('error:required')),
@@ -227,7 +221,7 @@ const EnterPassword = () => {
 
               <TouchableOpacity
                 style={styles.forgotPwButton}
-                onPress={onPressForgotPassword}>
+                onPress={clearUserData}>
                 <Typography.Button2>{t('forgotPassword')}</Typography.Button2>
               </TouchableOpacity>
             </KeyboardAvoidingView>
