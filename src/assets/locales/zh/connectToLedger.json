@@ -2,9 +2,9 @@
   "pairYourDevices": "Pair your devices",
   "followInstructionOnLedger": "Please follow the instructions on your Ledger Nano X",
   "sorryConnectionFailed": "Sorry, manager connection failed",
-  "makeSureLedgerOn": "请确保您的Ledger Nano X 已解锁并启用蓝牙",
+  "makeSureLedgerOn": "Please make sure your Ledger Nano X is unlocked and bluetooth is enabled",
   "connectInstructions": [
-    "开启并解锁您的 Ledger 设备",
+    "Turn on and unlock your Ledger device",
     "Open the Desmos APP \non your Ledger"
   ],
   "howToDL": "How to download Desmos App on Ledger?",
