@@ -1,6 +1,6 @@
 {
-  "invalid recovery passphrase, please try again": "Invalid recovery passphrase, please try again",
+  "invalid recovery passphrase, please try again": "助记词无效，请重试",
   "invalid order, please try again": "Invalid order, please try again",
-  "tap to order": "Tap the words to put them next to each other in the correct order",
-  "clear all": "Clear all"
+  "tap to order": "点击单词，按正确的顺序将它们放在彼此相邻上",
+  "clear all": "清除"
 }
