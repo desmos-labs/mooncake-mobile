@@ -1,27 +1,29 @@
-import {modalSuccess} from 'assets/images';
+import {errorImage} from 'assets/images';
+import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
 
-const NoConnections = () => {
-  const {t} = useTranslation('manageChains');
+const NoTweets = () => {
+  const {t} = useTranslation('connectApp');
 
   return (
     <View style={{alignItems: 'center'}}>
+      <Spacer paddingVertical={40} />
       <Image
-        source={modalSuccess}
+        source={errorImage}
         style={{
           width: 190,
-          height: 188,
+          height: 152,
           resizeMode: 'cover',
           marginBottom: 20,
         }}
       />
 
-      <Typography.H5>{t('noConnectedAddresses')}</Typography.H5>
+      <Typography.Body6>{t('noTweets')}</Typography.Body6>
     </View>
   );
 };
 
-export default NoConnections;
+export default NoTweets;

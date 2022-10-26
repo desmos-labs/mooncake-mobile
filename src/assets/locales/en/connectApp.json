@@ -1,6 +1,7 @@
 {
   "twitter username": "Your Twitter username",
   "proof": "Proof of Ownership",
+  "connect app": "Connect App",
   "confirm": "Confirm",
   "username": "Username",
   "connected": " Your twitter account is successfully connected",
@@ -15,5 +16,7 @@
   "connectedApps": "Connected Apps",
   "proof description": "In order to connect to your twitter account you need to confirm your ownership over this profile",
   "valid": "Valid twitter username",
-  "invalid": "Invalid twitter username"
+  "invalid": "Invalid twitter username",
+  "noTweets": "You don’t have any tweets yet",
+  "tweet made go next": "Tweet Made, Next"
 }

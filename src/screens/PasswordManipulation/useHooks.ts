@@ -104,7 +104,7 @@ const useHooks = () => {
               index: 1,
               routes: [
                 {
-                  name: ROUTES.HOME,
+                  name: ROUTES.HOME_TABS,
                 },
                 {
                   name: ROUTES.USER_PROFILE,
