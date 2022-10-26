@@ -6,6 +6,7 @@ on:
       - opened
       - edited
       - synchronize
+      -
     branches-ignore:
       - '!l10n_localisation'
       - '!l10n_*'
