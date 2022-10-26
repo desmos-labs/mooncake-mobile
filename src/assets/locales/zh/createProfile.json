@@ -1,11 +1,11 @@
 {
-  "header": "创建主页",
-  "description": "创建去中心化的个人主页",
-  "nickname": "昵称",
-  "enterNickname": "输入昵称",
+  "header": "Create a profile",
+  "description": "Create your decentralized profiles",
+  "nickname": "Nickname",
+  "enterNickname": "Enter nickname",
   "dTag": "dTag*",
   "enterDTag": "Enter dTag",
-  "bio": "个人简介",
-  "addBio": "在您的主页中添加个人简介(可选)",
-  "yourDesmosProfileIsNotCreated": "{{error}}，您的Desmos主页尚未创建"
+  "bio": "Bio",
+  "addBio": "Add a bio to your profile (optional)",
+  "yourDesmosProfileIsNotCreated": "{{error}}, your Desmos profile has not been created"
 }
