@@ -51,7 +51,7 @@ const useHooks = () => {
         settings.currentChain.currencies,
       );
     }
-  }, [data, loading]);
+  }, [data, loading, settings]);
 
   const initialFormValues = {
     amount: '',
