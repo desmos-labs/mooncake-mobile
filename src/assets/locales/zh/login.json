@@ -1,7 +1,7 @@
 {
   "welcomeBack": "Welcome Back!",
-  "logBackIn": "登录到您的个人主页",
-  "password": "密码",
-  "enterPassword": "输入密码",
-  "forgotPassword": "忘记密码"
+  "logBackIn": "Log back into your profile dTag",
+  "password": "Password",
+  "enterPassword": "Enter Password",
+  "forgotPassword": "Forgot Password"
 }
