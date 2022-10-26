@@ -1,7 +1,7 @@
-import {MorpheusApollo2} from '@desmoslabs/desmjs/build/types/chains';
+import {DesmosTestnet} from '@desmoslabs/desmjs/build/types/chains';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {atom} from 'recoil';
 import {AppSettings} from 'types/settings';
-import {getMMKV, setMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 
 /**
  * Default application settings
@@ -15,7 +15,8 @@ export const DefaultAppSettings: AppSettings = {
   currentTimezone: '',
   registeredReactions: [],
   registeredReports: [],
-  currentChain: MorpheusApollo2,
+  contractsConfig: [],
+  currentChain: DesmosTestnet,
 };
 
 /**
