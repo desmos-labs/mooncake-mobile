@@ -2,7 +2,7 @@
   "media": "Media",
   "text": "Text",
   "accessYourPhotos": "Access your photos",
-  "noAccess": "Butter 无法访问您的照片",
+  "noAccess": "Butter doesn't have access to your photos",
   "allowAccess": "Allow Access",
   "tapToType": "Tap to type.."
 }
