@@ -175,20 +175,20 @@ const Grants: React.FC<NavProps> = props => {
             ) !== -1
           }
         />
+        {grantsGiven.length !== 6 && (
+          <View>
+            <Spacer paddingTop={theme.spacing.s} />
+            <Button
+              mode="contained"
+              color={theme.colors.surfaceBlack}
+              style={{justifyContent: 'flex-end'}}>
+              <Typography.Button2 style={{color: theme.colors.white}}>
+                {t('grant all permissions')}
+              </Typography.Button2>
+            </Button>
+          </View>
+        )}
       </ScrollView>
-      {grantsGiven.length !== 6 && (
-        <View>
-          <Spacer paddingTop={theme.spacing.s} />
-          <Button
-            mode="contained"
-            color={theme.colors.surfaceBlack}
-            style={{justifyContent: 'flex-end'}}>
-            <Typography.Button2 style={{color: theme.colors.white}}>
-              {t('grant all permissions')}
-            </Typography.Button2>
-          </Button>
-        </View>
-      )}
     </DView>
   );
 };
