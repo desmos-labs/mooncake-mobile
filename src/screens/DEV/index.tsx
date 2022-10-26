@@ -86,6 +86,18 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         console.log('test');
       },
     });
+    toast.show('I am a toast', {
+      type: ToastConfig.ERROR,
+      onPress() {
+        console.log('test');
+      },
+    });
+    toast.show('I am a toast', {
+      type: ToastConfig.ERROR_NO_RETRY,
+      onPress() {
+        console.log('test');
+      },
+    });
   };
 
   const {activeAddress} = useActiveAccount();

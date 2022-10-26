@@ -44,7 +44,6 @@ const HomeTabs = () => {
     [loading],
   );
 
-  console.log(top);
   return (
     <SafeAreaView
       style={{

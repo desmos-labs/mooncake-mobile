@@ -41,6 +41,7 @@ import login from './login.json';
 import toast from './toast.json';
 import connectApp from './connectApp.json';
 import disconnectApp from './disconnectApp.json';
+import forgotPassword from './forgotPassword.json';
 
 const en = {
   common,
@@ -86,6 +87,7 @@ const en = {
   toast,
   connectApp,
   disconnectApp,
+  forgotPassword
 };
 
 export default en;

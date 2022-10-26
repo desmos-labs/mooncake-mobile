@@ -6,9 +6,9 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
   commonToastStyle: {
     width: '95%',
     top: 10,
-    height: 60,
     borderRadius: 8,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 11.5,
     flexDirection: 'row',
     borderWidth: 1,
     borderColor:
