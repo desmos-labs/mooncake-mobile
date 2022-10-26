@@ -1,6 +1,6 @@
 {
   "removeProfile": "Remove profile",
-  "backupSeedphrase": "请确保您助记词的备份， 不要 分享 它给任何人； 这是恢复您个人账户的唯一途径。",
+  "backupSeedphrase": "Make sure you have a backup of secret recovery phrase and <0>DO NOT SHARE</0> it to anyone; it is the only way to restore your profile dTags!",
   "goToBackup": "Back up your phrase",
   "remove": "Remove",
   "signout": "Sign Out"
