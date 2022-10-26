@@ -2,8 +2,8 @@
   "required": "This field is required.",
   "minChar": "At least {{numChar}} characters required.",
   "maxChar": "Maximum {{numChar}} characters.",
-  "pwMustMatch": "Passwords do not match, please try again.",
-  "incorrectPassword": "Incorrect password, please try again.",
+  "pwMustMatch": "密码不匹配，请重试.",
+  "incorrectPassword": "密码不正确，请重试",
   "imageUploadError": "An issue occurred while uploading your image. Please try again.",
-  "imageTooLarge": "The selected image is too large."
+  "imageTooLarge": "选中的图像过大"
 }
