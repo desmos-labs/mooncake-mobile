@@ -11,7 +11,7 @@ on:
       - '!l10n_*'
 jobs:
   main:
-    if: ${{ !contains(github.refs, 'l10n') }}
+    if: !startsWith(github.head_ref, 'l10n')
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v4.4.0
