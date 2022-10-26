@@ -20,6 +20,8 @@ import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useDisconnectChainLink from 'hooks/useDisconnectChainlink';
 import {modalSuccess} from 'assets/images';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -40,6 +42,8 @@ const ManageConnectedChains = () => {
   const unlockWallet = useUnlockWallet();
   const disconnectChainLink = useDisconnectChainLink();
 
+  const toast = useToast();
+
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
       if (!chainAccount) return;
@@ -47,15 +51,21 @@ const ManageConnectedChains = () => {
       const unlockResponse = await unlockWallet({chainAccount});
 
       if (!unlockResponse || !unlockResponse.wallet) return;
-      await disconnectChainLink(unlockResponse.wallet, chainLink);
-      // we want the refetch call to run while the user is shown the sucess dialog.
-      refetch();
+      try {
+        await disconnectChainLink(unlockResponse.wallet, chainLink);
+        // we want the refetch call to run while the user is shown the sucess dialog.
+        refetch();
 
-      navigate(ROUTES.RESULT_MODAL, {
-        image: modalSuccess,
-        primaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
-      });
+        navigate(ROUTES.RESULT_MODAL, {
+          image: modalSuccess,
+          primaryButtonLabel: t('resultModal:goToProfile') as string,
+          onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
+        });
+      } catch (err: any) {
+        toast.show(String(err), {
+          type: ToastConfig.ERROR,
+        });
+      }
     },
     [chainAccount],
   );
@@ -71,7 +81,7 @@ const ManageConnectedChains = () => {
         />
       );
     },
-    [],
+    [handlePressDisconnectChainLink],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
