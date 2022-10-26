@@ -1,7 +1,7 @@
 {
   "connectAddress": "Connect Chain",
-  "selectMethodToConnect": "选择一种连接您的地址的方式",
-  "connectWithLedger": "与 Ledger 连接",
-  "usePw": "使用密码",
+  "selectMethodToConnect": "Select a method to connect your address",
+  "connectWithLedger": "Connect with Ledger",
+  "usePw": "Use Password",
   "connectChain": "Connect Chain"
 }
