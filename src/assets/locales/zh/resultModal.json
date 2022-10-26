@@ -1,10 +1,10 @@
 {
   "success": "Success",
   "failed": "Failed",
-  "passwordWasChanged": "Your password has been changed",
+  "passwordWasChanged": "您的密码已更改",
   "goToProfile": "Go to Profile",
-  "congrats": "Congratulations!",
-  "profileCreated": "Your Desmos profile was created",
+  "congrats": "恭喜！",
+  "profileCreated": "您的 Desmos 主页已创建",
   "enterApp": "Enter App",
   "chainLinked": "{{chain}} address connected",
   "yourChainLinkDisconnected": "Your {{chainLink}} address was disconnected",
