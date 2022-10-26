@@ -1,7 +1,7 @@
 {
-  "signup": "注册",
+  "signup": "Sign up",
   "profile dtag": "Profile dTag",
   "enter dtag": "Enter dTag",
   "dtag taken": "This dTag has been taken",
-  "dtag info": "DTag代表与配置文件相关联的唯一人类可读名称。 创建您的个人资料时，请确保您选择一个DTag，其他人可以轻松记住和搜索。"
+  "dtag info": "DTag represents the unique human-readable name associated with a profile. When creating your profile, make sure you select a DTag that other people can easily remember and search."
 }
