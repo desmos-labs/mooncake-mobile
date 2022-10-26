@@ -25,5 +25,6 @@ export type AppSettings = {
   currentTimezone: string;
   registeredReactions: any[];
   registeredReports: any[];
+  contractsConfig: any[];
   currentChain: ChainInfo;
 };

@@ -1,5 +1,5 @@
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {isDeliverTxFailure} from '@cosmjs/stargate';
+import {GasPrice, isDeliverTxFailure} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
@@ -26,7 +26,9 @@ export default function useBroadcastMessages() {
         EnvConfig.DESMOS_RPC,
         _signer,
         {
-          gasPrice: settings.currentChain.gasPrice,
+          gasPrice: GasPrice.fromString(
+            `0.1${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
+          ),
         },
       );
 
