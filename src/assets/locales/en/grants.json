@@ -1,6 +1,13 @@
 {
   "grant permissions": "Grant permissions",
   "grant all permissions": "Grant all permissions",
+  "grant permission": "Grant permission",
+  "grant permissions desc": "Are you sure you want to grant the following permissions:\n • Contents\n • Reactions\n • Relationships\n • Profile\n • Report\n • Smart Contracts",
+  "revoke permissions desc": "Are you sure you want to revoke the following permissions:\n • Contents\n • Reactions\n • Relationships\n • Profile\n • Report\n • Smart Contracts",
+  "revoke permission": "Revoke permission",
+  "revoke permissions": "Revoke permissions",
+  "revoke all permissions": "Revoke all permissions",
+  "grant permission desc": "Grant permission",
   "description": "Authorization for an account to perform the following actions on your behalf",
   "details description": "{{title}} includes the following actions",
   "contents": "Contents",
@@ -20,5 +27,6 @@
   "profile permission": "Profile Permission",
   "relationships permission": "Relationships Permission",
   "report permission": "Report Permission",
-  "contracts permission": "Smart Contracts Permission"
+  "contracts permission": "Smart Contracts Permission",
+  "successful revoke": "All grants belonging to the account {{granter}} have been revoked.\nYou may close this screen"
 }

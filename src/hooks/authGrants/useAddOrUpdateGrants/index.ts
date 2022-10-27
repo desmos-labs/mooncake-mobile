@@ -1,5 +1,6 @@
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
+import {useNavigation} from '@react-navigation/native';
 import {useButterConfig} from '@recoil/butterConfigState';
 import {
   buildGrantAllowanceEncode,
@@ -12,8 +13,9 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import _ from 'lodash';
+import ROUTES from 'navigation/routes';
 import React from 'react';
-import {Alert} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 /**
@@ -36,6 +38,8 @@ const useAddOrUpdateGrants = () => {
   const unlockWallet = useUnlockWallet();
   const broadcastMessages = useBroadcastMessages();
   const {getAuthzGrants} = useGetAuthzGrants();
+  const {navigate} = useNavigation<any>();
+  const {t} = useTranslation();
 
   /**
    * Remove all user's grants and authorizations from chain.
@@ -88,11 +92,11 @@ const useAddOrUpdateGrants = () => {
       throw new Error('Error deleting grants');
     }
 
-    // placeholder message as th ere is no handler for the success case
-    Alert.alert(
-      '[PLACEHOLDER] SUCCESS',
-      `All grants belonging to the account ${granter} have been revoked. You may close this screen`,
-    );
+    navigate(ROUTES.RESULT_MODAL, {
+      title: t('common:success'),
+      subtitle: t('grants:successful revoke', {granter}),
+      primaryButtonLabel: t('common:close'),
+    });
   }, [chainAccount, butterConfig.desmos_address]);
 
   /**

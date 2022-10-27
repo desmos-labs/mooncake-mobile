@@ -12,7 +12,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {RefreshControl, ScrollView, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import GrantSection from 'screens/Grants/components/GrantSection';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
@@ -28,9 +28,9 @@ const Grants: React.FC<NavProps> = props => {
   const styles = useStyles();
   const theme = useTheme();
   const {pop} = useNavigation<NavProps['navigation']>();
-  const [loading, setLoading] = useState(false);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const {revokeAllGrants} = useAddOrUpdateGrants();
+  const [loading, setLoading] = useState<boolean>(false);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
 
@@ -43,7 +43,6 @@ const Grants: React.FC<NavProps> = props => {
 
   const fetchGrants = useCallback(async () => {
     try {
-      setLoading(true);
       const {grants} = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
@@ -54,10 +53,43 @@ const Grants: React.FC<NavProps> = props => {
       }
     } catch (e) {
       console.error(e);
+    }
+  }, [getAuthzGrants]);
+
+  const grantPermissionsWrapper = useCallback(async () => {
+    try {
+      await checkAndUpdateGrants({
+        grantsToRequest: [
+          GrantEnums.MsgCreatePost,
+          GrantEnums.MsgAddReaction,
+          GrantEnums.MsgRemoveReaction,
+          GrantEnums.MsgCreateRelationship,
+          GrantEnums.MsgDeleteRelationship,
+          GrantEnums.MsgCreateReport,
+          GrantEnums.MsgSaveProfile,
+          GrantEnums.MsgExecuteContract,
+        ],
+        stayOnCurrentScreen: true,
+      });
+      await fetchGrants();
+    } catch (e: any) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [getAuthzGrants]);
+  }, [checkAndUpdateGrants, fetchGrants]);
+
+  const revokePermissionsWrapper = useCallback(async () => {
+    try {
+      setLoading(true);
+      await revokeAllGrants();
+      await fetchGrants();
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchGrants, revokeAllGrants]);
 
   const grantAllPermissions = useCallback(async () => {
     navigate(ROUTES.CONFIRM_MODAL, {
@@ -66,22 +98,10 @@ const Grants: React.FC<NavProps> = props => {
       primaryButtonLabel: t('grant all permissions'),
       secondaryButtonLabel: t('common:cancel'),
       removeModalAfterButtonPress: true,
-      onPressPrimary: () =>
-        checkAndUpdateGrants({
-          grantsToRequest: [
-            GrantEnums.MsgCreatePost,
-            GrantEnums.MsgAddReaction,
-            GrantEnums.MsgRemoveReaction,
-            GrantEnums.MsgCreateRelationship,
-            GrantEnums.MsgDeleteRelationship,
-            GrantEnums.MsgCreateReport,
-            GrantEnums.MsgSaveProfile,
-            GrantEnums.MsgExecuteContract,
-          ],
-        }),
+      onPressPrimary: () => grantPermissionsWrapper(),
       onPressSecondary: () => pop(),
     });
-  }, [checkAndUpdateGrants, t]);
+  }, [grantPermissionsWrapper, navigate, pop, t]);
 
   const revokeAllPermissions = useCallback(async () => {
     navigate(ROUTES.CONFIRM_MODAL, {
@@ -89,11 +109,11 @@ const Grants: React.FC<NavProps> = props => {
       subtitle: t('revoke permissions desc'),
       primaryButtonLabel: t('revoke all permissions'),
       secondaryButtonLabel: t('common:cancel'),
-      onPressPrimary: () => revokeAllGrants(),
+      onPressPrimary: () => revokePermissionsWrapper(),
       onPressSecondary: () => pop(),
       removeModalAfterButtonPress: true,
     });
-  }, [checkAndUpdateGrants, t]);
+  }, [navigate, pop, revokePermissionsWrapper, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -121,9 +141,6 @@ const Grants: React.FC<NavProps> = props => {
       <Spacer paddingBottom={theme.spacing.s} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={fetchGrants} />
-        }
         style={styles.scrollView}
         contentContainerStyle={{
           paddingHorizontal: theme.spacing.m,
@@ -216,6 +233,7 @@ const Grants: React.FC<NavProps> = props => {
         <View>
           <Spacer paddingTop={theme.spacing.s} />
           <Button
+            loading={loading}
             mode="contained"
             color={theme.colors.surfaceBlack}
             onPress={

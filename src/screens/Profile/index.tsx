@@ -33,7 +33,6 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  Linking,
   RefreshControl,
   TouchableOpacity,
   View,
@@ -133,7 +132,7 @@ const Profile = () => {
   }, []);
 
   const twitterAccount = useMemo(() => {
-    return connectedApps.find(app => app.application === 'twitter');
+    return connectedApps.findIndex(app => app.application === 'twitter') !== -1;
   }, [connectedApps]);
 
   const profileLoading =
@@ -229,20 +228,6 @@ const Profile = () => {
     console.log('test');
   }, []);
 
-  const handleTwitterPress = useCallback(() => {
-    if (twitterAccount) {
-      Linking.openURL(
-        `twitter://user?screen_name=${encodeURIComponent(
-          twitterAccount.username,
-        )}`,
-      ).catch(() => {
-        Linking.openURL(
-          `https://twitter.com/${encodeURIComponent(twitterAccount.username)}`,
-        );
-      });
-    }
-  }, [twitterAccount]);
-
   if (profileLoading) {
     return <ActivityIndicator />;
   }
@@ -320,29 +305,18 @@ const Profile = () => {
                         {t('connectAddress')}
                       </Typography.Button2>
                     </Button>
-                    {twitterAccount ? (
-                      <TouchableOpacity
-                        style={styles.twitterButton}
-                        onPress={handleTwitterPress}>
-                        <Image
-                          source={twitterIcon}
-                          style={{width: 24, height: 24, marginRight: 6}}
-                        />
-                        <Typography.Button2>
-                          @{twitterAccount.username}
-                        </Typography.Button2>
-                      </TouchableOpacity>
-                    ) : (
-                      <Button
-                        mode="outlined"
-                        style={{borderColor: theme.colors.surfaceBlack}}
-                        contentStyle={styles.connectButton}
-                        onPress={handlePressConnectApp}>
-                        <Typography.Button2>
-                          {t('connectTwitter')}
-                        </Typography.Button2>
-                      </Button>
-                    )}
+                    <Button
+                      disabled={twitterAccount}
+                      mode="outlined"
+                      style={{borderColor: theme.colors.surfaceBlack}}
+                      contentStyle={styles.connectButton}
+                      onPress={handlePressConnectApp}>
+                      <Typography.Button2>
+                        {twitterAccount
+                          ? 'Twitter connected'
+                          : t('connectTwitter')}
+                      </Typography.Button2>
+                    </Button>
                   </View>
                   {chainLinks.length !== 0 ||
                     (connectedApps.length !== 0 && (
