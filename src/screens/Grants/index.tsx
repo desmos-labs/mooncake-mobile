@@ -29,17 +29,10 @@ const Grants: React.FC<NavProps> = props => {
   const theme = useTheme();
   const {pop} = useNavigation<NavProps['navigation']>();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  const {revokeAllGrants} = useAddOrUpdateGrants();
+  const {revokeGrants} = useAddOrUpdateGrants();
   const [loading, setLoading] = useState<boolean>(false);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
-
-  const checkPermission = useCallback(
-    (permission: GrantEnums) => {
-      return grantsGiven.findIndex(grant => grant === permission) !== -1;
-    },
-    [grantsGiven],
-  );
 
   const fetchGrants = useCallback(async () => {
     try {
@@ -55,6 +48,13 @@ const Grants: React.FC<NavProps> = props => {
       console.error(e);
     }
   }, [getAuthzGrants]);
+
+  const checkPermission = useCallback(
+    (permission: GrantEnums) => {
+      return grantsGiven.findIndex(grant => grant === permission) !== -1;
+    },
+    [grantsGiven, fetchGrants],
+  );
 
   const grantPermissionsWrapper = useCallback(async () => {
     try {
@@ -82,14 +82,14 @@ const Grants: React.FC<NavProps> = props => {
   const revokePermissionsWrapper = useCallback(async () => {
     try {
       setLoading(true);
-      await revokeAllGrants();
+      await revokeGrants();
       await fetchGrants();
     } catch (e: any) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [fetchGrants, revokeAllGrants]);
+  }, [fetchGrants, revokeGrants]);
 
   const grantAllPermissions = useCallback(async () => {
     navigate(ROUTES.CONFIRM_MODAL, {
@@ -121,12 +121,9 @@ const Grants: React.FC<NavProps> = props => {
     }, [fetchGrants]),
   );
 
-  const navigateToSection = useCallback(
-    async (section: {name: string; grants: {}[]}, checked: boolean) => {
-      navigate(ROUTES.GRANTS_DETAILS, {section, checked});
-    },
-    [],
-  );
+  const navigateToSection = useCallback(async (section: {name: string}) => {
+    navigate(ROUTES.GRANTS_DETAILS, {section});
+  }, []);
 
   return (
     <DView
@@ -150,13 +147,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('contents')}
           description={t('contents desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'contents',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgCreatePost),
-            )
+            navigateToSection({
+              name: 'contents',
+            })
           }
           checked={checkPermission(GrantEnums.MsgCreatePost)}
         />
@@ -164,13 +157,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('reactions')}
           description={t('reactions desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'reactions',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgAddReaction),
-            )
+            navigateToSection({
+              name: 'reactions',
+            })
           }
           checked={checkPermission(GrantEnums.MsgAddReaction)}
         />
@@ -178,13 +167,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('profile')}
           description={t('profile desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'profile',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgSaveProfile),
-            )
+            navigateToSection({
+              name: 'profile',
+            })
           }
           checked={checkPermission(GrantEnums.MsgSaveProfile)}
         />
@@ -192,13 +177,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('relationships')}
           description={t('relationships desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'relationships',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgCreateRelationship),
-            )
+            navigateToSection({
+              name: 'relationships',
+            })
           }
           checked={checkPermission(GrantEnums.MsgCreateRelationship)}
         />
@@ -206,13 +187,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('report')}
           description={t('report desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'report',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgCreateReport),
-            )
+            navigateToSection({
+              name: 'report',
+            })
           }
           checked={checkPermission(GrantEnums.MsgCreateReport)}
         />
@@ -220,13 +197,9 @@ const Grants: React.FC<NavProps> = props => {
           title={t('contracts')}
           description={t('contracts desc')}
           onPress={() =>
-            navigateToSection(
-              {
-                name: 'contracts',
-                grants: grantsGiven,
-              },
-              checkPermission(GrantEnums.MsgExecuteContract),
-            )
+            navigateToSection({
+              name: 'contracts',
+            })
           }
           checked={checkPermission(GrantEnums.MsgExecuteContract)}
         />

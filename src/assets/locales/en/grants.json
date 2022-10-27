@@ -28,5 +28,5 @@
   "relationships permission": "Relationships Permission",
   "report permission": "Report Permission",
   "contracts permission": "Smart Contracts Permission",
-  "successful revoke": "All grants belonging to the account {{granter}} have been revoked.\nYou may close this screen"
+  "successful revoke": "All selected grants belonging to the account {{granter}} have been revoked."
 }

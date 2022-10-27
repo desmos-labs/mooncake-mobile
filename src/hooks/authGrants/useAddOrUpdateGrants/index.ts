@@ -44,60 +44,62 @@ const useAddOrUpdateGrants = () => {
   /**
    * Remove all user's grants and authorizations from chain.
    */
-  const revokeAllGrants = React.useCallback(async () => {
-    if (!chainAccount) throw new Error('No active chain account found.');
+  const revokeGrants = React.useCallback(
+    async (selectedGrants?: GrantEnums[]) => {
+      if (!chainAccount) throw new Error('No active chain account found.');
 
-    const grantee = butterConfig.desmos_address;
-    const granter = chainAccount.address;
+      const grantee = butterConfig.desmos_address;
+      const granter = chainAccount.address;
 
-    const grantsData = await getAuthzGrants();
+      const grantsData = await getAuthzGrants();
 
-    const {grants} = grantsData;
+      const {grants} = grantsData;
 
-    const grantsToRevoke = grants.map(x => x.msg_type);
+      const grantsToRevoke = selectedGrants || grants.map(x => x.msg_type);
 
-    console.log('Revoking the following grants:', grantsToRevoke.join(', '));
-    const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
-      grantee,
-      granter,
-    });
+      console.log('Revoking the following grants:', grantsToRevoke.join(', '));
+      const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
+        grantee,
+        granter,
+      });
 
-    const msgRevokeGrantEncode = buildRevokeGrantMsgEncodes({
-      grantee,
-      granter,
-      grants: grantsToRevoke,
-    });
+      const msgRevokeGrantEncode = buildRevokeGrantMsgEncodes({
+        grantee,
+        granter,
+        grants: grantsToRevoke,
+      });
 
-    const unlockResult = await unlockWallet({chainAccount});
+      const unlockResult = await unlockWallet({chainAccount});
 
-    if (!unlockResult) {
-      throw new Error(
-        'Error unlocking wallet or user cancelled authentication',
+      if (!unlockResult) {
+        throw new Error(
+          'Error unlocking wallet or user cancelled authentication',
+        );
+      }
+
+      const {wallet} = unlockResult;
+
+      const combinedMessages = _.compact([
+        msgRevokeAllowanceEncode,
+        ...msgRevokeGrantEncode,
+      ]);
+
+      const broadcastResult = await broadcastMessages(
+        wallet as OfflineSigner,
+        combinedMessages,
       );
-    }
 
-    const {wallet} = unlockResult;
+      if (!broadcastResult) {
+        throw new Error('Error deleting grants');
+      }
 
-    const combinedMessages = _.compact([
-      msgRevokeAllowanceEncode,
-      ...msgRevokeGrantEncode,
-    ]);
-
-    const broadcastResult = await broadcastMessages(
-      wallet as OfflineSigner,
-      combinedMessages,
-    );
-
-    if (!broadcastResult) {
-      throw new Error('Error deleting grants');
-    }
-
-    navigate(ROUTES.RESULT_MODAL, {
-      title: t('common:success'),
-      subtitle: t('grants:successful revoke', {granter}),
-      primaryButtonLabel: t('common:close'),
-    });
-  }, [chainAccount, butterConfig.desmos_address]);
+      navigate(ROUTES.TEXTONLY_MODAL, {
+        title: t('common:success'),
+        body: t('grants:successful revoke', {granter}),
+      });
+    },
+    [chainAccount, butterConfig.desmos_address],
+  );
 
   /**
    * All-in-one function that builds and broadcast a transaction as part of the
@@ -174,7 +176,7 @@ const useAddOrUpdateGrants = () => {
     // to block/disable input before the data is fully loaded¬
     accountsLoading: loading,
     addOrUpdateGrants,
-    revokeAllGrants,
+    revokeGrants,
   };
 };
 

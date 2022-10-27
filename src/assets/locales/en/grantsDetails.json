@@ -18,5 +18,9 @@
   "create relationship": "Create relationship",
   "delete relationship": "Delete relationship",
   "create report": "Create report",
-  "send tip": "Create post"
+  "send tip": "Create post",
+  "yes revoke": "Yes, Revoke",
+  "yes grant": "Yes, Grant",
+  "grant following": "Are you sure you want to grant {{permissions}} permissions?",
+  "revoke following": "Are you sure you want to revoke {{permissions}} permissions?"
 }

@@ -1,25 +1,32 @@
-import {useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import PermissionComponent from 'screens/GrantsDetails/components/PermissionComponent';
+import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 import useStyles from './useStyles';
 
 export type GrantsSection = {
   name: string;
-  grants: any[];
 };
 
 export type GrantsDetailsParams = {
-  checked: boolean;
   section: GrantsSection;
 };
 
@@ -29,10 +36,38 @@ declare type NavProps = StackScreenProps<
 >;
 
 const GrantsDetails: React.FC<NavProps> = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const {t} = useTranslation('grantsDetails');
   const {params} = useRoute<NavProps['route']>();
+  const {navigate, pop} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
+  const {getAuthzGrants} = useGetAuthzGrants();
+  const {revokeGrants} = useAddOrUpdateGrants();
+
+  const fetchGrants = useCallback(async () => {
+    console.log('fetch');
+    try {
+      const {grants} = await getAuthzGrants();
+      if (grants) {
+        setGrantsGiven(
+          grants.map(grant => {
+            return grant.msg_type;
+          }),
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [getAuthzGrants]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchGrants();
+    }, [fetchGrants]),
+  );
 
   const title = useMemo(() => {
     switch (params.section.name) {
@@ -53,7 +88,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
     }
   }, [params, t]);
 
-  const permissionList = useMemo(() => {
+  const permissionsLabelsList = useMemo(() => {
     switch (params.section.name) {
       case 'contents':
         return [
@@ -79,6 +114,86 @@ const GrantsDetails: React.FC<NavProps> = () => {
     }
   }, [params, t]);
 
+  const permissionsEnumList = useMemo(() => {
+    switch (params.section.name) {
+      case 'contents':
+        return [GrantEnums.MsgCreatePost];
+      case 'reactions':
+        return [GrantEnums.MsgAddReaction, GrantEnums.MsgRemoveReaction];
+      case 'profile':
+        return [GrantEnums.MsgSaveProfile];
+      case 'relationships':
+        return [
+          GrantEnums.MsgCreateRelationship,
+          GrantEnums.MsgDeleteRelationship,
+        ];
+      case 'report':
+        return [GrantEnums.MsgCreateReport];
+      case 'contracts':
+        return [GrantEnums.MsgExecuteContract];
+      default:
+        return [];
+    }
+  }, [params]);
+
+  const permissionsGiven = useMemo(() => {
+    return permissionsEnumList.every(given => grantsGiven.includes(given));
+  }, [grantsGiven, permissionsEnumList]);
+
+  const grantPermissionsWrapper = useCallback(async () => {
+    try {
+      await checkAndUpdateGrants({
+        grantsToRequest: permissionsEnumList,
+        stayOnCurrentScreen: true,
+      });
+      await fetchGrants();
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [checkAndUpdateGrants, fetchGrants, permissionsEnumList]);
+
+  const onPressGrant = useCallback(() => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('grants:grant permissions'),
+      subtitle: t('grant following', {
+        permissions: permissionsLabelsList.join(', '),
+      }),
+      primaryButtonLabel: t('yes grant'),
+      secondaryButtonLabel: t('common:cancel'),
+      removeModalAfterButtonPress: true,
+      onPressPrimary: () => grantPermissionsWrapper(),
+      onPressSecondary: () => pop(),
+    });
+  }, [grantPermissionsWrapper, navigate, pop, t]);
+
+  const revokePermissionsWrapper = useCallback(async () => {
+    try {
+      setLoading(true);
+      await revokeGrants(permissionsEnumList);
+      await fetchGrants();
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchGrants, permissionsEnumList, revokeGrants]);
+
+  const onPressRevoke = useCallback(() => {
+    navigate(ROUTES.CONFIRM_MODAL, {
+      title: t('grants:revoke permissions'),
+      subtitle: t('revoke following', {
+        permissions: permissionsLabelsList.join(', '),
+      }),
+      primaryButtonLabel: t('yes revoke'),
+      secondaryButtonLabel: t('common:cancel'),
+      onPressPrimary: () => revokePermissionsWrapper(),
+      onPressSecondary: () => pop(),
+      removeModalAfterButtonPress: true,
+    });
+  }, [navigate, pop, revokePermissionsWrapper, t]);
+
   return (
     <DView
       style={styles.root}
@@ -94,16 +209,33 @@ const GrantsDetails: React.FC<NavProps> = () => {
       </Typography.Body5>
       <Spacer paddingBottom={theme.spacing.s} />
       <ScrollView style={styles.scrollView}>
-        {permissionList.map(permissionName => {
+        {permissionsLabelsList.map(permissionName => {
           return (
             <PermissionComponent
-              checked={params.checked}
+              checked={permissionsGiven}
               permissionName={permissionName}
               key={permissionName}
             />
           );
         })}
       </ScrollView>
+      {permissionsGiven ? (
+        <Button
+          loading={loading}
+          mode="outlined"
+          color={theme.colors.surfaceBlack}
+          onPress={onPressRevoke}>
+          {t('revoke permission')}
+        </Button>
+      ) : (
+        <Button
+          loading={loading}
+          mode="contained"
+          color={theme.colors.surfaceBlack}
+          onPress={onPressGrant}>
+          {t('grant permission')}
+        </Button>
+      )}
     </DView>
   );
 };

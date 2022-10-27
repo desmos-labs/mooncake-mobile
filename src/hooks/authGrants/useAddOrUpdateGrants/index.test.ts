@@ -294,7 +294,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       act(() => {
-        result.current.revokeAllGrants();
+        result.current.revokeGrants();
       });
 
       await waitFor(() => {
