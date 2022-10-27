@@ -63,6 +63,7 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
       });
     }
 
+    console.log(_accounts);
     setLoading(false);
     setAccounts(_accounts);
   }, [accounts]);

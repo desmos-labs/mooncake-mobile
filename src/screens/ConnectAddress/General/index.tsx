@@ -16,8 +16,8 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import LocalWallet from 'lib/LocalWallet';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import {HdPath} from 'types/hdpath';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -45,7 +45,7 @@ const ConnectAddressGeneral = () => {
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
     route?.params ?? {};
 
-  const {selectedChain} = useRecoilValue(connectChainState);
+  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
 
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
@@ -64,6 +64,7 @@ const ConnectAddressGeneral = () => {
   const {accounts, generateMoreAccounts, loading} = useGenerateAccounts({
     prefix: selectedChain.prefix,
     coinType: selectedChain.hdPath.coinType,
+    mnemonic,
   });
 
   const SwitchToAdvancedButton = React.useMemo(() => {
@@ -83,26 +84,37 @@ const ConnectAddressGeneral = () => {
   }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const renderItem = React.useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
-    ({item, index}: {item: LocalWallet; index: number}) => {
+    ({
+      item,
+      index,
+    }: {
+      // eslint-disable-next-line react/no-unused-prop-types
+      item: {
+        signer: any;
+        address: string;
+        hdPath: HdPath;
+      };
+      // eslint-disable-next-line react/no-unused-prop-types
+      index: number;
+    }) => {
       return (
         <AddressItem
-          key={item.bech32Address}
+          key={item.address}
           index={index}
-          address={item.bech32Address}
+          address={item.address}
           handlePress={() => {
             if (nextRouteOverride) {
-              if (loadedProfileMap?.has(item.bech32Address)) {
+              if (loadedProfileMap?.has(item.address)) {
                 return navigation.navigate(ROUTES.USER_PROFILE, {
-                  visitingProfileAddress: item.bech32Address,
+                  visitingProfileAddress: item.address,
                 });
               }
 
-              setSelectedExternalAccount(item.serialize());
+              setSelectedExternalAccount(item.signer.serialize());
               return navigation.navigate(nextRouteOverride);
             }
 
-            setSelectedExternalAccount(item.serialize());
+            setSelectedExternalAccount(item.signer.serialize());
             navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
           }}
         />
