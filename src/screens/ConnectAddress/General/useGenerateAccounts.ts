@@ -1,9 +1,12 @@
 import React from 'react';
-import LocalWallet from 'lib/LocalWallet';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {HdPath as CosmjsHdPath, Slip10RawIndex} from '@cosmjs/crypto';
-import {HdPath} from 'types/hdpath';
-import {LedgerSigner} from '@cosmjs/ledger-amino';
+import {
+  generateAccountUsingLedger,
+  generateAccountUsingMnemonic,
+  generateHdPaths,
+} from 'screens/ConnectAddress/utils';
+import {useRoute} from '@react-navigation/native';
+import _ from 'lodash';
+import {NavProps} from './index';
 
 type Args = {
   /**
@@ -16,16 +19,8 @@ type Args = {
    * @default 852
    */
   coinType?: number;
-};
 
-const toCosmjsHdPath = (hdPath: HdPath): CosmjsHdPath => {
-  return [
-    Slip10RawIndex.hardened(44),
-    Slip10RawIndex.hardened(hdPath.coinType),
-    Slip10RawIndex.hardened(hdPath.account),
-    Slip10RawIndex.normal(hdPath.change),
-    Slip10RawIndex.normal(hdPath.addressIndex),
-  ];
+  mnemonic?: string;
 };
 
 /**
@@ -33,81 +28,49 @@ const toCosmjsHdPath = (hdPath: HdPath): CosmjsHdPath => {
  * of generated accounts, so it can be used on pages that require
  * dynamic account generation (i.e lists)
  */
-const useGenerateAccounts = ({prefix, coinType = 852}: Args) => {
+const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
   const [accounts, setAccounts] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
-  const generateAccountsFromMnemonic = React.useCallback(
-    async ({mnemonic}: {mnemonic: string}) => {
-      const createNewWalletPromises = new Array(20)
-        .fill(0)
-        .map(async (_, idx) => {
-          return LocalWallet.fromMnemonic(mnemonic, {
-            prefix,
-            hdPath: {
-              coinType,
-              change: 0,
-              account: 0,
-              addressIndex: accounts.length + idx,
-            },
-          });
-        });
+  const {params} = useRoute<NavProps['route']>();
 
-      const wallets = await Promise.all(createNewWalletPromises);
+  const ledgerTransport = _.get(params, 'ledgerTransport');
+  const ledgerApp = _.get(params, 'ledgerApp');
 
-      setAccounts((prev: LocalWallet[]) => [...prev, ...wallets]);
-    },
-    [accounts, prefix, coinType],
-  );
+  const isUsingLedger = !mnemonic && ledgerTransport && ledgerApp;
 
-  const generateAccountsFromLedger = React.useCallback(
-    async ({
-      transport,
-      ledgerApp,
-    }: {
-      transport: BluetoothTransport;
-      ledgerApp: LedgerApp;
-    }) => {
-      const hdPaths: HdPath[] = new Array(20).fill(0).map((_, idx) => ({
-        coinType,
-        change: 0,
-        account: 0,
-        addressIndex: accounts.length + idx,
-      }));
+  React.useEffect(() => {
+    generateMoreAccounts().then();
+  }, []);
 
-      const cosmJsPaths = hdPaths.map(toCosmjsHdPath);
+  const generateMoreAccounts = React.useCallback(async () => {
+    setLoading(true);
+    const hdPaths = generateHdPaths({startingIndex: accounts.length, coinType});
 
-      // let cosmosLedgerApp: LedgerApp | undefined;
-      // if (ledgerApp!.name === 'Terra') {
-      //   cosmosLedgerApp = new TerraLedgerApp(transport!);
-      // }
-
-      const ledgerSigner = new LedgerSigner(transport, {
-        ledgerAppName: ledgerApp.name,
-        minLedgerAppVersion: ledgerApp.minVersion,
-        hdPaths: cosmJsPaths,
+    let _accounts;
+    if (isUsingLedger) {
+      _accounts = await generateAccountUsingLedger({
+        ledgerApp,
+        ledgerTransport,
         prefix,
+        hdPaths,
       });
+    } else {
+      _accounts = await generateAccountUsingMnemonic({
+        prefix,
+        hdPaths,
+        mnemonic: mnemonic!,
+      });
+    }
 
-      const _accounts = await ledgerSigner.getAccounts();
-
-      setAccounts(prev => [
-        ...prev,
-        ..._accounts.map((account, index) => ({
-          signer: ledgerSigner,
-          hdPath: hdPaths[index],
-          address: account.address,
-          bech32Address: account.address,
-        })),
-      ]);
-    },
-
-    [accounts, prefix, coinType],
-  );
+    setLoading(false);
+    setAccounts(_accounts);
+  }, [accounts]);
 
   return {
-    generateAccountsFromMnemonic,
-    generateAccountsFromLedger,
     accounts,
+    generateMoreAccounts,
+    loading,
   };
 };
 

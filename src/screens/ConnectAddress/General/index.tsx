@@ -18,13 +18,11 @@ import {
 } from '@recoil/connectChainState';
 import LocalWallet from 'lib/LocalWallet';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {ledgerApps} from 'config/LedgerApps';
-import _ from 'lodash';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
 
-type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
@@ -47,10 +45,7 @@ const ConnectAddressGeneral = () => {
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
     route?.params ?? {};
 
-  const ledgerTransport = _.get(route, 'params.ledgerTransport');
-  const ledgerApp = _.get(route, 'params.ledgerApp');
-
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+  const {selectedChain} = useRecoilValue(connectChainState);
 
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
@@ -66,37 +61,10 @@ const ConnectAddressGeneral = () => {
    * for integration, replace mnemonic with the user's stored mnemonic, and
    * prefix with the correct prefix of the account to be connected
    */
-  const {accounts, generateAccountsFromMnemonic, generateAccountsFromLedger} =
-    useGenerateAccounts({
-      prefix: selectedChain.prefix,
-      coinType: selectedChain.hdPath.coinType,
-    });
-
-  const generateNewAccounts = React.useCallback(() => {
-    if (ledgerApps) {
-      console.log('generate');
-      try {
-        generateAccountsFromLedger({
-          transport: ledgerTransport,
-          ledgerApp,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      generateAccountsFromMnemonic({mnemonic});
-    }
-  }, [
-    generateAccountsFromLedger,
-    generateAccountsFromMnemonic,
-    ledgerTransport,
-    mnemonic,
-    ledgerApp,
-  ]);
-
-  React.useEffect(() => {
-    generateNewAccounts();
-  }, []);
+  const {accounts, generateMoreAccounts, loading} = useGenerateAccounts({
+    prefix: selectedChain.prefix,
+    coinType: selectedChain.hdPath.coinType,
+  });
 
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
@@ -170,9 +138,8 @@ const ConnectAddressGeneral = () => {
         contentContainerStyle={{
           padding: theme.spacing.m,
         }}
-        onEndReached={() => {
-          generateNewAccounts();
-        }}
+        refreshing={loading}
+        onEndReached={generateMoreAccounts}
       />
     </DView>
   );
