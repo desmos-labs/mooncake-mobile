@@ -1,50 +1,92 @@
 import React from 'react';
-import LocalWallet from 'lib/LocalWallet';
+import {HdPath} from 'types/hdpath';
+import _ from 'lodash';
+import {
+  generateAccountUsingLedger,
+  generateAccountUsingMnemonic,
+} from 'screens/ConnectAddress/utils';
+import {useRoute} from '@react-navigation/native';
+import {NavProps} from './index';
 
-const useGenerateAccountFromHDPath = () => {
-  const [generatedAccount, setGeneratedAccount] = React.useState<
-    LocalWallet | undefined
-  >();
+type Args = {
+  /**
+   * The bech32 prefix of the generated accounts
+   */
+  prefix: string;
+
+  /**
+   * Optional cointype.
+   * @default 852
+   */
+  coinType?: number;
+
+  mnemonic?: string;
+};
+
+const useGenerateAccountFromHDPath = ({
+  prefix,
+  coinType = 852,
+  mnemonic,
+}: Args) => {
+  const [generatedAccount, setGeneratedAccount] = React.useState<{
+    signer: any;
+    address: string;
+    hdPath: HdPath;
+  }>();
+
+  const {params} = useRoute<NavProps['route']>();
+
+  const ledgerTransport = _.get(params, 'ledgerTransport');
+  const ledgerApp = _.get(params, 'ledgerApp');
+
+  const isUsingLedger = !mnemonic && ledgerTransport && ledgerApp;
+
   const [generating, setGenerating] = React.useState(false);
 
-  const generateAccountFromHDPath = React.useCallback(
+  const generateAccount = React.useCallback(
     async ({
-      mnemonic,
-      coin,
       change,
       account,
       addressIndex,
-      prefix,
     }: {
-      mnemonic: string;
-      coin: number;
       change: number;
       account: number;
       addressIndex: number;
-      prefix: string;
     }) => {
+      const hdPath: HdPath = {
+        coinType,
+        change,
+        account,
+        addressIndex,
+      };
+
       setGenerating(true);
+      let _accounts;
+      if (isUsingLedger) {
+        _accounts = await generateAccountUsingLedger({
+          ledgerApp,
+          ledgerTransport,
+          prefix,
+          hdPaths: [hdPath],
+        });
+      } else {
+        _accounts = await generateAccountUsingMnemonic({
+          prefix,
+          hdPaths: [hdPath],
+          mnemonic: mnemonic!,
+        });
+      }
 
-      const newWallet = await LocalWallet.fromMnemonic(mnemonic, {
-        prefix,
-        hdPath: {
-          account,
-          addressIndex,
-          change,
-          coinType: coin,
-        },
-      });
-
-      setGeneratedAccount(newWallet);
+      setGeneratedAccount(_accounts[0]);
       setGenerating(false);
     },
-    [generating],
+    [],
   );
 
   return {
     generatedAccount,
     generating,
-    generateAccountFromHDPath,
+    generateAccount,
   };
 };
 

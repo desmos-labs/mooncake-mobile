@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {IconButton, useTheme} from 'react-native-paper';
 import DView from 'components/DView';
@@ -18,11 +18,12 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
 
-type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
@@ -31,16 +32,18 @@ export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
-const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
+const ConnectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {t} = useTranslation('connectAddress');
-
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+  const route = useRoute<NavProps['route']>();
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
 
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
@@ -52,8 +55,14 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
 
   const [invalidField, setInvalidField] = React.useState(false);
 
-  const {generateAccountFromHDPath, generating, generatedAccount} =
-    useGenerateAccountFromHDPath();
+  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+
+  const {generateAccount, generating, generatedAccount} =
+    useGenerateAccountFromHDPath({
+      prefix: selectedChain.prefix,
+      coinType: selectedChain.hdPath.coinType,
+      mnemonic,
+    });
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -67,14 +76,11 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   React.useEffect(() => {
     const {change, account, addressIndex} = initialFormValues;
 
-    generateAccountFromHDPath({
-      mnemonic,
-      coin: selectedChain.hdPath.coinType,
-      prefix: selectedChain.prefix,
+    generateAccount({
       change: parseInt(change, 10),
       account: parseInt(account, 10),
       addressIndex: parseInt(addressIndex, 10),
-    });
+    }).then();
   }, []);
 
   const SwitchToGeneralButton = React.useMemo(() => {
@@ -118,10 +124,7 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
         return;
       }
 
-      generateAccountFromHDPath({
-        mnemonic,
-        coin: selectedChain.hdPath.coinType,
-        prefix: selectedChain.prefix,
+      generateAccount({
         change: parseInt(change, 10),
         account: parseInt(account, 10),
         addressIndex: parseInt(addressIndex, 10),
@@ -136,16 +139,17 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
     if (!generatedAccount) return;
 
     if (nextRouteOverride) {
-      if (loadedProfileMap?.has(generatedAccount.bech32Address)) {
+      if (loadedProfileMap?.has(generatedAccount.address)) {
         return navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: generatedAccount.bech32Address,
+          visitingProfileAddress: generatedAccount.address,
         });
       }
 
       return navigate(nextRouteOverride);
     }
 
-    setSelectedExternalAccount(generatedAccount.serialize);
+    // TODO: refactor for ledger
+    setSelectedExternalAccount(generatedAccount.signer.serialize());
     navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
   }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
 
@@ -217,7 +221,7 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
             <Typography.Body6>
               {generating || !generatedAccount
                 ? t('generating')
-                : generatedAccount.bech32Address}
+                : generatedAccount.address}
             </Typography.Body6>
           )}
         </Spacer>
