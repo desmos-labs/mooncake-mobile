@@ -36,6 +36,13 @@ describe('hook: useSendTip', () => {
           {
             address: 'mockAddress',
             type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
           },
         ],
       });
@@ -85,6 +92,13 @@ describe('hook: useSendTip', () => {
           {
             address: 'mockAddress',
             type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
           },
         ],
       });
