@@ -43,9 +43,14 @@ const useSendTip = () => {
         appSettings,
         'currentChain.stakeCurrency.coinMinimalDenom',
       );
+      const percentage = _.get(
+        appSettings.contractsConfig[0],
+        'config.service_fee.percentage.value',
+      );
 
       const depCheckMap: {[index: string]: any} = {
         denom,
+        percentage,
       };
 
       // Sanity check just incase one of the dependencies is undefined
@@ -71,7 +76,7 @@ const useSendTip = () => {
         const convertedAmount = [numberToPlainCoin(amount, denom)];
         // TODO: Static number for now, will update later
         const convertedFee = [
-          numberToPlainCoin(amount + amount * 0.1 * 0.01, denom),
+          numberToPlainCoin(amount + amount * percentage * 0.01, denom),
         ];
         let msg;
 

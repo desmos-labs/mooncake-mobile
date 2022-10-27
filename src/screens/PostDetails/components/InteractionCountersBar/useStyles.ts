@@ -29,7 +29,7 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: 28,
     height: 28,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   icon2: {
     borderWidth: 2,
@@ -39,7 +39,7 @@ const useStyles = makeStyle(theme => ({
     width: 28,
     height: 28,
     transform: [{translateX: 21}],
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   icon3: {
     borderWidth: 2,
@@ -49,7 +49,7 @@ const useStyles = makeStyle(theme => ({
     width: 28,
     height: 28,
     transform: [{translateX: 42}],
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
 }));
 

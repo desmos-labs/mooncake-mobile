@@ -120,6 +120,7 @@ const Grants: React.FC<NavProps> = props => {
       <Typography.Body5>{t('description')}</Typography.Body5>
       <Spacer paddingBottom={theme.spacing.s} />
       <ScrollView
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={fetchGrants} />
         }
