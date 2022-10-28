@@ -19,7 +19,7 @@ const useSendTip = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   /**
-   * @param {Coin[]} amount The amount object, a single value inside an array
+   * @param {number} amount The amount number
    * @param {string} sender The address of the sender
    * @param {string} receiver (OPTIONAL only if sending tips to an user) The address of the receiver
    * @param {string} message (OPTIONAL) A message to send with the tip (will be stored as a MEMO)
@@ -43,9 +43,14 @@ const useSendTip = () => {
         appSettings,
         'currentChain.stakeCurrency.coinMinimalDenom',
       );
+      const percentage = _.get(
+        appSettings.contractsConfig[0],
+        'config.service_fee.percentage.value',
+      );
 
       const depCheckMap: {[index: string]: any} = {
         denom,
+        percentage,
       };
 
       // Sanity check just incase one of the dependencies is undefined
@@ -69,9 +74,8 @@ const useSendTip = () => {
       setSendTipLoading(true);
       try {
         const convertedAmount = [numberToPlainCoin(amount, denom)];
-        // TODO: Static number for now, will update later
         const convertedFee = [
-          numberToPlainCoin(amount + amount * 0.1 * 0.01, denom),
+          numberToPlainCoin(amount + amount * percentage * 0.01, denom),
         ];
         let msg;
 
@@ -109,7 +113,7 @@ const useSendTip = () => {
         setSendTipLoading(false);
       }
     },
-    [appSettings],
+    [appSettings, checkAndUpdateGrants, toast],
   );
 
   return {sendTip, sendTipLoading};

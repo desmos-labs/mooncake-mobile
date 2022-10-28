@@ -141,6 +141,10 @@ enum ROUTES {
   CONNECT_APP = 'CONNECT_APP',
 
   SELECT_TWEET = 'SELECT_TWEET',
+
+  // Grants
+  GRANTS = 'GRANTS',
+  GRANTS_DETAILS = 'GRANTS_DETAILS',
 }
 
 export default ROUTES;

@@ -120,6 +120,7 @@ const Login = () => {
 
         <Spacer paddingTop={theme.spacing.m}>
           <Button
+            color={theme.colors.white}
             disabled={loading || !password}
             loading={loading}
             style={{borderColor: theme.colors.white}}

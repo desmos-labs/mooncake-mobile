@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   defaultStyle: {
     borderRadius: 36,
     height: 36,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     width: 36,
   },
 });

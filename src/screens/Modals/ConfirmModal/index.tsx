@@ -24,11 +24,11 @@ export type ConfirmModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel?: string;
+  primaryButtonLabel?: string | ReactNode;
   /**
    * Label of the secondary button.
    */
-  secondaryButtonLabel?: string;
+  secondaryButtonLabel?: string | ReactNode;
   /**
    * What to do when the user presses the close button.
    */

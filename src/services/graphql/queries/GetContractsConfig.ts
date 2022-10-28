@@ -4,6 +4,7 @@ const GetContractsConfig = gql`
   query ContractsConfig @api(name: desmos) {
     contract {
       address
+      config
       type
     }
   }
