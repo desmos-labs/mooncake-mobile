@@ -74,7 +74,6 @@ const useSendTip = () => {
       setSendTipLoading(true);
       try {
         const convertedAmount = [numberToPlainCoin(amount, denom)];
-        // TODO: Static number for now, will update later
         const convertedFee = [
           numberToPlainCoin(amount + amount * percentage * 0.01, denom),
         ];

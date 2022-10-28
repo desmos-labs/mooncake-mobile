@@ -210,13 +210,13 @@ const Grants: React.FC<NavProps> = props => {
             mode="contained"
             color={theme.colors.surfaceBlack}
             onPress={
-              grantsGiven.length !== 8
+              grantsGiven.length !== Object.keys(GrantEnums).length
                 ? grantAllPermissions
                 : revokeAllPermissions
             }
             style={{justifyContent: 'flex-end'}}>
             <Typography.Button2 style={{color: theme.colors.white}}>
-              {grantsGiven.length !== 8
+              {grantsGiven.length !== Object.keys(GrantEnums).length
                 ? t('grant all permissions')
                 : t('revoke all permissions')}
             </Typography.Button2>
