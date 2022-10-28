@@ -17,7 +17,7 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
 import PermissionComponent from 'screens/GrantsDetails/components/PermissionComponent';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 import useStyles from './useStyles';
@@ -36,6 +36,7 @@ declare type NavProps = StackScreenProps<
 >;
 
 const GrantsDetails: React.FC<NavProps> = () => {
+  const [initialLoading, setInitialLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const {t} = useTranslation('grantsDetails');
   const {params} = useRoute<NavProps['route']>();
@@ -48,8 +49,8 @@ const GrantsDetails: React.FC<NavProps> = () => {
   const {revokeGrants} = useAddOrUpdateGrants();
 
   const fetchGrants = useCallback(async () => {
-    console.log('fetch');
     try {
+      setInitialLoading(true);
       const {grants} = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
@@ -60,6 +61,8 @@ const GrantsDetails: React.FC<NavProps> = () => {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setTimeout(() => setInitialLoading(false), 1000);
     }
   }, [getAuthzGrants]);
 
@@ -219,22 +222,26 @@ const GrantsDetails: React.FC<NavProps> = () => {
           );
         })}
       </ScrollView>
-      {permissionsGiven ? (
-        <Button
-          loading={loading}
-          mode="outlined"
-          color={theme.colors.surfaceBlack}
-          onPress={onPressRevoke}>
-          {t('revoke permission')}
-        </Button>
+      {!initialLoading ? (
+        permissionsGiven ? (
+          <Button
+            loading={loading}
+            mode="outlined"
+            color={theme.colors.surfaceBlack}
+            onPress={onPressRevoke}>
+            {t('revoke permission')}
+          </Button>
+        ) : (
+          <Button
+            loading={loading}
+            mode="contained"
+            color={theme.colors.surfaceBlack}
+            onPress={onPressGrant}>
+            {t('grant permission')}
+          </Button>
+        )
       ) : (
-        <Button
-          loading={loading}
-          mode="contained"
-          color={theme.colors.surfaceBlack}
-          onPress={onPressGrant}>
-          {t('grant permission')}
-        </Button>
+        <ActivityIndicator />
       )}
     </DView>
   );

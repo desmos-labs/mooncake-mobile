@@ -53,7 +53,7 @@ const Grants: React.FC<NavProps> = props => {
     (permission: GrantEnums) => {
       return grantsGiven.findIndex(grant => grant === permission) !== -1;
     },
-    [grantsGiven, fetchGrants],
+    [grantsGiven],
   );
 
   const grantPermissionsWrapper = useCallback(async () => {
