@@ -19,7 +19,7 @@ const useSendTip = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   /**
-   * @param {Coin[]} amount The amount object, a single value inside an array
+   * @param {number} amount The amount number
    * @param {string} sender The address of the sender
    * @param {string} receiver (OPTIONAL only if sending tips to an user) The address of the receiver
    * @param {string} message (OPTIONAL) A message to send with the tip (will be stored as a MEMO)
@@ -113,7 +113,7 @@ const useSendTip = () => {
         setSendTipLoading(false);
       }
     },
-    [appSettings],
+    [appSettings, checkAndUpdateGrants, toast],
   );
 
   return {sendTip, sendTipLoading};

@@ -34,6 +34,7 @@ import {
   Image,
   ImageBackground,
   RefreshControl,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -234,6 +235,11 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <ImageBackground source={bannerImage} style={styles.bannerImage} />
       {/* avatar needs to be in a view for positioning and ios zIndex compat */}
       <Animated.View
