@@ -19,7 +19,6 @@ import {
   ExternalAccountEnum,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateProof from 'screens/ConnectAddress/useGenerateProof';
 import {Proof} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
@@ -36,9 +35,6 @@ export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
-
-  ledgerTransport?: BluetoothTransport;
-  ledgerApp?: LedgerApp;
 };
 
 const ConnectAddressAdvanced = () => {

@@ -83,5 +83,5 @@ export type LinkableChain = {
   /**
    * Ledger applications that the chain is compatible with.
    */
-  ledgerApps?: LedgerApp[];
+  ledgerApps: LedgerApp[];
 };

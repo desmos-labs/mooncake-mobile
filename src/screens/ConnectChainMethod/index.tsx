@@ -8,6 +8,7 @@ import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
+  connectChainState,
   connectMethodState,
   mnemonicState,
   selectedChainState,
@@ -21,7 +22,6 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
-import {CosmosLedgerApp, ledgerApps} from 'config/LedgerApps';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -44,28 +44,30 @@ const ConnectChainMethod = () => {
   const setMnemonic = useSetRecoilState(mnemonicState);
   const setSigner = useSetRecoilState(signerState);
 
+  const setConnectChainState = useSetRecoilState(connectChainState);
+
   const handlePressLedger = React.useCallback(() => {
     setConnectChainMethod('LEDGER');
 
-    const app =
-      ledgerApps.find(
-        x => x.name.toLowerCase() === selectedChain.name.toLowerCase(),
-      ) || CosmosLedgerApp;
+    if (selectedChain.ledgerApps.length > 1) {
+      navigate(ROUTES.SELECT_LEDGER_APP);
+    } else {
+      navigate(ROUTES.AUTHORIZE_WALLET, {
+        screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
+        params: {
+          ledgerApp: selectedChain.ledgerApps[0],
+          autoClose: true,
+          onConnectionEstablished: transport => {
+            setConnectChainState(prev => ({
+              ...prev,
+              ledgerTransport: transport,
+            }));
 
-    navigate(ROUTES.AUTHORIZE_WALLET, {
-      screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
-      params: {
-        ledgerApp: app,
-        autoClose: true,
-        onConnectionEstablished: transport => {
-          console.log('hello world');
-          navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
-            ledgerApp: app,
-            ledgerTransport: transport,
-          });
+            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+          },
         },
-      },
-    });
+      });
+    }
   }, []);
 
   const handlePressPassword = React.useCallback(async () => {
@@ -117,10 +119,13 @@ const ConnectChainMethod = () => {
         {t('selectMethodToConnect')}
       </Typography.Body6>
       <Spacer paddingBottom={theme.spacing.m} />
-      <ConnectChainMethodButton
-        method="ledger"
-        handlePress={handlePressLedger}
-      />
+      {selectedChain.ledgerApps.length > 0 && (
+        <ConnectChainMethodButton
+          method="ledger"
+          handlePress={handlePressLedger}
+        />
+      )}
+
       <Spacer paddingTop={theme.spacing.xl}>
         <ConnectChainMethodButton
           method="password"

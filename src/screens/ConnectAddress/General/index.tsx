@@ -17,7 +17,6 @@ import {
   ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
@@ -32,9 +31,6 @@ export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
-
-  ledgerTransport?: BluetoothTransport;
-  ledgerApp?: LedgerApp;
 };
 
 const ConnectAddressGeneral = () => {
