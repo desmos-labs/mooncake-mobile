@@ -79,4 +79,9 @@ export type LinkableChain = {
    * The chain's related assets
    */
   assets?: ChainAsset[];
+
+  /**
+   * Ledger applications that the chain is compatible with.
+   */
+  ledgerApps?: LedgerApp[];
 };
