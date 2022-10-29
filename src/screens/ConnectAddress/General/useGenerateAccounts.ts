@@ -38,7 +38,7 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
 
-  const isUsingLedger = !mnemonic && ledgerTransport && ledgerApp;
+  const isUsingLedger = ledgerTransport && ledgerApp;
 
   React.useEffect(() => {
     generateMoreAccounts().then();
@@ -46,7 +46,11 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
 
   const generateMoreAccounts = React.useCallback(async () => {
     setLoading(true);
-    const hdPaths = generateHdPaths({startingIndex: accounts.length, coinType});
+    const hdPaths = generateHdPaths({
+      startingIndex: accounts.length,
+      coinType,
+      limit: isUsingLedger ? 5 : 20,
+    });
 
     let _accounts;
     if (isUsingLedger) {
@@ -64,7 +68,6 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
       });
     }
 
-    console.log(_accounts);
     setLoading(false);
     setAccounts(_accounts);
   }, [accounts]);

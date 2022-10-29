@@ -18,6 +18,7 @@ import {
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import _ from 'lodash';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -56,6 +57,11 @@ const ConnectAddressGeneral = () => {
   const styles = useStyles();
 
   const theme = useTheme();
+
+  const ledgerTransport = _.get(route.params, 'ledgerTransport');
+  const ledgerApp = _.get(route.params, 'ledgerApp');
+
+  const isUsingLedger = ledgerTransport && ledgerApp;
 
   /**
    * for integration, replace mnemonic with the user's stored mnemonic, and
@@ -148,7 +154,9 @@ const ConnectAddressGeneral = () => {
           padding: theme.spacing.m,
         }}
         refreshing={loading}
-        onEndReached={generateMoreAccounts}
+        onEndReached={() => {
+          !isUsingLedger && generateMoreAccounts();
+        }}
       />
     </DView>
   );
