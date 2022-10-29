@@ -1,6 +1,5 @@
 import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {ImageSourcePropType} from 'react-native';
-import {DenomUnit} from '@desmoslabs/desmjs';
 import {HdPath} from './hdpath';
 
 export enum ChainAccountType {
@@ -9,6 +8,11 @@ export enum ChainAccountType {
 }
 
 export type ChainId = 'desmos-mainnet' | 'morpheus-apollo-3';
+
+export type DenomUnit = {
+  denom: string;
+  exponent: number;
+};
 
 export interface ChainAccount {
   /**

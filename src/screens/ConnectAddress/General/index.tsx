@@ -14,10 +14,10 @@ import ROUTES from 'navigation/routes';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   connectChainState,
+  ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {HdPath} from 'types/hdpath';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -89,11 +89,7 @@ const ConnectAddressGeneral = () => {
       index,
     }: {
       // eslint-disable-next-line react/no-unused-prop-types
-      item: {
-        signer: any;
-        address: string;
-        hdPath: HdPath;
-      };
+      item: ExternalAccount;
       // eslint-disable-next-line react/no-unused-prop-types
       index: number;
     }) => {
@@ -110,11 +106,12 @@ const ConnectAddressGeneral = () => {
                 });
               }
 
+              // TODO: refactor
               setSelectedExternalAccount(item.signer.serialize());
               return navigation.navigate(nextRouteOverride);
             }
 
-            setSelectedExternalAccount(item.signer.serialize());
+            setSelectedExternalAccount(item);
             navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
           }}
         />

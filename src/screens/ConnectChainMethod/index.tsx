@@ -59,7 +59,7 @@ const ConnectChainMethod = () => {
         autoClose: true,
         onConnectionEstablished: transport => {
           console.log('hello world');
-          navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+          navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
             ledgerApp: app,
             ledgerTransport: transport,
           });

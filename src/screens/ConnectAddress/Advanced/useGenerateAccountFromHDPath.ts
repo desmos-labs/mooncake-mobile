@@ -6,6 +6,7 @@ import {
   generateAccountUsingMnemonic,
 } from 'screens/ConnectAddress/utils';
 import {useRoute} from '@react-navigation/native';
+import {ExternalAccount} from '@recoil/connectChainState';
 import {NavProps} from './index';
 
 type Args = {
@@ -28,11 +29,8 @@ const useGenerateAccountFromHDPath = ({
   coinType = 852,
   mnemonic,
 }: Args) => {
-  const [generatedAccount, setGeneratedAccount] = React.useState<{
-    signer: any;
-    address: string;
-    hdPath: HdPath;
-  }>();
+  const [generatedAccount, setGeneratedAccount] =
+    React.useState<ExternalAccount>();
 
   const {params} = useRoute<NavProps['route']>();
 

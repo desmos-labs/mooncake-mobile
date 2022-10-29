@@ -3,6 +3,7 @@ import {HdPath} from 'types/hdpath';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import {LedgerSigner} from '@cosmjs/ledger-amino';
 import LocalWallet from 'lib/LocalWallet';
+import {ExternalAccountEnum} from '@recoil/connectChainState';
 
 export const generateAccountUsingMnemonic = async ({
   prefix,
@@ -23,9 +24,10 @@ export const generateAccountUsingMnemonic = async ({
   const wallets = await Promise.all(generateWallets);
 
   return wallets.map((x, idx) => ({
-    signer: x,
+    signer: x.serialize(),
     address: x.bech32Address,
     hdPath: hdPaths[idx],
+    type: ExternalAccountEnum.mnemonic,
   }));
 };
 
@@ -57,6 +59,7 @@ export const generateAccountUsingLedger = async ({
     signer: ledgerSigner,
     address: x.address,
     hdPath: hdPaths[idx],
+    type: ExternalAccountEnum.ledger,
   }));
 };
 

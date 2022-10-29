@@ -6,6 +6,7 @@ import {
 } from 'screens/ConnectAddress/utils';
 import {useRoute} from '@react-navigation/native';
 import _ from 'lodash';
+import {ExternalAccount} from '@recoil/connectChainState';
 import {NavProps} from './index';
 
 type Args = {
@@ -29,7 +30,7 @@ type Args = {
  * dynamic account generation (i.e lists)
  */
 const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
-  const [accounts, setAccounts] = React.useState<any[]>([]);
+  const [accounts, setAccounts] = React.useState<ExternalAccount[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   const {params} = useRoute<NavProps['route']>();

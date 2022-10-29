@@ -41,7 +41,7 @@ const AddressItem = ({index, address, handlePress}: Props) => {
       return convertCoin(
         data?.action_account_balance?.coins[0],
         6,
-        settings.currentChain.denomUnits,
+        settings.currentChain.currencies,
       );
     }
   }, [data]);

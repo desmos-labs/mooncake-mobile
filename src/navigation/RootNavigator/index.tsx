@@ -29,7 +29,9 @@ import ConnectAddressGeneral, {
 import ConnectApp from 'screens/ConnectApp';
 import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
-import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
+import ConnectChainTxDetail, {
+  ConnectChainTxDetailParams,
+} from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
@@ -138,7 +140,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
-  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
+  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;

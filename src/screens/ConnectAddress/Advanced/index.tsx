@@ -16,9 +16,13 @@ import {removeNonNumbers} from 'lib/FormatUtils';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   connectChainState,
+  ExternalAccountEnum,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useGenerateProof from 'screens/ConnectAddress/useGenerateProof';
+import {Proof} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
@@ -40,6 +44,8 @@ export type ConnectAddressAdvancedParams = {
 const ConnectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
+  const {activeAddress} = useActiveAccount();
+
   const {t} = useTranslation('connectAddress');
   const route = useRoute<NavProps['route']>();
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
@@ -56,6 +62,8 @@ const ConnectAddressAdvanced = () => {
   const [invalidField, setInvalidField] = React.useState(false);
 
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+
+  const {generateProofCompat, generateProof} = useGenerateProof();
 
   const {generateAccount, generating, generatedAccount} =
     useGenerateAccountFromHDPath({
@@ -95,7 +103,6 @@ const ConnectAddressAdvanced = () => {
               titleLabelOverride,
             });
           }}>
-          {' '}
           <Typography.Button2 style={styles.modeButtonText}>
             {t('general')}
           </Typography.Button2>
@@ -135,8 +142,21 @@ const ConnectAddressAdvanced = () => {
     [],
   );
 
-  const handlePressConfirm = React.useCallback(() => {
-    if (!generatedAccount) return;
+  const handlePressConfirm = React.useCallback(async () => {
+    if (!generatedAccount || !activeAddress) return;
+
+    let proof: Proof;
+    if (generatedAccount.type === ExternalAccountEnum.ledger) {
+      proof = await generateProofCompat({
+        activeAddress,
+        externalAccount: generatedAccount,
+      });
+    } else {
+      proof = await generateProof({
+        activeAddress,
+        externalAccount: generatedAccount,
+      });
+    }
 
     if (nextRouteOverride) {
       if (loadedProfileMap?.has(generatedAccount.address)) {
@@ -148,10 +168,12 @@ const ConnectAddressAdvanced = () => {
       return navigate(nextRouteOverride);
     }
 
-    // TODO: refactor for ledger
-    setSelectedExternalAccount(generatedAccount.signer.serialize());
-    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-  }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
+    setSelectedExternalAccount(generatedAccount);
+    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+      proof,
+      externalAddress: generatedAccount.address,
+    });
+  }, [activeAddress, nextRouteOverride, loadedProfileMap, generatedAccount]);
 
   return (
     <DView

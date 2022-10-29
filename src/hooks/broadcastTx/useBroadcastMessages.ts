@@ -1,5 +1,5 @@
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {isDeliverTxFailure} from '@cosmjs/stargate';
+import {GasPrice, isDeliverTxFailure} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
@@ -27,7 +27,7 @@ export default function useBroadcastMessages() {
         _signer,
         {
           gasPrice: GasPrice.fromString(
-            `0.1${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
+            `0.2${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
           ),
         },
       );
@@ -42,6 +42,8 @@ export default function useBroadcastMessages() {
         undefined,
         granter,
       );
+
+      console.log('pp poo man', JSON.stringify(signed));
 
       const broadcastResult = await client.broadcastTx(
         TxRaw.encode(signed.txRaw).finish(),

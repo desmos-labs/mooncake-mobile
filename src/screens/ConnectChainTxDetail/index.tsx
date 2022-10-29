@@ -9,7 +9,7 @@ import Button from 'components/Button';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {connectChainState} from '@recoil/connectChainState';
@@ -21,20 +21,12 @@ import {formatFeeWithDenoms} from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
 import EnvConfig from 'config/EnvConfig';
-import {
-  DesmosClient,
-  MsgLinkChainAccountEncodeObject,
-  OfflineSignerAdapter,
-} from '@desmoslabs/desmjs';
+import {MsgLinkChainAccountEncodeObject} from '@desmoslabs/desmjs';
 import {
   Bech32Address,
   Proof,
-  SignatureValueType,
-  SingleSignature,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {toHex} from '@cosmjs/encoding';
-import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -42,10 +34,19 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_CHAIN_TX_DETAIL
 >;
 
+export type ConnectChainTxDetailParams = {
+  proof: Proof;
+
+  externalAddress: string;
+};
+
 const ConnectChainTxDetail = () => {
   const {t} = useTranslation('connectChainTxDetail');
 
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {
+    params: {proof, externalAddress},
+  } = useRoute<NavProps['route']>();
 
   const {chainAccount} = useActiveAccount();
 
@@ -59,57 +60,20 @@ const ConnectChainTxDetail = () => {
   const styles = useStyles();
   const theme = useTheme();
   const [message, setMessage] = React.useState<any>(undefined);
-  const [deserializedExternalWallet, setDeserializedExternalWallet] =
-    React.useState<LocalWallet | undefined>(undefined);
+  const [deserializedExternalWallet] = React.useState<LocalWallet | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     const generateMessage = async () => {
-      if (!selectedChain) return;
-
-      const currentAddress = activeAddr!;
-
-      const externalWallet = await LocalWallet.deserialize(
-        selectedExternalAccount,
-      );
-
-      const _signer = new OfflineSignerAdapter(externalWallet);
-      const client = await DesmosClient.connectWithSigner(
-        EnvConfig.DESMOS_RPC,
-        _signer,
-      );
-
-      // sign the tx
-      const {pubKey, txRaw, signDoc} = await client.signTx(
-        externalWallet.bech32Address,
-        [],
-        {amount: [], gas: '0'},
-        currentAddress,
-        undefined,
-      );
-
-      // build signature
-      const signature: SingleSignature = {
-        valueType: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_DIRECT, // Proper signature type
-        signature: txRaw.signatures[0], // Signature value
-      };
-
-      const proof: Proof = Proof.fromPartial({
-        pubKey,
-        signature: Any.fromPartial({
-          typeUrl: '/desmos.profiles.v3.SingleSignature',
-          value: SingleSignature.encode(signature).finish(),
-        }),
-        // I don't have access to the JSON.stringify().hexEncode() function so I used this instead
-        plainText: toHex(SignDoc.encode(signDoc as SignDoc).finish()),
-      });
-
+      console.log(externalAddress);
       // Create the message
       const value: MsgLinkChainAccount = MsgLinkChainAccount.fromPartial({
         chainAddress: Any.fromPartial({
           typeUrl: '/desmos.profiles.v3.Bech32Address',
           value: Bech32Address.encode(
             Bech32Address.fromPartial({
-              value: externalWallet.bech32Address,
+              value: externalAddress,
               prefix: selectedChain.prefix,
             }),
           ).finish(),
@@ -125,8 +89,6 @@ const ConnectChainTxDetail = () => {
         typeUrl: '/desmos.profiles.v3.MsgLinkChainAccount',
         value,
       };
-
-      setDeserializedExternalWallet(externalWallet);
 
       setMessage(msg);
     };
@@ -200,7 +162,7 @@ const ConnectChainTxDetail = () => {
       </Typography.Subtitle2>
       <Typography.Body6
         style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={1}>
+        numberOfLines={2}>
         {activeAddr}
       </Typography.Body6>
 
@@ -209,12 +171,8 @@ const ConnectChainTxDetail = () => {
       </Typography.Subtitle2>
       <Typography.Body6
         style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={1}>
-        {deserializedExternalWallet ? (
-          deserializedExternalWallet.bech32Address
-        ) : (
-          <ActivityIndicator />
-        )}
+        numberOfLines={2}>
+        {selectedExternalAccount.address}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>
@@ -235,9 +193,7 @@ const ConnectChainTxDetail = () => {
       <View style={styles.buttonContainer}>
         <Button
           color={theme.colors.surfaceBlack}
-          disabled={
-            !chainAccount || !message || !fee || !deserializedExternalWallet
-          }
+          disabled={!chainAccount || !message || !fee}
           mode="contained"
           onPress={handlePressNext}>
           {t('common:next')}

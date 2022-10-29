@@ -1,6 +1,20 @@
 import {LinkableChain} from 'types/chains';
 import {atom, DefaultValue, selector} from 'recoil';
 import {OfflineSigner} from '@cosmjs/proto-signing';
+import {HdPath} from 'types/hdpath';
+import {LedgerSigner} from '@cosmjs/ledger-amino';
+
+export enum ExternalAccountEnum {
+  'mnemonic',
+  'ledger',
+}
+
+export interface ExternalAccount {
+  signer: string | LedgerSigner;
+  address: string;
+  hdPath: HdPath;
+  type: ExternalAccountEnum;
+}
 
 export const selectedChainState = atom<LinkableChain>({
   key: 'selectedChain',
@@ -22,7 +36,7 @@ export const mnemonicState = atom<string>({
   default: undefined,
 });
 
-export const selectedExternalAccountState = atom<string>({
+export const selectedExternalAccountState = atom<ExternalAccount>({
   key: 'selectedExternalAccount',
   default: undefined,
 });
