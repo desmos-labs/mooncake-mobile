@@ -111,7 +111,7 @@ const ConnectAddressGeneral = () => {
           }
 
           // TODO: refactor
-          setSelectedExternalAccount(item.signer.serialize());
+          setSelectedExternalAccount(item);
           return navigation.navigate(nextRouteOverride);
         }
 
