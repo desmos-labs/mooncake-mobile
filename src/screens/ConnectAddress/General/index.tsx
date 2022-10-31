@@ -18,7 +18,7 @@ import {
 } from '@recoil/connectChainState';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
-import {generateProof} from 'screens/ConnectAddress/utils';
+import useGenerateProof from 'hooks/useGenerateProof';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
@@ -55,6 +55,8 @@ const ConnectAddressGeneral = () => {
 
   const {checkIsAddressLinked} = useCheckIsAddressLinked();
 
+  const {generateProof} = useGenerateProof();
+
   const {t} = useTranslation('connectAddress');
 
   const styles = useStyles();
@@ -64,12 +66,12 @@ const ConnectAddressGeneral = () => {
   const ledgerTransport = _.get(route, 'params.ledgerTransport');
   const ledgerApp = _.get(route, 'params.ledgerApp');
 
-  const isUsingLedger = ledgerTransport && ledgerApp;
+  const isUsingLedger = !!(ledgerTransport && ledgerApp);
 
   const {accounts, generateAccounts, loading} = useGenerateAccounts();
 
   React.useEffect(() => {
-    generateAccounts(10);
+    generateAccounts(isUsingLedger ? 5 : 10);
   }, []);
 
   const SwitchToAdvancedButton = React.useMemo(() => {
@@ -120,10 +122,12 @@ const ConnectAddressGeneral = () => {
           activeAddress,
         });
 
-        navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
-          proof,
-          externalAddress: item.address,
-        });
+        if (proof) {
+          navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+            proof,
+            externalAddress: item.address,
+          });
+        }
       };
 
       return (

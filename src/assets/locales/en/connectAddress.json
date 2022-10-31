@@ -12,5 +12,7 @@
   "address": "Address",
   "alreadyLinked": "Already linked",
   "addrAlreadyLinked": "Address is already linked",
+  "pleaseReview": "Please review",
+  "approveTxOnLedger": "Please approve the transaction displayed on your ledger device.",
   "hdDerivPathModal": "A derivation path is a piece of data which tells a Hierarchical Deterministic (HD) wallet how to derive multiple accounts from the same Secret Recovery Phrase. \n\nDerivation paths are used as a Bitcoin standard and allows you to theoretically create millions of addresses from the same phrase."
 }

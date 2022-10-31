@@ -3,7 +3,7 @@ import {HdPath} from 'types/hdpath';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import {LedgerSigner} from '@cosmjs/ledger-amino';
 import LocalWallet from 'lib/LocalWallet';
-import {ExternalAccount, ExternalAccountEnum} from '@recoil/connectChainState';
+import {ExternalAccountEnum} from '@recoil/connectChainState';
 import {
   Proof,
   SignatureValueType,
@@ -11,16 +11,9 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import {isStdSignDoc} from '@desmoslabs/desmjs';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {fromBase64, toHex} from '@cosmjs/encoding';
-import {TxBody, SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-import {
-  encodeSecp256k1Pubkey,
-  makeSignDoc,
-  serializeSignDoc,
-  StdSignDoc,
-} from '@cosmjs/amino';
-import {encodePubkey} from '@cosmjs/proto-signing';
-import Long from 'long';
+import {toHex} from '@cosmjs/encoding';
+import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
+import {serializeSignDoc, StdSignDoc} from '@cosmjs/amino';
 
 export const generateAccountUsingMnemonic = async ({
   prefix,
@@ -98,7 +91,7 @@ export const generateHdPaths = ({
     };
   });
 
-const makeProof = ({
+export const makeProof = ({
   signature,
   pubKey,
   signDoc,
@@ -128,64 +121,4 @@ const makeProof = ({
   });
 
   return proof;
-};
-
-export const generateProof = async ({
-  externalAccount,
-  activeAddress,
-}: {
-  externalAccount: ExternalAccount;
-  activeAddress: string;
-}): Promise<Proof> => {
-  const {type, signer} = externalAccount;
-
-  if (type === ExternalAccountEnum.ledger) {
-    const _signDoc = makeSignDoc(
-      [],
-      {
-        gas: '0',
-        amount: [],
-      },
-      '0',
-      activeAddress,
-      '0',
-      '0',
-    );
-
-    const ledgerSigner = signer as LedgerSigner;
-
-    const [account] = await ledgerSigner.getAccounts();
-
-    const {signature} = await ledgerSigner.signAmino(account.address, _signDoc);
-
-    return makeProof({
-      signature: fromBase64(signature.signature),
-      pubKey: encodePubkey(encodeSecp256k1Pubkey(account.pubkey)),
-      signDoc: _signDoc,
-      signingMode: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_AMINO,
-    });
-  } else {
-    const localWallet = await LocalWallet.deserialize(signer as string);
-    const [account] = await localWallet.getAccounts();
-
-    const _signDoc = SignDoc.fromPartial({
-      accountNumber: Long.ZERO,
-      authInfoBytes: new Uint8Array(),
-      bodyBytes: TxBody.encode(
-        TxBody.fromPartial({
-          memo: activeAddress,
-        }),
-      ).finish(),
-      chainId: '',
-    });
-
-    const {signature} = await localWallet.signDirect(account.address, _signDoc);
-
-    return makeProof({
-      signature: fromBase64(signature.signature),
-      pubKey: encodePubkey(encodeSecp256k1Pubkey(account.pubkey)),
-      signDoc: _signDoc,
-      signingMode: SignatureValueType.SIGNATURE_VALUE_TYPE_COSMOS_DIRECT,
-    });
-  }
 };

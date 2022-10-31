@@ -23,9 +23,9 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
 import useGenerateAccounts from 'hooks/useGenerateAccounts';
+import useGenerateProof from 'hooks/useGenerateProof';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
-import {generateProof} from '../utils';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -45,6 +45,7 @@ const ConnectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
   const {activeAddress} = useActiveAccount();
+  const {generateProof} = useGenerateProof();
 
   const {t} = useTranslation('connectAddress');
   const route = useRoute<NavProps['route']>();
@@ -114,35 +115,30 @@ const ConnectAddressAdvanced = () => {
     );
   }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
-  const onFormSubmit = React.useCallback(
-    async (formValues: typeof initialFormValues) => {
-      console.log(formValues);
-
-      if (!generatedAccount || !activeAddress) return;
-
-      const proof = await generateProof({
-        activeAddress,
-        externalAccount: generatedAccount,
-      });
-
-      if (nextRouteOverride) {
-        if (loadedProfileMap?.has(generatedAccount.address)) {
-          return navigate(ROUTES.USER_PROFILE, {
-            visitingProfileAddress: generatedAccount.address,
-          });
-        }
-
-        return navigate(nextRouteOverride);
+  const handleSubmit = React.useCallback(async () => {
+    if (!generatedAccount || !activeAddress) return;
+    if (nextRouteOverride) {
+      if (loadedProfileMap?.has(generatedAccount.address)) {
+        return navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: generatedAccount.address,
+        });
       }
 
+      return navigate(nextRouteOverride);
+    }
+    const proof = await generateProof({
+      activeAddress,
+      externalAccount: generatedAccount,
+    });
+
+    if (proof) {
       setSelectedExternalAccount(generatedAccount);
       navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
         proof,
         externalAddress: generatedAccount.address,
       });
-    },
-    [generateAccount, activeAddress],
-  );
+    }
+  }, [generatedAccount, activeAddress]);
 
   const onFormChange = React.useCallback(
     (formValues: typeof initialFormValues) => {
@@ -224,10 +220,10 @@ const ConnectAddressAdvanced = () => {
         </View>
 
         <Formik
+          onSubmit={() => {}}
           initialValues={initialFormValues}
-          onSubmit={onFormSubmit}
           validate={onFormChange}>
-          {({setFieldValue, values, handleSubmit}) => {
+          {({setFieldValue, values}) => {
             return (
               <View>
                 <HDDerivPathInputGroup
