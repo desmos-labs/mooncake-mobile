@@ -3,7 +3,6 @@ import {atom, DefaultValue, selector} from 'recoil';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {HdPath} from 'types/hdpath';
 import {LedgerSigner} from '@cosmjs/ledger-amino';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 
 export enum ExternalAccountEnum {
   'mnemonic',
@@ -42,16 +41,6 @@ export const selectedExternalAccountState = atom<ExternalAccount>({
   default: undefined,
 });
 
-export const ledgerTransportState = atom<BluetoothTransport>({
-  key: 'bleLedger',
-  default: undefined,
-});
-
-export const ledgerAppState = atom<LedgerApp>({
-  key: 'ledgerApp',
-  default: undefined,
-});
-
 /**
  * An atom to keep track of the data used to create a new chain
  * connection
@@ -64,8 +53,6 @@ export const connectChainState = selector({
       connectMethod: get(connectMethodState),
       mnemonic: get(mnemonicState),
       selectedExternalAccount: get(selectedExternalAccountState),
-      ledgerTransport: get(ledgerTransportState),
-      ledgerApp: get(ledgerAppState),
     };
   },
   set: ({set}, value) => {
@@ -74,15 +61,11 @@ export const connectChainState = selector({
       set(connectMethodState, value);
       set(mnemonicState, value);
       set(selectedExternalAccountState, value);
-      set(ledgerTransportState, value);
-      set(ledgerAppState, value);
       return;
     }
     set(selectedChainState, value.selectedChain);
     set(connectMethodState, value.connectMethod);
     set(mnemonicState, value.mnemonic);
     set(selectedExternalAccountState, value.selectedExternalAccount);
-    set(ledgerTransportState, value.ledgerTransport);
-    set(ledgerAppState, value.ledgerApp);
   },
 });

@@ -1,12 +1,12 @@
 import React from 'react';
 import {HdPath} from 'types/hdpath';
-import _ from 'lodash';
 import {
   generateAccountUsingLedger,
   generateAccountUsingMnemonic,
 } from 'screens/ConnectAddress/utils';
-import {useRoute} from '@react-navigation/native';
 import {ExternalAccount} from '@recoil/connectChainState';
+import {useRoute} from '@react-navigation/native';
+import _ from 'lodash';
 import {NavProps} from './index';
 
 type Args = {
@@ -33,11 +33,10 @@ const useGenerateAccountFromHDPath = ({
     React.useState<ExternalAccount>();
 
   const {params} = useRoute<NavProps['route']>();
-
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
 
-  const isUsingLedger = !mnemonic && ledgerTransport && ledgerApp;
+  const isUsingLedger = !!(ledgerTransport && ledgerApp);
 
   const [generating, setGenerating] = React.useState(false);
 

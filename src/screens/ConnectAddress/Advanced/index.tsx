@@ -22,19 +22,24 @@ import {
 import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateProof from 'screens/ConnectAddress/useGenerateProof';
 import {Proof} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import _ from 'lodash';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
-  ROUTES.CONNECT_ADDRESS_GENERAL
+  ROUTES.CONNECT_ADDRESS_ADVANCED
 >;
 
 export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
 const ConnectAddressAdvanced = () => {
@@ -60,6 +65,8 @@ const ConnectAddressAdvanced = () => {
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
 
   const {generateProofCompat, generateProof} = useGenerateProof();
+
+  const ledgerTransport = _.get(route, 'params.ledgerTransport');
 
   const {generateAccount, generating, generatedAccount} =
     useGenerateAccountFromHDPath({
@@ -92,7 +99,11 @@ const ConnectAddressAdvanced = () => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => {
+          onPress={async () => {
+            if (ledgerTransport) {
+              await (ledgerTransport as BluetoothTransport).close();
+            }
+
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
               nextRouteOverride,
               loadedProfileMap,

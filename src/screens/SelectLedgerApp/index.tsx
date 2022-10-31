@@ -1,8 +1,8 @@
 import React from 'react';
 import DView from 'components/DView';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
-import {ledgerAppState, selectedChainState} from '@recoil/connectChainState';
+import {useRecoilValue} from 'recoil';
+import {selectedChainState} from '@recoil/connectChainState';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
@@ -18,6 +18,7 @@ type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.SELECT_LEDGER_APP
 >;
+
 /**
  * A screen where users select a ledger app to connect chains with more than one
  * supported ledger app
@@ -26,13 +27,23 @@ const SelectLedgerApp = () => {
   const selectedChain = useRecoilValue(selectedChainState);
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const setLedgerAppState = useSetRecoilState(ledgerAppState);
   const {t} = useTranslation('selectLedgerApp');
 
   const renderItem = ({item}: ListRenderItemInfo<LedgerApp>) => {
     const handlePress = () => {
-      setLedgerAppState(item);
-      navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+      navigate(ROUTES.AUTHORIZE_WALLET, {
+        screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
+        params: {
+          ledgerApp: selectedChain.ledgerApps[0],
+          autoClose: true,
+          onConnectionEstablished: transport => {
+            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+              ledgerApp: item,
+              ledgerTransport: transport,
+            });
+          },
+        },
+      });
     };
     return (
       <ChainItem

@@ -8,7 +8,6 @@ import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
-  connectChainState,
   connectMethodState,
   mnemonicState,
   selectedChainState,
@@ -44,8 +43,6 @@ const ConnectChainMethod = () => {
   const setMnemonic = useSetRecoilState(mnemonicState);
   const setSigner = useSetRecoilState(signerState);
 
-  const setConnectChainState = useSetRecoilState(connectChainState);
-
   const handlePressLedger = React.useCallback(() => {
     setConnectChainMethod('LEDGER');
 
@@ -58,12 +55,10 @@ const ConnectChainMethod = () => {
           ledgerApp: selectedChain.ledgerApps[0],
           autoClose: true,
           onConnectionEstablished: transport => {
-            setConnectChainState(prev => ({
-              ...prev,
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+              ledgerApp: selectedChain.ledgerApps[0],
               ledgerTransport: transport,
-            }));
-
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED);
+            });
           },
         },
       });

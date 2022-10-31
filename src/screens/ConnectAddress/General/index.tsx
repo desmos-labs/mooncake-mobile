@@ -17,6 +17,7 @@ import {
   ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
@@ -31,6 +32,9 @@ export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
 const ConnectAddressGeneral = () => {
@@ -54,8 +58,8 @@ const ConnectAddressGeneral = () => {
 
   const theme = useTheme();
 
-  const ledgerTransport = _.get(route.params, 'ledgerTransport');
-  const ledgerApp = _.get(route.params, 'ledgerApp');
+  const ledgerTransport = _.get(route, 'params.ledgerTransport');
+  const ledgerApp = _.get(route, 'params.ledgerApp');
 
   const isUsingLedger = ledgerTransport && ledgerApp;
 
@@ -74,7 +78,10 @@ const ConnectAddressGeneral = () => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => {
+          onPress={async () => {
+            if (ledgerTransport) {
+              await (ledgerTransport as BluetoothTransport).close();
+            }
             navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, route.params);
           }}>
           <Typography.Button2 style={styles.modeButtonText}>
@@ -151,7 +158,7 @@ const ConnectAddressGeneral = () => {
         }}
         refreshing={loading}
         onEndReached={() => {
-          !isUsingLedger && generateMoreAccounts();
+          !isUsingLedger && generateMoreAccounts(10);
         }}
       />
     </DView>
