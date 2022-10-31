@@ -34,10 +34,10 @@ const SelectLedgerApp = () => {
       navigate(ROUTES.AUTHORIZE_WALLET, {
         screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
         params: {
-          ledgerApp: selectedChain.ledgerApps[0],
+          ledgerApp: item,
           autoClose: true,
           onConnectionEstablished: transport => {
-            navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
               ledgerApp: item,
               ledgerTransport: transport,
             });
