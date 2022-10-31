@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
-import {FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -19,6 +19,8 @@ import {
 } from '@recoil/connectChainState';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
+import {generateProof} from 'screens/ConnectAddress/utils';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateAccounts from './useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
@@ -38,6 +40,7 @@ export type ConnectAddressGeneralParams = {
 };
 
 const ConnectAddressGeneral = () => {
+  const {activeAddress} = useActiveAccount();
   // placeholder
   const navigation = useNavigation<NavProps['navigation']>();
 
@@ -63,6 +66,7 @@ const ConnectAddressGeneral = () => {
 
   const isUsingLedger = ledgerTransport && ledgerApp;
 
+  console.log(selectedChain);
   /**
    * for integration, replace mnemonic with the user's stored mnemonic, and
    * prefix with the correct prefix of the account to be connected
@@ -102,31 +106,41 @@ const ConnectAddressGeneral = () => {
       // eslint-disable-next-line react/no-unused-prop-types
       index: number;
     }) => {
+      if (!activeAddress) return <ActivityIndicator />;
+      const handlePress = async () => {
+        if (nextRouteOverride) {
+          if (loadedProfileMap?.has(item.address)) {
+            return navigation.navigate(ROUTES.USER_PROFILE, {
+              visitingProfileAddress: item.address,
+            });
+          }
+
+          // TODO: refactor
+          setSelectedExternalAccount(item.signer.serialize());
+          return navigation.navigate(nextRouteOverride);
+        }
+
+        const proof = await generateProof({
+          externalAccount: item,
+          activeAddress,
+        });
+
+        navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+          proof,
+          externalAddress: item.address,
+        });
+      };
+
       return (
         <AddressItem
           key={item.address}
           index={index}
           address={item.address}
-          handlePress={() => {
-            if (nextRouteOverride) {
-              if (loadedProfileMap?.has(item.address)) {
-                return navigation.navigate(ROUTES.USER_PROFILE, {
-                  visitingProfileAddress: item.address,
-                });
-              }
-
-              // TODO: refactor
-              setSelectedExternalAccount(item.signer.serialize());
-              return navigation.navigate(nextRouteOverride);
-            }
-
-            setSelectedExternalAccount(item);
-            navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-          }}
+          handlePress={handlePress}
         />
       );
     },
-    [navigation, nextRouteOverride, loadedProfileMap],
+    [navigation, nextRouteOverride, loadedProfileMap, activeAddress],
   );
 
   const ItemSeparatorComponent = React.useCallback(

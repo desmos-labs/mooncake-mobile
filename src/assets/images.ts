@@ -207,6 +207,8 @@ export const eyeOpen = require('./images/eyeOpen.png');
 
 export const butterflyLandingIcon = require('./images/butterflyLanding.png');
 
+export const addButton = require('./images/addButton.png');
+
 // Socials
 
 export const discordIcon = require('./images/discord.png');

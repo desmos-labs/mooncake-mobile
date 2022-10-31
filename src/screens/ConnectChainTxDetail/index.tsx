@@ -52,8 +52,7 @@ const ConnectChainTxDetail = () => {
 
   const unlockWallet = useUnlockWallet();
 
-  const {selectedChain, selectedExternalAccount} =
-    useRecoilValue(connectChainState);
+  const {selectedChain} = useRecoilValue(connectChainState);
 
   const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
@@ -172,7 +171,7 @@ const ConnectChainTxDetail = () => {
       <Typography.Body6
         style={[styles.textStyle, styles.valueStyle]}
         numberOfLines={2}>
-        {selectedExternalAccount.address}
+        {externalAddress}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>

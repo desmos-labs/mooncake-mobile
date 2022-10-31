@@ -16,17 +16,15 @@ import {removeNonNumbers} from 'lib/FormatUtils';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   connectChainState,
-  ExternalAccountEnum,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useGenerateProof from 'screens/ConnectAddress/useGenerateProof';
-import {Proof} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
+import {generateProof} from '../utils';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -63,8 +61,6 @@ const ConnectAddressAdvanced = () => {
   const [invalidField, setInvalidField] = React.useState(false);
 
   const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
-
-  const {generateProofCompat, generateProof} = useGenerateProof();
 
   const ledgerTransport = _.get(route, 'params.ledgerTransport');
 
@@ -152,18 +148,10 @@ const ConnectAddressAdvanced = () => {
   const handlePressConfirm = React.useCallback(async () => {
     if (!generatedAccount || !activeAddress) return;
 
-    let proof: Proof;
-    if (generatedAccount.type === ExternalAccountEnum.ledger) {
-      proof = await generateProofCompat({
-        activeAddress,
-        externalAccount: generatedAccount,
-      });
-    } else {
-      proof = await generateProof({
-        activeAddress,
-        externalAccount: generatedAccount,
-      });
-    }
+    const proof = await generateProof({
+      activeAddress,
+      externalAccount: generatedAccount,
+    });
 
     if (nextRouteOverride) {
       if (loadedProfileMap?.has(generatedAccount.address)) {

@@ -84,6 +84,7 @@ const ConnectChainMethod = () => {
         if (mnemonic) {
           setMnemonic(mnemonic!);
           navigate(ROUTES.CONNECT_ADDRESS_GENERAL);
+          // need to refactor ledger wallet flow once importing accounts via ledger is fixed
         } else if (isLedgerSigner(wallet)) {
           setSigner(wallet);
           navigate(ROUTES.CONNECT_ADDRESS_GENERAL);

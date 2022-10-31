@@ -209,7 +209,7 @@ const LinkableChains: LinkableChain[] = [
   },
   {
     name: 'Likecoin',
-    prefix: 'cosmos',
+    prefix: 'like',
     hdPath: CosmosHdPath,
     icon: likecoinIcon,
     chainConfig: ChainConfig.fromPartial({

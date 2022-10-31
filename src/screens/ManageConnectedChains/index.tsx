@@ -17,6 +17,8 @@ import {ChainLink} from 'types/link';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
+import ImageButton from 'components/ImageButton';
+import {addButton} from 'assets/images';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -90,7 +92,19 @@ const ManageConnectedChains = () => {
     <DView topBar={<TopBar />}>
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
-          <Typography.H4>{t('connectedAddresses')}</Typography.H4>
+          <View style={styles.headerTextGroup}>
+            <Typography.H4 style={{flex: 1}}>
+              {t('connectedAddresses')}
+            </Typography.H4>
+
+            <ImageButton
+              onPress={() => {
+                navigate(ROUTES.SELECT_CHAIN);
+              }}
+              image={addButton}
+              style={styles.addConnectionButton}
+            />
+          </View>
 
           <Typography.Body5 style={styles.descriptionText}>
             {t('description')}
