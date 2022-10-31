@@ -23,7 +23,7 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
-import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
+import useGenerateAccounts from '../useGenerateAccounts';
 import {generateProof} from '../utils';
 
 export type NavProps = StackScreenProps<
@@ -60,16 +60,13 @@ const ConnectAddressAdvanced = () => {
 
   const [invalidField, setInvalidField] = React.useState(false);
 
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+  const {selectedChain} = useRecoilValue(connectChainState);
 
   const ledgerTransport = _.get(route, 'params.ledgerTransport');
 
-  const {generateAccount, generating, generatedAccount} =
-    useGenerateAccountFromHDPath({
-      prefix: selectedChain.prefix,
-      coinType: selectedChain.hdPath.coinType,
-      mnemonic,
-    });
+  const {generateAccount, loading, accounts} = useGenerateAccounts();
+
+  const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -115,10 +112,33 @@ const ConnectAddressAdvanced = () => {
   }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const onFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
+    async (formValues: typeof initialFormValues) => {
       console.log(formValues);
+
+      if (!generatedAccount || !activeAddress) return;
+
+      const proof = await generateProof({
+        activeAddress,
+        externalAccount: generatedAccount,
+      });
+
+      if (nextRouteOverride) {
+        if (loadedProfileMap?.has(generatedAccount.address)) {
+          return navigate(ROUTES.USER_PROFILE, {
+            visitingProfileAddress: generatedAccount.address,
+          });
+        }
+
+        return navigate(nextRouteOverride);
+      }
+
+      setSelectedExternalAccount(generatedAccount);
+      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+        proof,
+        externalAddress: generatedAccount.address,
+      });
     },
-    [],
+    [generateAccount, activeAddress],
   );
 
   const onFormChange = React.useCallback(
@@ -144,31 +164,6 @@ const ConnectAddressAdvanced = () => {
     },
     [],
   );
-
-  const handlePressConfirm = React.useCallback(async () => {
-    if (!generatedAccount || !activeAddress) return;
-
-    const proof = await generateProof({
-      activeAddress,
-      externalAccount: generatedAccount,
-    });
-
-    if (nextRouteOverride) {
-      if (loadedProfileMap?.has(generatedAccount.address)) {
-        return navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: generatedAccount.address,
-        });
-      }
-
-      return navigate(nextRouteOverride);
-    }
-
-    setSelectedExternalAccount(generatedAccount);
-    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
-      proof,
-      externalAddress: generatedAccount.address,
-    });
-  }, [activeAddress, nextRouteOverride, loadedProfileMap, generatedAccount]);
 
   return (
     <DView
@@ -206,7 +201,7 @@ const ConnectAddressAdvanced = () => {
           initialValues={initialFormValues}
           onSubmit={onFormSubmit}
           validate={onFormChange}>
-          {({setFieldValue, values}) => {
+          {({setFieldValue, values, handleSubmit}) => {
             return (
               <View>
                 <HDDerivPathInputGroup
@@ -222,35 +217,37 @@ const ConnectAddressAdvanced = () => {
                     setFieldValue('addressIndex', removeNonNumbers(value))
                   }
                 />
+
+                <Spacer
+                  paddingTop={theme.spacing.l}
+                  paddingBottom={theme.spacing.m}>
+                  <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
+                </Spacer>
+
+                <Spacer paddingBottom={theme.spacing.l}>
+                  {invalidField ? (
+                    <Typography.Body6>Invalid field</Typography.Body6>
+                  ) : (
+                    <Typography.Body6>
+                      {loading || !generatedAccount
+                        ? t('generating')
+                        : generatedAccount.address}
+                    </Typography.Body6>
+                  )}
+                </Spacer>
+
+                <Button
+                  color={theme.colors.surfaceBlack}
+                  mode="contained"
+                  loading={loading || !generatedAccount}
+                  disabled={invalidField}
+                  onPress={handleSubmit}>
+                  {t('common:next')}
+                </Button>
               </View>
             );
           }}
         </Formik>
-
-        <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-          <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
-        </Spacer>
-
-        <Spacer paddingBottom={theme.spacing.l}>
-          {invalidField ? (
-            <Typography.Body6>Invalid field</Typography.Body6>
-          ) : (
-            <Typography.Body6>
-              {generating || !generatedAccount
-                ? t('generating')
-                : generatedAccount.address}
-            </Typography.Body6>
-          )}
-        </Spacer>
-
-        <Button
-          color={theme.colors.surfaceBlack}
-          mode="contained"
-          loading={generating || !generatedAccount}
-          disabled={invalidField}
-          onPress={handlePressConfirm}>
-          {t('common:next')}
-        </Button>
       </View>
     </DView>
   );

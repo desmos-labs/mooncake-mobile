@@ -61,10 +61,8 @@ export const generateAccountUsingLedger = async ({
 }) => {
   const cosmJsPaths = hdPaths.map(toCosmjsHdPath);
 
-  console.log('attempting to generate accounts', ledgerApp);
   const {name: ledgerAppName, minVersion: minLedgerAppVersion} = ledgerApp;
 
-  console.log(ledgerTransport);
   const ledgerSigner = new LedgerSigner(ledgerTransport, {
     ledgerAppName,
     minLedgerAppVersion,
@@ -115,8 +113,8 @@ const makeProof = ({
   signingMode: SignatureValueType;
 }) => {
   const _signature: SingleSignature = {
-    valueType: signingMode, // Proper signature type
-    signature, // Signature value
+    valueType: signingMode,
+    signature,
   };
   const proof: Proof = Proof.fromPartial({
     pubKey,

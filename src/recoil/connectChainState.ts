@@ -42,8 +42,7 @@ export const selectedExternalAccountState = atom<ExternalAccount>({
 });
 
 /**
- * An atom to keep track of the data used to create a new chain
- * connection
+ * An atom to keep track of the data used to create a new chain connection
  */
 export const connectChainState = selector({
   key: 'connectChain',

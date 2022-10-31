@@ -11,9 +11,8 @@ import {ActivityIndicator, FlatList, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {
-  connectChainState,
   ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
@@ -21,7 +20,7 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import {generateProof} from 'screens/ConnectAddress/utils';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useGenerateAccounts from './useGenerateAccounts';
+import useGenerateAccounts from '../useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
 
@@ -49,8 +48,6 @@ const ConnectAddressGeneral = () => {
   const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
     route?.params ?? {};
 
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
-
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
   );
@@ -66,11 +63,11 @@ const ConnectAddressGeneral = () => {
 
   const isUsingLedger = ledgerTransport && ledgerApp;
 
-  const {accounts, generateMoreAccounts, loading} = useGenerateAccounts({
-    prefix: selectedChain.prefix,
-    coinType: selectedChain.hdPath.coinType,
-    mnemonic,
-  });
+  const {accounts, generateAccounts, loading} = useGenerateAccounts();
+
+  React.useEffect(() => {
+    generateAccounts(10);
+  }, []);
 
   const SwitchToAdvancedButton = React.useMemo(() => {
     return (
@@ -143,7 +140,7 @@ const ConnectAddressGeneral = () => {
     [],
   );
 
-  const ListFooterComponent = React.useCallback(() => {
+  const ListFooterComponent = React.useMemo(() => {
     if (loading) {
       return <ActivityIndicator style={{width: '100%', marginVertical: 16}} />;
     } else return <View />;
@@ -173,10 +170,10 @@ const ConnectAddressGeneral = () => {
         }}
         refreshing={loading}
         onEndReached={() => {
-          !isUsingLedger && generateMoreAccounts(10);
+          !isUsingLedger && generateAccounts(10);
         }}
-        ListFooterComponent={ListFooterComponent}
       />
+      {ListFooterComponent}
     </DView>
   );
 };
