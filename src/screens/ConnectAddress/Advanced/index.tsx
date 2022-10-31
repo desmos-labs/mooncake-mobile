@@ -22,9 +22,9 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import useCheckIfAddressLinked from 'screens/ConnectAddress/useIsAddressLinked';
+import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
-import useGenerateAccounts from '../useGenerateAccounts';
 import {generateProof} from '../utils';
 
 export type NavProps = StackScreenProps<

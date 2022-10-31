@@ -20,8 +20,8 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
 import {generateProof} from 'screens/ConnectAddress/utils';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useCheckIfAddressLinked from '../useIsAddressLinked';
-import useGenerateAccounts from '../useGenerateAccounts';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
 
