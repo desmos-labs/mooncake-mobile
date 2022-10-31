@@ -43,14 +43,11 @@ export default function useBroadcastMessages() {
         granter,
       );
 
-      console.log('pp poo man', JSON.stringify(signed));
-
       const broadcastResult = await client.broadcastTx(
         TxRaw.encode(signed.txRaw).finish(),
       );
 
       if (isDeliverTxFailure(broadcastResult)) {
-        console.log(broadcastResult);
         throw new Error(broadcastResult.rawLog ?? 'Unknown error');
       }
 
