@@ -66,11 +66,6 @@ const ConnectAddressGeneral = () => {
 
   const isUsingLedger = ledgerTransport && ledgerApp;
 
-  console.log(selectedChain);
-  /**
-   * for integration, replace mnemonic with the user's stored mnemonic, and
-   * prefix with the correct prefix of the account to be connected
-   */
   const {accounts, generateMoreAccounts, loading} = useGenerateAccounts({
     prefix: selectedChain.prefix,
     coinType: selectedChain.hdPath.coinType,
@@ -148,6 +143,12 @@ const ConnectAddressGeneral = () => {
     [],
   );
 
+  const ListFooterComponent = React.useCallback(() => {
+    if (loading) {
+      return <ActivityIndicator style={{width: '100%', marginVertical: 16}} />;
+    } else return <View />;
+  }, [loading]);
+
   return (
     <DView
       topBar={<TopBar rightElement={SwitchToAdvancedButton} />}
@@ -174,6 +175,7 @@ const ConnectAddressGeneral = () => {
         onEndReached={() => {
           !isUsingLedger && generateMoreAccounts(10);
         }}
+        ListFooterComponent={ListFooterComponent}
       />
     </DView>
   );

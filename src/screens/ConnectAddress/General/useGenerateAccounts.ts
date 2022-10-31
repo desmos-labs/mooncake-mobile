@@ -46,6 +46,7 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
 
   const generateMoreAccounts = React.useCallback(
     async (limit: number) => {
+      if (loading) return;
       setLoading(true);
       const hdPaths = generateHdPaths({
         startingIndex: accounts.length,
@@ -53,7 +54,7 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
         limit,
       });
 
-      let _accounts;
+      let _accounts: ExternalAccount[];
       if (isUsingLedger) {
         _accounts = await generateAccountUsingLedger({
           ledgerApp,
@@ -70,9 +71,9 @@ const useGenerateAccounts = ({prefix, coinType = 852, mnemonic}: Args) => {
       }
 
       setLoading(false);
-      setAccounts(_accounts);
+      setAccounts(prev => [...prev, ..._accounts]);
     },
-    [accounts],
+    [accounts, loading],
   );
 
   return {
