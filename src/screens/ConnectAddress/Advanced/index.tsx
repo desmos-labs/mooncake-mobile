@@ -21,7 +21,7 @@ import {
 import useActiveAccount from 'hooks/useActiveAccount';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
-import useCheckIfAddressLinked from 'screens/ConnectAddress/useIsAddressLinked';
+import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
 import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
@@ -67,7 +67,7 @@ const ConnectAddressAdvanced = () => {
 
   const {generateAccount, loading, accounts} = useGenerateAccounts();
 
-  const {checkIfAddressLinked} = useCheckIfAddressLinked();
+  const {checkIsAddressLinked} = useCheckIsAddressLinked();
 
   const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
 
@@ -168,7 +168,7 @@ const ConnectAddressAdvanced = () => {
     [],
   );
 
-  const isAddressLinked = checkIfAddressLinked(generatedAccount?.address || '');
+  const isAddressLinked = checkIsAddressLinked(generatedAccount?.address || '');
 
   const addressOrErrorElement = React.useMemo(() => {
     if (invalidField) return <View />;

@@ -6,7 +6,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 /**
  * A hook that exposes a function that checks if a given address has an existing chainLink
  */
-const useCheckIfAddressLinked = () => {
+const useCheckIsAddressLinked = () => {
   const {activeAddress} = useActiveAccount();
   const chainLinks = useRecoilValue(chainLinkState);
 
@@ -15,7 +15,7 @@ const useCheckIfAddressLinked = () => {
     return new Set([activeAddress, ...chainLinks.map(x => x.externalAddress)]);
   }, [chainLinks, activeAddress]);
 
-  const checkIfAddressLinked = React.useCallback(
+  const checkIsAddressLinked = React.useCallback(
     (externalAddress: string) => {
       return linkedAddresses.has(externalAddress);
     },
@@ -23,8 +23,8 @@ const useCheckIfAddressLinked = () => {
   );
 
   return {
-    checkIfAddressLinked,
+    checkIsAddressLinked,
   };
 };
 
-export default useCheckIfAddressLinked;
+export default useCheckIsAddressLinked;
