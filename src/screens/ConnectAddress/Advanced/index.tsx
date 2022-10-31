@@ -21,6 +21,7 @@ import {
 import useActiveAccount from 'hooks/useActiveAccount';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import _ from 'lodash';
+import useCheckIfAddressLinked from 'screens/ConnectAddress/useIsAddressLinked';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
 import useGenerateAccounts from '../useGenerateAccounts';
@@ -65,6 +66,8 @@ const ConnectAddressAdvanced = () => {
   const ledgerTransport = _.get(route, 'params.ledgerTransport');
 
   const {generateAccount, loading, accounts} = useGenerateAccounts();
+
+  const {checkIfAddressLinked} = useCheckIfAddressLinked();
 
   const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
 
@@ -165,6 +168,29 @@ const ConnectAddressAdvanced = () => {
     [],
   );
 
+  const isAddressLinked = checkIfAddressLinked(generatedAccount?.address || '');
+
+  const addressOrErrorElement = React.useMemo(() => {
+    if (invalidField) return <View />;
+    else if (generatedAccount && isAddressLinked) {
+      return (
+        <>
+          <Typography.Body6>{generatedAccount.address}</Typography.Body6>
+          <Typography.Body6 style={{marginTop: 8}}>
+            {t('addrAlreadyLinked')}
+          </Typography.Body6>
+        </>
+      );
+    }
+    return (
+      <Typography.Body6>
+        {loading || !generatedAccount
+          ? t('generating')
+          : generatedAccount.address}
+      </Typography.Body6>
+    );
+  }, [generatedAccount, loading, invalidField, isAddressLinked]);
+
   return (
     <DView
       topBar={<TopBar rightElement={SwitchToGeneralButton} />}
@@ -225,22 +251,14 @@ const ConnectAddressAdvanced = () => {
                 </Spacer>
 
                 <Spacer paddingBottom={theme.spacing.l}>
-                  {invalidField ? (
-                    <Typography.Body6>Invalid field</Typography.Body6>
-                  ) : (
-                    <Typography.Body6>
-                      {loading || !generatedAccount
-                        ? t('generating')
-                        : generatedAccount.address}
-                    </Typography.Body6>
-                  )}
+                  {addressOrErrorElement}
                 </Spacer>
 
                 <Button
                   color={theme.colors.surfaceBlack}
                   mode="contained"
                   loading={loading || !generatedAccount}
-                  disabled={invalidField}
+                  disabled={invalidField || isAddressLinked}
                   onPress={handleSubmit}>
                   {t('common:next')}
                 </Button>
