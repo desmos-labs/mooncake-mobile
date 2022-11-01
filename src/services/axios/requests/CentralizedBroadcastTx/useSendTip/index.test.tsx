@@ -167,8 +167,21 @@ describe('hook: useSendTip', () => {
     const initializeState = ({set}: any) => {
       set(appSettingsState, {
         currentChain: {
-          stakingDenom: 'test',
+          stakeCurrency: {
+            coinMinimalDenom: 'uTest',
+          },
         },
+        contractsConfig: [
+          {
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
+          },
+        ],
       });
     };
 
@@ -210,6 +223,7 @@ describe('hook: useSendTip', () => {
         currentChain: {
           stakingDenom: 'test',
         },
+        contractsConfig: [],
       });
     };
 
@@ -231,9 +245,7 @@ describe('hook: useSendTip', () => {
     try {
       await result.current.sendTip(mockSendTipArgs);
     } catch (err: any) {
-      expect(String(err)).toBe(
-        'Error: useSendTip: Missing depedency: contractAddress',
-      );
+      expect(String(err)).toBe('Error: useSendTip: Missing dependency: denom');
     }
   });
 });

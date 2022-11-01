@@ -56,7 +56,7 @@ const useSendTip = () => {
       // Sanity check just incase one of the dependencies is undefined
       Object.keys(depCheckMap).forEach(x => {
         if (depCheckMap[x] === undefined) {
-          throw new Error(`useSendTip: Missing depedency: ${x}`);
+          throw new Error(`useSendTip: Missing dependency: ${x}`);
         }
       });
 
