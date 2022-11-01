@@ -21,6 +21,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -30,7 +31,7 @@ type NavProps = StackScreenProps<
 
 const ConnectChainMethod = () => {
   const {t} = useTranslation('connectChain');
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {replace, navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
 
@@ -54,8 +55,8 @@ const ConnectChainMethod = () => {
         params: {
           ledgerApp: selectedChain.ledgerApps[0],
           autoClose: true,
-          onConnectionEstablished: transport => {
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+          onConnectionEstablished: (transport: BluetoothTransport) => {
+            replace(ROUTES.CONNECT_ADDRESS_GENERAL, {
               ledgerApp: selectedChain.ledgerApps[0],
               ledgerTransport: transport,
             });

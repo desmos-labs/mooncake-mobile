@@ -26,7 +26,7 @@ type NavProps = StackScreenProps<
 const SelectLedgerApp = () => {
   const selectedChain = useRecoilValue(selectedChainState);
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('selectLedgerApp');
 
   const renderItem = ({item}: ListRenderItemInfo<LedgerApp>) => {
@@ -37,7 +37,7 @@ const SelectLedgerApp = () => {
           ledgerApp: item,
           autoClose: true,
           onConnectionEstablished: transport => {
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
+            replace(ROUTES.CONNECT_ADDRESS_GENERAL, {
               ledgerApp: item,
               ledgerTransport: transport,
             });
