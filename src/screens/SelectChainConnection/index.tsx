@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {connectChainState, selectedChainState} from '@recoil/connectChainState';
+import {selectedChainState} from '@recoil/connectChainState';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -13,7 +13,7 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useResetRecoilState, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
 import SearchBar from 'screens/SelectChainConnection/components/SearchBar';
 import {ChainAsset, LinkableChain} from 'types/chains';
@@ -25,12 +25,7 @@ const SelectChainConnection = () => {
 
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const resetChainConnectionState = useResetRecoilState(connectChainState);
   const setSelectedChain = useSetRecoilState(selectedChainState);
-
-  React.useEffect(() => {
-    resetChainConnectionState();
-  }, []);
 
   const theme = useTheme();
 
