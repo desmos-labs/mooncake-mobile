@@ -101,11 +101,7 @@ const ConnectAddressAdvanced = () => {
               await (ledgerTransport as BluetoothTransport).close();
             }
 
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
-              nextRouteOverride,
-              loadedProfileMap,
-              titleLabelOverride,
-            });
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
           }}>
           <Typography.Button2 style={styles.modeButtonText}>
             {t('general')}
@@ -126,6 +122,7 @@ const ConnectAddressAdvanced = () => {
 
       return navigate(nextRouteOverride);
     }
+
     const proof = await generateProof({
       activeAddress,
       externalAccount: generatedAccount,
