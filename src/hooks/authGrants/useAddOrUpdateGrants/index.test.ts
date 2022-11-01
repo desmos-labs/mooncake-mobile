@@ -66,6 +66,17 @@ jest.mock('hooks/authGrants/useAddOrUpdateGrants/utils', () => ({
   buildRevokeGrantMsgEncodes: jest.fn(),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockNavigate,
+    }),
+  };
+});
+
 const mockGrants = [GrantEnums.MsgCreatePost];
 const mockGrantee = 'i-am-a-grantee';
 const mockGranter = 'i-am-a-granter';
@@ -294,7 +305,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       act(() => {
-        result.current.revokeAllGrants();
+        result.current.revokeGrants();
       });
 
       await waitFor(() => {

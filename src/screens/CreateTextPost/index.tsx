@@ -85,7 +85,7 @@ const CreateTextPost = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView edges={['top']} style={styles.safeAreaContainer}>
         <TouchableOpacity
           onPress={handlePostPressed}

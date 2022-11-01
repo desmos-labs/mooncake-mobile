@@ -39,6 +39,8 @@ import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
+import Grants from 'screens/Grants';
+import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -181,16 +183,20 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
+  // Nfts
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE]: undefined;
 
+  /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
-
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
-
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+
+  // Grants
+  [ROUTES.GRANTS]: undefined;
+  [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -243,7 +249,9 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
+
       <Stack.Screen
         name={ROUTES.CREATE_DESMOS_PROFILE}
         component={CreateDesmosProfile}
@@ -251,9 +259,11 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
+
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
+
       <Stack.Screen
         name={ROUTES.FULLSCREEN_STATUS_SCREEN}
         component={FullscreenStatusScreen}
@@ -342,11 +352,14 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_ADDRESS_GENERAL}
         component={ConnectAddressGeneral}
       />
+
       <Stack.Screen
         name={ROUTES.CONNECT_ADDRESS_ADVANCED}
         component={ConnectAddressAdvanced}
       />
+
       <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} />
+
       <Stack.Screen
         initialParams={{
           address: 'testAddress123123',
@@ -354,30 +367,44 @@ const RootNavigator = () => {
         name={ROUTES.CONFIRM_ADDRESS}
         component={ConfirmAddress}
       />
+
       <Stack.Screen
         name={ROUTES.SELECT_CHAIN}
         component={SelectChainConnection}
       />
+
       <Stack.Screen
         name={ROUTES.CONNECT_CHAIN_TX_DETAIL}
         component={ConnectChainTxDetail}
       />
+
       <Stack.Screen
         name={ROUTES.CONNECT_CHAIN_METHOD}
         component={ConnectChainMethod}
       />
+
       <Stack.Screen name={ROUTES.ENTER_COMMENT} component={EnterComment} />
+
       <Stack.Screen
         name={ROUTES.SELECT_POST_TYPE}
         component={PostTypeSelection}
       />
+
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
+
       <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
+
       <Stack.Screen
         name={ROUTES.CREATE_POST_CAMERA_ROLL}
         component={CreatePostCameraRoll}
       />
+
       <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
+
+      <Stack.Screen name={ROUTES.GRANTS} component={Grants} />
+
+      <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} />
+
       {/* modals */}
       <Stack.Group
         screenOptions={{
@@ -451,11 +478,14 @@ const RootNavigator = () => {
           component={PostInteractionTabs}
         />
       </Stack.Group>
+
       {/* modals end */}
+
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
         component={AuthorizeWalletStack}
       />
+
       <Stack.Screen
         name={ROUTES.FOLLOWING_AND_FOLLOWERS}
         component={FollowingAndFollowers}
@@ -464,6 +494,7 @@ const RootNavigator = () => {
           cardStyle: styles.followingAndFollowers,
         }}
       />
+
       <Stack.Screen
         name={ROUTES.PROFILE_POSTS}
         component={ProfilePosts}
@@ -471,8 +502,10 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
+
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
+
       <Stack.Screen
         name={ROUTES.ADD_PROFILE}
         component={AddProfile}

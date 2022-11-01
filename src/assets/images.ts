@@ -209,6 +209,8 @@ export const butterflyLandingIcon = require('./images/butterflyLanding.png');
 
 export const addButton = require('./images/addButton.png');
 
+export const verifiedIcon = require('./images/verified.png');
+
 // Socials
 
 export const discordIcon = require('./images/discord.png');

@@ -41,6 +41,8 @@ import login from './login.json';
 import toast from './toast.json';
 import connectApp from './connectApp.json';
 import disconnectApp from './disconnectApp.json';
+import grants from './grants.json';
+import grantsDetails from './grantsDetails.json';
 import forgotPassword from './forgotPassword.json';
 import selectLedgerApp from "./selectLedgerApp.json";
 
@@ -89,7 +91,10 @@ const en = {
   connectApp,
   disconnectApp,
   forgotPassword,
-  selectLedgerApp
+  selectLedgerApp,
+  grants,
+  grantsDetails,
+  forgotPassword
 };
 
 export default en;
