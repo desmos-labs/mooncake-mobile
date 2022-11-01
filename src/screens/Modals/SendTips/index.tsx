@@ -1,6 +1,5 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useButterConfig} from '@recoil/butterConfigState';
 import {iconButton} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -34,7 +33,6 @@ export type SendTipsParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
 const SendTips = () => {
-  const {butterConfig} = useButterConfig();
   const {params} = useRoute<NavProps['route']>();
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
@@ -51,6 +49,7 @@ const SendTips = () => {
     initialFormValues,
     validateForm,
     convertedBalance,
+    settings,
   } = useHooks();
 
   useFocusEffect(
@@ -213,7 +212,8 @@ const SendTips = () => {
                           marginVertical: theme.spacing.s,
                         }}>
                         {t('warning fee', {
-                          fee: butterConfig.contracts.tips.fees.percentage,
+                          fee: settings.contractsConfig[0].config.service_fee
+                            .percentage.value,
                         })}
                       </Typography.Body7>
                     </View>

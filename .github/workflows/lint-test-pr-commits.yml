@@ -1,9 +1,11 @@
 name: Run linter and tests on merge
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
 jobs:
   tests:
+    if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

@@ -17,6 +17,7 @@ import ROUTES from 'navigation/routes';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import _ from 'lodash';
+import useClearUserData from 'hooks/useClearUserData';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
@@ -44,6 +45,7 @@ const Login = () => {
   const [error, setError] = React.useState('');
   const [password, setPassword] = React.useState('');
   const {login} = useLogin();
+  const clearUserData = useClearUserData();
 
   const handleSubmit = React.useCallback(async () => {
     if (!activeAddress) {
@@ -118,6 +120,7 @@ const Login = () => {
 
         <Spacer paddingTop={theme.spacing.m}>
           <Button
+            color={theme.colors.white}
             disabled={loading || !password}
             loading={loading}
             style={{borderColor: theme.colors.white}}
@@ -130,7 +133,10 @@ const Login = () => {
         </Spacer>
       </View>
       <View style={styles.bottomContentContainer}>
-        <TouchableOpacity disabled={loading} style={styles.forgotPwButton}>
+        <TouchableOpacity
+          disabled={loading}
+          style={styles.forgotPwButton}
+          onPress={clearUserData}>
           <Typography.Button1 style={styles.labelStyle}>
             {t('forgotPassword')}
           </Typography.Button1>

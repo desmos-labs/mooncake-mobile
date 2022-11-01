@@ -1207,10 +1207,10 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.25.6.tgz#934d9a967180baa66163847616a74358732227ca"
   integrity sha512-ofOYiuxVKNo238vCPPlaDzqPXy2AQ/5/nashBo5rvPZJkxt9LciGfUEQWPCOb1BIJDNx2Dzu0z4XCf/dwzl0Dg==
 
-"@desmoslabs/desmjs-types@4.5.3":
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.5.3.tgz#f5957061999ed479b4412f7491b298ad715d3d66"
-  integrity sha512-i+kkaQE0GAgxec6n6UOuBYXFYr6vjRx4TVdBAhjk6A5fzgUn/E14+ulydU5mgEVm6rQZ83vNa5fwv5TC/PSb8g==
+"@desmoslabs/desmjs-types@4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.6.1.tgz#b94d3c1e73e213e21467eeb7a859717b93f54277"
+  integrity sha512-KOoOm8XzaKwudxtdTSDIUJYpFfVBBduOGgnkw0T6NXgOV+/BRkskXmVF8WRNW8nHAqVZW85B9IuVbAYdqvePCw==
   dependencies:
     long "^4.0.0"
     protobufjs "^7.1.0"
@@ -1223,10 +1223,10 @@
     long "^4.0.0"
     protobufjs "^7.1.0"
 
-"@desmoslabs/desmjs@4.5.3":
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.5.3.tgz#3815c045dae3137af9331529d8b226967a30dee9"
-  integrity sha512-6xVDl8ZYksiRuYqcdFCA+AGZ+WXXw8Q2q9ms7Kmdk6tg6610HalMe+wONZWYXZ6YaHJ5beZfv64k3hNqUQohTg==
+"@desmoslabs/desmjs@4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.6.1.tgz#4900239e920055ae284de23bf21c5beb5c29231a"
+  integrity sha512-QoRvfqZ33E+zAvqYQIuuaOKSl1rNk+2nywfwnTXeTy5dC3UdZsoKKRRV68GneWAVdPBQ+sVhhqaudm9ch8RcGg==
   dependencies:
     "@cosmjs/amino" "^0.28.11"
     "@cosmjs/cosmwasm-stargate" "^0.28.11"
@@ -10008,10 +10008,10 @@ react-native-reanimated-carousel@^3.0.3:
   resolved "https://registry.yarnpkg.com/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.0.3.tgz#b19b3909fa2ed7c35716fd7f1d2f4aff91345db3"
   integrity sha512-KdidXIBNQb4F/JmXn4tV+2yr/6BhYUQCii0QwBtv64QYiYiBIn+3K8yKJpLTOoy7e3dB3HFKD69VwCCw8ujd2w==
 
-react-native-reanimated@^2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.10.0.tgz#ed53be66bbb553b5b5e93e93ef4217c87b8c73db"
-  integrity sha512-jKm3xz5nX7ABtHzzuuLmawP0pFWP77lXNdIC6AWOceBs23OHUaJ29p4prxr/7Sb588GwTbkPsYkDqVFaE3ezNQ==
+react-native-reanimated@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.11.0.tgz#415ef668440d1b7d8b2b36a20342b1035432dd80"
+  integrity sha512-/QnujrXSNyXasv7v8K3eu5Z4XGRYMPRa0+x0RjNr6Z5/KEuPHwrg1Xm7UZ2YSm6jCF2b1BW6ceqP/1d626gvhQ==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"

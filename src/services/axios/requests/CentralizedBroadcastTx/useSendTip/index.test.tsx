@@ -49,8 +49,23 @@ describe('hook: useSendTip', () => {
     const initializeState = ({set}: any) => {
       set(appSettingsState, {
         currentChain: {
-          stakingDenom: 'test',
+          stakeCurrency: {
+            coinMinimalDenom: 'test',
+          },
         },
+        contractsConfig: [
+          {
+            address: 'mockAddress',
+            type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
+          },
+        ],
       });
     };
 
@@ -90,8 +105,23 @@ describe('hook: useSendTip', () => {
     const initializeState = ({set}: any) => {
       set(appSettingsState, {
         currentChain: {
-          stakingDenom: 'test',
+          stakeCurrency: {
+            coinMinimalDenom: 'test',
+          },
         },
+        contractsConfig: [
+          {
+            address: 'mockAddress',
+            type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
+          },
+        ],
       });
     };
 

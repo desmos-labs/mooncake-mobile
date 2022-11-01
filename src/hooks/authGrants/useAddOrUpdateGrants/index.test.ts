@@ -65,6 +65,17 @@ jest.mock('hooks/authGrants/useAddOrUpdateGrants/utils', () => ({
   buildRevokeGrantMsgEncodes: jest.fn(() => 'mockRevokeGrantMsgEncodes'),
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockNavigate,
+    }),
+  };
+});
+
 const mockGrants = [GrantEnums.MsgCreatePost];
 const mockGrantee = 'i-am-a-grantee';
 const mockGranter = 'i-am-a-granter';
@@ -350,7 +361,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       await act(async () => {
-        await result.current.revokeAllGrants();
+        await result.current.revokeGrants();
       });
 
       expect(mockBroadcastMessages).toHaveBeenCalledWith(
@@ -380,7 +391,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.revokeAllGrants();
+        await result.current.revokeGrants();
       } catch (err: any) {
         expect(err.message).toBe(
           'Error unlocking wallet or user cancelled authentication',
@@ -404,7 +415,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.revokeAllGrants();
+        await result.current.revokeGrants();
       } catch (err: any) {
         expect(err.message).toBe('No active chain account found.');
       }
@@ -436,7 +447,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.revokeAllGrants();
+        await result.current.revokeGrants();
       } catch (err: any) {
         expect(err.message).toBe('Error deleting grants');
       }

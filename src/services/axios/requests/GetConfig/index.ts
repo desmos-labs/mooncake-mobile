@@ -9,7 +9,6 @@ interface Response extends ButterConfigState {}
  */
 const GetConfig = async (): Promise<Response> => {
   const _response = await axiosInstance.get('/config');
-
   return _response.data;
 };
 
