@@ -181,7 +181,7 @@ const ConnectToLedger = () => {
     navigate(ROUTES.BOTTOM_MODAL, {
       title: t('modalTitle'),
       body: t('modalDescription'),
-      primaryButtonLabel: t('modalButton')!,
+      primaryButtonLabel: t('modalButton') as string,
     });
   }, []);
 

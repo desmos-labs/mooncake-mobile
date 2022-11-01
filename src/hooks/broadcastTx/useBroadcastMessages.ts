@@ -27,7 +27,7 @@ export default function useBroadcastMessages() {
         _signer,
         {
           gasPrice: GasPrice.fromString(
-            `0.2${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
+            `0.1${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
           ),
         },
       );

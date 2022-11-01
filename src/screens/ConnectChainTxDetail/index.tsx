@@ -65,8 +65,6 @@ const ConnectChainTxDetail = () => {
 
   React.useEffect(() => {
     const generateMessage = async () => {
-      console.log(externalAddress);
-      // Create the message
       const value: MsgLinkChainAccount = MsgLinkChainAccount.fromPartial({
         chainAddress: Any.fromPartial({
           typeUrl: '/desmos.profiles.v3.Bech32Address',
