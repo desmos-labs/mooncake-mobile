@@ -1,5 +1,6 @@
 import {StdFee} from '@cosmjs/amino';
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
+import {GasPrice} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
@@ -23,7 +24,9 @@ export default function useSignCustomTx() {
         EnvConfig.DESMOS_RPC,
         _signer,
         {
-          gasPrice: settings.currentChain.gasPrice,
+          gasPrice: GasPrice.fromString(
+            `0.1${settings.currentChain.stakeCurrency.coinMinimalDenom}`,
+          ),
         },
       );
 

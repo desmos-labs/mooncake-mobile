@@ -13,8 +13,8 @@ const NoConnections = () => {
         source={modalSuccess}
         style={{
           width: 190,
-          height: 152,
-          resizeMode: 'contain',
+          height: 188,
+          resizeMode: 'cover',
           marginBottom: 20,
         }}
       />

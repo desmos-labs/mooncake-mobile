@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
   avatarStyle: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     borderRadius: 20,
     marginRight: theme.spacing.s,
   },

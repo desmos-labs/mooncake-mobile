@@ -3,6 +3,7 @@ import React from 'react';
 import {atom, DefaultValue, useRecoilState} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import EnvConfig from 'config/EnvConfig';
 
 function isProfileData(
   data: ProfileData | DefaultValue | undefined,
@@ -41,6 +42,7 @@ export default activeProfileState;
 export const useGetProfileData = (address: string) => {
   const {data, loading, refetch} = useQuery(GetProfileForAddress, {
     variables: {address},
+    pollInterval: EnvConfig.POLLING_INTERVAL,
   });
 
   const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);

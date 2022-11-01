@@ -37,6 +37,8 @@ import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
+import Grants from 'screens/Grants';
+import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -98,6 +100,7 @@ import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
+import RNBootSplash from 'react-native-bootsplash';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -176,16 +179,20 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
+  // Nfts
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE]: undefined;
 
+  /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
-
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
-
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+
+  // Grants
+  [ROUTES.GRANTS]: undefined;
+  [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -200,7 +207,7 @@ const RootNavigator = () => {
 
   // Start polling queries
   usePollingQueries();
-
+  RNBootSplash.hide({fade: true});
   const {t} = useTranslation();
 
   /* To allow going back to previous screen via swipe left. */
@@ -385,6 +392,10 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
+
+      <Stack.Screen name={ROUTES.GRANTS} component={Grants} />
+
+      <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} />
 
       {/* modals */}
       <Stack.Group

@@ -6,7 +6,6 @@ export interface ButterConfigState {
   // Desmos address of the account used by the APIs
   desmos_address: string;
   ibc: any;
-  contracts: any;
 }
 
 /**
@@ -18,7 +17,6 @@ const butterConfigState = atom<ButterConfigState>({
   default: {
     desmos_address: '',
     ibc: {},
-    contracts: {},
   },
 });
 

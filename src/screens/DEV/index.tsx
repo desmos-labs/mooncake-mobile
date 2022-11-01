@@ -69,7 +69,7 @@ type DevScreenProps = StackScreenProps<
 
 const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
-  const {revokeAllGrants} = useAddOrUpdateGrants();
+  const {revokeGrants} = useAddOrUpdateGrants();
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
@@ -82,6 +82,18 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   const showToast = () => {
     toast.show('I am a toast', {
       type: ToastConfig.SUCCESS,
+      onPress() {
+        console.log('test');
+      },
+    });
+    toast.show('I am a toast', {
+      type: ToastConfig.ERROR,
+      onPress() {
+        console.log('test');
+      },
+    });
+    toast.show('I am a toast', {
+      type: ToastConfig.ERROR_NO_RETRY,
       onPress() {
         console.log('test');
       },
@@ -152,7 +164,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
               {
                 text: 'Yes',
                 onPress: async () => {
-                  await revokeAllGrants();
+                  await revokeGrants();
                 },
               },
               {

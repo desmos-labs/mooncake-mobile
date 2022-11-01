@@ -3,7 +3,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import ROUTES from 'navigation/routes';
 import Home, {HomeParams} from 'screens/Home';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTheme} from 'react-native-paper';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
@@ -28,6 +28,7 @@ const HomeTabs = () => {
   const [loading, setLoading] = React.useState(false);
   const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
   const {replace} = useNavigation<NavProps['navigation']>();
+  const {top} = useSafeAreaInsets();
 
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
@@ -48,9 +49,9 @@ const HomeTabs = () => {
       style={{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingTop: 16,
+        paddingTop: Math.max(24, top),
       }}
-      edges={['top', 'bottom']}>
+      edges={['bottom']}>
       <Tab.Navigator
         tabBar={renderTabBar}
         screenOptions={{

@@ -21,7 +21,7 @@ const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
   const styles = useStyles();
 
   const convertedAmount = useMemo(() => {
-    return convertCoin(tipAmount, 6, settings.currentChain.denomUnits);
+    return convertCoin(tipAmount, 6, settings.currentChain.currencies);
   }, [tipAmount, settings]);
 
   return (

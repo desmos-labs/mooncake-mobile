@@ -7,20 +7,6 @@ import {RecoilRoot} from 'recoil';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () => jest.fn());
-jest.mock('@recoil/butterConfigState', () => ({
-  useButterConfig: () => ({
-    butterConfig: {
-      contracts: {
-        tips: {
-          address: 'mockContractsAddress',
-          fees: {
-            percentage: 1,
-          },
-        },
-      },
-    },
-  }),
-}));
 
 jest.mock('./utils', () => ({
   buildPostTipMsg: () => 'postTipMsg',
@@ -42,8 +28,23 @@ describe('hook: useSendTip', () => {
     const initializeState = ({set}: any) => {
       set(appSettingsState, {
         currentChain: {
-          stakingDenom: 'test',
+          stakeCurrency: {
+            coinMinimalDenom: 'test',
+          },
         },
+        contractsConfig: [
+          {
+            address: 'mockAddress',
+            type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
+          },
+        ],
       });
     };
 
@@ -83,8 +84,23 @@ describe('hook: useSendTip', () => {
     const initializeState = ({set}: any) => {
       set(appSettingsState, {
         currentChain: {
-          stakingDenom: 'test',
+          stakeCurrency: {
+            coinMinimalDenom: 'test',
+          },
         },
+        contractsConfig: [
+          {
+            address: 'mockAddress',
+            type: 'tips',
+            config: {
+              service_fee: {
+                percentage: {
+                  value: 0.1,
+                },
+              },
+            },
+          },
+        ],
       });
     };
 

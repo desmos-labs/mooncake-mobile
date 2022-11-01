@@ -1,3 +1,4 @@
+import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import {gql} from '@apollo/client';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -66,18 +67,19 @@ export const useGetAuthzGrants = () => {
         },
         fetchPolicy: 'no-cache',
       }),
-      client.query({
+      client.watchQuery({
         query: GetAuthzGrants,
         variables: {
           userAddress: grantsAddress,
           granterAddress: activeAddress,
         },
         fetchPolicy: 'no-cache',
+        pollInterval: EnvConfig.POLLING_INTERVAL,
       }),
     ]);
-
-    const _grants: any[] = _.get(grantsData, 'data.authz_grant');
-
+    await grantsData.result();
+    const _grants: any[] =
+      _.get(grantsData.getCurrentResult(), 'data.authz_grant') || [];
     const formattedGrants = _grants.map(grant => ({
       msg_type: grant.authorization.msg,
       expiration: grant.expiration,

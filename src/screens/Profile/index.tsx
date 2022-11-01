@@ -33,8 +33,8 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  Linking,
   RefreshControl,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -133,7 +133,7 @@ const Profile = () => {
   }, []);
 
   const twitterAccount = useMemo(() => {
-    return connectedApps.find(app => app.application === 'twitter');
+    return connectedApps.findIndex(app => app.application === 'twitter') !== -1;
   }, [connectedApps]);
 
   const profileLoading =
@@ -229,26 +229,17 @@ const Profile = () => {
     console.log('test');
   }, []);
 
-  const handleTwitterPress = useCallback(() => {
-    if (twitterAccount) {
-      Linking.openURL(
-        `twitter://user?screen_name=${encodeURIComponent(
-          twitterAccount.username,
-        )}`,
-      ).catch(() => {
-        Linking.openURL(
-          `https://twitter.com/${encodeURIComponent(twitterAccount.username)}`,
-        );
-      });
-    }
-  }, [twitterAccount]);
-
   if (profileLoading) {
     return <ActivityIndicator />;
   }
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <ImageBackground source={bannerImage} style={styles.bannerImage} />
       {/* avatar needs to be in a view for positioning and ios zIndex compat */}
       <Animated.View
@@ -320,29 +311,18 @@ const Profile = () => {
                         {t('connectAddress')}
                       </Typography.Button2>
                     </Button>
-                    {twitterAccount ? (
-                      <TouchableOpacity
-                        style={styles.twitterButton}
-                        onPress={handleTwitterPress}>
-                        <Image
-                          source={twitterIcon}
-                          style={{width: 24, height: 24, marginRight: 6}}
-                        />
-                        <Typography.Button2>
-                          @{twitterAccount.username}
-                        </Typography.Button2>
-                      </TouchableOpacity>
-                    ) : (
-                      <Button
-                        mode="outlined"
-                        style={{borderColor: theme.colors.surfaceBlack}}
-                        contentStyle={styles.connectButton}
-                        onPress={handlePressConnectApp}>
-                        <Typography.Button2>
-                          {t('connectTwitter')}
-                        </Typography.Button2>
-                      </Button>
-                    )}
+                    <Button
+                      disabled={twitterAccount}
+                      mode="outlined"
+                      style={{borderColor: theme.colors.surfaceBlack}}
+                      contentStyle={styles.connectButton}
+                      onPress={handlePressConnectApp}>
+                      <Typography.Button2>
+                        {twitterAccount
+                          ? 'Twitter connected'
+                          : t('connectTwitter')}
+                      </Typography.Button2>
+                    </Button>
                   </View>
                   {chainLinks.length !== 0 ||
                     (connectedApps.length !== 0 && (
