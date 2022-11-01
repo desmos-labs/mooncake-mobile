@@ -50,24 +50,31 @@ const useGenerateAccounts = () => {
       };
 
       setLoading(true);
-      let _accounts;
-      if (isUsingLedger) {
-        _accounts = await generateAccountUsingLedger({
-          ledgerApp,
-          ledgerTransport,
-          prefix,
-          hdPaths: [hdPath],
-        });
-      } else {
-        _accounts = await generateAccountUsingMnemonic({
-          prefix,
-          hdPaths: [hdPath],
-          mnemonic: mnemonic!,
-        });
-      }
+      try {
+        let _accounts;
+        if (isUsingLedger) {
+          _accounts = await generateAccountUsingLedger({
+            ledgerApp,
+            ledgerTransport,
+            prefix,
+            hdPaths: [hdPath],
+          });
+        } else {
+          _accounts = await generateAccountUsingMnemonic({
+            prefix,
+            hdPaths: [hdPath],
+            mnemonic: mnemonic!,
+          });
+        }
 
-      setAccounts(_accounts);
-      setLoading(false);
+        if (_accounts) {
+          setAccounts(_accounts);
+        }
+      } catch (err) {
+        console.log('[useGenerateAccount]', String(err));
+      } finally {
+        setLoading(false);
+      }
     },
     [loading],
   );
@@ -82,7 +89,7 @@ const useGenerateAccounts = () => {
         limit,
       });
 
-      let _accounts: ExternalAccount[];
+      let _accounts: any;
       if (isUsingLedger) {
         _accounts = await generateAccountUsingLedger({
           ledgerApp,
@@ -99,7 +106,9 @@ const useGenerateAccounts = () => {
       }
 
       setLoading(false);
-      setAccounts(prev => [...prev, ..._accounts]);
+      if (_accounts) {
+        setAccounts(prev => [...prev, ..._accounts]);
+      }
     },
     [accounts, loading],
   );

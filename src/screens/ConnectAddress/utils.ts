@@ -14,6 +14,7 @@ import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import {toHex} from '@cosmjs/encoding';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {serializeSignDoc, StdSignDoc} from '@cosmjs/amino';
+import _ from 'lodash';
 
 export const generateAccountUsingMnemonic = async ({
   prefix,
@@ -41,37 +42,40 @@ export const generateAccountUsingMnemonic = async ({
   }));
 };
 
-export const generateAccountUsingLedger = async ({
-  ledgerTransport,
-  ledgerApp,
-  prefix,
-  hdPaths,
-}: {
-  ledgerTransport: BluetoothTransport;
-  ledgerApp: LedgerApp;
-  prefix: string;
-  hdPaths: HdPath[];
-}) => {
-  const cosmJsPaths = hdPaths.map(toCosmjsHdPath);
-
-  const {name: ledgerAppName, minVersion: minLedgerAppVersion} = ledgerApp;
-
-  const ledgerSigner = new LedgerSigner(ledgerTransport, {
-    ledgerAppName,
-    minLedgerAppVersion,
-    hdPaths: cosmJsPaths,
+export const generateAccountUsingLedger = _.debounce(
+  async ({
+    ledgerTransport,
+    ledgerApp,
     prefix,
-  });
+    hdPaths,
+  }: {
+    ledgerTransport: BluetoothTransport;
+    ledgerApp: LedgerApp;
+    prefix: string;
+    hdPaths: HdPath[];
+  }) => {
+    const cosmJsPaths = hdPaths.map(toCosmjsHdPath);
 
-  const accounts = await ledgerSigner.getAccounts();
+    const {name: ledgerAppName, minVersion: minLedgerAppVersion} = ledgerApp;
 
-  return accounts.map((x, idx) => ({
-    signer: ledgerSigner,
-    address: x.address,
-    hdPath: hdPaths[idx],
-    type: ExternalAccountEnum.ledger,
-  }));
-};
+    const ledgerSigner = new LedgerSigner(ledgerTransport, {
+      ledgerAppName,
+      minLedgerAppVersion,
+      hdPaths: cosmJsPaths,
+      prefix,
+    });
+
+    const accounts = await ledgerSigner.getAccounts();
+
+    return accounts.map((x, idx) => ({
+      signer: ledgerSigner,
+      address: x.address,
+      hdPath: hdPaths[idx],
+      type: ExternalAccountEnum.ledger,
+    }));
+  },
+  2000,
+);
 
 export const generateHdPaths = ({
   startingIndex,
@@ -82,7 +86,7 @@ export const generateHdPaths = ({
   limit?: number;
   coinType: number;
 }): HdPath[] =>
-  new Array(limit).fill(0).map((_, idx) => {
+  new Array(limit).fill(0).map((_el, idx) => {
     return {
       coinType,
       change: 0,
