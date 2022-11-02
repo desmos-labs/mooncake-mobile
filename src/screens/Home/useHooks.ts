@@ -10,7 +10,6 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -59,13 +58,6 @@ const useHooks = () => {
     fetchNewestPosts,
     loading: postsLoading,
   } = useGetPosts({type: postFamilyMap[routeName]});
-
-  // debug use
-  const pendingTx = useRecoilValue(pendingTxState);
-
-  React.useEffect(() => {
-    console.log('pending tx', pendingTx);
-  }, [pendingTx]);
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
