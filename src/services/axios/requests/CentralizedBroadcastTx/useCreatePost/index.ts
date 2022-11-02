@@ -124,30 +124,35 @@ const useCreatePost = () => {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();
             // don't add comments to pending for now
-            const _pendingPost: PendingPost = {
-              postData: {
-                id: Math.random() * 10000,
-                subspace_id: EnvConfig.APP_SUBSPACE_ID,
-                isPending: true,
+            if (_referencedPosts.length === 0) {
+              const _pendingPost: PendingPost = {
+                postData: {
+                  // id can be any number, since it is assigned by the server
+                  id: Date.now(),
+                  subspace_id: EnvConfig.APP_SUBSPACE_ID,
+                  isPending: true,
 
-                text: postText,
+                  text: postText,
 
-                attachments: attachmentUploadResult && [
-                  {
-                    id: 0,
-                    content: {
-                      ...attachmentUploadResult,
+                  attachments: attachmentUploadResult && [
+                    {
+                      id: 0,
+                      content: {
+                        ...attachmentUploadResult,
+                      },
                     },
-                  },
-                ],
+                  ],
 
-                author_address: activeAddress,
-              },
-              txHash: sendPostResponse.tx_hash,
-              timestamp: new Date().getTime(),
-              msgType: GrantEnums.MsgCreatePost,
-            };
-            addNewPendingPost(_pendingPost);
+                  author_address: activeAddress,
+                },
+                txHash: sendPostResponse.tx_hash,
+                timestamp: Date.now(),
+                msgType: GrantEnums.MsgCreatePost,
+
+                msg,
+              };
+              addNewPendingPost(_pendingPost);
+            }
 
             return sendPostResponse;
           }
