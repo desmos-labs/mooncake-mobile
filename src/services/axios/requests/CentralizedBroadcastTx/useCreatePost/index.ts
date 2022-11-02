@@ -134,14 +134,16 @@ const useCreatePost = () => {
 
                   text: postText,
 
-                  attachments: attachmentUploadResult && [
-                    {
-                      id: 0,
-                      content: {
-                        ...attachmentUploadResult,
-                      },
-                    },
-                  ],
+                  attachments: attachmentUploadResult
+                    ? [
+                        {
+                          id: 0,
+                          content: {
+                            ...attachmentUploadResult,
+                          },
+                        },
+                      ]
+                    : [],
 
                   author_address: activeAddress,
                 },

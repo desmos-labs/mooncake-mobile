@@ -84,13 +84,13 @@ const PostCard = ({
   }, [profile_pic]);
 
   const postType: POST_TYPE = React.useMemo(() => {
-    if (postData.text && postData?.attachments?.length === 0) {
+    if (postData.text && postData.attachments.length === 0) {
       return POST_TYPE.TEXT;
     }
-    if (postData.text && postData?.attachments?.length > 0) {
+    if (postData.text && postData.attachments.length > 0) {
       return POST_TYPE.IMAGE_TEXT;
     }
-    if (!postData.text && postData?.attachments?.length > 0) {
+    if (!postData.text && postData.attachments.length > 0) {
       return POST_TYPE.IMAGE;
     }
 
