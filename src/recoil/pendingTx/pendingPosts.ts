@@ -1,40 +1,52 @@
-import {atom, useRecoilState} from 'recoil';
+import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import React from 'react';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import {latestPostsByUserState} from '@recoil/latestPostsByUser';
+import {POST_TYPE, usePostsFamily} from '@recoil/posts';
 
 export const pendingPostsState = atom<PendingPost[]>({
   key: 'pendingPosts',
-  default: [
-    {
-      postData: {
-        id: Math.random() * 10000,
-        subspace_id: 5,
-        isPending: true,
-
-        text: 'hello world',
-
-        attachments: [
-          {
-            id: 0,
-            content: {
-              uri: 'https://static.wikia.nocookie.net/chainsaw-man/images/0/0f/Volume_01.png',
-              mimeType: 'image/jpeg',
-            },
-          },
-        ],
-
-        author_address: '123123',
-      },
-      txHash: 'hashyboi',
-      timestamp: new Date().getTime(),
-      msgType: GrantEnums.MsgCreatePost,
-    },
-  ],
+  default: [],
 });
+
+const isTxHashInLatestPost = (
+  txHash: string,
+  latestPosts: PostItem[],
+): PostItem | undefined =>
+  latestPosts.find(x => {
+    const txHashes = x.transactions.map(y => y.hash);
+    return txHashes.includes(txHash);
+  });
 
 const usePendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(pendingPostsState);
+  const latestPostsByUser = useRecoilValue(latestPostsByUserState);
 
+  const {setPosts} = usePostsFamily(POST_TYPE.DISCOVER);
+
+  const syncPendingPosts = React.useCallback(
+    (newPosts: PostItem[], _pendingPosts: PendingPost[]) => {
+      const postsToTransfer: PostItem[] = [];
+      const txHashesToRemove: string[] = [];
+      _pendingPosts.forEach(x => {
+        const post = isTxHashInLatestPost(x.txHash, newPosts);
+        if (post) {
+          postsToTransfer.push(post);
+          txHashesToRemove.push(x.txHash);
+        }
+      });
+      setPendingPosts(prev =>
+        prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+      );
+      setPosts(prev => [...postsToTransfer, ...prev]);
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    if (latestPostsByUser && latestPostsByUser.length > 0) {
+      syncPendingPosts(latestPostsByUser, pendingPosts);
+    }
+  }, [latestPostsByUser]);
   /**
    * Add a new pending relationship to recoil state.
    * @param {PendingPost} newPost - The new relationship to be added.

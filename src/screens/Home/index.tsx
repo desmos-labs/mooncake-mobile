@@ -83,10 +83,6 @@ const Home = () => {
 
   const theme = useTheme();
 
-  const currentPost = posts[selectedPostIndex];
-
-  console.log(_.get(currentPost, 'repliesCount.aggregate.count'));
-
   return (
     <View
       style={{

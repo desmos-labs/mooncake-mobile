@@ -60,6 +60,9 @@ declare global {
     followage: FollowerType[];
     following: FollowerType[];
     creation_time: string;
+    transactions: {
+      hash: string;
+    }[];
   }
 
   interface ConnectedApps {

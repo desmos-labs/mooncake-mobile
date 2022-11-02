@@ -27,6 +27,10 @@ declare global {
 
     conversation: any;
 
+    transactions: {
+      hash: string;
+    }[];
+
     repliesCount: {
       aggregate: {
         count: number;
