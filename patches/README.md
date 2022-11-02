@@ -25,5 +25,5 @@ This folder contains patches created using patch-package.
 
 ## react-native-toast-notifications
 - Apply a fix for https://github.com/arnnis/react-native-toast-notifications/issues/127
-
+- Add a second onPress handler called `onPressRetry` to specifically handle when the user presses `retry` on error type toasts
 
