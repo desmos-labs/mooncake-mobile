@@ -29,7 +29,9 @@ import ConnectAddressGeneral, {
 import ConnectApp from 'screens/ConnectApp';
 import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
-import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
+import ConnectChainTxDetail, {
+  ConnectChainTxDetailParams,
+} from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
@@ -101,6 +103,7 @@ import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
 import RNBootSplash from 'react-native-bootsplash';
+import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -132,6 +135,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.SELECT_LEDGER_APP]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
   [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
@@ -140,7 +144,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
-  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
+  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
@@ -338,6 +342,10 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
+      />
+      <Stack.Screen
+        name={ROUTES.SELECT_LEDGER_APP}
+        component={SelectLedgerApp}
       />
 
       <Stack.Screen

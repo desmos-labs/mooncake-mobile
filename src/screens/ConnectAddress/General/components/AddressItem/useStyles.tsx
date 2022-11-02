@@ -22,6 +22,14 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   alignRight: {right: 0, marginLeft: 'auto'},
+  linkedAddrStyle: {
+    flex: 1,
+    marginLeft: 16,
+    textAlign: 'right',
+  },
+  linkedTextStyle: {
+    opacity: 0.6,
+  },
 }));
 
 export default useStyles;

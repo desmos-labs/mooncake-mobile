@@ -8,14 +8,11 @@ import {connectedAppsState} from '@recoil/connectedApps';
 import {isFollowingAddr} from '@recoil/following';
 import useNumRelationships from '@recoil/numRelationshipState';
 import {
-  cosmosIcon,
   defaultBanner,
   defaultProfilePic,
   editButton,
   followedButton,
   followIcon,
-  stargazeIcon,
-  twitterIcon,
 } from 'assets/images';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
@@ -49,6 +46,10 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {
+  mapConnectedAppImages,
+  mapConnectedChainImages,
+} from 'screens/Profile/utils';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -229,6 +230,30 @@ const Profile = () => {
     console.log('test');
   }, []);
 
+  const ConnectedChains = React.useMemo(() => {
+    const images = [
+      ...mapConnectedChainImages(chainLinks),
+      ...mapConnectedAppImages(connectedApps),
+    ];
+
+    if (images.length > 3) images.length = 3;
+
+    if (chainLinks.length !== 0 || connectedApps.length !== 0) {
+      return (
+        <View style={{marginTop: 16}}>
+          <ChainsCountersBar
+            loading={false}
+            connectedChainsCounter={chainLinks.length}
+            connectedAppsCounter={connectedApps.length}
+            connectedChainsImages={images}
+            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+          />
+        </View>
+      );
+    }
+    return undefined;
+  }, [chainLinks, connectedApps]);
+
   if (profileLoading) {
     return <ActivityIndicator />;
   }
@@ -324,22 +349,7 @@ const Profile = () => {
                       </Typography.Button2>
                     </Button>
                   </View>
-                  {chainLinks.length !== 0 ||
-                    (connectedApps.length !== 0 && (
-                      <View style={{marginTop: 16}}>
-                        <ChainsCountersBar
-                          loading={false}
-                          connectedChainsCounter={chainLinks.length}
-                          connectedAppsCounter={connectedApps.length}
-                          connectedChainsImages={[
-                            stargazeIcon,
-                            cosmosIcon,
-                            twitterIcon,
-                          ]}
-                          handlePressCounters={() => navigate(ROUTES.SETTINGS)}
-                        />
-                      </View>
-                    ))}
+                  {ConnectedChains}
                 </>
               )}
             </View>

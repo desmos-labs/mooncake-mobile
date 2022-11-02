@@ -198,7 +198,7 @@ const LookingForDevices = () => {
         />
       </View>
     );
-  }, [scanning, devices.length, screenReady, isBTOn]);
+  }, [scanning, devices, screenReady, isBTOn]);
 
   return <DView backgroundColor={theme.colors.white}>{screenContent}</DView>;
 };

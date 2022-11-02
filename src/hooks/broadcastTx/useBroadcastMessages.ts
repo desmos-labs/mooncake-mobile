@@ -1,5 +1,5 @@
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
-import {GasPrice, isDeliverTxFailure} from '@cosmjs/stargate';
+import {GasPrice, assertIsDeliverTxSuccess} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
@@ -47,10 +47,7 @@ export default function useBroadcastMessages() {
         TxRaw.encode(signed.txRaw).finish(),
       );
 
-      if (isDeliverTxFailure(broadcastResult)) {
-        console.log(broadcastResult);
-        throw new Error(broadcastResult.rawLog ?? 'Unknown error');
-      }
+      assertIsDeliverTxSuccess(broadcastResult);
 
       return true;
     },

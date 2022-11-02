@@ -29,6 +29,7 @@ const useStyles = makeStyle(theme => ({
   subtitleText: {
     marginTop: theme.spacing.l,
     marginBottom: theme.spacing.xl,
+    textAlign: 'center',
   },
   primaryButtonText: {
     color: theme.colors.white,
@@ -44,6 +45,14 @@ const useStyles = makeStyle(theme => ({
   secondaryButton: {
     alignSelf: 'stretch',
     marginBottom: theme.spacing.s,
+  },
+  imageStyle: {
+    width: 126,
+    height: 125,
+    resizeMode: 'contain',
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.l,
+    alignSelf: 'center',
   },
 }));
 
