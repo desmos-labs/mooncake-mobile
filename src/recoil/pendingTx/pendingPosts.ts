@@ -53,15 +53,13 @@ const usePendingPosts = () => {
    */
   const addNewPendingPost = React.useCallback(
     (newPost: PendingPost) => {
-      console.log(JSON.stringify(newPost));
-
       setPendingPosts(prev => [...prev, newPost]);
     },
     [pendingPosts],
   );
 
   /**
-   * Remove a pending relationship by its txHash.
+   * Remove a pending post by its txHash.
    * @param {string} txHash - The txHash to remove.
    */
   const resolveByTxHash = React.useCallback(
