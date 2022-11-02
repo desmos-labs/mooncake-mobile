@@ -1,9 +1,15 @@
 import React from 'react';
-import {atom, useSetRecoilState} from 'recoil';
+import {
+  atom,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetLastPostsByAddress from 'services/graphql/queries/GetLastPostsByAddress';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {hasPendingPosts} from '@recoil/pendingTx/pendingPosts';
 
 export const latestPostsByUserState = atom<PostItem[]>({
   key: 'latestPosts',
@@ -13,8 +19,10 @@ export const latestPostsByUserState = atom<PostItem[]>({
 const usePollLatestPostsByUser = (limit: number) => {
   const {activeAddress} = useActiveAccount();
   const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
+  const resetLatestPosts = useResetRecoilState(latestPostsByUserState);
+  const shouldPoll = useRecoilValue(hasPendingPosts);
 
-  const {data} = useQuery(GetLastPostsByAddress, {
+  const {data, startPolling, stopPolling} = useQuery(GetLastPostsByAddress, {
     variables: {
       limit,
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
@@ -24,7 +32,6 @@ const usePollLatestPostsByUser = (limit: number) => {
         registered_reaction_id: 9,
       },
     },
-    pollInterval: EnvConfig.POLLING_INTERVAL,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
   });
@@ -35,6 +42,15 @@ const usePollLatestPostsByUser = (limit: number) => {
       setLatestPostsByUser(post);
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (shouldPoll) {
+      startPolling(EnvConfig.POLLING_INTERVAL);
+    } else {
+      resetLatestPosts();
+      stopPolling();
+    }
+  }, [shouldPoll]);
 };
 
 export default usePollLatestPostsByUser;
