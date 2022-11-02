@@ -1,5 +1,9 @@
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
+import {
+  MsgCreatePostEncodeObject,
+  MsgCreateRelationshipEncodeObject,
+  MsgDeleteRelationshipEncodeObject,
+} from '@desmoslabs/desmjs';
 
 export {};
 
@@ -10,14 +14,19 @@ declare global {
     timestamp: number;
 
     txHash: string;
+
+    msg:
+      | MsgCreatePostEncodeObject
+      | MsgCreateRelationshipEncodeObject
+      | MsgDeleteRelationshipEncodeObject;
   }
 
   interface PendingRelationship extends BasePendingTx {
     counterPartyAddr: string;
 
-    msgType:
-      | GrantEnums.MsgCreateRelationship
-      | GrantEnums.MsgDeleteRelationship;
+    msgType: string;
+
+    msg: MsgCreateRelationshipEncodeObject | MsgDeleteRelationshipEncodeObject;
   }
 
   interface PendingPost extends BasePendingTx {

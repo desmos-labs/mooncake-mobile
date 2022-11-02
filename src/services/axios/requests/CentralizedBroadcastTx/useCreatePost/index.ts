@@ -153,6 +153,7 @@ const useCreatePost = () => {
 
                 msg,
               };
+
               addNewPendingPost(_pendingPost);
             }
 

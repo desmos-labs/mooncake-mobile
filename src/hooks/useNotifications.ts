@@ -4,16 +4,19 @@ import resultTransactions from '@recoil/resultTransactions';
 import {useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
 import {useSetRecoilState} from 'recoil';
-import {Result} from 'types/transaction';
 import ToastConfig from 'config/ToastConfig';
 import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 import usePendingPosts from 'hooks/usePendingPosts';
+import useFindPendingTx from 'hooks/useFindPendingTx';
+import _ from 'lodash';
+import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 const useNotifications = () => {
   const setTransactions = useSetRecoilState(resultTransactions);
   const toast = useToast();
   const {resolveByTxHash} = usePendingRelationships();
   const {resolveByTxHash: resolvePendingPostsByTxHash} = usePendingPosts();
+  const {findPendingTxByHash} = useFindPendingTx();
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -22,6 +25,9 @@ const useNotifications = () => {
         id: 'default',
         name: 'Default Channel',
       });
+
+      const txHash = _.get(remoteMessage, 'data.tx_hash');
+      const result = _.get(remoteMessage, 'data.type');
 
       if (remoteMessage.notification) {
         await notifee.displayNotification({
@@ -43,6 +49,15 @@ const useNotifications = () => {
           } else if (remoteMessage.data?.type === 'transaction_fail') {
             toast.show('Transaction failed!', {
               type: ToastConfig.ERROR,
+              // @ts-ignore
+              onPressRetry: () => {
+                // find the matching txHash and rebroadcast its message
+                const pendingTx = findPendingTxByHash(txHash);
+                if (pendingTx) {
+                  const {msg} = pendingTx;
+                  encodeAndBroadcastTx({msgs: [msg]});
+                }
+              },
             });
           } else {
             toast.show('State of transaction unknown', {
@@ -52,14 +67,14 @@ const useNotifications = () => {
         }, 100);
 
         // TODO: refactor this into one function
-        resolveByTxHash(remoteMessage?.data?.tx_hash);
-        resolvePendingPostsByTxHash(remoteMessage?.data?.tx_hash);
+        resolveByTxHash(txHash);
+        resolvePendingPostsByTxHash(txHash);
 
         setTransactions(prev => [
           ...prev,
           {
-            hash: remoteMessage?.data?.tx_hash as string,
-            result: {type: remoteMessage?.data?.type} as Result,
+            hash: txHash,
+            result,
           },
         ]);
       }

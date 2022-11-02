@@ -89,6 +89,7 @@ const usePendingPosts = () => {
   return {
     resolveByTxHash,
     addNewPendingPost,
+    pendingPosts, // reexport pendingPosts for convenience
   };
 };
 
