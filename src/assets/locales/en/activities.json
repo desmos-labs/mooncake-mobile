@@ -1,5 +1,8 @@
 {
   "activities": "Activities",
+  "liked": "Liked your post",
+  "commented": "Commented your post",
+  "followed you": "Started following you",
   "no activities": "No Activities",
   "liked your post": "liked your post",
   "started following you": "started following you",

@@ -21,7 +21,7 @@ import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useChainLinks from 'hooks/useChainLinks';
-import useVisitingProfileData from 'hooks/useVisitingProfileData';
+import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
@@ -100,9 +100,8 @@ const Profile = () => {
   });
   /** Animations end * */
 
-  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
-    params?.visitingProfileAddress || '',
-  );
+  const {visitingProfileData, visitingProfileLoading} =
+    useProfileDataGivenAddress(params?.visitingProfileAddress || '');
   const {activeAddress, profileData, loading, refetch} = useActiveAccount();
 
   useFocusEffect(

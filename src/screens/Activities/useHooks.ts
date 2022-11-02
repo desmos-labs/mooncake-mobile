@@ -1,0 +1,133 @@
+import {useQuery} from '@apollo/client';
+import {differenceInCalendarDays, parseISO} from 'date-fns';
+import useActiveAccount from 'hooks/useActiveAccount';
+import _ from 'lodash';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import client from 'services/graphql/client';
+import GetNotifications from 'services/graphql/queries/GetNotifications';
+import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+
+const useHooks = () => {
+  const {activeAddress} = useActiveAccount();
+  const [notificationsWithProfile, setNotificationsWithProfile] = useState<
+    any[]
+  >([]);
+  const [notificationsDetailsLoading, setNotificationsDetailsLoading] =
+    useState(false);
+  const {t} = useTranslation('activities');
+  const {
+    data,
+    loading: notificationsLoading,
+    refetch: notificationsRefetch,
+  } = useQuery(GetNotifications, {
+    variables: {
+      userAddress: activeAddress,
+      limit: 99,
+      offset: 0,
+    },
+  });
+
+  const getCorrectAddress = (notification: any) => {
+    switch (notification.data.type) {
+      case 'comment':
+        return notification.data.reply_author;
+      case 'follow':
+        return notification.data.relationship_creator;
+      case 'reaction':
+        return notification.data.reaction_author;
+      default:
+        return '';
+    }
+  };
+
+  const fetchNotificationDetails = useCallback(async () => {
+    if (data) {
+      try {
+        setNotificationsDetailsLoading(true);
+        const results = await Promise.all(
+          data.notification.map(async (singleNot: any) => {
+            const {data: profileData} = await client.query({
+              query: GetProfileForAddress,
+              variables: {
+                address: getCorrectAddress(singleNot),
+              },
+              fetchPolicy: 'no-cache',
+            });
+            console.log(profileData);
+            return {...singleNot, profile: profileData.profile[0]};
+          }),
+        );
+        if (results) {
+          setNotificationsWithProfile(results);
+        }
+      } catch (e: any) {
+        console.error(e);
+      } finally {
+        setNotificationsDetailsLoading(false);
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    fetchNotificationDetails();
+  }, [fetchNotificationDetails]);
+
+  const notificationsData: [] | {data: any[]; section: string}[] =
+    useMemo(() => {
+      if (!notificationsWithProfile) return [];
+      const sortedArray = _.orderBy(
+        notificationsWithProfile,
+        [obj => new Date(obj.timestamp)],
+        ['desc'],
+      );
+      const thisWeekNotifications: any[] = [];
+      const earlierNotifications: any[] = [];
+      sortedArray.forEach(
+        (singleNotification: {
+          timestamp: any;
+          data: any;
+          user_address: string;
+        }) => {
+          const parsedTime = parseISO(`${singleNotification.timestamp!}Z`);
+          if (differenceInCalendarDays(new Date(parsedTime), Date.now()) <= 7) {
+            thisWeekNotifications.push(singleNotification);
+          } else {
+            earlierNotifications.push(singleNotification);
+          }
+        },
+      );
+
+      if (
+        thisWeekNotifications.length <= 0 &&
+        earlierNotifications.length > 0
+      ) {
+        return [{section: t('earlier'), data: earlierNotifications}];
+      } else if (
+        thisWeekNotifications.length > 0 &&
+        earlierNotifications.length <= 0
+      ) {
+        return [{section: t('this week'), data: thisWeekNotifications}];
+      } else if (
+        thisWeekNotifications.length > 0 &&
+        earlierNotifications.length > 0
+      ) {
+        return [
+          {section: t('this week'), data: thisWeekNotifications},
+          {section: t('earlier'), data: earlierNotifications},
+        ];
+      } else {
+        return [];
+      }
+    }, [notificationsWithProfile, t]);
+
+  const globalLoading = notificationsLoading && notificationsDetailsLoading;
+
+  return {
+    notificationsData,
+    globalLoading,
+    notificationsRefetch,
+  };
+};
+
+export default useHooks;
