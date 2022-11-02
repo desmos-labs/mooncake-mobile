@@ -54,7 +54,7 @@ const Home = () => {
     posts,
     selectedPostIndex,
     onCarouselProgressChange,
-    isPostPending,
+    checkIfPostIsPending,
   } = useHooks();
 
   const renderPost = React.useCallback(
@@ -67,7 +67,7 @@ const Home = () => {
           postData={info.item}
           onPressAuthor={() => handlePressAuthor(info.item.author_address)}
           onPressDetails={() => {
-            if (isPostPending(info.item.id)) {
+            if (checkIfPostIsPending(info.item.id)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
@@ -113,7 +113,7 @@ const Home = () => {
         <View style={styles.interactionButtonGroup}>
           <InteractionButton
             onPress={() => {
-              if (isPostPending(posts[selectedPostIndex].id)) {
+              if (checkIfPostIsPending(posts[selectedPostIndex].id)) {
                 return toast.show(t('toast:postTxInProgress'), {
                   type: ToastConfig.ERROR_NO_RETRY,
                 });
@@ -138,7 +138,7 @@ const Home = () => {
 
           <InteractionButton
             onPress={() => {
-              if (isPostPending(posts[selectedPostIndex].id)) {
+              if (checkIfPostIsPending(posts[selectedPostIndex].id)) {
                 return toast.show(t('toast:postTxInProgress'), {
                   type: ToastConfig.ERROR_NO_RETRY,
                 });
@@ -160,7 +160,7 @@ const Home = () => {
           <InteractionButton
             onPress={() => {
               if (
-                isPostPending(posts[selectedPostIndex].id) ||
+                checkIfPostIsPending(posts[selectedPostIndex].id) ||
                 !posts[selectedPostIndex].author
               ) {
                 return toast.show(t('toast:postTxInProgress'), {

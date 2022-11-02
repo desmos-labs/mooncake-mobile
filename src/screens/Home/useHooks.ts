@@ -73,7 +73,7 @@ const useHooks = () => {
     return [...sortedPendingPosts, ...posts];
   }, [posts, pendingPosts]);
 
-  const isPostPending = React.useCallback(
+  const checkIfPostIsPending = React.useCallback(
     (postId: number) => {
       return combinedPosts.find(x => x.id === postId)?.isPending;
     },
@@ -135,7 +135,7 @@ const useHooks = () => {
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      if (isPostPending(postId)) return;
+      if (checkIfPostIsPending(postId)) return;
 
       const result = await addOrRemoveReaction({
         postId,
@@ -156,7 +156,7 @@ const useHooks = () => {
 
   const handlePressTip = React.useCallback(
     (postAuthor: string, postId: number) => {
-      if (isPostPending(postId)) return;
+      if (checkIfPostIsPending(postId)) return;
       navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
     },
     [],
@@ -199,7 +199,7 @@ const useHooks = () => {
     posts: combinedPosts,
     selectedPostIndex,
     onCarouselProgressChange,
-    isPostPending,
+    checkIfPostIsPending,
   };
 };
 
