@@ -54,7 +54,7 @@ function useHandleAddProfileSubmit(
           throw new Error('No account creation data');
         }
         const externalWallet = await LocalWallet.deserialize(
-          selectedExternalAccount,
+          selectedExternalAccount.signer as string,
         );
         const address = externalWallet.bech32Address;
         const messages = getMessage(

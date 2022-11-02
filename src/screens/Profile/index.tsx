@@ -8,14 +8,11 @@ import {connectedAppsState} from '@recoil/connectedApps';
 import {isFollowingAddr} from '@recoil/following';
 import useNumRelationships from '@recoil/numRelationshipState';
 import {
-  cosmosIcon,
   defaultBanner,
   defaultProfilePic,
   editButton,
   followedButton,
   followIcon,
-  stargazeIcon,
-  twitterIcon,
 } from 'assets/images';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
@@ -33,8 +30,8 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  Linking,
   RefreshControl,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -49,6 +46,10 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {
+  mapConnectedAppImages,
+  mapConnectedChainImages,
+} from 'screens/Profile/utils';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -133,7 +134,7 @@ const Profile = () => {
   }, []);
 
   const twitterAccount = useMemo(() => {
-    return connectedApps.find(app => app.application === 'twitter');
+    return connectedApps.findIndex(app => app.application === 'twitter') !== -1;
   }, [connectedApps]);
 
   const profileLoading =
@@ -229,19 +230,29 @@ const Profile = () => {
     console.log('test');
   }, []);
 
-  const handleTwitterPress = useCallback(() => {
-    if (twitterAccount) {
-      Linking.openURL(
-        `twitter://user?screen_name=${encodeURIComponent(
-          twitterAccount.username,
-        )}`,
-      ).catch(() => {
-        Linking.openURL(
-          `https://twitter.com/${encodeURIComponent(twitterAccount.username)}`,
-        );
-      });
+  const ConnectedChains = React.useMemo(() => {
+    const images = [
+      ...mapConnectedChainImages(chainLinks),
+      ...mapConnectedAppImages(connectedApps),
+    ];
+
+    if (images.length > 3) images.length = 3;
+
+    if (chainLinks.length !== 0 || connectedApps.length !== 0) {
+      return (
+        <View style={{marginTop: 16}}>
+          <ChainsCountersBar
+            loading={false}
+            connectedChainsCounter={chainLinks.length}
+            connectedAppsCounter={connectedApps.length}
+            connectedChainsImages={images}
+            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+          />
+        </View>
+      );
     }
-  }, [twitterAccount]);
+    return undefined;
+  }, [chainLinks, connectedApps]);
 
   if (profileLoading) {
     return <ActivityIndicator />;
@@ -249,6 +260,11 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <ImageBackground source={bannerImage} style={styles.bannerImage} />
       {/* avatar needs to be in a view for positioning and ios zIndex compat */}
       <Animated.View
@@ -320,46 +336,20 @@ const Profile = () => {
                         {t('connectAddress')}
                       </Typography.Button2>
                     </Button>
-                    {twitterAccount ? (
-                      <TouchableOpacity
-                        style={styles.twitterButton}
-                        onPress={handleTwitterPress}>
-                        <Image
-                          source={twitterIcon}
-                          style={{width: 24, height: 24, marginRight: 6}}
-                        />
-                        <Typography.Button2>
-                          @{twitterAccount.username}
-                        </Typography.Button2>
-                      </TouchableOpacity>
-                    ) : (
-                      <Button
-                        mode="outlined"
-                        style={{borderColor: theme.colors.surfaceBlack}}
-                        contentStyle={styles.connectButton}
-                        onPress={handlePressConnectApp}>
-                        <Typography.Button2>
-                          {t('connectTwitter')}
-                        </Typography.Button2>
-                      </Button>
-                    )}
+                    <Button
+                      disabled={twitterAccount}
+                      mode="outlined"
+                      style={{borderColor: theme.colors.surfaceBlack}}
+                      contentStyle={styles.connectButton}
+                      onPress={handlePressConnectApp}>
+                      <Typography.Button2>
+                        {twitterAccount
+                          ? 'Twitter connected'
+                          : t('connectTwitter')}
+                      </Typography.Button2>
+                    </Button>
                   </View>
-                  {chainLinks.length !== 0 ||
-                    (connectedApps.length !== 0 && (
-                      <View style={{marginTop: 16}}>
-                        <ChainsCountersBar
-                          loading={false}
-                          connectedChainsCounter={chainLinks.length}
-                          connectedAppsCounter={connectedApps.length}
-                          connectedChainsImages={[
-                            stargazeIcon,
-                            cosmosIcon,
-                            twitterIcon,
-                          ]}
-                          handlePressCounters={() => navigate(ROUTES.SETTINGS)}
-                        />
-                      </View>
-                    ))}
+                  {ConnectedChains}
                 </>
               )}
             </View>

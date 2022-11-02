@@ -35,6 +35,13 @@ const useStyles = makeStyle(theme => ({
   confirmButton: {
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.l,
+    backgroundColor: theme.colors.surfaceBlack,
+  },
+  cancelButton: {
+    borderColor: theme.colors.surfaceBlack,
+  },
+  cancelText: {
+    color: theme.colors.surfaceBlack,
   },
 }));
 

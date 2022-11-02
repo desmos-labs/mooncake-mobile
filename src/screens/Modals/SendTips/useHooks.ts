@@ -87,6 +87,7 @@ const useHooks = () => {
     initialFormValues,
     validateForm,
     convertedBalance,
+    settings,
   };
 };
 

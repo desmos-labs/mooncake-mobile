@@ -49,6 +49,7 @@ const SendTips = () => {
     initialFormValues,
     validateForm,
     convertedBalance,
+    settings,
   } = useHooks();
 
   useFocusEffect(
@@ -211,7 +212,8 @@ const SendTips = () => {
                           marginVertical: theme.spacing.s,
                         }}>
                         {t('warning fee', {
-                          fee: 0.1,
+                          fee: settings.contractsConfig[0].config.service_fee
+                            .percentage.value,
                         })}
                       </Typography.Body7>
                     </View>

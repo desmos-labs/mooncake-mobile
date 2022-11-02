@@ -116,7 +116,7 @@ exports[`component: MaterialButton renders 1`] = `
                     "fontStyle": "normal",
                     "fontWeight": "600",
                     "letterSpacing": 0.015,
-                    "lineHeight": 20,
+                    "lineHeight": 21,
                     "textTransform": "capitalize",
                   },
                   undefined,
@@ -144,17 +144,19 @@ exports[`component: MaterialButton renders mode: backgroundComponent 1`] = `
   <View
     accessible={true}
     collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
+    focusable={false}
     onClick={[Function]}
-    onFocus={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
-    style={Object {}}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
   >
     <View
       style={
@@ -374,7 +376,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "600",
                       "letterSpacing": 0.015,
-                      "lineHeight": 20,
+                      "lineHeight": 21,
                       "textTransform": "capitalize",
                     },
                     undefined,
@@ -553,7 +555,7 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "600",
                       "letterSpacing": 0.015,
-                      "lineHeight": 20,
+                      "lineHeight": 21,
                       "textTransform": "capitalize",
                     },
                     undefined,
@@ -609,7 +611,7 @@ exports[`component: MaterialButton renders mode: text 1`] = `
             "fontStyle": "normal",
             "fontWeight": "600",
             "letterSpacing": 0.015,
-            "lineHeight": 20,
+            "lineHeight": 21,
             "textTransform": "capitalize",
           },
           undefined,

@@ -30,7 +30,9 @@ import ConnectAddressGeneral, {
 import ConnectApp from 'screens/ConnectApp';
 import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
 import ConnectChainMethod from 'screens/ConnectChainMethod';
-import ConnectChainTxDetail from 'screens/ConnectChainTxDetail';
+import ConnectChainTxDetail, {
+  ConnectChainTxDetailParams,
+} from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
 import DevScreen from 'screens/DEV';
@@ -38,6 +40,8 @@ import EditProfile from 'screens/EditProfile';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
+import Grants from 'screens/Grants';
+import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -100,6 +104,7 @@ import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
 import RNBootSplash from 'react-native-bootsplash';
+import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -131,6 +136,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.SELECT_LEDGER_APP]: undefined;
   [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
   [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
@@ -139,7 +145,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
-  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: undefined;
+  [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.ENTER_COMMENT]: EnterCommentParams;
@@ -178,18 +184,22 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
+  // Nfts
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
   [ROUTES.ADD_PROFILE]: undefined;
 
+  /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
-
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
-
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
   [ROUTES.ACTIVITIES]: undefined;
+
+  // Grants
+  [ROUTES.GRANTS]: undefined;
+  [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -336,6 +346,10 @@ const RootNavigator = () => {
         name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE}
         component={ShowRecoveryPhrase}
       />
+      <Stack.Screen
+        name={ROUTES.SELECT_LEDGER_APP}
+        component={SelectLedgerApp}
+      />
 
       <Stack.Screen
         name={ROUTES.CONNECT_ADDRESS_GENERAL}
@@ -389,6 +403,10 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
+
+      <Stack.Screen name={ROUTES.GRANTS} component={Grants} />
+
+      <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} />
 
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
 

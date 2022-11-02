@@ -128,7 +128,7 @@ exports[`component: FollowButton renders follow version 1`] = `
                     "fontStyle": "normal",
                     "fontWeight": "600",
                     "letterSpacing": 0.015,
-                    "lineHeight": 20,
+                    "lineHeight": 21,
                     "textTransform": "capitalize",
                   },
                   Array [
@@ -313,7 +313,7 @@ exports[`component: FollowButton renders unfollow version 1`] = `
                     "fontStyle": "normal",
                     "fontWeight": "600",
                     "letterSpacing": 0.015,
-                    "lineHeight": 20,
+                    "lineHeight": 21,
                     "textTransform": "capitalize",
                   },
                   Array [

@@ -35,6 +35,14 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.xl,
     paddingHorizontal: theme.spacing.xl,
   },
+  headerTextGroup: {
+    flexDirection: 'row',
+  },
+  addConnectionButton: {
+    width: 46,
+    height: 46,
+    resizeMode: 'contain',
+  },
 }));
 
 export default useStyles;

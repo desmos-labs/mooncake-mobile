@@ -136,6 +136,10 @@ const Settings: React.FC<NavProps> = props => {
       </Section>
       <Section style={styles.spacer} title={t('security')}>
         <SectionButton
+          label={t('permissions')}
+          onPress={() => navigate(ROUTES.GRANTS)}
+        />
+        <SectionButton
           label={t('reveal secret phrase')}
           onPress={() => navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)}
         />

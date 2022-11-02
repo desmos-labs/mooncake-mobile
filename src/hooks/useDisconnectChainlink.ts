@@ -1,7 +1,7 @@
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {useCallback} from 'react';
-import {MsgUnlinkChainAccountEncodeObject} from '@desmoslabs/desmjs';
 import {ChainLink} from 'types/link';
+import {MsgUnlinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useBroadcastMessages from './broadcastTx/useBroadcastMessages';
 
 export default function useDisconnectChainLink() {
@@ -13,12 +13,12 @@ export default function useDisconnectChainLink() {
       const msgs = [
         {
           typeUrl: '/desmos.profiles.v3.MsgUnlinkChainAccount',
-          value: {
+          value: MsgUnlinkChainAccount.fromPartial({
             chainName: chainLink.chainName,
             owner: accounts[0].address,
             target: chainLink.externalAddress,
-          },
-        } as MsgUnlinkChainAccountEncodeObject,
+          }),
+        },
       ];
 
       await broadcastMessages(wallet, msgs);

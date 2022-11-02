@@ -66,6 +66,12 @@ import {
   TgradeAssets,
   XPRTAssets,
 } from 'config/ChainAssets';
+import {
+  CosmosLedgerApp,
+  CryptoOrgLedgerApp,
+  DesmosLedgerApp,
+  TerraLedgerApp,
+} from 'config/LedgerApps';
 
 // see https://github.com/cosmos/chain-registry
 const LinkableChains: LinkableChain[] = [
@@ -78,6 +84,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'desmos',
     }),
     assets: DesmosAssets,
+    ledgerApps: [DesmosLedgerApp],
   },
   {
     name: 'Akash',
@@ -88,6 +95,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'akash',
     }),
     assets: AkashAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Band',
@@ -98,6 +106,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'band',
     }),
     assets: BandAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Bitcanna',
@@ -108,6 +117,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'bitcanna',
     }),
     assets: BitcannaAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Bitsong',
@@ -118,6 +128,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'bitsong',
     }),
     assets: BitsongAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Cosmos Hub',
@@ -128,6 +139,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'cosmos',
     }),
     assets: CosmosHubAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Crypto.org',
@@ -138,6 +150,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'crypto.org',
     }),
     assets: CryptoOrgAssets,
+    ledgerApps: [CosmosLedgerApp, CryptoOrgLedgerApp],
   },
   {
     name: 'e-Money',
@@ -148,6 +161,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'emoney',
     }),
     assets: EMoneyAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Impact Hub',
@@ -158,6 +172,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'impacthub',
     }),
     assets: IXOAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'IRISnet',
@@ -168,6 +183,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'irisnet',
     }),
     assets: IrisnetAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Juno',
@@ -178,6 +194,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'juno',
     }),
     assets: JunoAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Kava',
@@ -188,16 +205,18 @@ const LinkableChains: LinkableChain[] = [
       name: 'kava',
     }),
     assets: KavaAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Likecoin',
-    prefix: 'cosmos',
+    prefix: 'like',
     hdPath: CosmosHdPath,
     icon: likecoinIcon,
     chainConfig: ChainConfig.fromPartial({
       name: 'likecoin',
     }),
     assets: LikecoinAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Osmosis',
@@ -208,6 +227,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'osmosis',
     }),
     assets: OsmosisAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Regen',
@@ -218,6 +238,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'regen',
     }),
     assets: RegenAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Terra',
@@ -228,6 +249,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'terra',
     }),
     assets: TerraAssets,
+    ledgerApps: [TerraLedgerApp, CosmosLedgerApp],
   },
   {
     name: 'Persistence',
@@ -238,6 +260,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'persistence',
     }),
     assets: XPRTAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Secret Network',
@@ -248,6 +271,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'secretnetwork',
     }),
     assets: SecretnetworkAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Sentinel',
@@ -258,6 +282,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'sentinel',
     }),
     assets: SentinelAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Tgrade',
@@ -268,6 +293,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'tgrade',
     }),
     assets: TgradeAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Stargaze',
@@ -278,6 +304,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'stargaze',
     }),
     assets: StargazeAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
   {
     name: 'Sifchain',
@@ -288,6 +315,7 @@ const LinkableChains: LinkableChain[] = [
       name: 'sifchain',
     }),
     assets: SifchainAssets,
+    ledgerApps: [CosmosLedgerApp],
   },
 ];
 

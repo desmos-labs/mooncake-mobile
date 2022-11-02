@@ -22,6 +22,9 @@
   "createPost": "Create a post",
   "noLikesYet": "No posts liked yet",
   "noUserPosts": "You don't have any posts yet",
-  "chains and apps connected": "{{connectedChainsCounter}} Chains and {{connectedAppsCounter}} App connected"
-
+  "connectedChains": "{{count}} Chain",
+  "connectedChains_plural": "{{count}} Chains",
+  "and": "and",
+  "connectedApps": "{{count}} App connected",
+  "connectedApps_plural": "{{count}} Apps connected"
 }

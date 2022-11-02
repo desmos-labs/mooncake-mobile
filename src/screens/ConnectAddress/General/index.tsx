@@ -1,27 +1,31 @@
 import Button from 'components/Button';
-import React, {FC} from 'react';
+import React from 'react';
 import DView from 'components/DView';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
-import {FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {
-  connectChainState,
+  ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import LocalWallet from 'lib/LocalWallet';
-import useGenerateAccounts from './useGenerateAccounts';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import _ from 'lodash';
+import useGenerateProof from 'hooks/useGenerateProof';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useGenerateAccounts from 'hooks/useGenerateAccounts';
+import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
 import AddressItem from './components/AddressItem';
 import useStyles from '../useStyles';
 
-type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.CONNECT_ADDRESS_GENERAL
 >;
@@ -30,19 +34,28 @@ export type ConnectAddressGeneralParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
-const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
+const ConnectAddressGeneral = () => {
+  const {activeAddress} = useActiveAccount();
   // placeholder
   const navigation = useNavigation<NavProps['navigation']>();
 
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+  const route = useRoute<NavProps['route']>();
+
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
 
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
   );
+
+  const {checkIsAddressLinked} = useCheckIsAddressLinked();
+
+  const {generateProof} = useGenerateProof();
 
   const {t} = useTranslation('connectAddress');
 
@@ -50,18 +63,15 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
 
   const theme = useTheme();
 
-  /**
-   * for integration, replace mnemonic with the user's stored mnemonic, and
-   * prefix with the correct prefix of the account to be connected
-   */
-  const {accounts, generateAccountsFromMnemonic} = useGenerateAccounts({
-    mnemonic,
-    prefix: selectedChain.prefix,
-    coinType: selectedChain.hdPath.coinType,
-  });
+  const ledgerTransport = _.get(route, 'params.ledgerTransport');
+  const ledgerApp = _.get(route, 'params.ledgerApp');
+
+  const isUsingLedger = !!(ledgerTransport && ledgerApp);
+
+  const {accounts, generateAccounts, loading} = useGenerateAccounts();
 
   React.useEffect(() => {
-    generateAccountsFromMnemonic();
+    generateAccounts(isUsingLedger ? 5 : 10);
   }, []);
 
   const SwitchToAdvancedButton = React.useMemo(() => {
@@ -69,12 +79,11 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => {
-            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, {
-              nextRouteOverride,
-              loadedProfileMap,
-              titleLabelOverride,
-            });
+          onPress={async () => {
+            if (ledgerTransport) {
+              await (ledgerTransport as BluetoothTransport).close();
+            }
+            navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, route.params);
           }}>
           <Typography.Button2 style={styles.modeButtonText}>
             {t('advanced')}
@@ -85,38 +94,65 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
   }, [navigation, nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
   const renderItem = React.useCallback(
-    // eslint-disable-next-line react/no-unused-prop-types
-    ({item, index}: {item: LocalWallet; index: number}) => {
+    ({
+      item,
+      index,
+    }: {
+      // eslint-disable-next-line react/no-unused-prop-types
+      item: ExternalAccount;
+      // eslint-disable-next-line react/no-unused-prop-types
+      index: number;
+    }) => {
+      if (!activeAddress) return <ActivityIndicator />;
+      const handlePress = async () => {
+        if (nextRouteOverride) {
+          if (loadedProfileMap?.has(item.address)) {
+            return navigation.navigate(ROUTES.USER_PROFILE, {
+              visitingProfileAddress: item.address,
+            });
+          }
+
+          // TODO: refactor
+          setSelectedExternalAccount(item);
+          return navigation.navigate(nextRouteOverride);
+        }
+
+        const proof = await generateProof({
+          externalAccount: item,
+          activeAddress,
+        });
+
+        if (proof) {
+          navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+            proof,
+            externalAddress: item.address,
+          });
+        }
+      };
+
       return (
         <AddressItem
-          key={item.bech32Address}
+          key={item.address}
           index={index}
-          address={item.bech32Address}
-          handlePress={() => {
-            if (nextRouteOverride) {
-              if (loadedProfileMap?.has(item.bech32Address)) {
-                return navigation.navigate(ROUTES.USER_PROFILE, {
-                  visitingProfileAddress: item.bech32Address,
-                });
-              }
-
-              setSelectedExternalAccount(item.serialize());
-              return navigation.navigate(nextRouteOverride);
-            }
-
-            setSelectedExternalAccount(item.serialize());
-            navigation.navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-          }}
+          address={item.address}
+          handlePress={handlePress}
+          isAlreadyLinked={checkIsAddressLinked(item.address)}
         />
       );
     },
-    [navigation, nextRouteOverride, loadedProfileMap],
+    [navigation, nextRouteOverride, loadedProfileMap, activeAddress],
   );
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,
     [],
   );
+
+  const ListFooterComponent = React.useMemo(() => {
+    if (loading) {
+      return <ActivityIndicator style={{width: '100%', marginVertical: 16}} />;
+    } else return <View />;
+  }, [loading]);
 
   return (
     <DView
@@ -140,10 +176,12 @@ const ConnectAddressGeneral: FC<NavProps> = ({route}) => {
         contentContainerStyle={{
           padding: theme.spacing.m,
         }}
+        refreshing={loading}
         onEndReached={() => {
-          generateAccountsFromMnemonic();
+          !isUsingLedger && generateAccounts(10);
         }}
       />
+      {ListFooterComponent}
     </DView>
   );
 };

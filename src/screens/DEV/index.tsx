@@ -69,7 +69,7 @@ type DevScreenProps = StackScreenProps<
 
 const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
-  const {revokeAllGrants} = useAddOrUpdateGrants();
+  const {revokeGrants} = useAddOrUpdateGrants();
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
@@ -164,7 +164,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
               {
                 text: 'Yes',
                 onPress: async () => {
-                  await revokeAllGrants();
+                  await revokeGrants();
                 },
               },
               {
