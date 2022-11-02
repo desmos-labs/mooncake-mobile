@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
+import Activities from 'screens/Activities';
 import AddProfile from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
@@ -187,6 +188,8 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
 
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+
+  [ROUTES.ACTIVITIES]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -386,6 +389,8 @@ const RootNavigator = () => {
       />
 
       <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
+
+      <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
 
       {/* modals */}
       <Stack.Group

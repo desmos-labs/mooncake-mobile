@@ -391,9 +391,7 @@ const Profile = () => {
         disableRightButtons={screenMode === 'guestProfile'}
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
-        handlePressNotification={() => {
-          console.log('notifications');
-        }}
+        handlePressNotification={() => navigate(ROUTES.ACTIVITIES)}
         handlePressScan={() => {
           console.log('scan');
         }}
