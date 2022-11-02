@@ -3,6 +3,7 @@ import {useQuery} from '@apollo/client';
 import {useRecoilState} from 'recoil';
 import GetChainLinkByAddressDocument from 'services/graphql/queries/GetChainLinkAddressDocument';
 import useActiveAccount from 'hooks/useActiveAccount';
+import EnvConfig from 'config/EnvConfig';
 import chainLinkState from '../recoil/chainLinks';
 
 export default function useChainLinks() {
@@ -23,9 +24,11 @@ export default function useChainLinks() {
           } as ChainLink),
       );
 
+      console.log(cLinks);
       setChainLinks(cLinks);
     },
     onError: () => {},
+    pollInterval: EnvConfig.POLLING_INTERVAL,
   });
 
   return {

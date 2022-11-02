@@ -44,6 +44,7 @@ import disconnectApp from './disconnectApp.json';
 import grants from './grants.json';
 import grantsDetails from './grantsDetails.json';
 import forgotPassword from './forgotPassword.json';
+import selectLedgerApp from "./selectLedgerApp.json";
 
 const en = {
   common,
@@ -89,6 +90,8 @@ const en = {
   toast,
   connectApp,
   disconnectApp,
+  forgotPassword,
+  selectLedgerApp,
   grants,
   grantsDetails,
   forgotPassword

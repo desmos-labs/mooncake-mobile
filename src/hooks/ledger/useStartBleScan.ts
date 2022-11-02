@@ -1,6 +1,5 @@
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
 import {Linking, Platform} from 'react-native';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
@@ -16,7 +15,6 @@ export type ScanError = {
 };
 
 export default function useStartBleScan() {
-  const {t} = useTranslation();
   const [subscription, setScanSubscription] = useState<
     Subscription | undefined
   >(undefined);
@@ -63,6 +61,7 @@ export default function useStartBleScan() {
           await BluetoothStateManager.openSettings();
         }
       } else {
+        setScanning(true);
         setScanSubscription(
           TransportBLE.listen({
             complete: () => {
@@ -88,7 +87,8 @@ export default function useStartBleScan() {
                 });
               }
             },
-            error: () => {
+            error: err => {
+              console.log('scanning err:', err);
               setScanning(false);
             },
           }),
@@ -100,7 +100,7 @@ export default function useStartBleScan() {
         );
       }
     },
-    [stopScan, t],
+    [stopScan],
   );
 
   return {

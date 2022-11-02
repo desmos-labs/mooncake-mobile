@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {IconButton, useTheme} from 'react-native-paper';
 import DView from 'components/DView';
@@ -18,29 +18,39 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import useActiveAccount from 'hooks/useActiveAccount';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import _ from 'lodash';
+import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
+import useGenerateAccounts from 'hooks/useGenerateAccounts';
+import useGenerateProof from 'hooks/useGenerateProof';
 import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 import useStyles from '../useStyles';
-import useGenerateAccountFromHDPath from './useGenerateAccountFromHDPath';
 
-type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
-  ROUTES.CONNECT_ADDRESS_GENERAL
+  ROUTES.CONNECT_ADDRESS_ADVANCED
 >;
 
 export type ConnectAddressAdvancedParams = {
   nextRouteOverride?: keyof RootNavigatorParamList;
   loadedProfileMap?: Map<string, ProfileData>;
   titleLabelOverride?: string;
+
+  ledgerTransport?: BluetoothTransport;
+  ledgerApp?: LedgerApp;
 };
 
-const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
+const ConnectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
 
-  const {t} = useTranslation('connectAddress');
+  const {activeAddress} = useActiveAccount();
+  const {generateProof} = useGenerateProof();
 
-  const {mnemonic, selectedChain} = useRecoilValue(connectChainState);
+  const {t} = useTranslation('connectAddress');
+  const route = useRoute<NavProps['route']>();
+  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
+    route?.params ?? {};
 
   const setSelectedExternalAccount = useSetRecoilState(
     selectedExternalAccountState,
@@ -52,8 +62,15 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
 
   const [invalidField, setInvalidField] = React.useState(false);
 
-  const {generateAccountFromHDPath, generating, generatedAccount} =
-    useGenerateAccountFromHDPath();
+  const {selectedChain} = useRecoilValue(connectChainState);
+
+  const ledgerTransport = _.get(route, 'params.ledgerTransport');
+
+  const {generateAccount, loading, accounts} = useGenerateAccounts();
+
+  const {checkIsAddressLinked} = useCheckIsAddressLinked();
+
+  const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -67,14 +84,11 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
   React.useEffect(() => {
     const {change, account, addressIndex} = initialFormValues;
 
-    generateAccountFromHDPath({
-      mnemonic,
-      coin: selectedChain.hdPath.coinType,
-      prefix: selectedChain.prefix,
+    generateAccount({
       change: parseInt(change, 10),
       account: parseInt(account, 10),
       addressIndex: parseInt(addressIndex, 10),
-    });
+    }).then();
   }, []);
 
   const SwitchToGeneralButton = React.useMemo(() => {
@@ -82,14 +96,13 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => {
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, {
-              nextRouteOverride,
-              loadedProfileMap,
-              titleLabelOverride,
-            });
+          onPress={async () => {
+            if (ledgerTransport) {
+              await (ledgerTransport as BluetoothTransport).close();
+            }
+
+            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
           }}>
-          {' '}
           <Typography.Button2 style={styles.modeButtonText}>
             {t('general')}
           </Typography.Button2>
@@ -98,12 +111,31 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
     );
   }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
 
-  const onFormSubmit = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      console.log(formValues);
-    },
-    [],
-  );
+  const handleSubmit = React.useCallback(async () => {
+    if (!generatedAccount || !activeAddress) return;
+    if (nextRouteOverride) {
+      if (loadedProfileMap?.has(generatedAccount.address)) {
+        return navigate(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: generatedAccount.address,
+        });
+      }
+
+      return navigate(nextRouteOverride);
+    }
+
+    const proof = await generateProof({
+      activeAddress,
+      externalAccount: generatedAccount,
+    });
+
+    if (proof) {
+      setSelectedExternalAccount(generatedAccount);
+      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
+        proof,
+        externalAddress: generatedAccount.address,
+      });
+    }
+  }, [generatedAccount, activeAddress]);
 
   const onFormChange = React.useCallback(
     (formValues: typeof initialFormValues) => {
@@ -118,10 +150,7 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
         return;
       }
 
-      generateAccountFromHDPath({
-        mnemonic,
-        coin: selectedChain.hdPath.coinType,
-        prefix: selectedChain.prefix,
+      generateAccount({
         change: parseInt(change, 10),
         account: parseInt(account, 10),
         addressIndex: parseInt(addressIndex, 10),
@@ -132,22 +161,28 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
     [],
   );
 
-  const handlePressConfirm = React.useCallback(() => {
-    if (!generatedAccount) return;
+  const isAddressLinked = checkIsAddressLinked(generatedAccount?.address || '');
 
-    if (nextRouteOverride) {
-      if (loadedProfileMap?.has(generatedAccount.bech32Address)) {
-        return navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: generatedAccount.bech32Address,
-        });
-      }
-
-      return navigate(nextRouteOverride);
+  const addressOrErrorElement = React.useMemo(() => {
+    if (invalidField) return <View />;
+    else if (generatedAccount && isAddressLinked) {
+      return (
+        <>
+          <Typography.Body6>{generatedAccount.address}</Typography.Body6>
+          <Typography.Body6 style={{marginTop: 8}}>
+            {t('addrAlreadyLinked')}
+          </Typography.Body6>
+        </>
+      );
     }
-
-    setSelectedExternalAccount(generatedAccount.serialize);
-    navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL);
-  }, [nextRouteOverride, loadedProfileMap, generatedAccount]);
+    return (
+      <Typography.Body6>
+        {loading || !generatedAccount
+          ? t('generating')
+          : generatedAccount.address}
+      </Typography.Body6>
+    );
+  }, [generatedAccount, loading, invalidField, isAddressLinked]);
 
   return (
     <DView
@@ -182,8 +217,8 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
         </View>
 
         <Formik
+          onSubmit={() => {}}
           initialValues={initialFormValues}
-          onSubmit={onFormSubmit}
           validate={onFormChange}>
           {({setFieldValue, values}) => {
             return (
@@ -201,35 +236,29 @@ const ConnectAddressAdvanced: FC<NavProps> = ({route}) => {
                     setFieldValue('addressIndex', removeNonNumbers(value))
                   }
                 />
+
+                <Spacer
+                  paddingTop={theme.spacing.l}
+                  paddingBottom={theme.spacing.m}>
+                  <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
+                </Spacer>
+
+                <Spacer paddingBottom={theme.spacing.l}>
+                  {addressOrErrorElement}
+                </Spacer>
+
+                <Button
+                  color={theme.colors.surfaceBlack}
+                  mode="contained"
+                  loading={loading || !generatedAccount}
+                  disabled={invalidField || isAddressLinked}
+                  onPress={handleSubmit}>
+                  {t('common:next')}
+                </Button>
               </View>
             );
           }}
         </Formik>
-
-        <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-          <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
-        </Spacer>
-
-        <Spacer paddingBottom={theme.spacing.l}>
-          {invalidField ? (
-            <Typography.Body6>Invalid field</Typography.Body6>
-          ) : (
-            <Typography.Body6>
-              {generating || !generatedAccount
-                ? t('generating')
-                : generatedAccount.bech32Address}
-            </Typography.Body6>
-          )}
-        </Spacer>
-
-        <Button
-          color={theme.colors.surfaceBlack}
-          mode="contained"
-          loading={generating || !generatedAccount}
-          disabled={invalidField}
-          onPress={handlePressConfirm}>
-          {t('common:next')}
-        </Button>
       </View>
     </DView>
   );

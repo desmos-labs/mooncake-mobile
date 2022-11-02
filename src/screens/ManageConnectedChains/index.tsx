@@ -16,10 +16,9 @@ import NoConnections from 'screens/ManageConnectedChains/components/NoConnection
 import {ChainLink} from 'types/link';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useDisconnectChainLink from 'hooks/useDisconnectChainlink';
-import {modalSuccess} from 'assets/images';
+import ImageButton from 'components/ImageButton';
+import {addButton} from 'assets/images';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -33,28 +32,17 @@ const ManageConnectedChains = () => {
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const {refetch, chainLinks} = useChainLinks();
+  const {chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
   const {chainAccount} = useActiveAccount();
-  const unlockWallet = useUnlockWallet();
-  const disconnectChainLink = useDisconnectChainLink();
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
       if (!chainAccount) return;
 
-      const unlockResponse = await unlockWallet({chainAccount});
-
-      if (!unlockResponse || !unlockResponse.wallet) return;
-      await disconnectChainLink(unlockResponse.wallet, chainLink);
-      // we want the refetch call to run while the user is shown the sucess dialog.
-      refetch();
-
-      navigate(ROUTES.RESULT_MODAL, {
-        image: modalSuccess,
-        primaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressPrimary: () => navigate(ROUTES.USER_PROFILE),
+      navigate(ROUTES.DISCONNECT_CHAIN_MODAL, {
+        chainLink,
       });
     },
     [chainAccount],
@@ -71,7 +59,7 @@ const ManageConnectedChains = () => {
         />
       );
     },
-    [],
+    [handlePressDisconnectChainLink],
   );
 
   const ListEmptyComponent = React.useMemo(() => {
@@ -104,7 +92,19 @@ const ManageConnectedChains = () => {
     <DView topBar={<TopBar />}>
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
-          <Typography.H4>{t('connectedAddresses')}</Typography.H4>
+          <View style={styles.headerTextGroup}>
+            <Typography.H4 style={{flex: 1}}>
+              {t('connectedAddresses')}
+            </Typography.H4>
+
+            <ImageButton
+              onPress={() => {
+                navigate(ROUTES.SELECT_CHAIN);
+              }}
+              image={addButton}
+              style={styles.addConnectionButton}
+            />
+          </View>
 
           <Typography.Body5 style={styles.descriptionText}>
             {t('description')}

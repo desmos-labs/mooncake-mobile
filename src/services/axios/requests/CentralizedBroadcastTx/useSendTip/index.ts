@@ -56,7 +56,7 @@ const useSendTip = () => {
       // Sanity check just incase one of the dependencies is undefined
       Object.keys(depCheckMap).forEach(x => {
         if (depCheckMap[x] === undefined) {
-          throw new Error(`useSendTip: Missing depedency: ${x}`);
+          throw new Error(`useSendTip: Missing dependency: ${x}`);
         }
       });
 
@@ -66,6 +66,7 @@ const useSendTip = () => {
       });
 
       if (!success) {
+        console.log(toast.show);
         return toast.show('[PLACEHOLDER]Authorization is required.', {
           type: ToastConfig.ERROR_NO_RETRY,
         });

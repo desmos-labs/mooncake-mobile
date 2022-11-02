@@ -27,7 +27,7 @@
     "@desmoslabs/desmjs": "4.6.1",
     "@desmoslabs/desmjs-types": "4.6.1",
     "@habx/apollo-multi-endpoint-link": "^2.7.0",
-    "@ledgerhq/react-native-hw-transport-ble": "^6.27.1",
+    "@ledgerhq/react-native-hw-transport-ble": "^6.27.8",
     "@notifee/react-native": "^5.7.0",
     "@react-native-camera-roll/camera-roll": "^5.0.2",
     "@react-native-clipboard/clipboard": "^1.10.0",

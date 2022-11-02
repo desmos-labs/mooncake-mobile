@@ -46,10 +46,6 @@ const useLogin = () => {
         signedBytes,
       });
 
-      if (!token) {
-        throw new Error('[LOGIN] No token received from Login request');
-      }
-
       updateAuthToken(token);
 
       return true;

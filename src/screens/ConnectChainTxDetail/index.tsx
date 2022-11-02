@@ -9,20 +9,24 @@ import Button from 'components/Button';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import {connectChainState} from '@recoil/connectChainState';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {MsgLinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
-import {generateProof} from 'lib/desmos/chainlink';
 import LocalWallet from 'lib/LocalWallet';
 import {computeTxFees, messagesGas} from 'lib/desmos/fees';
 import {formatFeeWithDenoms} from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import EnvConfig from 'config/EnvConfig';
+import {MsgLinkChainAccountEncodeObject} from '@desmoslabs/desmjs';
+import {
+  Bech32Address,
+  Proof,
+} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -30,51 +34,60 @@ type NavProps = StackScreenProps<
   ROUTES.CONNECT_CHAIN_TX_DETAIL
 >;
 
+export type ConnectChainTxDetailParams = {
+  proof: Proof;
+
+  externalAddress: string;
+};
+
 const ConnectChainTxDetail = () => {
   const {t} = useTranslation('connectChainTxDetail');
 
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {
+    params: {proof, externalAddress},
+  } = useRoute<NavProps['route']>();
 
   const {chainAccount} = useActiveAccount();
 
   const unlockWallet = useUnlockWallet();
 
-  const {selectedChain, selectedExternalAccount} =
-    useRecoilValue(connectChainState);
+  const {selectedChain} = useRecoilValue(connectChainState);
 
   const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
   const styles = useStyles();
   const theme = useTheme();
   const [message, setMessage] = React.useState<any>(undefined);
-  const [deserializedExternalWallet, setDeserializedExternalWallet] =
-    React.useState<LocalWallet | undefined>(undefined);
+  const [deserializedExternalWallet] = React.useState<LocalWallet | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     const generateMessage = async () => {
-      if (!selectedChain) return;
-
-      const externalWallet = await LocalWallet.deserialize(
-        selectedExternalAccount,
-      );
-
-      const proof = await generateProof({
-        signerAddress: externalWallet.bech32Address,
-        externalChainWallet: externalWallet,
-        chain: selectedChain,
-      });
-
-      setDeserializedExternalWallet(externalWallet);
-
-      setMessage({
-        typeUrl: GenericMsgEnums.MsgLinkChainAccount,
-        value: MsgLinkChainAccount.fromPartial({
-          signer: activeAddr,
-          proof: proof.proof,
-          chainConfig: proof.chainConfig,
-          chainAddress: proof.chainAddress,
+      const value: MsgLinkChainAccount = MsgLinkChainAccount.fromPartial({
+        chainAddress: Any.fromPartial({
+          typeUrl: '/desmos.profiles.v3.Bech32Address',
+          value: Bech32Address.encode(
+            Bech32Address.fromPartial({
+              value: externalAddress,
+              prefix: selectedChain.prefix,
+            }),
+          ).finish(),
         }),
+        proof,
+        chainConfig: {
+          name: selectedChain.name.toLowerCase(),
+        },
+        signer: activeAddr!,
       });
+
+      const msg: MsgLinkChainAccountEncodeObject = {
+        typeUrl: '/desmos.profiles.v3.MsgLinkChainAccount',
+        value,
+      };
+
+      setMessage(msg);
     };
 
     generateMessage();
@@ -110,10 +123,8 @@ const ConnectChainTxDetail = () => {
         navigate(ROUTES.RESULT_MODAL, {
           image: modalSuccess,
           title: t('resultModal:success'),
-          subtitle: t('chainLinked', {
-            interpolation: {
-              chain: selectedChain.name.toUpperCase(),
-            },
+          subtitle: t('resultModal:chainLinked', {
+            chain: selectedChain.name.toUpperCase(),
           }),
           onPressPrimary: () => {
             navigate(ROUTES.USER_PROFILE);
@@ -148,7 +159,7 @@ const ConnectChainTxDetail = () => {
       </Typography.Subtitle2>
       <Typography.Body6
         style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={1}>
+        numberOfLines={2}>
         {activeAddr}
       </Typography.Body6>
 
@@ -157,12 +168,8 @@ const ConnectChainTxDetail = () => {
       </Typography.Subtitle2>
       <Typography.Body6
         style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={1}>
-        {deserializedExternalWallet ? (
-          deserializedExternalWallet.bech32Address
-        ) : (
-          <ActivityIndicator />
-        )}
+        numberOfLines={2}>
+        {externalAddress}
       </Typography.Body6>
 
       <Typography.Subtitle2 style={styles.textStyle}>
@@ -183,9 +190,7 @@ const ConnectChainTxDetail = () => {
       <View style={styles.buttonContainer}>
         <Button
           color={theme.colors.surfaceBlack}
-          disabled={
-            !chainAccount || !message || !fee || !deserializedExternalWallet
-          }
+          disabled={!chainAccount || !message || !fee}
           mode="contained"
           onPress={handlePressNext}>
           {t('common:next')}

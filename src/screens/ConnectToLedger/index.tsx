@@ -80,9 +80,9 @@ const ConnectToLedger = () => {
   React.useEffect(() => {
     if (autoClose && transport) {
       onConnectionEstablished!(transport);
-      goBack();
+      // goBack();
     }
-  }, [transport, autoClose]);
+  }, [transport, autoClose, onConnectionEstablished]);
 
   React.useEffect(() => {
     if (autoClose) {
@@ -181,7 +181,7 @@ const ConnectToLedger = () => {
     navigate(ROUTES.BOTTOM_MODAL, {
       title: t('modalTitle'),
       body: t('modalDescription'),
-      primaryButtonLabel: t('modalButton')!,
+      primaryButtonLabel: t('modalButton') as string,
     });
   }, []);
 
