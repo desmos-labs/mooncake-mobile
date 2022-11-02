@@ -24,7 +24,7 @@ const useStyles = makeStyleWithProps((disableInnerComment, theme) => ({
   avatar: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     borderRadius: 20,
     marginRight: theme.spacing.s,
   },

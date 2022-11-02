@@ -13,16 +13,23 @@ interface Props {
   post_id?: string;
   timestamp: string;
   profile?: any;
+  post?: any;
 }
 
-const Activities = ({type, action, post_id, profile, timestamp}: Props) => {
+const Activities = ({
+  type,
+  action,
+  post_id,
+  profile,
+  timestamp,
+  post,
+}: Props) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
 
   const content = useMemo(() => {
-    console.log(action, post_id);
     switch (type) {
       case 'reaction':
         return (
@@ -33,8 +40,14 @@ const Activities = ({type, action, post_id, profile, timestamp}: Props) => {
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('liked')}</Typography.Body6>
               </Typography.Subtitle3>
-              <Typography.Body7>{formattedDate}</Typography.Body7>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
             </View>
+            <Image
+              style={styles.postImage}
+              source={{uri: post.attachments[0].content.uri}}
+            />
           </View>
         );
       case 'comment':
@@ -46,8 +59,14 @@ const Activities = ({type, action, post_id, profile, timestamp}: Props) => {
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented')}</Typography.Body6>
               </Typography.Subtitle3>
-              <Typography.Body7>{formattedDate}</Typography.Body7>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
             </View>
+            <Image
+              style={styles.postImage}
+              source={{uri: post.attachments[0].content.uri}}
+            />
           </View>
         );
       case 'follow':
@@ -59,7 +78,9 @@ const Activities = ({type, action, post_id, profile, timestamp}: Props) => {
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('followed you')}</Typography.Body6>
               </Typography.Subtitle3>
-              <Typography.Body7>{formattedDate}</Typography.Body7>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
             </View>
             <View style={styles.buttonView}>
               <Button

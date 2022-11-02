@@ -1,4 +1,5 @@
 import {useQuery} from '@apollo/client';
+import EnvConfig from 'config/EnvConfig';
 import {differenceInCalendarDays, parseISO} from 'date-fns';
 import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
@@ -6,6 +7,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import client from 'services/graphql/client';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
+import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 
 const useHooks = () => {
@@ -14,7 +16,7 @@ const useHooks = () => {
     any[]
   >([]);
   const [notificationsDetailsLoading, setNotificationsDetailsLoading] =
-    useState(false);
+    useState(true);
   const {t} = useTranslation('activities');
   const {
     data,
@@ -54,7 +56,21 @@ const useHooks = () => {
               },
               fetchPolicy: 'no-cache',
             });
-            console.log(profileData);
+            if (singleNot.data.post_id) {
+              const {data: postData} = await client.query({
+                query: GetPostBySubspaceIDandPostID,
+                variables: {
+                  postID: singleNot.data.post_id,
+                  subspaceID: EnvConfig.APP_SUBSPACE_ID,
+                },
+                fetchPolicy: 'no-cache',
+              });
+              return {
+                ...singleNot,
+                profile: profileData.profile[0],
+                post: postData.posts[0],
+              };
+            }
             return {...singleNot, profile: profileData.profile[0]};
           }),
         );
@@ -121,7 +137,7 @@ const useHooks = () => {
       }
     }, [notificationsWithProfile, t]);
 
-  const globalLoading = notificationsLoading && notificationsDetailsLoading;
+  const globalLoading = notificationsLoading || notificationsDetailsLoading;
 
   return {
     notificationsData,

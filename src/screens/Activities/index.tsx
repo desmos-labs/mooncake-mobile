@@ -46,6 +46,7 @@ const Activities = () => {
       return (
         <NotificationComponent
           profile={item.profile}
+          post={item.post}
           timestamp={item.timestamp}
           {...item.data}
         />
