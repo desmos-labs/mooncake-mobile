@@ -20,7 +20,7 @@ import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
-import usePendingPosts from '@recoil/pendingTx/pendingPosts';
+import usePendingPosts from 'hooks/usePendingPosts';
 
 /**
  *

@@ -7,7 +7,7 @@ import {useSetRecoilState} from 'recoil';
 import {Result} from 'types/transaction';
 import ToastConfig from 'config/ToastConfig';
 import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
-import usePendingPosts from '@recoil/pendingTx/pendingPosts';
+import usePendingPosts from 'hooks/usePendingPosts';
 
 const useNotifications = () => {
   const setTransactions = useSetRecoilState(resultTransactions);
