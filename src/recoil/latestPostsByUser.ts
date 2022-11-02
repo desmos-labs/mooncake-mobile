@@ -16,6 +16,10 @@ export const latestPostsByUserState = atom<PostItem[]>({
   default: [],
 });
 
+/**
+ * A hook that manages logic related to polling the user's latest posts
+ * @param {number} limit - The amount of posts to poll
+ */
 const usePollLatestPostsByUser = (limit: number) => {
   const {activeAddress} = useActiveAccount();
   const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
