@@ -183,7 +183,8 @@ const PostCard = ({
     <TouchableOpacity
       style={styles.container}
       onPress={onPressDetails}
-      activeOpacity={0.9}>
+      activeOpacity={0.9}
+      key={postData.id}>
       {MediaAttachment}
       {content}
       {isPending && (
