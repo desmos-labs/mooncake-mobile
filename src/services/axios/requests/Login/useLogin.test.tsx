@@ -1,4 +1,4 @@
-import {act, renderHook, waitFor} from '@testing-library/react-native';
+import {act, renderHook} from '@testing-library/react-native';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import GetNonce from 'services/axios/requests/GetNonce';
 import useUnlockWallet from 'hooks/useUnlockWallet';
@@ -39,7 +39,9 @@ jest.mock('lib/SecureStorage', () => ({
 }));
 
 describe('services/axios: useLogin', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
     (GetNonce as jest.Mock).mockReturnValue({nonce: DUMMY_NONCE});
     (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
       wallet: 'placeholder',
@@ -52,20 +54,14 @@ describe('services/axios: useLogin', () => {
     });
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('logins and saves auth token to localStorage & axios config', async () => {
     const {result} = renderHook(() => useLogin());
 
-    act(() => {
-      result.current.login(DUMMY_ADDRESS);
+    await act(async () => {
+      await result.current.login(DUMMY_ADDRESS);
     });
 
-    await waitFor(() => {
-      expect(updateAuthToken).toHaveBeenCalledWith(DUMMY_TOKEN);
-    });
+    expect(updateAuthToken).toHaveBeenCalledWith(DUMMY_TOKEN);
   });
 
   it('login terminates early if error occurs during Login call', async () => {
@@ -75,12 +71,40 @@ describe('services/axios: useLogin', () => {
 
     const {result} = renderHook(() => useLogin());
 
-    act(() => {
-      result.current.login(DUMMY_ADDRESS);
-    });
+    try {
+      await act(async () => {
+        await result.current.login(DUMMY_ADDRESS);
+      });
+    } catch (err: any) {
+      expect(String(err)).toBe('Error: i-am-an-error');
+    }
+  });
 
-    await waitFor(() => {
-      expect(updateAuthToken).toHaveBeenCalledTimes(0);
-    });
+  it('throws an error if no activeAccount is found', async () => {
+    const {result} = renderHook(() => useLogin());
+
+    try {
+      await act(async () => {
+        await result.current.login('this-address-does-not-exist');
+      });
+    } catch (err: any) {
+      expect(String(err)).toBe(
+        'Error: [LOGIN] No account found for address this-address-does-not-exist',
+      );
+    }
+  });
+
+  it('throws an error if no wallet cannot be unlocked', async () => {
+    (useUnlockWallet as jest.Mock).mockReturnValue(() => undefined);
+
+    const {result} = renderHook(() => useLogin());
+
+    try {
+      await result.current.login(DUMMY_ADDRESS);
+    } catch (err: any) {
+      expect(String(err)).toBe(
+        'Error: [LOGIN] Unable to resolve wallet from unlock request',
+      );
+    }
   });
 });

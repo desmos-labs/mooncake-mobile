@@ -2,7 +2,7 @@ import {timestampFromDate} from '@desmoslabs/desmjs';
 import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
 import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import {act, renderHook, waitFor} from '@testing-library/react-native';
+import {act, renderHook} from '@testing-library/react-native';
 import EnvConfig from 'config/EnvConfig';
 import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import {
@@ -24,6 +24,7 @@ import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import Long from 'long';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 jest.mock('lib/desmos/fees');
 
@@ -42,9 +43,7 @@ jest.mock('@recoil/activeProfileState', () => ({
   loading: false,
 }));
 
-jest.mock('hooks/useActiveAccount', () =>
-  jest.fn(() => ({chainAccount: jest.fn(), loading: false})),
-);
+jest.mock('hooks/useActiveAccount', () => jest.fn());
 
 jest.mock('hooks/useUnlockWallet', () => jest.fn());
 
@@ -60,10 +59,10 @@ jest.mock('services/graphql/queries/GetAuthGrants', () => ({
 }));
 
 jest.mock('hooks/authGrants/useAddOrUpdateGrants/utils', () => ({
-  buildGrantAllowanceEncode: jest.fn(),
-  buildGrantMsgEncodes: jest.fn(),
-  buildRevokeAllowanceEncode: jest.fn(),
-  buildRevokeGrantMsgEncodes: jest.fn(),
+  buildGrantAllowanceEncode: jest.fn(() => mockGrantAllowanceEncode),
+  buildGrantMsgEncodes: jest.fn(() => ['mockGrantMsgEncodes']),
+  buildRevokeAllowanceEncode: jest.fn(() => 'mockRevokeAllowanceEncode'),
+  buildRevokeGrantMsgEncodes: jest.fn(() => 'mockRevokeGrantMsgEncodes'),
 }));
 
 const mockNavigate = jest.fn();
@@ -147,8 +146,66 @@ describe('hooks: useAddOrUpdateGrants', () => {
     jest.clearAllMocks();
   });
 
+  // reset to default mock values as some tests set chainAccount to undefined
+  // to simulate an error
+  beforeEach(() => {
+    (useActiveAccount as jest.Mock).mockReturnValue({
+      chainAccount: 'mockChainAccount',
+      loading: false,
+    });
+  });
+
   describe('addOrUpdateGrants', () => {
-    it('builds a fee grant allowance msg if user does not have one', () => {
+    it('builds a fee grant allowance msg if user does not have one', async () => {
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
+        unlockWallet: () => ({wallet: true}),
+      }));
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      await act(async () => {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      });
+
+      expect(buildGrantAllowanceEncode).toBeCalled();
+    });
+
+    it('throws error if wallet fails to unlock', async () => {
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
+        unlockWallet: () => undefined,
+      }));
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      } catch (err: any) {
+        expect(err.message).toBe(
+          'Error unlocking wallet or user cancelled authentication',
+        );
+      }
+    });
+
+    it('throws an error if chainAccount is undefined', async () => {
+      (useActiveAccount as jest.Mock).mockReturnValue({
+        chainAccount: undefined,
+        loading: false,
+      });
+
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
         getAuthzGrants: () => ({
           has_fee_grant: false,
@@ -158,16 +215,14 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
-      act(() => {
-        result.current.addOrUpdateGrants({grantsToRequest: []});
-      });
-
-      waitFor(() => {
-        expect(buildGrantAllowanceEncode).toBeCalled();
-      });
+      try {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
+      } catch (err: any) {
+        expect(err.message).toBe('No active chain account found.');
+      }
     });
 
-    it('does not build a fee grant allowance msg if user has one', () => {
+    it('revokes existing fee grant', async () => {
       (useGetAuthzGrants as jest.Mock).mockReturnValue({
         getAuthzGrants: () => ({
           has_fee_grant: true,
@@ -175,15 +230,17 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
+      (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
+        unlockWallet: () => ({wallet: true}),
+      }));
+
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
-      act(() => {
-        result.current.addOrUpdateGrants({grantsToRequest: []});
+      await act(async () => {
+        await result.current.addOrUpdateGrants({grantsToRequest: []});
       });
 
-      waitFor(() => {
-        expect(buildGrantAllowanceEncode).toHaveBeenCalledTimes(0);
-      });
+      expect(buildRevokeAllowanceEncode).toHaveBeenCalledTimes(1);
     });
 
     it('successfully builds and broadcasts a tx containing the necessary grants', async () => {
@@ -207,16 +264,14 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
-      act(() => {
-        result.current.addOrUpdateGrants({grantsToRequest: mockGrants});
+      await act(async () => {
+        await result.current.addOrUpdateGrants({grantsToRequest: mockGrants});
       });
 
-      await waitFor(() => {
-        expect(mockBroadcastMessages).toHaveBeenCalledWith(
-          expect.anything(), // wallet
-          [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
-        );
-      });
+      expect(mockBroadcastMessages).toHaveBeenCalledWith(
+        expect.anything(), // wallet
+        [mockGrantAllowanceEncode, ...mockMsgsGrantEncodes],
+      );
     });
 
     it('throws an error if wallet failed to unlock', async () => {
@@ -274,7 +329,6 @@ describe('hooks: useAddOrUpdateGrants', () => {
       try {
         await result.current.addOrUpdateGrants({grantsToRequest: []});
       } catch (err: any) {
-        console.log(err.messages);
         expect(err.message).toBe('Error requesting grants');
       }
     });
@@ -290,6 +344,8 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
+      mockBroadcastMessages = jest.fn(() => true);
+
       (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(
         mockRevokeGrantMsgEncodes,
       );
@@ -304,17 +360,102 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       const {result} = renderHook(() => useAddOrUpdateGrants());
 
-      act(() => {
-        result.current.revokeGrants();
+      await act(async () => {
+        await result.current.revokeGrants();
       });
 
-      await waitFor(() => {
-        expect(mockBroadcastMessages).toHaveBeenCalledWith(
-          expect.anything(), // wallet
-          [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
-          // expect.anything(), // fee
-        );
+      expect(mockBroadcastMessages).toHaveBeenCalledWith(
+        expect.anything(), // wallet
+        [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
+        // expect.anything(), // fee
+      );
+    });
+
+    it('throws an error if wallet failed to unlock', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
       });
+
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
+        mockGrantAllowanceEncode,
+      );
+
+      (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.revokeGrants();
+      } catch (err: any) {
+        expect(err.message).toBe(
+          'Error unlocking wallet or user cancelled authentication',
+        );
+      }
+    });
+
+    it('throws an error if chainAccount is undefined', async () => {
+      (useActiveAccount as jest.Mock).mockReturnValue({
+        chainAccount: undefined,
+        loading: false,
+      });
+
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [],
+        }),
+      });
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.revokeGrants();
+      } catch (err: any) {
+        expect(err.message).toBe('No active chain account found.');
+      }
+    });
+
+    it('throws error if broadcast fails', async () => {
+      // simulate a user who is requesting MsgCreatePost grants for the first time
+      (useGetAuthzGrants as jest.Mock).mockReturnValue({
+        getAuthzGrants: () => ({
+          has_fee_grant: false,
+          grants: [{}],
+        }),
+      });
+
+      (mockBroadcastMessages as any) = jest.fn(() => undefined);
+
+      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(
+        mockRevokeGrantMsgEncodes,
+      );
+
+      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(
+        mockRevokeAllowanceEncode,
+      );
+
+      (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
+        wallet: true,
+      }));
+
+      const {result} = renderHook(() => useAddOrUpdateGrants());
+
+      try {
+        await result.current.revokeGrants();
+      } catch (err: any) {
+        expect(err.message).toBe('Error deleting grants');
+      }
+      expect(mockBroadcastMessages).toHaveBeenCalledWith(
+        expect.anything(), // wallet
+        [mockRevokeAllowanceEncode, ...mockRevokeGrantMsgEncodes],
+        // expect.anything(), // fee
+      );
     });
   });
 });

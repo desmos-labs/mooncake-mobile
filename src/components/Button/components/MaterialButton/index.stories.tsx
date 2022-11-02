@@ -32,6 +32,11 @@ const GradientFilledMode: CompProps = {
   mode: 'gradientFilled',
 };
 
+const BackgroundComponentMode: CompProps = {
+  ...TextMode,
+  mode: 'backgroundComponent',
+};
+
 // MaterialButton as in Desmos Button
 storiesOf('components/MaterialButton', module)
   .addDecorator(getStories => (
@@ -61,6 +66,11 @@ storiesOf('components/MaterialButton', module)
   ))
   .add('Gradient filled', () => (
     <MaterialButton {...GradientFilledMode}>
+      <Text>Gradient filled</Text>
+    </MaterialButton>
+  ))
+  .add('Background component', () => (
+    <MaterialButton {...BackgroundComponentMode}>
       <Text>Gradient filled</Text>
     </MaterialButton>
   ))

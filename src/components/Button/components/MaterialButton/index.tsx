@@ -1,8 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view';
 import React, {ElementType, ReactNode} from 'react';
 import {
-  Pressable,
-  PressableStateCallbackType,
   StyleProp,
   Text,
   TextStyle,
@@ -188,9 +186,8 @@ const MaterialButton: React.FC<Props> = props => {
   }
 
   if (mode === 'backgroundComponent') {
-    // TouchableOpacity in FlatList causing 'Excessive number of pending callbacks: 501. Some pending callbacks that might have leaked by never being called from native code:' ...startAnimatingNode...{}
     return (
-      <Pressable onPress={onPress} style={pressableFeedback}>
+      <TouchableOpacity onPress={onPress}>
         <View style={[styles.backgroundComponentButton, style]}>
           {!!BackgroundComponent && (
             <BackgroundComponent
@@ -201,7 +198,7 @@ const MaterialButton: React.FC<Props> = props => {
           )}
           {children}
         </View>
-      </Pressable>
+      </TouchableOpacity>
     );
   }
 
@@ -220,12 +217,5 @@ const MaterialButton: React.FC<Props> = props => {
     </Button>
   );
 };
-
-function pressableFeedback({
-  pressed,
-}: PressableStateCallbackType): StyleProp<ViewStyle> {
-  if (!pressed) return {};
-  return {opacity: 0.75, transform: [{scale: 1.05}]};
-}
 
 export default MaterialButton;
