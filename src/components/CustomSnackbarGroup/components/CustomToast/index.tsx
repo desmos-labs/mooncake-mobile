@@ -20,8 +20,11 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
   const {t} = useTranslation('');
 
   const handlePress = React.useCallback(() => {
-    if (type === ToastConfig.SUCCESS) return;
-    Alert.alert('Error details', toast.message);
+    if (type === ToastConfig.SUCCESS) {
+      toast.onPress();
+    } else {
+      Alert.alert('Error details', toast.message);
+    }
   }, [toast.message]);
 
   return (
@@ -45,7 +48,10 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
         </View>
 
         {type === ToastConfig.ERROR ? (
-          <Button style={styles.button} mode="text" onPress={toast.onPress}>
+          <Button
+            style={styles.button}
+            mode="text"
+            onPress={toast.onPressRetry}>
             <Typography.Subtitle3>Retry</Typography.Subtitle3>
           </Button>
         ) : null}
