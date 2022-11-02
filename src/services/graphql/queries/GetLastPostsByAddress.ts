@@ -1,9 +1,9 @@
 import {gql} from '@apollo/client';
 import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
-const GetLastPostsTxHashByAddress = gql`
+const GetLastPostsByAddress = gql`
   ${POST_FIELDS}
-  query GetRecentPostsByAddress(
+  query GetLastPostsByAddress(
     $limit: Int
     $subspaceID: bigint
     $user: String
@@ -38,4 +38,4 @@ const GetLastPostsTxHashByAddress = gql`
   }
 `;
 
-export default GetLastPostsTxHashByAddress;
+export default GetLastPostsByAddress;
