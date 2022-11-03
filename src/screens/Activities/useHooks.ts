@@ -22,10 +22,11 @@ const useHooks = () => {
     data,
     loading: notificationsLoading,
     refetch: notificationsRefetch,
+    fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
     variables: {
       userAddress: activeAddress,
-      limit: 99,
+      limit: 7,
       offset: 0,
     },
   });
@@ -45,6 +46,7 @@ const useHooks = () => {
 
   const fetchNotificationDetails = useCallback(async () => {
     if (data) {
+      console.log('test');
       try {
         setNotificationsDetailsLoading(true);
         const results = await Promise.all(
@@ -69,6 +71,7 @@ const useHooks = () => {
                 ...singleNot,
                 profile: profileData.profile[0],
                 post: postData.posts[0],
+                replies: postData.replies,
               };
             }
             return {...singleNot, profile: profileData.profile[0]};
@@ -139,9 +142,12 @@ const useHooks = () => {
   const globalLoading = notificationsLoading || notificationsDetailsLoading;
 
   return {
+    data,
     notificationsData,
     globalLoading,
+    notificationsLoading,
     notificationsRefetch,
+    notificationsFetchMore,
   };
 };
 

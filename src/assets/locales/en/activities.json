@@ -4,9 +4,11 @@
   "earlier": "Earlier",
   "liked": "Liked your post",
   "commented": "Commented your post",
+  "commented reply": "Replied to your comment",
   "followed you": "Started following you",
   "no activities": "No Activities",
   "liked your post": "liked your post",
+  "liked reply": "liked your comment",
   "started following you": "started following you",
   "tipped you": "tipped {{amount}} DSM to your post"
 }

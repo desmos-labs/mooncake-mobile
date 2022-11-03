@@ -1,35 +1,37 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Image,
-  ListRenderItemInfo,
-  SectionList,
-  View,
-} from 'react-native';
+import {Image, ListRenderItemInfo, SectionList, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-/*
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
-*/
 
 const Activities = () => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
-  const {notificationsData, globalLoading, notificationsRefetch} = useHooks();
+  const navigation = useNavigation<NavProps>();
+  const {
+    data,
+    notificationsData,
+    globalLoading,
+    notificationsLoading,
+    notificationsRefetch,
+    notificationsFetchMore,
+  } = useHooks();
 
   const EmptyActivities = useMemo(() => {
-    return globalLoading ? (
-      <ActivityIndicator size="large" />
-    ) : (
+    return globalLoading ? null : (
       <View
         style={{
           flex: 1,
@@ -57,6 +59,7 @@ const Activities = () => {
           post={item.post}
           timestamp={item.timestamp}
           {...item.data}
+          navigation={navigation}
         />
       );
     },
@@ -72,7 +75,7 @@ const Activities = () => {
       <Typography.H3>{t('activities')}</Typography.H3>
       <SectionList
         keyExtractor={(item, index) => item + index}
-        refreshing={globalLoading}
+        refreshing={notificationsLoading}
         onRefresh={notificationsRefetch}
         style={{flex: 1}}
         contentContainerStyle={{flexGrow: 1}}
@@ -80,6 +83,25 @@ const Activities = () => {
         ListEmptyComponent={EmptyActivities}
         sections={notificationsData}
         renderItem={renderNotification}
+        onEndReached={() => {
+          notificationsFetchMore({
+            variables: {
+              offset: data.notification.length,
+            },
+            updateQuery: (prev, {fetchMoreResult}) => {
+              if (!fetchMoreResult) {
+                return prev;
+              }
+              return {
+                ...prev,
+                notification: [
+                  ...prev.notification,
+                  ...fetchMoreResult.notification,
+                ],
+              };
+            },
+          });
+        }}
         renderSectionHeader={({section: {section}}) => (
           <View
             style={{

@@ -10,6 +10,7 @@ const GetNotifications = gql`
       }
       limit: $limit
       offset: $offset
+      order_by: {timestamp: desc}
     ) {
       user_address
       data

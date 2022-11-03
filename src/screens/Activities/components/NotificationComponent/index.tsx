@@ -1,8 +1,10 @@
 import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+import EnvConfig from 'config/EnvConfig';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import React, {useMemo} from 'react';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -12,22 +14,26 @@ import useStyles from './useStyles';
 
 interface Props {
   type: string;
-  action: string;
   post_id?: string;
+  comment_id?: string;
+  reply_id?: string;
   timestamp: string;
   profile?: any;
   relationship_creator?: string;
   post?: any;
+  navigation: any;
 }
 
 const Activities = ({
   type,
-  action,
   post_id,
+  comment_id,
+  reply_id,
   profile,
   timestamp,
   relationship_creator,
   post,
+  navigation,
 }: Props) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
@@ -47,7 +53,10 @@ const Activities = ({
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
-                <Typography.Body6> {t('liked')}</Typography.Body6>
+                <Typography.Body6>
+                  {' '}
+                  {reply_id ? t('liked reply') : t('liked')}
+                </Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
@@ -68,7 +77,10 @@ const Activities = ({
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
-                <Typography.Body6> {t('commented')}</Typography.Body6>
+                <Typography.Body6>
+                  {' '}
+                  {reply_id ? t('commented reply') : t('commented')}
+                </Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
@@ -132,9 +144,10 @@ const Activities = ({
         return <View />;
     }
   }, [
-    action,
     formattedDate,
     post_id,
+    reply_id,
+    comment_id,
     profile.nickname,
     profile.profile_pic,
     type,
@@ -142,8 +155,30 @@ const Activities = ({
     isFollowingAddress,
   ]);
 
+  const navigateToCorrectScreen = useCallback(() => {
+    if (type === 'comment' || type === 'reaction') {
+      if (reply_id) {
+        navigation.navigate(ROUTES.COMMENT_REPLIES, {
+          postId: post_id,
+          commentId: reply_id,
+          subspaceId: EnvConfig.APP_SUBSPACE_ID,
+        });
+      } else {
+        navigation.navigate(ROUTES.POST_DETAILS, {
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          postId: post_id,
+          focusCommentBox: false,
+        });
+      }
+    }
+  }, [post_id, reply_id]);
+
   return (
-    <TouchableOpacity style={styles.container}>{content}</TouchableOpacity>
+    <TouchableOpacity
+      onPress={navigateToCorrectScreen}
+      style={styles.container}>
+      {content}
+    </TouchableOpacity>
   );
 };
 
