@@ -39,8 +39,17 @@ export type NavProps = StackScreenProps<
 >;
 
 export type CommentRepliesParams = {
+  /**
+   * Original post ID, the main root post
+   */
   postId: number;
+  /**
+   * Main comment ID, the one displayed on top of the screen, the id to use inside every query related to the main comment
+   */
   commentId: number;
+  /**
+   * Subspace ID, the id of the subspace
+   */
   subspaceId: number;
 };
 
