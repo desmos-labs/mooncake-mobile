@@ -75,13 +75,21 @@ const Activities = () => {
         refreshing={globalLoading}
         onRefresh={notificationsRefetch}
         style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1, marginTop: theme.spacing.l}}
+        contentContainerStyle={{flexGrow: 1}}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyActivities}
         sections={notificationsData}
         renderItem={renderNotification}
         renderSectionHeader={({section: {section}}) => (
-          <Typography.Button2>{section}</Typography.Button2>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: theme.colors.white,
+              paddingTop: theme.spacing.m,
+              paddingBottom: theme.spacing.s,
+            }}>
+            <Typography.Button2>{section}</Typography.Button2>
+          </View>
         )}
       />
     </DView>
