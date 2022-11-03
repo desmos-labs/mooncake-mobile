@@ -10,7 +10,7 @@ import {
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {Dimensions, LogBox, View} from 'react-native';
+import {Button, Dimensions, LogBox, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
 import {verticalScale} from 'react-native-size-matters';
@@ -23,6 +23,9 @@ import _ from 'lodash';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
+import usePendingPosts from 'hooks/usePendingPosts';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import EnvConfig from 'config/EnvConfig';
 import useStyles from './useStyles';
 
 // This warning is emitted from react-native-reanimated-carousel, but it
@@ -42,6 +45,7 @@ const Home = () => {
   const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
+  const {addNewPendingPost} = usePendingPosts();
 
   const {
     handlePressDetails,
@@ -56,6 +60,34 @@ const Home = () => {
     onCarouselProgressChange,
     checkIfPostIsPending,
   } = useHooks();
+
+  const debugAddPending = () => {
+    addNewPendingPost({
+      postData: {
+        id: Math.random() * 10000,
+        subspace_id: EnvConfig.APP_SUBSPACE_ID,
+        isPending: true,
+
+        text: 'hello world',
+
+        attachments: [
+          {
+            id: 0,
+            content: {
+              uri: 'https://static.wikia.nocookie.net/mato-seihei-no-slave/images/0/0f/Volume_01.png/revision/latest?cb=20191208175048',
+              mimeType: 'image/jpeg',
+            },
+          },
+        ],
+
+        author_address: '123123',
+      },
+      txHash: 'hashyboi',
+      timestamp: new Date().getTime(),
+      msgType: GrantEnums.MsgCreatePost,
+      msg: {} as any,
+    });
+  };
 
   const renderPost = React.useCallback(
     (info: CarouselRenderItemInfo<PostItem>) => {
@@ -181,6 +213,7 @@ const Home = () => {
           />
         </View>
       )}
+      <Button title="add debug post" onPress={debugAddPending} />
     </View>
   );
 };
