@@ -1,3 +1,4 @@
+import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
@@ -5,6 +6,8 @@ import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useRecoilValue} from 'recoil';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useStyles from './useStyles';
 
 interface Props {
@@ -13,6 +16,7 @@ interface Props {
   post_id?: string;
   timestamp: string;
   profile?: any;
+  relationship_creator?: string;
   post?: any;
 }
 
@@ -22,12 +26,17 @@ const Activities = ({
   post_id,
   profile,
   timestamp,
+  relationship_creator,
   post,
 }: Props) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
+  const isFollowingAddress = useRecoilValue(
+    isFollowingAddr(relationship_creator || ''),
+  );
+  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const content = useMemo(() => {
     switch (type) {
@@ -87,15 +96,35 @@ const Activities = ({
               </Typography.Body7>
             </View>
             <View style={styles.buttonView}>
-              <Button
-                mode="contained"
-                color={theme.colors.butterOrange01}
-                style={styles.followButton}>
-                <Typography.Button3
-                  style={{color: theme.colors.white, alignSelf: 'center'}}>
-                  {t('follow')}
-                </Typography.Button3>
-              </Button>
+              {isFollowingAddress ? (
+                <Button
+                  onPress={() =>
+                    followOrUnfollowUser({addrToFollow: relationship_creator!})
+                  }
+                  mode="outlined"
+                  color={theme.colors.surfaceBlack}
+                  style={styles.followButton}>
+                  <Typography.Button3
+                    style={{
+                      alignSelf: 'center',
+                    }}>
+                    {t('followingAndFollowers:unfollow')}
+                  </Typography.Button3>
+                </Button>
+              ) : (
+                <Button
+                  onPress={() =>
+                    followOrUnfollowUser({addrToFollow: relationship_creator!})
+                  }
+                  mode="contained"
+                  color={theme.colors.butterOrange01}
+                  style={styles.followButton}>
+                  <Typography.Button3
+                    style={{color: theme.colors.white, alignSelf: 'center'}}>
+                    {t('followingAndFollowers:follow')}
+                  </Typography.Button3>
+                </Button>
+              )}
             </View>
           </View>
         );
@@ -109,6 +138,8 @@ const Activities = ({
     profile.nickname,
     profile.profile_pic,
     type,
+    followOrUnfollowUser,
+    isFollowingAddress,
   ]);
 
   return (
