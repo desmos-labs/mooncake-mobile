@@ -10,11 +10,13 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {Dimensions} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import pendingTxState from '@recoil/pendingTx/pendingTxState';
 import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
+import EnvConfig from 'config/EnvConfig';
+import {POST_TYPE} from '@recoil/posts';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -26,11 +28,16 @@ type FollowingNavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList>
 >;
 
+const postFamilyMap = {
+  [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
+  [ROUTES.HOME_FOLLOWING]: POST_TYPE.FOLLOWING,
+};
+
 /**
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {params} = useRoute<
+  const {name: routeName} = useRoute<
     DiscoverNavProps['route'] | FollowingNavProps['route']
   >();
 
@@ -43,24 +50,35 @@ const useHooks = () => {
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
+  const pendingPosts = useRecoilValue(pendingPostsState);
+
   const {
     posts,
     fetchMorePosts,
     fetchNewestPosts,
     loading: postsLoading,
-  } = useGetPosts({type: params.type});
-
-  // debug use
-  const pendingTx = useRecoilValue(pendingTxState);
-
-  React.useEffect(() => {
-    console.log('pending tx', pendingTx);
-  }, [pendingTx]);
+  } = useGetPosts({type: postFamilyMap[routeName]});
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
   const prevOffsetValue = React.useRef(0);
   const overscrolling = React.useRef(false);
+
+  // sort and combine pending posts with posts from API
+  const combinedPosts = React.useMemo(() => {
+    const sortedPendingPosts = [...pendingPosts]
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(x => x.postData);
+
+    return [...sortedPendingPosts, ...posts];
+  }, [posts, pendingPosts]);
+
+  const checkIfPostIsPending = React.useCallback(
+    (postId: number) => {
+      return combinedPosts.find(x => x.id === postId)?.isPending;
+    },
+    [combinedPosts],
+  );
 
   // calculate carousel offset
   React.useEffect(() => {
@@ -117,6 +135,8 @@ const useHooks = () => {
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
+      if (checkIfPostIsPending(postId)) return;
+
       const result = await addOrRemoveReaction({
         postId,
       });
@@ -126,16 +146,17 @@ const useHooks = () => {
     [addOrRemoveReaction],
   );
 
-  const handlePressComments = React.useCallback(() => {
+  const handlePressComments = React.useCallback((postId: number) => {
     navigate(ROUTES.POST_DETAILS, {
       focusCommentBox: true,
-      postId: posts[selectedPostIndex].id,
-      subspaceID: posts[selectedPostIndex].subspace_id,
+      postId,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
     });
-  }, [selectedPostIndex, posts]);
+  }, []);
 
   const handlePressTip = React.useCallback(
     (postAuthor: string, postId: number) => {
+      if (checkIfPostIsPending(postId)) return;
       navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
     },
     [],
@@ -175,9 +196,10 @@ const useHooks = () => {
     handleAddReaction,
     handlePressComments,
     onPostChanged,
-    posts,
+    posts: combinedPosts,
     selectedPostIndex,
     onCarouselProgressChange,
+    checkIfPostIsPending,
   };
 };
 

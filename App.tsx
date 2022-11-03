@@ -19,7 +19,7 @@ const App = () => {
           animationType="zoom-in"
           placement="top"
           offsetTop={30}
-          duration={60000}
+          duration={3000}
           renderType={{
             [ToastConfig.SUCCESS]: toast => (
               <CustomToast type={ToastConfig.SUCCESS} toast={toast} />

@@ -20,6 +20,10 @@ import {
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import {
+  MsgCreateRelationshipEncodeObject,
+  MsgDeleteRelationshipEncodeObject,
+} from '@desmoslabs/desmjs';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -82,33 +86,39 @@ const useFollowOrUnfollow = () => {
 
       setLoading(true);
       try {
-        const msg = {
-          typeUrl: isAlreadyFollowing
-            ? GrantEnums.MsgDeleteRelationship
-            : GrantEnums.MsgCreateRelationship,
-          value: isAlreadyFollowing
-            ? MsgDeleteRelationship.fromPartial({
-                signer: activeAddress,
-                counterparty: addrToFollow,
-                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-              })
-            : MsgCreateRelationship.fromPartial({
-                signer: activeAddress,
-                counterparty: addrToFollow,
-                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-              }),
-        };
+        let msg:
+          | MsgDeleteRelationshipEncodeObject
+          | MsgCreateRelationshipEncodeObject;
+
+        if (isAlreadyFollowing) {
+          msg = {
+            typeUrl: GrantEnums.MsgDeleteRelationship,
+            value: MsgDeleteRelationship.fromPartial({
+              signer: activeAddress,
+              counterparty: addrToFollow,
+              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+            }),
+          };
+        } else {
+          msg = {
+            typeUrl: GrantEnums.MsgCreateRelationship,
+            value: MsgCreateRelationship.fromPartial({
+              signer: activeAddress,
+              counterparty: addrToFollow,
+              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+            }),
+          };
+        }
 
         const result = await encodeAndBroadcastTx({msgs: [msg]});
 
         if (result) {
           addNewPendingRelationship({
             counterPartyAddr: addrToFollow,
-            msgType: isAlreadyFollowing
-              ? GrantEnums.MsgDeleteRelationship
-              : GrantEnums.MsgCreateRelationship,
+            msgType: msg.typeUrl,
             timestamp: new Date().getTime(),
             txHash: result.tx_hash,
+            msg,
           });
 
           return true;

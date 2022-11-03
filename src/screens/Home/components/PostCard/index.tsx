@@ -8,6 +8,8 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {loadingWhite} from 'assets/animations';
 import useStyles from './useStyles';
 
 type Props = {
@@ -46,12 +48,18 @@ const PostCard = ({
   onPressDetails,
 }: Props) => {
   const styles = useStyles();
-  const {
-    author: {dtag, nickname, profile_pic},
-    attachments,
-  } = postData;
+  const {attachments, isPending} = postData;
 
-  const {activeAddress} = useActiveAccount();
+  const {activeAddress, profileData} = useActiveAccount();
+
+  // Use the current active user's profile data if the post is pending
+  const authorData = React.useMemo(() => {
+    if (isPending) {
+      return profileData || ({} as any);
+    } else return postData.author;
+  }, [postData, profileData]);
+
+  const {profile_pic, nickname, dtag} = authorData;
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
@@ -91,7 +99,7 @@ const PostCard = ({
     // TODO: make this less naive
     console.log('Default post behavior for post id', postData.id);
     return POST_TYPE.TEXT;
-  }, []);
+  }, [postData]);
 
   // Hopefully we come up with a more elegant way to do this in the future
   const content = React.useMemo(() => {
@@ -169,15 +177,29 @@ const PostCard = ({
         </View>
       );
     }
-  }, [postType, onPressFollow, activeAddress]);
+  }, [postType, onPressFollow, activeAddress, postData.author_address]);
 
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPressDetails}
-      activeOpacity={0.9}>
+      activeOpacity={0.9}
+      key={postData.id}>
       {MediaAttachment}
       {content}
+      {isPending && (
+        <ThemedLottieView
+          source={loadingWhite}
+          autoPlay
+          style={{
+            width: 40,
+            height: 40,
+            position: 'absolute',
+            top: 2,
+            left: 2,
+          }}
+        />
+      )}
     </TouchableOpacity>
   );
 };

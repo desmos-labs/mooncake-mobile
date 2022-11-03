@@ -6,6 +6,7 @@ import _ from 'lodash';
 import {followedAddressesState} from '@recoil/following';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {POST_TYPE, usePostsFamily} from '@recoil/posts';
 
 /**
  * Increase this to get more posts per query.
@@ -13,8 +14,8 @@ import useActiveAccount from 'hooks/useActiveAccount';
 const POSTS_PER_FETCH = 5;
 
 // Get posts up to a given timestamp
-const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
-  const [posts, setPosts] = React.useState<PostItem[]>([]);
+const useGetPosts = ({type}: {type: POST_TYPE}) => {
+  const {posts, setPosts} = usePostsFamily(type);
 
   const {activeAddress} = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
@@ -23,7 +24,7 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
   const subspaceID = 5;
 
   const queryVars = React.useMemo(() => {
-    if (type === 'discover') {
+    if (type === POST_TYPE.DISCOVER) {
       return {
         query: GetPosts,
         variables: {
@@ -91,7 +92,12 @@ const useGetPosts = ({type}: {type: 'discover' | 'following'}) => {
     [posts, loading],
   );
 
-  return {posts, fetchMorePosts, fetchNewestPosts, loading};
+  return {
+    posts,
+    fetchMorePosts,
+    fetchNewestPosts,
+    loading,
+  };
 };
 
 export default useGetPosts;

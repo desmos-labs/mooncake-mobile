@@ -1,62 +1,15 @@
 import {gql} from '@apollo/client';
+import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
 
-export const POST_FIELDS = gql`
-  fragment PostFields on post {
-    id
-    creation_date
-    author_address
-    attachments {
-      id
-      content
-    }
-    author {
-      address
-      bio
-      dtag
-      profile_pic
-      nickname
-    }
-    subspace_id
-    reactions {
-      id
-      value
-      author {
-        address
-      }
-    }
-    tips {
-      amount
-    }
-    text
-    conversation {
-      author {
-        address
-      }
-    }
-    transactions {
-      hash
-    }
-    repliesCount: referees_aggregate(
-      where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
-    ) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-const GetPosts = gql`
+const GetLastPostsByAddress = gql`
   ${POST_FIELDS}
-  query GetPostsBetweenDates(
-    $offset: Int
+  query GetLastPostsByAddress(
     $limit: Int
     $subspaceID: bigint
     $user: String
     $reaction: jsonb!
   ) @api(name: desmos) {
     post(
-      offset: $offset
       limit: $limit
       order_by: {creation_date: desc}
       where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
@@ -85,4 +38,4 @@ const GetPosts = gql`
   }
 `;
 
-export default GetPosts;
+export default GetLastPostsByAddress;

@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   /**
    * The source of the avatar.
    */
-  imageSrc: ImageSourcePropType;
+  imageSrc: React.ComponentProps<typeof FastImage>['source'];
 
   /**
    * What to do when the button is pressed.
@@ -28,7 +21,7 @@ type Props = {
   /**
    * Override image style
    */
-  style?: StyleProp<ImageStyle>;
+  style?: React.ComponentProps<typeof FastImage>['style'];
 };
 
 const ProfileHeaderButton = ({
@@ -39,7 +32,7 @@ const ProfileHeaderButton = ({
 }: Props) => {
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
-      <Image source={imageSrc} style={style || styles.defaultStyle} />
+      <FastImage source={imageSrc} style={style || styles.defaultStyle} />
     </TouchableOpacity>
   );
 };

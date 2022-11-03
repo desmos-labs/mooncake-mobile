@@ -82,19 +82,38 @@ exports[`component: PostComponent renders image posts 1`] = `
     }
   >
     <View>
-      <Image
-        source={
-          Object {
-            "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-          }
-        }
+      <View
         style={
-          Object {
-            "height": 630,
-            "width": 750,
-          }
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "height": 630,
+              "width": 750,
+            },
+          ]
         }
-      />
+      >
+        <FastImageView
+          defaultSource={null}
+          resizeMode="cover"
+          source={
+            Object {
+              "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
+            }
+          }
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
     </View>
   </View>
 </View>
@@ -120,19 +139,38 @@ exports[`component: PostComponent renders textImage posts 1`] = `
     }
   >
     <View>
-      <Image
-        source={
-          Object {
-            "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-          }
-        }
+      <View
         style={
-          Object {
-            "height": 630,
-            "width": 750,
-          }
+          Array [
+            Object {
+              "overflow": "hidden",
+            },
+            Object {
+              "height": 630,
+              "width": 750,
+            },
+          ]
         }
-      />
+      >
+        <FastImageView
+          defaultSource={null}
+          resizeMode="cover"
+          source={
+            Object {
+              "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
+            }
+          }
+          style={
+            Object {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
       <Text
         style={
           Array [
