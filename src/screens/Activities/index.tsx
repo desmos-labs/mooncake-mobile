@@ -4,7 +4,13 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ListRenderItemInfo, SectionList, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ListRenderItemInfo,
+  SectionList,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import useHooks from './useHooks';
@@ -21,7 +27,9 @@ const Activities = () => {
   const {notificationsData, globalLoading, notificationsRefetch} = useHooks();
 
   const EmptyActivities = useMemo(() => {
-    return (
+    return globalLoading ? (
+      <ActivityIndicator size="large" />
+    ) : (
       <View
         style={{
           flex: 1,
@@ -39,7 +47,7 @@ const Activities = () => {
         <Typography.Body5>{t('no activities')}</Typography.Body5>
       </View>
     );
-  }, [t]);
+  }, [t, globalLoading]);
 
   const renderNotification = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
@@ -69,7 +77,7 @@ const Activities = () => {
         style={{flex: 1}}
         contentContainerStyle={{flexGrow: 1, marginTop: theme.spacing.l}}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={notificationsData && EmptyActivities}
+        ListEmptyComponent={EmptyActivities}
         sections={notificationsData}
         renderItem={renderNotification}
         renderSectionHeader={({section: {section}}) => (

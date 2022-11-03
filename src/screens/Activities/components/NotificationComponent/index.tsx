@@ -44,10 +44,12 @@ const Activities = ({
                 {formattedDate}
               </Typography.Body7>
             </View>
-            <Image
-              style={styles.postImage}
-              source={{uri: post.attachments[0].content.uri}}
-            />
+            {post.attachments[0] && (
+              <Image
+                style={styles.postImage}
+                source={{uri: post.attachments[0].content.uri}}
+              />
+            )}
           </View>
         );
       case 'comment':
@@ -63,10 +65,12 @@ const Activities = ({
                 {formattedDate}
               </Typography.Body7>
             </View>
-            <Image
-              style={styles.postImage}
-              source={{uri: post.attachments[0].content.uri}}
-            />
+            {post.attachments[0] && (
+              <Image
+                style={styles.postImage}
+                source={{uri: post.attachments[0].content.uri}}
+              />
+            )}
           </View>
         );
       case 'follow':

@@ -113,6 +113,7 @@ const useHooks = () => {
           }
         },
       );
+      console.log('AAAAAAAAA', thisWeekNotifications[0]);
 
       if (
         thisWeekNotifications.length <= 0 &&
