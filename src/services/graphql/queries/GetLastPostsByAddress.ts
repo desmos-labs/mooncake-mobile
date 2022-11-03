@@ -12,7 +12,7 @@ const GetLastPostsByAddress = gql`
     post(
       limit: $limit
       order_by: {creation_date: desc}
-      where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
+      where: {subspace_id: {_eq: $subspaceID}}
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(
