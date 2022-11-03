@@ -46,7 +46,14 @@ const Activities = ({
 
   const content = useMemo(() => {
     switch (type) {
-      case 'reaction':
+      case 'reaction': {
+        const isOriginalPost = !post.conversation;
+        const isComment =
+          post.replies.length !== 0 &&
+          post.replies.find(
+            (rep: any) => rep.reference.id === post.conversation.id,
+          );
+        const isReply = !isOriginalPost && !isComment;
         return (
           <View style={{flexDirection: 'row'}}>
             <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
@@ -55,7 +62,9 @@ const Activities = ({
                 {profile.nickname.trimStart()}
                 <Typography.Body6>
                   {' '}
-                  {reply_id ? t('liked reply') : t('liked')}
+                  {isOriginalPost && t('post')}
+                  {isComment && t('comment')}
+                  {isReply && t('reply')}
                 </Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
@@ -70,6 +79,7 @@ const Activities = ({
             )}
           </View>
         );
+      }
       case 'comment':
         return (
           <View style={{flexDirection: 'row'}}>
@@ -77,10 +87,28 @@ const Activities = ({
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
-                <Typography.Body6>
-                  {' '}
-                  {reply_id ? t('commented reply') : t('commented')}
-                </Typography.Body6>
+                <Typography.Body6> {t('commented')}</Typography.Body6>
+              </Typography.Subtitle3>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
+            </View>
+            {post.attachments[0] && (
+              <Image
+                style={styles.postImage}
+                source={{uri: post.attachments[0].content.uri}}
+              />
+            )}
+          </View>
+        );
+      case 'reply':
+        return (
+          <View style={{flexDirection: 'row'}}>
+            <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
+            <View style={styles.profileView}>
+              <Typography.Subtitle3>
+                {profile.nickname.trimStart()}
+                <Typography.Body6> commented reply</Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
@@ -156,13 +184,43 @@ const Activities = ({
   ]);
 
   const navigateToCorrectScreen = useCallback(() => {
-    if (type === 'comment' || type === 'reaction') {
-      if (reply_id) {
-        navigation.navigate(ROUTES.COMMENT_REPLIES, {
-          postId: post_id,
-          commentId: reply_id,
-          subspaceId: EnvConfig.APP_SUBSPACE_ID,
-        });
+    if (type === 'comment') {
+      navigation.navigate(ROUTES.POST_DETAILS, {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        postId: post_id,
+        focusCommentBox: false,
+      });
+    }
+    if (type === 'reply') {
+      const reply = post.replies.find(
+        (rep: any) => rep.reference.id === post.conversation.id,
+      );
+      navigation.navigate(ROUTES.COMMENT_REPLIES, {
+        postId: reply.post.id,
+        commentId: reply.post.id,
+        subspaceId: EnvConfig.APP_SUBSPACE_ID,
+      });
+    }
+    if (type === 'reaction') {
+      const isOriginalPost = !post.conversation;
+      const reply = post.replies.find(
+        (rep: any) => rep.reference.id !== post.conversation.id,
+      );
+      const isReply = reply && post.replies.length !== 0;
+      if (!isOriginalPost) {
+        if (isReply) {
+          navigation.navigate(ROUTES.COMMENT_REPLIES, {
+            postId: reply.reference.id,
+            commentId: reply.reference.id,
+            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+          });
+        } else {
+          navigation.navigate(ROUTES.COMMENT_REPLIES, {
+            postId: post_id,
+            commentId: post_id,
+            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+          });
+        }
       } else {
         navigation.navigate(ROUTES.POST_DETAILS, {
           subspaceID: EnvConfig.APP_SUBSPACE_ID,
@@ -171,7 +229,7 @@ const Activities = ({
         });
       }
     }
-  }, [post_id, reply_id]);
+  }, [type, post_id, reply_id]);
 
   return (
     <TouchableOpacity

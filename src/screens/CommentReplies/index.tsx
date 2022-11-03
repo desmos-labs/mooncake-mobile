@@ -82,6 +82,7 @@ const CommentReplies = () => {
     handleAddReaction,
     handlePressReport,
   } = useHooks({
+    postID: params.postId,
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });

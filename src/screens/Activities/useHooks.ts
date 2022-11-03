@@ -34,9 +34,11 @@ const useHooks = () => {
   const getCorrectAddress = (notification: any) => {
     switch (notification.data.type) {
       case 'comment':
-        return notification.data.reply_author;
+        return notification.data.comment_author;
       case 'follow':
         return notification.data.relationship_creator;
+      case 'reply':
+        return notification.data.reply_author;
       case 'reaction':
         return notification.data.reaction_author;
       default:
@@ -46,7 +48,6 @@ const useHooks = () => {
 
   const fetchNotificationDetails = useCallback(async () => {
     if (data) {
-      console.log('test');
       try {
         setNotificationsDetailsLoading(true);
         const results = await Promise.all(
@@ -58,7 +59,7 @@ const useHooks = () => {
               },
               fetchPolicy: 'no-cache',
             });
-            if (singleNot.data.post_id) {
+            if (singleNot?.data?.post_id) {
               const {data: postData} = await client.query({
                 query: GetPostBySubspaceIDandPostID,
                 variables: {
@@ -71,7 +72,6 @@ const useHooks = () => {
                 ...singleNot,
                 profile: profileData.profile[0],
                 post: postData.posts[0],
-                replies: postData.replies,
               };
             }
             return {...singleNot, profile: profileData.profile[0]};
