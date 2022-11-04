@@ -9,6 +9,7 @@ import client from 'services/graphql/client';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import NotificationTypesEnum from 'types/notificationTypes';
 
 const useHooks = () => {
   const {activeAddress} = useActiveAccount();
@@ -33,13 +34,13 @@ const useHooks = () => {
 
   const getCorrectAddress = (notification: any) => {
     switch (notification.data.type) {
-      case 'comment':
+      case NotificationTypesEnum.Comment:
         return notification.data.comment_author;
-      case 'follow':
+      case NotificationTypesEnum.Follow:
         return notification.data.relationship_creator;
-      case 'reply':
+      case NotificationTypesEnum.Reply:
         return notification.data.reply_author;
-      case 'reaction':
+      case NotificationTypesEnum.Reaction:
         return notification.data.reaction_author;
       default:
         return '';

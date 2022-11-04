@@ -11,6 +11,7 @@ import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
 interface Props {
@@ -59,10 +60,10 @@ const Activities = ({
 
   const content = useMemo(() => {
     switch (type) {
-      case 'reaction': {
+      case NotificationTypesEnum.Reaction: {
         const {isOriginalPost, isComment, isReply} = checkPostType();
         return (
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRowView}>
             <FastImage
               style={styles.avatar}
               source={{uri: profile.profile_pic}}
@@ -81,7 +82,7 @@ const Activities = ({
                 {formattedDate}
               </Typography.Body7>
             </View>
-            {post.attachments[0] && (
+            {post?.attachments.length > 0 && (
               <FastImage
                 style={styles.postImage}
                 source={{uri: post.attachments[0].content.uri}}
@@ -90,9 +91,9 @@ const Activities = ({
           </View>
         );
       }
-      case 'comment':
+      case NotificationTypesEnum.Comment || NotificationTypesEnum.Reply:
         return (
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRowView}>
             <FastImage
               style={styles.avatar}
               source={{uri: profile.profile_pic}}
@@ -100,13 +101,18 @@ const Activities = ({
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
-                <Typography.Body6> {t('commented')}</Typography.Body6>
+                <Typography.Body6>
+                  {' '}
+                  {NotificationTypesEnum.Comment
+                    ? t('commented')
+                    : t('commented reply')}
+                </Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
               </Typography.Body7>
             </View>
-            {post.attachments[0] && (
+            {post?.attachments.length > 0 && (
               <FastImage
                 style={styles.postImage}
                 source={{uri: post.attachments[0].content.uri}}
@@ -114,33 +120,9 @@ const Activities = ({
             )}
           </View>
         );
-      case 'reply':
+      case NotificationTypesEnum.Follow:
         return (
-          <View style={{flexDirection: 'row'}}>
-            <FastImage
-              style={styles.avatar}
-              source={{uri: profile.profile_pic}}
-            />
-            <View style={styles.profileView}>
-              <Typography.Subtitle3>
-                {profile.nickname.trimStart()}
-                <Typography.Body6> {t('commented reply')}</Typography.Body6>
-              </Typography.Subtitle3>
-              <Typography.Body7 style={{color: theme.colors.grey02}}>
-                {formattedDate}
-              </Typography.Body7>
-            </View>
-            {post.attachments[0] && (
-              <FastImage
-                style={styles.postImage}
-                source={{uri: post.attachments[0].content.uri}}
-              />
-            )}
-          </View>
-        );
-      case 'follow':
-        return (
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRowView}>
             <FastImage
               style={styles.avatar}
               source={{uri: profile.profile_pic}}
@@ -205,21 +187,21 @@ const Activities = ({
   const navigateToCorrectScreen = useCallback(() => {
     const {isOriginalPost, reply} = checkPostType();
     const isReply = reply && post.replies.length !== 0;
-    if (type === 'comment') {
+    if (type === NotificationTypesEnum.Comment) {
       navigation.navigate(ROUTES.POST_DETAILS, {
         subspaceID: EnvConfig.APP_SUBSPACE_ID,
         postId: post_id,
         focusCommentBox: false,
       });
     }
-    if (type === 'reply') {
+    if (type === NotificationTypesEnum.Reply) {
       navigation.navigate(ROUTES.COMMENT_REPLIES, {
         postId: post.conversation.id,
         commentId: reply.post.id,
         subspaceId: EnvConfig.APP_SUBSPACE_ID,
       });
     }
-    if (type === 'reaction') {
+    if (type === NotificationTypesEnum.Reaction) {
       if (!isOriginalPost) {
         if (isReply) {
           navigation.navigate(ROUTES.COMMENT_REPLIES, {

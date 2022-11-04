@@ -37,6 +37,7 @@ const useStyles = makeStyle(theme => ({
     height: 52,
     resizeMode: 'cover',
   },
+  flexRowView: {flexDirection: 'row'},
 }));
 
 export default useStyles;
