@@ -8,12 +8,7 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import {
-  MIN_PW_LENGTH,
-  validateMin1Lowercase,
-  validateMin1SpecialChar,
-  validateMin1Uppercase,
-} from 'lib/ValidationUtils';
+import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -59,7 +54,7 @@ const PasswordManipulation = () => {
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
-      newPassword: Yup.string()
+      /*      newPassword: Yup.string()
         .min(
           MIN_PW_LENGTH,
           t('error:minChar', {
@@ -69,7 +64,7 @@ const PasswordManipulation = () => {
         .required(t('error:required'))
         .test('at least one lowercase', '', validateMin1Lowercase)
         .test('at least one uppercase', '', validateMin1Uppercase)
-        .test('at least one special', '', validateMin1SpecialChar),
+        .test('at least one special', '', validateMin1SpecialChar), */
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
