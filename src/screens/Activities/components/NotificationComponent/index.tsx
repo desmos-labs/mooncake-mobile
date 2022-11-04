@@ -10,50 +10,19 @@ import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
+import {CompleteNotification} from 'screens/Activities';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
-interface Props {
-  /**
-   * {NotificationsTypeEnum} Notification type
-   */
-  type: string;
-  /**
-   * Notification post id, could be an id of a comment, reply, or root post
-   */
-  post_id?: string;
-  /**
-   * Profile of the notification author
-   */
-  profile?: any;
-  /**
-   * If follow notification, the author of the relationship
-   */
-  relationship_creator?: string;
-  /**
-   * Complete post object
-   */
-  post?: any;
-  /**
-   * Notification timestamp
-   */
-  timestamp: string;
-  /**
-   * Navigation object, useful to navigate to the correct screen
-   */
-  navigation: any;
-}
-
 const Activities = ({
-  type,
-  post_id,
+  data: {type, post_id},
   profile,
   timestamp,
   relationship_creator,
   post,
   navigation,
-}: Props) => {
+}: CompleteNotification) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
@@ -112,7 +81,7 @@ const Activities = ({
           </View>
         );
       }
-      case NotificationTypesEnum.Comment || NotificationTypesEnum.Reply:
+      case NotificationTypesEnum.Comment:
         return (
           <View style={styles.flexRowView}>
             <FastImage
@@ -122,12 +91,31 @@ const Activities = ({
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
-                <Typography.Body6>
-                  {' '}
-                  {NotificationTypesEnum.Comment
-                    ? t('commented')
-                    : t('commented reply')}
-                </Typography.Body6>
+                <Typography.Body6> {t('commented')}</Typography.Body6>
+              </Typography.Subtitle3>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
+            </View>
+            {post?.attachments.length > 0 && (
+              <FastImage
+                style={styles.postImage}
+                source={{uri: post.attachments[0].content.uri}}
+              />
+            )}
+          </View>
+        );
+      case NotificationTypesEnum.Reply:
+        return (
+          <View style={styles.flexRowView}>
+            <FastImage
+              style={styles.avatar}
+              source={{uri: profile.profile_pic}}
+            />
+            <View style={styles.profileView}>
+              <Typography.Subtitle3>
+                {profile.nickname.trimStart()}
+                <Typography.Body6> {t('commented reply')}</Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
@@ -196,7 +184,6 @@ const Activities = ({
   }, [
     type,
     profile,
-    t,
     formattedDate,
     post,
     isFollowingAddress,

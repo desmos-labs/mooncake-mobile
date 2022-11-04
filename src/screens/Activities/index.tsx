@@ -16,6 +16,39 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
 
+export interface CompleteNotification {
+  data: {
+    /**
+     * {NotificationsTypeEnum} Notification type
+     */
+    type: string;
+    /**
+     * Notification post id, could be an id of a comment, reply, or root post
+     */
+    post_id?: string;
+  };
+  /**
+   * Profile of the notification author
+   */
+  profile?: any;
+  /**
+   * If follow notification, the author of the relationship
+   */
+  relationship_creator?: string;
+  /**
+   * Complete post object
+   */
+  post?: any;
+  /**
+   * Notification timestamp
+   */
+  timestamp: string;
+  /**
+   * Navigation object, useful to navigate to the correct screen
+   */
+  navigation: any;
+}
+
 const Activities = () => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
@@ -52,14 +85,14 @@ const Activities = () => {
   }, [t, globalLoading]);
 
   const renderNotification = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<CompleteNotification>) => {
       return (
         <NotificationComponent
           profile={item.profile}
           post={item.post}
           timestamp={item.timestamp}
-          {...item.data}
           navigation={navigation}
+          data={item.data}
         />
       );
     },
@@ -74,7 +107,7 @@ const Activities = () => {
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
       <SectionList
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(item, index) => item.timestamp + index}
         refreshing={notificationsLoading}
         onRefresh={notificationsRefetch}
         style={{flex: 1}}
