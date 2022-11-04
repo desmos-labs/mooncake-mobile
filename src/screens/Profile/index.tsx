@@ -28,8 +28,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Image,
-  ImageBackground,
   RefreshControl,
   StatusBar,
   TouchableOpacity,
@@ -50,6 +48,7 @@ import {
   mapConnectedAppImages,
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
+import FastImage from 'react-native-fast-image';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -264,7 +263,7 @@ const Profile = () => {
         backgroundColor="transparent"
         translucent={true}
       />
-      <ImageBackground source={bannerImage} style={styles.bannerImage} />
+      <FastImage source={bannerImage} style={styles.bannerImage} />
       {/* avatar needs to be in a view for positioning and ios zIndex compat */}
       <Animated.View
         style={[
@@ -272,7 +271,7 @@ const Profile = () => {
           {position: 'absolute', left: 0, right: 0},
           animatedAvatarStyle,
         ]}>
-        <Image style={styles.avatar} source={profileImage} />
+        <FastImage style={styles.avatar} source={profileImage} />
       </Animated.View>
       <Animated.ScrollView
         overScrollMode="never"

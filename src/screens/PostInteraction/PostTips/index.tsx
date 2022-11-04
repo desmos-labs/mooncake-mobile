@@ -1,10 +1,15 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {defaultProfilePic} from 'assets/images';
 import Typography from 'components/Typography';
 import {formatNumShorthand} from 'lib/FormatUtils';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -16,7 +21,10 @@ import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 import useHooks from './useHooks';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_TIPS>;
+type NavProps = CompositeScreenProps<
+  StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 const PostTips = () => {
   const {t} = useTranslation('postInteraction');

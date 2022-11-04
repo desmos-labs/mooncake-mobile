@@ -6,7 +6,8 @@ import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
@@ -62,7 +63,10 @@ const Activities = ({
         const {isOriginalPost, isComment, isReply} = checkPostType();
         return (
           <View style={{flexDirection: 'row'}}>
-            <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
+            <FastImage
+              style={styles.avatar}
+              source={{uri: profile.profile_pic}}
+            />
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
@@ -78,7 +82,7 @@ const Activities = ({
               </Typography.Body7>
             </View>
             {post.attachments[0] && (
-              <Image
+              <FastImage
                 style={styles.postImage}
                 source={{uri: post.attachments[0].content.uri}}
               />
@@ -89,7 +93,10 @@ const Activities = ({
       case 'comment':
         return (
           <View style={{flexDirection: 'row'}}>
-            <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
+            <FastImage
+              style={styles.avatar}
+              source={{uri: profile.profile_pic}}
+            />
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
@@ -100,7 +107,7 @@ const Activities = ({
               </Typography.Body7>
             </View>
             {post.attachments[0] && (
-              <Image
+              <FastImage
                 style={styles.postImage}
                 source={{uri: post.attachments[0].content.uri}}
               />
@@ -110,7 +117,10 @@ const Activities = ({
       case 'reply':
         return (
           <View style={{flexDirection: 'row'}}>
-            <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
+            <FastImage
+              style={styles.avatar}
+              source={{uri: profile.profile_pic}}
+            />
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
@@ -121,7 +131,7 @@ const Activities = ({
               </Typography.Body7>
             </View>
             {post.attachments[0] && (
-              <Image
+              <FastImage
                 style={styles.postImage}
                 source={{uri: post.attachments[0].content.uri}}
               />
@@ -131,7 +141,10 @@ const Activities = ({
       case 'follow':
         return (
           <View style={{flexDirection: 'row'}}>
-            <Image style={styles.avatar} source={{uri: profile.profile_pic}} />
+            <FastImage
+              style={styles.avatar}
+              source={{uri: profile.profile_pic}}
+            />
             <View style={styles.profileView}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}

@@ -2,7 +2,7 @@ import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Typography from 'components/Typography';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -13,7 +13,10 @@ import ReactionItem from './components/ReactionItem';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_REACTIONS>;
+type NavProps = StackScreenProps<
+  PostInteractionTabsParamList,
+  ROUTES.POST_REACTIONS
+>;
 
 const PostReactions = () => {
   const {t} = useTranslation('postInteraction');
