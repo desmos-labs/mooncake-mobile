@@ -15,12 +15,33 @@ import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
 interface Props {
+  /**
+   * {NotificationsTypeEnum} Notification type
+   */
   type: string;
+  /**
+   * Notification post id, could be an id of a comment, reply, or root post
+   */
   post_id?: string;
-  timestamp: string;
+  /**
+   * Profile of the notification author
+   */
   profile?: any;
+  /**
+   * If follow notification, the author of the relationship
+   */
   relationship_creator?: string;
+  /**
+   * Complete post object
+   */
   post?: any;
+  /**
+   * Notification timestamp
+   */
+  timestamp: string;
+  /**
+   * Navigation object, useful to navigate to the correct screen
+   */
   navigation: any;
 }
 
