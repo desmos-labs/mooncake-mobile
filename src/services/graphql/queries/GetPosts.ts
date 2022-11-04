@@ -29,12 +29,22 @@ export const POST_FIELDS = gql`
     }
     text
     conversation {
+      id
       author {
         address
       }
     }
     transactions {
       hash
+    }
+    replies: references(where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}) {
+      type
+      post {
+        id
+      }
+      reference {
+        id
+      }
     }
     repliesCount: referees_aggregate(
       where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}

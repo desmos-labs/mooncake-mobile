@@ -21,15 +21,13 @@ import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useChainLinks from 'hooks/useChainLinks';
-import useVisitingProfileData from 'hooks/useVisitingProfileData';
+import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Image,
-  ImageBackground,
   RefreshControl,
   StatusBar,
   TouchableOpacity,
@@ -50,6 +48,7 @@ import {
   mapConnectedAppImages,
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
+import FastImage from 'react-native-fast-image';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -100,9 +99,8 @@ const Profile = () => {
   });
   /** Animations end * */
 
-  const {visitingProfileData, visitingProfileLoading} = useVisitingProfileData(
-    params?.visitingProfileAddress || '',
-  );
+  const {visitingProfileData, visitingProfileLoading} =
+    useProfileDataGivenAddress(params?.visitingProfileAddress || '');
   const {activeAddress, profileData, loading, refetch} = useActiveAccount();
 
   useFocusEffect(
@@ -265,7 +263,7 @@ const Profile = () => {
         backgroundColor="transparent"
         translucent={true}
       />
-      <ImageBackground source={bannerImage} style={styles.bannerImage} />
+      <FastImage source={bannerImage} style={styles.bannerImage} />
       {/* avatar needs to be in a view for positioning and ios zIndex compat */}
       <Animated.View
         style={[
@@ -273,7 +271,7 @@ const Profile = () => {
           {position: 'absolute', left: 0, right: 0},
           animatedAvatarStyle,
         ]}>
-        <Image style={styles.avatar} source={profileImage} />
+        <FastImage style={styles.avatar} source={profileImage} />
       </Animated.View>
       <Animated.ScrollView
         overScrollMode="never"
@@ -381,9 +379,7 @@ const Profile = () => {
         disableRightButtons={screenMode === 'guestProfile'}
         scrollProgress={scrollProgress}
         handlePressHome={goBack}
-        handlePressNotification={() => {
-          console.log('notifications');
-        }}
+        handlePressNotification={() => navigate(ROUTES.ACTIVITIES)}
         handlePressScan={() => {
           console.log('scan');
         }}

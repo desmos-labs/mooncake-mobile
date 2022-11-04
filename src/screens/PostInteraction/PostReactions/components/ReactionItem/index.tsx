@@ -3,6 +3,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 type Props = {
@@ -18,7 +19,7 @@ const ReactionItem = ({reaction}: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <Image
+      <FastImage
         source={
           reaction.author.profile_pic
             ? {uri: reaction.author.profile_pic}

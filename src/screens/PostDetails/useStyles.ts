@@ -16,7 +16,6 @@ const useStyles = makeStyle(theme => ({
     paddingBottom: 10,
   },
   flatListContainer: {
-    paddingBottom: theme.spacing.l,
     paddingHorizontal: theme.spacing.m,
     flexGrow: 1,
   },

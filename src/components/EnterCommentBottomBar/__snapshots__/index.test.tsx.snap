@@ -627,21 +627,40 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             }
           }
         >
-          <Image
-            source={
-              Object {
-                "testUri": "../../../src/assets/images/defaultProfilePic.png",
-              }
-            }
+          <View
             style={
-              Object {
-                "alignSelf": "flex-start",
-                "borderRadius": 38,
-                "height": 38,
-                "width": 38,
-              }
+              Array [
+                Object {
+                  "overflow": "hidden",
+                },
+                Object {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 38,
+                  "height": 38,
+                  "width": 38,
+                },
+              ]
             }
-          />
+          >
+            <FastImageView
+              defaultSource={null}
+              resizeMode="cover"
+              source={
+                Object {
+                  "testUri": "../../../src/assets/images/defaultProfilePic.png",
+                }
+              }
+              style={
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
           <View
             style={
               Object {

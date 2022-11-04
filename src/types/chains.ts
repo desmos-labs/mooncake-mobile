@@ -7,8 +7,6 @@ export enum ChainAccountType {
   Ledger,
 }
 
-export type ChainId = 'desmos-mainnet' | 'morpheus-apollo-3';
-
 export type DenomUnit = {
   denom: string;
   exponent: number;

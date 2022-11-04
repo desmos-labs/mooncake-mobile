@@ -23,6 +23,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 // note: props are not final
@@ -107,7 +108,7 @@ const CommentItem = ({
       onLongPress={handleLongPress}
       activeOpacity={handlePress ? 0.8 : 1}
       style={[styles.container, styles.flexRow]}>
-      <Image
+      <FastImage
         source={
           author?.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
         }

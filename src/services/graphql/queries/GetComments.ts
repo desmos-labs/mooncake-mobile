@@ -15,9 +15,8 @@ export const GetPostComments = gql`
         subspace_id: {_eq: $subspaceID}
         conversation: {id: {_eq: $postID}}
         references: {
-          type: {
-            _in: ["POST_REFERENCE_TYPE_QUOTE", "POST_REFERENCE_TYPE_REPLY"]
-          }
+          type: {_eq: "POST_REFERENCE_TYPE_REPLY"}
+          reference: {id: {_eq: $postID}}
         }
       }
     ) {

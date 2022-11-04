@@ -1,13 +1,14 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage, {Source} from 'react-native-fast-image';
 import {ActivityIndicator} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
-  connectedChainsImages: React.ComponentProps<typeof Image>['source'][];
+  connectedChainsImages: Source[];
   connectedChainsCounter: number;
   connectedAppsCounter: number;
   handlePressCounters: () => void;
@@ -35,7 +36,7 @@ const ChainsCountersBar = ({
               marginRight: -10 * connectedChainsImages.length,
             }}>
             {connectedChainsImages.map((x, idx) => (
-              <Image
+              <FastImage
                 key={`${x.toString()}-${Math.random()}`}
                 source={x}
                 style={[styles.iconStyle, {left: -10 * idx}]}
