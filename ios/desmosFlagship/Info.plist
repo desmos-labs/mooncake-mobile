@@ -37,6 +37,8 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Files permission is required for app functionality and personalization.</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Butter authentication with TouchId or FaceID</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

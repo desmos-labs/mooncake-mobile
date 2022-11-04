@@ -17,15 +17,13 @@ import {
   deriveSecurePassword,
   encryptData,
 } from 'lib/EncryptionUtils';
-import {Platform} from 'react-native';
 
 const defaultOptions: Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
   },
-  accessControl:
-    Platform.OS === 'android' ? ACCESS_CONTROL.BIOMETRY_ANY : undefined,
-  accessible: ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+  accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+  accessControl: ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
 };
 
 enum SECURE_STORAGE_KEYS {
@@ -125,20 +123,25 @@ export const saveNewAccount = async (_account: ChainAccount) => {
 export const getAccounts = async () =>
   getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
 
-export const saveLocalWallet = async (
+export const turnOnBiometrics = async (
   _wallet: LocalWallet,
   password: string,
 ) => {
-  const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
-
   // Store the derived password for biometric unlocking
-  await setItem(
+  return setItem(
     `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
     deriveSecurePassword(password),
     {
       biometrics: true,
     },
   );
+};
+
+export const saveLocalWallet = async (
+  _wallet: LocalWallet,
+  password: string,
+) => {
+  const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
   const walletToSave = encryptData(_wallet.serialize(), password);
 
