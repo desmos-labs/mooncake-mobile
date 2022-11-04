@@ -6,6 +6,7 @@ import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import EnvConfig from 'config/EnvConfig';
 import {Formik} from 'formik';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -140,6 +141,14 @@ const MnemonicInput = () => {
                 </View>
               )}
               <View style={{backgroundColor: theme.colors.background}}>
+                {__DEV__ && (
+                  <Button
+                    onPress={() =>
+                      setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)
+                    }>
+                    autofill mnemonic
+                  </Button>
+                )}
                 <Button
                   color={theme.colors.surfaceBlack}
                   mode="contained"
