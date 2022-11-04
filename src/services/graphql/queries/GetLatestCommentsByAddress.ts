@@ -1,9 +1,9 @@
 import {gql} from '@apollo/client';
 import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
-const GetLastPostsByAddress = gql`
+const GetLatestCommentsByAddress = gql`
   ${POST_FIELDS}
-  query GetLastPostsByAddress(
+  query GetLatestCommentsByAddress(
     $limit: Int
     $subspaceID: bigint
     $user: String
@@ -12,11 +12,11 @@ const GetLastPostsByAddress = gql`
     post(
       limit: $limit
       order_by: {creation_date: desc}
-      where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
+      where: {subspace_id: {_eq: $subspaceID}}
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(
-        where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
+        where: {subspace_id: {_eq: $subspaceID}, _and: {conversation: {}}}
       ) {
         aggregate {
           count
@@ -38,4 +38,4 @@ const GetLastPostsByAddress = gql`
   }
 `;
 
-export default GetLastPostsByAddress;
+export default GetLatestCommentsByAddress;

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  atom,
+  atomFamily,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
@@ -9,9 +9,10 @@ import {useQuery} from '@apollo/client';
 import GetLastPostsByAddress from 'services/graphql/queries/GetLastPostsByAddress';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {hasPendingPosts} from '@recoil/pendingTx/pendingPosts';
+import {hasPendingPosts, PendingPostEnum} from '@recoil/pendingTx/pendingPosts';
+import GetLatestCommentsByAddress from 'services/graphql/queries/GetLatestCommentsByAddress';
 
-export const latestPostsByUserState = atom<PostItem[]>({
+export const latestPostsByUserState = atomFamily<PostItem[], PendingPostEnum>({
   key: 'latestPosts',
   default: [],
 });
@@ -20,13 +21,18 @@ export const latestPostsByUserState = atom<PostItem[]>({
  * A hook that manages logic related to polling the user's latest posts
  * @param {number} limit - The amount of posts to poll
  */
-const usePollLatestPostsByUser = (limit: number) => {
+const usePollLatestPostsByUser = (limit: number, type: PendingPostEnum) => {
   const {activeAddress} = useActiveAccount();
-  const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
-  const resetLatestPosts = useResetRecoilState(latestPostsByUserState);
-  const shouldPoll = useRecoilValue(hasPendingPosts);
+  const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState(type));
+  const resetLatestPosts = useResetRecoilState(latestPostsByUserState(type));
+  const shouldPollPosts = useRecoilValue(hasPendingPosts(type));
 
-  const {data, startPolling, stopPolling} = useQuery(GetLastPostsByAddress, {
+  const query =
+    type === PendingPostEnum.POST
+      ? GetLastPostsByAddress
+      : GetLatestCommentsByAddress;
+
+  const {data, startPolling, stopPolling} = useQuery(query, {
     variables: {
       limit,
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
@@ -48,13 +54,15 @@ const usePollLatestPostsByUser = (limit: number) => {
   }, [data]);
 
   React.useEffect(() => {
-    if (shouldPoll) {
+    if (shouldPollPosts) {
+      console.log('pending', type, 'detected, starting polling');
       startPolling(EnvConfig.POLLING_INTERVAL);
     } else {
+      console.log('no pending', type, 'detected, stopping polling');
       resetLatestPosts();
       stopPolling();
     }
-  }, [shouldPoll]);
+  }, [shouldPollPosts]);
 };
 
 export default usePollLatestPostsByUser;

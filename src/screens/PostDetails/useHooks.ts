@@ -5,7 +5,12 @@ import sharedPostState from '@recoil/sharedPostState';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
@@ -13,6 +18,13 @@ import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPo
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {
+  pendingCommentsByPost,
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
+import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import EnvConfig from 'config/EnvConfig';
 
 const useHooks = ({
   postID,
@@ -26,6 +38,10 @@ const useHooks = ({
   const {createPost, loading} = useCreatePost();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
+  const setPendingComments = useSetRecoilState(
+    pendingPostsState(PendingPostEnum.COMMENT),
+  );
 
   const {
     data: originalPost,
@@ -48,6 +64,8 @@ const useHooks = ({
     data: postComments,
     loading: commentsLoading,
     refetch: commentsRefetch,
+    startPolling,
+    stopPolling,
   } = useQuery(GetPostComments, {
     variables: {
       postID,
@@ -90,10 +108,29 @@ const useHooks = ({
     return originalPost.posts[0];
   }, [originalPost]);
 
+  React.useEffect(() => {
+    const txHashesToRemove: string[] = [];
+    pendingCommentsOfPost.forEach(x => {
+      const comment = isTxHashInLatestPost(x.txHash, postComments.post);
+      if (comment) {
+        txHashesToRemove.push(x.txHash);
+      }
+    });
+    setPendingComments(prev =>
+      prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+    );
+  }, [postComments]);
+
+  React.useEffect(() => {
+    if (pendingCommentsOfPost.length > 0) {
+      startPolling(EnvConfig.POLLING_INTERVAL);
+    } else stopPolling();
+  }, [pendingCommentsOfPost]);
+
   const comments = useMemo(() => {
     if (!postComments) return [];
-    return postComments.post;
-  }, [postComments]);
+    return [...pendingCommentsOfPost, ...postComments.post];
+  }, [pendingCommentsOfPost, postComments]);
 
   const reactions = useMemo(() => {
     if (!postReactions) return [];

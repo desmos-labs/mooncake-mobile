@@ -29,6 +29,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
+  Button,
   Dimensions,
   FlatList,
   Keyboard,
@@ -40,7 +41,7 @@ import {
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -49,8 +50,15 @@ import CommentItem from 'screens/PostInteraction/PostComments/components/Comment
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import useHooks from './useHooks';
+import EnvConfig from 'config/EnvConfig';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import Long from 'long';
+import {
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
 import useStyles from './useStyles';
+import useHooks from './useHooks';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -99,7 +107,6 @@ const PostDetails = () => {
     post,
     postLoading,
     comments,
-    commentsLoading,
     reactions,
     reactionsLoading,
     tips,
@@ -122,6 +129,10 @@ const PostDetails = () => {
 
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(popupMenuParams?.authorAddress || ''),
+  );
+
+  const setPendingComments = useSetRecoilState(
+    pendingPostsState(PendingPostEnum.COMMENT),
   );
 
   const {top} = useSafeAreaInsets();
@@ -174,14 +185,16 @@ const PostDetails = () => {
   }, [post?.author?.profile_pic]);
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      const {isPending} = item;
       return (
         <CommentItem
-          tipped={item?.tipPresence?.aggregate?.count > 0}
-          liked={item?.reactionPresence?.aggregate?.count > 0}
-          commented={item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={item?.repliesCount.aggregate.count!}
+          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
+          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
+          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={!isPending ? 0 : item?.repliesCount.aggregate.count!}
           handlePressMore={event => {
+            if (isPending) return;
             setAnchor({
               x: event.nativeEvent.pageX,
               y: event.nativeEvent.pageY,
@@ -196,19 +209,23 @@ const PostDetails = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => handleAddReaction(item.id)}
-          handlePressTip={() =>
-            handlePressSendTips(item?.author?.address, item.id)
-          }
-          handlePress={() =>
+          handlePressLike={() => {
+            if (isPending) return;
+            handleAddReaction(item.id);
+          }}
+          handlePressTip={() => {
+            if (isPending) return;
+            handlePressSendTips(item?.author?.address, item.id);
+          }}
+          handlePress={() => {
+            if (isPending) return;
             handlePressSelectedComment({
               postId: post.id,
               commentId: item.id,
               subspaceId: item.subspace_id,
-            })
-          }
+            });
+          }}
           handleLongPress={() => console.log('longPress')}
-          loading={commentsLoading}
           {...item}
         />
       );
@@ -329,6 +346,46 @@ const PostDetails = () => {
     popupMenuParams,
   ]);
 
+  const debugAddPending = () => {
+    setPendingComments(prev => [
+      {
+        postData: {
+          id: Math.random() * 10000,
+          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          isPending: true,
+
+          text: 'hello world',
+
+          attachments: [
+            {
+              id: 0,
+              content: {
+                uri: 'https://static.wikia.nocookie.net/mato-seihei-no-slave/images/0/0f/Volume_01.png/revision/latest?cb=20191208175048',
+                mimeType: 'image/jpeg',
+              },
+            },
+          ],
+          author_address: '123123',
+          author: {
+            nickname: 'authorman',
+            dtag: 'authorman',
+            address: '123',
+          } as any,
+        },
+        txHash: 'hashyboi',
+        timestamp: new Date().getTime(),
+        msgType: GrantEnums.MsgCreatePost,
+
+        msg: {
+          value: {
+            conversationId: Long.fromNumber(params.postId),
+          } as any,
+        } as any,
+      },
+      ...prev,
+    ]);
+  };
+
   return postLoading || !post ? (
     <SafeAreaView>
       <ActivityIndicator />
@@ -347,12 +404,14 @@ const PostDetails = () => {
         onRefresh={() => pageRefetch()}
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={[...comments]}
         ListEmptyComponent={ListEmptyComponent}
       />
+      <Button title="debug add post" onPress={debugAddPending} />
+
       <EnterCommentBottomBar
         loading={postCommentLoading}
         handlePostComment={handlePostComment}

@@ -14,13 +14,21 @@ import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import {UploadEvent} from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
-import {useRecoilCallback, useResetRecoilState} from 'recoil';
+import {
+  useRecoilCallback,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import usePendingPosts from 'hooks/usePendingPosts';
+import {
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
 
 /**
  *
@@ -49,6 +57,9 @@ const useCreatePost = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   const {addNewPendingPost} = usePendingPosts();
+  const addNewPendingComment = useSetRecoilState(
+    pendingPostsState(PendingPostEnum.COMMENT),
+  );
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
@@ -124,37 +135,39 @@ const useCreatePost = () => {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();
             // don't add comments to pending for now
-            if (_referencedPosts.length === 0) {
-              const _pendingPost: PendingPost = {
-                postData: {
-                  // id can be any number, since it is assigned by the server
-                  id: Date.now(),
-                  subspace_id: EnvConfig.APP_SUBSPACE_ID,
-                  isPending: true,
+            const _pendingPost: PendingPost = {
+              postData: {
+                // id can be any number, since it is assigned by the server
+                id: Date.now(),
+                subspace_id: EnvConfig.APP_SUBSPACE_ID,
+                isPending: true,
 
-                  text: postText,
+                text: postText,
 
-                  attachments: attachmentUploadResult
-                    ? [
-                        {
-                          id: 0,
-                          content: {
-                            ...attachmentUploadResult,
-                          },
+                attachments: attachmentUploadResult
+                  ? [
+                      {
+                        id: 0,
+                        content: {
+                          ...attachmentUploadResult,
                         },
-                      ]
-                    : [],
+                      },
+                    ]
+                  : [],
 
-                  author_address: activeAddress,
-                },
-                txHash: sendPostResponse.tx_hash,
-                timestamp: Date.now(),
-                msgType: GrantEnums.MsgCreatePost,
+                author_address: activeAddress,
+              },
+              txHash: sendPostResponse.tx_hash,
+              timestamp: Date.now(),
+              msgType: GrantEnums.MsgCreatePost,
 
-                msg,
-              };
+              msg,
+            };
 
+            if (_referencedPosts.length === 0) {
               addNewPendingPost(_pendingPost);
+            } else {
+              addNewPendingComment(prev => [_pendingPost, ...prev]);
             }
 
             return sendPostResponse;
