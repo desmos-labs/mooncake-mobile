@@ -1,3 +1,6 @@
+/**
+ * Every notification type, more to be added if needed
+ */
 enum NotificationTypesEnum {
   Comment = 'comment',
   Reply = 'reply',
