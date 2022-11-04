@@ -4,19 +4,25 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
+import useClearUserData from 'hooks/useClearUserData';
 import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
+import {
+  getLocalWallet,
+  getMnemonic,
+  getPasswordWithBiometrics,
+} from 'lib/SecureStorage';
 import _ from 'lodash';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
-import React, {ComponentProps, useState} from 'react';
+import React, {ComponentProps, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -25,9 +31,8 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useRecoilValue} from 'recoil';
 import * as Yup from 'yup';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import useClearUserData from 'hooks/useClearUserData';
 import useStyles from './useStyles';
 
 type NavProps = CompositeScreenProps<
@@ -66,6 +71,8 @@ const initialFormValues = {
 
 const EnterPassword = () => {
   const [loading, setLoading] = useState(false);
+  const [biometricsLoading, setBiometricsLoading] = useState(false);
+  const {biometrics} = useRecoilValue(appSettingsState);
   const [resolved, setResolved] = useState(false);
   const {t} = useTranslation('enterPassword');
   const {
@@ -95,7 +102,49 @@ const EnterPassword = () => {
         onFailedAuthentication && onFailedAuthentication();
       }
     };
-  }, [resolved]);
+  }, [onFailedAuthentication, resolved]);
+
+  const unlockWithBiometrics = React.useCallback(async () => {
+    setBiometricsLoading(true);
+    try {
+      if (address) {
+        const password = await getPasswordWithBiometrics(address);
+        const wallet = await getLocalWallet(address, password, true);
+        const mnemonic = await getMnemonic(address, password, true);
+
+        if (wallet && onSuccessfulAuthentication) {
+          setResolved(true);
+          onSuccessfulAuthentication({
+            wallet: provideWallet ? wallet : undefined,
+            mnemonic: provideMnemonic ? mnemonic : undefined,
+            authorized: true,
+          });
+          goBack();
+        } else {
+          onFailedAuthentication && onFailedAuthentication();
+        }
+      } else {
+        console.error('Invalid address');
+      }
+    } catch (err) {
+      console.log(String(err));
+    } finally {
+      setBiometricsLoading(false);
+    }
+  }, [
+    address,
+    onSuccessfulAuthentication,
+    provideWallet,
+    provideMnemonic,
+    goBack,
+    onFailedAuthentication,
+  ]);
+
+  useEffect(() => {
+    if (biometrics) {
+      unlockWithBiometrics();
+    }
+  }, [biometrics, unlockWithBiometrics]);
 
   const onFormSubmit = React.useCallback(
     async (
@@ -105,13 +154,9 @@ const EnterPassword = () => {
       setLoading(true);
       const {password} = formValues;
 
-      const useBiometrics = getMMKV<boolean>(
-        MMKVKEYS.USE_BIOMETRICS,
-      ) as boolean;
-
       try {
         if (address) {
-          const wallet = await getLocalWallet(address, password, useBiometrics);
+          const wallet = await getLocalWallet(address, password);
 
           if (!wallet) throw new Error('Error unlocking wallet');
 
@@ -151,7 +196,7 @@ const EnterPassword = () => {
       provideWallet,
       provideMnemonic,
       onSuccessfulAuthentication,
-      // onFailedAuthentication,
+      onFailedAuthentication,
     ],
   );
 
@@ -163,6 +208,7 @@ const EnterPassword = () => {
 
   return (
     <DView
+      showLoadingOverlay={biometricsLoading}
       style={styles.container}
       backgroundColor={theme.colors.white}
       topBar={<TopBar />}
@@ -182,7 +228,7 @@ const EnterPassword = () => {
             </Typography.Subtitle2>
             <DSecureTextInput
               style={styles.textInput}
-              autoFocus={true}
+              autoFocus={!biometrics}
               placeholder={t('inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {

@@ -3,15 +3,16 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import appSettingsState from '@recoil/settings';
 import {useCallback} from 'react';
 import {DesmosLedgerApp} from 'config/LedgerApps';
+import {useRecoilValue} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
 import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {EnterPasswordParams} from 'screens/EnterPassword';
 
 type NavProps = StackScreenProps<
@@ -55,9 +56,7 @@ export default function useUnlockWallet(): (
   {wallet?: OfflineSigner; mnemonic?: string; password?: string} | undefined
 > {
   const navigation = useNavigation<NavProps['navigation']>();
-
-  const useBiometrics = getMMKV<boolean>(MMKVKEYS.USE_BIOMETRICS);
-
+  const {biometrics} = useRecoilValue(appSettingsState);
   return useCallback(
     async ({
       chainAccount,
@@ -73,7 +72,7 @@ export default function useUnlockWallet(): (
           const wallet = await getLocalWallet(
             chainAccount.address,
             prefilledPassword,
-            useBiometrics,
+            biometrics,
           );
 
           if (!wallet) throw new Error('Error unlocking wallet');

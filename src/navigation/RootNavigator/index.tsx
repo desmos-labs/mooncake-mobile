@@ -44,6 +44,7 @@ import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
 import LookingForDevices from 'screens/LookingForDevices';
+import ManageBiometrics from 'screens/ManageBiometrics';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import MnemonicInput, {
@@ -154,6 +155,7 @@ export type RootNavigatorParamList = {
   [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
   [ROUTES.CREATE_POST_CAMERA_ROLL]: undefined;
   [ROUTES.EDIT_PROFILE]: undefined;
+  [ROUTES.MANAGE_BIOMETRICS]: undefined;
 
   // Nested navigators
   [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
@@ -313,6 +315,10 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.MANAGE_CONNECTED_APPS}
         component={ManageConnectedApps}
+      />
+      <Stack.Screen
+        name={ROUTES.MANAGE_BIOMETRICS}
+        component={ManageBiometrics}
       />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />

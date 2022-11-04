@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import BackButton from 'components/BackButton';
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 import useStyles from './useStyles';
 
@@ -14,20 +14,30 @@ export type Props = {
    */
   rightElement?: ReactElement;
   style?: StyleProp<ViewStyle>;
+  /**
+   * Custom behavior for the back button
+   */
+  backButtonCustomBehavior?: () => void;
 };
 
 /**
  * TODO: use react-navigation's header prop on navigator instead
  */
 export const TopBar: React.FC<Props> = props => {
-  const {centerElement, rightElement, style} = props;
+  const {centerElement, rightElement, style, backButtonCustomBehavior} = props;
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
 
-  const navigationGoBack = navigation.canGoBack() ? (
-    <BackButton onPress={navigation.goBack} />
-  ) : null;
+  const navigationGoBack = useMemo(() => {
+    if (backButtonCustomBehavior) {
+      console.log('backButton');
+      return <BackButton onPress={backButtonCustomBehavior} />;
+    }
+    return navigation.canGoBack() ? (
+      <BackButton onPress={navigation.goBack} />
+    ) : null;
+  }, [backButtonCustomBehavior, navigation]);
 
   return (
     <View style={[styles.root, style]}>

@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
@@ -7,15 +8,19 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
+import {
+  getLocalWallet,
+  getMnemonic,
+  getPasswordWithBiometrics,
+} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useRecoilValue} from 'recoil';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
@@ -25,7 +30,9 @@ type NavProps = StackScreenProps<
 >;
 
 const RevealRecoveryPhrase: React.FC<NavProps> = () => {
+  const {biometrics} = useRecoilValue(appSettingsState);
   const [loading, setLoading] = useState(false);
+  const [biometricsLoading, setBiometricsLoading] = useState(false);
   const {activeAddress} = useActiveAccount();
   const navigation = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation();
@@ -36,6 +43,31 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
     password: '',
   };
 
+  const unlockWithBiometrics = React.useCallback(async () => {
+    setBiometricsLoading(true);
+    try {
+      if (activeAddress) {
+        const password = await getPasswordWithBiometrics(activeAddress);
+        const wallet = await getLocalWallet(activeAddress, password, true);
+        const mnemonic = await getMnemonic(activeAddress, password, true);
+
+        if (wallet) {
+          navigation.navigate(ROUTES.SETTINGS_SHOW_SECRET_PHRASE, {
+            mnemonic: mnemonic!,
+          });
+        } else {
+          console.error('Errors while unlocking wallet');
+        }
+      } else {
+        console.error('Invalid address');
+      }
+    } catch (err) {
+      console.log(String(err));
+    } finally {
+      setBiometricsLoading(false);
+    }
+  }, [activeAddress]);
+
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
@@ -44,35 +76,25 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
       setLoading(true);
       const {password} = formValues;
 
-      const useBiometrics = getMMKV<boolean>(
-        MMKVKEYS.USE_BIOMETRICS,
-      ) as boolean;
-
       if (activeAddress) {
         try {
-          const wallet = await getLocalWallet(
-            activeAddress,
-            password,
-            useBiometrics,
-          );
-
+          const wallet = await getLocalWallet(activeAddress, password);
           if (!wallet) setErrors({password: t('error:walletError')});
-
           const mnemonic = await getMnemonic(activeAddress, password);
 
           if (wallet) {
-            setLoading(false);
             navigation.navigate(ROUTES.SETTINGS_SHOW_SECRET_PHRASE, {
               mnemonic: mnemonic!,
             });
           }
         } catch (err) {
-          setLoading(false);
           setErrors({password: t('error:incorrectPassword')});
+        } finally {
+          setLoading(false);
         }
       }
     },
-    [],
+    [activeAddress],
   );
 
   const validationSchema = React.useMemo(() => {
@@ -81,8 +103,17 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (biometrics) {
+      unlockWithBiometrics();
+    }
+  }, [biometrics, unlockWithBiometrics]);
+
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
+    <DView
+      style={styles.root}
+      topBar={<TopBar />}
+      showLoadingOverlay={biometricsLoading}>
       <Typography.H3>{t('settings:reveal secret phrase')}</Typography.H3>
       <Typography.Body6 style={styles.bodyText}>
         {t('settings:firstRow')}
@@ -109,6 +140,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
               {t('settings:enter password to continue')}
             </Typography.Subtitle2>
             <DSecureTextInput
+              autoFocus={!biometrics}
               clearTextOnFocus={true}
               placeholder={t('enterPassword:inputPlaceholder')}
               value={values.password}

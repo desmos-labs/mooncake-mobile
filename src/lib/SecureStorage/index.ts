@@ -88,6 +88,43 @@ async function setItem(
 }
 
 /**
+ * Save and encrypt a password to be used with biometrics auth
+ * @param _wallet the wallet of the account
+ * @param password the password of the account
+ */
+export const savePasswordWithBiometrics = async (
+  _wallet: LocalWallet,
+  password: string,
+) => {
+  // Store the derived password for biometric unlocking
+  return setItem(
+    `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+    deriveSecurePassword(password),
+    {
+      biometrics: true,
+    },
+  );
+};
+/**
+ * Get an encrypted password from biometrics auth
+ * @param address the address of the account
+ */
+export const getPasswordWithBiometrics = async (address: string) => {
+  // Get the password to be derived
+  return (await getItem<string>(
+    `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+    {
+      biometrics: true,
+    },
+  )) as string;
+};
+
+export const deletePasswordWithBiometrics = async (address: string) => {
+  // Delete the password saved with biometrics
+  return deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`);
+};
+
+/**
  * Delete an item from the storage.
  * @param key The item key to delete.
  */
@@ -123,20 +160,6 @@ export const saveNewAccount = async (_account: ChainAccount) => {
 export const getAccounts = async () =>
   getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
 
-export const turnOnBiometrics = async (
-  _wallet: LocalWallet,
-  password: string,
-) => {
-  // Store the derived password for biometric unlocking
-  return setItem(
-    `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-    deriveSecurePassword(password),
-    {
-      biometrics: true,
-    },
-  );
-};
-
 export const saveLocalWallet = async (
   _wallet: LocalWallet,
   password: string,
@@ -156,14 +179,7 @@ export const getLocalWallet = async (
   let walletPassword = password;
   const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
-  if (useBiometrics) {
-    walletPassword = await getItem<string>(
-      `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-      {
-        biometrics: true,
-      },
-    );
-  } else {
+  if (!useBiometrics) {
     walletPassword = deriveSecurePassword(walletPassword!);
   }
 
@@ -197,16 +213,9 @@ export const getMnemonic = async (
   password?: string,
   useBiometrics?: boolean,
 ): Promise<string | undefined> => {
-  let _password: string;
+  let _password = password;
 
-  if (useBiometrics) {
-    _password = (await getItem<string>(
-      `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-      {
-        biometrics: true,
-      },
-    )) as string;
-  } else {
+  if (!useBiometrics) {
     _password = deriveSecurePassword(password!);
   }
 
@@ -217,7 +226,7 @@ export const getMnemonic = async (
     },
   );
 
-  return decryptData(encryptedData!, _password);
+  return decryptData(encryptedData!, _password!);
 };
 
 export const deleteMnemonic = async (address: string) => {
