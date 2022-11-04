@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
+import POST_FIELDS from './fragments/PostFields';
 
 const GetPostBySubspaceIDandPostID = gql`
   ${POST_FIELDS}

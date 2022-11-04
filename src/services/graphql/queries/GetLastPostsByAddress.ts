@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetLastPostsByAddress = gql`
   ${POST_FIELDS}
@@ -16,7 +16,7 @@ const GetLastPostsByAddress = gql`
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(
-        where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
+        where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
       ) {
         aggregate {
           count
