@@ -1,29 +1,29 @@
 import {
-  ACCESS_CONTROL,
-  ACCESSIBLE,
-  getAllGenericPasswordServices,
-  resetGenericPassword,
-  Result,
-  getGenericPassword,
-  setGenericPassword,
-  Options,
-} from 'react-native-keychain';
-import _ from 'lodash';
-
-import LocalWallet from 'lib/LocalWallet';
-import {ChainAccount} from 'types/chains';
-import {
   decryptData,
   deriveSecurePassword,
   encryptData,
 } from 'lib/EncryptionUtils';
+
+import LocalWallet from 'lib/LocalWallet';
+import _ from 'lodash';
+import {
+  ACCESS_CONTROL,
+  ACCESSIBLE,
+  getAllGenericPasswordServices,
+  getGenericPassword,
+  Options,
+  resetGenericPassword,
+  Result,
+  setGenericPassword,
+} from 'react-native-keychain';
+import {ChainAccount} from 'types/chains';
 
 const defaultOptions: Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
   },
   accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-  accessControl: ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+  accessControl: ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
 };
 
 enum SECURE_STORAGE_KEYS {
