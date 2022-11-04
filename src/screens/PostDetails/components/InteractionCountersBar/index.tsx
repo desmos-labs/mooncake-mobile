@@ -1,13 +1,14 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage, {Source} from 'react-native-fast-image';
 import {ActivityIndicator} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
-  accountsHighlitedPics: React.ComponentProps<typeof Image>['source'][];
+  accountsHighlitedPics: Source[];
   tipsCounter: number;
   likesCounter: number;
   handlePressCounters: () => void;
@@ -38,13 +39,22 @@ const InteractionCountersBar = ({
         {accountsHighlitedPics[0] && (
           <View style={{width: calculatedWidth, height: 30}}>
             {accountsHighlitedPics[0] && (
-              <Image source={accountsHighlitedPics[0]} style={styles.icon1} />
+              <FastImage
+                source={accountsHighlitedPics[0]}
+                style={styles.icon1}
+              />
             )}
             {accountsHighlitedPics[1] && (
-              <Image source={accountsHighlitedPics[1]} style={styles.icon2} />
+              <FastImage
+                source={accountsHighlitedPics[1]}
+                style={styles.icon2}
+              />
             )}
             {accountsHighlitedPics[2] && (
-              <Image source={accountsHighlitedPics[2]} style={styles.icon3} />
+              <FastImage
+                source={accountsHighlitedPics[2]}
+                style={styles.icon3}
+              />
             )}
           </View>
         )}

@@ -14,9 +14,11 @@ import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 
 const useHooks = ({
+  postID,
   subspaceID,
   commentID,
 }: {
+  postID: number;
   subspaceID: number;
   commentID: number;
 }) => {
@@ -145,8 +147,8 @@ const useHooks = ({
   );
 
   const handleCommentReply = React.useCallback(async () => {
-    await createPost({conversationId: commentID, referencedPostId: commentID});
-  }, [commentID, createPost]);
+    await createPost({conversationId: postID, referencedPostId: commentID});
+  }, [postID, commentID, createPost]);
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {

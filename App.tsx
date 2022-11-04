@@ -1,6 +1,6 @@
 import {ApolloProvider} from '@apollo/client';
 import {NavigationContainer} from '@react-navigation/native';
-import CustomToast from 'components/CustomSnackbarGroup/components/CustomToast';
+import CustomToast from 'components/CustomToast';
 import LightTheme from 'config/theme/LightTheme';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';

@@ -147,6 +147,8 @@ enum ROUTES {
   // Grants
   GRANTS = 'GRANTS',
   GRANTS_DETAILS = 'GRANTS_DETAILS',
+
+  ACTIVITIES = 'ACTIVITIES',
 }
 
 export default ROUTES;

@@ -1,13 +1,19 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {expandCommentIcon} from 'assets/images';
 import Button from 'components/Button';
+import useDTextInputStyles from 'components/DTextInput/useStyles';
+import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import SelectedCommentImage from 'components/SelectedCommentImage';
+import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
+import useImageFromDevice from 'hooks/useImageFromDevice';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   KeyboardEventName,
@@ -16,17 +22,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Shadow} from 'react-native-shadow-2';
-import ImageButton from 'components/ImageButton';
-import {expandCommentIcon} from 'assets/images';
 import {useRecoilState, useResetRecoilState} from 'recoil';
-import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
-import SelectedCommentImage from 'components/SelectedCommentImage';
-import useImageFromDevice from 'hooks/useImageFromDevice';
-import Spacer from 'components/Spacer';
-import useDTextInputStyles from 'components/DTextInput/useStyles';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -135,7 +135,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
 
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 35 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 40 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         viewStyle={[
@@ -147,7 +147,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         radius={0}>
         <View style={styles.container}>
           {profileImage ? (
-            <Image source={profileImage} style={styles.profilePic} />
+            <FastImage source={profileImage} style={styles.profilePic} />
           ) : (
             <ActivityIndicator style={styles.profilePic} />
           )}

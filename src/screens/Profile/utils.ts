@@ -1,11 +1,12 @@
 import {ImageSourcePropType} from 'react-native';
 import LinkableChains from 'config/LinkableChains';
 import {defaultProfilePic, twitterIcon} from 'assets/images';
+import {Source} from 'react-native-fast-image';
 import {ChainLink} from 'types/link';
 
 export const mapConnectedChainImages = (
   connectedChains: ChainLink[],
-): ImageSourcePropType[] => {
+): Source[] => {
   return connectedChains.map(
     x =>
       LinkableChains.find(y => y.chainConfig.name === x.chainName)?.icon ||
@@ -15,7 +16,7 @@ export const mapConnectedChainImages = (
 
 export const mapConnectedAppImages = (
   connectedApps: ConnectedApps[],
-): ImageSourcePropType[] => {
+): Source[] => {
   const imageMap: {[index: string]: ImageSourcePropType} = {
     twitter: twitterIcon,
   };

@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
+import Activities from 'screens/Activities';
 import AddProfile from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
@@ -193,6 +194,8 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_APP]: ConnectAppParams;
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+
+  [ROUTES.ACTIVITIES]: undefined;
 
   // Grants
   [ROUTES.GRANTS]: undefined;
@@ -404,6 +407,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.GRANTS} component={Grants} />
 
       <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} />
+
+      <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
 
       {/* modals */}
       <Stack.Group

@@ -1,0 +1,15 @@
+{
+  "activities": "Activities",
+  "this week": "This week",
+  "earlier": "Earlier",
+  "liked": "Liked your post",
+  "liked comment": "Liked your comment to a post",
+  "liked reply": "Liked your reply to a comment",
+  "commented": "Commented your post",
+  "commented reply": "Replied to your comment",
+  "followed you": "Started following you",
+  "no activities": "No Activities",
+  "liked your post": "Liked your post",
+  "started following you": "started following you",
+  "tipped you": "tipped {{amount}} DSM to your post"
+}

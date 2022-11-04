@@ -1,9 +1,7 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
-import resultTransactions from '@recoil/resultTransactions';
 import {useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
-import {useSetRecoilState} from 'recoil';
 import ToastConfig from 'config/ToastConfig';
 import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 import usePendingPosts from 'hooks/usePendingPosts';
@@ -12,7 +10,6 @@ import _ from 'lodash';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 const useNotifications = () => {
-  const setTransactions = useSetRecoilState(resultTransactions);
   const toast = useToast();
   const {resolveByTxHash} = usePendingRelationships();
   const {resolveByTxHash: resolvePendingPostsByTxHash} = usePendingPosts();
@@ -27,7 +24,6 @@ const useNotifications = () => {
       });
 
       const txHash = _.get(remoteMessage, 'data.tx_hash');
-      const result = _.get(remoteMessage, 'data.type');
 
       if (remoteMessage.notification) {
         await notifee.displayNotification({
@@ -69,14 +65,6 @@ const useNotifications = () => {
         // TODO: refactor this into one function
         resolveByTxHash(txHash);
         resolvePendingPostsByTxHash(txHash);
-
-        setTransactions(prev => [
-          ...prev,
-          {
-            hash: txHash,
-            result,
-          },
-        ]);
       }
     });
     return unsubscribe;

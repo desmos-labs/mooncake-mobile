@@ -24,6 +24,27 @@ const textPostData: PostItem = {
   text: "I'm a ninja turtle that is a teenager.",
   conversation: null,
   id: 3,
+  reactionPresence: {
+    aggregate: {
+      count: 1,
+    },
+  },
+  commentPresence: {
+    aggregate: {
+      count: 1,
+    },
+  },
+  tipPresence: {
+    aggregate: {
+      count: 1,
+    },
+  },
+  repliesCount: {
+    aggregate: {
+      count: 4,
+    },
+  },
+  tips: [],
 };
 
 const imagePostData: PostItem = {
@@ -34,8 +55,7 @@ const imagePostData: PostItem = {
       id: 1,
       content: {
         uri: 'https://i.imgur.com/aih9snA.png',
-        '@type': '/desmos.posts.v1.Media',
-        mime_type: 'image/png',
+        mimeType: 'image/png',
       },
     },
   ],
@@ -49,8 +69,7 @@ const imageAndTextPostData: PostItem = {
       id: 1,
       content: {
         uri: 'https://i.imgur.com/aih9snA.png',
-        '@type': '/desmos.posts.v1.Media',
-        mime_type: 'image/png',
+        mimeType: 'image/png',
       },
     },
   ],

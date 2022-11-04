@@ -3,10 +3,10 @@ import {useMemo} from 'react';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 
 /**
- * WIP hook to retrieve the user's most recent active account
+ * WIP hook to retrieve the selected address profile datas
  *
  */
-const useVisitingProfileData = (address: string) => {
+const useProfileDataGivenAddress = (address: string) => {
   const {data, loading: visitingProfileLoading} = useQuery(
     GetProfileForAddress,
     {
@@ -22,4 +22,4 @@ const useVisitingProfileData = (address: string) => {
   };
 };
 
-export default useVisitingProfileData;
+export default useProfileDataGivenAddress;
