@@ -11,9 +11,10 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
+import {getSupportedBiometryType} from 'react-native-keychain';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
@@ -35,6 +36,7 @@ const Settings: React.FC<NavProps> = props => {
     navigation: {navigate},
   } = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
+  const [biometricsSupported, setBiometricsSupported] = useState<boolean>();
   const {chainAccount, profileData} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
@@ -47,9 +49,20 @@ const Settings: React.FC<NavProps> = props => {
     'MMM dd yyyy',
   );
 
-  /*  const areBiometricsSupported = useCallback(async () => {
-    console.log('checkIfBiometricsAreSupported');
-  }, []); */
+  const areBiometricsSupported = useCallback(async () => {
+    try {
+      const supported = await getSupportedBiometryType();
+      if (supported) {
+        setBiometricsSupported(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    areBiometricsSupported();
+  }, [areBiometricsSupported]);
 
   const handlePressSignOut = () => {
     deleteAuthToken();
@@ -147,18 +160,20 @@ const Settings: React.FC<NavProps> = props => {
           label={t('change password')}
           onPress={handleChangePassword}
         />
-        <SectionSwitch
-          label={t('enable biometrics')}
-          value={settings.biometrics}
-          onValueChange={() =>
-            setSettings((oldState: AppSettings) => {
-              return {
-                ...oldState,
-                biometrics: !settings.biometrics,
-              };
-            })
-          }
-        />
+        {biometricsSupported && (
+          <SectionSwitch
+            label={t('enable biometrics')}
+            value={settings.biometrics}
+            onValueChange={() =>
+              setSettings((oldState: AppSettings) => {
+                return {
+                  ...oldState,
+                  biometrics: !settings.biometrics,
+                };
+              })
+            }
+          />
+        )}
       </Section>
       <Section style={styles.spacer} title={t('others')}>
         <SectionButton
