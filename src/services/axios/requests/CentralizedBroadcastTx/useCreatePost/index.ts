@@ -20,6 +20,7 @@ import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import usePendingPosts from 'hooks/usePendingPosts';
 
 /**
  *
@@ -46,6 +47,8 @@ const useCreatePost = () => {
   const [loading, setLoading] = React.useState(false);
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+
+  const {addNewPendingPost} = usePendingPosts();
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
@@ -120,6 +123,40 @@ const useCreatePost = () => {
           if (sendPostResponse) {
             // only reset state when we're sure the post has been successfully broadcasted
             resetSharedPostState();
+            // don't add comments to pending for now
+            if (_referencedPosts.length === 0) {
+              const _pendingPost: PendingPost = {
+                postData: {
+                  // id can be any number, since it is assigned by the server
+                  id: Date.now(),
+                  subspace_id: EnvConfig.APP_SUBSPACE_ID,
+                  isPending: true,
+
+                  text: postText,
+
+                  attachments: attachmentUploadResult
+                    ? [
+                        {
+                          id: 0,
+                          content: {
+                            ...attachmentUploadResult,
+                          },
+                        },
+                      ]
+                    : [],
+
+                  author_address: activeAddress,
+                },
+                txHash: sendPostResponse.tx_hash,
+                timestamp: Date.now(),
+                msgType: GrantEnums.MsgCreatePost,
+
+                msg,
+              };
+
+              addNewPendingPost(_pendingPost);
+            }
+
             return sendPostResponse;
           }
         } catch (err: any) {

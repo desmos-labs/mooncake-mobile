@@ -81,8 +81,6 @@ const CreateTextPost = () => {
     }
   }, [createPost, sharedComment]);
 
-  console.log('input focused', inputFocused);
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />

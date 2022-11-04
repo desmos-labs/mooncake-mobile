@@ -5,6 +5,8 @@ export {};
 // TODO: replace this with POST type from desmjs
 declare global {
   interface PostItem {
+    isPending?: boolean;
+
     author_address: string;
 
     author: PostAuthor;
@@ -24,6 +26,10 @@ declare global {
     creation_date: string;
 
     conversation: any;
+
+    transactions: {
+      hash: string;
+    }[];
 
     repliesCount: {
       aggregate: {

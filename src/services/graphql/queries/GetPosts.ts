@@ -34,6 +34,9 @@ export const POST_FIELDS = gql`
         address
       }
     }
+    transactions {
+      hash
+    }
     replies: references(where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}) {
       type
       post {

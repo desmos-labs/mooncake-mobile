@@ -91,6 +91,9 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
       onPress() {
         console.log('test');
       },
+      onPressRetry() {
+        console.log('retry');
+      },
     });
     toast.show('I am a toast', {
       type: ToastConfig.ERROR_NO_RETRY,
