@@ -140,7 +140,7 @@ const CommentItem = ({
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {formattedDate}
+              {isPending ? t('common:broadcasting') : formattedDate}
             </Typography.Body7>
           </View>
 

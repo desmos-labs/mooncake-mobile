@@ -35,5 +35,6 @@
   "tryAgain": "Try Again",
   "success": "Success",
   "failed": "Failed",
-  "oops":"Oops!"
+  "oops":"Oops!",
+  "broadcasting": "Broadcasting..."
 }
