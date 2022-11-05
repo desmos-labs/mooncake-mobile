@@ -13,8 +13,9 @@ const pendingTxState = selector<PendingTx[]>({
   get: ({get}) => {
     const pendingRelationships = get(pendingRelationshipsState);
     const pendingPosts = get(pendingPostsState(PendingPostEnum.POST));
+    const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
 
-    return [...pendingRelationships, ...pendingPosts];
+    return [...pendingRelationships, ...pendingPosts, ...pendingComments];
   },
 });
 
