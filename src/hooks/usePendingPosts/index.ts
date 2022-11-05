@@ -32,9 +32,7 @@ const usePendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(
     pendingPostsState(PendingPostEnum.POST),
   );
-  const latestPostsByUser = useRecoilValue(
-    latestPostsByUserState(PendingPostEnum.POST),
-  );
+  const latestPostsByUser = useRecoilValue(latestPostsByUserState);
 
   const {setPosts} = usePostsFamily(POST_TYPE.DISCOVER);
 

@@ -4,12 +4,11 @@
 import {useGetConnectedAppsPolling} from '@recoil/connectedApps';
 import {useGetFollowingPolling} from '@recoil/following';
 import usePollLatestPostsByUser from '@recoil/latestPostsByUser';
-import {PendingPostEnum} from '@recoil/pendingTx/pendingPosts';
 
 const usePollingQueries = () => {
   useGetFollowingPolling();
   useGetConnectedAppsPolling();
-  usePollLatestPostsByUser(5, PendingPostEnum.POST);
+  usePollLatestPostsByUser(5);
 };
 
 export default usePollingQueries;
