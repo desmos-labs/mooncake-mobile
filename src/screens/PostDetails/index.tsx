@@ -25,7 +25,7 @@ import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -114,6 +114,7 @@ const PostDetails = () => {
     postCommentLoading,
     handlePressReport,
     pageRefetch,
+    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -124,7 +125,6 @@ const PostDetails = () => {
   );
 
   const {top} = useSafeAreaInsets();
-  const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
       console.log('post author', post?.author?.address);

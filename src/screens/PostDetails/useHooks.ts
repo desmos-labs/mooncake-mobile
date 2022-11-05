@@ -4,7 +4,7 @@ import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {
   useRecoilState,
   useRecoilValue,
@@ -25,6 +25,7 @@ import {
 } from '@recoil/pendingTx/pendingPosts';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import EnvConfig from 'config/EnvConfig';
+import {FlatList} from 'react-native';
 
 const useHooks = ({
   postID,
@@ -42,6 +43,7 @@ const useHooks = ({
   const setPendingComments = useSetRecoilState(
     pendingPostsState(PendingPostEnum.COMMENT),
   );
+  const scrollViewRef = useRef<FlatList>(null);
 
   const {
     data: originalPost,
@@ -126,8 +128,11 @@ const useHooks = ({
   React.useEffect(() => {
     if (pendingCommentsOfPost.length > 0) {
       startPolling(EnvConfig.POLLING_INTERVAL);
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd();
+      }, 500);
     } else stopPolling();
-  }, [pendingCommentsOfPost]);
+  }, [scrollViewRef, pendingCommentsOfPost]);
 
   const comments = useMemo(() => {
     if (!postComments) return [];
@@ -266,6 +271,7 @@ const useHooks = ({
     postCommentLoading: loading,
     handlePressReport,
     pageRefetch,
+    scrollViewRef,
   };
 };
 
