@@ -1,5 +1,6 @@
 import {atomFamily, selectorFamily} from 'recoil';
 import Long from 'long';
+import _ from 'lodash';
 
 export enum PendingPostEnum {
   'POST',
@@ -26,8 +27,11 @@ export const pendingCommentsByPost = selectorFamily<PendingPost[], number>({
 
       const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
 
-      return pendingComments.filter(x =>
-        x.msg.value.conversationId.eq(LONG_postID),
-      );
+      return pendingComments.filter(x => {
+        const referencedPosts = _.get(x, 'msg.value.referencedPosts');
+        if (referencedPosts.length === 0) return false;
+
+        return LONG_postID.eq(referencedPosts[0].postId);
+      });
     },
 });
