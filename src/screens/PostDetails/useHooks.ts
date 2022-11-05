@@ -129,7 +129,11 @@ const useHooks = ({
 
   const comments = useMemo(() => {
     if (!postComments) return [];
-    return [...pendingCommentsOfPost, ...postComments.post];
+
+    return [
+      ...postComments.post,
+      ...pendingCommentsOfPost.map(x => x.postData).reverse(),
+    ];
   }, [pendingCommentsOfPost, postComments]);
 
   const reactions = useMemo(() => {

@@ -29,7 +29,6 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
-  Button,
   Dimensions,
   FlatList,
   Keyboard,
@@ -41,7 +40,7 @@ import {
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -50,13 +49,6 @@ import CommentItem from 'screens/PostInteraction/PostComments/components/Comment
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import EnvConfig from 'config/EnvConfig';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import Long from 'long';
-import {
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
 import useStyles from './useStyles';
 import useHooks from './useHooks';
 
@@ -131,10 +123,6 @@ const PostDetails = () => {
     isFollowingAddr(popupMenuParams?.authorAddress || ''),
   );
 
-  const setPendingComments = useSetRecoilState(
-    pendingPostsState(PendingPostEnum.COMMENT),
-  );
-
   const {top} = useSafeAreaInsets();
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
@@ -187,12 +175,15 @@ const PostDetails = () => {
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
       const {isPending} = item;
+
       return (
         <CommentItem
           tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
           liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
           commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={!isPending ? 0 : item?.repliesCount.aggregate.count!}
+          repliesCounter={
+            !isPending ? item?.repliesCount?.aggregate?.count! : 0
+          }
           handlePressMore={event => {
             if (isPending) return;
             setAnchor({
@@ -227,6 +218,7 @@ const PostDetails = () => {
           }}
           handleLongPress={() => console.log('longPress')}
           {...item}
+          author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
@@ -346,46 +338,6 @@ const PostDetails = () => {
     popupMenuParams,
   ]);
 
-  const debugAddPending = () => {
-    setPendingComments(prev => [
-      {
-        postData: {
-          id: Math.random() * 10000,
-          subspace_id: EnvConfig.APP_SUBSPACE_ID,
-          isPending: true,
-
-          text: 'hello world',
-
-          attachments: [
-            {
-              id: 0,
-              content: {
-                uri: 'https://static.wikia.nocookie.net/mato-seihei-no-slave/images/0/0f/Volume_01.png/revision/latest?cb=20191208175048',
-                mimeType: 'image/jpeg',
-              },
-            },
-          ],
-          author_address: '123123',
-          author: {
-            nickname: 'authorman',
-            dtag: 'authorman',
-            address: '123',
-          } as any,
-        },
-        txHash: 'hashyboi',
-        timestamp: new Date().getTime(),
-        msgType: GrantEnums.MsgCreatePost,
-
-        msg: {
-          value: {
-            conversationId: Long.fromNumber(params.postId),
-          } as any,
-        } as any,
-      },
-      ...prev,
-    ]);
-  };
-
   return postLoading || !post ? (
     <SafeAreaView>
       <ActivityIndicator />
@@ -410,8 +362,6 @@ const PostDetails = () => {
         data={[...comments]}
         ListEmptyComponent={ListEmptyComponent}
       />
-      <Button title="debug add post" onPress={debugAddPending} />
-
       <EnterCommentBottomBar
         loading={postCommentLoading}
         handlePostComment={handlePostComment}
