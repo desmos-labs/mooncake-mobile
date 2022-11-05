@@ -21,17 +21,15 @@ export const pendingPostsState = atomFamily<PendingPost[], PendingPostEnum>({
 export const pendingCommentsByPost = selectorFamily<PendingPost[], number>({
   key: 'pendingCommentsByPost',
   get:
-    postID =>
+    referencePostID =>
     ({get}) => {
-      const LONG_postID = Long.fromNumber(postID);
-
       const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
 
       return pendingComments.filter(x => {
         const referencedPosts = _.get(x, 'msg.value.referencedPosts');
         if (referencedPosts.length === 0) return false;
 
-        return LONG_postID.eq(referencedPosts[0].postId);
+        return Long.fromNumber(referencePostID).eq(referencedPosts[0].postId);
       });
     },
 });
