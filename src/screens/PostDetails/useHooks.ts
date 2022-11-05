@@ -103,11 +103,9 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
-  const post = React.useMemo(() => {
-    if (!originalPost) return {};
-    return originalPost.posts[0];
-  }, [originalPost]);
-
+  /**
+   * Batch pending txHashes for removal if they have been broadcasted
+   */
   React.useEffect(() => {
     const txHashesToRemove: string[] = [];
     pendingCommentsOfPost.forEach(x => {
@@ -121,6 +119,9 @@ const useHooks = ({
     );
   }, [postComments]);
 
+  /**
+   * Start/stop polling comments if there is a pending comment for the parent post.
+   */
   React.useEffect(() => {
     if (pendingCommentsOfPost.length > 0) {
       startPolling(EnvConfig.POLLING_INTERVAL);
@@ -136,6 +137,20 @@ const useHooks = ({
     ];
   }, [pendingCommentsOfPost, postComments]);
 
+  const pageRefetch = async () => {
+    await Promise.all([
+      postRefetch,
+      commentsRefetch,
+      reactionsRefetch,
+      tipsRefetch,
+    ]);
+  };
+
+  const post = React.useMemo(() => {
+    if (!originalPost) return {};
+    return originalPost.posts[0];
+  }, [originalPost]);
+
   const reactions = useMemo(() => {
     if (!postReactions) return [];
     return postReactions.reaction;
@@ -143,28 +158,8 @@ const useHooks = ({
 
   const tips = useMemo(() => {
     if (!postTips) return [];
-    console.log(postTips);
     return postTips.tip_post;
   }, [postTips]);
-
-  const pageRefetch = async () => {
-    await postRefetch({
-      postID,
-      subspaceID,
-    });
-    await commentsRefetch({
-      postID,
-      subspaceID,
-    });
-    await reactionsRefetch({
-      postID,
-      subspaceID,
-    });
-    await tipsRefetch({
-      postID,
-      subspaceID,
-    });
-  };
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 

@@ -127,7 +127,7 @@ const PostDetails = () => {
   const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
-      console.log(post?.author?.address);
+      console.log('post author', post?.author?.address);
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
