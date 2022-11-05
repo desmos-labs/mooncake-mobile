@@ -107,6 +107,7 @@ const useHooks = ({
    * Batch pending txHashes for removal if they have been broadcasted
    */
   React.useEffect(() => {
+    if (!postComments) return;
     const txHashesToRemove: string[] = [];
     pendingCommentsOfPost.forEach(x => {
       const comment = isTxHashInLatestPost(x.txHash, postComments.post);
