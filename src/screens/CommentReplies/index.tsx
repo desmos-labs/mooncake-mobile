@@ -11,7 +11,7 @@ import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -90,12 +90,12 @@ const CommentReplies = () => {
     handleCommentReply,
     handleAddReaction,
     handlePressReport,
+    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });
-  const scrollViewRef = useRef<FlatList>(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -155,14 +155,17 @@ const CommentReplies = () => {
   );
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      const {isPending} = item;
       return (
         <CommentItem
-          commented={item?.post?.commentPresence?.aggregate?.count > 0}
-          tipped={item?.post?.tipPresence?.aggregate?.count > 0}
-          liked={item?.post?.reactionPresence?.aggregate?.count > 0}
-          repliesCounter={item.post.repliesCount.aggregate.count}
-          loading={commentsLoading}
+          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
+          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
+          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={
+            !isPending ? item?.repliesCount?.aggregate?.count! : 0
+          }
+          isPending={isPending}
           disableInnerComment={true}
           handlePressMore={event => {
             setAnchor({
@@ -170,20 +173,21 @@ const CommentReplies = () => {
               y: event.nativeEvent.pageY,
             });
             setPopupMenuParams({
-              postId: item.post.id,
-              subspaceId: item.post.subspace_id,
-              authorAddress: item.post.author.address,
+              postId: item.id,
+              subspaceId: item.subspace_id,
+              authorAddress: item.author.address,
             });
             setMenuVisible(true);
           }}
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => handleAddReaction(item.post.id)}
+          handlePressLike={() => !isPending && handleAddReaction(item.id)}
           handlePressTip={() =>
-            handlePressSendTips(item?.post?.author?.address, item.post.id)
+            !isPending && handlePressSendTips(item?.author?.address, item.id)
           }
-          {...item.post}
+          {...item}
+          author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
@@ -246,10 +250,6 @@ const CommentReplies = () => {
     handlePressCounters,
   ]);
 
-  const flatListData = useMemo(() => {
-    return comments;
-  }, [comments]);
-
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
     <ActivityIndicator />
   ) : (
@@ -264,13 +264,13 @@ const CommentReplies = () => {
         scrollEnabled={true}
         refreshing={mainCommentLoading}
         onRefresh={() => pageRefetch()}
-        keyExtractor={item => item.post.id}
+        keyExtractor={item => String(item.id)}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={flatListData}
+        data={comments}
       />
       <EnterCommentBottomBar
         loading={commentReplyLoading}

@@ -3,8 +3,13 @@ import {useNavigation} from '@react-navigation/native';
 import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import React, {useMemo, useRef} from 'react';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
@@ -12,6 +17,14 @@ import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPo
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import EnvConfig from 'config/EnvConfig';
+import {
+  pendingCommentsByPost,
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
+import {FlatList} from 'react-native';
 
 const useHooks = ({
   postID,
@@ -28,6 +41,8 @@ const useHooks = ({
   const {navigate} = useNavigation<NavProps['navigation']>();
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
+
+  const scrollViewRef = useRef<FlatList>(null);
 
   const {
     data: originalComment,
@@ -49,6 +64,8 @@ const useHooks = ({
     data: commentReplies,
     loading: commentsLoading,
     refetch: commentsRefetch,
+    startPolling,
+    stopPolling,
   } = useQuery(GetCommentReplies, {
     variables: {
       postID: commentID,
@@ -90,11 +107,6 @@ const useHooks = ({
     return originalComment.posts[0];
   }, [originalComment]);
 
-  const comments = useMemo(() => {
-    if (!commentReplies) return [];
-    return commentReplies.post_reference;
-  }, [commentReplies]);
-
   const reactions = useMemo(() => {
     if (!commentReactions) return [];
     return commentReactions.reaction;
@@ -104,6 +116,52 @@ const useHooks = ({
     if (!postTips) return [];
     return postTips.tip_post;
   }, [postTips]);
+
+  const setPendingComments = useSetRecoilState(
+    pendingPostsState(PendingPostEnum.COMMENT),
+  );
+
+  const pendingCommentsOfPost = useRecoilValue(
+    pendingCommentsByPost(commentID),
+  );
+
+  /**
+   * Batch pending txHashes for removal if they have been broadcasted
+   */
+  React.useEffect(() => {
+    if (!commentReplies) return;
+    const _comments = commentReplies.post_reference.map((x: any) => x.post);
+    const txHashesToRemove: string[] = [];
+    pendingCommentsOfPost.forEach(x => {
+      const comment = isTxHashInLatestPost(x.txHash, _comments);
+      if (comment) {
+        txHashesToRemove.push(x.txHash);
+      }
+    });
+    setPendingComments(prev =>
+      prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+    );
+  }, [commentReplies]);
+
+  /**
+   * Start/stop polling comments if there is a pending comment for the parent post.
+   */
+  React.useEffect(() => {
+    if (pendingCommentsOfPost.length > 0) {
+      startPolling(EnvConfig.POLLING_INTERVAL);
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd();
+      }, 500);
+    } else stopPolling();
+  }, [scrollViewRef, pendingCommentsOfPost]);
+
+  const comments = useMemo(() => {
+    if (!commentReplies) return [];
+    return [
+      ...commentReplies.post_reference.map((x: any) => x.post),
+      ...pendingCommentsOfPost.map(x => x.postData).reverse(),
+    ];
+  }, [commentReplies, pendingCommentsOfPost]);
 
   const pageRefetch = async () => {
     await mainCommentRefetch({
@@ -201,6 +259,7 @@ const useHooks = ({
     pageRefetch,
     handleAddReaction,
     handlePressReport,
+    scrollViewRef,
   };
 };
 

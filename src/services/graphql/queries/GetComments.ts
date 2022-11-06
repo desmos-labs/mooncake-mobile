@@ -83,6 +83,9 @@ export const GetCommentReplies = gql`
             address
           }
         }
+        transactions {
+          hash
+        }
         repliesCount: referees_aggregate(
           where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
         ) {
