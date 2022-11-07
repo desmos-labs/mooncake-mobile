@@ -100,7 +100,10 @@ describe('services/axios: useLogin', () => {
     const {result} = renderHook(() => useLogin());
 
     try {
-      await result.current.login(DUMMY_ADDRESS);
+      await result.current.login({
+        activeAddress: DUMMY_ADDRESS,
+        password: '123',
+      });
     } catch (err: any) {
       expect(String(err)).toBe(
         'Error: [LOGIN] Unable to resolve wallet from unlock request',
