@@ -10,7 +10,9 @@ import React, {ReactNode} from 'react';
 import {
   Image,
   ImageSourcePropType,
+  StyleProp,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -27,6 +29,7 @@ export type ConfirmModalParams = {
    * Additional description for the title.
    */
   subtitle?: string | ReactNode;
+  subtitleStyle?: StyleProp<TextStyle>;
 
   /**
    * Image to be shown between the title and subtitle
@@ -90,6 +93,7 @@ const ConfirmModal = () => {
     params: {
       title,
       subtitle,
+      subtitleStyle,
       primaryButtonLabel,
       secondaryButtonLabel,
       onDismiss,
@@ -127,7 +131,7 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         {image && <Image source={image} style={styles.imageStyle} />}
-        <Typography.Body5 style={styles.subtitleText}>
+        <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
           {subtitle}
         </Typography.Body5>
         {primaryButtonLabel && (
