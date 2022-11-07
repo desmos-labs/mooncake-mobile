@@ -205,19 +205,21 @@ const Grants: React.FC<NavProps> = props => {
           }
           checked={checkPermission(GrantEnums.MsgExecuteContract)}
         />
-        <View>
-          <Spacer paddingTop={theme.spacing.s} />
-          <Button
-            loading={loading}
-            mode="contained"
-            color={theme.colors.surfaceBlack}
-            onPress={grantAllPermissions}
-            style={{justifyContent: 'flex-end'}}>
-            <Typography.Button2 style={{color: theme.colors.white}}>
-              {t('grant all permissions')}
-            </Typography.Button2>
-          </Button>
-        </View>
+        {grantsGiven.length !== Object.keys(GrantEnums).length && (
+          <View>
+            <Spacer paddingTop={theme.spacing.s} />
+            <Button
+              loading={loading}
+              mode="contained"
+              color={theme.colors.surfaceBlack}
+              onPress={grantAllPermissions}
+              style={{justifyContent: 'flex-end'}}>
+              <Typography.Button2 style={{color: theme.colors.white}}>
+                {t('grant all permissions')}
+              </Typography.Button2>
+            </Button>
+          </View>
+        )}
       </ScrollView>
     </DView>
   );
