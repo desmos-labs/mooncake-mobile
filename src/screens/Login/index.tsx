@@ -90,7 +90,10 @@ const Login = () => {
         t('toast:errorSystemBusy', {type: ToastConfig.ERROR_NO_RETRY});
       }
     } catch (err) {
-      setError(t('error:incorrectPassword'));
+      // disable wrong password error if user cancels biometrics
+      if (!String(err).includes('code: 13, msg: Cancel')) {
+        setError(t('error:incorrectPassword'));
+      }
     } finally {
       setBiometricsLoading(false);
     }
