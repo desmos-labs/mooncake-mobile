@@ -124,6 +124,7 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-recommended": "^4.1.0",
