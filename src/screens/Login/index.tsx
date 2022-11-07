@@ -119,7 +119,6 @@ const Login = () => {
       const loginResponse = await login({
         activeAddress,
         password,
-        isDerivedPassword: false,
       });
 
       if (!loginResponse) {

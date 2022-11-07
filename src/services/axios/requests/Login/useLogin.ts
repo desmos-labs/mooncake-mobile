@@ -17,7 +17,7 @@ const useLogin = () => {
     }: {
       activeAddress: string;
       password: string;
-      isDerivedPassword: boolean;
+      isDerivedPassword?: boolean;
     }) => {
       const accounts = await getAccounts();
 
