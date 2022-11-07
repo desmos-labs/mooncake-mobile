@@ -170,7 +170,7 @@ describe('lib/SecureStorage', () => {
       await getLocalWallet('mockAddress', '123');
 
       // expect a derived secure password from the user's entered password
-      // expect(deriveSecurePassword).toHaveBeenCalledWith('123');
+      expect(deriveSecurePassword).toHaveBeenCalledWith('123');
 
       // expect the wallet data to be deserialized
       expect(deserializeSpy).toHaveBeenCalledWith(
