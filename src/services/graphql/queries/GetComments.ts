@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {POST_FIELDS} from 'services/graphql/queries/GetPosts';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 export const GetPostComments = gql`
   ${POST_FIELDS}
@@ -82,6 +82,9 @@ export const GetCommentReplies = gql`
           author {
             address
           }
+        }
+        transactions {
+          hash
         }
         repliesCount: referees_aggregate(
           where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}

@@ -4,8 +4,13 @@ import activeProfileState from '@recoil/activeProfileState';
 import sharedPostState from '@recoil/sharedPostState';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import React, {useMemo, useRef} from 'react';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetPostComments} from 'services/graphql/queries/GetComments';
@@ -13,6 +18,14 @@ import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPo
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {
+  pendingCommentsByPost,
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
+import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import EnvConfig from 'config/EnvConfig';
+import {FlatList} from 'react-native';
 
 const useHooks = ({
   postID,
@@ -26,6 +39,11 @@ const useHooks = ({
   const {createPost, loading} = useCreatePost();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
+  const setPendingComments = useSetRecoilState(
+    pendingPostsState(PendingPostEnum.COMMENT),
+  );
+  const scrollViewRef = useRef<FlatList>(null);
 
   const {
     data: originalPost,
@@ -48,6 +66,8 @@ const useHooks = ({
     data: postComments,
     loading: commentsLoading,
     refetch: commentsRefetch,
+    startPolling,
+    stopPolling,
   } = useQuery(GetPostComments, {
     variables: {
       postID,
@@ -85,15 +105,57 @@ const useHooks = ({
     fetchPolicy: 'no-cache',
   });
 
+  /**
+   * Batch pending txHashes for removal if they have been broadcasted
+   */
+  React.useEffect(() => {
+    if (!postComments) return;
+    const txHashesToRemove: string[] = [];
+    pendingCommentsOfPost.forEach(x => {
+      const comment = isTxHashInLatestPost(x.txHash, postComments.post);
+      if (comment) {
+        txHashesToRemove.push(x.txHash);
+      }
+    });
+    setPendingComments(prev =>
+      prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+    );
+  }, [postComments]);
+
+  /**
+   * Start/stop polling comments if there is a pending comment for the parent post.
+   */
+  React.useEffect(() => {
+    if (pendingCommentsOfPost.length > 0) {
+      startPolling(EnvConfig.POLLING_INTERVAL);
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd();
+      }, 500);
+    } else stopPolling();
+  }, [scrollViewRef, pendingCommentsOfPost]);
+
+  const comments = useMemo(() => {
+    if (!postComments) return [];
+
+    return [
+      ...postComments.post,
+      ...pendingCommentsOfPost.map(x => x.postData).reverse(),
+    ];
+  }, [pendingCommentsOfPost, postComments]);
+
+  const pageRefetch = async () => {
+    await Promise.all([
+      postRefetch,
+      commentsRefetch,
+      reactionsRefetch,
+      tipsRefetch,
+    ]);
+  };
+
   const post = React.useMemo(() => {
     if (!originalPost) return {};
     return originalPost.posts[0];
   }, [originalPost]);
-
-  const comments = useMemo(() => {
-    if (!postComments) return [];
-    return postComments.post;
-  }, [postComments]);
 
   const reactions = useMemo(() => {
     if (!postReactions) return [];
@@ -102,28 +164,8 @@ const useHooks = ({
 
   const tips = useMemo(() => {
     if (!postTips) return [];
-    console.log(postTips);
     return postTips.tip_post;
   }, [postTips]);
-
-  const pageRefetch = async () => {
-    await postRefetch({
-      postID,
-      subspaceID,
-    });
-    await commentsRefetch({
-      postID,
-      subspaceID,
-    });
-    await reactionsRefetch({
-      postID,
-      subspaceID,
-    });
-    await tipsRefetch({
-      postID,
-      subspaceID,
-    });
-  };
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 
@@ -229,6 +271,7 @@ const useHooks = ({
     postCommentLoading: loading,
     handlePressReport,
     pageRefetch,
+    scrollViewRef,
   };
 };
 

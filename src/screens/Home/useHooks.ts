@@ -14,7 +14,10 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
-import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
+import {
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
 import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
 
@@ -50,7 +53,7 @@ const useHooks = () => {
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
-  const pendingPosts = useRecoilValue(pendingPostsState);
+  const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
 
   const {
     posts,

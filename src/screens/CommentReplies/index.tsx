@@ -5,21 +5,17 @@ import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import PopupMenu from 'components/PopupMenu';
-import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
-  Keyboard,
-  KeyboardEventName,
   ListRenderItemInfo,
-  Platform,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
@@ -90,36 +86,18 @@ const CommentReplies = () => {
     handleCommentReply,
     handleAddReaction,
     handlePressReport,
+    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });
-  const scrollViewRef = useRef<FlatList>(null);
 
   useFocusEffect(
     React.useCallback(() => {
       pageRefetch();
     }, [pageRefetch]),
   );
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.select({
-        ios: 'keyboardWillShow',
-        android: 'keyboardDidShow',
-      }) as KeyboardEventName,
-      () => {
-        setTimeout(
-          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
-          100,
-        );
-      },
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   const countersImages = useMemo(() => {
     const reactionsImages = reactions.map((reaction: any) => {
@@ -155,14 +133,17 @@ const CommentReplies = () => {
   );
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      const {isPending} = item;
       return (
         <CommentItem
-          commented={item?.post?.commentPresence?.aggregate?.count > 0}
-          tipped={item?.post?.tipPresence?.aggregate?.count > 0}
-          liked={item?.post?.reactionPresence?.aggregate?.count > 0}
-          repliesCounter={item.post.repliesCount.aggregate.count}
-          loading={commentsLoading}
+          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
+          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
+          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={
+            !isPending ? item?.repliesCount?.aggregate?.count! : 0
+          }
+          isPending={isPending}
           disableInnerComment={true}
           handlePressMore={event => {
             setAnchor({
@@ -170,20 +151,21 @@ const CommentReplies = () => {
               y: event.nativeEvent.pageY,
             });
             setPopupMenuParams({
-              postId: item.post.id,
-              subspaceId: item.post.subspace_id,
-              authorAddress: item.post.author.address,
+              postId: item.id,
+              subspaceId: item.subspace_id,
+              authorAddress: item.author.address,
             });
             setMenuVisible(true);
           }}
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => handleAddReaction(item.post.id)}
+          handlePressLike={() => !isPending && handleAddReaction(item.id)}
           handlePressTip={() =>
-            handlePressSendTips(item?.post?.author?.address, item.post.id)
+            !isPending && handlePressSendTips(item?.author?.address, item.id)
           }
-          {...item.post}
+          {...item}
+          author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
@@ -220,19 +202,15 @@ const CommentReplies = () => {
           }
           {...mainComment}
         />
-        <Spacer paddingVertical={16} />
         <Divider style={styles.divider} />
-        <Spacer paddingVertical={16}>
-          <InteractionCountersBar
-            loading={reactionsLoading && tipsLoading}
-            likesCounter={reactions.length}
-            tipsCounter={tips.length}
-            handlePressCounters={handlePressCounters}
-            accountsHighlitedPics={countersImages}
-          />
-        </Spacer>
+        <InteractionCountersBar
+          loading={reactionsLoading && tipsLoading}
+          likesCounter={reactions.length}
+          tipsCounter={tips.length}
+          handlePressCounters={handlePressCounters}
+          accountsHighlitedPics={countersImages}
+        />
         <Divider style={styles.divider} />
-        <Spacer paddingBottom={16} />
       </>
     );
   }, [
@@ -245,10 +223,6 @@ const CommentReplies = () => {
     handlePressSendTips,
     handlePressCounters,
   ]);
-
-  const flatListData = useMemo(() => {
-    return comments;
-  }, [comments]);
 
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
     <ActivityIndicator />
@@ -263,14 +237,14 @@ const CommentReplies = () => {
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={mainCommentLoading}
-        onRefresh={() => pageRefetch()}
-        keyExtractor={item => item.post.id}
+        onRefresh={pageRefetch}
+        keyExtractor={item => String(item.id)}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={flatListData}
+        data={comments}
       />
       <EnterCommentBottomBar
         loading={commentReplyLoading}

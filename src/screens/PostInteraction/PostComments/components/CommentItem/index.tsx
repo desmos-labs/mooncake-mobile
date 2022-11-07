@@ -1,4 +1,4 @@
-import {buildingBlockAnim} from 'assets/animations';
+import {loadingOrange} from 'assets/animations';
 import {
   commentIcon,
   commentIconCommented,
@@ -27,8 +27,8 @@ import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 // note: props are not final
-type Props = {
-  disableInnerComment: boolean;
+interface Props extends PostItem {
+  disableInnerComment?: boolean;
 
   handlePressMore: (event: GestureResponderEvent) => void;
 
@@ -44,8 +44,6 @@ type Props = {
 
   repliesCounter: number;
 
-  author: ProfileSummary;
-
   // not final
   reactions: {}[];
 
@@ -53,18 +51,12 @@ type Props = {
 
   creation_date: string;
 
-  text?: string;
-
-  attachments?: PostAttachment[];
-
   liked?: boolean;
 
   tipped?: boolean;
 
   commented?: boolean;
-
-  loading?: boolean;
-};
+}
 
 const CommentItem = ({
   disableInnerComment,
@@ -83,8 +75,8 @@ const CommentItem = ({
   liked,
   tipped,
   commented,
-  loading,
   repliesCounter,
+  isPending,
 }: Props) => {
   const styles = useStyles(disableInnerComment);
   const {t} = useTranslation();
@@ -125,14 +117,13 @@ const CommentItem = ({
                 @{author?.dtag}
               </Typography.Body7>
             </View>
-            {/* loading indicator would go here */}
           </View>
 
-          {loading ? (
+          {isPending ? (
             <ThemedLottieView
               loop
               autoPlay
-              source={buildingBlockAnim}
+              source={loadingOrange}
               style={styles.loadingAnim}
             />
           ) : (
@@ -148,7 +139,7 @@ const CommentItem = ({
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {formattedDate}
+              {isPending ? t('common:broadcasting') : formattedDate}
             </Typography.Body7>
           </View>
 

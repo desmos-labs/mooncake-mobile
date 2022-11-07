@@ -25,7 +25,7 @@ import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -49,8 +49,8 @@ import CommentItem from 'screens/PostInteraction/PostComments/components/Comment
 import {isFollowingAddr} from '@recoil/following';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import useHooks from './useHooks';
 import useStyles from './useStyles';
+import useHooks from './useHooks';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -99,7 +99,6 @@ const PostDetails = () => {
     post,
     postLoading,
     comments,
-    commentsLoading,
     reactions,
     reactionsLoading,
     tips,
@@ -115,6 +114,7 @@ const PostDetails = () => {
     postCommentLoading,
     handlePressReport,
     pageRefetch,
+    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -125,10 +125,9 @@ const PostDetails = () => {
   );
 
   const {top} = useSafeAreaInsets();
-  const scrollViewRef = useRef<FlatList>(null);
   useFocusEffect(
     React.useCallback(() => {
-      console.log(post?.author?.address);
+      console.log('post author', post?.author?.address);
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,
@@ -174,14 +173,19 @@ const PostDetails = () => {
   }, [post?.author?.profile_pic]);
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      const {isPending} = item;
+
       return (
         <CommentItem
-          tipped={item?.tipPresence?.aggregate?.count > 0}
-          liked={item?.reactionPresence?.aggregate?.count > 0}
-          commented={item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={item?.repliesCount.aggregate.count!}
+          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
+          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
+          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={
+            !isPending ? item?.repliesCount?.aggregate?.count! : 0
+          }
           handlePressMore={event => {
+            if (isPending) return;
             setAnchor({
               x: event.nativeEvent.pageX,
               y: event.nativeEvent.pageY,
@@ -196,20 +200,25 @@ const PostDetails = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
-          handlePressLike={() => handleAddReaction(item.id)}
-          handlePressTip={() =>
-            handlePressSendTips(item?.author?.address, item.id)
-          }
-          handlePress={() =>
+          handlePressLike={() => {
+            if (isPending) return;
+            handleAddReaction(item.id);
+          }}
+          handlePressTip={() => {
+            if (isPending) return;
+            handlePressSendTips(item?.author?.address, item.id);
+          }}
+          handlePress={() => {
+            if (isPending) return;
             handlePressSelectedComment({
               postId: post.id,
               commentId: item.id,
               subspaceId: item.subspace_id,
-            })
-          }
+            });
+          }}
           handleLongPress={() => console.log('longPress')}
-          loading={commentsLoading}
           {...item}
+          author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
@@ -347,7 +356,7 @@ const PostDetails = () => {
         onRefresh={() => pageRefetch()}
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={[...comments]}

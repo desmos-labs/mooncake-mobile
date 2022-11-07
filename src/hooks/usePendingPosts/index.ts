@@ -2,7 +2,10 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 import {latestPostsByUserState} from '@recoil/latestPostsByUser';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
 import React from 'react';
-import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
+import {
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
 
 /**
  * Check if an array of PostItems contains a given txHash
@@ -10,7 +13,7 @@ import {pendingPostsState} from '@recoil/pendingTx/pendingPosts';
  * @param {PostItem[]} posts - An array of posts to search for the txHash in.
  * @returns {PostItem|undefined} - The matching post data or undefined if no match.
  */
-const isTxHashInLatestPost = (
+export const isTxHashInLatestPost = (
   txHash: string,
   posts: PostItem[],
 ): PostItem | undefined =>
@@ -26,7 +29,9 @@ const isTxHashInLatestPost = (
  * onto the chain.
  */
 const usePendingPosts = () => {
-  const [pendingPosts, setPendingPosts] = useRecoilState(pendingPostsState);
+  const [pendingPosts, setPendingPosts] = useRecoilState(
+    pendingPostsState(PendingPostEnum.POST),
+  );
   const latestPostsByUser = useRecoilValue(latestPostsByUserState);
 
   const {setPosts} = usePostsFamily(POST_TYPE.DISCOVER);
