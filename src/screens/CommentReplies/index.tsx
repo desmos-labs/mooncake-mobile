@@ -5,21 +5,17 @@ import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import PopupMenu from 'components/PopupMenu';
-import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
-  Keyboard,
-  KeyboardEventName,
   ListRenderItemInfo,
-  Platform,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
@@ -102,24 +98,6 @@ const CommentReplies = () => {
       pageRefetch();
     }, [pageRefetch]),
   );
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.select({
-        ios: 'keyboardWillShow',
-        android: 'keyboardDidShow',
-      }) as KeyboardEventName,
-      () => {
-        setTimeout(
-          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
-          100,
-        );
-      },
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   const countersImages = useMemo(() => {
     const reactionsImages = reactions.map((reaction: any) => {
@@ -224,19 +202,15 @@ const CommentReplies = () => {
           }
           {...mainComment}
         />
-        <Spacer paddingVertical={16} />
         <Divider style={styles.divider} />
-        <Spacer paddingVertical={16}>
-          <InteractionCountersBar
-            loading={reactionsLoading && tipsLoading}
-            likesCounter={reactions.length}
-            tipsCounter={tips.length}
-            handlePressCounters={handlePressCounters}
-            accountsHighlitedPics={countersImages}
-          />
-        </Spacer>
+        <InteractionCountersBar
+          loading={reactionsLoading && tipsLoading}
+          likesCounter={reactions.length}
+          tipsCounter={tips.length}
+          handlePressCounters={handlePressCounters}
+          accountsHighlitedPics={countersImages}
+        />
         <Divider style={styles.divider} />
-        <Spacer paddingBottom={16} />
       </>
     );
   }, [
@@ -263,7 +237,7 @@ const CommentReplies = () => {
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={mainCommentLoading}
-        onRefresh={() => pageRefetch()}
+        onRefresh={pageRefetch}
         keyExtractor={item => String(item.id)}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={ListEmptyComponent}

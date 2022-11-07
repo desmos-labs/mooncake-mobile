@@ -117,7 +117,6 @@ const CommentItem = ({
                 @{author?.dtag}
               </Typography.Body7>
             </View>
-            {/* loading indicator would go here */}
           </View>
 
           {isPending ? (

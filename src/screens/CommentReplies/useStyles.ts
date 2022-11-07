@@ -25,6 +25,7 @@ const useStyles = makeStyle(theme => ({
     borderColor: theme.colors.dividerGrey,
     borderWidth: 0.5,
     marginHorizontal: -30,
+    marginVertical: 16,
   },
 }));
 

@@ -24,7 +24,7 @@ import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
-import {FlatList} from 'react-native';
+import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
 
 const useHooks = ({
   postID,
@@ -43,6 +43,28 @@ const useHooks = ({
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
   const scrollViewRef = useRef<FlatList>(null);
+
+  React.useEffect(() => {
+    resetSharedPostState();
+  }, []);
+
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.select({
+        ios: 'keyboardWillShow',
+        android: 'keyboardDidShow',
+      }) as KeyboardEventName,
+      () => {
+        setTimeout(
+          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
+          100,
+        );
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, [scrollViewRef]);
 
   const {
     data: originalComment,
@@ -164,25 +186,15 @@ const useHooks = ({
   }, [commentReplies, pendingCommentsOfPost]);
 
   const pageRefetch = async () => {
-    await mainCommentRefetch({
-      postID: commentID,
-      subspaceID,
-    });
-    await commentsRefetch({
-      postID: commentID,
-      subspaceID,
-    });
-    await reactionsRefetch({
-      postID: commentID,
-      subspaceID,
-    });
-    await tipsRefetch({
-      postID: commentID,
-      subspaceID,
-    });
+    await Promise.all([
+      mainCommentRefetch,
+      commentsRefetch,
+      reactionsRefetch,
+      tipsRefetch,
+    ]);
   };
 
-  const handlePressCounters = React.useCallback(() => {
+  const handlePressCounters = () =>
     navigate(ROUTES.POST_INTERACTION, {
       screen: ROUTES.POST_REACTIONS,
       params: {
@@ -192,51 +204,34 @@ const useHooks = ({
         subspaceId: subspaceID,
       },
     });
-  }, []);
 
-  const handlePressReport = React.useCallback(
-    (postId: number, subspaceId: number) => {
-      navigate(ROUTES.REPORT_POST, {
-        postId,
-        subspaceId,
-      });
-    },
-    [],
-  );
+  const handlePressReport = (postId: number, subspaceId: number) =>
+    navigate(ROUTES.REPORT_POST, {
+      postId,
+      subspaceId,
+    });
 
-  const handleCommentReply = React.useCallback(async () => {
-    await createPost({conversationId: postID, referencedPostId: commentID});
-  }, [postID, commentID, createPost]);
+  const handleCommentReply = () =>
+    createPost({conversationId: postID, referencedPostId: commentID});
 
-  const handleAddReaction = React.useCallback(
-    async (postId: number) => {
-      const result = await addOrRemoveReaction({postId});
+  const handleAddReaction = (postId: number) => addOrRemoveReaction({postId});
 
-      console.log(result);
-    },
-    [addOrRemoveReaction],
-  );
+  const handlePressSendTips = (postAuthor: string, postId: number) => {
+    navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
+  };
 
-  React.useEffect(() => {
-    resetSharedPostState();
-  }, []);
-
-  const handlePressSendTips = React.useCallback(
-    (postAuthor: string, postId: number) => {
-      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
-    },
-    [],
-  );
-
-  const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: number}) => {
-      navigate(ROUTES.ENTER_COMMENT, {
-        author,
-        postId,
-      });
-    },
-    [],
-  );
+  const handleExpandComment = ({
+    author,
+    postId,
+  }: {
+    author: PostAuthor;
+    postId: number;
+  }) => {
+    navigate(ROUTES.ENTER_COMMENT, {
+      author,
+      postId,
+    });
+  };
 
   return {
     mainComment,
