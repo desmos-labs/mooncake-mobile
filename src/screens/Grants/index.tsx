@@ -5,7 +5,6 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -29,7 +28,9 @@ const Grants: React.FC<NavProps> = props => {
   const theme = useTheme();
   const {pop} = useNavigation<NavProps['navigation']>();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  /*
   const {revokeGrants} = useAddOrUpdateGrants();
+*/
   const [loading, setLoading] = useState<boolean>(false);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
@@ -79,7 +80,7 @@ const Grants: React.FC<NavProps> = props => {
     }
   }, [checkAndUpdateGrants, fetchGrants]);
 
-  const revokePermissionsWrapper = useCallback(async () => {
+  /*  const revokePermissionsWrapper = useCallback(async () => {
     try {
       setLoading(true);
       await revokeGrants();
@@ -89,12 +90,13 @@ const Grants: React.FC<NavProps> = props => {
     } finally {
       setLoading(false);
     }
-  }, [fetchGrants, revokeGrants]);
+  }, [fetchGrants, revokeGrants]); */
 
   const grantAllPermissions = useCallback(async () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('grant permissions'),
       subtitle: t('grant permissions desc'),
+      subtitleStyle: {textAlign: 'left'},
       primaryButtonLabel: t('grant all permissions'),
       secondaryButtonLabel: t('common:cancel'),
       removeModalAfterButtonPress: true,
@@ -103,7 +105,7 @@ const Grants: React.FC<NavProps> = props => {
     });
   }, [grantPermissionsWrapper, navigate, pop, t]);
 
-  const revokeAllPermissions = useCallback(async () => {
+  /*  const revokeAllPermissions = useCallback(async () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('revoke permissions'),
       subtitle: t('revoke permissions desc'),
@@ -113,7 +115,7 @@ const Grants: React.FC<NavProps> = props => {
       onPressSecondary: () => pop(),
       removeModalAfterButtonPress: true,
     });
-  }, [navigate, pop, revokePermissionsWrapper, t]);
+  }, [navigate, pop, revokePermissionsWrapper, t]); */
 
   useFocusEffect(
     useCallback(() => {
@@ -209,16 +211,10 @@ const Grants: React.FC<NavProps> = props => {
             loading={loading}
             mode="contained"
             color={theme.colors.surfaceBlack}
-            onPress={
-              grantsGiven.length !== Object.keys(GrantEnums).length
-                ? grantAllPermissions
-                : revokeAllPermissions
-            }
+            onPress={grantAllPermissions}
             style={{justifyContent: 'flex-end'}}>
             <Typography.Button2 style={{color: theme.colors.white}}>
-              {grantsGiven.length !== Object.keys(GrantEnums).length
-                ? t('grant all permissions')
-                : t('revoke all permissions')}
+              {t('grant all permissions')}
             </Typography.Button2>
           </Button>
         </View>
