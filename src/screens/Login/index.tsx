@@ -60,7 +60,11 @@ const Login = () => {
     try {
       if (activeAddress) {
         const passwordToUse = await getPasswordWithBiometrics(activeAddress);
-        const loginResponse = await login(activeAddress, passwordToUse);
+        const loginResponse = await login({
+          activeAddress,
+          password: passwordToUse,
+          isDerivedPassword: true,
+        });
 
         if (loginResponse) {
           if (!_.get(params, 'noPop')) {
@@ -109,7 +113,11 @@ const Login = () => {
     try {
       setLoading(true);
       setError('');
-      const loginResponse = await login(activeAddress, password);
+      const loginResponse = await login({
+        activeAddress,
+        password,
+        isDerivedPassword: false,
+      });
 
       if (!loginResponse) {
         toast.show(t('toast:errorLogin'), {type: ToastConfig.ERROR_NO_RETRY});

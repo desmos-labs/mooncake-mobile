@@ -3,10 +3,8 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
 import {useCallback} from 'react';
 import {DesmosLedgerApp} from 'config/LedgerApps';
-import {useRecoilValue} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -37,6 +35,11 @@ type useUnlockWalletParams = {
   shouldReplaceRoute?: boolean;
   // Skips asking user for password using EnterPassword screen if truthy
   prefilledPassword?: string;
+
+  /**
+   * Use a derived password instead of a regular password (biometrics compat)
+   */
+  isDerivedPassword?: boolean;
   // ScreenParams that are passed into the EnterPasswordScreen
   enterPwScreenOptions?: Pick<
     EnterPasswordParams,
@@ -56,23 +59,24 @@ export default function useUnlockWallet(): (
   {wallet?: OfflineSigner; mnemonic?: string; password?: string} | undefined
 > {
   const navigation = useNavigation<NavProps['navigation']>();
-  const {biometrics} = useRecoilValue(appSettingsState);
   return useCallback(
     async ({
       chainAccount,
       enterPwScreenOptions,
       prefilledPassword,
       shouldReplaceRoute,
+      isDerivedPassword,
     }: useUnlockWalletParams) => {
       const navigate = shouldReplaceRoute
         ? navigation.replace
         : navigation.navigate;
       if (chainAccount.type === ChainAccountType.Local) {
         if (prefilledPassword) {
+          console.log(prefilledPassword);
           const wallet = await getLocalWallet(
             chainAccount.address,
             prefilledPassword,
-            biometrics,
+            isDerivedPassword,
           );
 
           if (!wallet) throw new Error('Error unlocking wallet');
@@ -80,6 +84,7 @@ export default function useUnlockWallet(): (
           const mnemonic = await getMnemonic(
             chainAccount.address,
             prefilledPassword,
+            isDerivedPassword,
           );
 
           return new Promise(resolve => {

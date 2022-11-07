@@ -10,7 +10,15 @@ const useLogin = () => {
   const unlockWallet = useUnlockWallet();
 
   const login = React.useCallback(
-    async (activeAddress: string, password?: string) => {
+    async ({
+      activeAddress,
+      password,
+      isDerivedPassword,
+    }: {
+      activeAddress: string;
+      password: string;
+      isDerivedPassword: boolean;
+    }) => {
       const accounts = await getAccounts();
 
       const activeAccount = accounts?.find(x => x.address === activeAddress);
@@ -25,6 +33,7 @@ const useLogin = () => {
         chainAccount: activeAccount,
         shouldReplaceRoute: false,
         prefilledPassword: password,
+        isDerivedPassword,
       });
 
       if (!unlockResult || !unlockResult.wallet) {
