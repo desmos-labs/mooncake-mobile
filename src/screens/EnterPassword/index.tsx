@@ -1,5 +1,6 @@
 import {
   CompositeScreenProps,
+  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
@@ -22,7 +23,7 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
-import React, {ComponentProps, useEffect, useState} from 'react';
+import React, {ComponentProps, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   KeyboardAvoidingView,
@@ -140,11 +141,13 @@ const EnterPassword = () => {
     onFailedAuthentication,
   ]);
 
-  useEffect(() => {
-    if (biometrics) {
-      unlockWithBiometrics();
-    }
-  }, [biometrics, unlockWithBiometrics]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (biometrics) {
+        unlockWithBiometrics();
+      }
+    }, [biometrics, unlockWithBiometrics]),
+  );
 
   const onFormSubmit = React.useCallback(
     async (

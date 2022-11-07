@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
@@ -16,7 +16,7 @@ import {
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -103,11 +103,13 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (biometrics) {
-      unlockWithBiometrics();
-    }
-  }, [biometrics, unlockWithBiometrics]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (biometrics) {
+        unlockWithBiometrics();
+      }
+    }, [biometrics, unlockWithBiometrics]),
+  );
 
   return (
     <DView
