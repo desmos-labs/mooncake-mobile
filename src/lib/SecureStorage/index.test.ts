@@ -7,8 +7,10 @@ import {
   deleteLocalWallet,
   deleteMnemonic,
   getAccounts,
+  getLocalWallet,
   getMnemonic,
   resetSecureStorage,
+  saveLocalWallet,
   saveMnemonic,
   saveNewAccount,
 } from 'lib/SecureStorage';
@@ -19,6 +21,7 @@ import {
   setGenericPassword,
 } from 'react-native-keychain';
 import {ChainAccount, ChainAccountType} from 'types/chains';
+import LocalWallet from 'lib/LocalWallet';
 
 jest.mock('lib/EncryptionUtils', () => ({
   deriveSecurePassword: jest.fn(),
@@ -111,8 +114,7 @@ describe('lib/SecureStorage', () => {
       expect(getGenericPassword).toHaveBeenCalledWith({service: 'ACCOUNTS'});
     });
   });
-
-  /*  describe('saveLocalWallet', () => {
+  describe('saveLocalWallet', () => {
     it('saves a new wallet if no existing wallets are found', async () => {
       (deriveSecurePassword as jest.Mock).mockReturnValue(
         'mockDerivedSecurePassword',
@@ -134,12 +136,9 @@ describe('lib/SecureStorage', () => {
       // expect the derived password to have been saved
       expect(setGenericPassword).toHaveBeenCalledWith(
         'secureValue',
-        '"mockDerivedSecurePassword"',
+        '{"value":"mockEncrypteddWalletData"}',
         {
-          accessControl: undefined,
-          accessible: 0,
-          authenticationPrompt: {title: 'Biometric Authentication'},
-          service: 'mockWalletAddress_WALLET_PASSWORD',
+          service: 'mockWalletAddress_KEY',
         },
       );
 
@@ -178,7 +177,7 @@ describe('lib/SecureStorage', () => {
         '{"version":3,"privateKey":"BvgXa2OYRQyhWcfRVhnA8OZ1fLERoaFs+ZzmUlDMsKY=","publicKey":"AyjdXn3Ddz1xXE85rNichgHvEYBg9O4scWQLeEq7z2BA","prefix":"desmos"}',
       );
     });
-  }); */
+  });
 
   describe('saveMnemonic', () => {
     it('saves a mnemonic to secure storage', async () => {
