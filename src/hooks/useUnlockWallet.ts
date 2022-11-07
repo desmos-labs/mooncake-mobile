@@ -72,7 +72,6 @@ export default function useUnlockWallet(): (
         : navigation.navigate;
       if (chainAccount.type === ChainAccountType.Local) {
         if (prefilledPassword) {
-          console.log(prefilledPassword);
           const wallet = await getLocalWallet(
             chainAccount.address,
             prefilledPassword,
