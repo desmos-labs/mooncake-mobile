@@ -58,7 +58,10 @@ describe('services/axios: useLogin', () => {
     const {result} = renderHook(() => useLogin());
 
     await act(async () => {
-      await result.current.login(DUMMY_ADDRESS);
+      await result.current.login({
+        activeAddress: DUMMY_ADDRESS,
+        password: '123',
+      });
     });
 
     expect(updateAuthToken).toHaveBeenCalledWith(DUMMY_TOKEN);
@@ -73,7 +76,10 @@ describe('services/axios: useLogin', () => {
 
     try {
       await act(async () => {
-        await result.current.login(DUMMY_ADDRESS);
+        await result.current.login({
+          activeAddress: DUMMY_ADDRESS,
+          password: '123',
+        });
       });
     } catch (err: any) {
       expect(String(err)).toBe('Error: i-am-an-error');
@@ -85,7 +91,10 @@ describe('services/axios: useLogin', () => {
 
     try {
       await act(async () => {
-        await result.current.login('this-address-does-not-exist');
+        await result.current.login({
+          activeAddress: 'this-address-does-not-exist',
+          password: '123',
+        });
       });
     } catch (err: any) {
       expect(String(err)).toBe(
