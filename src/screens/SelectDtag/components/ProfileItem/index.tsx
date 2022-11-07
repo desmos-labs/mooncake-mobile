@@ -1,9 +1,10 @@
-import React from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
-import Typography from 'components/Typography';
-import DropShadowWrapper from 'components/DropShadowWrapper';
-import {useTranslation} from 'react-i18next';
 import {defaultProfilePic} from 'assets/images';
+import DropShadowWrapper from 'components/DropShadowWrapper';
+import Typography from 'components/Typography';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {ImageSourcePropType, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 type Props = {
@@ -34,9 +35,9 @@ const ProfileItem = ({nickname, dtag, handlePress, avatar}: Props) => {
   const {t} = useTranslation('selectDtag');
 
   return (
-    <DropShadowWrapper customColor="rgba(16, 24, 40,0.05)" disableInnerWrapper>
+    <DropShadowWrapper>
       <TouchableOpacity onPress={handlePress} style={styles.container}>
-        <Image
+        <FastImage
           source={
             // @ts-ignore
             !avatar || avatar!.uri === '[do-not-modify]'

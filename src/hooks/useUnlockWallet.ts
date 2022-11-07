@@ -11,7 +11,6 @@ import ROUTES from 'navigation/routes';
 import {toCosmjsHdPath} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
 import {getLocalWallet, getMnemonic} from 'lib/SecureStorage';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {EnterPasswordParams} from 'screens/EnterPassword';
 
 type NavProps = StackScreenProps<
@@ -36,6 +35,11 @@ type useUnlockWalletParams = {
   shouldReplaceRoute?: boolean;
   // Skips asking user for password using EnterPassword screen if truthy
   prefilledPassword?: string;
+
+  /**
+   * Use a derived password instead of a regular password (biometrics compat)
+   */
+  isDerivedPassword?: boolean;
   // ScreenParams that are passed into the EnterPasswordScreen
   enterPwScreenOptions?: Pick<
     EnterPasswordParams,
@@ -55,15 +59,13 @@ export default function useUnlockWallet(): (
   {wallet?: OfflineSigner; mnemonic?: string; password?: string} | undefined
 > {
   const navigation = useNavigation<NavProps['navigation']>();
-
-  const useBiometrics = getMMKV<boolean>(MMKVKEYS.USE_BIOMETRICS);
-
   return useCallback(
     async ({
       chainAccount,
       enterPwScreenOptions,
       prefilledPassword,
       shouldReplaceRoute,
+      isDerivedPassword,
     }: useUnlockWalletParams) => {
       const navigate = shouldReplaceRoute
         ? navigation.replace
@@ -73,7 +75,7 @@ export default function useUnlockWallet(): (
           const wallet = await getLocalWallet(
             chainAccount.address,
             prefilledPassword,
-            useBiometrics,
+            isDerivedPassword,
           );
 
           if (!wallet) throw new Error('Error unlocking wallet');
@@ -81,6 +83,7 @@ export default function useUnlockWallet(): (
           const mnemonic = await getMnemonic(
             chainAccount.address,
             prefilledPassword,
+            isDerivedPassword,
           );
 
           return new Promise(resolve => {

@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import MnemonicGrid from 'components/MnemonicGrid';
@@ -22,12 +22,15 @@ declare type NavProps = StackScreenProps<
 
 const ShowRecoveryPhrase = () => {
   const {params} = useRoute<NavProps['route']>();
+  const {pop} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
 
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
+    <DView
+      style={styles.root}
+      topBar={<TopBar backButtonCustomBehavior={() => pop(2)} />}>
       <Typography.H3 style={{marginBottom: theme.spacing.m}}>
         {t('settings:secret recovery phrase')}
       </Typography.H3>

@@ -115,15 +115,12 @@ enum ROUTES {
 
   // Post details start
   POST_DETAILS = 'POST_DETAILS',
-
   COMMENT_REPLIES = 'COMMENT_REPLIES',
   // Post details end
 
   // Post Interaction start
   POST_INTERACTION = 'POST_INTERACTION',
-
   POST_REACTIONS = 'POST_REACTIONS',
-
   POST_TIPS = 'POST_TIPS',
   // Post interaction end
 
@@ -140,15 +137,21 @@ enum ROUTES {
 
   ADD_PROFILE = 'ADD_PROFILE',
 
+  // Twitter connection start
   CONNECT_APP = 'CONNECT_APP',
-
   SELECT_TWEET = 'SELECT_TWEET',
+  // Twitter connection end
 
-  // Grants
+  // Grants start
   GRANTS = 'GRANTS',
   GRANTS_DETAILS = 'GRANTS_DETAILS',
+  // Grants end
 
+  // Activities
   ACTIVITIES = 'ACTIVITIES',
+
+  // Biometrics
+  MANAGE_BIOMETRICS = 'MANAGE_BIOMETRICS',
 }
 
 export default ROUTES;

@@ -14,12 +14,7 @@ import PasswordReqGroup from 'components/PasswordReqGroup';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
-import {
-  MIN_PW_LENGTH,
-  validateMin1Lowercase,
-  validateMin1SpecialChar,
-  validateMin1Uppercase,
-} from 'lib/ValidationUtils';
+import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
 import _ from 'lodash';
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -85,7 +80,7 @@ const Signup = () => {
 
   const validationSchema = useMemo(() => {
     return Yup.object().shape({
-      newPassword: Yup.string()
+      /*      newPassword: Yup.string()
         .min(
           MIN_PW_LENGTH - 1,
           t('error:minChar', {
@@ -95,7 +90,7 @@ const Signup = () => {
         .required(t('error:required'))
         .test('at least one lowercase', '', validateMin1Lowercase)
         .test('at least one uppercase', '', validateMin1Uppercase)
-        .test('at least one special', '', validateMin1SpecialChar),
+        .test('at least one special', '', validateMin1SpecialChar), */
       confirmPassword: Yup.string()
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),

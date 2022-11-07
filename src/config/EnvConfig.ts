@@ -16,6 +16,7 @@ const EnvConfig = {
   DESMOS_REST: Config.DESMOS_REST,
   APP_SUBSPACE_ID: 5,
   POLLING_INTERVAL: 2000,
+  DEV_MNEMONIC: Config.DEV_MNEMONIC,
 };
 
 export default EnvConfig;

@@ -9,21 +9,23 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
+import {deletePasswordWithBiometrics} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
+import {getSupportedBiometryType} from 'react-native-keychain';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import appSettingsState from 'recoil/settings';
 import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
-import {AppSettings} from 'types/settings';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import {deleteAuthToken} from 'services/axios';
 import {useNavigation} from '@react-navigation/native';
+import {AppSettings} from 'types/settings';
 
 declare type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -35,7 +37,8 @@ const Settings: React.FC<NavProps> = props => {
     navigation: {navigate},
   } = props;
   const [settings, setSettings] = useRecoilState(appSettingsState);
-  const {chainAccount, profileData} = useActiveAccount();
+  const [biometricsSupported, setBiometricsSupported] = useState<boolean>();
+  const {chainAccount, profileData, activeAddress} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const theme = useTheme();
@@ -47,9 +50,37 @@ const Settings: React.FC<NavProps> = props => {
     'MMM dd yyyy',
   );
 
-  /*  const areBiometricsSupported = useCallback(async () => {
-    console.log('checkIfBiometricsAreSupported');
-  }, []); */
+  const areBiometricsSupported = useCallback(async () => {
+    try {
+      const supported = await getSupportedBiometryType();
+      if (supported) {
+        setBiometricsSupported(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const manageBiometrics = useCallback(async () => {
+    if (settings.biometrics) {
+      const result = await deletePasswordWithBiometrics(activeAddress!);
+      if (result) {
+        setSettings((oldState: AppSettings) => {
+          return {
+            ...oldState,
+            biometrics: !settings.biometrics,
+          };
+        });
+      }
+    } else {
+      navigate(ROUTES.MANAGE_BIOMETRICS);
+    }
+  }, [activeAddress, navigate, setSettings, settings.biometrics]);
+
+  useEffect(() => {
+    // Check if biometrics are supported
+    areBiometricsSupported();
+  }, [areBiometricsSupported]);
 
   const handlePressSignOut = () => {
     deleteAuthToken();
@@ -68,7 +99,6 @@ const Settings: React.FC<NavProps> = props => {
   const handleChangePassword = useCallback(async () => {
     if (chainAccount) {
       const unlockResult = await unlockWallet({chainAccount});
-      console.log('unlock result', unlockResult);
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
@@ -76,7 +106,7 @@ const Settings: React.FC<NavProps> = props => {
         });
       }
     }
-  }, [chainAccount, unlockWallet]);
+  }, [chainAccount, navigate, unlockWallet]);
 
   const navigateToConfirmModal = useCallback(() => {
     navigate({
@@ -99,19 +129,12 @@ const Settings: React.FC<NavProps> = props => {
         onPressSecondary: handlePressSignOut,
       },
     });
-  }, []);
+  }, [handlePressSignOut]);
 
   const sendFeedback = useCallback(async () => {
     Linking.openURL('mailto:dev@forbole.com').catch(err =>
       console.error("Couldn't open email application", err),
     );
-  }, []);
-
-  useEffect(() => {
-    /**
-     * We need to check if the user has a compatible device with biometrics. If not we should disable this button
-     */
-    // areBiometricsSupported();
   }, []);
 
   return (
@@ -147,18 +170,13 @@ const Settings: React.FC<NavProps> = props => {
           label={t('change password')}
           onPress={handleChangePassword}
         />
-        <SectionSwitch
-          label={t('enable biometrics')}
-          value={settings.biometrics}
-          onValueChange={() =>
-            setSettings((oldState: AppSettings) => {
-              return {
-                ...oldState,
-                biometrics: !settings.biometrics,
-              };
-            })
-          }
-        />
+        {biometricsSupported && (
+          <SectionSwitch
+            label={t('enable biometrics')}
+            value={settings.biometrics}
+            onValueChange={manageBiometrics}
+          />
+        )}
       </Section>
       <Section style={styles.spacer} title={t('others')}>
         <SectionButton
