@@ -1,4 +1,4 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
@@ -32,13 +32,14 @@ const Activities = ({
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
-  const {navigate, dispatch} = useNavigation<NavProps['navigation']>();
+  const {navigate, push} = useNavigation<NavProps['navigation']>();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(relationship_creator || ''),
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
   const {profileData} = useActiveAccount();
+
   const checkPostType = useCallback(() => {
     const isOriginalPost = !post.conversation;
     const reply = post.replies.find(
@@ -53,17 +54,15 @@ const Activities = ({
       isReply,
       reply,
     };
-  }, [post]);
+  }, []);
 
   const navigateToProfile = useCallback(
     (address: string) => {
-      dispatch(
-        StackActions.push(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: address!,
-        }),
-      );
+      push(ROUTES.USER_PROFILE, {
+        visitingProfileAddress: address!,
+      });
     },
-    [dispatch],
+    [push],
   );
 
   const navigateToCorrectScreen = useCallback(() => {
@@ -265,19 +264,7 @@ const Activities = ({
       default:
         return <View />;
     }
-  }, [
-    type,
-    profile,
-    navigateToCorrectScreen,
-    t,
-    formattedDate,
-    post,
-    isFollowingAddress,
-    checkPostType,
-    navigateToProfile,
-    followOrUnfollowUser,
-    relationship_creator,
-  ]);
+  }, [formattedDate, isFollowingAddress, followOrUnfollowUser]);
 
   return <View style={styles.container}>{content}</View>;
 };
