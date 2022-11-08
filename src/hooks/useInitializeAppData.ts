@@ -37,11 +37,11 @@ const useInitializeAppData = () => {
   const {data: contractsConfig, loading: contractsConfigLoading} = useQuery(
     GetContractsConfig,
     {
-      variables: {
+      /*      variables: {
         config: {
-          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          subspace_id: '5',
         },
-      },
+      }, */
       fetchPolicy: 'no-cache',
     },
   );
