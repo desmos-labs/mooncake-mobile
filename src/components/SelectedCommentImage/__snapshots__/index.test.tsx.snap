@@ -35,6 +35,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
           Object {
             "borderRadius": 12,
             "height": 100,
+            "marginHorizontal": 16,
             "opacity": 1,
             "overflow": "hidden",
             "width": 100,

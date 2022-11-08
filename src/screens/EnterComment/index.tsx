@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
-import {ActivityIndicator, Image, TextInput, View} from 'react-native';
+import {ActivityIndicator, TextInput, View} from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
@@ -19,6 +19,7 @@ import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import {useRecoilState} from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {useTheme} from 'react-native-paper';
+import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 export type EnterCommentParams = {
@@ -131,7 +132,7 @@ const EnterComment = () => {
         <View style={styles.contentContainer}>
           <View style={styles.avatarGroup}>
             {profileData ? (
-              <Image
+              <FastImage
                 source={profileData.profile_pic || defaultProfilePic}
                 style={styles.avatar}
               />

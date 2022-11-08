@@ -53,7 +53,7 @@ const SelectedCommentImage = (props: Props) => {
   );
 };
 
-const useStyles = makeStyle(() => ({
+const useStyles = makeStyle(theme => ({
   closeButton: {
     height: 12,
     resizeMode: 'contain',
@@ -72,6 +72,7 @@ const useStyles = makeStyle(() => ({
     borderRadius: 12,
     height: COMPONENT_SIZE,
     width: COMPONENT_SIZE,
+    marginHorizontal: theme.spacing.m,
     zIndex: 2,
   },
   imageStyle: {
