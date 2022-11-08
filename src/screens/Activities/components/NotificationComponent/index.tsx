@@ -1,8 +1,13 @@
+import {StackActions, useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
+import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -15,23 +20,25 @@ import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcas
 import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
+
 const Activities = ({
   data: {type, post_id},
   profile,
   timestamp,
   relationship_creator,
   post,
-  navigation,
 }: CompleteNotification) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
+  const {navigate, dispatch} = useNavigation<NavProps['navigation']>();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(relationship_creator || ''),
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
-
+  const {profileData} = useActiveAccount();
   const checkPostType = useCallback(() => {
     const isOriginalPost = !post.conversation;
     const reply = post.replies.find(
@@ -48,17 +55,85 @@ const Activities = ({
     };
   }, [post]);
 
+  const navigateToProfile = useCallback(
+    (address: string) => {
+      dispatch(
+        StackActions.push(ROUTES.USER_PROFILE, {
+          visitingProfileAddress: address!,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const navigateToCorrectScreen = useCallback(() => {
+    console.log('navigateToScreen');
+    if (type === NotificationTypesEnum.Comment) {
+      navigate(ROUTES.POST_DETAILS, {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        postId: parseInt(post_id!, 10),
+        focusCommentBox: false,
+      });
+    }
+    if (type === NotificationTypesEnum.Reply) {
+      const {reply} = checkPostType();
+      navigate(ROUTES.COMMENT_REPLIES, {
+        postId: post.conversation.id,
+        commentId: reply.post.id,
+        subspaceId: EnvConfig.APP_SUBSPACE_ID,
+      });
+    }
+    if (type === NotificationTypesEnum.Reaction) {
+      const {isOriginalPost, reply} = checkPostType();
+      const isReply = reply && post.replies.length !== 0;
+      if (!isOriginalPost) {
+        if (isReply) {
+          navigate(ROUTES.COMMENT_REPLIES, {
+            postId: post.conversation.id,
+            commentId: reply.reference.id,
+            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+          });
+        } else {
+          navigate(ROUTES.COMMENT_REPLIES, {
+            postId: post.conversation.id,
+            commentId: parseInt(post_id!, 10),
+            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+          });
+        }
+      } else {
+        navigate(ROUTES.POST_DETAILS, {
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          postId: parseInt(post_id!, 10),
+          focusCommentBox: false,
+        });
+      }
+    }
+    if (type === NotificationTypesEnum.Follow) {
+      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+        screen: ROUTES.FOLLOWING,
+        params: {
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          userAddress: profileData?.address!,
+          headerTitle: profileData?.nickname.trim() || `@${profileData?.dtag}`,
+        },
+      });
+    }
+  }, [type, navigate, post_id, checkPostType, post, profileData]);
+
   const content = useMemo(() => {
     switch (type) {
       case NotificationTypesEnum.Reaction: {
         const {isOriginalPost, isComment, isReply} = checkPostType();
         return (
           <View style={styles.flexRowView}>
-            <FastImage
+            <ImageButton
+              onPress={() => navigateToProfile(profile.address!)}
               style={styles.avatar}
-              source={{uri: profile.profile_pic}}
+              image={{uri: profile.profile_pic}}
             />
-            <View style={styles.profileView}>
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={navigateToCorrectScreen}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6>
@@ -71,7 +146,7 @@ const Activities = ({
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </TouchableOpacity>
             {post?.attachments.length > 0 && (
               <FastImage
                 style={styles.postImage}
@@ -84,11 +159,14 @@ const Activities = ({
       case NotificationTypesEnum.Comment:
         return (
           <View style={styles.flexRowView}>
-            <FastImage
+            <ImageButton
+              onPress={() => navigateToProfile(profile.address!)}
               style={styles.avatar}
-              source={{uri: profile.profile_pic}}
+              image={{uri: profile.profile_pic}}
             />
-            <View style={styles.profileView}>
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={navigateToCorrectScreen}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented')}</Typography.Body6>
@@ -96,7 +174,7 @@ const Activities = ({
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </TouchableOpacity>
             {post?.attachments.length > 0 && (
               <FastImage
                 style={styles.postImage}
@@ -108,11 +186,14 @@ const Activities = ({
       case NotificationTypesEnum.Reply:
         return (
           <View style={styles.flexRowView}>
-            <FastImage
+            <ImageButton
+              onPress={() => navigateToProfile(profile.address!)}
               style={styles.avatar}
-              source={{uri: profile.profile_pic}}
+              image={{uri: profile.profile_pic}}
             />
-            <View style={styles.profileView}>
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={navigateToCorrectScreen}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented reply')}</Typography.Body6>
@@ -120,7 +201,7 @@ const Activities = ({
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </TouchableOpacity>
             {post?.attachments.length > 0 && (
               <FastImage
                 style={styles.postImage}
@@ -132,11 +213,14 @@ const Activities = ({
       case NotificationTypesEnum.Follow:
         return (
           <View style={styles.flexRowView}>
-            <FastImage
+            <ImageButton
+              onPress={() => navigateToProfile(profile.address!)}
               style={styles.avatar}
-              source={{uri: profile.profile_pic}}
+              image={{uri: profile.profile_pic}}
             />
-            <View style={styles.profileView}>
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={navigateToCorrectScreen}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('followed you')}</Typography.Body6>
@@ -144,7 +228,7 @@ const Activities = ({
               <Typography.Body7 style={{color: theme.colors.grey02}}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </TouchableOpacity>
             <View style={styles.buttonView}>
               {isFollowingAddress ? (
                 <Button
@@ -184,63 +268,18 @@ const Activities = ({
   }, [
     type,
     profile,
+    navigateToCorrectScreen,
+    t,
     formattedDate,
     post,
     isFollowingAddress,
     checkPostType,
+    navigateToProfile,
     followOrUnfollowUser,
     relationship_creator,
   ]);
 
-  const navigateToCorrectScreen = useCallback(() => {
-    const {isOriginalPost, reply} = checkPostType();
-    const isReply = reply && post.replies.length !== 0;
-    if (type === NotificationTypesEnum.Comment) {
-      navigation.navigate(ROUTES.POST_DETAILS, {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        postId: post_id,
-        focusCommentBox: false,
-      });
-    }
-    if (type === NotificationTypesEnum.Reply) {
-      navigation.navigate(ROUTES.COMMENT_REPLIES, {
-        postId: post.conversation.id,
-        commentId: reply.post.id,
-        subspaceId: EnvConfig.APP_SUBSPACE_ID,
-      });
-    }
-    if (type === NotificationTypesEnum.Reaction) {
-      if (!isOriginalPost) {
-        if (isReply) {
-          navigation.navigate(ROUTES.COMMENT_REPLIES, {
-            postId: post.conversation.id,
-            commentId: reply.reference.id,
-            subspaceId: EnvConfig.APP_SUBSPACE_ID,
-          });
-        } else {
-          navigation.navigate(ROUTES.COMMENT_REPLIES, {
-            postId: post.conversation.id,
-            commentId: post_id,
-            subspaceId: EnvConfig.APP_SUBSPACE_ID,
-          });
-        }
-      } else {
-        navigation.navigate(ROUTES.POST_DETAILS, {
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
-          postId: post_id,
-          focusCommentBox: false,
-        });
-      }
-    }
-  }, [checkPostType, post, type, navigation, post_id]);
-
-  return (
-    <TouchableOpacity
-      onPress={navigateToCorrectScreen}
-      style={styles.container}>
-      {content}
-    </TouchableOpacity>
-  );
+  return <View style={styles.container}>{content}</View>;
 };
 
 export default Activities;

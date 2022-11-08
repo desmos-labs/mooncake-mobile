@@ -212,7 +212,7 @@ const SendTips = () => {
                           marginVertical: theme.spacing.s,
                         }}>
                         {t('warning fee', {
-                          fee: settings.contractsConfig[0].config.service_fee
+                          fee: settings?.contractsConfig[0]?.config?.service_fee
                             .percentage.value,
                         })}
                       </Typography.Body7>
