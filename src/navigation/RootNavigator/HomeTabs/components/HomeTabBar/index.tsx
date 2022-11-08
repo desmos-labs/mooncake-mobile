@@ -37,21 +37,26 @@ const HomeTabBar = ({state, position, navigation, setLoading}: Props) => {
     resetSharedPostState();
     setLoading(true);
 
-    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
+    try {
+      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
 
-    const {success} = await checkAndUpdateGrants({
-      grantsToRequest,
-    });
-
-    if (success) {
-      navigate(ROUTES.CREATE_TEXT_POST);
-    } else {
-      toast.show('[PLACEHOLDER]Authorization is required.', {
-        type: ToastConfig.ERROR_NO_RETRY,
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
       });
+
+      if (success) {
+        navigate(ROUTES.CREATE_TEXT_POST);
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    } catch (err) {
+      toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [activeAddress]);
+  }, [activeAddress, checkAndUpdateGrants]);
 
   return (
     <View style={styles.container}>

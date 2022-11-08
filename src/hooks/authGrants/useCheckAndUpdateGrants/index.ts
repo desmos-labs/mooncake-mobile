@@ -58,7 +58,7 @@ const useCheckAndUpdateGrants = () => {
         return !grants[x];
       });
     },
-    [activeAddr],
+    [activeAddr, getAuthzGrants],
   );
 
   const updateGrants = React.useCallback(
@@ -102,7 +102,7 @@ const useCheckAndUpdateGrants = () => {
         stayOnCurrentScreen,
       });
     },
-    [],
+    [checkGrants, updateGrants],
   );
   return {
     checkAndUpdateGrants,

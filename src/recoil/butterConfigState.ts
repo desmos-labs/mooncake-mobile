@@ -1,5 +1,5 @@
 import React from 'react';
-import {atom, useRecoilState, useSetRecoilState} from 'recoil';
+import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
 import GetConfig from 'services/axios/requests/GetConfig';
 
 export interface ButterConfigState {
@@ -25,15 +25,9 @@ const butterConfigState = atom<ButterConfigState>({
  * to manually update the atom.
  */
 export const useButterConfig = () => {
-  const [butterConfig, setButterConfig] = useRecoilState(butterConfigState);
-
-  const updateButterConfig = React.useCallback(async () => {
-    const _butterConfig = await GetConfig();
-    setButterConfig(_butterConfig);
-  }, []);
+  const butterConfig = useRecoilValue(butterConfigState);
 
   return {
-    updateButterConfig,
     butterConfig,
   };
 };

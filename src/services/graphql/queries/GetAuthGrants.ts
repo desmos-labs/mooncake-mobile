@@ -42,6 +42,7 @@ const GetFeeGrantCount = gql`
 // eslint-disable-next-line import/prefer-default-export
 export const useGetAuthzGrants = () => {
   const {activeAddress} = useActiveAccount();
+
   const {
     butterConfig: {desmos_address: grantsAddress},
   } = useButterConfig();
@@ -55,7 +56,7 @@ export const useGetAuthzGrants = () => {
     }[];
   }> => {
     if (!grantsAddress) {
-      return console.log('[DEBUG] not valid grantsAddress found') as any;
+      throw new Error('[DEBUG] grantsAddress not found');
     }
 
     const [feeGrantData, grantsData] = await Promise.all([
@@ -97,6 +98,7 @@ export const useGetAuthzGrants = () => {
       grants: formattedGrants,
     };
   }, [activeAddress, grantsAddress]);
+
   return {
     getAuthzGrants,
   };
