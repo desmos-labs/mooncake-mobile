@@ -12,6 +12,9 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import useActiveAccount from 'hooks/useActiveAccount';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {broadcastAnim} from 'assets/animations';
 
 export type HomeTabsParamList = {
   [ROUTES.HOME_DISCOVER]: HomeParams;
@@ -30,6 +33,14 @@ const HomeTabs = () => {
   const {replace} = useNavigation<NavProps['navigation']>();
   const {top} = useSafeAreaInsets();
 
+  const {profileData} = useActiveAccount();
+
+  const [screenReady, setScreenReady] = React.useState(false);
+
+  React.useEffect(() => {
+    if (profileData) setScreenReady(true);
+  }, [profileData]);
+
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
     if (bearerToken) {
@@ -43,6 +54,15 @@ const HomeTabs = () => {
     ),
     [loading],
   );
+
+  if (!screenReady) {
+    return (
+      <SafeAreaView
+        style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView
