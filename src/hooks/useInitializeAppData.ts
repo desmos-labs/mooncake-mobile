@@ -37,6 +37,11 @@ const useInitializeAppData = () => {
   const {data: contractsConfig, loading: contractsConfigLoading} = useQuery(
     GetContractsConfig,
     {
+      /*      variables: {
+        config: {
+          subspace_id: '5',
+        },
+      }, */
       fetchPolicy: 'no-cache',
     },
   );
@@ -67,6 +72,10 @@ const useInitializeAppData = () => {
       !registeredReactionsLoading &&
       !contractsConfigLoading
     ) {
+      console.log(
+        'contracts config DEBUG waiting for backend',
+        contractsConfig?.contract,
+      );
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting

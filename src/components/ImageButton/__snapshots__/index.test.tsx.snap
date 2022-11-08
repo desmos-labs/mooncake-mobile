@@ -27,13 +27,35 @@ exports[`component: ImageButton renders 1`] = `
       }
     }
   >
-    <Image
-      source={
-        Object {
-          "testUri": "../../../src/assets/images/defaultProfilePic.png",
-        }
+    <View
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          undefined,
+        ]
       }
-    />
+    >
+      <FastImageView
+        defaultSource={null}
+        resizeMode="cover"
+        source={
+          Object {
+            "testUri": "../../../src/assets/images/defaultProfilePic.png",
+          }
+        }
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
   </View>
 </View>
 `;

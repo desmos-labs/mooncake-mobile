@@ -79,20 +79,39 @@ exports[`component: MediaBottomPanel renders 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "testUri": "../../../src/assets/images/galleryIcon.png",
-                }
-              }
+            <View
               style={
-                Object {
-                  "height": 24,
-                  "resizeMode": "contain",
-                  "width": 24,
-                }
+                Array [
+                  Object {
+                    "overflow": "hidden",
+                  },
+                  Object {
+                    "height": 24,
+                    "resizeMode": "contain",
+                    "width": 24,
+                  },
+                ]
               }
-            />
+            >
+              <FastImageView
+                defaultSource={null}
+                resizeMode="cover"
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/galleryIcon.png",
+                  }
+                }
+                style={
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
           </View>
           <View
             accessibilityLabel="use image from camera"
@@ -125,20 +144,39 @@ exports[`component: MediaBottomPanel renders 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "testUri": "../../../src/assets/images/cameraIcon.png",
-                }
-              }
+            <View
               style={
-                Object {
-                  "height": 24,
-                  "resizeMode": "contain",
-                  "width": 24,
-                }
+                Array [
+                  Object {
+                    "overflow": "hidden",
+                  },
+                  Object {
+                    "height": 24,
+                    "resizeMode": "contain",
+                    "width": 24,
+                  },
+                ]
               }
-            />
+            >
+              <FastImageView
+                defaultSource={null}
+                resizeMode="cover"
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/cameraIcon.png",
+                  }
+                }
+                style={
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
           </View>
           <View
             accessibilityLabel="mention a user"
@@ -166,20 +204,39 @@ exports[`component: MediaBottomPanel renders 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "testUri": "../../../src/assets/images/tagIcon.png",
-                }
-              }
+            <View
               style={
-                Object {
-                  "height": 24,
-                  "resizeMode": "contain",
-                  "width": 24,
-                }
+                Array [
+                  Object {
+                    "overflow": "hidden",
+                  },
+                  Object {
+                    "height": 24,
+                    "resizeMode": "contain",
+                    "width": 24,
+                  },
+                ]
               }
-            />
+            >
+              <FastImageView
+                defaultSource={null}
+                resizeMode="cover"
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/tagIcon.png",
+                  }
+                }
+                style={
+                  Object {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
           </View>
         </View>
         <View

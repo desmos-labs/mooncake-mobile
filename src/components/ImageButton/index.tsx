@@ -1,20 +1,18 @@
 import React, {ReactNode} from 'react';
 import {
-  ImageSourcePropType,
   StyleSheet,
   TouchableOpacity,
   View,
-  Image,
   StyleProp,
-  ImageStyle,
   TouchableOpacityProps,
 } from 'react-native';
+import FastImage, {ImageStyle, Source} from 'react-native-fast-image';
 
 interface Props extends TouchableOpacityProps {
   /**
    * The source of the image.
    */
-  image: ImageSourcePropType;
+  image: Source;
 
   /**
    * The image's style.
@@ -63,7 +61,7 @@ const ImageButton = ({
       style={{opacity: rest.disabled ? 0.3 : 1}}
       hitSlop={hitSlop}
       {...rest}>
-      <Image style={style} source={image} />
+      <FastImage style={style} source={image} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>
           {overlayComponent}
