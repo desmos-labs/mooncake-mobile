@@ -7,6 +7,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
+import {Trans} from 'react-i18next';
 import {
   Image,
   ImageSourcePropType,
@@ -131,8 +132,12 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         {image && <Image source={image} style={styles.imageStyle} />}
+
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
-          {subtitle}
+          <Trans
+            i18nKey={subtitle as string}
+            components={[<Typography.Subtitle2 style={subtitleStyle} />]}
+          />
         </Typography.Body5>
         {primaryButtonLabel && (
           <Button
