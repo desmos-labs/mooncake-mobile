@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
   },
   errorText: {
     marginTop: theme.spacing.s,
-    color: theme.colors.error,
+    color: theme.colors.pink01,
   },
   textInput: {
     borderWidth: 1,
