@@ -39,7 +39,7 @@ const useStyles = makeStyle(theme => ({
   },
   primaryButton: {
     alignSelf: 'stretch',
-    marginBottom: theme.spacing.m,
+    marginBottom: theme.spacing.l,
     backgroundColor: theme.colors.surfaceBlack,
   },
   secondaryButton: {
