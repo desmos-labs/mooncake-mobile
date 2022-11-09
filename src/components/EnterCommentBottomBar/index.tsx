@@ -122,7 +122,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
     return (
       <Button
         mode="contained"
-        disabled={comment.length === 0}
+        disabled={commentAttachment ? false : comment.length === 0}
         style={styles.postButton}
         loading={loading}
         onPress={handlePostComment}>
@@ -131,7 +131,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         </Typography.Button3>
       </Button>
     );
-  }, [comment, loading]);
+  }, [comment, loading, commentAttachment]);
 
   return (
     <KeyboardAvoidingView
