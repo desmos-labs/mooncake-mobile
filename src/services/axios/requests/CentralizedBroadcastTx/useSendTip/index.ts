@@ -63,6 +63,7 @@ const useSendTip = () => {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
       const {success} = await checkAndUpdateGrants({
         grantsToRequest,
+        stayOnCurrentScreen: true,
       });
 
       if (!success) {
