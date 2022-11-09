@@ -67,17 +67,10 @@ const PostCard = ({
   const isFollowing = useRecoilValue(isFollowingAddr(postData.author_address));
 
   const Avatar = React.useMemo(() => {
-    if (profile_pic) {
-      return (
-        <ProfileHeaderButton
-          imageSrc={{uri: profile_pic}}
-          style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
-        />
-      );
-    }
     return (
       <ProfileHeaderButton
-        imageSrc={defaultProfilePic}
+        onPress={onPressAuthor}
+        imageSrc={profile_pic || defaultProfilePic}
         style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
       />
     );
