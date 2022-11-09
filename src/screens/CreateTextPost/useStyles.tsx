@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 /**
  * Style hook for the CreateTextPost screen
@@ -41,6 +41,7 @@ const useStyles = makeStyle(theme => ({
     fontWeight: '400',
     lineHeight: 27,
     letterSpacing: 0.0015,
+    width: Dimensions.get('window').width,
     textAlign: 'center',
   },
   headerGroup: {
