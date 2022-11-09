@@ -85,11 +85,13 @@ const CreateDesmosProfile: FC<NavProps> = () => {
 
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
 
-  const submitHandler =
+  const isAddingProfile =
     ROUTES.ADD_PROFILE ===
-    (accountCreation?.source ?? createLedgerAccount?.source)
-      ? handleAddProfileSubmit
-      : handleFormSubmit;
+    (accountCreation?.source ?? createLedgerAccount?.source);
+
+  const submitHandler = isAddingProfile
+    ? handleAddProfileSubmit
+    : handleFormSubmit;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -259,7 +261,9 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               </ScrollView>
               <View style={{padding: theme.spacing.m}}>
                 <Button
-                  disabled={!values.dTag}
+                  disabled={
+                    isAddingProfile ? !values.dTag || !!errors.dTag : false
+                  }
                   color={theme.colors.surfaceBlack}
                   mode="contained"
                   onPress={fromSignUp ? navigation.goBack : handleSubmit}
