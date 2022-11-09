@@ -39,7 +39,7 @@ const useInitializeAppData = () => {
     {
       variables: {
         config: {
-          subspace_id: EnvConfig.APP_SUBSPACE_ID,
+          subspace_id: String(EnvConfig.APP_SUBSPACE_ID),
         },
       },
       fetchPolicy: 'no-cache',
