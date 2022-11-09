@@ -96,7 +96,6 @@ const useCheckAndUpdateGrants = () => {
       stayOnCurrentScreen,
     }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
       const missingOrExpiredGrants = await checkGrants(grantsToRequest);
-
       return updateGrants({
         grantsToRequest: missingOrExpiredGrants,
         stayOnCurrentScreen,
