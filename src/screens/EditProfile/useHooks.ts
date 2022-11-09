@@ -127,8 +127,16 @@ const useHooks = () => {
             type: ToastConfig.ERROR_NO_RETRY,
           });
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error: any) {
+        if (error.response.status === 413) {
+          toast.show('Image size is too big', {
+            type: ToastConfig.ERROR_NO_RETRY,
+          });
+        } else {
+          toast.show(String(error), {
+            type: ToastConfig.ERROR_NO_RETRY,
+          });
+        }
       } finally {
         setLoading(false);
       }
