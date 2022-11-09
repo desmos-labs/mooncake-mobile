@@ -72,10 +72,10 @@ const useInitializeAppData = () => {
       !registeredReactionsLoading &&
       !contractsConfigLoading
     ) {
-      console.log(
-        'contracts config DEBUG waiting for backend',
-        contractsConfig?.contract,
-      );
+      // console.log(
+      //   'contracts config DEBUG waiting for backend',
+      //   contractsConfig?.contract,
+      // );
       setAppSettings(prev => ({
         ...prev,
         // temporary timezone setting
