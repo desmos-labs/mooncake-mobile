@@ -19,10 +19,7 @@ const WelcomeBack = () => {
   const [password, setPassword] = React.useState('');
 
   return (
-    <DView
-      statusBarProps={{translucent: true}}
-      backgroundImage={landingBG}
-      style={styles.container}>
+    <DView backgroundImage={landingBG} style={styles.container}>
       <Image source={butterflyLandingIcon} style={styles.dummyAvatar} />
       <Text style={styles.title} allowFontScaling>
         {t('header')}
