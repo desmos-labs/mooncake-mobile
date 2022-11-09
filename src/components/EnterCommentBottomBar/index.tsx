@@ -123,6 +123,11 @@ const EnterCommentBottomBar: React.FC<Props> = ({
       <Button
         mode="contained"
         disabled={commentAttachment ? false : comment.length === 0}
+        contentStyle={
+          Platform.OS === 'android' && {
+            height: '100%',
+          }
+        }
         style={styles.postButton}
         loading={loading}
         onPress={handlePostComment}>
