@@ -136,7 +136,7 @@ const LinkableChains: LinkableChain[] = [
     hdPath: CosmosHdPath,
     icon: cosmosIcon,
     chainConfig: ChainConfig.fromPartial({
-      name: 'cosmos',
+      name: 'cosmos hub',
     }),
     assets: CosmosHubAssets,
     ledgerApps: [CosmosLedgerApp],
