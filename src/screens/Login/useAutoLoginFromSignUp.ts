@@ -9,6 +9,9 @@ import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import {NavProps} from './index';
 
+/**
+ * A hook that will auto-login the user if they have entered a password during the signup/import account screen.
+ */
 const useAutoLoginFromSignUp = () => {
   const signUpPassword = useRecoilValue(signUpPasswordState);
   const resetSignUpPassword = useResetRecoilState(signUpPasswordState);
@@ -47,11 +50,11 @@ const useAutoLoginFromSignUp = () => {
 
     // reset password on unmount to avoid login screen loading from flickering
     return () => {
-      console.log('unmounted');
       resetSignUpPassword();
     };
   }, [signUpPassword, activeAddress]);
 
+  // pass boolean to control whether to show loading overlay on main screen
   return {
     shouldAutoLogin: !!signUpPassword,
   };
