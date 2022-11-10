@@ -35,6 +35,33 @@ const useStyles = makeStyle(theme => ({
   dismissTouchable: {
     ...StyleSheet.absoluteFillObject,
   },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: theme.spacing.m,
+  },
+  innerModalContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    paddingVertical: theme.spacing.xl,
+    backgroundColor: theme.colors.background,
+    borderRadius: 12,
+  },
+  bodyText: {
+    marginTop: theme.spacing.l,
+    marginBottom: theme.spacing.xl,
+    textAlign: 'center',
+  },
+  primaryButton: {
+    alignSelf: 'stretch',
+    marginBottom: theme.spacing.l,
+    backgroundColor: theme.colors.surfaceBlack,
+  },
+  secondaryButton: {
+    alignSelf: 'stretch',
+    marginBottom: theme.spacing.s,
+  },
 }));
 
 export default useStyles;

@@ -1,11 +1,10 @@
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
-import React from 'react';
-import {GrantEnums} from 'lib/desmos/msgtypes';
 import {useNavigation} from '@react-navigation/native';
-import ROUTES from 'navigation/routes';
 import {differenceInMilliseconds} from 'date-fns';
+import {GrantEnums} from 'lib/desmos/msgtypes';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {useTranslation} from 'react-i18next';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {StyleProp, TextStyle} from 'react-native';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 
 /**
@@ -17,7 +16,12 @@ import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
 export interface CheckAndUpdateGrantsArgs {
   grantsToRequest: GrantEnums[];
   stayOnCurrentScreen?: boolean;
-  skipModal?: boolean;
+  detailsModal?: {
+    title: string;
+    body: string;
+    bodyStyle?: StyleProp<TextStyle>;
+    buttonLabel: string;
+  };
 }
 
 /**
@@ -28,8 +32,6 @@ const useCheckAndUpdateGrants = () => {
   const {navigate, pop} = useNavigation<any>();
   const {getAuthzGrants} = useGetAuthzGrants();
   const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const {addOrUpdateGrants} = useAddOrUpdateGrants();
-  const {t} = useTranslation('grants');
   /**
    * Convenience function to check if the user has enabled a grant for a given list
    * @param {GrantEnums[]} grantsToCheck - check if user has provided grants for these grants
@@ -70,6 +72,7 @@ const useCheckAndUpdateGrants = () => {
     async ({
       grantsToRequest,
       stayOnCurrentScreen,
+      detailsModal,
     }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
       return new Promise(resolve => {
         if (grantsToRequest.length === 0) {
@@ -77,6 +80,7 @@ const useCheckAndUpdateGrants = () => {
         } else {
           navigate(ROUTES.ACTION_AUTHORIZATION, {
             grants: grantsToRequest,
+            detailsModal,
             onApprove: () => {
               !stayOnCurrentScreen && pop();
               resolve({success: true});
@@ -92,22 +96,6 @@ const useCheckAndUpdateGrants = () => {
     [],
   );
 
-  const updateGrantsWithoutModal = React.useCallback(
-    async ({grantsToRequest}: CheckAndUpdateGrantsArgs): Promise<boolean> => {
-      if (grantsToRequest.length !== 0) {
-        const result = await addOrUpdateGrants({grantsToRequest});
-        if (result) {
-          navigate(ROUTES.TEXTONLY_MODAL, {
-            title: t('common:success'),
-            body: t('grants:successful grant', {activeAddr}),
-          });
-        }
-      }
-      return true;
-    },
-    [addOrUpdateGrants, activeAddr],
-  );
-
   /**
    * Check and update a user's on-chain grants
    */
@@ -115,17 +103,13 @@ const useCheckAndUpdateGrants = () => {
     async ({
       grantsToRequest,
       stayOnCurrentScreen,
-      skipModal,
-    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean} | boolean> => {
+      detailsModal,
+    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
       const missingOrExpiredGrants = await checkGrants(grantsToRequest);
-      if (skipModal) {
-        return updateGrantsWithoutModal({
-          grantsToRequest: missingOrExpiredGrants,
-        });
-      }
       return updateGrants({
         grantsToRequest: missingOrExpiredGrants,
         stayOnCurrentScreen,
+        detailsModal,
       });
     },
     [checkGrants, updateGrants],

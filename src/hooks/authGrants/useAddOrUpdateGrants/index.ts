@@ -2,6 +2,7 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
 import {useButterConfig} from '@recoil/butterConfigState';
+import {authorizationImage} from 'assets/images';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
@@ -95,7 +96,9 @@ const useAddOrUpdateGrants = () => {
 
       navigate(ROUTES.TEXTONLY_MODAL, {
         title: t('common:success'),
-        body: t('grants:successful revoke', {granter}),
+        body: t('grants:successful revoke'),
+        bodyStyle: {textAlign: 'center'},
+        image: authorizationImage,
       });
     },
     [chainAccount, butterConfig.desmos_address],

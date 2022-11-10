@@ -1,5 +1,6 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {authorizationImage} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -26,7 +27,6 @@ const Grants: React.FC<NavProps> = props => {
   const {t} = useTranslation('grants');
   const styles = useStyles();
   const theme = useTheme();
-  const {pop} = useNavigation<NavProps['navigation']>();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchingGrants, setFetchingGrants] = useState<boolean>(false);
@@ -58,8 +58,9 @@ const Grants: React.FC<NavProps> = props => {
     [grantsGiven],
   );
 
-  const grantPermissionsWrapper = useCallback(async () => {
+  const grantAllPermissions = useCallback(async () => {
     try {
+      setLoading(true);
       await checkAndUpdateGrants({
         grantsToRequest: [
           GrantEnums.MsgCreatePost,
@@ -72,52 +73,26 @@ const Grants: React.FC<NavProps> = props => {
           GrantEnums.MsgExecuteContract,
         ],
         stayOnCurrentScreen: true,
-        skipModal: true,
+        detailsModal: {
+          title: t('grant permissions'),
+          body: t('grant permissions desc'),
+          bodyStyle: {textAlign: 'left'},
+          buttonLabel: t('grant all permissions'),
+        },
       });
       await fetchGrants();
+      navigate(ROUTES.TEXTONLY_MODAL, {
+        title: t('common:success'),
+        bodyStyle: {textAlign: 'center'},
+        body: t('successful grant'),
+        image: authorizationImage,
+      });
     } catch (e: any) {
       console.error(e);
     } finally {
       setLoading(false);
     }
   }, [checkAndUpdateGrants, fetchGrants]);
-
-  /*  const revokePermissionsWrapper = useCallback(async () => {
-    try {
-      setLoading(true);
-      await revokeGrants();
-      await fetchGrants();
-    } catch (e: any) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchGrants, revokeGrants]); */
-
-  const grantAllPermissions = useCallback(async () => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('grant permissions'),
-      subtitle: t('grant permissions desc'),
-      subtitleStyle: {textAlign: 'left'},
-      primaryButtonLabel: t('grant all permissions'),
-      secondaryButtonLabel: t('common:cancel'),
-      removeModalAfterButtonPress: true,
-      onPressPrimary: () => grantPermissionsWrapper(),
-      onPressSecondary: () => pop(),
-    });
-  }, [grantPermissionsWrapper, navigate, pop, t]);
-
-  /*  const revokeAllPermissions = useCallback(async () => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('revoke permissions'),
-      subtitle: t('revoke permissions desc'),
-      primaryButtonLabel: t('revoke all permissions'),
-      secondaryButtonLabel: t('common:cancel'),
-      onPressPrimary: () => revokePermissionsWrapper(),
-      onPressSecondary: () => pop(),
-      removeModalAfterButtonPress: true,
-    });
-  }, [navigate, pop, revokePermissionsWrapper, t]); */
 
   useFocusEffect(
     useCallback(() => {
@@ -131,7 +106,7 @@ const Grants: React.FC<NavProps> = props => {
 
   return (
     <DView
-      showLoadingOverlay={fetchingGrants}
+      showLoadingOverlay={fetchingGrants || loading}
       style={styles.root}
       topBar={<TopBar />}
       disableHideKeyboardTouchable={true}
