@@ -1,4 +1,4 @@
-import {defaultProfilePic, followedButton, followIcon} from 'assets/images';
+import {defaultProfilePic, followedIcon, followIcon} from 'assets/images';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -100,7 +100,7 @@ const PostCard = ({
     const followUnfollowButton = postData.author_address !== activeAddress && (
       <View>
         <ProfileHeaderButton
-          imageSrc={isFollowing ? followedButton : followIcon}
+          imageSrc={isFollowing ? followedIcon : followIcon}
           onPress={onPressFollow}
         />
       </View>

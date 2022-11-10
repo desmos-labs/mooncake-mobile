@@ -21,8 +21,8 @@ const useStyles = makeStyle(theme => ({
   },
   followIcon: {
     zIndex: 1,
-    width: 24,
-    height: 24,
+    width: 36,
+    height: 36,
     tintColor: theme.colors.surfaceBlack,
   },
   moreIcon: {

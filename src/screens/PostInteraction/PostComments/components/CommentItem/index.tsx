@@ -40,6 +40,8 @@ interface Props extends PostItem {
 
   handlePress?: () => void;
 
+  handleProfilePicPress?: () => void;
+
   handleLongPress?: (event: GestureResponderEvent) => void;
 
   repliesCounter: number;
@@ -66,6 +68,7 @@ const CommentItem = ({
   handlePressTip,
   handlePress,
   handleLongPress,
+  handleProfilePicPress,
   author,
   reactions,
   tips,
@@ -95,18 +98,21 @@ const CommentItem = ({
   });
 
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      activeOpacity={handlePress ? 0.8 : 1}
-      style={[styles.container, styles.flexRow]}>
-      <FastImage
-        source={
-          author?.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
-        }
-        style={styles.avatar}
-      />
-      <View style={styles.flex}>
+    <View style={[styles.container, styles.flexRow]}>
+      <TouchableOpacity onPress={handleProfilePicPress}>
+        <FastImage
+          source={
+            author?.profile_pic ? {uri: author.profile_pic} : defaultProfilePic
+          }
+          style={styles.avatar}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        activeOpacity={handlePress ? 0.8 : 1}
+        style={styles.flex}>
         <View style={styles.contentContainer}>
           <View style={styles.flexRow}>
             <View>
@@ -199,8 +205,8 @@ const CommentItem = ({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
