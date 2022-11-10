@@ -50,7 +50,7 @@ const EnterComment = () => {
 
   const {profileData} = useActiveAccount();
 
-  const {goBack, navigate, pop} = useNavigation<NavProps['navigation']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
 
   const [commentText, setCommentText] = useRecoilState(postTextState);
   const [commentAttachment, setCommentAttachment] =
@@ -68,26 +68,15 @@ const EnterComment = () => {
     onImageSelected: setCommentAttachment,
   });
 
-  const handlePressGallery = React.useCallback(() => {
-    if (isCreatePost) navigate(ROUTES.CREATE_POST_CAMERA_ROLL);
-    else imageFromLibrary();
-  }, [isCreatePost]);
-
   const handlePress = React.useCallback(async () => {
     setLoading(true);
-    const isCreatingImagePost = isCreatePost && commentAttachment;
 
     await createPost({
       referencedPostId: postId,
       conversationId: postId,
     });
 
-    // EnterComment -> CreateTextPost -> Home
-    if (isCreatingImagePost) {
-      pop(2);
-    } else {
-      goBack();
-    }
+    goBack();
 
     setLoading(false);
   }, [isCreatePost, commentAttachment]);
@@ -169,7 +158,7 @@ const EnterComment = () => {
       </DView>
       <MediaBottomPanel
         imageSelected={!!commentAttachment}
-        handlePressGallery={handlePressGallery}
+        handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
         handlePressMention={() => {
           console.log('placeholder');
