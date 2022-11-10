@@ -16,6 +16,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
   },
   inputLabel: {
+    textTransform: 'capitalize',
     marginBottom: theme.spacing.s,
   },
   buttonGroup: {
