@@ -37,8 +37,6 @@ const useStyles = makeStyle(theme => ({
     // Typography.Body4
     fontFamily: 'Poppins-SemiBold',
     fontSize: 22,
-    fontStyle: 'normal',
-    fontWeight: '400',
     lineHeight: 27,
     letterSpacing: 0.0015,
     width: Dimensions.get('window').width,

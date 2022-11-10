@@ -38,8 +38,6 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
     fontFamily: 'Poppins-SemiBold',
     fontSize: 22,
-    fontStyle: 'normal',
-    fontWeight: '400',
     lineHeight: 27,
     letterSpacing: 0.0015,
     width: Dimensions.get('window').width,
