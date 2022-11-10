@@ -141,10 +141,7 @@ const Signup = () => {
             <BackButton onPress={goBack} />
           </Spacer>
         </View>
-      }
-      statusBarProps={{
-        barStyle: 'dark-content',
-      }}>
+      }>
       <Typography.H3 style={styles.headerText}>
         {t('signup:signup')}
       </Typography.H3>

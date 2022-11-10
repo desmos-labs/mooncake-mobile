@@ -151,7 +151,6 @@ const Login = () => {
   return (
     <DView
       showLoadingOverlay={biometricsLoading}
-      statusBarProps={{translucent: true}}
       backgroundImage={landingBG}
       backgroundFillScreen
       style={styles.container}>
