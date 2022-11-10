@@ -99,7 +99,6 @@ import {Dimensions, TextStyle, ViewStyle} from 'react-native';
 import {FollowingParams} from 'screens/Following';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import CreatePostCameraRoll from 'screens/CreatePostCameraRoll';
 import {useTheme} from 'react-native-paper';
 import Login, {LoginParams} from 'screens/Login';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
@@ -153,7 +152,6 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_POST_TYPE]: undefined;
   [ROUTES.CREATE_TEXT_POST]: undefined;
   [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
-  [ROUTES.CREATE_POST_CAMERA_ROLL]: undefined;
   [ROUTES.EDIT_PROFILE]: undefined;
   [ROUTES.MANAGE_BIOMETRICS]: undefined;
 
@@ -402,11 +400,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} />
 
       <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
-
-      <Stack.Screen
-        name={ROUTES.CREATE_POST_CAMERA_ROLL}
-        component={CreatePostCameraRoll}
-      />
 
       <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} />
 

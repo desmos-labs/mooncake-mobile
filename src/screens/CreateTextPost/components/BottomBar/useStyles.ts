@@ -18,6 +18,15 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     height: 32,
   },
+  leftButtonGroup: {
+    flexDirection: 'row',
+  },
+  cameraButton: {
+    marginLeft: theme.spacing.m,
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
 }));
 
 export default useStyles;
