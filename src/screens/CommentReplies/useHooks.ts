@@ -214,7 +214,8 @@ const useHooks = ({
   const handleCommentReply = () =>
     createPost({conversationId: postID, referencedPostId: commentID});
 
-  const handleAddReaction = (postId: number) => addOrRemoveReaction({postId});
+  const handleAddReaction = (postId: number) =>
+    addOrRemoveReaction({postId, stayOnCurrentScreen: true});
 
   const handlePressSendTips = (postAuthor: string, postId: number) => {
     navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
