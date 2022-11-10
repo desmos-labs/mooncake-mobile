@@ -11,7 +11,7 @@ import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
  * @typedef CheckAndUpdateGrantsArgs
  * @param {GrantEnums[]} Object.grantsToRequest - An Array of grants to request.
  * @param {boolean} Object.stayOnCurrentScreen - If true, will not call pop() after grant request process is completed.
- * @param {boolean} Object.skipModal - If true, will not open auth modal.
+ * @param {boolean} Object.detailsModal - An object containing details modal informations, such as title, body and so on.
  */
 export interface CheckAndUpdateGrantsArgs {
   grantsToRequest: GrantEnums[];
