@@ -39,7 +39,6 @@ const Landing = () => {
 
   return (
     <DView
-      statusBarProps={{translucent: true}}
       backgroundImage={landingBG}
       backgroundFillScreen
       style={styles.container}>

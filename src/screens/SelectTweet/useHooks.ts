@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useButterConfig} from '@recoil/butterConfigState';
+import {errorImage} from 'assets/images';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import _ from 'lodash';
@@ -96,17 +97,24 @@ const useHooks = () => {
                 }),
               title: t('common:success'),
               subtitle: t('connected'),
-              primaryButtonLabel: t('common:goToProfile')!,
+              primaryButtonLabel: t('common:goToProfile') as string,
             }),
           failureAction: () =>
-            navigate(ROUTES.RESULT_MODAL, {
+            navigate(ROUTES.CONFIRM_MODAL, {
+              title: t('common:failed'),
+              subtitle: t('not connected'),
+              primaryButtonLabel: t('common:retry')!,
+              image: errorImage,
               onPressPrimary: () =>
                 navigate(ROUTES.SELECT_TWEET, {
                   username: user.username,
                 }),
-              title: t('common:failed'),
-              subtitle: t('not connected'),
-              primaryButtonLabel: t('common:retry')!,
+              secondaryButtonLabel: t('common:goToProfile')!,
+              secondaryButtonMode: 'outlined',
+              onPressSecondary: () =>
+                navigate(ROUTES.USER_PROFILE, {
+                  visitingProfileAddress: accounts[0].address,
+                }),
             }),
         });
       }
