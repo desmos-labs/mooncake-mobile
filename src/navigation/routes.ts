@@ -100,7 +100,6 @@ enum ROUTES {
 
   EDIT_PROFILE = 'EDIT_PROFILE',
 
-  CREATE_POST_CAMERA_ROLL = 'CREATE_POST_CAMERA_ROLL',
   // Root navigation end
 
   // Authorize wallet stack start

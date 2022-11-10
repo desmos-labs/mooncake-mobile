@@ -5,7 +5,6 @@ import {useTranslation} from 'react-i18next';
 import {cameraIcon, defaultProfilePic} from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import {convertEdgeToImageDTO} from 'screens/CreatePostCameraRoll/useGallery';
 import ImageButton from 'components/ImageButton';
 import {View} from 'react-native';
 import useStyles from './useStyles';
