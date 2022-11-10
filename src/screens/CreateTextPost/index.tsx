@@ -15,7 +15,7 @@ import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
 import {useTheme} from 'react-native-paper';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {postParamsState} from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
@@ -23,9 +23,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {postTextState} from '@recoil/sharedPostState';
+import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import ImageButton from 'components/ImageButton';
 import {addAlphaToHex} from 'config/theme';
+import {Asset} from 'react-native-image-picker';
+import useImageFromDevice from 'hooks/useImageFromDevice';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -42,8 +44,19 @@ const CreateTextPost = () => {
   const postParams = useRecoilValue(postParamsState);
   const [sharedComment, setSharedComment] = useRecoilState(postTextState);
   const {createPost, loading} = useCreatePost();
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {replace, goBack} = useNavigation<NavProps['navigation']>();
   const [inputFocused, setInputFocused] = React.useState(false);
+  const setCommentAttachment = useSetRecoilState(postAttachmentsState);
+
+  const imageSelectedCallback = React.useCallback((image: Asset) => {
+    replace(ROUTES.ENTER_COMMENT, {isCreatePost: true});
+
+    setCommentAttachment(image);
+  }, []);
+
+  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+    onImageSelected: imageSelectedCallback,
+  });
 
   const [backgroundIndex, setBackgroundIndex] = React.useState(
     _.random(0, postBG.length),
@@ -134,7 +147,8 @@ const CreateTextPost = () => {
         onPress={handlePostPressed}>
         <BottomBar
           handlePressPost={handleSubmitPost}
-          handlePressGallery={() => navigate(ROUTES.CREATE_POST_CAMERA_ROLL)}
+          handlePressGallery={imageFromLibrary}
+          handlePressCamera={imageFromCamera}
         />
       </TouchableOpacity>
 
