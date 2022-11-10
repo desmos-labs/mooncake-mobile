@@ -2,10 +2,14 @@ import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
-import {defaultProfilePic} from 'assets/images';
+import {cameraIcon, defaultProfilePic} from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
-import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import {convertEdgeToImageDTO} from 'screens/CreatePostCameraRoll/useGallery';
+import {
+  CameraRoll,
+  PhotoIdentifier,
+} from '@react-native-camera-roll/camera-roll';
+import ImageButton from 'components/ImageButton';
+import {View} from 'react-native';
 import useStyles from './useStyles';
 import GalleryButton from './GalleryButton';
 
@@ -13,9 +17,36 @@ type Props = {
   handlePressPost: () => void;
 
   handlePressGallery: () => void;
+
+  handlePressCamera: () => void;
 };
 
-const BottomBar = ({handlePressGallery, handlePressPost}: Props) => {
+type ImageDto = {
+  filename: string | null;
+  uri: string;
+  height: number;
+  width: number;
+  fileSize: number | null;
+  playableDuration: number;
+  timestamp: number;
+  type: string;
+  mimeType: string;
+};
+
+export const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
+  return edges.map(x => ({
+    ...x.node.image,
+    mimeType: x.node.image.mimeType,
+    timestamp: x.node.timestamp,
+    type: x.node.type,
+  }));
+};
+
+const BottomBar = ({
+  handlePressGallery,
+  handlePressPost,
+  handlePressCamera,
+}: Props) => {
   const styles = useStyles();
   const {t} = useTranslation();
 
@@ -38,10 +69,18 @@ const BottomBar = ({handlePressGallery, handlePressPost}: Props) => {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <GalleryButton
-        image={firstPhoto || defaultProfilePic}
-        handlePress={handlePressGallery}
-      />
+      <View style={styles.leftButtonGroup}>
+        <GalleryButton
+          image={firstPhoto || defaultProfilePic}
+          handlePress={handlePressGallery}
+        />
+
+        <ImageButton
+          image={cameraIcon}
+          style={styles.cameraButton}
+          onPress={handlePressCamera}
+        />
+      </View>
 
       <Button
         style={styles.postButton}
