@@ -161,7 +161,9 @@ const GrantsDetails: React.FC<NavProps> = () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('grants:grant permissions'),
       subtitle: t('grant following', {
-        permissions: permissionsLabelsList.join(', '),
+        permissions:
+          params.section.name.charAt(0).toUpperCase() +
+          params.section.name.slice(1),
       }),
       primaryButtonLabel: t('yes grant'),
       secondaryButtonLabel: t('common:cancel'),
@@ -187,7 +189,9 @@ const GrantsDetails: React.FC<NavProps> = () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('grants:revoke permissions'),
       subtitle: t('revoke following', {
-        permissions: permissionsLabelsList.join(', '),
+        permissions:
+          params.section.name.charAt(0).toUpperCase() +
+          params.section.name.slice(1),
       }),
       primaryButtonLabel: t('yes revoke'),
       secondaryButtonLabel: t('common:cancel'),

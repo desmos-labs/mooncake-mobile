@@ -28,9 +28,6 @@ const Grants: React.FC<NavProps> = props => {
   const theme = useTheme();
   const {pop} = useNavigation<NavProps['navigation']>();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-  /*
-  const {revokeGrants} = useAddOrUpdateGrants();
-*/
   const [loading, setLoading] = useState<boolean>(false);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
