@@ -26,6 +26,7 @@ import ROUTES from 'navigation/routes';
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import ImageButton from 'components/ImageButton';
 import {addAlphaToHex} from 'config/theme';
+import {mapPostFontSize} from 'lib/FormatUtils';
 import {Asset} from 'react-native-image-picker';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import BottomBar from './components/BottomBar';
@@ -137,7 +138,11 @@ const CreateTextPost = () => {
               onChangeText={setSharedComment}
               onPressIn={handlePostPressed}
               placeholder={inputFocused ? '' : t('tapToType')}
-              style={[styles.inputStyle, {opacity: inputOpacity}]}
+              style={[
+                styles.inputStyle,
+                {opacity: inputOpacity},
+                {fontSize: mapPostFontSize(sharedComment.length)},
+              ]}
               placeholderTextColor={addAlphaToHex('#FFFFFF', 0.5)}
             />
           </KeyboardAvoidingView>

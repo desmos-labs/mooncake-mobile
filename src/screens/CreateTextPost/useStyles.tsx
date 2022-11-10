@@ -35,10 +35,8 @@ const useStyles = makeStyle(theme => ({
     padding: theme.spacing.m,
     color: theme.colors.white,
     // Typography.Body4
-    fontFamily: 'Poppins-Regular',
-    fontSize: 18,
-    fontStyle: 'normal',
-    fontWeight: '400',
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 22,
     lineHeight: 27,
     letterSpacing: 0.0015,
     width: Dimensions.get('window').width,

@@ -1,5 +1,5 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 /**
  * Theme hook for the PostCard component
@@ -34,8 +34,15 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   textStyle: {
+    // same as inputStyle in CreateTextPost/useStyles
     color: theme.colors.white,
-    fontSize: 32,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 22,
+    lineHeight: 27,
+    letterSpacing: 0.0015,
+    width: Dimensions.get('window').width,
+    textAlign: 'center',
+    padding: theme.spacing.m,
   },
   imagePostText: {
     marginTop: theme.spacing.s,
