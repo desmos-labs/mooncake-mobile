@@ -33,26 +33,26 @@ describe('utils: FormatUtils', () => {
   });
 
   describe('mapPostFontSize', () => {
-    it('fontSize = 22 for numChars < 201', () => {
+    it('fontSize === 22 for numChars < 201', () => {
       expect(mapPostFontSize(200)).toBe(22);
     });
 
-    it('fontSize = 20 for numChars > 200 && numChars < 251', () => {
+    it('fontSize === 20 for numChars > 200 && numChars < 251', () => {
       expect(mapPostFontSize(201)).toBe(20);
       expect(mapPostFontSize(250)).toBe(20);
     });
 
-    it('fontSize = 18 for numChars > 250 && numChars < 351', () => {
+    it('fontSize === 18 for numChars > 250 && numChars < 351', () => {
       expect(mapPostFontSize(251)).toBe(18);
       expect(mapPostFontSize(350)).toBe(18);
     });
 
-    it('fontSize = 16 for numChars > 350 && numChars < 451', () => {
+    it('fontSize === 16 for numChars > 350 && numChars < 451', () => {
       expect(mapPostFontSize(351)).toBe(16);
       expect(mapPostFontSize(450)).toBe(16);
     });
 
-    it('fontSize = 14 for numChars > 450 && numChars < 501', () => {
+    it('fontSize === 14 for numChars > 450 && numChars < 501', () => {
       expect(mapPostFontSize(451)).toBe(14);
       expect(mapPostFontSize(500)).toBe(14);
     });
