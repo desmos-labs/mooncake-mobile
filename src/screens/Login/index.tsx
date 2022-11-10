@@ -25,9 +25,12 @@ import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import useLogin from 'services/axios/requests/Login/useLogin';
+import useAutoLoginFromSignUp from 'screens/Login/useAutoLoginFromSignUp';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
+export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
 export type LoginParams = {
   // Callback to be executed if login is successful.
@@ -54,6 +57,8 @@ const Login = () => {
   const [password, setPassword] = React.useState('');
   const {login} = useLogin();
   const clearUserData = useClearUserData();
+
+  const {shouldAutoLogin} = useAutoLoginFromSignUp();
 
   const unlockWithBiometrics = React.useCallback(async () => {
     setBiometricsLoading(true);
@@ -147,6 +152,14 @@ const Login = () => {
       setLoading(false);
     }
   }, [activeAddress, toast, login, password, params, getState]);
+
+  if (shouldAutoLogin) {
+    return (
+      <DView style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ThemedLottieView source={broadcastAnim} autoPlay autoSize loop />
+      </DView>
+    );
+  }
 
   return (
     <DView

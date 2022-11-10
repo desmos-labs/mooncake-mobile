@@ -12,10 +12,11 @@ import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
 import {toBase64} from '@cosmjs/encoding';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import signUpInfoState from '@recoil/signUpInfoState';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import _ from 'lodash';
+import signUpPasswordState from '@recoil/signUpPasswordState';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
@@ -26,6 +27,7 @@ const useHooks = () => {
 
   const signUpInfo = useRecoilValue(signUpInfoState);
 
+  const setSignUpPassword = useSetRecoilState(signUpPasswordState);
   const [loading, setLoading] = React.useState(false);
 
   const initialFormValues = {
@@ -90,6 +92,8 @@ const useHooks = () => {
       const messages = [saveProfileMessage];
 
       setLoading(false);
+
+      setSignUpPassword(confirmPassword);
 
       navigate(ROUTES.BROADCAST_TX, {
         messages,

@@ -17,6 +17,7 @@ import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useLazyQuery} from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useChangePassword from 'hooks/useChangePassword';
+import signUpPasswordState from '@recoil/signUpPasswordState';
 import useStyles from './useStyles';
 
 /**
@@ -27,6 +28,7 @@ const useHooks = () => {
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation('passwordManipulation');
   const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
+  const setSignUpPassword = useSetRecoilState(signUpPasswordState);
 
   const {changePassword} = useChangePassword();
   const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
@@ -177,6 +179,8 @@ const useHooks = () => {
           mnemonic,
           password: confirmPassword,
         });
+
+        setSignUpPassword(confirmPassword);
 
         if (
           existingAccounts.data &&
