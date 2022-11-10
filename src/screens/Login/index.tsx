@@ -20,14 +20,23 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import useLogin from 'services/axios/requests/Login/useLogin';
+import useAutoLoginFromSignUp from 'screens/Login/useAutoLoginFromSignUp';
+import ThemedLottieView from 'components/ThemedLottieView';
+import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
+export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
 export type LoginParams = {
   // Callback to be executed if login is successful.
@@ -54,6 +63,8 @@ const Login = () => {
   const [password, setPassword] = React.useState('');
   const {login} = useLogin();
   const clearUserData = useClearUserData();
+
+  const {shouldAutoLogin} = useAutoLoginFromSignUp();
 
   const unlockWithBiometrics = React.useCallback(async () => {
     setBiometricsLoading(true);
@@ -148,64 +159,79 @@ const Login = () => {
     }
   }, [activeAddress, toast, login, password, params, getState]);
 
+  if (shouldAutoLogin) {
+    return (
+      <DView style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ThemedLottieView source={broadcastAnim} autoPlay autoSize loop />
+      </DView>
+    );
+  }
+
   return (
     <DView
       showLoadingOverlay={biometricsLoading}
       backgroundImage={landingBG}
       backgroundFillScreen
       style={styles.container}>
-      <Image source={butterflyLandingIcon} style={styles.logo} />
-      <Spacer paddingVertical={theme.spacing.s}>
-        <Typography.Body1 style={styles.title}>
-          {t('welcomeBack')}
-        </Typography.Body1>
-      </Spacer>
-      <Typography.Body1 style={styles.subtitle}>
-        {t('logBackIn')}
-      </Typography.Body1>
-
-      <View style={styles.contentContainer}>
-        <Typography.Subtitle2 style={styles.labelStyle}>
-          {t('password')}
-        </Typography.Subtitle2>
-        <DSecureTextInput
-          autoFocus={!biometrics}
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          placeholder={t('enterPassword')}
-        />
-
-        {error && (
-          <Typography.Caption1 style={styles.errorStyle}>
-            {error}
-          </Typography.Caption1>
-        )}
-
-        <Spacer paddingTop={theme.spacing.m}>
-          <Button
-            color={theme.colors.white}
-            disabled={loading || !password}
-            loading={loading}
-            style={{borderColor: theme.colors.white}}
-            onPress={handleSubmit}
-            mode="outlined">
-            <Typography.Button2 style={{color: theme.colors.white}}>
-              {t('common:confirm')}
-            </Typography.Button2>
-          </Button>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        contentContainerStyle={{flexGrow: 1}}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -100 : 0}
+        behavior={Platform.OS === 'ios' ? 'position' : 'padding'}>
+        <Image source={butterflyLandingIcon} style={styles.logo} />
+        <Spacer paddingVertical={theme.spacing.s}>
+          <Typography.Body1 style={styles.title}>
+            {t('welcomeBack')}
+          </Typography.Body1>
         </Spacer>
-      </View>
-      <View style={styles.bottomContentContainer}>
-        <TouchableOpacity
-          disabled={loading}
-          style={styles.forgotPwButton}
-          onPress={clearUserData}>
-          <Typography.Button1 style={styles.labelStyle}>
-            {t('forgotPassword')}
-          </Typography.Button1>
-        </TouchableOpacity>
-      </View>
+        <Typography.Body1 style={styles.subtitle}>
+          {t('logBackIn')}
+        </Typography.Body1>
+
+        <View style={styles.contentContainer}>
+          <Typography.Subtitle2 style={styles.labelStyle}>
+            {t('password')}
+          </Typography.Subtitle2>
+          <DSecureTextInput
+            autoFocus={!biometrics}
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            placeholder={t('enterPassword')}
+          />
+
+          {error && (
+            <Typography.Caption1 style={styles.errorStyle}>
+              {error}
+            </Typography.Caption1>
+          )}
+
+          <Spacer paddingTop={theme.spacing.m}>
+            <Button
+              color={theme.colors.white}
+              disabled={loading || !password}
+              loading={loading}
+              style={{borderColor: theme.colors.white}}
+              onPress={handleSubmit}
+              mode="outlined">
+              <Typography.Button2 style={{color: theme.colors.white}}>
+                {t('common:confirm')}
+              </Typography.Button2>
+            </Button>
+          </Spacer>
+        </View>
+
+        <View style={styles.bottomContentContainer}>
+          <TouchableOpacity
+            disabled={loading}
+            style={styles.forgotPwButton}
+            onPress={clearUserData}>
+            <Typography.Button1 style={styles.labelStyle}>
+              {t('forgotPassword')}
+            </Typography.Button1>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </DView>
   );
 };

@@ -35,13 +35,14 @@ const useStyles = makeStyle(theme => ({
     color: theme.colors.white,
   },
   contentContainer: {
-    flex: 0.5,
+    marginTop: 40,
     alignItems: 'stretch',
     justifyContent: 'center',
   },
   bottomContentContainer: {
-    flex: 0.5,
+    flex: 1,
     justifyContent: 'flex-end',
+    alignSelf: 'center',
   },
   labelStyle: {
     alignSelf: 'flex-start',
