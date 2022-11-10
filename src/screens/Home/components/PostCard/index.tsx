@@ -10,6 +10,7 @@ import {useRecoilValue} from 'recoil';
 import {isFollowingAddr} from '@recoil/following';
 import ThemedLottieView from 'components/ThemedLottieView';
 import {loadingWhite} from 'assets/animations';
+import {mapPostFontSize} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 type Props = {
@@ -108,7 +109,11 @@ const PostCard = ({
       return (
         <>
           <View style={styles.textContainer}>
-            <Typography.H2 style={styles.textStyle}>
+            <Typography.H2
+              style={[
+                styles.textStyle,
+                {fontSize: mapPostFontSize(postData?.text?.length)},
+              ]}>
               {postData.text}
             </Typography.H2>
           </View>

@@ -26,6 +26,7 @@ import ROUTES from 'navigation/routes';
 import {postTextState} from '@recoil/sharedPostState';
 import ImageButton from 'components/ImageButton';
 import {addAlphaToHex} from 'config/theme';
+import {mapPostFontSize} from 'lib/FormatUtils';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
@@ -124,7 +125,11 @@ const CreateTextPost = () => {
               onChangeText={setSharedComment}
               onPressIn={handlePostPressed}
               placeholder={inputFocused ? '' : t('tapToType')}
-              style={[styles.inputStyle, {opacity: inputOpacity}]}
+              style={[
+                styles.inputStyle,
+                {opacity: inputOpacity},
+                {fontSize: mapPostFontSize(sharedComment.length)},
+              ]}
               placeholderTextColor={addAlphaToHex('#FFFFFF', 0.5)}
             />
           </KeyboardAvoidingView>

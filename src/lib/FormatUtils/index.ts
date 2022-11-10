@@ -81,3 +81,18 @@ export const formatFeeWithDenoms = (fee: StdFee) => {
     formattedString: `${formattedAmount} ${matchingDenom.toUpperCase()}`,
   };
 };
+
+export const mapPostFontSize = (numChars: number) => {
+  let fontSize = 14;
+  if (numChars < 201) {
+    fontSize = 22;
+  } else if (numChars < 251) {
+    fontSize = 20;
+  } else if (numChars < 351) {
+    fontSize = 18;
+  } else if (numChars < 451) {
+    fontSize = 16;
+  }
+
+  return fontSize;
+};
