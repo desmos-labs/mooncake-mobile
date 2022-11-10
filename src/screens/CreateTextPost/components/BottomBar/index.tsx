@@ -4,7 +4,10 @@ import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
 import {cameraIcon, defaultProfilePic} from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
-import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+import {
+  CameraRoll,
+  PhotoIdentifier,
+} from '@react-native-camera-roll/camera-roll';
 import ImageButton from 'components/ImageButton';
 import {View} from 'react-native';
 import useStyles from './useStyles';
@@ -16,6 +19,27 @@ type Props = {
   handlePressGallery: () => void;
 
   handlePressCamera: () => void;
+};
+
+type ImageDto = {
+  filename: string | null;
+  uri: string;
+  height: number;
+  width: number;
+  fileSize: number | null;
+  playableDuration: number;
+  timestamp: number;
+  type: string;
+  mimeType: string;
+};
+
+export const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
+  return edges.map(x => ({
+    ...x.node.image,
+    mimeType: x.node.image.mimeType,
+    timestamp: x.node.timestamp,
+    type: x.node.type,
+  }));
 };
 
 const BottomBar = ({
