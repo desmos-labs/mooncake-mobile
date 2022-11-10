@@ -29,11 +29,13 @@ const Grants: React.FC<NavProps> = props => {
   const {pop} = useNavigation<NavProps['navigation']>();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const [loading, setLoading] = useState<boolean>(false);
+  const [fetchingGrants, setFetchingGrants] = useState<boolean>(false);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
 
   const fetchGrants = useCallback(async () => {
     try {
+      setFetchingGrants(true);
       const {grants} = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
@@ -44,6 +46,8 @@ const Grants: React.FC<NavProps> = props => {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setFetchingGrants(false);
     }
   }, [getAuthzGrants]);
 
@@ -68,6 +72,7 @@ const Grants: React.FC<NavProps> = props => {
           GrantEnums.MsgExecuteContract,
         ],
         stayOnCurrentScreen: true,
+        skipModal: true,
       });
       await fetchGrants();
     } catch (e: any) {
@@ -126,6 +131,7 @@ const Grants: React.FC<NavProps> = props => {
 
   return (
     <DView
+      showLoadingOverlay={fetchingGrants}
       style={styles.root}
       topBar={<TopBar />}
       disableHideKeyboardTouchable={true}

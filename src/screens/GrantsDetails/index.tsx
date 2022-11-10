@@ -145,9 +145,10 @@ const GrantsDetails: React.FC<NavProps> = () => {
 
   const grantPermissionsWrapper = useCallback(async () => {
     try {
+      setLoading(true);
       await checkAndUpdateGrants({
         grantsToRequest: permissionsEnumList,
-        stayOnCurrentScreen: true,
+        skipModal: true,
       });
       await fetchGrants();
     } catch (e: any) {
