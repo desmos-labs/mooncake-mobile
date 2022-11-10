@@ -70,7 +70,7 @@ const PostCard = ({
     return (
       <ProfileHeaderButton
         onPress={onPressAuthor}
-        imageSrc={profile_pic || defaultProfilePic}
+        imageSrc={(profile_pic && {uri: profile_pic}) || defaultProfilePic}
         style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
       />
     );
