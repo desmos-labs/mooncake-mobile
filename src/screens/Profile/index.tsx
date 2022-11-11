@@ -24,7 +24,7 @@ import useChainLinks from 'hooks/useChainLinks';
 import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   RefreshControl,
@@ -254,13 +254,15 @@ const Profile = () => {
     return undefined;
   }, [chainLinks, connectedApps]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (!profileLoading) {
-        setTimeout(() => setGlobalLoading(false), 500);
-      }
-    }, [profileLoading]),
-  );
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (!profileLoading) {
+      timeout = setTimeout(() => setGlobalLoading(false), 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [profileLoading]);
 
   if (globalLoading) {
     return (
