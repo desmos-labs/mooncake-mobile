@@ -9,7 +9,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList} from 'react-native';
+import {ActivityIndicator, FlatList} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import NftComponent from 'screens/ProfileNfts/components/NftComponent';
@@ -23,14 +23,14 @@ const ProfileNfts = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('nft');
   const [nfts, setNfts] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   const getNftsData = async (address: string) => {
     try {
       const response = await axios.get(
         `https://nft-api.stargaze-apis.com/api/v1beta/profile/${address}/nfts`,
       );
-      return response.data;
+      return response.data.slice(0, 4);
     } catch (e) {
       console.error(e);
     }
@@ -63,7 +63,6 @@ const ProfileNfts = () => {
 
   return (
     <DView
-      showLoadingOverlay={loading}
       backgroundColor={theme.colors.white}
       topBar={<TopBar style={{backgroundColor: theme.colors.white}} />}
       disableHideKeyboardTouchable={true}
@@ -73,26 +72,31 @@ const ProfileNfts = () => {
       </Spacer>
       <Typography.Body6>{t('link stars')}</Typography.Body6>
       <Spacer paddingVertical={10} />
-      <FlatList
-        refreshing={loading}
-        onRefresh={() =>
-          fetchNfts('stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25')
-        }
-        showsVerticalScrollIndicator={false}
-        data={nfts}
-        keyExtractor={item => item.tokenId}
-        renderItem={renderNft}
-        numColumns={2}
-        contentContainerStyle={styles.contentContainer}
-        ListEmptyComponent={
-          !loading ? (
-            <EmptyPostComponent
-              textLabel={t('noNft')}
-              buttonLabel={t('connect address')}
-            />
-          ) : null
-        }
-      />
+      {nfts.length > 0 ? (
+        <FlatList
+          refreshing={loading}
+          onRefresh={() =>
+            fetchNfts('stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25')
+          }
+          showsVerticalScrollIndicator={false}
+          data={nfts}
+          keyExtractor={item => item.tokenId}
+          renderItem={renderNft}
+          numColumns={2}
+          style={{flex: 1, margin: -theme.spacing.m}}
+          contentContainerStyle={styles.contentContainer}
+          ListEmptyComponent={
+            !loading ? (
+              <EmptyPostComponent
+                textLabel={t('noNft')}
+                buttonLabel={t('connect address')}
+              />
+            ) : null
+          }
+        />
+      ) : (
+        <ActivityIndicator size="small" />
+      )}
     </DView>
   );
 };

@@ -2,7 +2,8 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import Image from 'react-native-image-progress';
+import FastImage from 'react-native-fast-image';
+import {createImageProgress} from 'react-native-image-progress';
 import useStyles from './useStyles';
 
 export interface Props {
@@ -12,17 +13,18 @@ export interface Props {
 
 const NftComponent = ({data, onPress}: Props) => {
   const styles = useStyles();
+  const Image = createImageProgress(FastImage);
   return (
     <View style={{flex: 1}}>
       <DropShadowWrapper
         style={{margin: 6}}
-        customColor="rgba(133, 133, 133, 0.001)"
-        customDistance={8}>
+        customDistance={8}
+        outerShadowProps={{startColor: 'rgba(16, 24, 40, 0.03)', distance: 30}}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
           <Image
             source={{uri: data.image}}
             style={styles.image}
-            imageStyle={styles.innerStyle}
+            imageStyle={styles.image}
           />
           <View style={styles.textGroup}>
             <Typography.Subtitle4 numberOfLines={1}>

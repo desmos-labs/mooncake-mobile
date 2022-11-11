@@ -9,8 +9,9 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {Platform, View} from 'react-native';
-import Image from 'react-native-image-progress';
+import {View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {createImageProgress} from 'react-native-image-progress';
 import {useTheme} from 'react-native-paper';
 import Animated, {
   Extrapolation,
@@ -37,6 +38,8 @@ const NftDetails = () => {
   const {
     params: {nftData},
   } = useRoute<NavProps['route']>();
+  const Image = createImageProgress(FastImage);
+
   const scrollProgress = useSharedValue(0);
 
   const animatedOpacityStyle = useAnimatedStyle(() => {
@@ -56,28 +59,25 @@ const NftDetails = () => {
 
   return (
     <>
-      {/*
-      waiting for a fix from blur-view lib, until that we need to disable android blur
-*/}
-      {Platform.OS === 'ios' && (
-        <>
-          <Animated.View style={animatedOpacityStyle}>
-            <View style={styles.imageAbsolute}>
-              <Image
-                source={{uri: nftData.image}}
-                imageStyle={styles.backgroundImage}
-              />
-            </View>
-          </Animated.View>
-          <BlurView
-            style={styles.absolute}
-            blurType="regular"
-            blurAmount={8}
-            pointerEvents="none"
-            reducedTransparencyFallbackColor="white"
-          />
-        </>
-      )}
+      <>
+        <Animated.View style={animatedOpacityStyle}>
+          <View style={styles.imageAbsolute}>
+            <Image
+              source={{uri: nftData.image}}
+              imageStyle={styles.backgroundImage}
+            />
+          </View>
+        </Animated.View>
+        <BlurView
+          style={styles.absolute}
+          blurType="light"
+          blurAmount={32}
+          blurRadius={25}
+          downsampleFactor={25}
+          pointerEvents="none"
+          reducedTransparencyFallbackColor="white"
+        />
+      </>
       <SafeAreaView>
         <ImageButton
           image={profileBack}
@@ -90,8 +90,10 @@ const NftDetails = () => {
           scrollEventThrottle={16}>
           <DropShadowWrapper
             style={styles.dropShadow}
-            customColor="rgba(16, 24, 40, 0.02)"
-            customDistance={10}>
+            outerShadowProps={{
+              startColor: 'rgba(16, 24, 40, 0.03)',
+              distance: 10,
+            }}>
             <Image
               source={{uri: nftData.image}}
               style={{
