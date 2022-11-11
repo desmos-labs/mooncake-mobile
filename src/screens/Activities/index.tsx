@@ -8,7 +8,13 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ListRenderItemInfo, SectionList, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ListRenderItemInfo,
+  SectionList,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import useHooks from './useHooks';
@@ -106,47 +112,51 @@ const Activities = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
-      <SectionList
-        keyExtractor={(item, index) => item.timestamp + index}
-        refreshing={notificationsLoading}
-        onRefresh={notificationsRefetch}
-        style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={EmptyActivities}
-        sections={notificationsData}
-        renderItem={renderNotification}
-        onEndReached={() => {
-          notificationsFetchMore({
-            variables: {
-              offset: data.notification.length,
-            },
-            updateQuery: (prev, {fetchMoreResult}) => {
-              if (!fetchMoreResult) {
-                return prev;
-              }
-              return {
-                ...prev,
-                notification: [
-                  ...prev.notification,
-                  ...fetchMoreResult.notification,
-                ],
-              };
-            },
-          });
-        }}
-        renderSectionHeader={({section: {section}}) => (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: theme.colors.white,
-              paddingTop: theme.spacing.m,
-              paddingBottom: theme.spacing.s,
-            }}>
-            <Typography.Button2>{section}</Typography.Button2>
-          </View>
-        )}
-      />
+      {notificationsData.length > 0 ? (
+        <SectionList
+          keyExtractor={(item, index) => item.timestamp + index}
+          refreshing={notificationsLoading}
+          onRefresh={notificationsRefetch}
+          style={{flex: 1}}
+          contentContainerStyle={{flexGrow: 1}}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={EmptyActivities}
+          sections={notificationsData}
+          renderItem={renderNotification}
+          onEndReached={() => {
+            notificationsFetchMore({
+              variables: {
+                offset: data.notification.length,
+              },
+              updateQuery: (prev, {fetchMoreResult}) => {
+                if (!fetchMoreResult) {
+                  return prev;
+                }
+                return {
+                  ...prev,
+                  notification: [
+                    ...prev.notification,
+                    ...fetchMoreResult.notification,
+                  ],
+                };
+              },
+            });
+          }}
+          renderSectionHeader={({section: {section}}) => (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: theme.colors.white,
+                paddingTop: theme.spacing.m,
+                paddingBottom: theme.spacing.s,
+              }}>
+              <Typography.Button2>{section}</Typography.Button2>
+            </View>
+          )}
+        />
+      ) : (
+        <ActivityIndicator />
+      )}
     </DView>
   );
 };
