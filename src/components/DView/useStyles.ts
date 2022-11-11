@@ -5,7 +5,6 @@ import {verticalScale} from 'react-native-size-matters';
 const useStyles = makeStyleWithProps((background: Props, theme) => ({
   root: {
     flexDirection: 'column',
-    flex: 1,
     flexGrow: 1,
     backgroundColor: theme.colors.background,
   },
