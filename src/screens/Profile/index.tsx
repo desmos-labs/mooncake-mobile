@@ -27,28 +27,30 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  ActivityIndicator,
   RefreshControl,
+  SafeAreaView,
   StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {Snackbar, useTheme} from 'react-native-paper';
 import Animated, {
+  FadeIn,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
+import Loading from 'screens/Following/components/Loading/Loading';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
-import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import {
   mapConnectedAppImages,
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
-import FastImage from 'react-native-fast-image';
+import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -71,7 +73,7 @@ const Profile = () => {
   const {top} = useSafeAreaInsets();
   const {chainLinks} = useChainLinks();
   const [connectedApps] = useRecoilState(connectedAppsState);
-
+  const [globalLoading, setGlobalLoading] = useState(true);
   /** Animations start
    * These hooks act as the animation driver for the ProfileHeader component
    * The actual animations are created in the component itself.
@@ -252,12 +254,24 @@ const Profile = () => {
     return undefined;
   }, [chainLinks, connectedApps]);
 
-  if (profileLoading) {
-    return <ActivityIndicator />;
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!profileLoading) {
+        setTimeout(() => setGlobalLoading(false), 500);
+      }
+    }, [profileLoading]),
+  );
+
+  if (globalLoading) {
+    return (
+      <SafeAreaView>
+        <Loading />
+      </SafeAreaView>
+    );
   }
 
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeIn.duration(250)} style={styles.container}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -399,7 +413,7 @@ const Profile = () => {
         duration={Snackbar.DURATION_SHORT}>
         <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
       </Snackbar>
-    </View>
+    </Animated.View>
   );
 };
 
