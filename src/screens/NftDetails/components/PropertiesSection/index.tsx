@@ -22,10 +22,14 @@ const PropertiesSection = (nftData: Props) => {
   }, []);
 
   return (
-    <View style={{marginVertical: theme.spacing.m}}>
+    <View style={{marginTop: theme.spacing.m, flex: 1}}>
       <Typography.H5>{t('properties')}</Typography.H5>
       <Spacer paddingVertical={16}>
-        <DropShadowWrapper customColor="rgba(16, 24, 40, 0.01)">
+        <DropShadowWrapper
+          outerShadowProps={{
+            startColor: 'rgba(16, 24, 40, 0.03)',
+            distance: 30,
+          }}>
           <View style={styles.section}>
             <SingleProperty
               roundTop={true}

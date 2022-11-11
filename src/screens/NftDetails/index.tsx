@@ -22,7 +22,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PropertiesSection from 'screens/NftDetails/components/PropertiesSection';
-import UserBio from 'screens/Profile/components/UserBio';
 import useStyles from './useStyles';
 
 export type NftDetailsParams = {
@@ -45,9 +44,9 @@ const NftDetails = () => {
   const animatedOpacityStyle = useAnimatedStyle(() => {
     const interpolatedOpacity = interpolate(
       scrollProgress.value,
-      [0, 150],
+      [0, 100],
       [1, 0],
-      {extrapolateRight: Extrapolation.CLAMP},
+      Extrapolation.CLAMP,
     );
     return {opacity: interpolatedOpacity};
   });
@@ -58,7 +57,7 @@ const NftDetails = () => {
   });
 
   return (
-    <>
+    <SafeAreaView style={{backgroundColor: theme.colors.white, flex: 1}}>
       <>
         <Animated.View style={animatedOpacityStyle}>
           <View style={styles.imageAbsolute}>
@@ -78,7 +77,7 @@ const NftDetails = () => {
           reducedTransparencyFallbackColor="white"
         />
       </>
-      <SafeAreaView>
+      <View style={{flex: 1, marginTop: theme.spacing.s}}>
         <ImageButton
           image={profileBack}
           style={styles.backImage}
@@ -87,6 +86,7 @@ const NftDetails = () => {
         <Animated.ScrollView
           style={styles.container}
           onScroll={scrollHandler}
+          showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}>
           <DropShadowWrapper
             style={styles.dropShadow}
@@ -103,14 +103,18 @@ const NftDetails = () => {
               imageStyle={styles.nftImage}
             />
           </DropShadowWrapper>
-          <View style={{margin: theme.spacing.m}}>
-            <Typography.H5>
-              {nftData.name}
-              {' #'}
-              {nftData.tokenId}
-            </Typography.H5>
-            <Spacer paddingVertical={6}>
-              <UserBio content={nftData.description} />
+          <View style={{margin: theme.spacing.m, flex: 1}}>
+            <Spacer
+              paddingTop={theme.spacing.m}
+              paddingBottom={theme.spacing.l}>
+              <Typography.H5>
+                {nftData.name}
+                {' #'}
+                {nftData.tokenId}
+              </Typography.H5>
+            </Spacer>
+            <Spacer paddingBottom={theme.spacing.l}>
+              <Typography.Body6>{nftData.description}</Typography.Body6>
             </Spacer>
             <Typography.Subtitle3
               numberOfLines={1}
@@ -122,6 +126,7 @@ const NftDetails = () => {
               Created by{'  '}
               <Typography.Body6>{nftData.creator}</Typography.Body6>
             </Typography.Subtitle3>
+            <Spacer paddingBottom={4} />
             <Typography.Subtitle3
               numberOfLines={1}
               ellipsizeMode="middle"
@@ -136,8 +141,8 @@ const NftDetails = () => {
             <Spacer paddingBottom={20} />
           </View>
         </Animated.ScrollView>
-      </SafeAreaView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 };
 
