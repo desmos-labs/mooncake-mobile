@@ -63,10 +63,9 @@ export const Following: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <View style={styles.contentContainer}>
+    <View style={styles.container}>
       <FlatList
         data={data}
-        style={styles.flatList}
         refreshing={false}
         onRefresh={refetch}
         renderItem={renderItem}
@@ -78,6 +77,7 @@ export const Following: FC<NavProps> = ({route}) => {
         getItemLayout={getItemLayout}
         keyExtractor={keyExtractor}
         removeClippedSubviews={true}
+        contentContainerStyle={styles.contentContainer}
       />
       {!!error && (
         <Error error={error.message} label={t('retry')} onPress={fetchMore} />
