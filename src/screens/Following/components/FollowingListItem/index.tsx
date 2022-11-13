@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import FollowButton from 'components/FollowButton';
 import Typography from 'components/Typography';
 import {defaultProfilePic} from 'assets/images';
@@ -10,11 +10,17 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
-const FollowingListItem: FC<ProfileSummary> = ({
+interface Props extends ProfileSummary {
+  // A handler that will redirect the user to the follower's profile page
+  onPress: () => void;
+}
+
+const FollowingListItem: FC<Props> = ({
   profile_pic,
   nickname,
   dtag,
   address,
+  onPress,
 }) => {
   const styles = useStyles();
 
@@ -28,7 +34,7 @@ const FollowingListItem: FC<ProfileSummary> = ({
   const {activeAddress} = useActiveAccount();
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <FastImage
         source={profile_pic ? {uri: profile_pic} : defaultProfilePic}
         style={styles.pic}
@@ -54,7 +60,7 @@ const FollowingListItem: FC<ProfileSummary> = ({
           type={isFollowing ? 'unfollow' : 'follow'}
         />
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
