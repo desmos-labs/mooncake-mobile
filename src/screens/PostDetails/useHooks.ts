@@ -204,7 +204,10 @@ const useHooks = ({
 
   const handleAddReaction = React.useCallback(
     async (postId: number) => {
-      const result = await addOrRemoveReaction({postId});
+      const result = await addOrRemoveReaction({
+        postId,
+        stayOnCurrentScreen: true,
+      });
       console.log(result);
     },
     [addOrRemoveReaction],
