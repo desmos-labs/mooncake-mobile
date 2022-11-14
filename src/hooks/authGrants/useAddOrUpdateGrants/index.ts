@@ -73,11 +73,14 @@ const useAddOrUpdateGrants = () => {
         grants: grantsToRevoke,
       });
 
-      const msgGrantAllowanceEncode = buildGrantAllowanceEncode({
-        grants: remainingGrants,
-        grantee,
-        granter,
-      });
+      const msgGrantAllowanceEncode =
+        remainingGrants.length !== 0
+          ? buildGrantAllowanceEncode({
+              grants: remainingGrants,
+              grantee,
+              granter,
+            })
+          : undefined;
 
       const unlockResult = await unlockWallet({chainAccount});
 
