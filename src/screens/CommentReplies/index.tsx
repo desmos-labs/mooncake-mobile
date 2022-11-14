@@ -1,6 +1,7 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
+import {isFollowingAddr} from '@recoil/following';
 import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
@@ -24,7 +25,6 @@ import InteractionCountersBar from 'screens/PostDetails/components/InteractionCo
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import {isFollowingAddr} from '@recoil/following';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -86,6 +86,7 @@ const CommentReplies = () => {
     handleCommentReply,
     handleAddReaction,
     handlePressReport,
+    handleNavigateToProfile,
     scrollViewRef,
   } = useHooks({
     postID: params.postId,
@@ -160,6 +161,9 @@ const CommentReplies = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
+          handleProfilePicPress={() =>
+            handleNavigateToProfile(item?.author_address)
+          }
           handlePressLike={() => !isPending && handleAddReaction(item.id)}
           handlePressTip={() =>
             !isPending && handlePressSendTips(item?.author?.address, item.id)
@@ -197,6 +201,9 @@ const CommentReplies = () => {
             console.log('hello world');
           }}
           handlePressLike={() => handleAddReaction(mainComment.id)}
+          handleProfilePicPress={() =>
+            handleNavigateToProfile(mainComment?.author?.address)
+          }
           handlePressTip={() =>
             handlePressSendTips(mainComment?.author?.address, mainComment?.id)
           }

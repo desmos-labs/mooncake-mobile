@@ -215,7 +215,6 @@ const useHooks = ({
 
   const handlePressReport = React.useCallback(
     (postId: number, subspaceId: number) => {
-      console.log('report');
       navigate(ROUTES.REPORT_POST, {
         postId,
         subspaceId,
@@ -223,6 +222,11 @@ const useHooks = ({
     },
     [],
   );
+
+  const handleNavigateToProfile = (address: string) =>
+    navigate(ROUTES.USER_PROFILE, {
+      visitingProfileAddress: address,
+    });
 
   React.useEffect(() => {
     resetSharedPostState();
@@ -271,6 +275,7 @@ const useHooks = ({
     navigateToProfile,
     handlePostComment,
     handleAddReaction,
+    handleNavigateToProfile,
     postCommentLoading: loading,
     handlePressReport,
     pageRefetch,

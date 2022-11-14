@@ -1,9 +1,17 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import activeProfileState from '@recoil/activeProfileState';
+import {
+  pendingCommentsByPost,
+  PendingPostEnum,
+  pendingPostsState,
+} from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
+import EnvConfig from 'config/EnvConfig';
+import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useRef} from 'react';
+import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
 import {
   useRecoilState,
   useRecoilValue,
@@ -11,20 +19,12 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
-import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
-import EnvConfig from 'config/EnvConfig';
-import {
-  pendingCommentsByPost,
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
-import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
 
 const useHooks = ({
   postID,
@@ -211,6 +211,11 @@ const useHooks = ({
       subspaceId,
     });
 
+  const handleNavigateToProfile = (address: string) =>
+    navigate(ROUTES.USER_PROFILE, {
+      visitingProfileAddress: address,
+    });
+
   const handleCommentReply = () =>
     createPost({conversationId: postID, referencedPostId: commentID});
 
@@ -251,6 +256,7 @@ const useHooks = ({
     handlePressSendTips,
     handleExpandComment,
     handleCommentReply,
+    handleNavigateToProfile,
     commentReplyLoading: loading,
     pageRefetch,
     handleAddReaction,

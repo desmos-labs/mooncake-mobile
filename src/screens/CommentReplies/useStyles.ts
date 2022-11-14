@@ -12,7 +12,6 @@ const useStyles = makeStyle(theme => ({
   },
   topBar: {
     backgroundColor: theme.colors.white,
-    zIndex: 2,
     paddingBottom: 10,
   },
   flatListContainer: {

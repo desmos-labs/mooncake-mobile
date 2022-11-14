@@ -11,7 +11,7 @@ import {
   defaultBanner,
   defaultProfilePic,
   editButton,
-  followedButton,
+  followedIcon,
   followIcon,
 } from 'assets/images';
 import Button from 'components/Button';
@@ -181,7 +181,7 @@ const Profile = () => {
 
     return (
       <ImageButton
-        image={isFollowing ? followedButton : followIcon}
+        image={isFollowing ? followedIcon : followIcon}
         style={styles.editButton}
         onPress={() => followOrUnfollowUser({addrToFollow: address})}
       />

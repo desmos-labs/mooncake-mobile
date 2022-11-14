@@ -50,17 +50,11 @@ export const modalSuccess = require('./images/modalSuccess.png');
 
 export const modalFail = require('./images/modalFail.png');
 
-export const iconCross = require('./images/iconCross.png');
-
 export const iconCrossBlack = require('./images/iconCrossBlack.png');
-
-export const btDevice = require('./images/btDevice.png');
 
 export const ledgerIcon = require('./images/ledgerIcon.png');
 
 export const checkboxIcon = require('./images/checkboxIcon.png');
-
-export const blogDetails = require('./images/blogDetails.png');
 
 export const followIcon = require('./images/followIcon.png');
 
@@ -76,13 +70,9 @@ export const commentLikeEmptyIcon = require('./images/commentLikeIconEmpty.png')
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
-export const homeButton = require('./images/homeButton.png');
-
 export const plusWhiteIcon = require('./images/plusWhite.png');
 
 export const settingsButton = require('./images/settingsButton.png');
-
-export const notificationsButton = require('./images/notificationsButton.png');
 
 export const editButton = require('./images/editButton.png');
 
@@ -105,8 +95,6 @@ export const checkboxUnchecked = require('./images/checkbox.png');
 export const arrowRight = require('./images/arrowRight.png');
 
 export const ledgerConnectionError = require('./images/ledgerConnectionError.png');
-
-export const ledgerDevice = require('./images/ledgerDevice.png');
 
 export const createProfileBanner = require('./images/createProfileBanner.png');
 
@@ -142,21 +130,13 @@ export const authorizationImage = require('./images/authorizationImage.png');
 
 export const commentMore = require('./images/commentMore.png');
 
-export const commentTip = require('./images/commentTip.png');
-
-export const commentComment = require('./images/commentComment.png');
-
 export const commentLiked = require('./images/commentLiked.png');
 
-export const followedButton = require('./images/followedIcon.png');
+export const followedIcon = require('assets/images/unfollowIcon.png');
 
 export const followBlackIcon = require('./images/followBlackLight.png');
 
 export const reportIcon = require('./images/report.png');
-
-export const followOrangeIcon = require('./images/followOrangeIcon.png');
-
-export const followOrangeFilledIcon = require('./images/followOrangeFilledIcon.png');
 
 export const moreBlackIcon = require('./images/moreBlackIcon.png');
 
@@ -213,14 +193,6 @@ export const verifiedIcon = require('./images/verified.png');
 
 // Socials
 
-export const discordIcon = require('./images/discord.png');
-
-export const telegramIcon = require('./images/telegram.png');
-
 export const twitterIcon = require('./images/twitter.png');
 
 export const twitterIconBlack = require('./images/twitterBlack.png');
-
-export const mediumIcon = require('./images/medium.png');
-
-export const githubIcon = require('./images/github.png');

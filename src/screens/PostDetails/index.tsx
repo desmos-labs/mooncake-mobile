@@ -5,10 +5,12 @@ import {
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
+import {isFollowingAddr} from '@recoil/following';
 import {
   defaultProfilePic,
   followBlackIcon,
-  followOrangeIcon,
+  followedIcon,
+  followIcon,
   moreBlackIcon,
   reportIcon,
   shareBlackIcon,
@@ -22,6 +24,7 @@ import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -46,11 +49,9 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import {isFollowingAddr} from '@recoil/following';
-import useActiveAccount from 'hooks/useActiveAccount';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import useStyles from './useStyles';
 import useHooks from './useHooks';
+import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -113,6 +114,7 @@ const PostDetails = () => {
     handleAddReaction,
     postCommentLoading,
     handlePressReport,
+    handleNavigateToProfile,
     pageRefetch,
     scrollViewRef,
   } = useHooks({
@@ -200,6 +202,9 @@ const PostDetails = () => {
           handlePressComment={() => {
             console.log('hello world');
           }}
+          handleProfilePicPress={() =>
+            handleNavigateToProfile(item.author_address)
+          }
           handlePressLike={() => {
             if (isPending) return;
             handleAddReaction(item.id);
@@ -301,13 +306,8 @@ const PostDetails = () => {
         <View style={styles.rightContainer}>
           {activeAddress !== post?.author?.address && (
             <ImageButton
-              style={[
-                styles.followIcon,
-                isFollowingAddress && {
-                  tintColor: theme.colors.primary,
-                },
-              ]}
-              image={followOrangeIcon}
+              style={[styles.followIcon]}
+              image={isFollowingAddress ? followedIcon : followIcon}
               onPress={async () => {
                 await followOrUnfollowUser({
                   addrToFollow: post?.author?.address,
