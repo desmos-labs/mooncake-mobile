@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import axios from 'axios';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -13,6 +12,7 @@ import {ActivityIndicator, FlatList} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import NftComponent from 'screens/ProfileNfts/components/NftComponent';
+import GetNftsData from 'services/axios/requests/GetNftsData';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_NFTS>;
@@ -25,21 +25,10 @@ const ProfileNfts = () => {
   const [nfts, setNfts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  const getNftsData = async (address: string) => {
-    try {
-      const response = await axios.get(
-        `https://nft-api.stargaze-apis.com/api/v1beta/profile/${address}/nfts`,
-      );
-      return response.data.slice(0, 4);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const fetchNfts = useCallback(async (address: string) => {
     setLoading(true);
     console.log('fetching');
-    const newNfts = await getNftsData(address);
+    const newNfts = await GetNftsData(address);
     setNfts((existingNfts: any[]) => [...existingNfts, ...newNfts]);
     setLoading(false);
   }, []);
@@ -80,6 +69,7 @@ const ProfileNfts = () => {
           }
           showsVerticalScrollIndicator={false}
           data={nfts}
+          windowSize={2}
           keyExtractor={item => item.tokenId}
           renderItem={renderNft}
           numColumns={2}
