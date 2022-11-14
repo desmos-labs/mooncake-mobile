@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
+import ToastConfig from 'config/ToastConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -14,6 +15,7 @@ import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
+import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import {CompleteNotification} from 'screens/Activities';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
@@ -39,7 +41,7 @@ const Activities = ({
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
   const {profileData} = useActiveAccount();
-
+  const toast = useToast();
   const checkPostType = useCallback(() => {
     const isOriginalPost = !post.conversation;
     const reply = post.replies.find(
@@ -76,11 +78,17 @@ const Activities = ({
     }
     if (type === NotificationTypesEnum.Reply) {
       const {reply} = checkPostType();
-      navigate(ROUTES.COMMENT_REPLIES, {
-        postId: post.conversation.id,
-        commentId: reply.post.id,
-        subspaceId: EnvConfig.APP_SUBSPACE_ID,
-      });
+      if (!reply) {
+        toast.show('Something went wrong', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      } else {
+        navigate(ROUTES.COMMENT_REPLIES, {
+          postId: post.conversation.id,
+          commentId: reply.post.id,
+          subspaceId: EnvConfig.APP_SUBSPACE_ID,
+        });
+      }
     }
     if (type === NotificationTypesEnum.Reaction) {
       const {isOriginalPost, reply} = checkPostType();
