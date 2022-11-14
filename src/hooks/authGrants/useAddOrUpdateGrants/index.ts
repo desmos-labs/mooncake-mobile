@@ -55,8 +55,11 @@ const useAddOrUpdateGrants = () => {
       const grantsData = await getAuthzGrants();
 
       const {grants} = grantsData;
-
+      const formattedGrants = grants.map(x => x.msg_type);
       const grantsToRevoke = selectedGrants || grants.map(x => x.msg_type);
+      const remainingGrants = formattedGrants.filter(
+        grant => !grantsToRevoke.includes(grant),
+      );
 
       console.log('Revoking the following grants:', grantsToRevoke.join(', '));
       const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
@@ -68,6 +71,12 @@ const useAddOrUpdateGrants = () => {
         grantee,
         granter,
         grants: grantsToRevoke,
+      });
+
+      const msgGrantAllowanceEncode = buildGrantAllowanceEncode({
+        grants: remainingGrants,
+        grantee,
+        granter,
       });
 
       const unlockResult = await unlockWallet({chainAccount});
@@ -82,6 +91,7 @@ const useAddOrUpdateGrants = () => {
 
       const combinedMessages = _.compact([
         msgRevokeAllowanceEncode,
+        msgGrantAllowanceEncode,
         ...msgRevokeGrantEncode,
       ]);
 
