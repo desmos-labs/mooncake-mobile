@@ -6,6 +6,8 @@ import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import GetPaginatedFollowers from 'services/graphql/queries/GetPaginatedFollowers';
 import GetPaginatedFollowing from 'services/graphql/queries/GetPaginatedFollowing';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import EmptyFollowers from './components/EmptyFollowers';
 import EmptyFollowing from './components/EmptyFollowing';
 import Error from './components/Error';
@@ -15,9 +17,9 @@ import Loading from './components/Loading/Loading';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = MaterialTopTabScreenProps<
-  RootNavigatorParamList,
-  ROUTES.FOLLOWING
+type NavProps = CompositeScreenProps<
+  MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING>,
+  StackScreenProps<RootNavigatorParamList>
 >;
 
 /**
@@ -40,6 +42,7 @@ export const Following: FC<NavProps> = ({route}) => {
   const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
   const {t} = useTranslation('common');
+  const {push} = useNavigation<NavProps['navigation']>();
 
   const isFollowing = route.name === (ROUTES.FOLLOWING as string);
 
@@ -53,7 +56,16 @@ export const Following: FC<NavProps> = ({route}) => {
 
   const renderItem = useCallback(
     ({item}: ListRenderItemInfo<ProfileSummary>) => {
-      return <FollowingListItem {...item} />;
+      return (
+        <FollowingListItem
+          {...item}
+          onPress={() => {
+            push(ROUTES.USER_PROFILE, {
+              visitingProfileAddress: item.address,
+            });
+          }}
+        />
+      );
     },
     [subspaceID],
   );
@@ -63,10 +75,9 @@ export const Following: FC<NavProps> = ({route}) => {
   );
 
   return (
-    <View style={styles.contentContainer}>
+    <View style={styles.container}>
       <FlatList
         data={data}
-        style={styles.flatList}
         refreshing={false}
         onRefresh={refetch}
         renderItem={renderItem}
@@ -78,6 +89,7 @@ export const Following: FC<NavProps> = ({route}) => {
         getItemLayout={getItemLayout}
         keyExtractor={keyExtractor}
         removeClippedSubviews={true}
+        contentContainerStyle={styles.contentContainer}
       />
       {!!error && (
         <Error error={error.message} label={t('retry')} onPress={fetchMore} />
