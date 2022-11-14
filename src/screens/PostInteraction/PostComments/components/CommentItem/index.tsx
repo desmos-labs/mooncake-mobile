@@ -114,7 +114,9 @@ const CommentItem = ({
         activeOpacity={handlePress ? 0.8 : 1}
         style={styles.flex}>
         <View style={styles.contentContainer}>
-          <View style={styles.flexRow}>
+          <TouchableOpacity
+            style={styles.flexRow}
+            onPress={handleProfilePicPress}>
             <View>
               <Typography.Subtitle3 style={styles.textStyle}>
                 {author?.nickname ? author.nickname : t('no nickname')}
@@ -123,7 +125,7 @@ const CommentItem = ({
                 @{author?.dtag}
               </Typography.Body7>
             </View>
-          </View>
+          </TouchableOpacity>
 
           {isPending ? (
             <ThemedLottieView
