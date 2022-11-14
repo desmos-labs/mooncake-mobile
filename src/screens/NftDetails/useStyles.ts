@@ -18,7 +18,7 @@ const useStyles = makeStyle(theme => ({
     marginLeft: theme.spacing.m,
     marginBottom: 10,
   },
-  dropShadow: {marginHorizontal: theme.spacing.m, marginTop: 10},
+  dropShadow: {marginHorizontal: theme.spacing.m, marginTop: 10, flex: 1},
   nftImage: {
     width: '100%',
     height: 332,
