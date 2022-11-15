@@ -4,6 +4,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {authorizationImage} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -143,33 +144,35 @@ const GrantsDetails: React.FC<NavProps> = () => {
     return permissionsEnumList.every(given => grantsGiven.includes(given));
   }, [grantsGiven, permissionsEnumList]);
 
-  const grantPermissionsWrapper = useCallback(async () => {
+  const onPressGrant = useCallback(async () => {
     try {
+      setLoading(true);
       await checkAndUpdateGrants({
         grantsToRequest: permissionsEnumList,
         stayOnCurrentScreen: true,
+        detailsModal: {
+          title: t('grants:grant permissions'),
+          body: t('grant following', {
+            permissions:
+              params.section.name.charAt(0).toUpperCase() +
+              params.section.name.slice(1),
+          }),
+          buttonLabel: t('yes grant'),
+        },
       });
       await fetchGrants();
+      navigate(ROUTES.TEXTONLY_MODAL, {
+        title: t('common:success'),
+        bodyStyle: {textAlign: 'center'},
+        body: t('grants:successful grant'),
+        image: authorizationImage,
+      });
     } catch (e: any) {
       console.error(e);
     } finally {
       setLoading(false);
     }
   }, [checkAndUpdateGrants, fetchGrants, permissionsEnumList]);
-
-  const onPressGrant = useCallback(() => {
-    navigate(ROUTES.CONFIRM_MODAL, {
-      title: t('grants:grant permissions'),
-      subtitle: t('grant following', {
-        permissions: permissionsLabelsList.join(', '),
-      }),
-      primaryButtonLabel: t('yes grant'),
-      secondaryButtonLabel: t('common:cancel'),
-      removeModalAfterButtonPress: true,
-      onPressPrimary: () => grantPermissionsWrapper(),
-      onPressSecondary: () => pop(),
-    });
-  }, [grantPermissionsWrapper, navigate, pop, t]);
 
   const revokePermissionsWrapper = useCallback(async () => {
     try {
@@ -187,7 +190,9 @@ const GrantsDetails: React.FC<NavProps> = () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('grants:revoke permissions'),
       subtitle: t('revoke following', {
-        permissions: permissionsLabelsList.join(', '),
+        permissions:
+          params.section.name.charAt(0).toUpperCase() +
+          params.section.name.slice(1),
       }),
       primaryButtonLabel: t('yes revoke'),
       secondaryButtonLabel: t('common:cancel'),

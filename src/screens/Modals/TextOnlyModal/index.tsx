@@ -6,7 +6,14 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import FastImage, {Source} from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 export type TextOnlyModalParams = {
@@ -19,13 +26,15 @@ export type TextOnlyModalParams = {
    * Additional description for the title.
    */
   body?: string | ReactNode;
+  bodyStyle?: StyleProp<TextStyle>;
+  image?: Source;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.TEXTONLY_MODAL>;
 
 const TextOnlyModal = () => {
   const {
-    params: {title, body},
+    params: {title, body, bodyStyle, image},
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
@@ -41,8 +50,16 @@ const TextOnlyModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        <Typography.H5>{title}</Typography.H5>
-        <Typography.Body6 style={styles.subtitleText}>{body}</Typography.Body6>
+        {image && (
+          <FastImage
+            source={image}
+            style={{width: 116, height: 116, alignSelf: 'center'}}
+          />
+        )}
+        <Typography.H5 style={bodyStyle}>{title}</Typography.H5>
+        <Typography.Body6 style={[styles.subtitleText, bodyStyle]}>
+          {body}
+        </Typography.Body6>
       </View>
     </View>
   );

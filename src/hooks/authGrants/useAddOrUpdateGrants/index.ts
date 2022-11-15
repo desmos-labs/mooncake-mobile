@@ -2,6 +2,7 @@ import {OfflineSigner} from '@cosmjs/proto-signing';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
 import {useButterConfig} from '@recoil/butterConfigState';
+import {authorizationImage} from 'assets/images';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
@@ -54,8 +55,11 @@ const useAddOrUpdateGrants = () => {
       const grantsData = await getAuthzGrants();
 
       const {grants} = grantsData;
-
+      const formattedGrants = grants.map(x => x.msg_type);
       const grantsToRevoke = selectedGrants || grants.map(x => x.msg_type);
+      const remainingGrants = formattedGrants.filter(
+        grant => !grantsToRevoke.includes(grant),
+      );
 
       console.log('Revoking the following grants:', grantsToRevoke.join(', '));
       const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
@@ -69,6 +73,15 @@ const useAddOrUpdateGrants = () => {
         grants: grantsToRevoke,
       });
 
+      const msgGrantAllowanceEncode =
+        remainingGrants.length !== 0
+          ? buildGrantAllowanceEncode({
+              grants: remainingGrants,
+              grantee,
+              granter,
+            })
+          : undefined;
+
       const unlockResult = await unlockWallet({chainAccount});
 
       if (!unlockResult) {
@@ -81,6 +94,7 @@ const useAddOrUpdateGrants = () => {
 
       const combinedMessages = _.compact([
         msgRevokeAllowanceEncode,
+        msgGrantAllowanceEncode,
         ...msgRevokeGrantEncode,
       ]);
 
@@ -95,7 +109,9 @@ const useAddOrUpdateGrants = () => {
 
       navigate(ROUTES.TEXTONLY_MODAL, {
         title: t('common:success'),
-        body: t('grants:successful revoke', {granter}),
+        body: t('grants:successful revoke'),
+        bodyStyle: {textAlign: 'center'},
+        image: authorizationImage,
       });
     },
     [chainAccount, butterConfig.desmos_address],

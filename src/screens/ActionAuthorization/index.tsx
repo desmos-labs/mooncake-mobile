@@ -9,9 +9,16 @@ import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useToast} from 'react-native-toast-notifications';
@@ -19,9 +26,13 @@ import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
   grants: GrantEnums[];
-
+  detailsModal?: {
+    title: string;
+    body: string;
+    bodyStyle?: StyleProp<TextStyle>;
+    buttonLabel: string;
+  };
   onCancel?: () => void;
-
   onApprove?: () => void;
 };
 
@@ -32,21 +43,15 @@ type NavProps = StackScreenProps<
 
 const ActionAuthorization = () => {
   const styles = useStyles();
-
   const theme = useTheme();
-
   const {t} = useTranslation('authorization');
-
   const {pop} = useNavigation<NavProps['navigation']>();
-
   const [loading, setLoading] = React.useState(false);
-
   const {addOrUpdateGrants} = useAddOrUpdateGrants();
-
   const toast = useToast();
 
   const {
-    params: {grants, onCancel, onApprove},
+    params: {grants, detailsModal, onCancel, onApprove},
   } = useRoute<NavProps['route']>();
 
   const grantMessage = React.useMemo(() => {
@@ -84,8 +89,9 @@ const ActionAuthorization = () => {
   const handleApprove = React.useCallback(async () => {
     setLoading(true);
     try {
+      detailsModal && pop();
       await addOrUpdateGrants({grantsToRequest: grants});
-      pop();
+      !detailsModal && pop();
       // run onApprove last
       onApprove && onApprove();
     } catch (err: any) {
@@ -98,58 +104,106 @@ const ActionAuthorization = () => {
     }
   }, [onApprove, grants, addOrUpdateGrants]);
 
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.dismissTouchable}
-        onPress={handleCancel}
-      />
-      <View style={styles.innerContainer}>
-        <SafeAreaView edges={['bottom']}>
-          <View style={styles.bar} />
-          <Spacer paddingVertical={theme.spacing.l}>
-            <Typography.H4 style={styles.textStyle}>
-              {t('header')}
-            </Typography.H4>
-          </Spacer>
+  const bottomUpModal = useMemo(
+    () => (
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.dismissTouchable}
+          onPress={handleCancel}
+        />
+        <View style={styles.innerContainer}>
+          <SafeAreaView edges={['bottom']}>
+            <View style={styles.bar} />
+            <Spacer paddingVertical={theme.spacing.l}>
+              <Typography.H4 style={styles.textStyle}>
+                {t('header')}
+              </Typography.H4>
+            </Spacer>
 
-          <Typography.Body5 style={styles.textStyle}>
+            <Typography.Body5 style={styles.textStyle}>
+              <Trans
+                i18nKey="authorization:authorizeToAction"
+                values={{
+                  action: grantMessage,
+                }}
+              />
+            </Typography.Body5>
+
+            <Image source={authorizationImage} style={styles.imageStyle} />
+
+            <Button
+              mode="contained"
+              style={{backgroundColor: theme.colors.surfaceBlack}}
+              onPress={handleApprove}
+              loading={loading}>
+              {t('common:confirm')}
+            </Button>
+
+            <Spacer
+              paddingTop={theme.spacing.l}
+              paddingBottom={theme.spacing.m}>
+              <Button
+                mode="outlined"
+                style={{borderColor: theme.colors.surfaceBlack}}
+                labelStyle={{color: theme.colors.surfaceBlack}}
+                disabled={loading}
+                onPress={handleCancel}>
+                {t('common:refuse')}
+              </Button>
+            </Spacer>
+
+            <Typography.Body7 style={styles.textStyle}>
+              {t('avoidRepetitiveActions')}
+            </Typography.Body7>
+          </SafeAreaView>
+        </View>
+      </View>
+    ),
+    [grantMessage, handleApprove, handleCancel, loading],
+  );
+
+  const middleModal = useMemo(
+    () => (
+      <View style={styles.modalContainer}>
+        {/* invoke dismiss fn or goBack if user presses the background */}
+        <TouchableOpacity
+          onPress={handleCancel}
+          activeOpacity={1}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <View style={styles.innerModalContainer}>
+          <Typography.H5 style={{textAlign: 'center'}}>
+            {detailsModal?.title}
+          </Typography.H5>
+
+          <Typography.Body5 style={[styles.bodyText, detailsModal?.bodyStyle]}>
             <Trans
-              i18nKey="authorization:authorizeToAction"
-              values={{
-                action: grantMessage,
-              }}
+              i18nKey={detailsModal?.body as string}
+              components={[
+                <Typography.Subtitle2 style={detailsModal?.bodyStyle} />,
+              ]}
             />
           </Typography.Body5>
-
-          <Image source={authorizationImage} style={styles.imageStyle} />
-
           <Button
+            style={styles.primaryButton}
             mode="contained"
-            style={{backgroundColor: theme.colors.surfaceBlack}}
-            onPress={handleApprove}
-            loading={loading}>
-            {t('common:confirm')}
+            onPress={handleApprove}>
+            {detailsModal?.buttonLabel}
           </Button>
-
-          <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-            <Button
-              mode="outlined"
-              style={{borderColor: theme.colors.surfaceBlack}}
-              labelStyle={{color: theme.colors.surfaceBlack}}
-              disabled={loading}
-              onPress={handleCancel}>
-              {t('common:refuse')}
-            </Button>
-          </Spacer>
-
-          <Typography.Body7 style={styles.textStyle}>
-            {t('avoidRepetitiveActions')}
-          </Typography.Body7>
-        </SafeAreaView>
+          <Button
+            containerStyle={styles.secondaryButton}
+            color={theme.colors.surfaceBlack}
+            mode="text"
+            onPress={handleCancel}>
+            {t('commmon:cancel')}
+          </Button>
+        </View>
       </View>
-    </View>
+    ),
+    [detailsModal, handleApprove, handleCancel],
   );
+
+  return detailsModal ? middleModal : bottomUpModal;
 };
 
 export default ActionAuthorization;
