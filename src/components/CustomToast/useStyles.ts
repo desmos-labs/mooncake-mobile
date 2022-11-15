@@ -5,7 +5,7 @@ import {Props} from './index';
 const useStyles = makeStyleWithProps((props: Props, theme) => ({
   commonToastStyle: {
     width: '95%',
-    top: 10,
+    top: 18,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 11.5,
