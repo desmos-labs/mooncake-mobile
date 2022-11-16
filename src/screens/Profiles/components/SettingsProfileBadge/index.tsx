@@ -2,7 +2,8 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, Image, TouchableOpacity, View} from 'react-native';
+import {Dimensions, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -137,7 +138,7 @@ const SettingsProfileBadge = (props: Props) => {
           <DropShadowWrapper
             style={styles.externalContainer}
             innerStyle={styles.container}>
-            <Image
+            <FastImage
               source={value.profilePicture}
               style={styles.profilePicture}
             />

@@ -1,11 +1,11 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {mnemonicState, signerState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import {getAccounts} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -15,7 +15,6 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-import {useResetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
@@ -24,14 +23,12 @@ declare type Props = StackScreenProps<RootNavigatorParamList>;
 const Profiles: React.FC<Props> = props => {
   const {navigation} = props;
   const {profiles} = useLoadProfiles();
-  const [activeAddress] = useMMKVStorage<string | undefined>(
-    MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
-  );
-
+  const {activeAddress, chainAccount} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();
+  const unlockWallet = useUnlockWallet();
 
   React.useEffect(() => {
     const loadProfiles = async () => {
@@ -69,13 +66,26 @@ const Profiles: React.FC<Props> = props => {
     });
   }, []);
 
-  const resetSigner = useResetRecoilState(signerState);
-  const resetMnemonic = useResetRecoilState(mnemonicState);
-  const navigateToAddProfile = useCallback(() => {
-    resetSigner();
-    resetMnemonic();
-    navigation.navigate(ROUTES.ADD_PROFILE);
-  }, [activeAddress]);
+  /*  const resetSigner = useResetRecoilState(signerState);
+  const resetMnemonic = useResetRecoilState(mnemonicState); */
+  const navigateToAddProfile = useCallback(async () => {
+    if (!chainAccount) {
+      throw new Error('No chain account');
+    }
+
+    try {
+      const result = await unlockWallet({chainAccount});
+      if (result) {
+        navigation.navigate(ROUTES.ADD_PROFILE, {
+          wallet: result.wallet!,
+          mnemonic: result.mnemonic!,
+          password: result.password!,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [chainAccount]);
 
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {

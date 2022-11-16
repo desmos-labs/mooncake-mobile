@@ -1,21 +1,28 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
+import usePollingQueries from 'hooks/usePollingQueries';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
+import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {Dimensions, TextStyle, ViewStyle} from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
+import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
 import Activities from 'screens/Activities';
-import AddProfile from 'screens/AddProfile';
+import AddProfile, {AddProfileParams} from 'screens/AddProfile';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -35,14 +42,21 @@ import ConnectChainTxDetail, {
 } from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
 import EditProfile from 'screens/EditProfile';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import {FollowingParams} from 'screens/Following';
+import FollowingAndFollowers, {
+  FollowingAndFollowersParams,
+} from 'screens/FollowingAndFollowers';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
+import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageBiometrics from 'screens/ManageBiometrics';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -72,15 +86,17 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
+import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
-import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import SelectLedgerApp from 'screens/SelectLedgerApp';
 import SelectTweet, {SelectTweetParams} from 'screens/SelectTweet';
 import Settings from 'screens/Settings';
 import ShowRecoveryPhrase, {
@@ -89,22 +105,6 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import PostTypeSelection from 'screens/PostTypeSelection';
-import CreateTextPost from 'screens/CreateTextPost';
-import FollowingAndFollowers, {
-  FollowingAndFollowersParams,
-} from 'screens/FollowingAndFollowers';
-import {Dimensions, TextStyle, ViewStyle} from 'react-native';
-import {FollowingParams} from 'screens/Following';
-import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {useTheme} from 'react-native-paper';
-import Login, {LoginParams} from 'screens/Login';
-import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
-import usePollingQueries from 'hooks/usePollingQueries';
-import RNBootSplash from 'react-native-bootsplash';
-import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -188,7 +188,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE]: undefined;
+  [ROUTES.ADD_PROFILE]: AddProfileParams;
 
   /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
@@ -510,11 +510,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
-      <Stack.Screen
-        name={ROUTES.ADD_PROFILE}
-        component={AddProfile}
-        options={{cardStyle: styles.addProfileCard}}
-      />
+      <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} />
     </Stack.Navigator>
   );
 };
