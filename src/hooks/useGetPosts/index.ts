@@ -7,6 +7,7 @@ import {followedAddressesState} from '@recoil/following';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
+import EnvConfig from 'config/EnvConfig';
 
 /**
  * Increase this to get more posts per query.
@@ -19,9 +20,6 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
 
   const {activeAddress} = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
-  // in the future, this value should be passed as either a prop or loaded from
-  // recoil
-  const subspaceID = 5;
 
   const queryVars = React.useMemo(() => {
     if (type === POST_TYPE.DISCOVER) {
@@ -30,7 +28,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         variables: {
           offset: 0,
           limit: POSTS_PER_FETCH,
-          subspaceID,
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
           user: activeAddress!,
           reaction: {
             '@type': '/desmos.reactions.v1.RegisteredReactionValue',
@@ -44,7 +42,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         variables: {
           offset: 0,
           limit: POSTS_PER_FETCH,
-          subspaceID,
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
           following: Array.from(followingAddrs),
           user: activeAddress!,
           reaction: {
@@ -68,7 +66,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       ...queryVars.variables,
       offset: posts.length,
     });
-  }, [posts, loading]);
+  }, [posts, loading, queryVars.variables]);
 
   React.useEffect(() => {
     if (!loading && data) {
@@ -91,6 +89,12 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     }, 1500),
     [posts, loading],
   );
+
+  React.useEffect(() => {
+    if (type === POST_TYPE.FOLLOWING) {
+      fetchNewestPosts();
+    }
+  }, [followingAddrs]);
 
   return {
     posts,
