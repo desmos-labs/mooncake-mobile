@@ -90,6 +90,7 @@ const Home = () => {
         backgroundColor: theme.colors.background,
       }}>
       <Carousel
+        windowSize={4}
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
