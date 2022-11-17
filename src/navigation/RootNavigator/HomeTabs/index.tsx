@@ -43,9 +43,17 @@ const HomeTabs = () => {
 
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
-    if (bearerToken) {
-      RefreshSession();
-    } else replace(ROUTES.LOGIN);
+    const refreshSession = async () => {
+      if (bearerToken) {
+        try {
+          await RefreshSession();
+        } catch {
+          replace(ROUTES.LOGIN);
+        }
+      } else replace(ROUTES.LOGIN);
+    };
+
+    refreshSession();
   }, []);
 
   const renderTabBar = React.useCallback(
