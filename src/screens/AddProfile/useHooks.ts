@@ -1,5 +1,4 @@
 import {useRoute} from '@react-navigation/native';
-import {ExternalAccount} from '@recoil/connectChainState';
 import _ from 'lodash';
 import React from 'react';
 import {
@@ -9,31 +8,17 @@ import {
 } from 'screens/ConnectAddress/utils';
 import {DESMOS_COIN_TYPE} from 'types/hdpath';
 
-const DESMOS_PREFIX = 'desmos';
-
-/**
- * Generate desmos accounts given a mnemonic
- */
-const useGenerateAccountsFromMnemonic = (mnemonic?: string) => {
-  const [accounts, setAccounts] = React.useState<ExternalAccount[]>([]);
-  const [loading, setLoading] = React.useState(false);
-  const prefix = DESMOS_PREFIX;
-  const coinType = DESMOS_COIN_TYPE;
+const useHooks = () => {
   const {params} = useRoute<any>();
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
-
   const isUsingLedger = !!(ledgerTransport && ledgerApp);
 
   const generateAccounts = React.useCallback(
-    async (limit: number, startingIndex?: number) => {
-      if (loading) return;
-      setLoading(true);
-      console.log('start', startingIndex);
-      console.log('end', limit);
+    async (startingIndex: number, limit: number, mnemonic?: string) => {
       const hdPaths = generateHdPaths({
         startingIndex: startingIndex || 0,
-        coinType,
+        coinType: DESMOS_COIN_TYPE,
         limit,
       });
       let _accounts: any;
@@ -41,30 +26,27 @@ const useGenerateAccountsFromMnemonic = (mnemonic?: string) => {
         _accounts = await generateAccountUsingLedger({
           ledgerApp,
           ledgerTransport,
-          prefix,
+          prefix: 'desmos',
           hdPaths,
         });
       } else {
         _accounts = await generateAccountUsingMnemonic({
-          prefix,
+          prefix: 'desmos',
           hdPaths,
           mnemonic: mnemonic!,
         });
       }
 
-      setLoading(false);
       if (_accounts) {
-        setAccounts(prev => [...prev, ..._accounts]);
+        return _accounts;
       }
     },
-    [loading, mnemonic],
+    [isUsingLedger],
   );
 
   return {
-    accounts,
-    loading,
     generateAccounts,
   };
 };
 
-export default useGenerateAccountsFromMnemonic;
+export default useHooks;
