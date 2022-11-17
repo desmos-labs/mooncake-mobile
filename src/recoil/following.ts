@@ -63,9 +63,4 @@ export const useGetFollowingPolling = () => {
 
     syncPendingRelationships(newFollowing.map(x => x.address));
   }, [data]);
-
-  // refetch following list if userAddress has changed
-  // React.useEffect(() => {
-  //   refetch({userAddress: activeAddress});
-  // }, [activeAddress]);
 };
