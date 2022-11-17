@@ -7,6 +7,7 @@ import {
 import {Asset, ImageLibraryOptions} from 'react-native-image-picker/src/types';
 import {Alert, Platform} from 'react-native';
 import {Permission, PERMISSIONS, request} from 'react-native-permissions';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   mediaType: 'photo',
@@ -18,7 +19,12 @@ type Params = {
   /**
    * An optional callback to independently process a selected image.
    */
-  onImageSelected?: (image: Asset) => void;
+  onImageSelected: (image: Asset) => void;
+
+  /**
+   * If true, will not resize the image after one is selected.
+   */
+  disableResizeImage?: boolean;
 };
 
 type ReturnValue = {
@@ -31,25 +37,50 @@ type ReturnValue = {
    * Select an image by allowing the user to take a photo.
    */
   imageFromCamera: () => void;
+};
 
-  /**
-   * The user's selected image.
-   */
-  imageAsset: Asset | undefined;
+const resizeImages = async (
+  selectedImages: Asset[],
+  disableResize?: boolean,
+): Promise<Asset[]> => {
+  if (disableResize) {
+    return selectedImages;
+  }
 
-  /**
-   * Clears the selected image.
-   */
-  clearImage: () => void;
+  const SIZE_LIMIT = 600;
+
+  const resizedImages = selectedImages.map(async x => {
+    // from shotgun debugging, seems like the server limits files to 1mb
+    if (x.fileSize! > 1000000) {
+      const resized = await ImageResizer.createResizedImage(
+        x.uri!,
+        SIZE_LIMIT,
+        SIZE_LIMIT,
+        'PNG',
+        100,
+      );
+
+      return {
+        ...x,
+        ...resized,
+      };
+    }
+    return {
+      ...x,
+    };
+  });
+
+  return Promise.all(resizedImages);
 };
 
 /**
  * A hook that wraps react-native-image-picker logic and stores the selected
  * image in a useState hook.
  */
-const useImageFromDevice = ({onImageSelected}: Params): ReturnValue => {
-  const [image, setImage] = React.useState<Asset>();
-
+const useImageFromDevice = ({
+  onImageSelected,
+  disableResizeImage,
+}: Params): ReturnValue => {
   // selecting webp images on ios will return an error code
   const imageFromLibrary = React.useCallback(async () => {
     const result = await launchImageLibrary(DEFAULT_OPTIONS);
@@ -61,9 +92,12 @@ const useImageFromDevice = ({onImageSelected}: Params): ReturnValue => {
         'Unable to load photo. Please select another photo.',
       );
     } else if (result.assets) {
-      setImage(result.assets[0]);
+      const processedImages = await resizeImages(
+        result.assets,
+        disableResizeImage,
+      );
+      onImageSelected(processedImages[0]);
     }
-    onImageSelected && result.assets && onImageSelected(result.assets[0]);
   }, []);
 
   const imageFromCamera = React.useCallback(async () => {
@@ -84,21 +118,17 @@ const useImageFromDevice = ({onImageSelected}: Params): ReturnValue => {
         'Unable to load photo. Please select another photo.',
       );
     } else if (result.assets) {
-      setImage(result.assets[0]);
+      const processedImages = await resizeImages(
+        result.assets,
+        disableResizeImage,
+      );
+      onImageSelected(processedImages[0]);
     }
-
-    onImageSelected && result.assets && onImageSelected(result.assets[0]);
   }, []);
-
-  const clearImage = React.useCallback(() => {
-    if (image) setImage(undefined);
-  }, [image]);
 
   return {
     imageFromLibrary,
     imageFromCamera,
-    imageAsset: image,
-    clearImage,
   };
 };
 

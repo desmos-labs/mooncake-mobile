@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
+    "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@cosmjs/cosmwasm-stargate": "0.28.11",
     "@cosmjs/crypto": "0.28.11",
     "@cosmjs/encoding": "0.28.11",

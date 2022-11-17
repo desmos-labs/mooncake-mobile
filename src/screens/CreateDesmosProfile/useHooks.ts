@@ -6,7 +6,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useMemo, useRef, useState} from 'react';
 import {ScrollView, TextInput} from 'react-native';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import signUpInfoState, {
   signUpBioState,
   signUpCoverPicState,
@@ -19,8 +19,10 @@ import useValidationSchema from './useValidationSchema';
 
 function useHooks() {
   const signUpInfo = useRecoilValue(signUpInfoState);
-  const setCoverPic = useSetRecoilState(signUpCoverPicState);
-  const setProfilePic = useSetRecoilState(signUpProfilePicState);
+  const [coverPicture, setCoverPicture] = useRecoilState(signUpCoverPicState);
+  const [profilePicture, setProfilePicture] = useRecoilState(
+    signUpProfilePicState,
+  );
   const setBio = useSetRecoilState(signUpBioState);
   const setNickname = useSetRecoilState(signUpNicknameState);
 
@@ -33,15 +35,13 @@ function useHooks() {
     return routes[routes.length - 2].name === ROUTES.SIGNUP;
   }, [navigation]);
 
-  const {imageAsset: coverPicture, imageFromLibrary: selectCoverPicture} =
-    useImageFromDevice({
-      onImageSelected: image => setCoverPic(image),
-    });
+  const {imageFromLibrary: selectCoverPicture} = useImageFromDevice({
+    onImageSelected: image => setCoverPicture(image),
+  });
 
-  const {imageAsset: profilePicture, imageFromLibrary: selectProfilePicture} =
-    useImageFromDevice({
-      onImageSelected: image => setProfilePic(image),
-    });
+  const {imageFromLibrary: selectProfilePicture} = useImageFromDevice({
+    onImageSelected: image => setProfilePicture(image),
+  });
 
   const [loading, setLoading] = useState(false);
 
