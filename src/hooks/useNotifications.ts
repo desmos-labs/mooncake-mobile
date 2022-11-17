@@ -68,7 +68,7 @@ const useNotifications = () => {
       }
     });
     return unsubscribe;
-  }, [toast, resolveByTxHash]);
+  }, []);
 };
 
 export default useNotifications;
