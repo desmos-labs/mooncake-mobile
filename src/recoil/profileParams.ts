@@ -1,8 +1,6 @@
-import React from 'react';
-import {atom, useRecoilState} from 'recoil';
-import {useLazyQuery} from '@apollo/client';
-import GetProfileParams from 'services/graphql/queries/GetProfileParams';
+import {atom} from 'recoil';
 
+// eslint-disable-next-line import/prefer-default-export
 export const profileParamsState = atom<ProfileParams>({
   key: 'profileParams',
   default: {
@@ -28,28 +26,3 @@ export const profileParamsState = atom<ProfileParams>({
     },
   },
 });
-
-// TODO: refactor this into a useProfileParams and useInitializeProfileParams hooks
-export const useGetProfileParams = () => {
-  const [params, setParams] = useRecoilState(profileParamsState);
-
-  const [getProfileParams, {data}] = useLazyQuery(GetProfileParams);
-
-  React.useEffect(() => {
-    getProfileParams();
-  }, []);
-
-  React.useEffect(() => {
-    if (data) {
-      const {profiles_params} = data;
-
-      const [first] = profiles_params;
-
-      setParams(first.params);
-    }
-  }, [data]);
-
-  return {
-    profileParams: params,
-  };
-};
