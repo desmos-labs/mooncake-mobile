@@ -20,6 +20,7 @@ import {
 } from '@recoil/pendingTx/pendingPosts';
 import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
+import _ from 'lodash';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -55,12 +56,9 @@ const useHooks = () => {
 
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
 
-  const {
-    posts,
-    fetchMorePosts,
-    fetchNewestPosts,
-    loading: postsLoading,
-  } = useGetPosts({type: postFamilyMap[routeName]});
+  const {posts, fetchMorePosts, fetchNewestPosts} = useGetPosts({
+    type: postFamilyMap[routeName],
+  });
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
@@ -69,7 +67,7 @@ const useHooks = () => {
 
   // sort and combine pending posts with posts from API
   const combinedPosts = React.useMemo(() => {
-    const sortedPendingPosts = [...pendingPosts]
+    const sortedPendingPosts = pendingPosts
       .sort((a, b) => a.timestamp - b.timestamp)
       .map(x => x.postData);
 
@@ -165,15 +163,13 @@ const useHooks = () => {
     [],
   );
 
-  // Throttle this function to max one call every 3 seconds
-  const onOverscrollRight = React.useCallback(() => {
-    fetchNewestPosts();
-  }, [postsLoading]);
-
-  const onCarouselProgressChange = React.useCallback(
+  /**
+   * Overscroll detection to fetchNewPosts
+   */
+  const onCarouselProgressChange = _.throttle(
     (_temp: number, __: number, value: number) => {
-      const offsetValue = value;
-
+      // only start detecting overscroll if user is on the left-most elements
+      if (selectedPostIndex > 1) return;
       if (overscrolling.current && value === 0) {
         overscrolling.current = false;
       }
@@ -181,14 +177,11 @@ const useHooks = () => {
       if (prevOffsetValue.current > 25 && !overscrolling.current) {
         overscrolling.current = true;
         // do overscroll right things
-        onOverscrollRight();
-      }
-      if (offsetValue < maxOffset.current) {
-        // do overscroll left things
+        fetchNewestPosts();
       }
       prevOffsetValue.current = value;
     },
-    [maxOffset.current, prevOffsetValue.current, overscrolling.current],
+    100,
   );
 
   return {
