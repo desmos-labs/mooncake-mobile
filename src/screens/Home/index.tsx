@@ -78,7 +78,7 @@ const Home = () => {
         />
       );
     },
-    [posts, handlePressFollow, handlePressAuthor, handlePressDetails],
+    [posts.length, handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
   const theme = useTheme();
@@ -90,7 +90,7 @@ const Home = () => {
         backgroundColor: theme.colors.background,
       }}>
       <Carousel
-        windowSize={4}
+        windowSize={2}
         onProgressChange={onCarouselProgressChange}
         onSnapToItem={onPostChanged}
         mode="parallax"
@@ -104,10 +104,6 @@ const Home = () => {
         style={styles.carousel}
         data={[...posts, 0 as any]}
         renderItem={renderPost}
-        panGestureHandlerProps={{
-          activeOffsetX: [-10, 10],
-          failOffsetY: [-10, 10],
-        }}
       />
 
       {posts.length > 0 && selectedPostIndex !== posts.length && (
