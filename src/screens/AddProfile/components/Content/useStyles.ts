@@ -3,6 +3,7 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   content: {
     flex: 1,
+    marginHorizontal: theme.spacing.m,
   },
   scrollViewOuter: {
     marginTop: theme.spacing.m,

@@ -1,6 +1,7 @@
 import {useLazyQuery} from '@apollo/client';
 import profilesState from '@recoil/profiles';
 import Button from 'components/Button';
+import Typography from 'components/Typography';
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, ScrollView, View} from 'react-native';
@@ -18,7 +19,8 @@ type ContentProps = {
 const Content: FC<ContentProps> = ({mnemonic}) => {
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [globalLoading, setGlobalLoading] = useState(true);
-  const [fetchedAccounts, setFetchedAccounts] = useState([]);
+  const [fetchLimit, setFetchLimit] = useState(10);
+  const [fetchedAccounts, setFetchedAccounts] = useState<any[]>([]);
   const [profiles] = useRecoilState(profilesState);
   const [getProfiles] = useLazyQuery(GetProfileForAddresses);
   const {generateAccounts} = useHooks();
@@ -32,7 +34,7 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
   const generateAccountsAndFetchProfiles = useCallback(async () => {
     try {
       setGlobalLoading(true);
-      const result = await generateAccounts(0, 100, mnemonic);
+      const result = await generateAccounts(0, 10, mnemonic);
       if (result) {
         const addressesToFetch = result.map(
           (account: {address: any}) => account.address,
@@ -50,13 +52,57 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
     }
   }, [generateAccounts, getProfiles, mnemonic]);
 
+  const generateMoreAccountsAndFetchProfiles = useCallback(async () => {
+    try {
+      setGlobalLoading(true);
+      const result = await generateAccounts(
+        fetchLimit,
+        fetchLimit + 10,
+        mnemonic,
+      );
+      if (result) {
+        const addressesToFetch = result.map(
+          (account: {address: any}) => account.address,
+        );
+        await getProfiles({
+          variables: {
+            addresses: addressesToFetch,
+          },
+        }).then(res => setFetchedAccounts(prev => [...prev, res.data.profile]));
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTimeout(() => setGlobalLoading(false), 1000);
+      setFetchLimit(prev => prev + 10);
+    }
+  }, [generateAccounts, getProfiles, mnemonic]);
+
   useEffect(() => {
     generateAccountsAndFetchProfiles();
-  }, [generateAccountsAndFetchProfiles]);
+  }, []);
+
+  useEffect(() => {
+    console.log(fetchedAccounts);
+  }, [fetchedAccounts]);
 
   return (
     <View style={styles.content}>
-      <ScrollView contentContainerStyle={{padding: theme.spacing.m}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Typography.Body6>
+          Searches the first {fetchLimit} accounts
+        </Typography.Body6>
+        <Button mode="text">
+          <Typography.Button2
+            style={{color: theme.colors.butterOrange01}}
+            onPress={generateMoreAccountsAndFetchProfiles}>
+            {t('search more')}
+          </Typography.Button2>
+        </Button>
+      </View>
+      <ScrollView
+        style={{marginHorizontal: -theme.spacing.m}}
+        contentContainerStyle={{padding: theme.spacing.m}}>
         {globalLoading ? (
           <ActivityIndicator />
         ) : (
@@ -76,18 +122,15 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
           })
         )}
       </ScrollView>
-      <View style={{marginHorizontal: theme.spacing.m}}>
-        <Button mode="text" color={theme.colors.surfaceBlack}>
-          search more profiles
+      <View>
+        <Button mode="contained" color={theme.colors.surfaceBlack}>
+          {t('confirm')}
         </Button>
         <Button
           style={{paddingVertical: theme.spacing.m}}
           mode="text"
           color={theme.colors.surfaceBlack}>
           create desmos profile
-        </Button>
-        <Button mode="contained" color={theme.colors.surfaceBlack}>
-          {t('confirm')}
         </Button>
       </View>
     </View>
