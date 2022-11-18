@@ -1,7 +1,11 @@
 import {useLazyQuery} from '@apollo/client';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, ScrollView, View} from 'react-native';
@@ -11,6 +15,8 @@ import AddProfileBadge from 'screens/AddProfile/components/AddProfileBadge';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useHooks from '../../useHooks';
 import useStyles from './useStyles';
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
 type ContentProps = {
   mnemonic: string | undefined;
@@ -24,6 +30,7 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
   const [profiles] = useRecoilState(profilesState);
   const [getProfiles] = useLazyQuery(GetProfileForAddresses);
   const {generateAccounts} = useHooks();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation();
@@ -129,6 +136,9 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
           {t('confirm')}
         </Button>
         <Button
+          onPress={() =>
+            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic})
+          }
           style={{paddingVertical: theme.spacing.m}}
           mode="text"
           color={theme.colors.surfaceBlack}>

@@ -3,7 +3,6 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     paddingTop: theme.spacing.m,
-    paddingBottom: theme.spacing.xl,
     flexGrow: 1,
   },
   topBar: {

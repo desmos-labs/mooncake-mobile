@@ -23,6 +23,12 @@ import ActionAuthorization, {
 } from 'screens/ActionAuthorization';
 import Activities from 'screens/Activities';
 import AddProfile, {AddProfileParams} from 'screens/AddProfile';
+import AddProfileSelectAddressAdvanced, {
+  AddProfileSelectAddressAdvancedParams,
+} from 'screens/AddProfileSelectAddress/Advanced';
+import AddProfileSelectAddressGeneral, {
+  AddProfileSelectAddressGeneralParams,
+} from 'screens/AddProfileSelectAddress/General';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -188,13 +194,17 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
+  // Add profile
   [ROUTES.ADD_PROFILE]: AddProfileParams;
+  [ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL]: AddProfileSelectAddressGeneralParams;
+  [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
 
   /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
+  // Activities
   [ROUTES.ACTIVITIES]: undefined;
 
   // Grants
@@ -511,6 +521,14 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
       <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} />
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL}
+        component={AddProfileSelectAddressGeneral}
+      />
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED}
+        component={AddProfileSelectAddressAdvanced}
+      />
     </Stack.Navigator>
   );
 };
