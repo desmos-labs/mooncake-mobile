@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import React from 'react';
-import {atom, DefaultValue, useRecoilState} from 'recoil';
-import {useQuery} from '@apollo/client';
+import {atom, DefaultValue, useRecoilState, useSetRecoilState} from 'recoil';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import EnvConfig from 'config/EnvConfig';
 
@@ -39,13 +39,14 @@ const activeProfileState = atom<ProfileData | undefined>({
 
 export default activeProfileState;
 
-export const useGetProfileData = (address: string) => {
+export const usePollProfileData = (address: string) => {
+  const setActiveProfile = useSetRecoilState(activeProfileState);
+
   const {data, loading, refetch} = useQuery(GetProfileForAddress, {
     variables: {address},
     pollInterval: EnvConfig.POLLING_INTERVAL,
+    fetchPolicy: 'no-cache',
   });
-
-  const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);
 
   React.useEffect(() => {
     if (!data) return;
@@ -54,6 +55,38 @@ export const useGetProfileData = (address: string) => {
 
     setActiveProfile(firstProfile);
   }, [data]);
+
+  return {
+    loading,
+    refetch,
+  };
+};
+
+export const useGetProfileData = (address: string) => {
+  const [, {loading, refetch}] = useLazyQuery(GetProfileForAddress, {
+    variables: {address},
+  });
+
+  const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);
+
+  const fetchActiveProfile = React.useCallback(async (_address: string) => {
+    const getProfileResponse = await refetch({address: _address});
+
+    const {data} = getProfileResponse;
+    if (!data) return;
+
+    const {profile} = data;
+    const [firstProfile] = profile;
+
+    setActiveProfile(firstProfile);
+  }, []);
+
+  React.useEffect(() => {
+    if (!activeProfile && address) {
+      console.log('fetching');
+      fetchActiveProfile(address);
+    }
+  }, [activeProfile, address]);
 
   return {
     profileData: activeProfile,

@@ -1,8 +1,4 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {connectedAppsState} from '@recoil/connectedApps';
 import {isFollowingAddr} from '@recoil/following';
@@ -51,6 +47,7 @@ import {
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {usePollProfileData} from '@recoil/activeProfileState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -103,13 +100,8 @@ const Profile = () => {
 
   const {visitingProfileData, visitingProfileLoading} =
     useProfileDataGivenAddress(params?.visitingProfileAddress || '');
-  const {activeAddress, profileData, loading, refetch} = useActiveAccount();
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch();
-    }, [refetch]),
-  );
+  const {activeAddress, profileData} = useActiveAccount();
+  const {loading, refetch} = usePollProfileData(activeAddress!);
 
   const screenMode = useMemo(() => {
     if (params?.visitingProfileAddress) {
