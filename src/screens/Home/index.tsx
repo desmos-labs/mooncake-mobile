@@ -41,6 +41,12 @@ export type HomeParams = {
   type: 'discover' | 'following';
 };
 
+const getItemLayout = (data: any, index: number) => ({
+  length: Dimensions.get('window').width,
+  offset: Dimensions.get('window').width * index,
+  index,
+});
+
 const Home = () => {
   const styles = useStyles();
   const toast = useToast();
@@ -116,7 +122,6 @@ const Home = () => {
         backgroundColor: theme.colors.background,
       }}>
       <FlatList
-        pinchGestureEnabled={false}
         data={posts}
         horizontal
         pagingEnabled
@@ -141,6 +146,8 @@ const Home = () => {
         overScrollMode="never"
         bounces={false}
         bouncesZoom={false}
+        removeClippedSubviews
+        getItemLayout={getItemLayout}
       />
 
       {posts.length > 0 && selectedPostIndex !== posts.length && (
