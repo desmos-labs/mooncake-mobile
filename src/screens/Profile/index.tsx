@@ -1,6 +1,9 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {connectedAppsState} from '@recoil/connectedApps';
+import {
+  connectedAppsState,
+  useGetConnectedAppsPolling,
+} from '@recoil/connectedApps';
 import {isFollowingAddr} from '@recoil/following';
 import useNumRelationships from '@recoil/numRelationshipState';
 import {
@@ -71,6 +74,8 @@ const Profile = () => {
   const {chainLinks} = useChainLinks();
   const [connectedApps] = useRecoilState(connectedAppsState);
   const [globalLoading, setGlobalLoading] = useState(true);
+  useGetConnectedAppsPolling();
+
   /** Animations start
    * These hooks act as the animation driver for the ProfileHeader component
    * The actual animations are created in the component itself.

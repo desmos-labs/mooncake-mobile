@@ -1,11 +1,19 @@
-import React from 'react';
-import {atom, selector, selectorFamily, useRecoilState} from 'recoil';
+import {useEffect} from 'react';
+import {
+  atom,
+  selector,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
 import useActiveAccount from 'hooks/useActiveAccount';
-import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
+import usePendingRelationships, {
+  pendingRelationshipsState,
+} from '@recoil/pendingTx/pendingRelationships';
 import EnvConfig from 'config/EnvConfig';
 
 export const followingState = atom<CounterParty[]>({
@@ -39,19 +47,17 @@ export const useGetFollowingPolling = () => {
   const {activeAddress} = useActiveAccount();
   const [, setFollowing] = useRecoilState(followingState);
   const {syncPendingRelationships} = usePendingRelationships();
+  const pendingRelationships = useRecoilValue(pendingRelationshipsState);
 
-  const {data} = useQuery<GetFollowedUsersForAddressData>(
-    GetFollowedUsersForAddress,
-    {
+  const {data, startPolling, stopPolling} =
+    useQuery<GetFollowedUsersForAddressData>(GetFollowedUsersForAddress, {
       variables: {
         userAddress: activeAddress,
       },
-      pollInterval: EnvConfig.POLLING_INTERVAL,
       fetchPolicy: 'no-cache',
-    },
-  );
+    });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!data) return;
     const {user_relationship} = data;
 
@@ -63,4 +69,12 @@ export const useGetFollowingPolling = () => {
 
     syncPendingRelationships(newFollowing.map(x => x.address));
   }, [data]);
+
+  useEffect(() => {
+    if (pendingRelationships.length > 0) {
+      startPolling(EnvConfig.POLLING_INTERVAL);
+    } else {
+      stopPolling();
+    }
+  }, [pendingRelationships.length]);
 };

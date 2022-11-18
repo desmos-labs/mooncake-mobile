@@ -3,7 +3,6 @@ import messaging from '@react-native-firebase/messaging';
 import {useEffect} from 'react';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
-import usePendingRelationships from '@recoil/pendingTx/pendingRelationships';
 import usePendingPosts from 'hooks/usePendingPosts';
 import useFindPendingTx from 'hooks/useFindPendingTx';
 import _ from 'lodash';
@@ -11,7 +10,6 @@ import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcast
 
 const useNotifications = () => {
   const toast = useToast();
-  const {resolveByTxHash} = usePendingRelationships();
   const {resolveByTxHash: resolvePendingPostsByTxHash} = usePendingPosts();
   const {findPendingTxByHash} = useFindPendingTx();
 
@@ -63,12 +61,11 @@ const useNotifications = () => {
         }, 100);
 
         // TODO: refactor this into one function
-        resolveByTxHash(txHash);
         resolvePendingPostsByTxHash(txHash);
       }
     });
     return unsubscribe;
-  }, [toast, resolveByTxHash]);
+  }, [toast]);
 };
 
 export default useNotifications;
