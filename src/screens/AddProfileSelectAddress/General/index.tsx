@@ -30,7 +30,7 @@ export type AddProfileSelectAddressGeneralParams = {
 const AddProfileSelectAddressGeneral = () => {
   const {activeAddress} = useActiveAccount();
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(10);
   const navigation = useNavigation<NavProps['navigation']>();
   const {
