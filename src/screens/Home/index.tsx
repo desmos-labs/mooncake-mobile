@@ -115,23 +115,6 @@ const Home = () => {
         flex: 1,
         backgroundColor: theme.colors.background,
       }}>
-      {/* <Carousel */}
-      {/*  windowSize={2} */}
-      {/*  onProgressChange={onCarouselProgressChange} */}
-      {/*  onSnapToItem={onPostChanged} */}
-      {/*  mode="parallax" */}
-      {/*  loop={false} */}
-      {/*  modeConfig={{ */}
-      {/*    parallaxScrollingScale: 0.9, */}
-      {/*    parallaxScrollingOffset: 60, */}
-      {/*  }} */}
-      {/*  width={Dimensions.get('window').width} */}
-      {/*  height={verticalScale(500)} */}
-      {/*  style={styles.carousel} */}
-      {/*  data={[...posts, 0 as any]} */}
-      {/*  renderItem={renderPost} */}
-      {/* /> */}
-
       <FlatList
         pinchGestureEnabled={false}
         data={posts}
@@ -150,7 +133,7 @@ const Home = () => {
         // comment these 2 props when developing for a smoother experience
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={3}
         onEndReached={fetchMorePosts}
         onRefresh={fetchNewestPosts}
         refreshing={loading}
