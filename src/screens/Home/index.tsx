@@ -88,7 +88,7 @@ const Home = () => {
             padding: 16,
           }}>
           <PostCard
-            postData={item}
+            {...item}
             onPressAuthor={() => handlePressAuthor(item.author_address)}
             onPressDetails={() => {
               if (checkIfPostIsPending(item.id)) {

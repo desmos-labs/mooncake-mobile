@@ -1,7 +1,7 @@
 import {defaultProfilePic, followedIcon, followIcon} from 'assets/images';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Typography from 'components/Typography';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
@@ -13,12 +13,7 @@ import {loadingWhite} from 'assets/animations';
 import {mapPostFontSize} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
-type Props = {
-  /**
-   * The data of the post retrieved from a query.
-   */
-  postData: PostItem;
-
+interface Props extends PostItem {
   /**
    * What to do when the author's avatar, name, or dtag is pressed.
    */
@@ -33,7 +28,7 @@ type Props = {
    * What to do if the post details button is pressed.
    */
   onPressDetails: () => void;
-};
+}
 
 enum POST_TYPE {
   TEXT = 'TEXT',
@@ -43,29 +38,33 @@ enum POST_TYPE {
 
 // The post dimensions are controlled by the Carousel
 const PostCard = ({
-  postData,
   onPressAuthor,
   onPressFollow,
   onPressDetails,
+  author,
+  isPending,
+  author_address,
+  attachments,
+  text,
+  id,
 }: Props) => {
   const styles = useStyles();
-  const {attachments, isPending} = postData;
 
   const {activeAddress, profileData} = useActiveAccount();
 
   // Use the current active user's profile data if the post is pending
   const authorData = React.useMemo(() => {
+    console.log('author data');
     if (isPending) {
       return profileData || ({} as any);
-    } else return postData.author;
-  }, [postData, profileData]);
+    } else return author;
+  }, [profileData]);
 
   const {profile_pic, nickname, dtag} = authorData;
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
-  // potentially causing a "too many pending callbacks" warning
-  const isFollowing = useRecoilValue(isFollowingAddr(postData.author_address));
+  const isFollowing = useRecoilValue(isFollowingAddr(author_address));
 
   const Avatar = React.useMemo(() => {
     return (
@@ -77,27 +76,10 @@ const PostCard = ({
     );
   }, [profile_pic]);
 
-  const postType: POST_TYPE = React.useMemo(() => {
-    if (postData.text && postData.attachments.length === 0) {
-      return POST_TYPE.TEXT;
-    }
-    if (postData.text && postData.attachments.length > 0) {
-      return POST_TYPE.IMAGE_TEXT;
-    }
-    if (!postData.text && postData.attachments.length > 0) {
-      return POST_TYPE.IMAGE;
-    }
-
-    // This should never be reached. Logged post id's should be checked for
-    // validity
-    // TODO: make this less naive
-    console.log('Default post behavior for post id', postData.id);
-    return POST_TYPE.TEXT;
-  }, [postData]);
-
   // Hopefully we come up with a more elegant way to do this in the future
-  const content = React.useMemo(() => {
-    const followUnfollowButton = postData.author_address !== activeAddress && (
+  const Content = React.useMemo(() => {
+    console.log('hello world', id);
+    const followUnfollowButton = author_address !== activeAddress && (
       <View>
         <ProfileHeaderButton
           imageSrc={isFollowing ? followedIcon : followIcon}
@@ -105,6 +87,27 @@ const PostCard = ({
         />
       </View>
     );
+
+    const checkPostType = () => {
+      if (text && attachments.length === 0) {
+        return POST_TYPE.TEXT;
+      }
+      if (text && attachments.length > 0) {
+        return POST_TYPE.IMAGE_TEXT;
+      }
+      if (!text && attachments.length > 0) {
+        return POST_TYPE.IMAGE;
+      }
+
+      // This should never be reached. Logged post id's should be checked for
+      // validity
+      // TODO: make this less naive
+      console.log('Default post behavior for post id', id);
+      return POST_TYPE.TEXT;
+    };
+
+    const postType = checkPostType();
+
     if (postType === POST_TYPE.TEXT || postType === POST_TYPE.IMAGE) {
       return (
         <>
@@ -112,9 +115,9 @@ const PostCard = ({
             <Typography.H2
               style={[
                 styles.textStyle,
-                {fontSize: mapPostFontSize(postData?.text?.length)},
+                {fontSize: mapPostFontSize(text?.length)},
               ]}>
-              {postData.text}
+              {text}
             </Typography.H2>
           </View>
           <View style={styles.bottomGroup}>
@@ -166,7 +169,7 @@ const PostCard = ({
                 </View>
               </TouchableOpacity>
               <Typography.Body7 numberOfLines={2} style={styles.imagePostText}>
-                {postData.text}
+                {text}
               </Typography.Body7>
             </View>
 
@@ -175,17 +178,11 @@ const PostCard = ({
         </View>
       );
     }
-  }, [postType, onPressFollow, activeAddress, postData.author_address]);
+  }, [isFollowing]);
 
-  return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPressDetails}
-      activeOpacity={0.9}
-      key={postData.id}>
-      {MediaAttachment}
-      {content}
-      {isPending && (
+  const PendingIndicator = useMemo(() => {
+    if (isPending) {
+      return (
         <ThemedLottieView
           source={loadingWhite}
           autoPlay
@@ -197,7 +194,19 @@ const PostCard = ({
             left: 2,
           }}
         />
-      )}
+      );
+    } else return undefined;
+  }, [isPending]);
+
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPressDetails}
+      activeOpacity={0.9}
+      key={id}>
+      {MediaAttachment}
+      {Content}
+      {PendingIndicator}
     </TouchableOpacity>
   );
 };
