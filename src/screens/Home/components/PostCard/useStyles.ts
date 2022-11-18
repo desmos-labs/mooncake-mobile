@@ -10,7 +10,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.butterOrange01,
     justifyContent: 'flex-end',
     overflow: 'hidden',
-    width: '95%',
+    width: '100%',
     height: '100%',
     alignSelf: 'center',
   },

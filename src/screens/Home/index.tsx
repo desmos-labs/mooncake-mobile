@@ -9,11 +9,14 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
-import {Dimensions, LogBox, View} from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
-import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
-import {verticalScale} from 'react-native-size-matters';
+import React, {useMemo} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  ListRenderItemInfo,
+  LogBox,
+  View,
+} from 'react-native';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
@@ -50,38 +53,61 @@ const Home = () => {
     handlePressTip,
     handleAddReaction,
     handlePressComments,
-    onPostChanged,
     posts,
     selectedPostIndex,
-    onCarouselProgressChange,
+    loading,
+    fetchNewestPosts,
+    fetchMorePosts,
+    onViewableItemsChanged,
     checkIfPostIsPending,
   } = useHooks();
 
   const renderPost = React.useCallback(
-    (info: CarouselRenderItemInfo<PostItem>) => {
-      if (info.index === posts.length) {
-        return <NoMorePosts />;
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      if (item.emptyComponent) {
+        return (
+          <View
+            style={{
+              width: Dimensions.get('window').width,
+              padding: 16,
+            }}>
+            <NoMorePosts />
+          </View>
+        );
       }
       return (
-        <PostCard
-          postData={info.item}
-          onPressAuthor={() => handlePressAuthor(info.item.author_address)}
-          onPressDetails={() => {
-            if (checkIfPostIsPending(info.item.id)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
-            }
-            handlePressDetails(info.item.id, info.item.subspace_id);
-          }}
-          onPressFollow={() => handlePressFollow(info.item.author_address)}
-        />
+        <View
+          style={{
+            width: Dimensions.get('window').width,
+            padding: 16,
+          }}>
+          <PostCard
+            postData={item}
+            onPressAuthor={() => handlePressAuthor(item.author_address)}
+            onPressDetails={() => {
+              if (checkIfPostIsPending(item.id)) {
+                return toast.show(t('toast:postTxInProgress'), {
+                  type: ToastConfig.ERROR_NO_RETRY,
+                });
+              }
+              handlePressDetails(item.id, item.subspace_id);
+            }}
+            onPressFollow={() => handlePressFollow(item.author_address)}
+          />
+        </View>
       );
     },
-    [posts.length, handlePressFollow, handlePressAuthor, handlePressDetails],
+    [handlePressFollow, handlePressAuthor, handlePressDetails],
   );
 
   const theme = useTheme();
+
+  const viewabilityConfig = useMemo(() => {
+    return {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95,
+    };
+  }, []);
 
   return (
     <View
@@ -89,21 +115,49 @@ const Home = () => {
         flex: 1,
         backgroundColor: theme.colors.background,
       }}>
-      <Carousel
-        windowSize={2}
-        onProgressChange={onCarouselProgressChange}
-        onSnapToItem={onPostChanged}
-        mode="parallax"
-        loop={false}
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 60,
+      {/* <Carousel */}
+      {/*  windowSize={2} */}
+      {/*  onProgressChange={onCarouselProgressChange} */}
+      {/*  onSnapToItem={onPostChanged} */}
+      {/*  mode="parallax" */}
+      {/*  loop={false} */}
+      {/*  modeConfig={{ */}
+      {/*    parallaxScrollingScale: 0.9, */}
+      {/*    parallaxScrollingOffset: 60, */}
+      {/*  }} */}
+      {/*  width={Dimensions.get('window').width} */}
+      {/*  height={verticalScale(500)} */}
+      {/*  style={styles.carousel} */}
+      {/*  data={[...posts, 0 as any]} */}
+      {/*  renderItem={renderPost} */}
+      {/* /> */}
+
+      <FlatList
+        pinchGestureEnabled={false}
+        data={posts}
+        horizontal
+        pagingEnabled
+        style={{
+          flex: 1,
         }}
-        width={Dimensions.get('window').width}
-        height={verticalScale(500)}
-        style={styles.carousel}
-        data={[...posts, 0 as any]}
+        contentContainerStyle={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
         renderItem={renderPost}
+        windowSize={8}
+        showsHorizontalScrollIndicator={false}
+        // comment these 2 props when developing for a smoother experience
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        onEndReachedThreshold={2}
+        onEndReached={fetchMorePosts}
+        onRefresh={fetchNewestPosts}
+        refreshing={loading}
+        scrollToOverflowEnabled={false}
+        overScrollMode="never"
+        bounces={false}
+        bouncesZoom={false}
       />
 
       {posts.length > 0 && selectedPostIndex !== posts.length && (

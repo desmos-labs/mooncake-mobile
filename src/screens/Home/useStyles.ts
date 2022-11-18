@@ -19,10 +19,10 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   interactionButtonGroup: {
-    flex: 1,
     justifyContent: 'space-evenly',
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 24,
   },
   carousel: {
     alignItems: 'center',
