@@ -44,7 +44,7 @@ const usePendingPosts = () => {
     if (latestPostsByUser && latestPostsByUser.length > 0) {
       syncPendingPosts(latestPostsByUser, pendingPosts);
     }
-  }, [latestPostsByUser]);
+  }, [JSON.stringify(latestPostsByUser)]);
 
   /**
    * A React callback that checks if a pending post has made it onto the chain, and
@@ -73,23 +73,17 @@ const usePendingPosts = () => {
    * Add a new pending relationship to recoil state.
    * @param {PendingPost} newPost - The new relationship to be added.
    */
-  const addNewPendingPost = React.useCallback(
-    (newPost: PendingPost) => {
-      setPendingPosts(prev => [...prev, newPost]);
-    },
-    [pendingPosts],
-  );
+  const addNewPendingPost = React.useCallback((newPost: PendingPost) => {
+    setPendingPosts(prev => [...prev, newPost]);
+  }, []);
 
   /**
    * Remove a pending post by its txHash.
    * @param {string} txHash - The txHash to remove.
    */
-  const resolveByTxHash = React.useCallback(
-    (txHash: string) => {
-      setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
-    },
-    [pendingPosts],
-  );
+  const resolveByTxHash = React.useCallback((txHash: string) => {
+    setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
+  }, []);
 
   return {
     resolveByTxHash,

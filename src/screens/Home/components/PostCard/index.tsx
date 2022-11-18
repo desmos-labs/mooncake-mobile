@@ -54,7 +54,6 @@ const PostCard = ({
 
   // Use the current active user's profile data if the post is pending
   const authorData = React.useMemo(() => {
-    console.log('author data');
     if (isPending) {
       return profileData || ({} as any);
     } else return author;

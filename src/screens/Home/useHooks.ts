@@ -71,7 +71,7 @@ const useHooks = () => {
   // sort and combine pending posts with posts from API
   const combinedPosts = React.useMemo(() => {
     return [...parsedPendingPosts, ...posts, {emptyComponent: true} as any];
-  }, [posts, pendingPosts]);
+  }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
   const checkIfPostIsPending = (postId: number) => {
     return parsedPendingPosts.find(x => x.id === postId)?.isPending;

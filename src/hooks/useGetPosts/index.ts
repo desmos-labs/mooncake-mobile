@@ -18,6 +18,8 @@ const POSTS_PER_FETCH = 5;
 const useGetPosts = ({type}: {type: POST_TYPE}) => {
   const {posts, setPosts} = usePostsFamily(type);
 
+  const postDepString = JSON.stringify(posts);
+
   const {activeAddress} = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
 
@@ -66,14 +68,14 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       ...queryVars.variables,
       offset: posts.length,
     });
-  }, [posts, loading, queryVars.variables]);
+  }, [postDepString, loading, queryVars.variables]);
 
   React.useEffect(() => {
-    if (!loading && data) {
+    if (!loading) {
       const {post} = data;
       setPosts(prev => _.uniqBy([...prev, ...post], 'id'));
     }
-  }, [loading, data]);
+  }, [loading]);
 
   // Reset the fetch offset to restart post fetching
   const fetchNewestPosts = React.useCallback(
@@ -87,7 +89,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         setPosts(_.get(a, 'data.post'));
       });
     }, 1500),
-    [posts, loading],
+    [loading],
   );
 
   React.useEffect(() => {
