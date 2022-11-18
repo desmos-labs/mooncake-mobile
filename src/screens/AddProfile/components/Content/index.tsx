@@ -68,7 +68,9 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
           variables: {
             addresses: addressesToFetch,
           },
-        }).then(res => setFetchedAccounts(prev => [...prev, res.data.profile]));
+        }).then(res =>
+          setFetchedAccounts(prev => [...prev, ...res.data.profile]),
+        );
       }
     } catch (e) {
       console.error(e);
