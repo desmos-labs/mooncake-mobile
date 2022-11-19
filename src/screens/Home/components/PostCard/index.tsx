@@ -13,7 +13,11 @@ import {loadingWhite} from 'assets/animations';
 import {mapPostFontSize} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
-interface Props extends PostItem {
+interface Props
+  extends Pick<
+    PostItem,
+    'author' | 'isPending' | 'attachments' | 'text' | 'id'
+  > {
   /**
    * What to do when the author's avatar, name, or dtag is pressed.
    */
@@ -43,7 +47,6 @@ const PostCard = ({
   onPressDetails,
   author,
   isPending,
-  author_address,
   attachments,
   text,
   id,
@@ -63,7 +66,7 @@ const PostCard = ({
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
-  const isFollowing = useRecoilValue(isFollowingAddr(author_address));
+  const isFollowing = useRecoilValue(isFollowingAddr(author.address));
 
   const Avatar = React.useMemo(() => {
     return (
@@ -77,8 +80,7 @@ const PostCard = ({
 
   // Hopefully we come up with a more elegant way to do this in the future
   const Content = React.useMemo(() => {
-    console.log('hello world', id);
-    const followUnfollowButton = author_address !== activeAddress && (
+    const followUnfollowButton = author.address !== activeAddress && (
       <View>
         <ProfileHeaderButton
           imageSrc={isFollowing ? followedIcon : followIcon}

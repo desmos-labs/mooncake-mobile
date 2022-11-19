@@ -9,12 +9,13 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   Dimensions,
   FlatList,
   ListRenderItemInfo,
-  LogBox,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   View,
 } from 'react-native';
 import InteractionButton from 'screens/Home/components/InteractionButton';
@@ -27,10 +28,6 @@ import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
-
-// This warning is emitted from react-native-reanimated-carousel, but it
-// does not affect operation
-LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -75,7 +72,7 @@ const Home = () => {
           <View
             style={{
               width: Dimensions.get('window').width,
-              padding: 16,
+              padding: 24,
             }}>
             <NoMorePosts />
           </View>
@@ -85,10 +82,14 @@ const Home = () => {
         <View
           style={{
             width: Dimensions.get('window').width,
-            padding: 16,
+            padding: 24,
           }}>
           <PostCard
-            {...item}
+            author={item.author}
+            isPending={item.isPending}
+            attachments={item.attachments}
+            text={item.text}
+            id={item.id}
             onPressAuthor={() => handlePressAuthor(item.author_address)}
             onPressDetails={() => {
               if (checkIfPostIsPending(item.id)) {
@@ -115,6 +116,16 @@ const Home = () => {
     };
   }, []);
 
+  const onScrollEndDrag = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const xV = _.get(e, 'nativeEvent.velocity.x');
+      if (xV > 2 && selectedPostIndex === 0) {
+        fetchNewestPosts();
+      }
+    },
+    [selectedPostIndex],
+  );
+
   return (
     <View
       style={{
@@ -128,25 +139,24 @@ const Home = () => {
         style={{
           flex: 1,
         }}
-        contentContainerStyle={{
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
         renderItem={renderPost}
-        windowSize={8}
+        windowSize={10}
         showsHorizontalScrollIndicator={false}
-        // comment these 2 props when developing for a smoother experience
+        // comment these 3 props when developing for a smoother experience
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
+        onScrollEndDrag={onScrollEndDrag}
+        scrollEventThrottle={25}
+        // comment end
         onEndReachedThreshold={3}
         onEndReached={fetchMorePosts}
-        onRefresh={fetchNewestPosts}
+        maxToRenderPerBatch={4}
         refreshing={loading}
         scrollToOverflowEnabled={false}
         overScrollMode="never"
         bounces={false}
         bouncesZoom={false}
-        removeClippedSubviews
+        removeClippedSubviews={false}
         getItemLayout={getItemLayout}
       />
 
