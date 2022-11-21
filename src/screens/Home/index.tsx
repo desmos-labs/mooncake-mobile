@@ -9,7 +9,7 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -49,6 +49,8 @@ const Home = () => {
   const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
+
+  const lockPostPress = useRef(false);
 
   const {
     handlePressDetails,
@@ -92,6 +94,8 @@ const Home = () => {
             id={item.id}
             onPressAuthor={() => handlePressAuthor(item.author_address)}
             onPressDetails={() => {
+              if (lockPostPress.current) return;
+
               if (checkIfPostIsPending(item.id)) {
                 return toast.show(t('toast:postTxInProgress'), {
                   type: ToastConfig.ERROR_NO_RETRY,
@@ -104,10 +108,21 @@ const Home = () => {
         </View>
       );
     },
-    [handlePressFollow, handlePressAuthor, handlePressDetails],
+    [
+      lockPostPress.current,
+      handlePressFollow,
+      handlePressAuthor,
+      handlePressDetails,
+    ],
   );
 
   const theme = useTheme();
+
+  const onScrollBeginDrag = useCallback(() => {
+    if (selectedPostIndex === 0) {
+      lockPostPress.current = true;
+    }
+  }, [selectedPostIndex, lockPostPress.current]);
 
   const onScrollEndDrag = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -122,8 +137,10 @@ const Home = () => {
           fetchNewestPosts();
         }
       }
+
+      lockPostPress.current = false;
     },
-    [selectedPostIndex],
+    [selectedPostIndex, lockPostPress.current],
   );
 
   const viewabilityConfig = useMemo(() => {
@@ -152,6 +169,7 @@ const Home = () => {
         // comment these 2 props when developing for a smoother experience
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
+        onScrollBeginDrag={onScrollBeginDrag}
         onScrollEndDrag={onScrollEndDrag}
         // comment end
         onEndReachedThreshold={3}
