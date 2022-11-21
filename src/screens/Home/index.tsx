@@ -9,13 +9,14 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   Dimensions,
   FlatList,
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   View,
 } from 'react-native';
 import InteractionButton from 'screens/Home/components/InteractionButton';
@@ -111,12 +112,25 @@ const Home = () => {
   const onScrollEndDrag = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const xV = _.get(e, 'nativeEvent.velocity.x');
-      if (xV > 2 && selectedPostIndex === 0) {
-        fetchNewestPosts();
+      if (Platform.OS === 'ios') {
+        if (xV < -2 && selectedPostIndex === 0) {
+          fetchNewestPosts();
+        }
+      } else if (Platform.OS === 'android') {
+        if (xV > 2 && selectedPostIndex === 0) {
+          fetchNewestPosts();
+        }
       }
     },
     [selectedPostIndex],
   );
+
+  const viewabilityConfig = useMemo(() => {
+    return {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95,
+    };
+  }, []);
 
   return (
     <View
@@ -136,6 +150,7 @@ const Home = () => {
         showsHorizontalScrollIndicator={false}
         // comment these 2 props when developing for a smoother experience
         onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         onScrollEndDrag={onScrollEndDrag}
         // comment end
         onEndReachedThreshold={3}

@@ -7,7 +7,7 @@ import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {Dimensions, ViewToken} from 'react-native';
+import {ViewToken} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -50,7 +50,6 @@ const useHooks = () => {
   >();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const maxOffset = React.useRef<number>(0);
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
@@ -76,12 +75,6 @@ const useHooks = () => {
   const checkIfPostIsPending = (postId: number) => {
     return parsedPendingPosts.find(x => x.id === postId)?.isPending;
   };
-
-  // calculate carousel offset
-  React.useEffect(() => {
-    maxOffset.current =
-      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
-  }, [posts?.length]);
 
   const handlePressAuthor = useCallback(
     (address: string) => {
