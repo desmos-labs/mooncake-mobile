@@ -51,7 +51,7 @@ const usePollLatestPostsByUser = (limit: number) => {
       const {post} = data;
       setLatestPostsByUser(post);
     }
-  }, [loading]);
+  }, [JSON.stringify(data)]);
 
   React.useEffect(() => {
     if (pendingPosts.length > 0) {

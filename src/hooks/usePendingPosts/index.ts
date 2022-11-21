@@ -22,13 +22,7 @@ export const isTxHashInLatestPost = (
     return txHashes.includes(txHash);
   });
 
-/**
- * A hook that wraps all logic involving pending posts.
- * Posts on Butter can be pending or non-pending. Pending posts are temporary, local data structures that contain
- * just enough data to render a placeholder PostCard on the Home page to indicate that the post is being broadcast
- * onto the chain.
- */
-const usePendingPosts = () => {
+export const useSyncPendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(
     pendingPostsState(PendingPostEnum.POST),
   );
@@ -44,7 +38,7 @@ const usePendingPosts = () => {
     if (latestPostsByUser && latestPostsByUser.length > 0) {
       syncPendingPosts(latestPostsByUser, pendingPosts);
     }
-  }, [JSON.stringify(latestPostsByUser)]);
+  }, [latestPostsByUser]);
 
   /**
    * A React callback that checks if a pending post has made it onto the chain, and
@@ -67,6 +61,18 @@ const usePendingPosts = () => {
       setPosts(prev => [...postsToTransfer, ...prev]);
     },
     [],
+  );
+};
+
+/**
+ * A hook that wraps all logic involving pending posts.
+ * Posts on Butter can be pending or non-pending. Pending posts are temporary, local data structures that contain
+ * just enough data to render a placeholder PostCard on the Home page to indicate that the post is being broadcast
+ * onto the chain.
+ */
+const usePendingPosts = () => {
+  const [pendingPosts, setPendingPosts] = useRecoilState(
+    pendingPostsState(PendingPostEnum.POST),
   );
 
   /**

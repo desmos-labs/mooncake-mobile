@@ -105,6 +105,7 @@ import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
 import RNBootSplash from 'react-native-bootsplash';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
+import {useSyncPendingPosts} from 'hooks/usePendingPosts';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -214,6 +215,8 @@ const RootNavigator = () => {
 
   // Start polling queries
   usePollingQueries();
+  useSyncPendingPosts();
+
   const {t} = useTranslation();
 
   useEffect(() => {
