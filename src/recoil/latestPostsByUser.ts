@@ -13,6 +13,7 @@ import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
+import {useSyncPendingPosts} from 'hooks/usePendingPosts';
 
 export const latestPostsByUserState = atom<PostItem[]>({
   key: 'latestPosts',
@@ -28,37 +29,40 @@ const usePollLatestPostsByUser = (limit: number) => {
   const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
   const resetLatestPosts = useResetRecoilState(latestPostsByUserState);
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
-  const shouldPollPosts = pendingPosts.length > 0;
+  useSyncPendingPosts();
 
-  const {data, startPolling, stopPolling} = useQuery(GetLastPostsByAddress, {
-    variables: {
-      limit,
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      user: activeAddress!,
-      reaction: {
-        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-        registered_reaction_id: 9,
+  const {data, startPolling, stopPolling, loading} = useQuery(
+    GetLastPostsByAddress,
+    {
+      variables: {
+        limit,
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        user: activeAddress!,
+        reaction: {
+          '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+          registered_reaction_id: 9,
+        },
       },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'no-cache',
     },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'no-cache',
-  });
+  );
 
   React.useEffect(() => {
-    if (data) {
+    if (!loading && data) {
       const {post} = data;
       setLatestPostsByUser(post);
     }
-  }, [data]);
+  }, [JSON.stringify(data)]);
 
   React.useEffect(() => {
-    if (shouldPollPosts) {
+    if (pendingPosts.length > 0) {
       startPolling(EnvConfig.POLLING_INTERVAL);
     } else {
       resetLatestPosts();
       stopPolling();
     }
-  }, [shouldPollPosts]);
+  }, [pendingPosts.length]);
 };
 
 export default usePollLatestPostsByUser;

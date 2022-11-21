@@ -22,13 +22,7 @@ export const isTxHashInLatestPost = (
     return txHashes.includes(txHash);
   });
 
-/**
- * A hook that wraps all logic involving pending posts.
- * Posts on Butter can be pending or non-pending. Pending posts are temporary, local data structures that contain
- * just enough data to render a placeholder PostCard on the Home page to indicate that the post is being broadcast
- * onto the chain.
- */
-const usePendingPosts = () => {
+export const useSyncPendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(
     pendingPostsState(PendingPostEnum.POST),
   );
@@ -68,28 +62,34 @@ const usePendingPosts = () => {
     },
     [],
   );
+};
+
+/**
+ * A hook that wraps all logic involving pending posts.
+ * Posts on Butter can be pending or non-pending. Pending posts are temporary, local data structures that contain
+ * just enough data to render a placeholder PostCard on the Home page to indicate that the post is being broadcast
+ * onto the chain.
+ */
+const usePendingPosts = () => {
+  const [pendingPosts, setPendingPosts] = useRecoilState(
+    pendingPostsState(PendingPostEnum.POST),
+  );
 
   /**
    * Add a new pending relationship to recoil state.
    * @param {PendingPost} newPost - The new relationship to be added.
    */
-  const addNewPendingPost = React.useCallback(
-    (newPost: PendingPost) => {
-      setPendingPosts(prev => [...prev, newPost]);
-    },
-    [pendingPosts],
-  );
+  const addNewPendingPost = React.useCallback((newPost: PendingPost) => {
+    setPendingPosts(prev => [...prev, newPost]);
+  }, []);
 
   /**
    * Remove a pending post by its txHash.
    * @param {string} txHash - The txHash to remove.
    */
-  const resolveByTxHash = React.useCallback(
-    (txHash: string) => {
-      setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
-    },
-    [pendingPosts],
-  );
+  const resolveByTxHash = React.useCallback((txHash: string) => {
+    setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
+  }, []);
 
   return {
     resolveByTxHash,

@@ -7,7 +7,7 @@ import useGetPosts from 'hooks/useGetPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {Dimensions} from 'react-native';
+import {ViewToken} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -20,6 +20,7 @@ import {
 } from '@recoil/pendingTx/pendingPosts';
 import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
+import _ from 'lodash';
 
 type DiscoverNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
@@ -49,57 +50,31 @@ const useHooks = () => {
   >();
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-  const maxOffset = React.useRef<number>(0);
 
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
 
-  const {
-    posts,
-    fetchMorePosts,
-    fetchNewestPosts,
-    loading: postsLoading,
-  } = useGetPosts({type: postFamilyMap[routeName]});
+  const {posts, fetchMorePosts, fetchNewestPosts, loading} = useGetPosts({
+    type: postFamilyMap[routeName],
+  });
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
 
-  const prevOffsetValue = React.useRef(0);
-  const overscrolling = React.useRef(false);
+  const parsedPendingPosts = React.useMemo(() => {
+    return pendingPosts
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(x => x.postData);
+  }, [JSON.stringify(pendingPosts)]);
 
   // sort and combine pending posts with posts from API
   const combinedPosts = React.useMemo(() => {
-    const sortedPendingPosts = [...pendingPosts]
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(x => x.postData);
+    return [...parsedPendingPosts, ...posts, {emptyComponent: true} as any];
+  }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
-    return [...sortedPendingPosts, ...posts];
-  }, [posts, pendingPosts]);
-
-  const checkIfPostIsPending = React.useCallback(
-    (postId: number) => {
-      return combinedPosts.find(x => x.id === postId)?.isPending;
-    },
-    [combinedPosts],
-  );
-
-  // calculate carousel offset
-  React.useEffect(() => {
-    maxOffset.current =
-      Math.floor(Dimensions.get('window').width * (posts.length - 1)) * -1;
-  }, [posts?.length]);
-
-  // fetch new posts before the user reaches the last post so they
-  // will be enslaved by the app forever
-  const onPostChanged = React.useCallback(
-    (index: number) => {
-      setSelectedPostIndex(index);
-      if (index >= posts.length - 5) {
-        fetchMorePosts();
-      }
-    },
-    [posts?.length],
-  );
+  const checkIfPostIsPending = (postId: number) => {
+    return parsedPendingPosts.find(x => x.id === postId)?.isPending;
+  };
 
   const handlePressAuthor = useCallback(
     (address: string) => {
@@ -165,30 +140,14 @@ const useHooks = () => {
     [],
   );
 
-  // Throttle this function to max one call every 3 seconds
-  const onOverscrollRight = React.useCallback(() => {
-    fetchNewestPosts();
-  }, [postsLoading]);
-
-  const onCarouselProgressChange = React.useCallback(
-    (_temp: number, __: number, value: number) => {
-      const offsetValue = value;
-
-      if (overscrolling.current && value === 0) {
-        overscrolling.current = false;
+  const onViewableItemsChanged = useCallback(
+    (a: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
+      const index = _.get(a, 'viewableItems[0].index');
+      if (index !== undefined) {
+        setSelectedPostIndex(index);
       }
-
-      if (prevOffsetValue.current > 25 && !overscrolling.current) {
-        overscrolling.current = true;
-        // do overscroll right things
-        onOverscrollRight();
-      }
-      if (offsetValue < maxOffset.current) {
-        // do overscroll left things
-      }
-      prevOffsetValue.current = value;
     },
-    [maxOffset.current, prevOffsetValue.current, overscrolling.current],
+    [],
   );
 
   return {
@@ -198,11 +157,13 @@ const useHooks = () => {
     handlePressTip,
     handleAddReaction,
     handlePressComments,
-    onPostChanged,
     posts: combinedPosts,
     selectedPostIndex,
-    onCarouselProgressChange,
     checkIfPostIsPending,
+    loading,
+    fetchNewestPosts,
+    fetchMorePosts,
+    onViewableItemsChanged,
   };
 };
 

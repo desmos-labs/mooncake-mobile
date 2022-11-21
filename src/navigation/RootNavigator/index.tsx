@@ -9,7 +9,7 @@ import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import ActionAuthorization, {
   ActionAuthorizationParams,
@@ -214,8 +214,12 @@ const RootNavigator = () => {
 
   // Start polling queries
   usePollingQueries();
-  RNBootSplash.hide({fade: true});
+
   const {t} = useTranslation();
+
+  useEffect(() => {
+    RNBootSplash.hide({fade: true});
+  }, []);
 
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');
