@@ -13,6 +13,7 @@ import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
+import {useSyncPendingPosts} from 'hooks/usePendingPosts';
 
 export const latestPostsByUserState = atom<PostItem[]>({
   key: 'latestPosts',
@@ -28,6 +29,7 @@ const usePollLatestPostsByUser = (limit: number) => {
   const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
   const resetLatestPosts = useResetRecoilState(latestPostsByUserState);
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
+  useSyncPendingPosts();
 
   const {data, startPolling, stopPolling, loading} = useQuery(
     GetLastPostsByAddress,
