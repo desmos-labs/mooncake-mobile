@@ -111,13 +111,14 @@ const Home = () => {
 
   const onScrollEndDrag = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const detectValue = 1.2;
       const xV = _.get(e, 'nativeEvent.velocity.x');
       if (Platform.OS === 'ios') {
-        if (xV < -2 && selectedPostIndex === 0) {
+        if (xV < -detectValue && selectedPostIndex === 0) {
           fetchNewestPosts();
         }
       } else if (Platform.OS === 'android') {
-        if (xV > 2 && selectedPostIndex === 0) {
+        if (xV > detectValue && selectedPostIndex === 0) {
           fetchNewestPosts();
         }
       }
