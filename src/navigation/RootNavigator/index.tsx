@@ -71,6 +71,9 @@ import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
+import AddProfileModal, {
+  AddProfileModalParams,
+} from 'screens/Modals/AddProfileModal';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
@@ -198,6 +201,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ADD_PROFILE]: AddProfileParams;
   [ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL]: AddProfileSelectAddressGeneralParams;
   [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
+  [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
 
   /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
@@ -440,14 +444,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
+        <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
         <Stack.Screen
-          initialParams={{
-            title: t('confirmModal:removeProfile'),
-            body: t('confirmModal:backupSeedphrase'),
-            primaryButtonLabel: t('confirmModal:goToBackup'),
-          }}
-          name={ROUTES.BOTTOM_MODAL}
-          component={BottomModal}
+          name={ROUTES.ADD_PROFILE_MODAL}
+          component={AddProfileModal}
         />
         <Stack.Screen
           initialParams={{

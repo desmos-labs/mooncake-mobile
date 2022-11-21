@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
@@ -18,10 +19,12 @@ import Icon from 'react-native-vector-icons/Feather';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
-declare type Props = StackScreenProps<RootNavigatorParamList>;
+export type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.SETTINGS_PROFILES
+>;
 
-const Profiles: React.FC<Props> = props => {
-  const {navigation} = props;
+const Profiles = () => {
   const {profiles} = useLoadProfiles();
   const {activeAddress, chainAccount} = useActiveAccount();
   const {t} = useTranslation('settings');
@@ -29,6 +32,7 @@ const Profiles: React.FC<Props> = props => {
   const scrollRef = useRef(null);
   const theme = useTheme();
   const unlockWallet = useUnlockWallet();
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   React.useEffect(() => {
     const loadProfiles = async () => {
@@ -44,7 +48,7 @@ const Profiles: React.FC<Props> = props => {
   }, []);
 
   const navigateToConfirmModal = useCallback((index: number) => {
-    navigation.navigate({
+    navigate({
       name: ROUTES.CONFIRM_MODAL,
       params: {
         title: t('confirmModal:removeProfile'),
@@ -68,6 +72,7 @@ const Profiles: React.FC<Props> = props => {
 
   /*  const resetSigner = useResetRecoilState(signerState);
   const resetMnemonic = useResetRecoilState(mnemonicState); */
+
   const navigateToAddProfile = useCallback(async () => {
     if (!chainAccount) {
       throw new Error('No chain account');
@@ -76,7 +81,7 @@ const Profiles: React.FC<Props> = props => {
     try {
       const result = await unlockWallet({chainAccount});
       if (result) {
-        navigation.navigate(ROUTES.ADD_PROFILE, {
+        navigate(ROUTES.ADD_PROFILE, {
           wallet: result.wallet!,
           mnemonic: result.mnemonic!,
           password: result.password!,
@@ -86,6 +91,13 @@ const Profiles: React.FC<Props> = props => {
       console.error(e);
     }
   }, [chainAccount]);
+
+  const navigateToModal = useCallback(() => {
+    navigate(ROUTES.ADD_PROFILE_MODAL, {
+      onPressPrimary: () => navigateToAddProfile(),
+      onPressSecondary: () => navigateToAddProfile(),
+    });
+  }, [navigateToAddProfile]);
 
   const selectProfile = (i: number) => {
     profiles.forEach((profile, index) => {
@@ -113,9 +125,7 @@ const Profiles: React.FC<Props> = props => {
     <DView style={styles.root} topBar={<TopBar />}>
       <View style={styles.titleBar}>
         <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
-        <TouchableOpacity
-          style={styles.plusButton}
-          onPress={navigateToAddProfile}>
+        <TouchableOpacity style={styles.plusButton} onPress={navigateToModal}>
           <View style={styles.plusButton}>
             <Icon
               name="plus"

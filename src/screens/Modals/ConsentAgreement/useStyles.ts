@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 4,
     // this is a different gray as the gray used in design is not
     // in the theme colors
-    backgroundColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.iconGrey,
     alignSelf: 'center',
   },
   headerText: {

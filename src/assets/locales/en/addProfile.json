@@ -1,5 +1,7 @@
 {
   "title": "Add Profile",
+  "add desmos profile": "Add Desmos Profile",
+  "create a new desmos profile": "Create a new Desmos Profile",
   "availableProfiles": "Available Profiles",
   "orCreateADesmosProfile": "or Create a Desmos profile"
 }
