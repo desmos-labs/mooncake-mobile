@@ -1,4 +1,3 @@
-import {OfflineSigner} from '@cosmjs/proto-signing';
 import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
@@ -12,9 +11,7 @@ import Content from './components/Content';
 import useStyles from './useStyles';
 
 export interface AddProfileParams {
-  wallet: OfflineSigner | undefined;
   mnemonic: string;
-  password: string;
 }
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;

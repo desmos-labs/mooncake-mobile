@@ -1,6 +1,8 @@
 {
   "title": "Add Profile",
   "add desmos profile": "Add Desmos Profile",
+  "select account": "Select an account",
+  "alreadyImported": "Already imported",
   "create a new desmos profile": "Create a new Desmos Profile",
   "availableProfiles": "Available Profiles",
   "orCreateADesmosProfile": "or Create a Desmos profile"

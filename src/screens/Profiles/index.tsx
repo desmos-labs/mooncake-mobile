@@ -79,12 +79,33 @@ const Profiles = () => {
     }
 
     try {
-      const result = await unlockWallet({chainAccount});
+      const result = await unlockWallet({
+        chainAccount,
+        enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+      });
       if (result) {
         navigate(ROUTES.ADD_PROFILE, {
-          wallet: result.wallet!,
           mnemonic: result.mnemonic!,
-          password: result.password!,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [chainAccount]);
+
+  const navigateToSelectAddress = useCallback(async () => {
+    if (!chainAccount) {
+      throw new Error('No chain account');
+    }
+
+    try {
+      const result = await unlockWallet({
+        chainAccount,
+        enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+      });
+      if (result) {
+        navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
+          mnemonic: result.mnemonic!,
         });
       }
     } catch (e) {
@@ -95,7 +116,7 @@ const Profiles = () => {
   const navigateToModal = useCallback(() => {
     navigate(ROUTES.ADD_PROFILE_MODAL, {
       onPressPrimary: () => navigateToAddProfile(),
-      onPressSecondary: () => navigateToAddProfile(),
+      onPressSecondary: () => navigateToSelectAddress(),
     });
   }, [navigateToAddProfile]);
 

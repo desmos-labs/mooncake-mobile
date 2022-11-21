@@ -168,9 +168,9 @@ const AddProfileSelectAddressAdvanced = () => {
       topBar={<TopBar rightElement={SwitchToGeneralButton} />}
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
-          {t('addProfile')}
-        </Typography.H5>
+        <Typography.H3 style={styles.textStyle}>
+          {t('addProfile:title')}
+        </Typography.H3>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
           <Typography.Body6 style={styles.textStyle}>
@@ -179,9 +179,9 @@ const AddProfileSelectAddressAdvanced = () => {
         </Spacer>
 
         <View style={styles.tooltipGroup}>
-          <Typography.Body6 style={styles.textStyle}>
+          <Typography.Subtitle2 style={styles.textStyle}>
             {t('hdDerivPath')}
-          </Typography.Body6>
+          </Typography.Subtitle2>
           <IconButton
             icon="information-outline"
             onPress={() => {

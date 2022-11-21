@@ -130,11 +130,11 @@ const AddProfileSelectAddressGeneral = () => {
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
         <Typography.H3 style={styles.textStyle}>
-          {t('add profile')}
+          {t('addProfile:title')}
         </Typography.H3>
         <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.s}>
           <Typography.Body6 style={styles.textStyle}>
-            {t('selectAnAccount')}
+            {t('addProfile:select account')}
           </Typography.Body6>
         </Spacer>
       </View>
