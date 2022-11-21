@@ -60,13 +60,13 @@ const PostCard = ({
     if (isPending) {
       return profileData || ({} as any);
     } else return author;
-  }, [profileData]);
+  }, [isPending, profileData]);
 
   const {profile_pic, nickname, dtag} = authorData;
 
   const {MediaAttachment} = useRenderMediaAttachment({attachments});
 
-  const isFollowing = useRecoilValue(isFollowingAddr(author.address));
+  const isFollowing = useRecoilValue(isFollowingAddr(authorData?.address));
 
   const Avatar = React.useMemo(() => {
     return (
@@ -80,7 +80,7 @@ const PostCard = ({
 
   // Hopefully we come up with a more elegant way to do this in the future
   const Content = React.useMemo(() => {
-    const followUnfollowButton = author.address !== activeAddress && (
+    const followUnfollowButton = authorData.address !== activeAddress && (
       <View>
         <ProfileHeaderButton
           imageSrc={isFollowing ? followedIcon : followIcon}
