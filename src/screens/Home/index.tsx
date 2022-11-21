@@ -9,7 +9,7 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -58,7 +58,6 @@ const Home = () => {
     handlePressComments,
     posts,
     selectedPostIndex,
-    loading,
     fetchNewestPosts,
     fetchMorePosts,
     onViewableItemsChanged,
@@ -83,6 +82,7 @@ const Home = () => {
           style={{
             width: Dimensions.get('window').width,
             padding: 24,
+            backgroundColor: 'red',
           }}>
           <PostCard
             author={item.author}
@@ -109,13 +109,6 @@ const Home = () => {
 
   const theme = useTheme();
 
-  const viewabilityConfig = useMemo(() => {
-    return {
-      waitForInteraction: true,
-      viewAreaCoveragePercentThreshold: 95,
-    };
-  }, []);
-
   const onScrollEndDrag = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const xV = _.get(e, 'nativeEvent.velocity.x');
@@ -140,23 +133,17 @@ const Home = () => {
           flex: 1,
         }}
         renderItem={renderPost}
-        windowSize={10}
+        windowSize={3}
         showsHorizontalScrollIndicator={false}
-        // comment these 3 props when developing for a smoother experience
+        // comment these 2 props when developing for a smoother experience
         onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
         onScrollEndDrag={onScrollEndDrag}
-        scrollEventThrottle={25}
         // comment end
         onEndReachedThreshold={3}
         onEndReached={fetchMorePosts}
-        maxToRenderPerBatch={4}
-        refreshing={loading}
         scrollToOverflowEnabled={false}
         overScrollMode="never"
         bounces={false}
-        bouncesZoom={false}
-        removeClippedSubviews={false}
         getItemLayout={getItemLayout}
       />
 
