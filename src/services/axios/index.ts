@@ -1,6 +1,6 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import {deleteMMKV, MMKVKEYS, setMMKV, useMMKVStorage} from 'lib/MMKVStorage';
+import {deleteMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {useNavigation} from '@react-navigation/native';
@@ -40,16 +40,6 @@ type NavProps = StackScreenProps<RootNavigatorParamList, any>;
 // functionality
 export const useInitializeAxios = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [bearerToken] = useMMKVStorage<string>(MMKVKEYS.REST_AUTH_TOKEN);
-
-  React.useEffect(() => {
-    if (!bearerToken) return;
-    console.log('setting new bearer token', bearerToken);
-
-    axiosInstance.defaults.headers.common = {
-      Authorization: `Bearer ${bearerToken}`,
-    };
-  }, [bearerToken]);
 
   React.useEffect(() => {
     axiosInstance.interceptors.response.use(

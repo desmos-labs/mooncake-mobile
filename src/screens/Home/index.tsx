@@ -9,11 +9,16 @@ import {
 } from 'assets/images';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
-import {Dimensions, LogBox, View} from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
-import {CarouselRenderItemInfo} from 'react-native-reanimated-carousel/src/types';
-import {verticalScale} from 'react-native-size-matters';
+import React, {useCallback, useMemo, useRef} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  ListRenderItemInfo,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+  View,
+} from 'react-native';
 import InteractionButton from 'screens/Home/components/InteractionButton';
 import NoMorePosts from 'screens/Home/components/NoMorePosts';
 import PostCard from 'screens/Home/components/PostCard';
@@ -25,10 +30,6 @@ import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
 
-// This warning is emitted from react-native-reanimated-carousel, but it
-// does not affect operation
-LogBox.ignoreLogs([/Cannot record touch end without a touch start./]);
-
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.HOME_TABS
@@ -38,10 +39,18 @@ export type HomeParams = {
   type: 'discover' | 'following';
 };
 
+const getItemLayout = (data: any, index: number) => ({
+  length: Dimensions.get('window').width,
+  offset: Dimensions.get('window').width * index,
+  index,
+});
+
 const Home = () => {
   const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
+
+  const lockPostPress = useRef(false);
 
   const {
     handlePressDetails,
@@ -50,38 +59,96 @@ const Home = () => {
     handlePressTip,
     handleAddReaction,
     handlePressComments,
-    onPostChanged,
     posts,
     selectedPostIndex,
-    onCarouselProgressChange,
+    fetchNewestPosts,
+    fetchMorePosts,
+    onViewableItemsChanged,
     checkIfPostIsPending,
   } = useHooks();
 
   const renderPost = React.useCallback(
-    (info: CarouselRenderItemInfo<PostItem>) => {
-      if (info.index === posts.length) {
-        return <NoMorePosts />;
+    ({item}: ListRenderItemInfo<PostItem>) => {
+      if (item.emptyComponent) {
+        return (
+          <View
+            style={{
+              width: Dimensions.get('window').width,
+              padding: 24,
+            }}>
+            <NoMorePosts />
+          </View>
+        );
       }
       return (
-        <PostCard
-          postData={info.item}
-          onPressAuthor={() => handlePressAuthor(info.item.author_address)}
-          onPressDetails={() => {
-            if (checkIfPostIsPending(info.item.id)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
-            }
-            handlePressDetails(info.item.id, info.item.subspace_id);
-          }}
-          onPressFollow={() => handlePressFollow(info.item.author_address)}
-        />
+        <View
+          style={{
+            width: Dimensions.get('window').width,
+            padding: 24,
+          }}>
+          <PostCard
+            author={item.author}
+            isPending={item.isPending}
+            attachments={item.attachments}
+            text={item.text}
+            id={item.id}
+            onPressAuthor={() => handlePressAuthor(item.author_address)}
+            onPressDetails={() => {
+              if (lockPostPress.current) return;
+
+              if (checkIfPostIsPending(item.id)) {
+                return toast.show(t('toast:postTxInProgress'), {
+                  type: ToastConfig.ERROR_NO_RETRY,
+                });
+              }
+              handlePressDetails(item.id, item.subspace_id);
+            }}
+            onPressFollow={() => handlePressFollow(item.author_address)}
+          />
+        </View>
       );
     },
-    [posts, handlePressFollow, handlePressAuthor, handlePressDetails],
+    [
+      lockPostPress.current,
+      handlePressFollow,
+      handlePressAuthor,
+      handlePressDetails,
+    ],
   );
 
   const theme = useTheme();
+
+  const onScrollBeginDrag = useCallback(() => {
+    if (selectedPostIndex === 0) {
+      lockPostPress.current = true;
+    }
+  }, [selectedPostIndex, lockPostPress.current]);
+
+  const onScrollEndDrag = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const detectValue = 1.2;
+      const xV = _.get(e, 'nativeEvent.velocity.x');
+      if (Platform.OS === 'ios') {
+        if (xV < -detectValue && selectedPostIndex === 0) {
+          fetchNewestPosts();
+        }
+      } else if (Platform.OS === 'android') {
+        if (xV > detectValue && selectedPostIndex === 0) {
+          fetchNewestPosts();
+        }
+      }
+
+      lockPostPress.current = false;
+    },
+    [selectedPostIndex, lockPostPress.current],
+  );
+
+  const viewabilityConfig = useMemo(() => {
+    return {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95,
+    };
+  }, []);
 
   return (
     <View
@@ -89,24 +156,28 @@ const Home = () => {
         flex: 1,
         backgroundColor: theme.colors.background,
       }}>
-      <Carousel
-        onProgressChange={onCarouselProgressChange}
-        onSnapToItem={onPostChanged}
-        mode="parallax"
-        loop={false}
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 60,
+      <FlatList
+        data={posts}
+        horizontal
+        pagingEnabled
+        style={{
+          flex: 1,
         }}
-        width={Dimensions.get('window').width}
-        height={verticalScale(500)}
-        style={styles.carousel}
-        data={[...posts, 0 as any]}
         renderItem={renderPost}
-        panGestureHandlerProps={{
-          activeOffsetX: [-10, 10],
-          failOffsetY: [-10, 10],
-        }}
+        windowSize={3}
+        showsHorizontalScrollIndicator={false}
+        // comment these 2 props when developing for a smoother experience
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        onScrollBeginDrag={onScrollBeginDrag}
+        onScrollEndDrag={onScrollEndDrag}
+        // comment end
+        onEndReachedThreshold={3}
+        onEndReached={fetchMorePosts}
+        scrollToOverflowEnabled={false}
+        overScrollMode="never"
+        bounces={false}
+        getItemLayout={getItemLayout}
       />
 
       {posts.length > 0 && selectedPostIndex !== posts.length && (

@@ -41,35 +41,29 @@ const useHooks = () => {
     };
   }, [profileData]);
 
-  const {
-    imageAsset: coverPictureFromDevice,
-    imageFromLibrary: selectCoverPicture,
-  } = useImageFromDevice({
+  const {imageFromLibrary: selectCoverPicture} = useImageFromDevice({
     onImageSelected: image => setCoverPic(image),
   });
 
-  const {
-    imageAsset: profilePictureFromDevice,
-    imageFromLibrary: selectProfilePicture,
-  } = useImageFromDevice({
+  const {imageFromLibrary: selectProfilePicture} = useImageFromDevice({
     onImageSelected: image => setProfilePic(image),
   });
 
   const profilePictureUri = useMemo(() => {
-    if (profilePictureFromDevice) {
-      return profilePictureFromDevice.uri;
+    if (profilePic) {
+      return profilePic.uri;
     } else {
       return profileData?.profile_pic || undefined;
     }
-  }, [profilePictureFromDevice, profileData]);
+  }, [profilePic, profileData]);
 
   const coverPictureUri = useMemo(() => {
-    if (coverPictureFromDevice) {
-      return coverPictureFromDevice.uri;
+    if (coverPic) {
+      return coverPic.uri;
     } else {
       return profileData?.cover_pic || undefined;
     }
-  }, [coverPictureFromDevice, profileData]);
+  }, [coverPic, profileData]);
 
   const onEditProfile = useCallback(
     async (values: typeof initialFormState) => {

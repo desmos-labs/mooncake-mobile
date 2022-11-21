@@ -12,7 +12,7 @@ import EnvConfig from 'config/EnvConfig';
 /**
  * Increase this to get more posts per query.
  */
-const POSTS_PER_FETCH = 5;
+const POSTS_PER_FETCH = 10;
 
 // Get posts up to a given timestamp
 const useGetPosts = ({type}: {type: POST_TYPE}) => {
@@ -66,29 +66,26 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       ...queryVars.variables,
       offset: posts.length,
     });
-  }, [posts, loading, queryVars.variables]);
+  }, [posts.length, loading, queryVars.variables]);
 
   React.useEffect(() => {
-    if (!loading && data) {
+    if (data) {
       const {post} = data;
       setPosts(prev => _.uniqBy([...prev, ...post], 'id'));
     }
-  }, [loading, data]);
+  }, [JSON.stringify(data)]);
 
   // Reset the fetch offset to restart post fetching
-  const fetchNewestPosts = React.useCallback(
-    _.throttle(() => {
-      setPosts([]);
+  const fetchNewestPosts = React.useCallback(() => {
+    setPosts([]);
 
-      refetch({
-        ...queryVars.variables,
-        offset: 0,
-      }).then(a => {
-        setPosts(_.get(a, 'data.post'));
-      });
-    }, 1500),
-    [posts, loading],
-  );
+    refetch({
+      ...queryVars.variables,
+      offset: 0,
+    }).then(a => {
+      setPosts(_.get(a, 'data.post'));
+    });
+  }, [loading]);
 
   React.useEffect(() => {
     if (type === POST_TYPE.FOLLOWING) {

@@ -92,6 +92,7 @@ const useCreatePost = () => {
 
           // note: only Media attachments
           // only support 1 image attachment for now
+
           const attachmentUploadResult = postAttachments
             ? await uploadImageForPost({
                 mediaFile: postAttachments,
