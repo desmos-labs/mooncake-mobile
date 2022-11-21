@@ -69,11 +69,11 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
   }, [posts.length, loading, queryVars.variables]);
 
   React.useEffect(() => {
-    if (!loading) {
+    if (data) {
       const {post} = data;
       setPosts(prev => _.uniqBy([...prev, ...post], 'id'));
     }
-  }, [loading, JSON.stringify(data)]);
+  }, [JSON.stringify(data)]);
 
   // Reset the fetch offset to restart post fetching
   const fetchNewestPosts = React.useCallback(() => {
