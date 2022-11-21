@@ -82,7 +82,6 @@ const Home = () => {
           style={{
             width: Dimensions.get('window').width,
             padding: 24,
-            backgroundColor: 'red',
           }}>
           <PostCard
             author={item.author}
