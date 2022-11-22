@@ -1,6 +1,7 @@
 import {
   akashIcon,
   bandIcon,
+  bitcannaIcon,
   cosmosIcon,
   cryptoComIcon,
   desmosIcon,
@@ -16,6 +17,7 @@ import {ImageSourcePropType} from 'react-native';
 
 const chainIconMap: {[index: string]: ImageSourcePropType} = {
   akash: akashIcon,
+  bitcanna: bitcannaIcon,
   band: bandIcon,
   cosmos: cosmosIcon,
   cryptoCom: cryptoComIcon,
