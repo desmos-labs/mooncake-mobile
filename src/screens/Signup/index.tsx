@@ -1,6 +1,5 @@
 import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import {useGetProfileParams} from '@recoil/profileParams';
 import {iconButton} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
@@ -25,8 +24,9 @@ import * as Yup from 'yup';
 import ROUTES from 'navigation/routes';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {useResetRecoilState, useSetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
+import {profileParamsState} from '@recoil/profileParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -60,7 +60,7 @@ const Signup = () => {
     loading,
   } = useHooks();
 
-  const {profileParams} = useGetProfileParams();
+  const profileParams = useRecoilValue(profileParamsState);
 
   useEffect(() => {
     setDtagParams(profileParams.dtag);
