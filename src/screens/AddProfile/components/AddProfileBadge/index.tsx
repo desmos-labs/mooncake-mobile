@@ -1,12 +1,9 @@
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React, {useCallback} from 'react';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {
-  PanGestureHandlerProps,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {PanGestureHandlerProps} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import {RadioButtonInput} from 'react-native-simple-radio-button';
 import useStyles from './useStyles';
@@ -66,10 +63,7 @@ const AddProfileBadge = (props: Props) => {
   const {nickname, dtag, profile_pic, isSelected} = value;
 
   return (
-    <TouchableWithoutFeedback
-      touchSoundDisabled
-      onPress={handleSelect}
-      disabled={disabled}>
+    <TouchableOpacity onPress={handleSelect} disabled={disabled}>
       <DropShadowWrapper
         style={[
           styles.externalContainer,
@@ -101,7 +95,7 @@ const AddProfileBadge = (props: Props) => {
           />
         </View>
       </DropShadowWrapper>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 
