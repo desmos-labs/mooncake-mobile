@@ -134,11 +134,16 @@ const ConfirmModal = () => {
         {image && <Image source={image} style={styles.imageStyle} />}
 
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
-          <Trans
-            i18nKey={subtitle as string}
-            components={[<Typography.Subtitle2 style={subtitleStyle} />]}
-          />
+          {typeof subtitle === 'string' ? (
+            <Trans
+              i18nKey={subtitle as string}
+              components={[<Typography.Subtitle2 style={subtitleStyle} />]}
+            />
+          ) : (
+            subtitle
+          )}
         </Typography.Body5>
+
         {primaryButtonLabel && (
           <Button
             style={styles.primaryButton}
