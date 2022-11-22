@@ -1,6 +1,10 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ExternalAccount} from '@recoil/connectChainState';
+import {
+  ExternalAccount,
+  selectedExternalAccountState,
+} from '@recoil/connectChainState';
+import createLocalWalletState from '@recoil/createLocalWalletState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -14,6 +18,7 @@ import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, FlatList, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import useHooks from '../useHooks';
 import useStyles from '../useStyles';
 import AddressItem from './components/AddressItem';
@@ -41,6 +46,10 @@ const AddProfileSelectAddressGeneral = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {generateAccounts} = useHooks();
+  const setSelectedExternalAccount = useSetRecoilState(
+    selectedExternalAccountState,
+  );
+  const setAccountCreation = useSetRecoilState(createLocalWalletState);
 
   const asyncGenerateAccounts = useCallback(
     async (startingIndex: number, limitIndex: number) => {
@@ -96,8 +105,13 @@ const AddProfileSelectAddressGeneral = () => {
       index: number;
     }) => {
       if (!activeAddress) return <ActivityIndicator />;
-      const handlePress = async () => {
-        console.log('test');
+      const handlePress = async (wallet: ExternalAccount) => {
+        setSelectedExternalAccount(wallet);
+        setAccountCreation({
+          mnemonic: mnemonic!,
+          source: ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL,
+        });
+        navigation.navigate(ROUTES.CREATE_DESMOS_PROFILE);
       };
 
       return (
@@ -105,7 +119,7 @@ const AddProfileSelectAddressGeneral = () => {
           key={item.address}
           index={index}
           address={item.address}
-          handlePress={handlePress}
+          handlePress={() => handlePress(item)}
           isAlreadyLinked={checkIsAddressLinked(item.address)}
         />
       );

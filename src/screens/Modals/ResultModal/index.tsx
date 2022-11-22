@@ -49,7 +49,14 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.RESULT_MODAL>;
 
 const ResultModal = () => {
   const {
-    params: {title, subtitle, image, primaryButtonLabel, onPressPrimary},
+    params: {
+      title,
+      subtitle,
+      image,
+      primaryButtonLabel,
+      onPressPrimary,
+      onDismiss,
+    },
   } = useRoute<NavProps['route']>();
 
   const styles = useStyles();
@@ -59,7 +66,7 @@ const ResultModal = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={goBack}
+        onPress={onDismiss || goBack}
         activeOpacity={1}
         style={StyleSheet.absoluteFillObject}
       />

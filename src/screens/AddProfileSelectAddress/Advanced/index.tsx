@@ -104,7 +104,7 @@ const AddProfileSelectAddressAdvanced = () => {
 
   const handleSubmit = React.useCallback(async () => {
     if (!generatedAccount || !activeAddress) return;
-    console.log('test');
+    navigate(ROUTES.CREATE_DESMOS_PROFILE);
   }, []);
 
   const onFormChange = React.useCallback(

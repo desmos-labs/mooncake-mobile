@@ -132,8 +132,12 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         {image && <Image source={image} style={styles.imageStyle} />}
-
-        <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
+        <Typography.Body5
+          style={[
+            styles.subtitleText,
+            subtitleStyle,
+            !image && {marginTop: theme.spacing.l},
+          ]}>
           <Trans
             i18nKey={subtitle as string}
             components={[<Typography.Subtitle2 style={subtitleStyle} />]}

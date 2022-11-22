@@ -6,7 +6,10 @@ type AccountCreationAtom = {
 
   password?: string;
 
-  source?: ROUTES.ADD_PROFILE | undefined;
+  source?:
+    | ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL
+    | ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED
+    | undefined;
 };
 
 /**

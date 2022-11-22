@@ -27,7 +27,6 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
   },
   subtitleText: {
-    marginTop: theme.spacing.l,
     marginBottom: theme.spacing.xl,
     textAlign: 'center',
   },
@@ -47,9 +46,9 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.s,
   },
   imageStyle: {
-    width: 126,
-    height: 125,
-    resizeMode: 'contain',
+    width: 150,
+    height: 180,
+    resizeMode: 'cover',
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.l,
     alignSelf: 'center',
