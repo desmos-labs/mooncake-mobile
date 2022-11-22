@@ -98,7 +98,6 @@ const SendTips = () => {
                     <Typography.H4 style={styles.headerText}>
                       {t('header')}
                     </Typography.H4>
-                    <Typography.Body6>{t('description')}</Typography.Body6>
                     <Spacer paddingBottom={16} />
                     <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
                     <Spacer paddingBottom={14} />
