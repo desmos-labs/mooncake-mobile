@@ -83,7 +83,7 @@ const useHooks = () => {
 
   const tipLimits = useMemo(() => {
     return {
-      minimum: 1 + (1 * tipFee) / 100,
+      min: 1 + (1 * tipFee) / 100,
       max: parseFloat(_.get(convertedBalance, 'amount', '0')) * 0.99,
     };
   }, [convertedBalance, tipFee]);
@@ -98,13 +98,10 @@ const useHooks = () => {
          */
         if (
           parseFloat(values.amount) < 1 ||
-          parseFloat(convertedBalance.amount) < tipLimits.minimum
+          parseFloat(convertedBalance.amount) < tipLimits.min
         ) {
           errors.amount = t('too few');
-        } else if (
-          parseFloat(values.amount) >
-          parseInt(convertedBalance.amount, 10) * 0.99
-        ) {
+        } else if (parseFloat(values.amount) > tipLimits.max) {
           errors.amount = t('too much');
         }
       }
