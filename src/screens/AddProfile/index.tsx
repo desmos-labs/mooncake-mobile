@@ -12,6 +12,7 @@ import useStyles from './useStyles';
 
 export interface AddProfileParams {
   mnemonic: string;
+  password: string;
 }
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
@@ -20,7 +21,7 @@ const AddProfile = () => {
   const {t} = useTranslation();
   const styles = useStyles();
   const {
-    params: {mnemonic},
+    params: {mnemonic, password},
   } = useRoute<NavProps['route']>();
 
   return (
@@ -32,7 +33,7 @@ const AddProfile = () => {
       <Typography.H3 style={styles.title}>
         {t('addProfile:availableProfiles')}
       </Typography.H3>
-      <Content mnemonic={mnemonic} />
+      <Content mnemonic={mnemonic} password={password} />
     </DView>
   );
 };

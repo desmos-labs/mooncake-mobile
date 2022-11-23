@@ -1,32 +1,38 @@
 import {useLazyQuery} from '@apollo/client';
+import {toBase64} from '@cosmjs/encoding';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+import LocalWallet from 'lib/LocalWallet';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import AddProfileBadge from 'screens/AddProfile/components/AddProfileBadge';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import useHooks from '../../useHooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
 type ContentProps = {
-  mnemonic: string | undefined;
+  mnemonic?: string;
+  password?: string;
 };
 
-const Content: FC<ContentProps> = ({mnemonic}) => {
+const Content = ({mnemonic, password}: ContentProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [globalLoading, setGlobalLoading] = useState(true);
   const [fetchLimit, setFetchLimit] = useState(10);
   const [fetchedAccounts, setFetchedAccounts] = useState<any[]>([]);
+  const [generatedWallets, setGeneratedWallets] = useState<any[]>([]);
   const [profiles] = useRecoilState(profilesState);
   const [getProfiles] = useLazyQuery(GetProfileForAddresses);
   const {generateAccounts} = useHooks();
@@ -43,6 +49,7 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
       setGlobalLoading(true);
       const result = await generateAccounts(0, 10, mnemonic);
       if (result) {
+        setGeneratedWallets(result);
         const addressesToFetch = result.map(
           (account: {address: any}) => account.address,
         );
@@ -87,13 +94,38 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
     }
   }, [generateAccounts, getProfiles, mnemonic]);
 
+  const createNewAccount = useCallback(async () => {
+    try {
+      const walletToSave = generatedWallets.find(
+        wallet => wallet.address === selectedAddress,
+      );
+      const deserializedWallet = await LocalWallet.deserialize(
+        walletToSave.signer as string,
+      );
+      const chainAccount: ChainAccount = {
+        address: deserializedWallet.bech32Address,
+        type: ChainAccountType.Local,
+        pubKey: toBase64(deserializedWallet.publicKey),
+        hdPath: walletToSave.hdPath,
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveLocalWallet(deserializedWallet, password!);
+      await saveMnemonic(
+        deserializedWallet.bech32Address,
+        mnemonic!,
+        password!,
+      );
+      await saveNewAccount(chainAccount);
+      navigate(ROUTES.SETTINGS_PROFILES);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [generatedWallets, selectedAddress]);
+
   useEffect(() => {
     generateAccountsAndFetchProfiles();
   }, []);
-
-  useEffect(() => {
-    console.log(fetchedAccounts);
-  }, [fetchedAccounts]);
 
   return (
     <View style={styles.content}>
@@ -132,12 +164,18 @@ const Content: FC<ContentProps> = ({mnemonic}) => {
         )}
       </ScrollView>
       <View>
-        <Button mode="contained" color={theme.colors.surfaceBlack}>
+        <Button
+          mode="contained"
+          color={theme.colors.surfaceBlack}
+          onPress={createNewAccount}>
           {t('confirm')}
         </Button>
         <Button
           onPress={() =>
-            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic})
+            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
+              mnemonic,
+              password,
+            })
           }
           style={{paddingVertical: theme.spacing.m}}
           mode="text"

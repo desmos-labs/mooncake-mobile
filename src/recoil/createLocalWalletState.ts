@@ -2,7 +2,7 @@ import ROUTES from 'navigation/routes';
 import {atom} from 'recoil';
 
 type AccountCreationAtom = {
-  mnemonic: string;
+  mnemonic?: string;
 
   password?: string;
 

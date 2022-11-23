@@ -1,5 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {signerState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
 import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
@@ -7,7 +8,6 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {getAccounts} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
@@ -16,7 +16,9 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import {useSetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
+import useLogin from 'services/axios/requests/Login/useLogin';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -25,27 +27,16 @@ export type NavProps = StackScreenProps<
 >;
 
 const Profiles = () => {
-  const {profiles} = useLoadProfiles();
-  const {activeAddress, chainAccount} = useActiveAccount();
+  const {profiles, loadAddrsIntoState} = useLoadProfiles();
+  const {activeAddress, chainAccount, setActiveAddress} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();
-  const unlockWallet = useUnlockWallet();
   const {navigate} = useNavigation<NavProps['navigation']>();
-
-  React.useEffect(() => {
-    const loadProfiles = async () => {
-      const _profiles = await getAccounts();
-      if (_profiles) {
-        const addresses = _profiles.map(x => x.address);
-
-        console.log(addresses);
-      }
-    };
-
-    loadProfiles();
-  }, []);
+  const unlockWallet = useUnlockWallet();
+  const setSigner = useSetRecoilState(signerState);
+  const {login} = useLogin();
 
   const navigateToConfirmModal = useCallback((index: number) => {
     navigate({
@@ -70,6 +61,12 @@ const Profiles = () => {
     });
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadAddrsIntoState();
+    }, []),
+  );
+
   /*  const resetSigner = useResetRecoilState(signerState);
   const resetMnemonic = useResetRecoilState(mnemonicState); */
 
@@ -86,6 +83,7 @@ const Profiles = () => {
       if (result) {
         navigate(ROUTES.ADD_PROFILE, {
           mnemonic: result.mnemonic!,
+          password: result.password!,
         });
       }
     } catch (e) {
@@ -106,6 +104,7 @@ const Profiles = () => {
       if (result) {
         navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
           mnemonic: result.mnemonic!,
+          password: result.password!,
         });
       }
     } catch (e) {
@@ -120,13 +119,37 @@ const Profiles = () => {
     });
   }, [navigateToAddProfile]);
 
-  const selectProfile = (i: number) => {
-    profiles.forEach((profile, index) => {
-      if (index === i) {
-        // setUserOptions({selectedProfile: profile});
-      }
-    });
-  };
+  const selectProfile = useCallback(
+    async (i: number) => {
+      await Promise.all(
+        profiles.map(async (profile, index) => {
+          if (index === i) {
+            try {
+              console.log(chainAccount);
+              const unlockResult = await unlockWallet({
+                chainAccount: chainAccount!,
+              });
+              if (
+                unlockResult &&
+                unlockResult.wallet &&
+                unlockResult.password
+              ) {
+                setSigner(unlockResult.wallet);
+                setActiveAddress(profile.address);
+                await login({
+                  activeAddress: profile.address,
+                  password: unlockResult.password,
+                });
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }),
+      );
+    },
+    [chainAccount, profiles],
+  );
 
   const values = useMemo(() => {
     if (profiles.length === 0) return [];
@@ -140,7 +163,7 @@ const Profiles = () => {
         isSelected: activeAddress === profile.address,
       };
     });
-  }, [profiles]);
+  }, [profiles, activeAddress]);
 
   return (
     <DView style={styles.root} topBar={<TopBar />}>

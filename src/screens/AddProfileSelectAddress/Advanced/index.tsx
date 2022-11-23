@@ -1,5 +1,8 @@
+import {toBase64} from '@cosmjs/encoding';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -8,12 +11,15 @@ import Typography from 'components/Typography';
 import {Formik, isNaN} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {removeNonNumbers} from 'lib/FormatUtils';
+import LocalWallet from 'lib/LocalWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {IconButton, useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DESMOS_COIN_TYPE} from 'types/hdpath';
 import useHooks from '../useHooks';
 import useStyles from '../useStyles';
@@ -26,6 +32,7 @@ export type NavProps = StackScreenProps<
 
 export type AddProfileSelectAddressAdvancedParams = {
   mnemonic?: string;
+  password?: string;
 };
 
 const AddProfileSelectAddressAdvanced = () => {
@@ -33,7 +40,7 @@ const AddProfileSelectAddressAdvanced = () => {
   const {activeAddress} = useActiveAccount();
   const {t} = useTranslation('connectAddress');
   const {
-    params: {mnemonic},
+    params: {mnemonic, password},
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
@@ -41,6 +48,10 @@ const AddProfileSelectAddressAdvanced = () => {
   const [invalidField, setInvalidField] = useState(false);
   const [generatedAccount, setGeneratedAccount] = useState<any>();
   const [loading, setLoading] = useState(true);
+  const setAccountCreation = useSetRecoilState(createLocalWalletState);
+  const setWalletAndAccountToAdd = useSetRecoilState(
+    walletAndAccountToAddState,
+  );
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -104,6 +115,27 @@ const AddProfileSelectAddressAdvanced = () => {
 
   const handleSubmit = React.useCallback(async () => {
     if (!generatedAccount || !activeAddress) return;
+    const deserializedWallet = await LocalWallet.deserialize(
+      generatedAccount.signer as string,
+    );
+    const chainAccount: ChainAccount = {
+      address: deserializedWallet.bech32Address,
+      type: ChainAccountType.Local,
+      pubKey: toBase64(deserializedWallet.publicKey),
+      hdPath: generatedAccount.hdPath,
+      signAlgorithm: 'secp256k1',
+    };
+    setWalletAndAccountToAdd({
+      accountWithWalletData: {
+        chainAccount,
+        wallet: generatedAccount.signer as string,
+      },
+      password: password!,
+      mnemonic: mnemonic!,
+    });
+    setAccountCreation({
+      source: ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED,
+    });
     navigate(ROUTES.CREATE_DESMOS_PROFILE);
   }, []);
 
