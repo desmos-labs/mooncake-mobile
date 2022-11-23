@@ -138,10 +138,14 @@ const ConfirmModal = () => {
             subtitleStyle,
             !image && {marginTop: theme.spacing.l},
           ]}>
-          <Trans
-            i18nKey={subtitle as string}
-            components={[<Typography.Subtitle2 style={subtitleStyle} />]}
-          />
+          {typeof subtitle === 'string' ? (
+            <Trans
+              i18nKey={subtitle as string}
+              components={[<Typography.Subtitle2 style={subtitleStyle} />]}
+            />
+          ) : (
+            subtitle
+          )}
         </Typography.Body5>
         {primaryButtonLabel && (
           <Button

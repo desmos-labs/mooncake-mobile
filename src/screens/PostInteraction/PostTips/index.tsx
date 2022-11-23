@@ -72,6 +72,7 @@ const PostTips = () => {
         additionalButton
         buttonLabel={t('tip')}
         handleButton={handlePressSendTips}
+        additionalButtonStyle={{backgroundColor: theme.colors.black}}
       />
     );
   }, []);
