@@ -70,3 +70,4 @@ keystore.jks
 playstore-key.json
 
 coverage
+.cxx/
