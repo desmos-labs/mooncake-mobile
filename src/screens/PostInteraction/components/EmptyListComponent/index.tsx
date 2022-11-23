@@ -3,13 +3,14 @@ import Button from 'components/Button';
 import Typography from 'components/Typography';
 import {makeStyle} from 'config/theme';
 import React from 'react';
-import {Image, View} from 'react-native';
+import {Image, StyleProp, View, ViewStyle} from 'react-native';
 
 type Props = {
   label: string;
   additionalButton?: boolean;
   buttonLabel?: string;
   handleButton?: () => void;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 
 const EmptyListComponent = ({
@@ -17,6 +18,7 @@ const EmptyListComponent = ({
   additionalButton,
   buttonLabel,
   handleButton,
+  additionalButtonStyle,
 }: Props) => {
   const styles = useStyles();
 
@@ -28,7 +30,7 @@ const EmptyListComponent = ({
       </View>
       {additionalButton && (
         <Button
-          style={styles.additionalButton}
+          style={[styles.additionalButton, additionalButtonStyle]}
           mode="contained"
           onPress={handleButton}>
           <Typography.Button3 style={styles.buttonText}>
