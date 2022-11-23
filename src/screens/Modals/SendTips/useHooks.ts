@@ -40,6 +40,10 @@ const useHooks = () => {
     }, [refetch]),
   );
 
+  const initialFormValues = {
+    amount: '',
+  };
+
   const editable = useMemo(() => {
     return !(loading || data.action_account_balance.coins[0].amount <= 0);
   }, [data, loading]);
@@ -69,10 +73,6 @@ const useHooks = () => {
     }
   }, [data, loading, settings]);
 
-  const initialFormValues = {
-    amount: '',
-  };
-
   const tipFee = useMemo(() => {
     return _.get(
       settings,
@@ -81,11 +81,25 @@ const useHooks = () => {
     );
   }, [settings?.contractsConfig[0]]);
 
+  const tipLimits = useMemo(() => {
+    return {
+      minimum: 1 + (1 * tipFee) / 100,
+      max: parseFloat(_.get(convertedBalance, 'amount', '0')) * 0.99,
+    };
+  }, [convertedBalance, tipFee]);
+
   const validateForm = useCallback(
     (values: typeof initialFormValues) => {
       const errors: any = {};
       if (convertedBalance?.amount) {
-        if (parseFloat(values.amount) < 1) {
+        /**
+         * Fail minimum validation if entered tip amount is less than 1 or if
+         * user has less than the absolute minimum tip amount (1 + tip fee)
+         */
+        if (
+          parseFloat(values.amount) < 1 ||
+          parseFloat(convertedBalance.amount) < tipLimits.minimum
+        ) {
           errors.amount = t('too few');
         } else if (
           parseFloat(values.amount) >
@@ -97,19 +111,17 @@ const useHooks = () => {
 
       return errors;
     },
-    [convertedBalance, tipFee],
+    [convertedBalance, tipLimits],
   );
 
   const shouldDisableTipButton: {[index: string]: boolean} =
     React.useMemo(() => {
-      // const userTokens = _.get(convertedBalance, 'amount', 0);
-
-      const userTokens = 2;
+      const userTokens = _.get(convertedBalance, 'amount', 0);
 
       return TIP_AMOUNTS.reduce((acc, cur) => {
         return {
           ...acc,
-          [cur]: userTokens < cur + cur * tipFee,
+          [cur]: userTokens < cur + cur * (tipFee / 100),
         };
       }, {});
     }, [convertedBalance?.amount, tipFee]);
