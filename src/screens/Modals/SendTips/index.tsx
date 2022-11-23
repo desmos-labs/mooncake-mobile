@@ -1,5 +1,3 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import {iconButton} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
@@ -7,9 +5,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
@@ -22,7 +18,7 @@ import {
 } from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import useHooks from './useHooks';
+import useHooks, {TIP_AMOUNTS} from './useHooks';
 import useStyles from './useStyles';
 
 export type SendTipsParams = {
@@ -30,45 +26,23 @@ export type SendTipsParams = {
   postId?: number;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
-
 const SendTips = () => {
-  const {params} = useRoute<NavProps['route']>();
   const [message, setMessage] = React.useState<string>('');
   const {t} = useTranslation('sendTips');
   const styles = useStyles();
   const theme = useTheme();
   const {
-    activeAddress,
-    refetch,
     loading,
     editable,
-    handleSendTip,
     sendTipLoading,
     goBack,
     initialFormValues,
     validateForm,
     convertedBalance,
-    settings,
+    shouldDisableTipButton,
+    tipFee,
+    handlePressConfirm,
   } = useHooks();
-
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch]),
-  );
-
-  const handlePressConfirm = React.useCallback(
-    (values: any) => {
-      handleSendTip({
-        amount: parseInt(values.amount, 10),
-        receiver: params.postAuthor,
-        sender: activeAddress!,
-        postId: params.postId!,
-      });
-    },
-    [handleSendTip, params.postAuthor, params.postId, activeAddress],
-  );
 
   return (
     // marginTop to offset the tabIcon's top spacing
@@ -102,63 +76,58 @@ const SendTips = () => {
                     <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
                     <Spacer paddingBottom={14} />
                     <View style={styles.buttonGroup}>
-                      <Button
-                        disabled={!editable}
-                        mode={values.amount === '1' ? 'contained' : 'outlined'}
-                        style={styles.tipButton}
-                        contentStyle={styles.tipButtonContent}
-                        onPress={() => {
-                          setFieldValue('amount', '1', true);
-                        }}>
-                        <Typography.Subtitle3
-                          style={{
-                            color:
-                              values.amount === '1'
-                                ? theme.colors.white
-                                : theme.colors.surfaceBlack,
-                            textTransform: 'uppercase',
-                          }}>
-                          1 DSM
-                        </Typography.Subtitle3>
-                      </Button>
-                      <Button
-                        disabled={!editable}
-                        mode={values.amount === '5' ? 'contained' : 'outlined'}
-                        style={styles.tipButton}
-                        contentStyle={styles.tipButtonContent}
-                        onPress={() => {
-                          setFieldValue('amount', '5', true);
-                        }}>
-                        <Typography.Subtitle3
-                          style={{
-                            color:
-                              values.amount === '5'
-                                ? theme.colors.white
-                                : theme.colors.surfaceBlack,
-                            textTransform: 'uppercase',
-                          }}>
-                          5 DSM
-                        </Typography.Subtitle3>
-                      </Button>
-                      <Button
-                        disabled={!editable}
-                        mode={values.amount === '10' ? 'contained' : 'outlined'}
-                        style={styles.tipButton}
-                        contentStyle={styles.tipButtonContent}
-                        onPress={() => {
-                          setFieldValue('amount', '10', true);
-                        }}>
-                        <Typography.Subtitle3
-                          style={{
-                            color:
-                              values.amount === '10'
-                                ? theme.colors.white
-                                : theme.colors.surfaceBlack,
-                            textTransform: 'uppercase',
-                          }}>
-                          10 DSM
-                        </Typography.Subtitle3>
-                      </Button>
+                      {TIP_AMOUNTS.map(value => {
+                        return (
+                          <Button
+                            key={String(value)}
+                            disabled={
+                              !editable || shouldDisableTipButton[String(value)]
+                            }
+                            mode={
+                              values.amount === String(value)
+                                ? 'contained'
+                                : 'outlined'
+                            }
+                            style={{
+                              minWidth: 106,
+                              borderColor: theme.colors.surfaceBlack,
+                            }}
+                            contentStyle={[
+                              {height: 42},
+                              shouldDisableTipButton[String(value)]
+                                ? {
+                                    backgroundColor: theme.colors.grey01,
+                                  }
+                                : {
+                                    backgroundColor:
+                                      values.amount === String(value)
+                                        ? theme.colors.primary
+                                        : 'white',
+                                  },
+                            ]}
+                            onPress={() => {
+                              setFieldValue('amount', String(value), true);
+                            }}>
+                            <Typography.Subtitle3
+                              style={
+                                shouldDisableTipButton[String(value)]
+                                  ? {
+                                      color: theme.colors.white,
+                                      textTransform: 'uppercase',
+                                    }
+                                  : {
+                                      color:
+                                        values.amount === String(value)
+                                          ? theme.colors.white
+                                          : theme.colors.surfaceBlack,
+                                      textTransform: 'uppercase',
+                                    }
+                              }>
+                              {value} DSM
+                            </Typography.Subtitle3>
+                          </Button>
+                        );
+                      })}
                     </View>
                     <Spacer paddingBottom={20} />
                     <DTextInput
@@ -211,8 +180,7 @@ const SendTips = () => {
                           marginVertical: theme.spacing.s,
                         }}>
                         {t('warning fee', {
-                          fee: settings?.contractsConfig[0]?.config?.service_fee
-                            .percentage.value,
+                          fee: tipFee,
                         })}
                       </Typography.Body7>
                     </View>

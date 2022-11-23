@@ -1,8 +1,12 @@
 import appSettingsState from '@recoil/settings';
-import {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useQuery} from '@apollo/client';
 import {convertCoin} from '@desmoslabs/desmjs';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -11,10 +15,16 @@ import {useTranslation} from 'react-i18next';
 import {useRecoilState} from 'recoil';
 import useSendTip from 'services/axios/requests/CentralizedBroadcastTx/useSendTip';
 import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import _ from 'lodash';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
 
+// this will directly control the default tip amount buttons
+export const TIP_AMOUNTS = [1, 5, 10];
+
 const useHooks = () => {
+  const {params} = useRoute<NavProps['route']>();
+
   const [settings] = useRecoilState(appSettingsState);
   const {activeAddress} = useActiveAccount();
   const {sendTip, sendTipLoading} = useSendTip();
@@ -23,6 +33,12 @@ const useHooks = () => {
   const {refetch, loading, data} = useQuery(getAccountBalance, {
     variables: {address: activeAddress},
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const editable = useMemo(() => {
     return !(loading || data.action_account_balance.coins[0].amount <= 0);
@@ -57,15 +73,23 @@ const useHooks = () => {
     amount: '',
   };
 
+  const tipFee = useMemo(() => {
+    return _.get(
+      settings,
+      'contractsConfig[0].config.service_fee.percentage.value',
+      0,
+    );
+  }, [settings?.contractsConfig[0]]);
+
   const validateForm = useCallback(
     (values: typeof initialFormValues) => {
       const errors: any = {};
       if (convertedBalance?.amount) {
-        if (parseFloat(values.amount) < 0.1) {
+        if (parseFloat(values.amount) < 1) {
           errors.amount = t('too few');
         } else if (
           parseFloat(values.amount) >
-          parseInt(convertedBalance.amount, 10) * 0.9
+          parseInt(convertedBalance.amount, 10) * 0.99
         ) {
           errors.amount = t('too much');
         }
@@ -73,21 +97,46 @@ const useHooks = () => {
 
       return errors;
     },
-    [convertedBalance],
+    [convertedBalance, tipFee],
+  );
+
+  const shouldDisableTipButton: {[index: string]: boolean} =
+    React.useMemo(() => {
+      // const userTokens = _.get(convertedBalance, 'amount', 0);
+
+      const userTokens = 2;
+
+      return TIP_AMOUNTS.reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur]: userTokens < cur + cur * tipFee,
+        };
+      }, {});
+    }, [convertedBalance?.amount, tipFee]);
+
+  const handlePressConfirm = React.useCallback(
+    (values: any) => {
+      handleSendTip({
+        amount: parseInt(values.amount, 10),
+        receiver: params.postAuthor,
+        sender: activeAddress!,
+        postId: params.postId!,
+      });
+    },
+    [handleSendTip, activeAddress],
   );
 
   return {
-    activeAddress,
-    refetch,
     loading,
     editable,
-    handleSendTip,
     sendTipLoading,
     goBack,
     initialFormValues,
     validateForm,
     convertedBalance,
-    settings,
+    shouldDisableTipButton,
+    tipFee,
+    handlePressConfirm,
   };
 };
 
