@@ -46,6 +46,7 @@ const useStyles = makeStyle(theme => ({
     height: 200,
     resizeMode: 'contain',
     alignSelf: 'center',
+    paddingBottom: theme.spacing.xl,
   },
 }));
 

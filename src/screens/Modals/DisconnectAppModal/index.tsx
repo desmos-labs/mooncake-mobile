@@ -36,15 +36,14 @@ const DisconnectAppModal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <Typography.H5 style={styles.textStyle}>
-          {t('disconnect')}
-        </Typography.H5>
-
         <View style={styles.chainImageGroup}>
           <Image source={GetAppIcon(appName)} style={styles.chainIcon} />
           <Image source={disconnectIcon} style={styles.disconnectIcon} />
           <Image source={desmosIcon} style={styles.chainIcon} />
         </View>
+        <Typography.H5 style={styles.textStyle}>
+          {t('disconnect')}
+        </Typography.H5>
 
         <Typography.Body5 style={styles.textStyle}>
           {t('areYouSure', {appName})}

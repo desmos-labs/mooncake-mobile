@@ -104,7 +104,6 @@ import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
 import RNBootSplash from 'react-native-bootsplash';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
-import {modalSuccess} from 'assets/images';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -429,13 +428,13 @@ const RootNavigator = () => {
         <Stack.Screen
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}
-          initialParams={{
-            title: 'Success',
-            subtitle: 'Your Twitter account is successfully connected',
-            primaryButtonLabel: 'Go to Profile',
-            // secondaryButtonLabel: 'Go to Profile',
-            image: modalSuccess,
-          }}
+          // initialParams={{
+          //   title: 'Success',
+          //   subtitle: 'Your Twitter account is successfully connected',
+          //   primaryButtonLabel: 'Go to Profile',
+          //   // secondaryButtonLabel: 'Go to Profile',
+          //   image: modalSuccess,
+          // }}
         />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />

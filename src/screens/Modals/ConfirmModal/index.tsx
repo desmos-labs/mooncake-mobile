@@ -133,7 +133,7 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         {image && <Image source={image} style={styles.imageStyle} />}
 
-        <Spacer paddingTop={32} paddingBottom={16}>
+        <Spacer paddingBottom={16}>
           <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         </Spacer>
 
