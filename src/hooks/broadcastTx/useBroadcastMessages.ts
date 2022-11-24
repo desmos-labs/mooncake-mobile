@@ -46,7 +46,6 @@ export default function useBroadcastMessages() {
       const broadcastResult = await client.broadcastTx(
         TxRaw.encode(signed.txRaw).finish(),
       );
-
       assertIsDeliverTxSuccess(broadcastResult);
 
       return true;

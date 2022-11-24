@@ -6,6 +6,8 @@ const GetAppConnectedByUser = gql`
       application
       creation_time
       username
+      state
+      result
     }
   }
 `;
