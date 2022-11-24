@@ -22,7 +22,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_TWEET>;
 
 const useHooks = () => {
   const [loading, setLoading] = useState(false);
-  const [tweets, setTweets] = useState([]);
+  const [tweets, setTweets] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
   const [selectedTweetId, setSelectedTweetId] = useState<number>();
   const {chainAccount} = useActiveAccount();
