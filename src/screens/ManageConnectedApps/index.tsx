@@ -67,6 +67,7 @@ const ManageConnectedApps = () => {
             },
           };
           navigate(ROUTES.BROADCAST_TX, {
+            title: t('broadcastTx:unlinkApp') as string,
             messages: [msg],
             offlineSigner: result.wallet,
             successAction: () => successDisconnection(appName),

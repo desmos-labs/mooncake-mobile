@@ -67,6 +67,7 @@ function useHandleAddProfileSubmit(
         );
         broadcastActionRef.current = pushOrReplace => {
           pushOrReplace(ROUTES.BROADCAST_TX, {
+            title: t('broadcastTx:addProfile') as string,
             messages,
             offlineSigner: externalWallet,
             async successAction() {

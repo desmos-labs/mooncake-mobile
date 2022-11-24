@@ -16,6 +16,11 @@ import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
   /**
+   * Override screen title.
+   */
+  title?: string;
+
+  /**
    * The messages to be broadcast on chain.
    */
   messages: EncodeObject[];
@@ -47,6 +52,7 @@ const BroadcastTx: React.FC = () => {
   const {t} = useTranslation('accountCreation');
   const styles = useStyles();
   const {params} = useRoute<NavProps['route']>();
+  const {title} = params;
   const broadcastMessages = useBroadcastMessages();
 
   const broadcastTx = React.useCallback(async () => {
@@ -71,7 +77,7 @@ const BroadcastTx: React.FC = () => {
       <View style={styles.container}>
         <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
         <Spacer paddingVertical={12} />
-        <Typography.H4>{t('transaction broadcasting')}</Typography.H4>
+        <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
         <Typography.Body6>{t('please wait')}</Typography.Body6>
       </View>
     </DView>
