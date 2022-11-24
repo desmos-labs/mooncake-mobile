@@ -76,8 +76,11 @@ const BroadcastTx: React.FC = () => {
     <DView>
       <View style={styles.container}>
         <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
-        <Spacer paddingVertical={12} />
-        <Typography.H4>{title || t('transaction broadcasting')}</Typography.H4>
+        <Spacer paddingVertical={12}>
+          <Typography.H4>
+            {title || t('transaction broadcasting')}
+          </Typography.H4>
+        </Spacer>
         <Typography.Body6>{t('please wait')}</Typography.Body6>
       </View>
     </DView>
