@@ -63,7 +63,6 @@ import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
 import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
-import ResultModal, {ResultModalParams} from 'screens/Modals/ResultModal';
 import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
@@ -105,6 +104,7 @@ import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import usePollingQueries from 'hooks/usePollingQueries';
 import RNBootSplash from 'react-native-bootsplash';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
+import {modalSuccess} from 'assets/images';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -113,7 +113,6 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
-  [ROUTES.RESULT_MODAL]: ResultModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
@@ -427,7 +426,16 @@ const RootNavigator = () => {
           name={ROUTES.CONSENT_AGREEMENT}
           component={ConsentAgreement}
         />
-        <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+        <Stack.Screen
+          name={ROUTES.CONFIRM_MODAL}
+          component={ConfirmModal}
+          initialParams={{
+            title: t('resultModal:success'),
+            subtitle: t('resultModal:passwordWasChanged'),
+            primaryButtonLabel: t('resultModal:goToProfile'),
+            image: modalSuccess,
+          }}
+        />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
         <Stack.Screen
@@ -446,16 +454,6 @@ const RootNavigator = () => {
           }}
           name={ROUTES.TEXTONLY_MODAL}
           component={TextOnlyModal}
-        />
-        <Stack.Screen
-          // Remove these when going production
-          initialParams={{
-            title: t('resultModal:success'),
-            subtitle: t('resultModal:passwordWasChanged'),
-            primaryButtonLabel: t('resultModal:goToProfile'),
-          }}
-          name={ROUTES.RESULT_MODAL}
-          component={ResultModal}
         />
 
         <Stack.Screen
