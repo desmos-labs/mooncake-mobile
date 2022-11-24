@@ -430,9 +430,10 @@ const RootNavigator = () => {
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}
           initialParams={{
-            title: t('resultModal:success'),
-            subtitle: t('resultModal:passwordWasChanged'),
-            primaryButtonLabel: t('resultModal:goToProfile'),
+            title: 'Success',
+            subtitle: 'Your Twitter account is successfully connected',
+            primaryButtonLabel: 'Go to Profile',
+            // secondaryButtonLabel: 'Go to Profile',
             image: modalSuccess,
           }}
         />
