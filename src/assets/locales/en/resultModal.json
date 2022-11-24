@@ -8,5 +8,5 @@
   "enterApp": "Enter App",
   "chainLinked": "{{chain}} address connected",
   "yourChainLinkDisconnected": "Your {{chainLink}} address was disconnected",
-  "appDisconnected": "Your {{appName}} was successfully disconnected"
+  "appDisconnected": "Your {{appName}} account is successfully disconnected"
 }
