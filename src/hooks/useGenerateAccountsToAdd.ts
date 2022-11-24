@@ -8,7 +8,7 @@ import {
 } from 'screens/ConnectAddress/utils';
 import {DESMOS_COIN_TYPE, HdPath} from 'types/hdpath';
 
-const useHooks = () => {
+const useGenerateAccountsToAdd = () => {
   const {params} = useRoute<any>();
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
@@ -61,11 +61,11 @@ const useHooks = () => {
       let _accounts: any;
       if (isUsingLedger) {
         /*        _accounts = await generateAccountUsingLedger({
-          ledgerApp,
-          ledgerTransport,
-          prefix: 'desmos',
-          hdPath,
-        }); */
+         ledgerApp,
+         ledgerTransport,
+         prefix: 'desmos',
+         hdPath,
+         }); */
       } else {
         _accounts = await generateAccountUsingMnemonic({
           prefix: 'desmos',
@@ -82,9 +82,9 @@ const useHooks = () => {
   );
 
   return {
-    generateAccount,
     generateAccounts,
+    generateAccount,
   };
 };
 
-export default useHooks;
+export default useGenerateAccountsToAdd;

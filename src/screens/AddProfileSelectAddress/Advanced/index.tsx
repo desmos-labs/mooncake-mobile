@@ -2,28 +2,29 @@ import {toBase64} from '@cosmjs/encoding';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import createLocalWalletState from '@recoil/createLocalWalletState';
+import {useLoadProfiles} from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import Button from 'components/Button';
 import DView from 'components/DView';
+import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, isNaN} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import {removeNonNumbers} from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {IconButton, useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DESMOS_COIN_TYPE} from 'types/hdpath';
-import useHooks from '../useHooks';
 import useStyles from '../useStyles';
-import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -44,11 +45,12 @@ const AddProfileSelectAddressAdvanced = () => {
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {generateAccount} = useHooks();
+  const {generateAccount} = useGenerateAccountsToAdd();
   const [invalidField, setInvalidField] = useState(false);
   const [generatedAccount, setGeneratedAccount] = useState<any>();
   const [loading, setLoading] = useState(true);
   const setAccountCreation = useSetRecoilState(createLocalWalletState);
+  const {profiles} = useLoadProfiles();
   const setWalletAndAccountToAdd = useSetRecoilState(
     walletAndAccountToAddState,
   );
@@ -164,15 +166,12 @@ const AddProfileSelectAddressAdvanced = () => {
   );
 
   const isProfileAlreadyAdded = useMemo(
-    () => generatedAccount?.address === activeAddress,
+    () =>
+      profiles.findIndex(
+        profile => profile.address === generatedAccount?.address,
+      ) !== -1,
     [generatedAccount],
   );
-
-  useEffect(() => {
-    return () => {
-      console.log(generatedAccount);
-    };
-  }, [generatedAccount]);
 
   const addressOrErrorElement = React.useMemo(() => {
     if (invalidField) return <View />;
@@ -181,7 +180,7 @@ const AddProfileSelectAddressAdvanced = () => {
         <>
           <Typography.Body6>{generatedAccount.address}</Typography.Body6>
           <Typography.Body6 style={{marginTop: 8}}>
-            {t('alreadyAdded')}
+            {t('addProfile:alreadyImported')}
           </Typography.Body6>
         </>
       );

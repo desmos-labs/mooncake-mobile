@@ -5,6 +5,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
+import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import LocalWallet from 'lib/LocalWallet';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -17,7 +18,6 @@ import {useRecoilState} from 'recoil';
 import AddProfileBadge from 'screens/AddProfile/components/AddProfileBadge';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import {ChainAccount, ChainAccountType} from 'types/chains';
-import useHooks from '../../useHooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
@@ -35,7 +35,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
   const [generatedWallets, setGeneratedWallets] = useState<any[]>([]);
   const [profiles] = useRecoilState(profilesState);
   const [getProfiles] = useLazyQuery(GetProfileForAddresses);
-  const {generateAccounts} = useHooks();
+  const {generateAccounts} = useGenerateAccountsToAdd();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();

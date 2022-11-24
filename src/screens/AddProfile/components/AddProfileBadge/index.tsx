@@ -1,3 +1,4 @@
+import {defaultProfilePic} from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React, {useCallback} from 'react';
@@ -70,7 +71,10 @@ const AddProfileBadge = (props: Props) => {
           disabled && styles.externalContainerDisabled,
         ]}
         innerStyle={styles.container}>
-        <FastImage source={{uri: profile_pic}} style={styles.profilePicture} />
+        <FastImage
+          source={profile_pic ? {uri: profile_pic} : defaultProfilePic}
+          style={styles.profilePicture}
+        />
         <View style={styles.textContainer}>
           {nickname && (
             <Typography.H5 numberOfLines={2} ellipsizeMode="middle">

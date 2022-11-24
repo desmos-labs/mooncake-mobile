@@ -3,14 +3,16 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ExternalAccount} from '@recoil/connectChainState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
+import {useLoadProfiles} from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
+import AddressItem from 'components/AddressItem';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
+import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import LocalWallet from 'lib/LocalWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -20,9 +22,7 @@ import {ActivityIndicator, FlatList, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import {ChainAccount, ChainAccountType} from 'types/chains';
-import useHooks from '../useHooks';
 import useStyles from '../useStyles';
-import AddressItem from './components/AddressItem';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -43,11 +43,11 @@ const AddProfileSelectAddressGeneral = () => {
   const {
     params: {mnemonic, password},
   } = useRoute<NavProps['route']>();
-  const {checkIsAddressLinked} = useCheckIsAddressLinked();
   const {t} = useTranslation('addProfile');
   const styles = useStyles();
   const theme = useTheme();
-  const {generateAccounts} = useHooks();
+  const {generateAccounts} = useGenerateAccountsToAdd();
+  const {profiles} = useLoadProfiles();
   const setAccountCreation = useSetRecoilState(createLocalWalletState);
   const setWalletAndAccountToAdd = useSetRecoilState(
     walletAndAccountToAddState,
@@ -138,7 +138,10 @@ const AddProfileSelectAddressGeneral = () => {
           index={index}
           address={item.address}
           handlePress={() => handlePress(item)}
-          isAlreadyLinked={checkIsAddressLinked(item.address)}
+          isAlreadyLinked={
+            profiles.findIndex(profile => profile.address === item.address) !==
+            -1
+          }
         />
       );
     },
