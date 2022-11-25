@@ -1,21 +1,34 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
+import usePollingQueries from 'hooks/usePollingQueries';
+import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
+import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
+import {Dimensions, TextStyle, ViewStyle} from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
+import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
 import Activities from 'screens/Activities';
-import AddProfile from 'screens/AddProfile';
+import AddProfile, {AddProfileParams} from 'screens/AddProfile';
+import AddProfileSelectAddressAdvanced, {
+  AddProfileSelectAddressAdvancedParams,
+} from 'screens/AddProfileSelectAddress/Advanced';
+import AddProfileSelectAddressGeneral, {
+  AddProfileSelectAddressGeneralParams,
+} from 'screens/AddProfileSelectAddress/General';
 import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
 import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
 import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
@@ -35,14 +48,21 @@ import ConnectChainTxDetail, {
 } from 'screens/ConnectChainTxDetail';
 import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
 import CreateDesmosProfile from 'screens/CreateDesmosProfile';
+import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
 import EditProfile from 'screens/EditProfile';
+import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
+import {FollowingParams} from 'screens/Following';
+import FollowingAndFollowers, {
+  FollowingAndFollowersParams,
+} from 'screens/FollowingAndFollowers';
 import FullscreenStatusScreen, {
   FullscreenStatusScreenParams,
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Landing from 'screens/Landing';
+import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageBiometrics from 'screens/ManageBiometrics';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
@@ -51,6 +71,9 @@ import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
+import AddProfileModal, {
+  AddProfileModalParams,
+} from 'screens/Modals/AddProfileModal';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
@@ -72,15 +95,17 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
+import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
+import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
 import Profiles from 'screens/Profiles';
-import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
 import SelectChainConnection from 'screens/SelectChainConnection';
 import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
+import SelectLedgerApp from 'screens/SelectLedgerApp';
 import SelectTweet, {SelectTweetParams} from 'screens/SelectTweet';
 import Settings from 'screens/Settings';
 import ShowRecoveryPhrase, {
@@ -89,22 +114,6 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import PostTypeSelection from 'screens/PostTypeSelection';
-import CreateTextPost from 'screens/CreateTextPost';
-import FollowingAndFollowers, {
-  FollowingAndFollowersParams,
-} from 'screens/FollowingAndFollowers';
-import {Dimensions, TextStyle, ViewStyle} from 'react-native';
-import {FollowingParams} from 'screens/Following';
-import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {useTheme} from 'react-native-paper';
-import Login, {LoginParams} from 'screens/Login';
-import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
-import usePollingQueries from 'hooks/usePollingQueries';
-import RNBootSplash from 'react-native-bootsplash';
-import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -188,13 +197,18 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_NFTS]: undefined;
   [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  [ROUTES.ADD_PROFILE]: undefined;
+  // Add profile
+  [ROUTES.ADD_PROFILE]: AddProfileParams;
+  [ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL]: AddProfileSelectAddressGeneralParams;
+  [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
+  [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
 
   /* Apps and Twitter */
   [ROUTES.CONNECT_APP]: ConnectAppParams;
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
+  // Activities
   [ROUTES.ACTIVITIES]: undefined;
 
   // Grants
@@ -430,14 +444,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
+        <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
         <Stack.Screen
-          initialParams={{
-            title: t('confirmModal:removeProfile'),
-            body: t('confirmModal:backupSeedphrase'),
-            primaryButtonLabel: t('confirmModal:goToBackup'),
-          }}
-          name={ROUTES.BOTTOM_MODAL}
-          component={BottomModal}
+          name={ROUTES.ADD_PROFILE_MODAL}
+          component={AddProfileModal}
         />
         <Stack.Screen
           initialParams={{
@@ -514,10 +524,14 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} />
       <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} />
 
+      <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} />
       <Stack.Screen
-        name={ROUTES.ADD_PROFILE}
-        component={AddProfile}
-        options={{cardStyle: styles.addProfileCard}}
+        name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL}
+        component={AddProfileSelectAddressGeneral}
+      />
+      <Stack.Screen
+        name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED}
+        component={AddProfileSelectAddressAdvanced}
       />
     </Stack.Navigator>
   );

@@ -86,8 +86,10 @@ const CreateDesmosProfile: FC<NavProps> = () => {
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
 
   const isAddingProfile =
-    ROUTES.ADD_PROFILE ===
-    (accountCreation?.source ?? createLedgerAccount?.source);
+    ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED ===
+      (accountCreation?.source ?? createLedgerAccount?.source) ||
+    ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL ===
+      (accountCreation?.source ?? createLedgerAccount?.source);
 
   const submitHandler = isAddingProfile
     ? handleAddProfileSubmit

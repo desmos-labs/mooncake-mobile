@@ -115,7 +115,7 @@ const ConfirmModal = () => {
   const onPressPrimaryButton = () => {
     if (removeModalAfterButtonPress) {
       goBack();
-      onPressPrimary && setTimeout(() => onPressPrimary());
+      onPressPrimary && setTimeout(() => onPressPrimary(), 200);
     } else {
       onPressPrimary && onPressPrimary();
     }
@@ -132,8 +132,12 @@ const ConfirmModal = () => {
       <View style={styles.innerContainer}>
         <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         {image && <Image source={image} style={styles.imageStyle} />}
-
-        <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
+        <Typography.Body5
+          style={[
+            styles.subtitleText,
+            subtitleStyle,
+            !image && {marginTop: theme.spacing.l},
+          ]}>
           {typeof subtitle === 'string' ? (
             <Trans
               i18nKey={subtitle as string}
@@ -143,7 +147,6 @@ const ConfirmModal = () => {
             subtitle
           )}
         </Typography.Body5>
-
         {primaryButtonLabel && (
           <Button
             style={styles.primaryButton}

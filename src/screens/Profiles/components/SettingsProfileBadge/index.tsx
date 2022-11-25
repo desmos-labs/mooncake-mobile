@@ -2,7 +2,8 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, Image, TouchableOpacity, View} from 'react-native';
+import {Dimensions, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -134,31 +135,33 @@ const SettingsProfileBadge = (props: Props) => {
         simultaneousHandlers={simultaneousHandlers}
         onGestureEvent={panGesture}>
         <Animated.View style={animatedStyle}>
-          <DropShadowWrapper
-            style={styles.externalContainer}
-            innerStyle={styles.container}>
-            <Image
-              source={value.profilePicture}
-              style={styles.profilePicture}
-            />
-            <View style={styles.textContainer}>
-              <Typography.H5>{value.nickname}</Typography.H5>
-              <Typography.Body6>{value.dTag}</Typography.Body6>
-            </View>
-            <View style={styles.radioButton}>
-              <RadioButtonInput
-                obj={value}
-                index={index}
-                isSelected={value.isSelected}
-                onPress={() => onSelect(index)}
-                buttonSize={12}
-                // @ts-ignore
-                borderWidth={2}
-                buttonInnerColor={theme.colors.butterOrange01}
-                buttonOuterColor={theme.colors.butterOrange01}
+          <TouchableOpacity activeOpacity={1} onPress={() => onSelect(index)}>
+            <DropShadowWrapper
+              style={styles.externalContainer}
+              innerStyle={styles.container}>
+              <FastImage
+                source={value.profilePicture}
+                style={styles.profilePicture}
               />
-            </View>
-          </DropShadowWrapper>
+              <View style={styles.textContainer}>
+                <Typography.H5>{value.nickname}</Typography.H5>
+                <Typography.Body6>{value.dTag}</Typography.Body6>
+              </View>
+              <View style={styles.radioButton}>
+                <RadioButtonInput
+                  obj={value}
+                  index={index}
+                  isSelected={value.isSelected}
+                  onPress={() => onSelect(index)}
+                  buttonSize={12}
+                  // @ts-ignore
+                  borderWidth={2}
+                  buttonInnerColor={theme.colors.butterOrange01}
+                  buttonOuterColor={theme.colors.butterOrange01}
+                />
+              </View>
+            </DropShadowWrapper>
+          </TouchableOpacity>
         </Animated.View>
       </PanGestureHandler>
     </View>
