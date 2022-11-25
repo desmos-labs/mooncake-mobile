@@ -81,6 +81,7 @@ function useHandleFormSubmit(
         }, 500);
 
         navigation.navigate(ROUTES.BROADCAST_TX, {
+          title: t('broadcastTx:createProfile') as string,
           messages,
           offlineSigner: wallet!,
           // save newly created account data and navigate to home page

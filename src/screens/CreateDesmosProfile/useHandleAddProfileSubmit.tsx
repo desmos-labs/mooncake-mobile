@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
-import {errorImage} from 'assets/images';
+import {errorImage, modalSuccess} from 'assets/images';
 import LocalWallet from 'lib/LocalWallet';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
@@ -87,13 +87,15 @@ function useHandleAddProfileSubmit(
         );
 
         navigate(ROUTES.BROADCAST_TX, {
+          title: t('broadcastTx:addProfile') as string,
           messages: msgs,
           offlineSigner: deserializedWallet,
           successAction: () =>
-            navigate(ROUTES.RESULT_MODAL, {
+            navigate(ROUTES.CONFIRM_MODAL, {
               onPressPrimary: () => successAction(),
               title: t('common:success'),
               subtitle: t('created'),
+              image: modalSuccess,
               primaryButtonLabel: t('go to profiles') as string,
               onDismiss: () => null,
             }),

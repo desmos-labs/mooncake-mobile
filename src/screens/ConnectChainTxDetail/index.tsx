@@ -117,6 +117,7 @@ const ConnectChainTxDetail = () => {
     const deserializedWallet = unlockResponse.wallet;
 
     navigate(ROUTES.BROADCAST_TX, {
+      title: t('broadcastTx:connectChain') as string,
       messages: [message],
       offlineSigner: deserializedWallet!,
       successAction: () => {

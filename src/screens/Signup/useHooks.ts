@@ -96,6 +96,7 @@ const useHooks = () => {
       setSignUpPassword(confirmPassword);
 
       navigate(ROUTES.BROADCAST_TX, {
+        title: t('broadcastTx:signUp') as string,
         messages,
         offlineSigner: newWallet,
         successAction: () => {
