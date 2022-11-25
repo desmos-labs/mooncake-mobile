@@ -49,7 +49,7 @@ export const useGetFollowingPolling = () => {
   const {syncPendingRelationships} = usePendingRelationships();
   const pendingRelationships = useRecoilValue(pendingRelationshipsState);
 
-  const {data, startPolling, stopPolling} =
+  const {data, startPolling, stopPolling, refetch} =
     useQuery<GetFollowedUsersForAddressData>(GetFollowedUsersForAddress, {
       variables: {
         userAddress: activeAddress,
@@ -68,7 +68,15 @@ export const useGetFollowingPolling = () => {
     setFollowing(newFollowing);
 
     syncPendingRelationships(newFollowing.map(x => x.address));
-  }, [data]);
+  }, [JSON.stringify(data)]);
+
+  useEffect(() => {
+    if (activeAddress) {
+      refetch({
+        userAddress: activeAddress,
+      });
+    }
+  }, [activeAddress]);
 
   useEffect(() => {
     if (pendingRelationships.length > 0) {

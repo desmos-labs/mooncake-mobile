@@ -1,28 +1,28 @@
-import Button from 'components/Button';
-import React from 'react';
-import DView from 'components/DView';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-import Typography from 'components/Typography';
-import TopBar from 'components/TopBar';
-import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
-import {ActivityIndicator, FlatList, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import {useSetRecoilState} from 'recoil';
 import {
   ExternalAccount,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import _ from 'lodash';
-import useGenerateProof from 'hooks/useGenerateProof';
+import AddressItem from 'components/AddressItem';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
-import AddressItem from './components/AddressItem';
+import useGenerateAccounts from 'hooks/useGenerateAccounts';
+import useGenerateProof from 'hooks/useGenerateProof';
+import _ from 'lodash';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, FlatList, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import useStyles from '../useStyles';
 
 export type NavProps = StackScreenProps<

@@ -43,8 +43,9 @@ const useStyles = makeStyle(theme => ({
     marginBottom: theme.spacing.s,
   },
   imageStyle: {
-    height: 200,
-    resizeMode: 'contain',
+    width: 150,
+    height: 180,
+    resizeMode: 'cover',
     alignSelf: 'center',
     paddingBottom: theme.spacing.xl,
   },

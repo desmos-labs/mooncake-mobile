@@ -116,7 +116,7 @@ const ConfirmModal = () => {
   const onPressPrimaryButton = () => {
     if (removeModalAfterButtonPress) {
       goBack();
-      onPressPrimary && setTimeout(() => onPressPrimary());
+      onPressPrimary && setTimeout(() => onPressPrimary(), 200);
     } else {
       onPressPrimary && onPressPrimary();
     }

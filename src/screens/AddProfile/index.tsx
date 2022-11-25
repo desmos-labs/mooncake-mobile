@@ -1,125 +1,28 @@
-import {toBase64} from '@cosmjs/encoding';
+import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
-import ErrorBoundary from 'components/ErrorBoundary';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, Suspense, useEffect} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator} from 'react-native-paper';
-import {
-  mnemonicState,
-  selectedChainState,
-  signerState,
-} from '@recoil/connectChainState';
-import {useRecoilState, useSetRecoilState} from 'recoil';
-import createLocalWalletState from '@recoil/createLocalWalletState';
-import createLedgerAccountState from '@recoil/createLedgerAccountState';
-import {ChainAccountType} from 'types/chains';
-import useStyles from './useStyles';
 import Content from './components/Content';
-import desmosChain from './desmosChain';
+import useStyles from './useStyles';
 
-/* The number of profiles that will be displayed on the screen. */
-export const PROFILE_PER_PAGE = 100;
+export interface AddProfileParams {
+  mnemonic: string;
+  password: string;
+}
 
-/* This is the maximum number of pages that will be loaded. */
-export const MAX_PAGE_TO_LOAD = 50;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
-type AddProfileProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.ADD_PROFILE
->;
-
-/* A React component for the Add Profile screen. */
-const AddProfile: FC<AddProfileProps> = ({navigation}) => {
+const AddProfile = () => {
   const {t} = useTranslation();
   const styles = useStyles();
-
-  const unlockWallet = useUnlockWallet();
-  const {chainAccount} = useActiveAccount();
-
-  const [signer, setSigner] = useRecoilState(signerState);
-  const [mnemonic, setMnemonic] = useRecoilState(mnemonicState);
-  const setSelectedChain = useSetRecoilState(selectedChainState);
-
-  const setCreateLocalWallet = useSetRecoilState(createLocalWalletState);
-  const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
-
-  const isWalletUnlocked = !!signer;
-
-  /* Using the unlockWallet function to unlock the wallet. */
-  useEffect(() => {
-    if (isWalletUnlocked) return; // already unlocked
-
-    if (!chainAccount) return; // wait for async load
-
-    (async () => {
-      const shouldReplaceRoute = true;
-      const titleLabelOverride = t('addProfile:title');
-      const buttonLabelOverride = t('common:next');
-      const dViewProps = {
-        topBar: <TopBar style={styles.topBar} />,
-        backgroundColor: 'transparent',
-        style: styles.dView,
-      };
-
-      const res = await unlockWallet({
-        chainAccount,
-        shouldReplaceRoute,
-        enterPwScreenOptions: {
-          titleLabelOverride,
-          buttonLabelOverride,
-          dViewProps,
-        },
-      });
-
-      if (!res?.wallet) {
-        // ledger cancelled
-        if (chainAccount.type === ChainAccountType.Ledger) {
-          return navigation.pop();
-        }
-        // forgot password clicked
-        return;
-      }
-
-      const {wallet, mnemonic: mnemonicRes} = res;
-
-      // unlocked
-      setSigner(wallet);
-
-      if (mnemonicRes) {
-        setMnemonic(mnemonicRes);
-        setCreateLocalWallet(prev => ({
-          ...prev,
-          mnemonic: mnemonicRes,
-          source: ROUTES.ADD_PROFILE,
-        }));
-      } else {
-        const accounts = await wallet.getAccounts();
-        if (!accounts.length) return;
-        setCreateLedgerAccount(prev => ({
-          ...prev,
-          account: {
-            type: ChainAccountType.Ledger,
-            address: accounts[0].address,
-            hdPath: desmosChain().hdPath, // TO DO: add ledger support
-            pubKey: toBase64(accounts[0].pubkey),
-            signAlgorithm: accounts[0].algo,
-          },
-          source: ROUTES.ADD_PROFILE,
-        }));
-      }
-      setSelectedChain(desmosChain());
-
-      // PASSWORD_MANIPULATION > ADD_PROFILE
-      navigation.navigate(ROUTES.ADD_PROFILE);
-    })();
-  }, [isWalletUnlocked, chainAccount, navigation]);
+  const {
+    params: {mnemonic, password},
+  } = useRoute<NavProps['route']>();
 
   return (
     <DView
@@ -130,20 +33,7 @@ const AddProfile: FC<AddProfileProps> = ({navigation}) => {
       <Typography.H3 style={styles.title}>
         {t('addProfile:availableProfiles')}
       </Typography.H3>
-      <ErrorBoundary
-        fallback={
-          <Typography.H3 style={styles.title}>
-            {t('common:oopsSomethingWentWrongPleaseTryAgainLater')}
-          </Typography.H3>
-        }>
-        <Suspense fallback={<ActivityIndicator />}>
-          {isWalletUnlocked ? (
-            <Content signer={signer} mnemonic={mnemonic} />
-          ) : (
-            <ActivityIndicator />
-          )}
-        </Suspense>
-      </ErrorBoundary>
+      <Content mnemonic={mnemonic} password={password} />
     </DView>
   );
 };

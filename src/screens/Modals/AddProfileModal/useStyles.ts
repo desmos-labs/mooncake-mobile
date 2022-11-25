@@ -16,8 +16,9 @@ const useStyles = makeStyle(theme => ({
   },
   headerText: {
     textAlign: 'left',
-    marginBottom: theme.spacing.l,
     marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.s,
+    alignSelf: 'center',
   },
   innerContainer: {
     backgroundColor: theme.colors.background,
@@ -26,6 +27,17 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.l,
     paddingBottom: theme.spacing.l,
     paddingTop: 10,
+  },
+  divider: {
+    borderColor: theme.colors.dividerGrey,
+    borderWidth: 0.5,
+    marginHorizontal: -theme.spacing.l,
+  },
+  image: {width: 24, height: 24, marginRight: theme.spacing.m},
+  button: {
+    flexDirection: 'row',
+    paddingVertical: theme.spacing.l,
+    alignItems: 'center',
   },
 }));
 

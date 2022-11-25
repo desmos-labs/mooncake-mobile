@@ -32,17 +32,18 @@ export const useLoadProfiles = () => {
 
   const {data, loading} = useQuery(GetProfileSummaryForAddresses, {
     variables: {addresses: storedAccountAddrs},
+    fetchPolicy: 'no-cache',
   });
 
-  // First, map an array of each address stored on the device
-  React.useEffect(() => {
-    const loadAddrsIntoState = async () => {
-      const _accounts = await getAccounts();
+  const loadAddrsIntoState = React.useCallback(async () => {
+    const _accounts = await getAccounts();
 
-      if (_accounts) {
-        setStoredAccountAddrs(_accounts.map(x => x.address));
-      }
-    };
+    if (_accounts) {
+      setStoredAccountAddrs(_accounts.map(x => x.address));
+    }
+  }, []);
+
+  React.useEffect(() => {
     loadAddrsIntoState();
   }, []);
 
@@ -60,12 +61,12 @@ export const useLoadProfiles = () => {
 
     // returned profile object will be an array
     const {profile} = data;
-
     setProfiles(profile);
   }, [data]);
 
   return {
     profiles,
+    loadAddrsIntoState,
     loading,
   };
 };

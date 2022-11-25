@@ -1,5 +1,6 @@
 import React from 'react';
-import {ImageSourcePropType, View} from 'react-native';
+import {View} from 'react-native';
+import {Source} from 'react-native-fast-image';
 import {PanGestureHandlerProps} from 'react-native-gesture-handler';
 import SettingsProfileBadge from 'screens/Profiles/components/SettingsProfileBadge';
 
@@ -18,7 +19,7 @@ export interface ProfileRadioValue {
   /**
    * The picture to display, can be and asset or a url
    */
-  profilePicture: ImageSourcePropType;
+  profilePicture: Source;
   /**
    * Is the badge selected
    */
