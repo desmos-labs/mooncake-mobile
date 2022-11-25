@@ -63,9 +63,8 @@ const useHooks = () => {
         const ibc = _.get(butterConfig, 'ibc');
         const verificationData = {
           method: 'tweet',
-          value: JSON.stringify(selectedTweetId),
+          value: selectedTweetId?.toString(),
         };
-
         const verificationDataHex = Buffer.from(
           JSON.stringify(verificationData),
         ).toString('hex');

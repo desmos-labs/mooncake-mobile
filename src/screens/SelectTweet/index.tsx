@@ -84,7 +84,7 @@ const SelectTweet = () => {
           data={tweets}
           renderItem={renderItem}
           style={styles.flatlist}
-          ListEmptyComponent={EmptyComponent}
+          ListEmptyComponent={loading ? null : EmptyComponent}
           contentContainerStyle={styles.flatlistContainer}
         />
         {tweets.length > 0 && (
