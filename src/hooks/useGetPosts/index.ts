@@ -52,7 +52,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         },
       };
     }
-  }, [type, followingAddrs, activeAddress]);
+  }, [followingAddrs, activeAddress]);
 
   const {data, refetch, loading} = useQuery(queryVars.query, {
     variables: queryVars.variables,
@@ -83,15 +83,15 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       ...queryVars.variables,
       offset: 0,
     }).then(a => {
-      setPosts(_.get(a, 'data.post'));
+      setPosts(_.get(a, 'data.post', []));
     });
-  }, [loading]);
+  }, [loading, JSON.stringify(queryVars)]);
 
   React.useEffect(() => {
     if (type === POST_TYPE.FOLLOWING) {
       fetchNewestPosts();
     }
-  }, [followingAddrs]);
+  }, [followingAddrs, activeAddress]);
 
   return {
     posts,

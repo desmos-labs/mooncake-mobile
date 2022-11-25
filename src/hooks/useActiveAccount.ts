@@ -11,7 +11,7 @@ import {getAccounts} from 'lib/SecureStorage';
 const useActiveAccount = () => {
   const [chainAccount, setChainAccount] = React.useState<ChainAccount>();
 
-  const [activeAddress] = useMMKVStorage<string | undefined>(
+  const [activeAddress, setActiveAddress] = useMMKVStorage<string | undefined>(
     MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
   );
 
@@ -40,6 +40,7 @@ const useActiveAccount = () => {
 
   return {
     activeAddress,
+    setActiveAddress,
     profileData,
     loading,
     chainAccount,

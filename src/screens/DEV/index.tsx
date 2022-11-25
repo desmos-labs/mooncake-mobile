@@ -25,7 +25,7 @@ import {useResetRecoilState} from 'recoil';
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
   ROUTES.LOGIN,
-  ROUTES.RESULT_MODAL,
+  ROUTES.CONFIRM_MODAL,
   ROUTES.SIGNUP,
   ROUTES.ACTION_AUTHORIZATION,
   ROUTES.CREATE_TEXT_POST,
