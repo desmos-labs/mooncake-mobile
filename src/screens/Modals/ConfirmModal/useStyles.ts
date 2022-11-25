@@ -6,9 +6,8 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    alignItems: 'center',
+    padding: theme.spacing.m,
     justifyContent: 'center',
-    marginHorizontal: theme.spacing.m,
   },
   innerContainer: {
     justifyContent: 'center',
@@ -27,7 +26,6 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
   },
   subtitleText: {
-    marginBottom: theme.spacing.xl,
     textAlign: 'center',
   },
   primaryButtonText: {
@@ -38,7 +36,6 @@ const useStyles = makeStyle(theme => ({
   },
   primaryButton: {
     alignSelf: 'stretch',
-    marginBottom: theme.spacing.l,
     backgroundColor: theme.colors.surfaceBlack,
   },
   secondaryButton: {
@@ -49,9 +46,8 @@ const useStyles = makeStyle(theme => ({
     width: 150,
     height: 180,
     resizeMode: 'cover',
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.l,
     alignSelf: 'center',
+    paddingBottom: theme.spacing.xl,
   },
 }));
 

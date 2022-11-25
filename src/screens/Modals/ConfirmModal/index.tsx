@@ -18,6 +18,7 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
+import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -130,14 +131,13 @@ const ConfirmModal = () => {
         style={StyleSheet.absoluteFillObject}
       />
       <View style={styles.innerContainer}>
-        <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
         {image && <Image source={image} style={styles.imageStyle} />}
-        <Typography.Body5
-          style={[
-            styles.subtitleText,
-            subtitleStyle,
-            !image && {marginTop: theme.spacing.l},
-          ]}>
+
+        <Spacer paddingBottom={16}>
+          <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
+        </Spacer>
+
+        <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
           {typeof subtitle === 'string' ? (
             <Trans
               i18nKey={subtitle as string}
@@ -147,23 +147,28 @@ const ConfirmModal = () => {
             subtitle
           )}
         </Typography.Body5>
-        {primaryButtonLabel && (
-          <Button
-            style={styles.primaryButton}
-            mode={primaryButtonMode}
-            onPress={onPressPrimaryButton}>
-            {primaryButtonLabel}
-          </Button>
-        )}
-        {secondaryButtonLabel && (
-          <Button
-            containerStyle={styles.secondaryButton}
-            color={theme.colors.surfaceBlack}
-            mode={secondaryButtonMode as any}
-            onPress={onPressSecondary}>
-            {secondaryButtonLabel}
-          </Button>
-        )}
+
+        <Spacer paddingTop={theme.spacing.xl}>
+          {primaryButtonLabel && (
+            <Button
+              style={styles.primaryButton}
+              mode={primaryButtonMode}
+              onPress={onPressPrimaryButton}>
+              {primaryButtonLabel}
+            </Button>
+          )}
+          {secondaryButtonLabel && (
+            <Spacer paddingTop={theme.spacing.xl}>
+              <Button
+                containerStyle={styles.secondaryButton}
+                color={theme.colors.surfaceBlack}
+                mode={secondaryButtonMode as any}
+                onPress={onPressSecondary}>
+                {secondaryButtonLabel}
+              </Button>
+            </Spacer>
+          )}
+        </Spacer>
       </View>
     </View>
   );
