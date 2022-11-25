@@ -97,7 +97,7 @@ const useHooks = () => {
           newPassword: formValues.newPassword,
         });
 
-        navigate(ROUTES.RESULT_MODAL, {
+        navigate(ROUTES.CONFIRM_MODAL, {
           title: t('resultModal:success'),
           subtitle: t('resultModal:passwordWasChanged'),
           primaryButtonLabel: t('resultModal:goToProfile') as string,

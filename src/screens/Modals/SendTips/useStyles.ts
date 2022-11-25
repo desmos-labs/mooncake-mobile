@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     // in the theme colors
     backgroundColor: theme.colors.iconGrey,
     alignSelf: 'center',
-    marginTop: theme.spacing.l,
+    marginTop: 10,
   },
   headerText: {
     textAlign: 'center',
@@ -30,7 +30,6 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'space-between',
   },
   tipButton: {minWidth: 106, borderColor: theme.colors.surfaceBlack},
-  tipButtonContent: {height: 42},
   textInput: {
     borderWidth: 1,
     backgroundColor: theme.colors.white,

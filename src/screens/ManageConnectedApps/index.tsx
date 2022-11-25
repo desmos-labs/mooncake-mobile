@@ -37,7 +37,7 @@ const ManageConnectedApps = () => {
   const unlockWallet = useUnlockWallet();
 
   const successDisconnection = React.useCallback((appName: string) => {
-    navigate(ROUTES.RESULT_MODAL, {
+    navigate(ROUTES.CONFIRM_MODAL, {
       image: modalSuccess,
       title: t('resultModal:success'),
       subtitle: t('resultModal:appDisconnected', {
@@ -67,6 +67,7 @@ const ManageConnectedApps = () => {
             },
           };
           navigate(ROUTES.BROADCAST_TX, {
+            title: t('broadcastTx:unlinkApp') as string,
             messages: [msg],
             offlineSigner: result.wallet,
             successAction: () => successDisconnection(appName),

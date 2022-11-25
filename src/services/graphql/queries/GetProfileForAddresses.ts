@@ -10,14 +10,6 @@ const GetProfileForAddresses = gql`
       cover_pic
       nickname
       profile_pic
-      followage {
-        counterparty_address
-        subspace_id
-      }
-      following {
-        counterparty_address
-        subspace_id
-      }
     }
   }
 `;

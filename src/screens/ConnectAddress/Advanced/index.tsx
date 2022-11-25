@@ -1,30 +1,30 @@
-import React from 'react';
+import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-import {IconButton, useTheme} from 'react-native-paper';
-import DView from 'components/DView';
-import TopBar from 'components/TopBar';
-import {View} from 'react-native';
-import Typography from 'components/Typography';
-import Spacer from 'components/Spacer';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import {Formik, isNaN} from 'formik';
-import Button from 'components/Button';
-import {removeNonNumbers} from 'lib/FormatUtils';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
+import Button from 'components/Button';
+import DView from 'components/DView';
+import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import {Formik, isNaN} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import _ from 'lodash';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
 import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useGenerateProof from 'hooks/useGenerateProof';
-import HDDerivPathInputGroup from './components/HDDerivPathInputGroup';
+import {removeNonNumbers} from 'lib/FormatUtils';
+import _ from 'lodash';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+import {IconButton, useTheme} from 'react-native-paper';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import useStyles from '../useStyles';
 
 export type NavProps = StackScreenProps<

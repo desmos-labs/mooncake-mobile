@@ -2,11 +2,9 @@ import {defaultProfilePic} from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React, {useCallback} from 'react';
-import {Image, ImageSourcePropType, View} from 'react-native';
-import {
-  PanGestureHandlerProps,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {PanGestureHandlerProps} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import {RadioButtonInput} from 'react-native-simple-radio-button';
 import useStyles from './useStyles';
@@ -14,11 +12,11 @@ import useStyles from './useStyles';
 /**
  * Simple interface to display a radio button as a profile
  */
-export interface ProfileRadioValue {
+export interface AddProfileRadioValue {
   /**
    * The id of the profile
    */
-  id: string;
+  address: string;
   /**
    * The nickname to display over the dTag
    */
@@ -26,11 +24,11 @@ export interface ProfileRadioValue {
   /**
    * The dTag to display under the nickname
    */
-  dTag: string;
+  dtag: string;
   /**
-   * The picture to display, can be and asset or a url
+   * The picture to display as url
    */
-  profilePicture: ImageSourcePropType;
+  profile_pic: string;
   /**
    * Is the badge selected
    */
@@ -41,7 +39,7 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
   /**
    * Values to be displayed as radio buttons.
    */
-  value: ProfileRadioValue;
+  value: AddProfileRadioValue;
   /**
    * Callback when the user click a button.
    * @param id the id on the clicked button.
@@ -59,24 +57,24 @@ const AddProfileBadge = (props: Props) => {
   const theme = useTheme();
   const handleSelect = useCallback(() => {
     if (!disabled && onSelect) {
-      onSelect(value.id);
+      onSelect(value.address);
     }
-  }, [onSelect, value.id, disabled]);
+  }, [disabled, onSelect, value.address]);
 
-  const {nickname, dTag, profilePicture, isSelected} = value;
+  const {nickname, dtag, profile_pic, isSelected} = value;
 
   return (
-    <TouchableWithoutFeedback
-      touchSoundDisabled
-      onPress={handleSelect}
-      disabled={disabled}>
+    <TouchableOpacity onPress={handleSelect} disabled={disabled}>
       <DropShadowWrapper
         style={[
           styles.externalContainer,
           disabled && styles.externalContainerDisabled,
         ]}
         innerStyle={styles.container}>
-        <Image source={profilePicture} style={styles.profilePicture} />
+        <FastImage
+          source={profile_pic ? {uri: profile_pic} : defaultProfilePic}
+          style={styles.profilePicture}
+        />
         <View style={styles.textContainer}>
           {nickname && (
             <Typography.H5 numberOfLines={2} ellipsizeMode="middle">
@@ -84,7 +82,7 @@ const AddProfileBadge = (props: Props) => {
             </Typography.H5>
           )}
           <Typography.Body6 numberOfLines={2} ellipsizeMode="middle">
-            {dTag}
+            {dtag}
           </Typography.Body6>
         </View>
         <View
@@ -101,24 +99,8 @@ const AddProfileBadge = (props: Props) => {
           />
         </View>
       </DropShadowWrapper>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
-
-export function profileToRadioValue({
-  address,
-  nickname,
-  dtag,
-  profile_pic,
-}: ProfileData) {
-  return {
-    id: address,
-    nickname,
-    dTag: `@${dtag}`,
-    profilePicture: profile_pic ? {uri: profile_pic} : defaultProfilePic,
-    isSelected: false,
-    disabled: false,
-  };
-}
 
 export default AddProfileBadge;

@@ -21,9 +21,11 @@ const useStyles = makeStyle(theme => ({
     height: 4,
     backgroundColor: '#DEDEDE',
   },
+  centered: {
+    textAlign: 'center',
+  },
   textStyle: {
     color: theme.colors.surfaceBlack,
-    textAlign: 'center',
   },
   imageStyle: {
     width: 140,

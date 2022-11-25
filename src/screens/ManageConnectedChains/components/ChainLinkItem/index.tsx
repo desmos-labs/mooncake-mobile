@@ -1,11 +1,11 @@
-import React from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
-import GetChainIcon from 'lib/GetChainIcon';
-import Typography from 'components/Typography';
-import {copyIcon} from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useTranslation} from 'react-i18next';
+import {copyIcon} from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
+import Typography from 'components/Typography';
+import GetChainIcon from 'lib/GetChainIcon';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {Image, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
