@@ -61,6 +61,7 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
+import Invites from 'screens/Invites';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
@@ -212,6 +213,8 @@ export type RootNavigatorParamList = {
   // Grants
   [ROUTES.GRANTS]: undefined;
   [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
+
+  [ROUTES.INVITES]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -424,6 +427,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} />
 
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+
+      <Stack.Screen name={ROUTES.INVITES} component={Invites} />
 
       {/* modals */}
       <Stack.Group

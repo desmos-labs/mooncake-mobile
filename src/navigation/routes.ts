@@ -152,6 +152,9 @@ enum ROUTES {
 
   // Biometrics
   MANAGE_BIOMETRICS = 'MANAGE_BIOMETRICS',
+
+  // Invites
+  INVITES = 'INVITES',
 }
 
 export default ROUTES;

@@ -160,6 +160,8 @@ export const checkBlackIcon = require('./images/checkBlack.png');
 
 export const addProfileIcon = require('./images/addProfile.png');
 
+export const invitesBanner = require('./images/invitesLogo.png');
+
 // array of images
 export const postBG = [
   require('./images/postBG/postBG1.png'),
