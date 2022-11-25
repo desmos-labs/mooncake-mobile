@@ -70,7 +70,7 @@ const SelectDtag = () => {
       await saveLocalWallet(deserializedWallet, password!);
       await saveMnemonic(
         deserializedWallet.bech32Address,
-        createLocalWalletValues.mnemonic,
+        createLocalWalletValues.mnemonic!,
         password!,
       );
     }

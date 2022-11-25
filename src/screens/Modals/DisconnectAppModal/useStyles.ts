@@ -14,12 +14,14 @@ const useStyles = makeStyle(theme => ({
   textStyle: {
     color: theme.colors.surfaceBlack,
     textAlign: 'center',
+    marginBottom: theme.spacing.l,
   },
   chainImageGroup: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: theme.spacing.l,
+    marginTop: theme.spacing.m,
+    marginBottom: theme.spacing.l,
   },
   disconnectIcon: {
     width: 24,
@@ -33,7 +35,7 @@ const useStyles = makeStyle(theme => ({
     resizeMode: 'contain',
   },
   confirmButton: {
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.m,
     marginBottom: theme.spacing.l,
   },
 }));

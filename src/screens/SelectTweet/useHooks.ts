@@ -91,7 +91,7 @@ const useHooks = () => {
           messages: [msg],
           offlineSigner: unlockResult.wallet,
           successAction: () =>
-            navigate(ROUTES.RESULT_MODAL, {
+            navigate(ROUTES.CONFIRM_MODAL, {
               onPressPrimary: () =>
                 navigate(ROUTES.USER_PROFILE, {
                   visitingProfileAddress: accounts[0].address,

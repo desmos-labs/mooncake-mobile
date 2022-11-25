@@ -1,6 +1,10 @@
 import {toBase64} from '@cosmjs/encoding';
 import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
@@ -9,15 +13,11 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {Dispatch, SetStateAction, useCallback} from 'react';
-import UploadMedia from 'services/axios/requests/UploadMedia';
-import {ChainAccount, ChainAccountType} from 'types/chains';
 import {useTranslation} from 'react-i18next';
 import {Asset} from 'react-native-image-picker';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import {UnwrapRecoilValue} from 'recoil';
-import {useNavigation} from '@react-navigation/native';
-import createLocalWalletState from '@recoil/createLocalWalletState';
-import createLedgerAccountState from '@recoil/createLedgerAccountState';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 
 function useHandleFormSubmit(
   initialFormState: {nickname: string; dTag: string; bio: string},

@@ -13,7 +13,7 @@ const useStyles = makeStyle(theme => ({
     // in the theme colors
     backgroundColor: theme.colors.iconGrey,
     alignSelf: 'center',
-    marginTop: theme.spacing.l,
+    marginTop: 10,
   },
   headerText: {
     textAlign: 'center',

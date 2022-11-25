@@ -133,10 +133,10 @@ const useHooks = () => {
       const result = await PostProof(toUpload);
       setProofString(result.url);
     } catch (e: any) {
-      navigate(ROUTES.RESULT_MODAL, {
+      navigate(ROUTES.CONFIRM_MODAL, {
         title: t('common:failed'),
         subtitle: e.toString(),
-        primaryButtonLabel: t('common:retry')!,
+        primaryButtonLabel: t('common:retry') as string,
         onPressPrimary: () =>
           navigate(ROUTES.CONNECT_APP, {
             mode: 'tweet',

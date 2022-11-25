@@ -1,231 +1,190 @@
-import React, {
-  FC,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {ScrollView, View} from 'react-native';
-import {ChainAccount} from 'types/chains';
-import {OfflineSigner} from '@cosmjs/proto-signing';
-import {ActivityIndicator} from 'react-native-paper';
-import {useLoadProfiles} from '@recoil/profiles';
-import {MAX_PAGE_TO_LOAD, PROFILE_PER_PAGE} from 'screens/AddProfile';
-import isLedgerSigner from 'screens/AddProfile/isLedgerSigner';
-import generateLedgerAccounts from 'screens/AddProfile/generateLedgerAccounts';
-import generateLocalAccounts from 'screens/AddProfile/generateLocalAccounts';
-import AddProfileBadgeGroup from '../AddProfileBadgeGroup';
+import {useLazyQuery} from '@apollo/client';
+import {toBase64} from '@cosmjs/encoding';
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import profilesState from '@recoil/profiles';
+import Button from 'components/Button';
+import Typography from 'components/Typography';
+import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
+import LocalWallet from 'lib/LocalWallet';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {useRecoilState} from 'recoil';
+import AddProfileBadge from 'screens/AddProfile/components/AddProfileBadge';
+import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
+import {ChainAccount, ChainAccountType} from 'types/chains';
 import useStyles from './useStyles';
-import Buttons from '../Buttons';
-import AddProfileBadge, {profileToRadioValue} from '../AddProfileBadge';
 
-export type ProfilesByPage = {
-  [page: number]: {
-    accounts: ChainAccount[];
-    profiles: ProfileData[];
-  };
-};
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
 
-/**
- * @property {number} page - The current page number.
- * @property {ChainAccount[] | undefined;} accounts - ChainAccount[] - The list of accounts that are currently
- * loaded.
- * @property {ProfileData[]} selectedProfiles - The profiles that are currently selected.
- * @property handleSelect - This is a function that is called when a profile is selected.
- * @property setProfileCount - This is a function that sets the profile count for a given page.
- * @property loadMoreAccounts - This is a function that will be called when the user clicks the "Load
- * More" button.
- */
-type ContentGroupProps = {
-  page: number;
-  accounts: ChainAccount[] | undefined;
-  selectedProfileMap: Map<string, ProfileData>;
-  handleSelect: (profile: ProfileData) => void;
-  setProfileCount: (page: number, count: number) => void;
-  loadMoreAccounts: () => void;
-};
-
-/* A React component that is used to render a group of AddProfileBadge components. */
-const ContentGroup: FC<ContentGroupProps> = ({
-  page,
-  accounts,
-  selectedProfileMap,
-  handleSelect,
-  setProfileCount,
-  loadMoreAccounts,
-}) => {
-  const addresses = useMemo(
-    () => accounts?.map(account => account.address) ?? [],
-    [accounts],
-  );
-  if (!addresses.length) return null;
-  return (
-    <Suspense fallback={<ActivityIndicator />} key={page}>
-      {accounts ? (
-        <AddProfileBadgeGroup
-          page={page}
-          addresses={addresses}
-          selectedProfileMap={selectedProfileMap}
-          onSelect={handleSelect}
-          setProfileCount={setProfileCount}
-          loadMoreAccounts={loadMoreAccounts}
-        />
-      ) : (
-        <ActivityIndicator />
-      )}
-    </Suspense>
-  );
-};
-
-/**
- * @property {OfflineSigner} signer - The offline signer that will be used to sign the transaction.
- * @property {string | undefined} mnemonic - The mnemonic phrase that was generated for the account.
- */
 type ContentProps = {
-  signer: OfflineSigner;
-  mnemonic: string | undefined;
+  mnemonic?: string;
+  password?: string;
 };
 
-const Content: FC<ContentProps> = ({signer, mnemonic}) => {
+const Content = ({mnemonic, password}: ContentProps) => {
+  const [selectedAddress, setSelectedAddress] = useState<string>();
+  const [globalLoading, setGlobalLoading] = useState(true);
+  const [fetchLimit, setFetchLimit] = useState(10);
+  const [fetchedAccounts, setFetchedAccounts] = useState<any[]>([]);
+  const [generatedWallets, setGeneratedWallets] = useState<any[]>([]);
+  const [profiles] = useRecoilState(profilesState);
+  const [getProfiles] = useLazyQuery(GetProfileForAddresses);
+  const {generateAccounts} = useGenerateAccountsToAdd();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
+  const theme = useTheme();
+  const {t} = useTranslation();
+  const isAlreadyAdded = (address: string) => {
+    return profiles.findIndex(profile => profile.address === address) !== -1;
+  };
 
-  const [accountsByPage, setAccountsByPage] = useState<Array<ChainAccount[]>>(
-    [],
-  );
-  const [profileCountByPage, setProfileCountByPage] = useState<
-    Record<number, number>
-  >({});
-  const [selectedProfiles, setSelectedProfiles] = useState<ProfileData[]>([]);
-
-  const {profiles: loadedProfiles, loading} = useLoadProfiles();
-
-  const loadMoreAccounts = useCallback(() => {
-    console.log(
-      `loading profiles (${accountsByPage.length * PROFILE_PER_PAGE}-${
-        (1 + accountsByPage.length) * PROFILE_PER_PAGE - 1
-      })...`,
-    );
-    if (accountsByPage.length >= MAX_PAGE_TO_LOAD) return; // Only load 10 pages
-    (async () => {
-      const page = accountsByPage.length; // zero-based page number
-      const newAccounts = await generateAccounts(page, signer, mnemonic);
-      setAccountsByPage(prev => {
-        const result = prev.slice();
-        if (result.length < page) {
-          result.length = page;
-          result.fill([], prev.length);
-        }
-        result.splice(page, 1, newAccounts);
-        return result;
-      });
-      setProfileCountByPage(prev => ({...prev, [page]: 0}));
-    })();
-  }, [signer, mnemonic, accountsByPage]);
-
-  /* Reset and generate the first page of accounts */
-  useEffect(() => {
-    setAccountsByPage([]);
-    setProfileCountByPage([]);
-    loadMoreAccounts();
-  }, [signer, mnemonic]);
-
-  /* A callback function that is used to select a profile. */
-  const handleSelect = useCallback((profile: ProfileData) => {
-    setSelectedProfiles(prev => {
-      const index = prev.findIndex(p => p.address === profile.address);
-      if (index >= 0) {
-        return prev.filter((_, i) => i !== index);
-      } else {
-        return prev.concat(profile);
+  const generateAccountsAndFetchProfiles = useCallback(async () => {
+    try {
+      setGlobalLoading(true);
+      const result = await generateAccounts(0, 10, mnemonic);
+      if (result) {
+        setGeneratedWallets(result);
+        const addressesToFetch = result.map(
+          (account: {address: any}) => account.address,
+        );
+        await getProfiles({
+          variables: {
+            addresses: addressesToFetch,
+          },
+        }).then(res => setFetchedAccounts(res.data.profile));
       }
-    });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTimeout(() => setGlobalLoading(false), 1000);
+    }
+  }, [generateAccounts, getProfiles, mnemonic]);
+
+  const generateMoreAccountsAndFetchProfiles = useCallback(async () => {
+    try {
+      setGlobalLoading(true);
+      const result = await generateAccounts(
+        fetchLimit,
+        fetchLimit + 10,
+        mnemonic,
+      );
+      if (result) {
+        const addressesToFetch = result.map(
+          (account: {address: any}) => account.address,
+        );
+        await getProfiles({
+          variables: {
+            addresses: addressesToFetch,
+          },
+        }).then(res =>
+          setFetchedAccounts(prev => [...prev, ...res.data.profile]),
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setTimeout(() => setGlobalLoading(false), 1000);
+      setFetchLimit(prev => prev + 10);
+    }
+  }, [generateAccounts, getProfiles, mnemonic]);
+
+  const createNewAccount = useCallback(async () => {
+    try {
+      const walletToSave = generatedWallets.find(
+        wallet => wallet.address === selectedAddress,
+      );
+      const deserializedWallet = await LocalWallet.deserialize(
+        walletToSave.signer as string,
+      );
+      const chainAccount: ChainAccount = {
+        address: deserializedWallet.bech32Address,
+        type: ChainAccountType.Local,
+        pubKey: toBase64(deserializedWallet.publicKey),
+        hdPath: walletToSave.hdPath,
+        signAlgorithm: 'secp256k1',
+      };
+
+      await saveLocalWallet(deserializedWallet, password!);
+      await saveMnemonic(
+        deserializedWallet.bech32Address,
+        mnemonic!,
+        password!,
+      );
+      await saveNewAccount(chainAccount);
+      navigate(ROUTES.SETTINGS_PROFILES);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [generatedWallets, selectedAddress]);
+
+  useEffect(() => {
+    generateAccountsAndFetchProfiles();
   }, []);
-
-  const setProfileCount = useCallback((page: number, count: number) => {
-    setProfileCountByPage(prev => ({...prev, [page]: count}));
-  }, []);
-
-  /* Creating a map of the selected profiles. */
-  const selectedProfileMap = useMemo(
-    () => new Map(selectedProfiles.map(profile => [profile.address, profile])),
-    [selectedProfiles],
-  );
-
-  const loadedProfileMap = useMemo(
-    () => new Map(loadedProfiles.map(profile => [profile.address, profile])),
-    [loadedProfiles],
-  );
-
-  const accountsExcludedLoadedProfile = useMemo(() => {
-    return accountsByPage
-      .map((accounts, page) => ({
-        accounts: accounts.filter(acc => !loadedProfileMap.has(acc.address)),
-        page,
-      }))
-      .filter(({accounts}) => accounts.length > 0);
-  }, [accountsByPage, loadedProfileMap]);
 
   return (
     <View style={styles.content}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Typography.Body6>
+          Searches the first {fetchLimit} accounts
+        </Typography.Body6>
+        <Button mode="text">
+          <Typography.Button2
+            style={{color: theme.colors.butterOrange01}}
+            onPress={generateMoreAccountsAndFetchProfiles}>
+            {t('search more')}
+          </Typography.Button2>
+        </Button>
+      </View>
       <ScrollView
-        style={styles.scrollViewOuter}
-        contentContainerStyle={styles.scrollViewInner}>
-        {loading ? (
+        style={{marginHorizontal: -theme.spacing.m}}
+        contentContainerStyle={{padding: theme.spacing.m}}>
+        {globalLoading ? (
           <ActivityIndicator />
         ) : (
-          <>
-            {accountsExcludedLoadedProfile.map(({accounts, page}) => (
-              <ContentGroup
-                page={page}
-                accounts={accounts}
-                selectedProfileMap={selectedProfileMap}
-                handleSelect={handleSelect}
-                setProfileCount={setProfileCount}
-                loadMoreAccounts={loadMoreAccounts}
-                key={page}
-              />
-            ))}
-            {loadedProfiles.map(profile => (
+          fetchedAccounts.map((value: any) => {
+            console.log(value);
+            return (
               <AddProfileBadge
-                value={profileToRadioValue(profile)}
-                disabled={true}
-                key={profile.address}
+                disabled={isAlreadyAdded(value.address)}
+                value={{
+                  ...value,
+                  isSelected: selectedAddress === value.address,
+                }}
+                onSelect={address => setSelectedAddress(address)}
+                key={value.dtag}
               />
-            ))}
-            {accountsByPage.length < MAX_PAGE_TO_LOAD && <ActivityIndicator />}
-          </>
+            );
+          })
         )}
       </ScrollView>
-      <Buttons
-        canAddProfile={Object.values(profileCountByPage).some(
-          count => count > 0,
-        )}
-        selectedProfileMap={selectedProfileMap}
-        loadedProfileMap={loadedProfileMap}
-        accountsByPage={accountsByPage}
-      />
+      <View>
+        <Button
+          mode="contained"
+          color={theme.colors.surfaceBlack}
+          onPress={createNewAccount}>
+          {t('confirm')}
+        </Button>
+        <Button
+          onPress={() =>
+            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
+              mnemonic,
+              password,
+            })
+          }
+          style={{paddingVertical: theme.spacing.m}}
+          mode="text"
+          color={theme.colors.surfaceBlack}>
+          create desmos profile
+        </Button>
+      </View>
     </View>
   );
 };
-
-/**
- * It generates a list of accounts based on the page number, the signer, and the mnemonic
- * @param {number} page - The page number of the accounts to generate.
- * @param {OfflineSigner} signer - OfflineSigner - this is the signer that the user has selected.
- * @param {string | undefined} mnemonic - The mnemonic phrase used to generate the accounts.
- * @returns An array of accounts
- */
-function generateAccounts(
-  page: number,
-  signer: OfflineSigner,
-  mnemonic: string | undefined,
-) {
-  const addressIndexOffset = page * PROFILE_PER_PAGE;
-  if (isLedgerSigner(signer)) {
-    return generateLedgerAccounts(addressIndexOffset, PROFILE_PER_PAGE, signer);
-  }
-  return generateLocalAccounts(addressIndexOffset, PROFILE_PER_PAGE, mnemonic);
-}
 
 export default Content;

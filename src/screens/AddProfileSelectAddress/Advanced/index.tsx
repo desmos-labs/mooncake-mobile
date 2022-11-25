@@ -1,10 +1,9 @@
-import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
+import {toBase64} from '@cosmjs/encoding';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {
-  connectChainState,
-  selectedExternalAccountState,
-} from '@recoil/connectChainState';
+import createLocalWalletState from '@recoil/createLocalWalletState';
+import {useLoadProfiles} from '@recoil/profiles';
+import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
@@ -13,64 +12,48 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, isNaN} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
-import useGenerateAccounts from 'hooks/useGenerateAccounts';
-import useGenerateProof from 'hooks/useGenerateProof';
+import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import {removeNonNumbers} from 'lib/FormatUtils';
-import _ from 'lodash';
+import LocalWallet from 'lib/LocalWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {IconButton, useTheme} from 'react-native-paper';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
+import {ChainAccount, ChainAccountType} from 'types/chains';
+import {DESMOS_COIN_TYPE} from 'types/hdpath';
 import useStyles from '../useStyles';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
-  ROUTES.CONNECT_ADDRESS_ADVANCED
+  ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED
 >;
 
-export type ConnectAddressAdvancedParams = {
-  nextRouteOverride?: keyof RootNavigatorParamList;
-  loadedProfileMap?: Map<string, ProfileData>;
-  titleLabelOverride?: string;
-
-  ledgerTransport?: BluetoothTransport;
-  ledgerApp?: LedgerApp;
+export type AddProfileSelectAddressAdvancedParams = {
+  mnemonic?: string;
+  password?: string;
 };
 
-const ConnectAddressAdvanced = () => {
+const AddProfileSelectAddressAdvanced = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
-
   const {activeAddress} = useActiveAccount();
-  const {generateProof} = useGenerateProof();
-
   const {t} = useTranslation('connectAddress');
-  const route = useRoute<NavProps['route']>();
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
-
-  const setSelectedExternalAccount = useSetRecoilState(
-    selectedExternalAccountState,
-  );
-
+  const {
+    params: {mnemonic, password},
+  } = useRoute<NavProps['route']>();
   const styles = useStyles();
-
   const theme = useTheme();
-
-  const [invalidField, setInvalidField] = React.useState(false);
-
-  const {selectedChain} = useRecoilValue(connectChainState);
-
-  const ledgerTransport = _.get(route, 'params.ledgerTransport');
-
-  const {generateAccount, loading, accounts} = useGenerateAccounts();
-
-  const {checkIsAddressLinked} = useCheckIsAddressLinked();
-
-  const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
+  const {generateAccount} = useGenerateAccountsToAdd();
+  const [invalidField, setInvalidField] = useState(false);
+  const [generatedAccount, setGeneratedAccount] = useState<any>();
+  const [loading, setLoading] = useState(true);
+  const setAccountCreation = useSetRecoilState(createLocalWalletState);
+  const {profiles} = useLoadProfiles();
+  const setWalletAndAccountToAdd = useSetRecoilState(
+    walletAndAccountToAddState,
+  );
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -80,15 +63,40 @@ const ConnectAddressAdvanced = () => {
     };
   }, []);
 
+  const generateAccountFromParams = useCallback(
+    async ({
+      change,
+      account,
+      addressIndex,
+    }: {
+      change: string;
+      account: string;
+      addressIndex: string;
+    }) => {
+      try {
+        setLoading(true);
+        const generatedAcc = await generateAccount(
+          parseInt(change, 10),
+          parseInt(account, 10),
+          parseInt(addressIndex, 10),
+          mnemonic,
+        );
+        if (account) {
+          setGeneratedAccount(generatedAcc);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [generateAccount, generatedAccount],
+  );
+
   // generate first account
   React.useEffect(() => {
     const {change, account, addressIndex} = initialFormValues;
-
-    generateAccount({
-      change: parseInt(change, 10),
-      account: parseInt(account, 10),
-      addressIndex: parseInt(addressIndex, 10),
-    }).then();
+    generateAccountFromParams({change, account, addressIndex});
   }, []);
 
   const SwitchToGeneralButton = React.useMemo(() => {
@@ -97,11 +105,7 @@ const ConnectAddressAdvanced = () => {
         <Button
           mode="text"
           onPress={async () => {
-            if (ledgerTransport) {
-              await (ledgerTransport as BluetoothTransport).close();
-            }
-
-            navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
+            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic});
           }}>
           <Typography.Button2 style={styles.modeButtonText}>
             {t('general')}
@@ -109,33 +113,33 @@ const ConnectAddressAdvanced = () => {
         </Button>
       </View>
     );
-  }, [nextRouteOverride, loadedProfileMap, titleLabelOverride]);
+  }, []);
 
   const handleSubmit = React.useCallback(async () => {
     if (!generatedAccount || !activeAddress) return;
-    if (nextRouteOverride) {
-      if (loadedProfileMap?.has(generatedAccount.address)) {
-        return navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: generatedAccount.address,
-        });
-      }
-
-      return navigate(nextRouteOverride);
-    }
-
-    const proof = await generateProof({
-      activeAddress,
-      externalAccount: generatedAccount,
+    const deserializedWallet = await LocalWallet.deserialize(
+      generatedAccount.signer as string,
+    );
+    const chainAccount: ChainAccount = {
+      address: deserializedWallet.bech32Address,
+      type: ChainAccountType.Local,
+      pubKey: toBase64(deserializedWallet.publicKey),
+      hdPath: generatedAccount.hdPath,
+      signAlgorithm: 'secp256k1',
+    };
+    setWalletAndAccountToAdd({
+      accountWithWalletData: {
+        chainAccount,
+        wallet: generatedAccount.signer as string,
+      },
+      password: password!,
+      mnemonic: mnemonic!,
     });
-
-    if (proof) {
-      setSelectedExternalAccount(generatedAccount);
-      navigate(ROUTES.CONNECT_CHAIN_TX_DETAIL, {
-        proof,
-        externalAddress: generatedAccount.address,
-      });
-    }
-  }, [generatedAccount, activeAddress]);
+    setAccountCreation({
+      source: ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED,
+    });
+    navigate(ROUTES.CREATE_DESMOS_PROFILE);
+  }, []);
 
   const onFormChange = React.useCallback(
     (formValues: typeof initialFormValues) => {
@@ -150,10 +154,10 @@ const ConnectAddressAdvanced = () => {
         return;
       }
 
-      generateAccount({
-        change: parseInt(change, 10),
-        account: parseInt(account, 10),
-        addressIndex: parseInt(addressIndex, 10),
+      generateAccountFromParams({
+        change,
+        account,
+        addressIndex,
       }).then(() => {
         setInvalidField(false);
       });
@@ -161,16 +165,22 @@ const ConnectAddressAdvanced = () => {
     [],
   );
 
-  const isAddressLinked = checkIsAddressLinked(generatedAccount?.address || '');
+  const isProfileAlreadyAdded = useMemo(
+    () =>
+      profiles.findIndex(
+        profile => profile.address === generatedAccount?.address,
+      ) !== -1,
+    [generatedAccount],
+  );
 
   const addressOrErrorElement = React.useMemo(() => {
     if (invalidField) return <View />;
-    else if (generatedAccount && isAddressLinked) {
+    else if (generatedAccount && isProfileAlreadyAdded) {
       return (
         <>
           <Typography.Body6>{generatedAccount.address}</Typography.Body6>
           <Typography.Body6 style={{marginTop: 8}}>
-            {t('addrAlreadyLinked')}
+            {t('addProfile:alreadyImported')}
           </Typography.Body6>
         </>
       );
@@ -182,16 +192,16 @@ const ConnectAddressAdvanced = () => {
           : generatedAccount.address}
       </Typography.Body6>
     );
-  }, [generatedAccount, loading, invalidField, isAddressLinked]);
+  }, [generatedAccount, loading, invalidField, isProfileAlreadyAdded]);
 
   return (
     <DView
       topBar={<TopBar rightElement={SwitchToGeneralButton} />}
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
-          {titleLabelOverride || t('header')}
-        </Typography.H5>
+        <Typography.H3 style={styles.textStyle}>
+          {t('addProfile:title')}
+        </Typography.H3>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
           <Typography.Body6 style={styles.textStyle}>
@@ -200,9 +210,9 @@ const ConnectAddressAdvanced = () => {
         </Spacer>
 
         <View style={styles.tooltipGroup}>
-          <Typography.Body6 style={styles.textStyle}>
+          <Typography.Subtitle2 style={styles.textStyle}>
             {t('hdDerivPath')}
-          </Typography.Body6>
+          </Typography.Subtitle2>
           <IconButton
             icon="information-outline"
             onPress={() => {
@@ -224,7 +234,7 @@ const ConnectAddressAdvanced = () => {
             return (
               <View>
                 <HDDerivPathInputGroup
-                  coin={selectedChain.hdPath.coinType}
+                  coin={DESMOS_COIN_TYPE}
                   values={values}
                   handleChangeAccount={(value: string) => {
                     setFieldValue('account', removeNonNumbers(value));
@@ -251,7 +261,7 @@ const ConnectAddressAdvanced = () => {
                   color={theme.colors.surfaceBlack}
                   mode="contained"
                   loading={loading || !generatedAccount}
-                  disabled={invalidField || isAddressLinked}
+                  disabled={invalidField || isProfileAlreadyAdded}
                   onPress={handleSubmit}>
                   {t('common:next')}
                 </Button>
@@ -264,4 +274,4 @@ const ConnectAddressAdvanced = () => {
   );
 };
 
-export default ConnectAddressAdvanced;
+export default AddProfileSelectAddressAdvanced;

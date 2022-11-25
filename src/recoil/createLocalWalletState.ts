@@ -2,11 +2,14 @@ import ROUTES from 'navigation/routes';
 import {atom} from 'recoil';
 
 type AccountCreationAtom = {
-  mnemonic: string;
+  mnemonic?: string;
 
   password?: string;
 
-  source?: ROUTES.ADD_PROFILE | undefined;
+  source?:
+    | ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL
+    | ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED
+    | undefined;
 };
 
 /**

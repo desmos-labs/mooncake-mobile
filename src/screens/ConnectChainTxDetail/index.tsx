@@ -121,7 +121,7 @@ const ConnectChainTxDetail = () => {
       messages: [message],
       offlineSigner: deserializedWallet!,
       successAction: () => {
-        navigate(ROUTES.RESULT_MODAL, {
+        navigate(ROUTES.CONFIRM_MODAL, {
           image: modalSuccess,
           title: t('resultModal:success'),
           subtitle: t('resultModal:chainLinked', {
@@ -134,7 +134,7 @@ const ConnectChainTxDetail = () => {
         });
       },
       failureAction: (errorMessage?: string) => {
-        navigate(ROUTES.RESULT_MODAL, {
+        navigate(ROUTES.CONFIRM_MODAL, {
           image: errorImage,
           title: t('resultModal:failed'),
           subtitle: errorMessage,

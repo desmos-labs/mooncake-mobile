@@ -31,9 +31,7 @@ export const generateAccountUsingMnemonic = async ({
       hdPath: x,
     }),
   );
-
   const wallets = await Promise.all(generateWallets);
-
   return wallets.map((x, idx) => ({
     signer: x.serialize(),
     address: x.bech32Address,
