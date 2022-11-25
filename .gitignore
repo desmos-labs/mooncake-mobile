@@ -70,3 +70,5 @@ keystore.jks
 playstore-key.json
 
 coverage
+.cxx/
+contents.xcworkspacedata
