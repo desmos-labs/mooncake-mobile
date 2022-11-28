@@ -160,7 +160,15 @@ export const checkBlackIcon = require('./images/checkBlack.png');
 
 export const addProfileIcon = require('./images/addProfile.png');
 
-export const invitesBanner = require('./images/invitesLogo.png');
+export const invitesBanner = require('./images/invites/invitesLogo.png');
+export const invitesBanner2 = require('./images/invites/invitesLogo2.png');
+
+export const inviteUserIcon = require('./images/invites/inviteUserIcon.png');
+
+export const invite1 = require('./images/invites/invite1.png');
+export const invite2 = require('./images/invites/invite2.png');
+export const invite3 = require('./images/invites/invite3.png');
+export const invite4 = require('./images/invites/invite4.png');
 
 // array of images
 export const postBG = [
@@ -185,7 +193,7 @@ export const profileBack = require('./images/profileBack.png');
 
 export const profileSettings = require('./images/profileSettings.png');
 
-export const iconButton = require('./images/iconButton.png');
+export const infoIcon = require('assets/images/infoIcon.png');
 
 export const eyeOpen = require('./images/eyeOpen.png');
 

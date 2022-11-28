@@ -1,4 +1,4 @@
-import {iconButton} from 'assets/images';
+import {infoIcon} from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -171,7 +171,7 @@ const SendTips = () => {
                     )}
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image
-                        source={iconButton}
+                        source={infoIcon}
                         style={{width: 16, height: 16, marginRight: 4}}
                       />
                       <Typography.Body7

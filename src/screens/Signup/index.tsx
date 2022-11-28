@@ -1,6 +1,6 @@
 import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import {iconButton} from 'assets/images';
+import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -165,7 +165,7 @@ const Signup = () => {
                       </Typography.Subtitle2>
                       <ImageButton
                         style={styles.iconButton}
-                        image={iconButton}
+                        image={infoIcon}
                         onPress={openInfoModal}
                       />
                     </View>

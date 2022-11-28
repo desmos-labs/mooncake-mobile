@@ -186,7 +186,7 @@ const Settings: React.FC<NavProps> = props => {
         {/* removed as of Sept 23, DFP-497 */}
         {/* <SectionButton label={t('faq')} onPress={() => console.log('faq')} /> */}
         <SectionButton
-          label={t('invites')}
+          label={t('invites:invites')}
           onPress={() => navigate(ROUTES.INVITES)}
         />
         <SectionButton
