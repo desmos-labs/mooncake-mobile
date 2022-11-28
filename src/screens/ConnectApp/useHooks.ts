@@ -2,7 +2,7 @@ import {StdFee} from '@cosmjs/amino';
 import {toHex, toUtf8} from '@cosmjs/encoding';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {
-  getPubKeyBytes,
+  getPubKeyRawBytes,
   getSignatureBytes,
   getSignedBytes,
   MsgAuthenticateEncodeObject,
@@ -120,7 +120,7 @@ const useHooks = () => {
 
     return {
       desmos_address: accounts[0].address,
-      pubkey_bytes: toHex(getPubKeyBytes(signed)),
+      pubkey_bytes: toHex(getPubKeyRawBytes(signed)),
       signed_bytes: toHex(getSignedBytes(signed)),
       signature_bytes: toHex(getSignatureBytes(signed)),
     };
