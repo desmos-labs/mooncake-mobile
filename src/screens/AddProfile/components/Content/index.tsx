@@ -119,7 +119,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
       await saveNewAccount(chainAccount);
       navigate(ROUTES.SETTINGS_PROFILES);
     } catch (e) {
-      console.error(e);
+      console.error('error saving account', e);
     }
   }, [generatedWallets, selectedAddress]);
 

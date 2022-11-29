@@ -64,6 +64,7 @@ export type EnterPasswordParams = {
   dViewProps?: ComponentProps<typeof DView>;
   onSuccessfulAuthentication?: (result: LocalAccountAuthenticationArgs) => void;
   onFailedAuthentication?: () => void;
+  skipBiometrics?: boolean;
 };
 
 const initialFormValues = {
@@ -87,6 +88,7 @@ const EnterPassword = () => {
       onSuccessfulAuthentication,
       onFailedAuthentication,
       inputLabelOverride,
+      skipBiometrics,
     },
   } = useRoute<NavProps['route']>();
   const {goBack} = useNavigation<NavProps['navigation']>();
@@ -143,7 +145,7 @@ const EnterPassword = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (biometrics) {
+      if (biometrics && !skipBiometrics) {
         unlockWithBiometrics();
       }
     }, [biometrics, unlockWithBiometrics]),
