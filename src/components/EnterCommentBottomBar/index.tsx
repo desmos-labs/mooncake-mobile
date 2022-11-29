@@ -1,4 +1,5 @@
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {clearTimeout} from '@testing-library/react-native/build/helpers/timers';
 import {expandCommentIcon} from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
@@ -112,10 +113,13 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (focusTextInput) {
       // It was too fast, so we need to slow it down to be able to render everything else before focussing this input
-      setTimeout(() => textInputRef?.current?.focus(), 200);
+      timeout = setTimeout(() => textInputRef?.current?.focus(), 200);
     }
+
+    return () => clearTimeout(timeout);
   }, [focusTextInput]);
 
   const rightButtonComponent = useMemo(() => {
