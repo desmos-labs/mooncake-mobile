@@ -114,7 +114,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   useEffect(() => {
     if (focusTextInput) {
       // It was too fast, so we need to slow it down to be able to render everything else before focussing this input
-      setTimeout(() => textInputRef?.current?.focus());
+      setTimeout(() => textInputRef?.current?.focus(), 200);
     }
   }, [focusTextInput]);
 
