@@ -234,7 +234,6 @@ const Profile = () => {
     ];
 
     if (images.length > 3) images.length = 3;
-
     if (chainLinks.length !== 0 || connectedApps.length !== 0) {
       return (
         <View style={{marginTop: 16}}>

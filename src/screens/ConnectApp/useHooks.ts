@@ -1,11 +1,10 @@
 import {StdFee} from '@cosmjs/amino';
-import {toHex, toUtf8} from '@cosmjs/encoding';
+import {toHex} from '@cosmjs/encoding';
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {
   getPubKeyRawBytes,
   getSignatureBytes,
   getSignedBytes,
-  MsgAuthenticateEncodeObject,
 } from '@desmoslabs/desmjs';
 import {
   useFocusEffect,
@@ -103,20 +102,13 @@ const useHooks = () => {
   const generateProof = useCallback(async () => {
     if (!wallet) return;
     const accounts = await wallet.getAccounts();
-    const msg: MsgAuthenticateEncodeObject = {
-      typeUrl: '/desmjs.v1.MsgAuthenticate',
-      value: {
-        user: accounts[0].address,
-        nonce: toUtf8(twitterUsername),
-      },
-    };
 
     const fee: StdFee = {
       amount: [],
       gas: '0',
     };
 
-    const signed = await signCustomTx(wallet, [msg], fee);
+    const signed = await signCustomTx(wallet, [], fee);
 
     return {
       desmos_address: accounts[0].address,

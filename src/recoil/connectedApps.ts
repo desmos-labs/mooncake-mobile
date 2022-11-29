@@ -1,8 +1,7 @@
 import {useQuery} from '@apollo/client';
-import {ApplicationLinkState} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import React from 'react';
+import {useEffect} from 'react';
 import {atom, useSetRecoilState} from 'recoil';
 import GetAppConnectedByUser from 'services/graphql/queries/GetAppConnectedByUser';
 
@@ -26,16 +25,11 @@ export const useGetConnectedAppsPolling = () => {
     fetchPolicy: 'no-cache',
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!data) return;
     console.log(data.application_link[0]);
-    const connectedAppsWithoutErrors = data.application_link.filter(
-      link =>
-        link.state ===
-        ApplicationLinkState.APPLICATION_LINK_STATE_VERIFICATION_SUCCESS,
-    );
-    if (connectedAppsWithoutErrors) {
-      setConnectedApps(connectedAppsWithoutErrors);
+    if (data.application_link) {
+      setConnectedApps(data.application_link);
     }
   }, [data]);
 };

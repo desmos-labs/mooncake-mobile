@@ -99,6 +99,7 @@ const ManageConnectedApps = () => {
       return (
         <AppConnectedItem
           appName={info.item.application}
+          state={info.item.state}
           username={info.item.username}
           onPressDisconnect={() =>
             handlePressDisconnectApp(info.item.application, info.item.username)

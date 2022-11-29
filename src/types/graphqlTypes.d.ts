@@ -1,6 +1,5 @@
 // This is a temporary types file for types related to graphql queries.
 // It will likely be replaced by some auto-generated version in the future.
-import {ApplicationLinkState} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 
 export {};
 
@@ -71,7 +70,7 @@ declare global {
     application: string;
     creation_time: string;
     username: string;
-    state: ApplicationLinkState;
+    state: string;
     result: any;
   }
 
