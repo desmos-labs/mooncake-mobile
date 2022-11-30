@@ -1,28 +1,34 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {invitesBanner2} from 'assets/images';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
+import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import useStyles from './useStyles';
 
-/* export type NavProps = StackScreenProps<
+export type NavProps = StackScreenProps<
   RootNavigatorParamList,
   ROUTES.MANAGE_INVITES
->; */
+>;
 
 const ManageInvites = () => {
   const styles = useStyles();
   const {t} = useTranslation('invites');
   const theme = useTheme();
+  const {navigate} = useNavigation<NavProps['navigation']>();
 
   return (
     <DView
-      backgroundColor={theme.colors.white}
+      backgroundColor={theme.colors.backgroundGrey}
       disableHideKeyboardTouchable={true}
       style={styles.container}
       topBar={<TopBar style={{paddingBottom: theme.spacing.m}} />}>
@@ -46,6 +52,7 @@ const ManageInvites = () => {
           }}
         />
       </View>
+      <InvitesList navigate={navigate} />
     </DView>
   );
 };

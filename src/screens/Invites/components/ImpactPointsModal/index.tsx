@@ -88,7 +88,7 @@ const ImpactPointsModal = () => {
             mode="contained"
             color={theme.colors.surfaceBlack}
             onPress={goBack}>
-            {t('understand')}
+            {t('got it')}
           </Button>
         </Spacer>
       </TouchableOpacity>

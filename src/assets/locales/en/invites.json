@@ -3,7 +3,7 @@
   "title modal": "Impact Points",
   "body modal": "Impact points are a way to reward your in app activities. Interacting with some of the app's functions rewards you with points. ",
   "caption modal": "Impact points rewards",
-  "understand": "Understand",
+  "got it": "Got it",
   "invite friends": "Invite Friends & Earn DSM",
   "refer a friend": "Refer a friend and you both get rewards",
   "points": "{{number}} points",
@@ -18,6 +18,7 @@
   "create a post": "Create a post",
   "tip a post": "Tip a post",
   "react a post": "React a post",
-  "total rewards": "Total Rewards Earned"
+  "total rewards": "Total Rewards Earned",
+  "no invites yet": "No invites yet"
 
 }

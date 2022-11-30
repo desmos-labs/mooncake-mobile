@@ -169,6 +169,7 @@ export const invite1 = require('./images/invites/invite1.png');
 export const invite2 = require('./images/invites/invite2.png');
 export const invite3 = require('./images/invites/invite3.png');
 export const invite4 = require('./images/invites/invite4.png');
+export const emptyInvitesImage = require('./images/invites/emptyInvites.png');
 
 // array of images
 export const postBG = [
