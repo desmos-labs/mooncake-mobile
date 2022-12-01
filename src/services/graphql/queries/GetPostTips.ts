@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
 export const GetPostTips = gql`
-  query PostTips($postID: bigint, $subspaceID: bigint) @api(name: desmos) {
+  query PostTips($postID: bigint, $subspaceID: bigint) @api(name: butter) {
     tip_post(
       where: {post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
     ) {
@@ -20,7 +20,7 @@ export const GetPostTips = gql`
 `;
 
 export const GetTippedPostsFromAddress = gql`
-  query TippedPosts($subspaceID: bigint!, $user: String!) @api(name: desmos) {
+  query TippedPosts($subspaceID: bigint!, $user: String!) @api(name: butter) {
     tip_post(
       where: {subspace_id: {_eq: $subspaceID}, sender_address: {_eq: $user}}
     ) {

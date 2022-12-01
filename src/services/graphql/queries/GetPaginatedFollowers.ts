@@ -16,15 +16,13 @@ const GetPaginatedFollowers = gql`
     $userAddress: String!
     $limit: Int!
     $offset: Int!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     paginatedFollowers: user_relationship(
       limit: $limit
       offset: $offset
       where: {
         subspace_id: {_eq: $subspaceID}
         counterparty_address: {_eq: $userAddress}
-        counterparty: {}
-        creator: {}
       }
     ) {
       _: creator {
@@ -38,8 +36,6 @@ const GetPaginatedFollowers = gql`
       where: {
         subspace_id: {_eq: $subspaceID}
         counterparty_address: {_eq: $userAddress}
-        counterparty: {}
-        creator: {}
       }
     ) {
       aggregate {

@@ -17,17 +17,23 @@ export type GetFollowStatsForAddressData = {
 };
 
 const GetNumRelationshipsForAddress = gql`
-  query GetFollowStatsForAddress($address: String) @api(name: desmos) {
-    profile(where: {address: {_eq: $address}}) {
-      followage_aggregate(where: {creator: {}}) {
-        aggregate {
-          count
-        }
+  query GetFollowStatsForAddress($subspaceID: bigint!, $address: String!)
+  @api(name: butter) {
+    followage_aggregate: user_relationship_aggregate(
+      where: {
+        subspace_id: {_eq: $subspaceID}
+        counterparty_address: {_eq: $address}
       }
-      following_aggregate(where: {counterparty: {}}) {
-        aggregate {
-          count
-        }
+    ) {
+      aggregate {
+        count
+      }
+    }
+    following_aggregate: user_relationship_aggregate(
+      where: {subspace_id: {_eq: $subspaceID}, creator_address: {_eq: $address}}
+    ) {
+      aggregate {
+        count
       }
     }
   }
