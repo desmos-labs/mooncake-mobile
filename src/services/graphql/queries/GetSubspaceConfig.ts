@@ -3,8 +3,8 @@ import {gql} from '@apollo/client';
 /**
  * A query that retrieves the report, reaction, and tips config from gql.
  */
-const GetAppConfig = gql`
-  query GetAppConfig($subspaceID: bigint!) @api(name: desmos) {
+const GetSubspaceConfig = gql`
+  query GetSubspaceConfig($subspaceID: bigint!) @api(name: butter) {
     subspace_report_reason(where: {subspace_id: {_eq: $subspaceID}}) {
       id
       title
@@ -24,13 +24,7 @@ const GetAppConfig = gql`
       type
       config
     }
-    profiles_params {
-      params
-    }
-    posts_params {
-      params
-    }
   }
 `;
 
-export default GetAppConfig;
+export default GetSubspaceConfig;
