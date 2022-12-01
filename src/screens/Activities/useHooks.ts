@@ -1,7 +1,6 @@
 import {useQuery} from '@apollo/client';
 import EnvConfig from 'config/EnvConfig';
 import {differenceInCalendarDays, parseISO} from 'date-fns';
-import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -12,7 +11,6 @@ import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress'
 import NotificationTypesEnum from 'types/notificationTypes';
 
 const useHooks = () => {
-  const {activeAddress} = useActiveAccount();
   const [notificationsWithProfile, setNotificationsWithProfile] = useState<
     any[]
   >([]);
@@ -26,7 +24,6 @@ const useHooks = () => {
     fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
     variables: {
-      userAddress: activeAddress,
       limit: 7,
       offset: 0,
     },
@@ -48,6 +45,7 @@ const useHooks = () => {
   };
 
   const fetchNotificationDetails = useCallback(async () => {
+    console.log('dataaaaaaaa', data);
     if (data) {
       try {
         setNotificationsDetailsLoading(true);
