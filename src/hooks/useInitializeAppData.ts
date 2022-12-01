@@ -37,9 +37,9 @@ const useInitializeAppData = () => {
   React.useEffect(() => {
     const initAppData = async () => {
       const [appConfig] = await Promise.all([
+        getDesmosParams(),
         getSubspaceConfig(),
         getButterConfig(),
-        getDesmosParams(),
       ]);
 
       const {
