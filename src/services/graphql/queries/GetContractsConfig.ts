@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
 const GetContractsConfig = gql`
-  query Contracts($config: jsonb!) @api(name: desmos) {
+  query Contracts($config: jsonb!) @api(name: butter) {
     contract(where: {type: {_ilike: "tips"}, config: {_contains: $config}}) {
       address
       type

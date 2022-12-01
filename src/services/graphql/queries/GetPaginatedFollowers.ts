@@ -16,7 +16,7 @@ const GetPaginatedFollowers = gql`
     $userAddress: String!
     $limit: Int!
     $offset: Int!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     paginatedFollowers: user_relationship(
       limit: $limit
       offset: $offset

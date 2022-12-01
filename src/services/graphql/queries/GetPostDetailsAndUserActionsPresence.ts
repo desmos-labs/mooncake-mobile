@@ -8,7 +8,7 @@ const GetPostDetailsAndUserActionsPresence = gql`
     $postID: bigint!
     $user: String
     $reaction: jsonb!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     posts: post(where: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}) {
       ...PostFields
       reactionPresence: reactions_aggregate(

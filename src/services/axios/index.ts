@@ -9,7 +9,7 @@ import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 
 const axiosInstance = axios.create({
-  baseURL: EnvConfig.DESMOS_REST,
+  baseURL: EnvConfig.BUTTER_REST,
   timeout: 15000,
 });
 

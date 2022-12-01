@@ -2,7 +2,7 @@ import {gql} from '@apollo/client';
 
 const GetNotifications = gql`
   query UserNotifications($userAddress: String!, $limit: Int!, $offset: Int!)
-  @api(name: desmos) {
+  @api(name: butter) {
     notification(
       where: {
         user_address: {_eq: $userAddress}

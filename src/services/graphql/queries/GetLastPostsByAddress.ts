@@ -8,7 +8,7 @@ const GetLastPostsByAddress = gql`
     $subspaceID: bigint
     $user: String
     $reaction: jsonb!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     post(
       limit: $limit
       order_by: {creation_date: desc}

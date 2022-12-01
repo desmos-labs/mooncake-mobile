@@ -17,7 +17,7 @@ export type GetFollowStatsForAddressData = {
 };
 
 const GetNumRelationshipsForAddress = gql`
-  query GetFollowStatsForAddress($address: String) @api(name: desmos) {
+  query GetFollowStatsForAddress($address: String) @api(name: butter) {
     profile(where: {address: {_eq: $address}}) {
       followage_aggregate(where: {creator: {}}) {
         aggregate {
