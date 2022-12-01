@@ -45,7 +45,6 @@ const useHooks = () => {
   };
 
   const fetchNotificationDetails = useCallback(async () => {
-    console.log('dataaaaaaaa', data);
     if (data) {
       try {
         setNotificationsDetailsLoading(true);
