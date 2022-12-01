@@ -1,3 +1,4 @@
+import EnvConfig from 'config/EnvConfig';
 import {
   selectorFamily,
   useRecoilRefresher_UNSTABLE,
@@ -24,20 +25,15 @@ const numRelationshipState = selectorFamily<
     const {data} = await client.query({
       query: GetNumRelationshipsForAddress,
       variables: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
         address,
       },
       fetchPolicy: 'no-cache',
     });
 
     if (data) {
-      const numFollowers = _.get(
-        data,
-        'profile[0].followage_aggregate.aggregate.count',
-      );
-      const numFollowing = _.get(
-        data,
-        'profile[0].following_aggregate.aggregate.count',
-      );
+      const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
+      const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
 
       return {
         numFollowers,

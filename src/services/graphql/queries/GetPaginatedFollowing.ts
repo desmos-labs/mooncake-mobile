@@ -23,8 +23,6 @@ const GetPaginatedFollowing = gql`
       where: {
         subspace_id: {_eq: $subspaceID}
         creator_address: {_eq: $userAddress}
-        creator: {}
-        counterparty: {}
       }
     ) {
       _: counterparty {
@@ -38,8 +36,6 @@ const GetPaginatedFollowing = gql`
       where: {
         subspace_id: {_eq: $subspaceID}
         creator_address: {_eq: $userAddress}
-        creator: {}
-        counterparty: {}
       }
     ) {
       aggregate {
