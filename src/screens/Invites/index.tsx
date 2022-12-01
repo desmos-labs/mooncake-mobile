@@ -1,6 +1,8 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
+  copyIcon,
   infoIcon,
   invite1,
   invite2,
@@ -19,7 +21,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, Share, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import StepComponent from 'screens/Invites/components/StepComponent';
@@ -41,9 +43,81 @@ const Invites = () => {
     );
   }, []);
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Refer a friend and you both get rewards',
+        url: 'www.google.com',
+        title: 'Butter',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const shareComponent = useMemo(() => {
+    return (
+      <View style={{marginHorizontal: theme.spacing.m}}>
+        <View
+          style={{
+            backgroundColor: theme.colors.white,
+            borderRadius: theme.roundness,
+            borderColor: theme.colors.lightGrey01,
+            borderWidth: 1,
+            marginBottom: theme.spacing.m,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Typography.Body6
+            selectable={true}
+            style={{
+              alignSelf: 'center',
+              marginHorizontal: theme.spacing.s,
+              marginVertical: theme.spacing.m,
+            }}>
+            nfjklsnfjklsdnfklsdnfknsd
+          </Typography.Body6>
+          <TouchableOpacity
+            onPress={() => Clipboard.setString('nfjklsnfjklsdnfklsdnfknsd')}
+            style={{
+              borderColor: theme.colors.lightGrey01,
+              borderLeftWidth: 1,
+              alignContent: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={copyIcon}
+              style={{
+                margin: theme.spacing.m,
+                width: 20,
+                height: 20,
+                alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+        <Button
+          mode="contained"
+          color={theme.colors.surfaceBlack}
+          onPress={onShare}>
+          {t('share')}
+        </Button>
+      </View>
+    );
+  }, []);
+
   return (
     <DView
-      backgroundColor={theme.colors.white}
+      backgroundColor={theme.colors.background}
       disableHideKeyboardTouchable={true}
       style={styles.container}
       scrollable={true}
@@ -70,12 +144,13 @@ const Invites = () => {
         <Typography.Body6>{t('refer a friend')}</Typography.Body6>
         <Spacer paddingVertical={theme.spacing.s} />
       </View>
-      <Button
+      {/*      <Button
         color={theme.colors.surfaceBlack}
         style={{marginHorizontal: theme.spacing.m}}
         mode="contained">
         {t('generate invite')}
-      </Button>
+      </Button> */}
+      {shareComponent}
       <Spacer paddingVertical={theme.spacing.m} />
       <View style={{alignItems: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
