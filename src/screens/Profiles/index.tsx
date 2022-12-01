@@ -1,3 +1,4 @@
+import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {signerState} from '@recoil/connectChainState';
@@ -19,6 +20,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useSetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useLogin from 'services/axios/requests/Login/useLogin';
+import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -140,6 +142,8 @@ const Profiles = () => {
                   activeAddress: profile.address,
                   password: unlockResult.password,
                 });
+                const notificationsToken = await messaging().getToken();
+                await PostNotificationToken(notificationsToken.toString());
               }
             } catch (e) {
               console.error(e);
