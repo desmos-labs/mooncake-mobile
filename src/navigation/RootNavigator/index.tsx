@@ -13,7 +13,7 @@ import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
@@ -116,6 +116,7 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -237,9 +238,20 @@ const RootNavigator = () => {
 
   const {t} = useTranslation();
 
+  const handleDynamicLink = useCallback(async (link: any) => {
+    if (link.url) {
+      console.log(link);
+    }
+  }, []);
+
   useEffect(() => {
     RNBootSplash.hide({fade: true});
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, [handleDynamicLink]);
 
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');
