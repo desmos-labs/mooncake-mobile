@@ -31,17 +31,27 @@ exports[`component: DView renders 1`] = `
   }
 >
   <View
+    animatedStyle={
+      Object {
+        "value": Object {},
+      }
+    }
+    collapsable={false}
+    entering={
+      FadeIn {
+        "build": [Function],
+        "durationV": 250,
+        "randomizeDelay": false,
+      }
+    }
     style={
-      Array [
-        Object {
-          "backgroundColor": "transparent",
-          "flex": 1,
-          "flexDirection": "column",
-          "flexGrow": 1,
-          "zIndex": 1,
-        },
-        undefined,
-      ]
+      Object {
+        "backgroundColor": "transparent",
+        "flex": 1,
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "zIndex": 1,
+      }
     }
   >
     <Text>
@@ -122,17 +132,27 @@ exports[`component: DView renders background prop 1`] = `
     />
   </View>
   <View
+    animatedStyle={
+      Object {
+        "value": Object {},
+      }
+    }
+    collapsable={false}
+    entering={
+      FadeIn {
+        "build": [Function],
+        "durationV": 250,
+        "randomizeDelay": false,
+      }
+    }
     style={
-      Array [
-        Object {
-          "backgroundColor": "transparent",
-          "flex": 1,
-          "flexDirection": "column",
-          "flexGrow": 1,
-          "zIndex": 1,
-        },
-        undefined,
-      ]
+      Object {
+        "backgroundColor": "transparent",
+        "flex": 1,
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "zIndex": 1,
+      }
     }
   >
     <Text>
