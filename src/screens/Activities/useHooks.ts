@@ -107,7 +107,9 @@ const useHooks = () => {
           user_address: string;
         }) => {
           const parsedTime = parseISO(`${singleNotification.timestamp!}Z`);
-          if (differenceInCalendarDays(new Date(parsedTime), Date.now()) <= 7) {
+          if (
+            -differenceInCalendarDays(new Date(parsedTime), Date.now()) <= 7
+          ) {
             thisWeekNotifications.push(singleNotification);
           } else {
             earlierNotifications.push(singleNotification);
