@@ -42,12 +42,14 @@ const Activities = ({
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
   const {profileData} = useActiveAccount();
   const toast = useToast();
+
   const checkPostType = useCallback(() => {
-    const isOriginalPost = !post.conversation;
+    console.log(post.conversation);
+    const isOriginalPost = post.conversation === null;
     const reply = post.replies.find(
       (rep: any) => rep.reference.id === post.conversation.id,
     );
-    const isComment = post.replies.length !== 0 && !reply;
+    const isComment = reply !== null && !isOriginalPost;
     const isReply = !isOriginalPost && !isComment;
 
     return {
@@ -68,7 +70,6 @@ const Activities = ({
   );
 
   const navigateToCorrectScreen = useCallback(() => {
-    console.log('navigateToScreen');
     if (type === NotificationTypesEnum.Comment) {
       navigate(ROUTES.POST_DETAILS, {
         subspaceID: EnvConfig.APP_SUBSPACE_ID,
@@ -91,8 +92,7 @@ const Activities = ({
       }
     }
     if (type === NotificationTypesEnum.Reaction) {
-      const {isOriginalPost, reply} = checkPostType();
-      const isReply = reply && post.replies.length !== 0;
+      const {isOriginalPost, isReply, reply} = checkPostType();
       if (!isOriginalPost) {
         if (isReply) {
           navigate(ROUTES.COMMENT_REPLIES, {
@@ -125,12 +125,15 @@ const Activities = ({
         },
       });
     }
-  }, [type, navigate, post_id, checkPostType, post, profileData]);
+  }, [profileData]);
 
   const content = useMemo(() => {
     switch (type) {
       case NotificationTypesEnum.Reaction: {
         const {isOriginalPost, isComment, isReply} = checkPostType();
+        console.log('is post?', isOriginalPost);
+        console.log('is comment?', isComment);
+        console.log('is reply?', isReply);
         return (
           <View style={styles.flexRowView}>
             <ImageButton

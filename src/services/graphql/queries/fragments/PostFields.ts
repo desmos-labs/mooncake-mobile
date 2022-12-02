@@ -29,6 +29,7 @@ const POST_FIELDS = gql`
     }
     text
     conversation {
+      id
       author {
         address
       }
