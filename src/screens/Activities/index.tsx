@@ -112,7 +112,7 @@ const Activities = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
-      {notificationsData.length > 0 || !notificationsLoading ? (
+      {notificationsData.length > 0 && !notificationsLoading ? (
         <SectionList
           keyExtractor={(item, index) => item.timestamp + index}
           refreshing={notificationsLoading}
@@ -123,6 +123,9 @@ const Activities = () => {
           ListEmptyComponent={EmptyActivities}
           sections={notificationsData}
           renderItem={renderNotification}
+          ListFooterComponent={
+            notificationsLoading ? <ActivityIndicator /> : null
+          }
           onEndReached={() => {
             notificationsFetchMore({
               variables: {
