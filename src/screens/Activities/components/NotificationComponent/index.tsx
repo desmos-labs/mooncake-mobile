@@ -44,7 +44,6 @@ const Activities = ({
   const toast = useToast();
 
   const checkPostType = useCallback(() => {
-    console.log(post.conversation);
     const isOriginalPost = post.conversation === null;
     const reply = post.replies.find(
       (rep: any) => rep.reference.id === post.conversation.id,
@@ -131,9 +130,6 @@ const Activities = ({
     switch (type) {
       case NotificationTypesEnum.Reaction: {
         const {isOriginalPost, isComment, isReply} = checkPostType();
-        console.log('is post?', isOriginalPost);
-        console.log('is comment?', isComment);
-        console.log('is reply?', isReply);
         return (
           <View style={styles.flexRowView}>
             <ImageButton
