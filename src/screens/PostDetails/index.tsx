@@ -350,7 +350,7 @@ const PostDetails = () => {
   ]);
 
   return postLoading || !post ? (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
       <ActivityIndicator />
     </SafeAreaView>
   ) : (

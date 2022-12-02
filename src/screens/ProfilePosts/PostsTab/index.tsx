@@ -10,7 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
@@ -83,21 +83,27 @@ export const PostsTab = () => {
 
   return (
     <View style={styles.contentContainer}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        refreshing={postsLoading}
-        onRefresh={pageRefetch}
-        data={posts}
-        renderItem={renderPosts}
-        numColumns={3}
-        contentContainerStyle={styles.contentContainerStyle}
-        ListEmptyComponent={
-          <EmptyPostComponent
-            textLabel={t('noUserPosts')}
-            buttonLabel={t('createPost')}
-          />
-        }
-      />
+      {posts.length > 0 && !postsLoading ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          refreshing={postsLoading}
+          onRefresh={pageRefetch}
+          data={posts}
+          renderItem={renderPosts}
+          numColumns={3}
+          contentContainerStyle={styles.contentContainerStyle}
+          ListEmptyComponent={
+            !posts.length ? null : (
+              <EmptyPostComponent
+                textLabel={t('noUserPosts')}
+                buttonLabel={t('createPost')}
+              />
+            )
+          }
+        />
+      ) : (
+        <ActivityIndicator />
+      )}
     </View>
   );
 };
