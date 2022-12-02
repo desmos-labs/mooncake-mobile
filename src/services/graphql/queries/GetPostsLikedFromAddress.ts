@@ -2,7 +2,7 @@ import {gql} from '@apollo/client';
 
 const GetPostsLikedForAddress = gql`
   query LikedUserPosts($subspaceID: bigint, $address: String)
-  @api(name: desmos) {
+  @api(name: butter) {
     reaction(
       where: {
         post: {subspace_id: {_eq: $subspaceID}}

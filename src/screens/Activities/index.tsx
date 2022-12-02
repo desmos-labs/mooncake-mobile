@@ -80,7 +80,7 @@ const Activities = () => {
         <Image
           source={errorImage}
           style={{
-            width: '100%',
+            width: 139,
             height: 163.55,
             resizeMode: 'cover',
           }}
@@ -112,7 +112,7 @@ const Activities = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
-      {notificationsData.length > 0 ? (
+      {notificationsData.length > 0 || !notificationsLoading ? (
         <SectionList
           keyExtractor={(item, index) => item.timestamp + index}
           refreshing={notificationsLoading}

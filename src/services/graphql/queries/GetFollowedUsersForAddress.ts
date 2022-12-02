@@ -11,7 +11,7 @@ export type GetFollowedUsersForAddressData = {
 };
 
 const GetFollowedUsersForAddress = gql`
-  query Following($userAddress: String) @api(name: desmos) {
+  query Following($userAddress: String) @api(name: butter) {
     user_relationship(where: {creator_address: {_eq: $userAddress}}) {
       counterparty {
         dtag

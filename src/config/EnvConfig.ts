@@ -5,15 +5,15 @@ const EnvConfig = {
   GQL_ENDPOINT: {
     forbole: Config.FORBOLE_GQL,
     desmos: Config.DESMOS_GQL,
+    butter: Config.BUTTER_GQL,
   },
   CHAIN: Config.CHAIN,
-  FEE_GRANTER: Config.FEE_GRANTER,
   DESMOS_RPC: Config.DESMOS_RPC,
   // temporary way to keep track of base denoms for transactions on the
   // desmos chain
   BASE_DENOM: Config.BASE_DENOM,
   MAX_COMMENT_LENGTH: 500,
-  DESMOS_REST: Config.DESMOS_REST,
+  BUTTER_REST: Config.BUTTER_REST,
   APP_SUBSPACE_ID: 5,
   POLLING_INTERVAL: 2000,
   DEV_MNEMONIC: Config.DEV_MNEMONIC,

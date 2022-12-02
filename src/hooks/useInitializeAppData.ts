@@ -10,8 +10,9 @@ import {useGetButterConfig} from '@recoil/butterConfigState';
 import {postParamsState} from '@recoil/postParamsState';
 import {useInitializeAxios} from 'services/axios';
 import {useLazyQuery} from '@apollo/client';
-import GetAppConfig from 'services/graphql/queries/GetAppConfig';
+import GetSubspaceConfig from 'services/graphql/queries/GetSubspaceConfig';
 import _ from 'lodash';
+import GetDesmosParams from 'services/graphql/queries/GetDesmosParams';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
@@ -19,10 +20,14 @@ const useInitializeAppData = () => {
   const setPostParams = useSetRecoilState(postParamsState);
   useInitializeAxios();
 
-  const [getAppConfig] = useLazyQuery(GetAppConfig, {
+  const [getSubspaceConfig] = useLazyQuery(GetSubspaceConfig, {
     variables: {
       subspaceID: String(EnvConfig.APP_SUBSPACE_ID),
     },
+    fetchPolicy: 'no-cache',
+  });
+
+  const [getDesmosParams] = useLazyQuery(GetDesmosParams, {
     fetchPolicy: 'no-cache',
   });
 
@@ -32,7 +37,8 @@ const useInitializeAppData = () => {
   React.useEffect(() => {
     const initAppData = async () => {
       const [appConfig] = await Promise.all([
-        getAppConfig(),
+        getDesmosParams(),
+        getSubspaceConfig(),
         getButterConfig(),
       ]);
 

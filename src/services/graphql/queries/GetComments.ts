@@ -8,7 +8,7 @@ export const GetPostComments = gql`
     $subspaceID: bigint
     $user: String
     $reaction: jsonb!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     post(
       order_by: {creation_date: asc}
       where: {
@@ -50,7 +50,7 @@ export const GetCommentReplies = gql`
     $subspaceID: bigint
     $user: String
     $reaction: jsonb!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     post_reference(
       where: {reference: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
     ) {

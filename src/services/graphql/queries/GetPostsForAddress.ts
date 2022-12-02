@@ -2,7 +2,7 @@ import {gql} from '@apollo/client';
 
 const GetPostsForAddress = gql`
   query GetPostsForAddress($subspaceID: bigint!, $address: String)
-  @api(name: desmos) {
+  @api(name: butter) {
     post(
       order_by: {creation_date: desc}
       where: {

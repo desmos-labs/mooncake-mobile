@@ -146,16 +146,27 @@ const PostDetails = () => {
         android: 'keyboardDidShow',
       }) as KeyboardEventName,
       () => {
-        setTimeout(
-          () => scrollViewRef?.current?.scrollToEnd({animated: true}),
-          100,
-        );
+        if (comments.length > 0) {
+          setTimeout(
+            () => scrollViewRef?.current?.scrollToEnd({animated: true}),
+            100,
+          );
+        } else {
+          setTimeout(
+            () =>
+              scrollViewRef?.current?.scrollToOffset({
+                animated: true,
+                offset: Dimensions.get('window').height,
+              }),
+            100,
+          );
+        }
       },
     );
     return () => {
       keyboardDidShowListener.remove();
     };
-  }, []);
+  }, [comments.length]);
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {

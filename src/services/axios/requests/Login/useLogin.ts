@@ -1,9 +1,9 @@
-import React from 'react';
+import {OfflineDirectSigner} from '@cosmjs/proto-signing';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {getAccounts} from 'lib/SecureStorage';
-import {OfflineDirectSigner} from '@cosmjs/proto-signing';
-import Login from 'services/axios/requests/Login/index';
+import React from 'react';
 import {updateAuthToken} from 'services/axios';
+import Login from 'services/axios/requests/Login/index';
 import {generateLoginData} from 'services/axios/requests/Login/utils';
 
 const useLogin = () => {

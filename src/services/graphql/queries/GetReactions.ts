@@ -2,7 +2,7 @@ import {gql} from '@apollo/client';
 
 export const GetPostReactions = gql`
   query PostReactions($subspaceID: bigint!, $postID: bigint!)
-  @api(name: desmos) {
+  @api(name: butter) {
     reaction(
       where: {post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
     ) {
@@ -23,7 +23,7 @@ export const GetReactionForPostAndAuthor = gql`
     $subspaceID: bigint!
     $postID: bigint!
     $address: String
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     reaction(
       where: {
         post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}
