@@ -1,3 +1,4 @@
+import {useQuery} from '@apollo/client';
 import {emptyInvitesImage} from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
@@ -5,76 +6,77 @@ import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, ListRenderItemInfo, SectionList, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ListRenderItemInfo,
+  SafeAreaView,
+  SectionList,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import InviteComponent, {
   Invite,
 } from 'screens/ManageInvites/components/InviteComponent';
+import GetInvites from 'services/graphql/queries/GetInvites';
+import useStyles from './useStyles';
 
 interface Props {
   navigate: (args: any) => void;
 }
 
 const InvitesList = ({navigate}: Props) => {
-  /*
-  const [invitesLoading, setInvitesLoading] = useState(false);
-*/
-  /*
   const styles = useStyles();
-*/
   const theme = useTheme();
   const {t} = useTranslation('invites');
+  const {data, loading, refetch} = useQuery(GetInvites, {
+    fetchPolicy: 'no-cache',
+  });
 
-  const pendingInvites = [
-    {
-      id: 1,
-      address: '123454353453',
-      creationDate: new Date().getDate(),
-    },
-  ];
+  const invitesSectioned = useMemo(() => {
+    if (!data?.invite) {
+      return [];
+    }
 
-  const successfulInvites = [
-    {
-      id: 2,
-      address: '12345435345364564',
-      creationDate: new Date().getDate(),
-    },
-    {
-      id: 3,
-      address: '12345435345364545',
-      creationDate: new Date().getDate(),
-    },
-  ];
+    const pending: any[] = [];
+    const successful: any[] = [];
 
-  const mock = [
-    {section: t('pending invites'), data: pendingInvites},
-    {section: t('successful invites'), data: successfulInvites},
-  ];
+    data.invite.forEach((invite: any) => {
+      if (invite.claimer) {
+        successful.push(invite);
+      } else {
+        pending.push(invite);
+      }
+    });
+    console.log(pending.length);
+    console.log(successful.length);
+
+    if (pending.length > 0 && successful.length <= 0) {
+      return [{section: t('pending invites'), data: pending}];
+    } else if (pending.length <= 0 && successful.length > 0) {
+      return [{section: t('successful invites'), data: successful}];
+    } else if (pending.length > 0 && successful.length > 0) {
+      return [
+        {section: t('pending invites'), data: pending},
+        {section: t('successful invites'), data: successful},
+      ];
+    } else {
+      return [];
+    }
+  }, [data]);
 
   const renderInvite = React.useCallback(
-    ({item}: ListRenderItemInfo<Invite>) => {
-      return <InviteComponent {...item} />;
+    ({item, index}: ListRenderItemInfo<Invite>) => {
+      return <InviteComponent {...item} index={index + 1} />;
     },
     [],
   );
 
   const EmptyInvites = useMemo(() => {
-    return mock.length === 0 ? null : (
-      <View
-        style={{
-          justifyContent: 'center',
-          marginHorizontal: theme.spacing.m,
-        }}>
+    return (
+      <View style={styles.container}>
         <View style={{alignItems: 'center'}}>
-          <Image
-            source={emptyInvitesImage}
-            style={{
-              width: 96,
-              height: 70,
-              resizeMode: 'cover',
-              marginBottom: theme.spacing.l,
-            }}
-          />
+          <Image source={emptyInvitesImage} style={styles.emptyImage} />
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
         </View>
 
@@ -87,31 +89,60 @@ const InvitesList = ({navigate}: Props) => {
         </Button>
       </View>
     );
-  }, [t]);
+  }, [data]);
+
+  const bottomComponent = useMemo(() => {
+    return data?.invite?.length === 3 ? (
+      <Typography.Body6
+        style={{
+          color: theme.colors.grey01,
+          alignSelf: 'center',
+          textAlign: 'center',
+        }}>
+        {t('sent all')}
+      </Typography.Body6>
+    ) : (
+      <Button
+        onPress={() => navigate(ROUTES.INVITES)}
+        mode="contained"
+        color={theme.colors.surfaceBlack}
+        style={{marginHorizontal: theme.spacing.m}}>
+        {t('invite more')}
+      </Button>
+    );
+  }, [data]);
 
   return (
-    <SectionList
-      keyExtractor={(item, index) => item.code.toString() + index}
-      /*      refreshing={invitesLoading}
-      onRefresh={notificationsRefetch} */
-      style={{flex: 1}}
-      contentContainerStyle={{flexGrow: 1}}
-      showsVerticalScrollIndicator={false}
-      ListEmptyComponent={EmptyInvites}
-      sections={[]}
-      renderItem={renderInvite}
-      renderSectionHeader={({section: {section}}) => (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: theme.colors.backgroundGrey,
-            paddingTop: theme.spacing.m,
-            paddingBottom: theme.spacing.s,
-          }}>
-          <Typography.Button2>{section}</Typography.Button2>
-        </View>
+    <View style={{flex: 1}}>
+      {!data?.invite && loading ? (
+        <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator />
+        </SafeAreaView>
+      ) : (
+        <>
+          <SectionList
+            keyExtractor={(item, index) => item.code.toString() + index}
+            refreshing={loading}
+            onRefresh={refetch}
+            style={{flex: 1}}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: theme.spacing.m,
+            }}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={EmptyInvites}
+            sections={invitesSectioned}
+            renderItem={renderInvite}
+            renderSectionHeader={({section: {section}}) => (
+              <View style={styles.header}>
+                <Typography.Button2>{section}</Typography.Button2>
+              </View>
+            )}
+          />
+          {data?.invite?.length !== 0 && bottomComponent}
+        </>
       )}
-    />
+    </View>
   );
 };
 

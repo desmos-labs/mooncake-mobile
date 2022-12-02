@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     height: 240,
     right: 0,
     marginLeft: 'auto',
-    top: -100,
+    marginTop: -100,
   },
 }));
 

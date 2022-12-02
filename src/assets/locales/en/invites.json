@@ -1,5 +1,9 @@
 {
   "invites": "Invites",
+  "pending invites": "Pending Invites",
+  "successful invites": "Successful Invites",
+  "sent all": "You've successfully sent\nall of your invites",
+  "invite": "Invite",
   "title modal": "Impact Points",
   "body modal": "Impact points are a way to reward your in app activities. Interacting with some of the app's functions rewards you with points. ",
   "caption modal": "Impact points rewards",

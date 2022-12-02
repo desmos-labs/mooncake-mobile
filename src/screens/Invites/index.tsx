@@ -17,24 +17,30 @@ import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, Share, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
+import {useToast} from 'react-native-toast-notifications';
 import StepComponent from 'screens/Invites/components/StepComponent';
+import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
 
 const Invites = () => {
   const [inviteGenerated, setInviteGenerated] = useState<boolean>();
+  const [generationLoading, setGenerationLoading] = useState<boolean>(false);
+  const [inviteLink, setInviteLink] = useState<string>('');
   const styles = useStyles();
   const {t} = useTranslation('invites');
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const toast = useToast();
 
   const rightElement = useMemo(() => {
     return (
@@ -48,8 +54,8 @@ const Invites = () => {
     try {
       const result = await Share.share({
         message: 'Refer a friend and you both get rewards',
-        url: 'test',
-        title: 'test',
+        url: inviteLink,
+        title: 'Butter invitation link',
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -65,15 +71,34 @@ const Invites = () => {
     }
   };
 
+  const generateInvite = useCallback(async () => {
+    try {
+      setGenerationLoading(true);
+      const response = await GenerateInvite();
+      if (response.link) {
+        console.log(response);
+        setInviteLink(response.link);
+        setInviteGenerated(true);
+      }
+    } catch (e) {
+      toast.show('Max amount of invites already reached', {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
+      setInviteGenerated(false);
+    } finally {
+      setGenerationLoading(false);
+    }
+  }, [inviteLink, inviteGenerated]);
+
   const shareComponent = useMemo(() => {
     return (
       <View style={{marginHorizontal: theme.spacing.m}}>
         <View style={styles.inviteContainer}>
           <Typography.Body6 selectable={true} style={styles.inviteText}>
-            test generated invite
+            {inviteLink}
           </Typography.Body6>
           <TouchableOpacity
-            onPress={() => Clipboard.setString('test generated invite')}
+            onPress={() => Clipboard.setString(inviteLink)}
             style={styles.copyButton}>
             <Image source={copyIcon} style={styles.copyIcon} />
           </TouchableOpacity>
@@ -86,7 +111,7 @@ const Invites = () => {
         </Button>
       </View>
     );
-  }, []);
+  }, [inviteLink]);
 
   return (
     <DView
@@ -115,7 +140,8 @@ const Invites = () => {
         shareComponent
       ) : (
         <Button
-          onPress={() => setInviteGenerated(true)}
+          onPress={() => generateInvite()}
+          loading={generationLoading}
           color={theme.colors.surfaceBlack}
           style={{marginHorizontal: theme.spacing.m}}
           mode="contained">

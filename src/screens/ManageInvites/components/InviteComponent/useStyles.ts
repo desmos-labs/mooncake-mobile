@@ -3,7 +3,7 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    paddingVertical: theme.spacing.s,
   },
   avatar: {
     width: 40,
@@ -37,7 +37,13 @@ const useStyles = makeStyle(theme => ({
     height: 52,
     resizeMode: 'cover',
   },
-  flexRowView: {flexDirection: 'row'},
+  flexRowView: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: theme.colors.white,
+    padding: theme.spacing.m,
+    borderRadius: theme.roundness,
+  },
 }));
 
 export default useStyles;
