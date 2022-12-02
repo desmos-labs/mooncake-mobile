@@ -19,7 +19,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, Share, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -30,6 +30,7 @@ import useStyles from './useStyles';
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
 
 const Invites = () => {
+  const [inviteGenerated, setInviteGenerated] = useState<boolean>();
   const styles = useStyles();
   const {t} = useTranslation('invites');
   const theme = useTheme();
@@ -47,8 +48,8 @@ const Invites = () => {
     try {
       const result = await Share.share({
         message: 'Refer a friend and you both get rewards',
-        url: 'www.google.com',
-        title: 'Butter',
+        url: 'test',
+        title: 'test',
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -67,42 +68,14 @@ const Invites = () => {
   const shareComponent = useMemo(() => {
     return (
       <View style={{marginHorizontal: theme.spacing.m}}>
-        <View
-          style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: theme.roundness,
-            borderColor: theme.colors.lightGrey01,
-            borderWidth: 1,
-            marginBottom: theme.spacing.m,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <Typography.Body6
-            selectable={true}
-            style={{
-              alignSelf: 'center',
-              marginHorizontal: theme.spacing.s,
-              marginVertical: theme.spacing.m,
-            }}>
-            nfjklsnfjklsdnfklsdnfknsd
+        <View style={styles.inviteContainer}>
+          <Typography.Body6 selectable={true} style={styles.inviteText}>
+            test generated invite
           </Typography.Body6>
           <TouchableOpacity
-            onPress={() => Clipboard.setString('nfjklsnfjklsdnfklsdnfknsd')}
-            style={{
-              borderColor: theme.colors.lightGrey01,
-              borderLeftWidth: 1,
-              alignContent: 'center',
-              justifyContent: 'center',
-            }}>
-            <Image
-              source={copyIcon}
-              style={{
-                margin: theme.spacing.m,
-                width: 20,
-                height: 20,
-                alignSelf: 'center',
-              }}
-            />
+            onPress={() => Clipboard.setString('test generated invite')}
+            style={styles.copyButton}>
+            <Image source={copyIcon} style={styles.copyIcon} />
           </TouchableOpacity>
         </View>
         <Button
@@ -130,30 +103,28 @@ const Invites = () => {
       <FastImage
         resizeMode="cover"
         source={invitesBanner}
-        style={{
-          width: 375,
-          height: 375,
-          marginTop: -60,
-          alignSelf: 'center',
-          backgroundColor: 'transparent',
-        }}
+        style={styles.banner}
       />
 
-      <View style={{padding: theme.spacing.m, alignItems: 'center'}}>
+      <View style={styles.subtitleContainer}>
         <Typography.H3>{t('invite friends')}</Typography.H3>
         <Typography.Body6>{t('refer a friend')}</Typography.Body6>
         <Spacer paddingVertical={theme.spacing.s} />
       </View>
-      {/*      <Button
-        color={theme.colors.surfaceBlack}
-        style={{marginHorizontal: theme.spacing.m}}
-        mode="contained">
-        {t('generate invite')}
-      </Button> */}
-      {shareComponent}
+      {inviteGenerated ? (
+        shareComponent
+      ) : (
+        <Button
+          onPress={() => setInviteGenerated(true)}
+          color={theme.colors.surfaceBlack}
+          style={{marginHorizontal: theme.spacing.m}}
+          mode="contained">
+          {t('generate invite')}
+        </Button>
+      )}
       <Spacer paddingVertical={theme.spacing.m} />
       <View style={{alignItems: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.rowCenter}>
           <Typography.Subtitle2>
             {t('points', {number: 0})}
           </Typography.Subtitle2>
@@ -161,15 +132,12 @@ const Invites = () => {
           <ImageButton
             onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}
             image={infoIcon}
-            style={{width: 18, height: 18, marginLeft: 4}}
+            style={styles.iconLeft}
           />
         </View>
         <Spacer paddingTop={6} />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image
-            source={inviteUserIcon}
-            style={{width: 18, height: 18, marginRight: 4}}
-          />
+        <View style={styles.rowCenter}>
+          <Image source={inviteUserIcon} style={styles.iconRight} />
           <Typography.Body6 style={{color: theme.colors.midGrey}}>
             {t('invites shared', {number: 0})}
           </Typography.Body6>

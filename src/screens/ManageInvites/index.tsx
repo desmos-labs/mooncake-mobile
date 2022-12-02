@@ -33,7 +33,7 @@ const ManageInvites = () => {
       style={styles.container}
       topBar={<TopBar style={{paddingBottom: theme.spacing.m}} />}>
       <View style={{flexDirection: 'row'}}>
-        <View style={{flexDirection: 'column', paddingLeft: theme.spacing.m}}>
+        <View style={styles.textContainer}>
           <Typography.H3>{t('invites')}</Typography.H3>
           <Spacer paddingTop={theme.spacing.s} />
           <Typography.Body5>{t('total rewards')}</Typography.Body5>
@@ -43,13 +43,7 @@ const ManageInvites = () => {
         <FastImage
           resizeMode="cover"
           source={invitesBanner2}
-          style={{
-            width: 140,
-            height: 240,
-            right: 0,
-            marginLeft: 'auto',
-            top: -100,
-          }}
+          style={styles.banner}
         />
       </View>
       <InvitesList navigate={navigate} />

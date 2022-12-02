@@ -39,13 +39,7 @@ const ImpactPointsModal = () => {
         <Spacer paddingTop={20} paddingBottom={20}>
           <Typography.Body5>{t('caption modal')}</Typography.Body5>
         </Spacer>
-        <View
-          style={{
-            flexDirection: 'column',
-            borderColor: '#EFEFEF',
-            borderRadius: 8,
-            borderWidth: 1,
-          }}>
+        <View style={styles.tableContainer}>
           <View
             style={{
               flexDirection: 'row',
@@ -58,7 +52,7 @@ const ImpactPointsModal = () => {
               <Typography.Subtitle3>{t('points modal')}</Typography.Subtitle3>
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRow}>
             <View style={styles.tableLeft}>
               <Typography.Body6>{t('create a post')}</Typography.Body6>
             </View>
@@ -66,7 +60,7 @@ const ImpactPointsModal = () => {
               <Typography.Body6>{t('2')}</Typography.Body6>
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRow}>
             <View style={styles.tableLeft}>
               <Typography.Body6>{t('tip a post')}</Typography.Body6>
             </View>
@@ -74,7 +68,7 @@ const ImpactPointsModal = () => {
               <Typography.Body6>{t('3')}</Typography.Body6>
             </View>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.flexRow}>
             <View style={[styles.tableLeft, {borderBottomLeftRadius: 8}]}>
               <Typography.Body6>{t('react a post')}</Typography.Body6>
             </View>

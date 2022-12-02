@@ -46,6 +46,13 @@ const useStyles = makeStyle(theme => ({
     padding: 14,
     borderColor: '#EFEFEF',
   },
+  tableContainer: {
+    flexDirection: 'column',
+    borderColor: '#EFEFEF',
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  flexRow: {flexDirection: 'row'},
 }));
 
 export default useStyles;
