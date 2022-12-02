@@ -20,6 +20,7 @@ import {
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -232,7 +233,9 @@ const CommentReplies = () => {
   ]);
 
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
-    <ActivityIndicator />
+    <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <ActivityIndicator />
+    </SafeAreaView>
   ) : (
     <DView
       disableHideKeyboardTouchable={true}
