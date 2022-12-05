@@ -20,6 +20,19 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>social.butter</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>0.0.1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -37,14 +50,14 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Files permission is required for app functionality and personalization.</string>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Butter authentication with TouchId or FaceID</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth permissions is required for Ledger pairing.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera Permission is required for app functionality and personalization.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Butter authentication with TouchId or FaceID</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -90,6 +103,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
