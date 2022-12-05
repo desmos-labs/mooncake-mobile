@@ -31,7 +31,7 @@
     "@ledgerhq/react-native-hw-transport-ble": "^6.27.8",
     "@notifee/react-native": "^5.7.0",
     "@react-native-camera-roll/camera-roll": "^5.0.2",
-    "@react-native-clipboard/clipboard": "^1.10.0",
+    "@react-native-clipboard/clipboard": "^1.11.1",
     "@react-native-community/blur": "^4.2.0",
     "@react-native-firebase/app": "^15.4.0",
     "@react-native-firebase/messaging": "^15.4.0",

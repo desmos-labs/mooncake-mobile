@@ -5,6 +5,7 @@ import {
   View,
   StyleProp,
   TouchableOpacityProps,
+  ViewStyle,
 } from 'react-native';
 import FastImage, {ImageStyle, Source} from 'react-native-fast-image';
 
@@ -18,6 +19,8 @@ interface Props extends TouchableOpacityProps {
    * The image's style.
    */
   style?: StyleProp<ImageStyle>;
+
+  buttonStyle?: StyleProp<ViewStyle>;
 
   /**
    * A component that will be rendered on top of the image.
@@ -45,6 +48,7 @@ const ImageButton = ({
   overlayComponent,
   overlayPosition,
   hitSlopValue,
+  buttonStyle,
   ...rest
 }: Props) => {
   const hitSlop = hitSlopValue
@@ -58,10 +62,10 @@ const ImageButton = ({
 
   return (
     <TouchableOpacity
-      style={{opacity: rest.disabled ? 0.3 : 1}}
+      style={[{opacity: rest.disabled ? 0.3 : 1}, buttonStyle]}
       hitSlop={hitSlop}
       {...rest}>
-      <FastImage style={style} source={image} />
+      <FastImage resizeMode="cover" style={style} source={image} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>
           {overlayComponent}

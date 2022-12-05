@@ -61,12 +61,15 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
+import Invites from 'screens/Invites';
+import ImpactPointsModal from 'screens/Invites/components/ImpactPointsModal';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
 import ManageBiometrics from 'screens/ManageBiometrics';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
+import ManageInvites from 'screens/ManageInvites';
 import MnemonicInput, {
   MNEMONIC_INPUT_MODE,
   MnemonicInputParams,
@@ -212,6 +215,11 @@ export type RootNavigatorParamList = {
   // Grants
   [ROUTES.GRANTS]: undefined;
   [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
+
+  // Invites
+  [ROUTES.INVITES]: undefined;
+  [ROUTES.MANAGE_INVITES]: undefined;
+  [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -425,6 +433,10 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
 
+      <Stack.Screen name={ROUTES.INVITES} component={Invites} />
+
+      <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
+
       {/* modals */}
       <Stack.Group
         screenOptions={{
@@ -453,6 +465,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
         <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
+        <Stack.Screen
+          name={ROUTES.IMPACT_POINTS_MODAL}
+          component={ImpactPointsModal}
+        />
         <Stack.Screen
           name={ROUTES.ADD_PROFILE_MODAL}
           component={AddProfileModal}

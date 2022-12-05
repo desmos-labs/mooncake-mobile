@@ -1,0 +1,24 @@
+{
+  "invites": "Invites",
+  "title modal": "Impact Points",
+  "body modal": "Impact points are a way to reward your in app activities. Interacting with some of the app's functions rewards you with points. ",
+  "caption modal": "Impact points rewards",
+  "got it": "Got it",
+  "invite friends": "Invite Friends & Earn DSM",
+  "refer a friend": "Refer a friend and you both get rewards",
+  "points": "{{number}} points",
+  "invite steps": "Invite Steps",
+  "invites shared": "{{number}}/3 invites shared",
+  "generate invite": "Generate an invite",
+  "share invite": "Share it with your friend",
+  "wait redeem": "Wait them to redeem it",
+  "get rewards": "You <0>both get rewards</0>",
+  "action": "Action",
+  "points modal": "Points",
+  "create a post": "Create a post",
+  "tip a post": "Tip a post",
+  "react a post": "React a post",
+  "total rewards": "Total Rewards Earned",
+  "no invites yet": "No invites yet"
+
+}

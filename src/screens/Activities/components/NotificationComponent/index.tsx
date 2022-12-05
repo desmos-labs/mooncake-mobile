@@ -24,7 +24,7 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
 
-const Activities = ({
+const NotificationComponent = ({
   data: {type, post_id},
   profile,
   timestamp,
@@ -276,4 +276,4 @@ const Activities = ({
   return <View style={styles.container}>{content}</View>;
 };
 
-export default Activities;
+export default NotificationComponent;
