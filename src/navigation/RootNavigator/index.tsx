@@ -1,3 +1,6 @@
+import dynamicLinks, {
+  FirebaseDynamicLinksTypes,
+} from '@react-native-firebase/dynamic-links';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import EnvConfig from 'config/EnvConfig';
@@ -13,9 +16,9 @@ import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, TextStyle, ViewStyle} from 'react-native';
+import {Alert, Dimensions, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
 import ActionAuthorization, {
@@ -116,7 +119,6 @@ import ShowRecoveryPhrase, {
 import Signup from 'screens/Signup';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -238,20 +240,43 @@ const RootNavigator = () => {
 
   const {t} = useTranslation();
 
-  const handleDynamicLink = useCallback(async (link: any) => {
-    if (link.url) {
-      console.log(link);
+  useEffect(() => {
+    console.log('dynamic links fetching from closed');
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        console.log(link);
+        if (link) {
+          console.log('link from closed state');
+          Alert.alert(
+            'test',
+            `${link.utmParameters.toString()} ${link.url.toString()}`,
+          );
+        }
+      });
+  }, []);
+
+  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
+    // Handle dynamic link inside your own application
+    console.log('dynamic links fetching from open');
+    if (link) {
+      console.log('link from open state');
+      Alert.alert(
+        'test',
+        `${link.utmParameters.toString()} ${link.url.toString()}`,
+      );
     }
+  };
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    // When the component is unmounted, remove the listener
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     RNBootSplash.hide({fade: true});
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    return () => unsubscribe();
-  }, [handleDynamicLink]);
 
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');

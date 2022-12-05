@@ -7,6 +7,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:join.butter.social</string>
+		<string>applinks:join.butter.social/invites</string>
 	</array>
 </dict>
 </plist>
