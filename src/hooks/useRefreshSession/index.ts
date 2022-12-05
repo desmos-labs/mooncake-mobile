@@ -26,9 +26,6 @@ const useRefreshSession = () => {
 
         await RefreshSession();
 
-        if (!messaging().isDeviceRegisteredForRemoteMessages) {
-          await messaging().registerDeviceForRemoteMessages();
-        }
         const notificationsToken = await messaging().getToken();
         await PostNotificationToken(notificationsToken.toString());
       } else {

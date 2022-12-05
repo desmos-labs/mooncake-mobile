@@ -242,7 +242,7 @@ const RootNavigator = () => {
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
     if (link) {
-      Alert.alert('test', `${link.url.toString()}`);
+      Alert.alert('FirebaseDynamicLink', `${link.url.toString()}`);
     }
   };
 
@@ -255,10 +255,8 @@ const RootNavigator = () => {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        console.log(link);
         if (link) {
-          console.log('link from closed state');
-          Alert.alert('test', `${link.url.toString()}`);
+          Alert.alert('FirebaseDynamicLink', `${link.url.toString()}`);
         }
       });
     // Clear the subscription
