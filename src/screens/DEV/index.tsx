@@ -1,26 +1,28 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {mnemonicState, signerState} from '@recoil/connectChainState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import ToastConfig from 'config/ToastConfig';
+import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {clearMMKV} from 'lib/MMKVStorage';
 import {resetSecureStorage} from 'lib/SecureStorage';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC} from 'react';
+import React, {FC, useCallback} from 'react';
 import {
   Alert,
   FlatList,
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
-import {mnemonicState, signerState} from '@recoil/connectChainState';
 import {useResetRecoilState} from 'recoil';
+import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -56,7 +58,7 @@ const routesToRender = [
 ];
 
 const styles: {[styleName: string]: ViewStyle | TextStyle} = {
-  button: {padding: 18, borderWidth: 1, borderColor: 'grey'},
+  button: {padding: 18, borderWidth: 1, borderColor: 'grey', borderRadius: 12},
   flatList: {padding: 16},
   text: {color: 'black'},
 };
@@ -90,9 +92,9 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
       onPress() {
         console.log('test');
       },
-      onPressRetry() {
+      /*      onPressRetry() {
         console.log('retry');
-      },
+      }, */
     });
     toast.show('I am a toast', {
       type: ToastConfig.ERROR_NO_RETRY,
@@ -101,6 +103,20 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
       },
     });
   };
+
+  const acceptInvite = useCallback(async (code: string) => {
+    await AcceptInvite(code).then(result =>
+      Alert.alert('Accept invite tx hash', result.tx_hash),
+    );
+  }, []);
+
+  const redeemAnInvite = useCallback(async () => {
+    Alert.prompt('Insert invite code', '', async invite => {
+      await acceptInvite(invite).catch(e => {
+        Alert.alert('Error', e.response.data);
+      });
+    });
+  }, []);
 
   const {activeAddress} = useActiveAccount();
 
@@ -142,64 +158,94 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   return (
     <DView>
       <FlatList
+        style={{flex: 1}}
         contentContainerStyle={styles.flatList}
         data={routesToRender}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
-
-      <Button mode="contained" onPress={() => navigate(ROUTES.LANDING)}>
-        Continue to Landing screen
-      </Button>
-
-      <Spacer paddingVertical={16} />
-      <Button mode="contained" onPress={showToast}>
-        Show toast
-      </Button>
-      <Button
-        mode="contained"
-        onPress={() => {
-          Alert.alert(
-            'Are you sure?',
-            'This will revoke all grants on chain.',
-            [
-              {
-                text: 'Yes',
-                onPress: async () => {
-                  await revokeGrants();
-                },
+      <Spacer paddingVertical={4} />
+      <View style={{marginHorizontal: 10}}>
+        <Button
+          mode="contained"
+          color="green"
+          onPress={() => navigate(ROUTES.LANDING)}>
+          Continue to Landing screen
+        </Button>
+        <Spacer paddingVertical={4} />
+        <Button
+          mode="contained"
+          color="red"
+          onPress={() =>
+            navigate(ROUTES.HOME_TABS, {
+              screen: ROUTES.HOME_DISCOVER,
+              params: {
+                type: 'discover',
               },
-              {
-                text: 'Cancel',
-              },
-            ],
-          );
-        }}>
-        Revoke all Grants
-      </Button>
-
-      <Button
-        mode="contained"
-        onPress={() => {
-          Alert.alert(
-            'Are you sure?',
-            'This will delete all values in MMKV and Secure Storage',
-            [
-              {
-                text: 'Yes',
-                onPress: async () => {
-                  clearMMKV();
-                  await resetSecureStorage();
-                },
-              },
-              {
-                text: 'Cancel',
-              },
-            ],
-          );
-        }}>
-        Reset MMKV storage & Secure Storage
-      </Button>
+            })
+          }>
+          Continue to Home screen
+        </Button>
+        <Spacer paddingVertical={8} />
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'column', flex: 0.5}}>
+            <Button mode="contained" onPress={showToast}>
+              Show toast
+            </Button>
+            <Spacer paddingVertical={4} />
+            <Button mode="contained" onPress={redeemAnInvite}>
+              Accept invite
+            </Button>
+          </View>
+          <Spacer paddingHorizontal={4} />
+          <View style={{flexDirection: 'column', flex: 0.5}}>
+            <Button
+              mode="contained"
+              onPress={() => {
+                Alert.alert(
+                  'Are you sure?',
+                  'This will revoke all grants on chain.',
+                  [
+                    {
+                      text: 'Yes',
+                      onPress: async () => {
+                        await revokeGrants();
+                      },
+                    },
+                    {
+                      text: 'Cancel',
+                    },
+                  ],
+                );
+              }}>
+              Revoke all Grants
+            </Button>
+            <Spacer paddingVertical={4} />
+            <Button
+              mode="contained"
+              onPress={() => {
+                Alert.alert(
+                  'Are you sure?',
+                  'This will delete all values in MMKV and Secure Storage',
+                  [
+                    {
+                      text: 'Yes',
+                      onPress: async () => {
+                        clearMMKV();
+                        await resetSecureStorage();
+                      },
+                    },
+                    {
+                      text: 'Cancel',
+                    },
+                  ],
+                );
+              }}>
+              Reset MMKV storage & Secure Storage
+            </Button>
+          </View>
+        </View>
+      </View>
     </DView>
   );
 };
