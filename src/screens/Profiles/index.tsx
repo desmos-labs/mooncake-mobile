@@ -148,6 +148,9 @@ const Profiles = () => {
                   activeAddress: profile.address,
                   password: unlockResult.password,
                 });
+                if (!messaging().isDeviceRegisteredForRemoteMessages) {
+                  await messaging().registerDeviceForRemoteMessages();
+                }
                 const notificationsToken = await messaging().getToken();
                 await PostNotificationToken(notificationsToken.toString());
               }

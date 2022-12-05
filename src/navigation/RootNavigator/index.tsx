@@ -240,42 +240,29 @@ const RootNavigator = () => {
 
   const {t} = useTranslation();
 
+  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
+    if (link) {
+      Alert.alert('test', `${link.url.toString()}`);
+    }
+  };
+
   useEffect(() => {
-    console.log('dynamic links fetching from closed');
+    // Hide the splashscreen
+    RNBootSplash.hide({fade: true});
+
+    // Listen to Firebase dynamic links, foreground and background modes
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
     dynamicLinks()
       .getInitialLink()
       .then(link => {
         console.log(link);
         if (link) {
           console.log('link from closed state');
-          Alert.alert(
-            'test',
-            `${link.utmParameters.toString()} ${link.url.toString()}`,
-          );
+          Alert.alert('test', `${link.url.toString()}`);
         }
       });
-  }, []);
-
-  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
-    // Handle dynamic link inside your own application
-    console.log('dynamic links fetching from open');
-    if (link) {
-      console.log('link from open state');
-      Alert.alert(
-        'test',
-        `${link.utmParameters.toString()} ${link.url.toString()}`,
-      );
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    // When the component is unmounted, remove the listener
+    // Clear the subscription
     return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    RNBootSplash.hide({fade: true});
   }, []);
 
   /* To allow going back to previous screen via swipe left. */
