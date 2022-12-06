@@ -1,11 +1,9 @@
-import {useQuery} from '@apollo/client';
 import {emptyInvitesImage} from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Image,
@@ -18,7 +16,7 @@ import {useTheme} from 'react-native-paper';
 import InviteComponent, {
   Invite,
 } from 'screens/ManageInvites/components/InviteComponent';
-import GetInvites from 'services/graphql/queries/GetInvites';
+import useHooks from '../../useHooks';
 import useStyles from './useStyles';
 
 interface Props {
@@ -28,41 +26,7 @@ interface Props {
 const InvitesList = ({navigate}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('invites');
-  const {data, loading, refetch} = useQuery(GetInvites, {
-    fetchPolicy: 'no-cache',
-  });
-
-  const invitesSectioned = useMemo(() => {
-    if (!data?.invite) {
-      return [];
-    }
-
-    const pending: any[] = [];
-    const successful: any[] = [];
-
-    data.invite.forEach((invite: any) => {
-      if (invite.claimer) {
-        successful.push({...invite, index: data.invite.indexOf(invite) + 1});
-      } else {
-        pending.push({...invite, index: data.invite.indexOf(invite) + 1});
-      }
-    });
-
-    if (pending.length > 0 && successful.length <= 0) {
-      return [{section: t('pending invites'), data: pending}];
-    } else if (pending.length <= 0 && successful.length > 0) {
-      return [{section: t('successful invites'), data: successful}];
-    } else if (pending.length > 0 && successful.length > 0) {
-      return [
-        {section: t('pending invites'), data: pending},
-        {section: t('successful invites'), data: successful},
-      ];
-    } else {
-      return [];
-    }
-  }, [data]);
-
+  const {invitesSectioned, data, loading, refetch, t} = useHooks();
   const renderInvite = React.useCallback(
     ({item}: ListRenderItemInfo<Invite>) => {
       console.log(item);

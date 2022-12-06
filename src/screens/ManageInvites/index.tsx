@@ -8,11 +8,11 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import InvitesList from 'screens/ManageInvites/components/InvitesList';
+import useHooks from 'screens/ManageInvites/useHooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -22,9 +22,9 @@ export type NavProps = StackScreenProps<
 
 const ManageInvites = () => {
   const styles = useStyles();
-  const {t} = useTranslation('invites');
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const {rewardBalance, t} = useHooks();
 
   return (
     <DView
@@ -38,7 +38,11 @@ const ManageInvites = () => {
           <Spacer paddingTop={theme.spacing.s} />
           <Typography.Body5>{t('total rewards')}</Typography.Body5>
           <Spacer paddingTop={theme.spacing.s} />
-          <Typography.H1>0 DSM</Typography.H1>
+          {rewardBalance !== undefined ? (
+            <Typography.H1>{rewardBalance} DSM</Typography.H1>
+          ) : (
+            <ActivityIndicator style={{flex: 1}} />
+          )}
         </View>
         <FastImage
           resizeMode="cover"

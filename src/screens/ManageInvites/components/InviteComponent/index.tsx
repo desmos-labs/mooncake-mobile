@@ -70,14 +70,11 @@ const InviteComponent = ({
                 }
               />
               <View style={styles.profileView}>
-                <Typography.Subtitle2
-                  numberOfLines={1}
-                  ellipsizeMode="middle"
-                  style={{maxWidth: '80%'}}>
-                  {claimer.nickname.trimStart() || claimer.address.trimStart()}
+                <Typography.Subtitle2 numberOfLines={1}>
+                  {claimer.nickname.trimStart() || 'no-nickname'}
                 </Typography.Subtitle2>
                 <Typography.Body7>
-                  @{claimer.dtag.trimStart() || 'no-dtag-set'}
+                  @{claimer.dtag.trimStart() || 'no-dtag'}
                 </Typography.Body7>
               </View>
             </View>
