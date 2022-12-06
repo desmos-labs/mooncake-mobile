@@ -52,10 +52,7 @@ const MnemonicInput = () => {
   } = useHooks();
 
   return (
-    <DView
-      style={styles.container}
-      topBar={<TopBar />}
-      disableHideKeyboardTouchable={true}>
+    <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t(headerText)}</Typography.H3>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 50 : 0}

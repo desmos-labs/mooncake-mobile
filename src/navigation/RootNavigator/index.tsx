@@ -5,6 +5,7 @@ import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
 import usePollingQueries from 'hooks/usePollingQueries';
@@ -233,6 +234,7 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
   const {navigate} = useNavigation<any>();
+  const {activeAddress} = useActiveAccount();
   const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
@@ -245,11 +247,15 @@ const RootNavigator = () => {
   const {t} = useTranslation();
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
-    if (link) {
+    if (link && !activeAddress) {
       const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-      Alert.alert('FirebaseDynamicLink', `${inviteCode}`);
+      Alert.alert('You received an invite!', `${inviteCode}`);
       setInviteCode(inviteCode);
       navigate(ROUTES.SIGNUP);
+    } else {
+      if (activeAddress) {
+        Alert.alert('Error', 'Your already have an account');
+      }
     }
   };
 
@@ -262,11 +268,15 @@ const RootNavigator = () => {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        if (link) {
+        if (link && !activeAddress) {
           const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-          Alert.alert('FirebaseDynamicLink', `${inviteCode}`);
+          Alert.alert('You received an invite!', `${inviteCode}`);
           setInviteCode(inviteCode);
           navigate(ROUTES.SIGNUP);
+        } else {
+          if (activeAddress) {
+            Alert.alert('Error', 'Your already have an account');
+          }
         }
       });
     // Clear the subscription

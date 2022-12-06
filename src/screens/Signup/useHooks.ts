@@ -80,13 +80,11 @@ const useHooks = () => {
 
         await saveNewAccount(account);
         await saveLocalWallet(newWallet, confirmPassword);
-        console.log('password', confirmPassword);
         await saveMnemonic(newWallet.bech32Address, mnemonic, confirmPassword);
         setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
         if (inviteCode !== '') {
           console.log('Invite code', inviteCode);
-
           const {signatureBytes, pubkeyBytes, signedBytes} =
             await generateLoginData({
               wallet: newWallet as OfflineDirectSigner,
@@ -112,10 +110,9 @@ const useHooks = () => {
             await AcceptInvite(inviteCode)
               .then(result => {
                 if (result) {
-                  console.log('result', result);
                   Alert.alert(
                     'Invite redeemed!',
-                    'Invite was successful redeemed, you can now create a Desmos Profile',
+                    'Invitation successfully redeemed! We are creating your new Desmos Profile, please wait...',
                   );
                   setAddressToCheck(address);
                   setSignupValues({
@@ -202,15 +199,13 @@ const useHooks = () => {
   }, [signupValues, signUpInfo]);
 
   useEffect(() => {
-    console.log('DATA', data);
+    console.log('Waiting the account to be on-chain');
     if (
       data &&
       data.action_account_balance.coins.length > 0 &&
       data.action_account_balance.coins[0].amount !== 0
     ) {
-      console.log(
-        'Account on chain found, proceed to create a profile and sign the tx',
-      );
+      console.log('Account on chain found, saving the profile on chain now');
       stopPolling();
       saveProfileOnChain();
     }
