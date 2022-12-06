@@ -53,8 +53,7 @@ const Invites = () => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: 'Refer a friend and you both get rewards',
-        url: inviteLink,
+        message: inviteLink,
         title: 'Butter invitation link',
       });
       if (result.action === Share.sharedAction) {

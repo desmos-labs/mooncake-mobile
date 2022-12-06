@@ -253,7 +253,7 @@ const RootNavigator = () => {
       setInviteCode(inviteCode);
       navigate(ROUTES.SIGNUP);
     } else {
-      if (activeAddress) {
+      if (link && activeAddress) {
         Alert.alert('Error', 'Your already have an account');
       }
     }
@@ -274,7 +274,7 @@ const RootNavigator = () => {
           setInviteCode(inviteCode);
           navigate(ROUTES.SIGNUP);
         } else {
-          if (activeAddress) {
+          if (link && activeAddress) {
             Alert.alert('Error', 'Your already have an account');
           }
         }
