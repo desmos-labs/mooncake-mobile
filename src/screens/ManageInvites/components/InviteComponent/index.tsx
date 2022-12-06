@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import {copyIcon} from 'assets/images';
+import {copyIcon, defaultProfilePic} from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -28,8 +28,6 @@ const InviteComponent = ({
   expiration_time,
   index,
 }: Invite) => {
-  /*  const {t} = useTranslation('activities');
-  const theme = useTheme(); */
   const styles = useStyles();
   const theme = useTheme();
   const {t} = useTranslation('invites');
@@ -37,30 +35,53 @@ const InviteComponent = ({
   const expirationDate = useFormatTimeForPostDetails(expiration_time);
 
   useEffect(() => {
-    console.log(code);
-    console.log(link);
-    console.log(creationDate);
-    console.log(expirationDate);
-    console.log(claimer);
-  }, []);
+    console.log('Invite number', index);
+    console.log('Invite code', code);
+    console.log('Creation date', creationDate);
+    console.log('Expiration date', expirationDate);
+  }, [creationDate, expirationDate]);
 
   const content = useMemo(() => {
     return (
       <View style={styles.flexRowView}>
         {claimer ? (
-          <>
-            <FastImage
-              style={styles.avatar}
-              source={{uri: claimer.profile_pic}}
-            />
-
-            <View style={styles.profileView}>
-              <Typography.Subtitle3>
-                {claimer.nickname.trimStart()}
-                <Typography.Body6>test</Typography.Body6>
-              </Typography.Subtitle3>
+          <View style={{flexDirection: 'column', flex: 1}}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Typography.Body5>
+                {t('invite')} # {index}
+              </Typography.Body5>
+              <Typography.Body7 style={{color: theme.colors.midGrey}}>
+                {creationDate}
+              </Typography.Body7>
             </View>
-          </>
+            <Spacer paddingBottom={theme.spacing.s} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <FastImage
+                style={styles.avatar}
+                source={
+                  claimer.profile_pic
+                    ? {uri: claimer.profile_pic}
+                    : defaultProfilePic
+                }
+              />
+              <View style={styles.profileView}>
+                <Typography.Subtitle2
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  style={{maxWidth: '80%'}}>
+                  {claimer.nickname.trimStart() || claimer.address.trimStart()}
+                </Typography.Subtitle2>
+                <Typography.Body7>
+                  @{claimer.dtag.trimStart() || 'no-dtag-set'}
+                </Typography.Body7>
+              </View>
+            </View>
+          </View>
         ) : (
           <View style={{flex: 1}}>
             <View
@@ -69,7 +90,7 @@ const InviteComponent = ({
                 {t('invite')} # {index}
               </Typography.Body5>
               <Typography.Body7 style={{color: theme.colors.midGrey}}>
-                {expirationDate}
+                {creationDate}
               </Typography.Body7>
             </View>
             <Spacer paddingBottom={theme.spacing.s} />

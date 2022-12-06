@@ -43,13 +43,11 @@ const InvitesList = ({navigate}: Props) => {
 
     data.invite.forEach((invite: any) => {
       if (invite.claimer) {
-        successful.push(invite);
+        successful.push({...invite, index: data.invite.indexOf(invite) + 1});
       } else {
-        pending.push(invite);
+        pending.push({...invite, index: data.invite.indexOf(invite) + 1});
       }
     });
-    console.log(pending.length);
-    console.log(successful.length);
 
     if (pending.length > 0 && successful.length <= 0) {
       return [{section: t('pending invites'), data: pending}];
@@ -66,8 +64,9 @@ const InvitesList = ({navigate}: Props) => {
   }, [data]);
 
   const renderInvite = React.useCallback(
-    ({item, index}: ListRenderItemInfo<Invite>) => {
-      return <InviteComponent {...item} index={index + 1} />;
+    ({item}: ListRenderItemInfo<Invite>) => {
+      console.log(item);
+      return <InviteComponent {...item} />;
     },
     [],
   );

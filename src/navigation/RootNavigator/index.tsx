@@ -1,8 +1,9 @@
 import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
-import {NavigatorScreenParams} from '@react-navigation/native';
+import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
@@ -21,6 +22,7 @@ import {useTranslation} from 'react-i18next';
 import {Alert, Dimensions, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
@@ -230,6 +232,8 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
+  const {navigate} = useNavigation<any>();
+  const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useNotifications();
@@ -242,7 +246,10 @@ const RootNavigator = () => {
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
     if (link) {
-      Alert.alert('FirebaseDynamicLink', `${link.url.toString()}`);
+      const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
+      Alert.alert('FirebaseDynamicLink', `${inviteCode}`);
+      setInviteCode(inviteCode);
+      navigate(ROUTES.SIGNUP);
     }
   };
 
@@ -256,7 +263,10 @@ const RootNavigator = () => {
       .getInitialLink()
       .then(link => {
         if (link) {
-          Alert.alert('FirebaseDynamicLink', `${link.url.toString()}`);
+          const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
+          Alert.alert('FirebaseDynamicLink', `${inviteCode}`);
+          setInviteCode(inviteCode);
+          navigate(ROUTES.SIGNUP);
         }
       });
     // Clear the subscription

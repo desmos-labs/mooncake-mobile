@@ -14,8 +14,6 @@ const useStyles = makeStyle(theme => ({
   profileView: {
     marginLeft: theme.spacing.s,
     flexDirection: 'column',
-    justifyContent: 'center',
-    maxWidth: '60%',
   },
   followButton: {
     minWidth: 86,

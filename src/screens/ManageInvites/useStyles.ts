@@ -7,11 +7,11 @@ const useStyles = makeStyle(theme => ({
   },
   textContainer: {flexDirection: 'column', paddingLeft: theme.spacing.m},
   banner: {
-    width: 140,
-    height: 240,
+    width: 125,
+    height: 175,
     right: 0,
     marginLeft: 'auto',
-    marginTop: -100,
+    marginTop: -45,
   },
 }));
 

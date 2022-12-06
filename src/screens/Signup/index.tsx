@@ -58,6 +58,7 @@ const Signup = () => {
     validateForm,
     initialFormValues,
     loading,
+    inviteCode,
   } = useHooks();
 
   const profileParams = useRecoilValue(profileParamsState);
@@ -261,6 +262,12 @@ const Signup = () => {
                     )}
                   </View>
                 </ScrollView>
+                {inviteCode !== '' && (
+                  <Typography.Button3
+                    style={{color: theme.colors.accentGreen01}}>
+                    Invite code: {inviteCode}
+                  </Typography.Button3>
+                )}
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
                     checked={values.consent}

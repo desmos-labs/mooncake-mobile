@@ -1,22 +1,31 @@
+import {useQuery} from '@apollo/client';
+import {toBase64} from '@cosmjs/encoding';
+import {OfflineDirectSigner} from '@cosmjs/proto-signing';
+import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import inviteCodeState from '@recoil/inviteCodeState';
+import signUpInfoState from '@recoil/signUpInfoState';
+import signUpPasswordState from '@recoil/signUpPasswordState';
+import {GenericMsgEnums} from 'lib/desmos/msgtypes';
+import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
-import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {GenericMsgEnums} from 'lib/desmos/msgtypes';
+import {Alert} from 'react-native';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {updateAuthToken} from 'services/axios';
+import AcceptInvite from 'services/axios/requests/AcceptInvite';
+import Login from 'services/axios/requests/Login';
+import {generateLoginData} from 'services/axios/requests/Login/utils';
+import UploadMedia from 'services/axios/requests/UploadMedia';
+import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
-import {toBase64} from '@cosmjs/encoding';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
-import signUpInfoState from '@recoil/signUpInfoState';
-import UploadMedia from 'services/axios/requests/UploadMedia';
-import _ from 'lodash';
-import signUpPasswordState from '@recoil/signUpPasswordState';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
@@ -24,11 +33,19 @@ const useHooks = () => {
   const {navigate, reset, goBack, push} =
     useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
-
+  const inviteCode = useRecoilValue(inviteCodeState);
   const signUpInfo = useRecoilValue(signUpInfoState);
-
   const setSignUpPassword = useSetRecoilState(signUpPasswordState);
   const [loading, setLoading] = React.useState(false);
+  const [addressToCheck, setAddressToCheck] = React.useState('');
+  const [signupValues, setSignupValues] = React.useState<any>({});
+  const {data, startPolling, stopPolling} = useQuery(GetAccountBalance, {
+    variables: {
+      address: addressToCheck,
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only',
+  });
 
   const initialFormValues = {
     dTag: '',
@@ -39,90 +56,165 @@ const useHooks = () => {
 
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
-      setLoading(true);
-      // First time user, create new wallet
-      const mnemonic = randomMnemonic();
+      try {
+        setLoading(true);
+        // First time user, create new wallet
+        const mnemonic = randomMnemonic();
 
-      const {confirmPassword, dTag} = formValues;
-      const newWallet = await LocalWallet.fromMnemonic(mnemonic, {
-        // TODO: dev only, remove before pushing
-        // hdPath: {coinType: 852, account: 1, change: 0, addressIndex: 0},
-      });
-      const address = newWallet.bech32Address;
+        const {confirmPassword, dTag} = formValues;
+        const newWallet = await LocalWallet.fromMnemonic(mnemonic, {
+          // TODO: dev only, remove before pushing
+          // hdPath: {coinType: 852, account: 1, change: 0, addressIndex: 0},
+        });
+        const address = newWallet.bech32Address;
 
-      const account: ChainAccount = {
-        type: ChainAccountType.Local,
-        address: newWallet.bech32Address,
-        hdPath: {
-          ...DesmosHdPath,
-        },
-        pubKey: toBase64(newWallet.publicKey),
-        signAlgorithm: 'secp256k1',
-      };
+        const account: ChainAccount = {
+          type: ChainAccountType.Local,
+          address: newWallet.bech32Address,
+          hdPath: {
+            ...DesmosHdPath,
+          },
+          pubKey: toBase64(newWallet.publicKey),
+          signAlgorithm: 'secp256k1',
+        };
 
-      await saveNewAccount(account);
-      await saveLocalWallet(newWallet, confirmPassword);
-      await saveMnemonic(newWallet.bech32Address, confirmPassword, mnemonic);
-      setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+        await saveNewAccount(account);
+        await saveLocalWallet(newWallet, confirmPassword);
+        console.log('password', confirmPassword);
+        await saveMnemonic(newWallet.bech32Address, mnemonic, confirmPassword);
+        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
-      const {nickname, coverPicture, profilePicture, bio} = signUpInfo;
+        if (inviteCode !== '') {
+          console.log('Invite code', inviteCode);
 
-      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        profilePicture && UploadMedia({mediaFile: profilePicture}),
-        coverPicture && UploadMedia({mediaFile: coverPicture}),
-      ]);
+          const {signatureBytes, pubkeyBytes, signedBytes} =
+            await generateLoginData({
+              wallet: newWallet as OfflineDirectSigner,
+              address,
+              signerData: {
+                accountNumber: 0,
+                sequence: 0,
+                chainId: 'desmos',
+              },
+            });
 
-      const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
-      const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
-
-      // Save new wallet as last selected wallet
-      // Build save profile message
-      const saveProfileMessage: MsgSaveProfileEncodeObject = {
-        typeUrl: GenericMsgEnums.MsgSaveProfile,
-        value: {
-          creator: address,
-          dtag: dTag,
-          nickname: nickname || '[do-not-modify]',
-          bio: bio || '[do-not-modify]',
-          profilePicture: profilePictureUrl || '[do-not-modify]',
-          coverPicture: coverPictureUrl || '[do-not-modify]',
-        },
-      };
-
-      const messages = [saveProfileMessage];
-
-      setLoading(false);
-
-      setSignUpPassword(confirmPassword);
-
-      navigate(ROUTES.BROADCAST_TX, {
-        title: t('broadcastTx:signUp') as string,
-        messages,
-        offlineSigner: newWallet,
-        successAction: () => {
-          push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-            title: t('common:congratulations'),
-            subtitle: t('common:dtag created'),
-            buttonLabel: t('resultModal:enterApp'),
-            handleButtonPress: () => {
-              reset({
-                index: 0,
-                routes: [
-                  {
-                    name: ROUTES.HOME_TABS,
-                  },
-                ],
-              });
-            },
+          const {token} = await Login({
+            address,
+            signatureBytes,
+            pubkeyBytes,
+            signedBytes,
           });
-        },
-        failureAction: () => {
-          goBack();
-        },
-      });
+
+          updateAuthToken(token);
+
+          if (token) {
+            console.log('Token', token);
+            await AcceptInvite(inviteCode)
+              .then(result => {
+                if (result) {
+                  console.log('result', result);
+                  Alert.alert(
+                    'Invite redeemed!',
+                    'Invite was successful redeemed, you can now create a Desmos Profile',
+                  );
+                  setAddressToCheck(address);
+                  setSignupValues({
+                    wallet: newWallet,
+                    dTag,
+                    address,
+                    password: confirmPassword,
+                  });
+                  startPolling(1000);
+                }
+              })
+              .catch(e => {
+                console.log('error', e);
+                Alert.alert('Error', e.response.data);
+              });
+          }
+        } else {
+          Alert.alert('Error', 'Your invite code is invalid');
+        }
+      } catch (e) {
+        console.error('Error', e);
+        setLoading(false);
+        stopPolling();
+      }
     },
-    [signUpInfo],
+    [signUpInfo, data, startPolling, stopPolling],
   );
+
+  const saveProfileOnChain = useCallback(async () => {
+    const {wallet, address, password, dTag} = signupValues;
+    const {nickname, coverPicture, profilePicture, bio} = signUpInfo;
+
+    const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
+      profilePicture && UploadMedia({mediaFile: profilePicture}),
+      coverPicture && UploadMedia({mediaFile: coverPicture}),
+    ]);
+
+    const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
+    const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
+
+    // Save new wallet as last selected wallet
+    // Build save profile message
+    const saveProfileMessage: MsgSaveProfileEncodeObject = {
+      typeUrl: GenericMsgEnums.MsgSaveProfile,
+      value: {
+        creator: address,
+        dtag: dTag,
+        nickname: nickname || '[do-not-modify]',
+        bio: bio || '[do-not-modify]',
+        profilePicture: profilePictureUrl || '[do-not-modify]',
+        coverPicture: coverPictureUrl || '[do-not-modify]',
+      },
+    };
+    stopPolling();
+    const messages = [saveProfileMessage];
+    setLoading(false);
+    setSignUpPassword(password);
+
+    navigate(ROUTES.BROADCAST_TX, {
+      title: t('broadcastTx:signUp') as string,
+      messages,
+      offlineSigner: wallet,
+      successAction: () => {
+        push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
+          title: t('common:congratulations'),
+          subtitle: t('common:dtag created'),
+          buttonLabel: t('resultModal:enterApp'),
+          handleButtonPress: () => {
+            reset({
+              index: 0,
+              routes: [
+                {
+                  name: ROUTES.HOME_TABS,
+                },
+              ],
+            });
+          },
+        });
+      },
+      failureAction: () => {
+        goBack();
+      },
+    });
+  }, [signupValues, signUpInfo]);
+
+  useEffect(() => {
+    console.log('DATA', data);
+    if (
+      data &&
+      data.action_account_balance.coins.length > 0 &&
+      data.action_account_balance.coins[0].amount !== 0
+    ) {
+      console.log(
+        'Account on chain found, proceed to create a profile and sign the tx',
+      );
+      stopPolling();
+      saveProfileOnChain();
+    }
+  }, [data, stopPolling]);
 
   const openInfoModal = useCallback(() => {
     navigate(ROUTES.TEXTONLY_MODAL, {
@@ -157,6 +249,7 @@ const useHooks = () => {
     validateForm,
     initialFormValues,
     loading,
+    inviteCode,
   };
 };
 

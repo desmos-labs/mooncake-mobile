@@ -1,4 +1,5 @@
 import {OfflineDirectSigner} from '@cosmjs/proto-signing';
+import {SignerData} from '@cosmjs/stargate';
 import GetNonce from 'services/axios/requests/GetNonce';
 import {StdFee} from '@cosmjs/amino';
 import {
@@ -15,9 +16,11 @@ import {toHex} from '@cosmjs/encoding';
 export const generateLoginData = async ({
   wallet,
   address,
+  signerData,
 }: {
   wallet: OfflineDirectSigner;
   address: string;
+  signerData?: SignerData;
 }): Promise<{
   signatureBytes: string;
   pubkeyBytes: string;
@@ -49,7 +52,7 @@ export const generateLoginData = async ({
 
   // Pass an empty array as message, as we just need to sign something
   // to grab the SignatureResult
-  const result = await desmosClient.signTx(address, [], fee, nonce);
+  const result = await desmosClient.signTx(address, [], fee, nonce, signerData);
 
   return {
     signatureBytes: toHex(getSignatureBytes(result)),

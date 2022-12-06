@@ -4,6 +4,7 @@ const GetInvites = gql`
   query Invites @api(name: butter) {
     invite {
       claimer {
+        address
         dtag
         address
         nickname
