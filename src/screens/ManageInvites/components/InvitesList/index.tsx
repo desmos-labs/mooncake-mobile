@@ -27,6 +27,7 @@ const InvitesList = ({navigate}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const {invitesSectioned, data, loading, refetch, t} = useHooks();
+
   const renderInvite = React.useCallback(
     ({item}: ListRenderItemInfo<Invite>) => {
       console.log(item);

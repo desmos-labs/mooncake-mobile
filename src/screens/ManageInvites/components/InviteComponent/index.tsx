@@ -106,7 +106,7 @@ const InviteComponent = ({
         )}
       </View>
     );
-  }, []);
+  }, [link, claimer, creation_time, expiration_time, index]);
 
   return <View style={styles.container}>{content}</View>;
 };
