@@ -59,12 +59,23 @@ const AppConnectedItem = ({
         <View style={styles.centerGroup}>
           <View style={{flexDirection: 'row'}}>
             <Typography.H5 style={styles.baseText}>{username}</Typography.H5>
-            {state === 'APPLICATION_LINK_STATE_VERIFICATION_SUCCESS' && (
+            {state === 'APPLICATION_LINK_STATE_VERIFICATION_SUCCESS' ? (
               <Image
                 source={verifiedIcon}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 20,
+                  height: 20,
+                  alignSelf: 'center',
+                  marginLeft: 4,
+                }}
+              />
+            ) : (
+              <Image
+                source={verifiedIcon}
+                style={{
+                  tintColor: 'rgba(221, 221, 221, 1)',
+                  width: 20,
+                  height: 20,
                   alignSelf: 'center',
                   marginLeft: 4,
                 }}
