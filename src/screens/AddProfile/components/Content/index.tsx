@@ -143,7 +143,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
       </View>
       <ScrollView
         style={{marginHorizontal: -theme.spacing.m}}
-        contentContainerStyle={{padding: theme.spacing.m}}>
+        contentContainerStyle={{padding: theme.spacing.m, flexGrow: 1}}>
         {globalLoading ? (
           <ActivityIndicator />
         ) : (

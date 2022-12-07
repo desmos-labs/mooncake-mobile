@@ -18,7 +18,6 @@ export const deriveSecurePassword = (password: string): string => {
  */
 export const encryptData = (text: string, password: string): string => {
   const securePassword: string = deriveSecurePassword(password);
-
   return CryptoES.AES.encrypt(text, securePassword).toString();
 };
 

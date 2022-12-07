@@ -1,6 +1,11 @@
-import {NavigatorScreenParams} from '@react-navigation/native';
+import dynamicLinks, {
+  FirebaseDynamicLinksTypes,
+} from '@react-native-firebase/dynamic-links';
+import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
 import usePollingQueries from 'hooks/usePollingQueries';
@@ -15,9 +20,10 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, TextStyle, ViewStyle} from 'react-native';
+import {Alert, Dimensions, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
@@ -227,6 +233,9 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
+  const {navigate} = useNavigation<any>();
+  const {activeAddress} = useActiveAccount();
+  const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useNotifications();
@@ -237,8 +246,41 @@ const RootNavigator = () => {
 
   const {t} = useTranslation();
 
+  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
+    if (link && !activeAddress) {
+      const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
+      Alert.alert('You received an invite!', `${inviteCode}`);
+      setInviteCode(inviteCode);
+      navigate(ROUTES.SIGNUP);
+    } else {
+      if (link && activeAddress) {
+        Alert.alert('Error', 'Your already have an account');
+      }
+    }
+  };
+
   useEffect(() => {
+    // Hide the splashscreen
     RNBootSplash.hide({fade: true});
+
+    // Listen to Firebase dynamic links, foreground and background modes
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        if (link && !activeAddress) {
+          const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
+          Alert.alert('You received an invite!', `${inviteCode}`);
+          setInviteCode(inviteCode);
+          navigate(ROUTES.SIGNUP);
+        } else {
+          if (link && activeAddress) {
+            Alert.alert('Error', 'Your already have an account');
+          }
+        }
+      });
+    // Clear the subscription
+    return () => unsubscribe();
   }, []);
 
   /* To allow going back to previous screen via swipe left. */

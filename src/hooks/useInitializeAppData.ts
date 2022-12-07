@@ -36,22 +36,20 @@ const useInitializeAppData = () => {
   // Not the most elegant way, but it will do for now
   React.useEffect(() => {
     const initAppData = async () => {
+      const desmosParams = await getDesmosParams();
+
       const [appConfig] = await Promise.all([
-        getDesmosParams(),
         getSubspaceConfig(),
         getButterConfig(),
       ]);
 
-      const {
-        subspace_report_reason,
-        subspace_registered_reaction,
-        contract,
-        profiles_params,
-        posts_params,
-      } = appConfig.data;
-
-      const _postParams = _.get(posts_params, '[0].params');
-      const _profileParams = _.get(profiles_params, '[0].params');
+      const {subspace_report_reason, subspace_registered_reaction, contract} =
+        appConfig.data;
+      const _postParams = _.get(desmosParams.data, 'posts_params.[0].params');
+      const _profileParams = _.get(
+        desmosParams.data,
+        'profiles_params.[0].params',
+      );
 
       setProfileParams(_profileParams);
       setPostParams(_postParams);

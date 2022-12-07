@@ -135,6 +135,7 @@ const Profiles = () => {
               console.log(chainAccount);
               const unlockResult = await unlockWallet({
                 chainAccount: chainAccount!,
+                skipBiometrics: true,
               });
               if (
                 unlockResult &&

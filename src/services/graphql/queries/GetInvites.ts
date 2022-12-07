@@ -1,16 +1,17 @@
 import {gql} from '@apollo/client';
 
 const GetInvites = gql`
-  query Invites @api(name: desmos) {
+  query Invites @api(name: butter) {
     invite {
-      code
-      link
       claimer {
         address
         dtag
+        address
         nickname
         profile_pic
       }
+      code
+      link
       creation_time
       expiration_time
     }
