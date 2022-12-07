@@ -1,5 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {usePollProfileData} from '@recoil/activeProfileState';
 import {
   connectedAppsState,
   useGetConnectedAppsPolling,
@@ -26,6 +27,7 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  ActivityIndicator,
   RefreshControl,
   SafeAreaView,
   StatusBar,
@@ -42,7 +44,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import Loading from 'screens/Following/components/Loading/Loading';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import {
@@ -50,7 +51,6 @@ import {
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import {usePollProfileData} from '@recoil/activeProfileState';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -262,8 +262,8 @@ const Profile = () => {
 
   if (globalLoading) {
     return (
-      <SafeAreaView>
-        <Loading />
+      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator />
       </SafeAreaView>
     );
   }

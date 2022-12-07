@@ -10,7 +10,7 @@ const GetPostsFromFollowing = gql`
     $following: [String!]
     $user: String
     $reaction: jsonb!
-  ) @api(name: desmos) {
+  ) @api(name: butter) {
     post(
       offset: $offset
       limit: $limit

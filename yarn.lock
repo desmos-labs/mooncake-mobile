@@ -1386,11 +1386,11 @@
     strip-json-comments "^3.1.1"
 
 "@expo/config-plugins@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-5.0.1.tgz#66bc8d15785bdcd3598e466344f8c0518390179d"
-  integrity sha512-1OfnsOrfeSkB0VZfT01UjQ5Uq6p+yYbq8yNkj0e99K/6NLHpyvIxj+5tZIV0nQXgkOcqBIABL2uA7lwB8CkaBQ==
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-5.0.4.tgz#216fea6558fe66615af1370de55193f4181cb23e"
+  integrity sha512-vzUcVpqOMs3h+hyRdhGwk+eGIOhXa5xYdd92yO17RMNHav3v/+ekMbs7XA2c3lepMO8Yd4/5hqmRw9ZTL6jGzg==
   dependencies:
-    "@expo/config-types" "^46.0.0"
+    "@expo/config-types" "^47.0.0"
     "@expo/json-file" "8.2.36"
     "@expo/plist" "0.0.18"
     "@expo/sdk-runtime-versions" "^1.0.0"
@@ -1406,10 +1406,10 @@
     xcode "^3.0.1"
     xml2js "0.4.23"
 
-"@expo/config-types@^46.0.0":
-  version "46.0.2"
-  resolved "https://registry.yarnpkg.com/@expo/config-types/-/config-types-46.0.2.tgz#191f225ebfcbe624868ddc40efae79593f948dd8"
-  integrity sha512-PXkmOgNwRyBfgVT1HmFZhfh3Qm7WKKyV6mk3/5HJ/LzPh1t+Zs2JrWX8U2YncTLV1QzV7nV8tnkyvszzqnZEzQ==
+"@expo/config-types@^47.0.0":
+  version "47.0.0"
+  resolved "https://registry.yarnpkg.com/@expo/config-types/-/config-types-47.0.0.tgz#99eeabe0bba7a776e0f252b78beb0c574692c38d"
+  integrity sha512-r0pWfuhkv7KIcXMUiNACJmJKKwlTBGMw9VZHNdppS8/0Nve8HZMTkNRFQzTHW1uH3pBj8jEXpyw/2vSWDHex9g==
 
 "@expo/json-file@8.2.36":
   version "8.2.36"
@@ -2203,10 +2203,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.0.2.tgz#299bcd25fc51c1e8564808e744439bf7761286af"
   integrity sha512-5gBol4mHjw9u1hUQzYWWdnB+uYgjuBd+adLQfJWhE6yv7rNFb+Noi872bYLyzBb8ayaVAbp/EtlxiG1lWY/IyA==
 
-"@react-native-clipboard/clipboard@^1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.10.0.tgz#605e784ed5435059c9b5db52b2d112f9fd09c409"
-  integrity sha512-1L+I0vmeUJgMi8MnNsqI00391/RFLkmmxj9qAuOS2madpvce/oNqJb8Pwk2Fc/uxIJSxOckTpq+dQwyPU6s+7w==
+"@react-native-clipboard/clipboard@^1.11.1":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.11.1.tgz#d3a9e685ce2383b1e92b89a334896c5575cc103d"
+  integrity sha512-nvSIIHzybVWqYxcJE5hpT17ekxAAg383Ggzw5WrYHtkKX61N1AwaKSNmXs5xHV7pmKSOe/yWjtSwxIzfW51I5Q==
 
 "@react-native-community/blur@^4.2.0":
   version "4.2.0"
@@ -2398,7 +2398,12 @@
   resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz"
   integrity sha512-o6aam+0Ug1xGK3ABYmBm0B1YuEKfM/5kaoZO0eHbZwSpw9UzDX4G5y4Nx/K20FHqUmJHkZmLvOUFYwN4N+HqKA==
 
-"@react-native-firebase/app@^15.4.0":
+"@react-native-firebase/analytics@15.4.0":
+  version "15.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-15.4.0.tgz#28cffb1c1a9e64a74d818f9cddc6bff38ed163d1"
+  integrity sha512-pshC2Po4Zfe5rafiexjK2lCpIGUq5Flc/swSbpvANGB64FBP3phxftQAwkO/F3sSL/I/uJTEsZ0GoKz3d1g0Jg==
+
+"@react-native-firebase/app@15.4.0":
   version "15.4.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-15.4.0.tgz#616a6d13956fbed1ee010ca05b9e62969d19b5c5"
   integrity sha512-1Xf1Q0x6x6dZamRjIpDLCvj4CUwozr1mvH3sc3A4J1avjGUwgqD0RR58DGd7r9akU+JmEXLHB84EZ9Aa68AHDg==
@@ -2407,7 +2412,12 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/messaging@^15.4.0":
+"@react-native-firebase/dynamic-links@15.4.0":
+  version "15.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-15.4.0.tgz#2fbb744354c005b9326657908943864a957bb2b9"
+  integrity sha512-xmFdKU1lCJqRh4d4q0nklQj+bI6G9zu4S2GLuhXuvEBJZnbMzXINJzQBaaML5pAtPZfnujm9wr4RD0omU0IN8g==
+
+"@react-native-firebase/messaging@15.4.0":
   version "15.4.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-15.4.0.tgz#1a6834cebe90c520a8b23180dcd52bf38dc90e08"
   integrity sha512-irmmkAWwD0PqZc3Nua4vdDS5liPfJzis5/zC1XxZw/AS4AfoEj2yv3+r273bqx/E9aZ2Udl1GBPV2nWBDDR/yA==

@@ -48,6 +48,10 @@ type useUnlockWalletParams = {
     | 'dViewProps'
     | 'inputLabelOverride'
   >;
+  /**
+   * Used to get the wallet password skipping the bio auth
+   */
+  skipBiometrics?: boolean;
 };
 
 /**
@@ -66,6 +70,7 @@ export default function useUnlockWallet(): (
       prefilledPassword,
       shouldReplaceRoute,
       isDerivedPassword,
+      skipBiometrics,
     }: useUnlockWalletParams) => {
       const navigate = shouldReplaceRoute
         ? navigation.replace
@@ -101,6 +106,7 @@ export default function useUnlockWallet(): (
                 address: chainAccount.address,
                 provideWallet: true,
                 provideMnemonic: true,
+                skipBiometrics,
                 onSuccessfulAuthentication: (
                   result: LocalAccountAuthenticationArgs,
                 ) => {

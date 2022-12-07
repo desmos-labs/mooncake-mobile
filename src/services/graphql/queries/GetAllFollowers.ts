@@ -2,7 +2,7 @@ import {gql} from '@apollo/client';
 
 const GetAllFollowers = gql`
   query GetFollowers($subspaceID: bigint!, $userAddress: String!)
-  @api(name: desmos) {
+  @api(name: butter) {
     followers: user_relationship(
       where: {
         subspace_id: {_eq: $subspaceID}

@@ -1,6 +1,7 @@
+import {useLazyQuery} from '@apollo/client';
 import React from 'react';
 import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import GetConfig from 'services/axios/requests/GetConfig';
+import GetConfig from 'services/graphql/queries/GetConfig';
 
 export interface ButterConfigState {
   // Desmos address of the account used by the APIs
@@ -34,11 +35,16 @@ export const useButterConfig = () => {
 
 export const useGetButterConfig = () => {
   const setButterConfig = useSetRecoilState(butterConfigState);
+  const [getConfigQuery] = useLazyQuery(GetConfig, {
+    fetchPolicy: 'no-cache',
+  });
 
   const getButterConfig = React.useCallback(async () => {
-    const _butterConfig = await GetConfig();
-
-    setButterConfig(_butterConfig);
+    await getConfigQuery().then(result => {
+      if (result) {
+        setButterConfig(result.data.config);
+      }
+    });
   }, []);
 
   return {

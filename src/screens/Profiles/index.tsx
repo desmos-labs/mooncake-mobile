@@ -1,7 +1,9 @@
+import messaging from '@react-native-firebase/messaging';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {signerState} from '@recoil/connectChainState';
 import {useLoadProfiles} from '@recoil/profiles';
+import appSettingsState from '@recoil/settings';
 import {defaultProfilePic} from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -16,9 +18,10 @@ import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useLogin from 'services/axios/requests/Login/useLogin';
+import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -27,6 +30,7 @@ export type NavProps = StackScreenProps<
 >;
 
 const Profiles = () => {
+  const {biometrics} = useRecoilValue(appSettingsState);
   const {profiles, loadAddrsIntoState} = useLoadProfiles();
   const {activeAddress, chainAccount, setActiveAddress} = useActiveAccount();
   const {t} = useTranslation('settings');
@@ -79,7 +83,9 @@ const Profiles = () => {
       const result = await unlockWallet({
         chainAccount,
         enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+        skipBiometrics: true,
       });
+
       if (result) {
         navigate(ROUTES.ADD_PROFILE, {
           mnemonic: result.mnemonic!,
@@ -89,7 +95,7 @@ const Profiles = () => {
     } catch (e) {
       console.error(e);
     }
-  }, [chainAccount]);
+  }, [chainAccount, biometrics]);
 
   const navigateToSelectAddress = useCallback(async () => {
     if (!chainAccount) {
@@ -100,6 +106,7 @@ const Profiles = () => {
       const result = await unlockWallet({
         chainAccount,
         enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+        skipBiometrics: true,
       });
       if (result) {
         navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
@@ -128,6 +135,7 @@ const Profiles = () => {
               console.log(chainAccount);
               const unlockResult = await unlockWallet({
                 chainAccount: chainAccount!,
+                skipBiometrics: true,
               });
               if (
                 unlockResult &&
@@ -140,6 +148,8 @@ const Profiles = () => {
                   activeAddress: profile.address,
                   password: unlockResult.password,
                 });
+                const notificationsToken = await messaging().getToken();
+                await PostNotificationToken(notificationsToken.toString());
               }
             } catch (e) {
               console.error(e);

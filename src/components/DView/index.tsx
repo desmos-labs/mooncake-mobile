@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import Animated, {FadeIn} from 'react-native-reanimated';
 import {
   Edge,
   SafeAreaView,
@@ -45,7 +46,6 @@ export type Props = SafeAreaViewProps & {
 
   showLoadingOverlay?: boolean;
   onBackgroundPress?: () => void;
-
   backgroundFillScreen?: boolean;
 };
 // TODO fix statusBarStyle accordingly with the theme
@@ -101,7 +101,9 @@ const DView: React.FC<Props> = props => {
             />
           )}
           {topBar}
-          <View style={[styles.content, style]}>
+          <Animated.View
+            entering={FadeIn.duration(250)}
+            style={[styles.content, style]}>
             {scrollable ? (
               <ScrollView
                 refreshControl={
@@ -126,7 +128,7 @@ const DView: React.FC<Props> = props => {
             ) : (
               children
             )}
-          </View>
+          </Animated.View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <LoadingOverlay isVisible={showLoadingOverlay ?? false} />

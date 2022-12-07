@@ -83,10 +83,7 @@ const PasswordManipulation = () => {
   } = useHooks();
 
   return (
-    <DView
-      style={styles.container}
-      topBar={<TopBar />}
-      disableHideKeyboardTouchable={true}>
+    <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3 style={styles.headerText}>{t(headerText)}</Typography.H3>
 
       {descriptionText && (

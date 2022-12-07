@@ -46,7 +46,8 @@ import grantsDetails from './grantsDetails.json';
 import forgotPassword from './forgotPassword.json';
 import activities from './activities.json';
 import selectLedgerApp from './selectLedgerApp.json';
-import broadcastTx from "./broadcastTx.json";
+import broadcastTx from './broadcastTx.json';
+import invites from './invites.json';
 
 const en = {
   common,
@@ -97,7 +98,8 @@ const en = {
   grants,
   grantsDetails,
   activities,
-  broadcastTx
+  broadcastTx,
+  invites,
 };
 
 export default en;

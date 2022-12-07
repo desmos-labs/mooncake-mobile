@@ -1,6 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import ROUTES from 'navigation/routes';
+import {StatusBar} from 'react-native';
 import Home, {HomeParams} from 'screens/Home';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -63,6 +64,11 @@ const HomeTabs = () => {
         paddingTop: Math.max(24, top),
       }}
       edges={['bottom']}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <Tab.Navigator
         tabBar={renderTabBar}
         screenOptions={{

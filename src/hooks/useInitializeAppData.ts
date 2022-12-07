@@ -10,8 +10,9 @@ import {useGetButterConfig} from '@recoil/butterConfigState';
 import {postParamsState} from '@recoil/postParamsState';
 import {useInitializeAxios} from 'services/axios';
 import {useLazyQuery} from '@apollo/client';
-import GetAppConfig from 'services/graphql/queries/GetAppConfig';
+import GetSubspaceConfig from 'services/graphql/queries/GetSubspaceConfig';
 import _ from 'lodash';
+import GetDesmosParams from 'services/graphql/queries/GetDesmosParams';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
@@ -19,10 +20,14 @@ const useInitializeAppData = () => {
   const setPostParams = useSetRecoilState(postParamsState);
   useInitializeAxios();
 
-  const [getAppConfig] = useLazyQuery(GetAppConfig, {
+  const [getSubspaceConfig] = useLazyQuery(GetSubspaceConfig, {
     variables: {
       subspaceID: String(EnvConfig.APP_SUBSPACE_ID),
     },
+    fetchPolicy: 'no-cache',
+  });
+
+  const [getDesmosParams] = useLazyQuery(GetDesmosParams, {
     fetchPolicy: 'no-cache',
   });
 
@@ -31,21 +36,20 @@ const useInitializeAppData = () => {
   // Not the most elegant way, but it will do for now
   React.useEffect(() => {
     const initAppData = async () => {
+      const desmosParams = await getDesmosParams();
+
       const [appConfig] = await Promise.all([
-        getAppConfig(),
+        getSubspaceConfig(),
         getButterConfig(),
       ]);
 
-      const {
-        subspace_report_reason,
-        subspace_registered_reaction,
-        contract,
-        profiles_params,
-        posts_params,
-      } = appConfig.data;
-
-      const _postParams = _.get(posts_params, '[0].params');
-      const _profileParams = _.get(profiles_params, '[0].params');
+      const {subspace_report_reason, subspace_registered_reaction, contract} =
+        appConfig.data;
+      const _postParams = _.get(desmosParams.data, 'posts_params.[0].params');
+      const _profileParams = _.get(
+        desmosParams.data,
+        'profiles_params.[0].params',
+      );
 
       setProfileParams(_profileParams);
       setPostParams(_postParams);

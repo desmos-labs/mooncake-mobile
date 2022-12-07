@@ -1,6 +1,6 @@
 import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import {iconButton} from 'assets/images';
+import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -58,6 +58,7 @@ const Signup = () => {
     validateForm,
     initialFormValues,
     loading,
+    inviteCode,
   } = useHooks();
 
   const profileParams = useRecoilValue(profileParamsState);
@@ -165,7 +166,7 @@ const Signup = () => {
                       </Typography.Subtitle2>
                       <ImageButton
                         style={styles.iconButton}
-                        image={iconButton}
+                        image={infoIcon}
                         onPress={openInfoModal}
                       />
                     </View>
@@ -261,6 +262,12 @@ const Signup = () => {
                     )}
                   </View>
                 </ScrollView>
+                {inviteCode !== '' && (
+                  <Typography.Button3
+                    style={{color: theme.colors.accentGreen01}}>
+                    Invite code: {inviteCode}
+                  </Typography.Button3>
+                )}
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
                     checked={values.consent}

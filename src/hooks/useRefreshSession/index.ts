@@ -1,6 +1,8 @@
+import messaging from '@react-native-firebase/messaging';
 import {useCallback} from 'react';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import axiosInstance from 'services/axios';
+import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import RefreshSession from 'services/axios/requests/RefreshSession';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +25,9 @@ const useRefreshSession = () => {
         };
 
         await RefreshSession();
+
+        const notificationsToken = await messaging().getToken();
+        await PostNotificationToken(notificationsToken.toString());
       } else {
         throw new Error('No bearer token found');
       }
