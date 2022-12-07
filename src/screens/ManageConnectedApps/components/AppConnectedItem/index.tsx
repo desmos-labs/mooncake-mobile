@@ -1,7 +1,8 @@
+import {verifiedIcon} from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import GetAppIcon from 'lib/GetAppIcon';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import useStyles from './useStyles';
@@ -22,11 +23,21 @@ type Props = {
    * What to do when the user presses the Disconnect button.
    */
   onPressDisconnect: () => void;
+  state: string;
 };
 
-const AppConnectedItem = ({appName, username, onPressDisconnect}: Props) => {
+const AppConnectedItem = ({
+  appName,
+  username,
+  onPressDisconnect,
+  state,
+}: Props) => {
   const {t} = useTranslation('common');
   const styles = useStyles();
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   return (
     <DropShadowWrapper
@@ -46,7 +57,32 @@ const AppConnectedItem = ({appName, username, onPressDisconnect}: Props) => {
         <Image style={styles.icon} source={GetAppIcon(appName)} />
 
         <View style={styles.centerGroup}>
-          <Typography.H5 style={styles.baseText}>{username}</Typography.H5>
+          <View style={{flexDirection: 'row'}}>
+            <Typography.H5 style={styles.baseText}>{username}</Typography.H5>
+            {state === 'APPLICATION_LINK_STATE_VERIFICATION_SUCCESS' ? (
+              <Image
+                source={verifiedIcon}
+                style={{
+                  width: 20,
+                  height: 20,
+                  alignSelf: 'center',
+                  marginLeft: 4,
+                }}
+              />
+            ) : (
+              <Image
+                source={verifiedIcon}
+                style={{
+                  tintColor: 'rgba(221, 221, 221, 1)',
+                  width: 20,
+                  height: 20,
+                  alignSelf: 'center',
+                  marginLeft: 4,
+                }}
+              />
+            )}
+          </View>
+
           <View style={styles.addressGroup}>
             <Typography.Body7
               style={styles.baseText}

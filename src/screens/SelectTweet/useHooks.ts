@@ -22,7 +22,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_TWEET>;
 
 const useHooks = () => {
   const [loading, setLoading] = useState(false);
-  const [tweets, setTweets] = useState([]);
+  const [tweets, setTweets] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
   const [selectedTweetId, setSelectedTweetId] = useState<number>();
   const {chainAccount} = useActiveAccount();
@@ -63,9 +63,8 @@ const useHooks = () => {
         const ibc = _.get(butterConfig, 'ibc');
         const verificationData = {
           method: 'tweet',
-          value: JSON.stringify(selectedTweetId),
+          value: selectedTweetId?.toString(),
         };
-
         const verificationDataHex = Buffer.from(
           JSON.stringify(verificationData),
         ).toString('hex');

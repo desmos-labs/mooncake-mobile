@@ -1,5 +1,6 @@
 // This is a temporary types file for types related to graphql queries.
 // It will likely be replaced by some auto-generated version in the future.
+
 export {};
 
 // min_length and max_length are returned as strings, but we can use
@@ -69,6 +70,8 @@ declare global {
     application: string;
     creation_time: string;
     username: string;
+    state: string;
+    result: any;
   }
 
   interface ConnectedAppsQueryData {

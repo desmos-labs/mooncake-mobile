@@ -36,12 +36,16 @@ const ManageConnectedApps = () => {
   const {chainAccount} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
 
+  function capitalize(word: string) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
+  }
+
   const successDisconnection = React.useCallback((appName: string) => {
     navigate(ROUTES.CONFIRM_MODAL, {
       image: modalSuccess,
       title: t('resultModal:success'),
       subtitle: t('resultModal:appDisconnected', {
-        appName,
+        appName: capitalize(appName),
       }),
       primaryButtonLabel: t('resultModal:goToProfile') as string,
       onPressPrimary: () => {
@@ -95,6 +99,7 @@ const ManageConnectedApps = () => {
       return (
         <AppConnectedItem
           appName={info.item.application}
+          state={info.item.state}
           username={info.item.username}
           onPressDisconnect={() =>
             handlePressDisconnectApp(info.item.application, info.item.username)

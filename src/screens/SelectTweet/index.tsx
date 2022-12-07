@@ -84,19 +84,21 @@ const SelectTweet = () => {
           data={tweets}
           renderItem={renderItem}
           style={styles.flatlist}
-          ListEmptyComponent={EmptyComponent}
+          ListEmptyComponent={loading ? null : EmptyComponent}
           contentContainerStyle={styles.flatlistContainer}
         />
-        <Button
-          disabled={!selectedTweetId}
-          mode="contained"
-          color={theme.colors.surfaceBlack}
-          onPress={handleConnectTweet}
-          style={styles.button}>
-          <Typography.Button2 style={{color: theme.colors.white}}>
-            {t('common:next')}
-          </Typography.Button2>
-        </Button>
+        {tweets.length > 0 && (
+          <Button
+            disabled={!selectedTweetId}
+            mode="contained"
+            color={theme.colors.surfaceBlack}
+            onPress={handleConnectTweet}
+            style={styles.button}>
+            <Typography.Button2 style={{color: theme.colors.white}}>
+              {t('common:next')}
+            </Typography.Button2>
+          </Button>
+        )}
       </>
     </DView>
   );
