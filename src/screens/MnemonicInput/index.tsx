@@ -65,7 +65,10 @@ const MnemonicInput = () => {
           onSubmit={onSubmit}>
           {({handleSubmit, errors, values, setFieldValue, resetForm}) => (
             <>
-              <ScrollView>
+              <ScrollView
+                keyboardDismissMode={
+                  Platform.OS === 'ios' ? 'interactive' : 'on-drag'
+                }>
                 <View style={{flex: 1}}>
                   <Typography.Body6 style={styles.descriptionText}>
                     {t('description')}
