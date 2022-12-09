@@ -99,6 +99,7 @@ import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
+import Onboarding from 'screens/Onboarding';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
@@ -226,6 +227,9 @@ export type RootNavigatorParamList = {
   [ROUTES.INVITES]: undefined;
   [ROUTES.MANAGE_INVITES]: undefined;
   [ROUTES.IMPACT_POINTS_MODAL]: undefined;
+
+  // Onboarding
+  [ROUTES.ONBOARDING]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -478,6 +482,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.INVITES} component={Invites} />
 
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
+
+      <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
 
       {/* modals */}
       <Stack.Group

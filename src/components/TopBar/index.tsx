@@ -18,23 +18,32 @@ export type Props = {
    * Custom behavior for the back button
    */
   backButtonCustomBehavior?: () => void;
+  /**
+   * Remove back button
+   */
+  noBackButton?: boolean;
 };
 
 /**
  * TODO: use react-navigation's header prop on navigator instead
  */
 export const TopBar: React.FC<Props> = props => {
-  const {centerElement, rightElement, style, backButtonCustomBehavior} = props;
+  const {
+    centerElement,
+    rightElement,
+    style,
+    backButtonCustomBehavior,
+    noBackButton,
+  } = props;
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
 
   const navigationGoBack = useMemo(() => {
     if (backButtonCustomBehavior) {
-      console.log('backButton');
       return <BackButton onPress={backButtonCustomBehavior} />;
     }
-    return navigation.canGoBack() ? (
+    return navigation.canGoBack() && !noBackButton ? (
       <BackButton onPress={navigation.goBack} />
     ) : null;
   }, [backButtonCustomBehavior, navigation]);

@@ -1,0 +1,18 @@
+import {makeStyle} from 'config/theme';
+
+/**
+ * Style hook for the Settings screen
+ */
+const useStyles = makeStyle(theme => ({
+  root: {
+    padding: theme.spacing.m,
+  },
+  scrollViewOuter: {
+    flex: 1,
+  },
+  scrollViewInner: {
+    flexGrow: 1,
+  },
+}));
+
+export default useStyles;
