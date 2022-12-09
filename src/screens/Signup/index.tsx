@@ -1,5 +1,8 @@
 import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {profileParamsState} from '@recoil/profileParams';
+import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
 import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
@@ -15,18 +18,21 @@ import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
 import _ from 'lodash';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
 import * as Yup from 'yup';
-import ROUTES from 'navigation/routes';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
-import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
-import {profileParamsState} from '@recoil/profileParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -40,9 +46,16 @@ const Signup = () => {
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
-
   const setSignUpDTag = useSetRecoilState(signUpDTagState);
   const resetSignUpInfo = useResetRecoilState(signUpInfoState);
+  const [animatedPswChecksVisible, setAnimatedPswChecksVisible] =
+    useState(false);
+  const animatedOpacity = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(animatedOpacity.value, [0, 1], [0, 1]),
+    };
+  });
 
   // reset recoil state on entry
   React.useEffect(() => {
@@ -58,7 +71,7 @@ const Signup = () => {
     validateForm,
     initialFormValues,
     loading,
-    inviteCode,
+    setInviteCode,
   } = useHooks();
 
   const profileParams = useRecoilValue(profileParamsState);
@@ -92,9 +105,7 @@ const Signup = () => {
         .test('at least one lowercase', '', validateMin1Lowercase)
         .test('at least one uppercase', '', validateMin1Uppercase)
         .test('at least one special', '', validateMin1SpecialChar), */
-      confirmPassword: Yup.string()
-        .required(t('error:required'))
-        .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
+      inviteCode: Yup.string().required(t('error:required')),
       dTag: Yup.string()
         .required(t('error:required'))
         .min(
@@ -132,6 +143,19 @@ const Signup = () => {
     }
   }, []);
 
+  const animatedPasswordChecks = useCallback(
+    (values: any) => {
+      return (
+        animatedPswChecksVisible && (
+          <Animated.View style={animatedStyle}>
+            <PasswordReqGroup passwordToCheck={values.newPassword} />
+          </Animated.View>
+        )
+      );
+    },
+    [animatedPswChecksVisible],
+  );
+
   return (
     <DView
       backgroundColor={theme.colors.white}
@@ -146,19 +170,23 @@ const Signup = () => {
       <Typography.H3 style={styles.headerText}>
         {t('signup:signup')}
       </Typography.H3>
-      <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.buttonGroup}>
-        <Formik
-          initialValues={initialFormValues}
-          onSubmit={handleFormSubmit}
-          validationSchema={validationSchema}
-          validate={validateForm}>
-          {({handleSubmit, values, errors, setFieldValue}) => {
-            return (
-              <>
-                <ScrollView ref={scrollViewRef}>
+      <Formik
+        initialValues={initialFormValues}
+        onSubmit={handleFormSubmit}
+        validationSchema={validationSchema}
+        validate={validateForm}>
+        {({handleSubmit, values, errors, setFieldValue}) => {
+          return (
+            <>
+              <KeyboardAvoidingView
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.buttonGroup}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardDismissMode={
+                    Platform.OS === 'ios' ? 'interactive' : 'on-drag'
+                  }>
                   <View style={styles.formContainer}>
                     <View style={styles.dTagRowContainer}>
                       <Typography.Subtitle2>
@@ -204,7 +232,7 @@ const Signup = () => {
 
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
-                        {t('enterNewPw')}
+                        {t('signup:password')}
                       </Typography.Subtitle2>
                       {values.newPassword.length >= MIN_PW_LENGTH && (
                         <Typography.Subtitle4
@@ -215,12 +243,16 @@ const Signup = () => {
                     </View>
 
                     <DSecureTextInput
+                      onOuterFocus={() => {
+                        setAnimatedPswChecksVisible(true);
+                        animatedOpacity.value = withTiming(1);
+                      }}
                       value={values.newPassword}
                       onChangeText={(value: string) => {
                         setFieldValue('newPassword', value, true);
                       }}
                       style={styles.inputLabel}
-                      placeholder={t('newPw')}
+                      placeholder={t('signup:enter password')}
                       // error={!!errors.newPassword}
                     />
 
@@ -229,45 +261,34 @@ const Signup = () => {
                         {errors.newPassword}
                       </Typography.Caption1>
                     )}
-
-                    <PasswordReqGroup passwordToCheck={values.newPassword} />
-
+                    {animatedPasswordChecks(values)}
+                    <Spacer paddingBottom={theme.spacing.m} />
                     <Typography.Subtitle2
                       style={{marginBottom: theme.spacing.s}}>
-                      {t('confirmPw')}
+                      {t('signup:invite code optional')}
                     </Typography.Subtitle2>
-                    <DSecureTextInput
-                      onOuterFocus={() =>
+                    <DTextInput
+                      onFocus={() => {
                         setTimeout(
                           () =>
                             scrollViewRef.current?.scrollToEnd({
                               animated: true,
                             }),
                           400,
-                        )
-                      }
-                      placeholder={t('pw')}
-                      value={values.confirmPassword}
+                        );
+                      }}
+                      value={values.inviteCode}
                       onChangeText={(value: string) => {
-                        setFieldValue('confirmPassword', value, true);
+                        setFieldValue('inviteCode', value, true);
+                        setInviteCode(value);
                       }}
                       style={styles.inputLabel}
-                      // error={!!errors.confirmPassword}
+                      placeholder={t('signup:invite code')}
                     />
-                    {errors.confirmPassword && (
-                      <Typography.Caption1
-                        style={[styles.errorText, {marginBottom: 20}]}>
-                        {errors.confirmPassword}
-                      </Typography.Caption1>
-                    )}
                   </View>
                 </ScrollView>
-                {inviteCode !== '' && (
-                  <Typography.Button3
-                    style={{color: theme.colors.accentGreen01}}>
-                    Invite code: {inviteCode}
-                  </Typography.Button3>
-                )}
+              </KeyboardAvoidingView>
+              <>
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
                     checked={values.consent}
@@ -307,9 +328,9 @@ const Signup = () => {
                   color={theme.colors.surfaceBlack}
                   disabled={
                     !values.dTag ||
-                    !values.confirmPassword ||
                     !values.newPassword ||
                     !values.consent ||
+                    !values.inviteCode ||
                     !availableDTag ||
                     _.flatten(Object.values(errors)).length > 0
                   }
@@ -317,10 +338,10 @@ const Signup = () => {
                   {t('common:next')}
                 </Button>
               </>
-            );
-          }}
-        </Formik>
-      </KeyboardAvoidingView>
+            </>
+          );
+        }}
+      </Formik>
     </DView>
   );
 };

@@ -27,6 +27,7 @@ export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
   inputStyle?: StyleProp<TextStyle>;
   placeHolderColor?: ColorValue;
   onOuterFocus?: () => void;
+  onOuterBlur?: () => void;
 };
 
 const DTextInput: React.FC<Props> = props => {

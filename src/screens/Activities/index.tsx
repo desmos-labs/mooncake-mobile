@@ -112,7 +112,7 @@ const Activities = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
-      {data.notification.length >= 0 && !notificationsLoading ? (
+      {data?.notification?.length >= 0 && !notificationsLoading ? (
         <SectionList
           keyExtractor={(item, index) => item.timestamp + index}
           refreshing={notificationsLoading}

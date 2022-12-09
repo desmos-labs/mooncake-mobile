@@ -17,7 +17,7 @@ import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert} from 'react-native';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {updateAuthToken} from 'services/axios';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import Login from 'services/axios/requests/Login';
@@ -33,7 +33,7 @@ const useHooks = () => {
   const {navigate, reset, goBack, push} =
     useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
-  const inviteCode = useRecoilValue(inviteCodeState);
+  const [inviteCode, setInviteCode] = useRecoilState(inviteCodeState);
   const signUpInfo = useRecoilValue(signUpInfoState);
   const setSignUpPassword = useSetRecoilState(signUpPasswordState);
   const [loading, setLoading] = React.useState(false);
@@ -50,7 +50,7 @@ const useHooks = () => {
   const initialFormValues = {
     dTag: '',
     newPassword: '',
-    confirmPassword: '',
+    inviteCode,
     consent: false,
   };
 
@@ -61,7 +61,7 @@ const useHooks = () => {
         // First time user, create new wallet
         const mnemonic = randomMnemonic();
 
-        const {confirmPassword, dTag} = formValues;
+        const {newPassword, dTag} = formValues;
         const newWallet = await LocalWallet.fromMnemonic(mnemonic, {
           // TODO: dev only, remove before pushing
           // hdPath: {coinType: 852, account: 1, change: 0, addressIndex: 0},
@@ -79,8 +79,8 @@ const useHooks = () => {
         };
 
         await saveNewAccount(account);
-        await saveLocalWallet(newWallet, confirmPassword);
-        await saveMnemonic(newWallet.bech32Address, mnemonic, confirmPassword);
+        await saveLocalWallet(newWallet, newPassword);
+        await saveMnemonic(newWallet.bech32Address, mnemonic, newPassword);
         setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
         if (inviteCode !== '') {
@@ -119,7 +119,7 @@ const useHooks = () => {
                     wallet: newWallet,
                     dTag,
                     address,
-                    password: confirmPassword,
+                    password: newPassword,
                   });
                   startPolling(1000);
                 }
@@ -245,6 +245,7 @@ const useHooks = () => {
     initialFormValues,
     loading,
     inviteCode,
+    setInviteCode,
   };
 };
 

@@ -6,6 +6,7 @@ import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = ({
   onOuterFocus,
+  onOuterBlur,
   ...rest
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
@@ -26,7 +27,12 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({
           onOuterFocus();
         }
       }}
-      onBlur={() => setFocused(false)}
+      onBlur={() => {
+        setFocused(false);
+        if (onOuterBlur) {
+          onOuterBlur();
+        }
+      }}
       secureTextEntry={hideText}
       textAlignVertical="center"
       placeHolderColor={iconColor}
