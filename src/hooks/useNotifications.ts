@@ -1,10 +1,10 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
-import {useEffect} from 'react';
-import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import useFindPendingTx from 'hooks/useFindPendingTx';
 import _ from 'lodash';
+import {useEffect} from 'react';
+import {useToast} from 'react-native-toast-notifications';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 const useNotifications = () => {
@@ -17,6 +17,8 @@ const useNotifications = () => {
       const channelId = await notifee.createChannel({
         id: 'default',
         name: 'Default Channel',
+        sound: 'default',
+        vibration: true,
       });
 
       const txHash = _.get(remoteMessage, 'data.tx_hash');
@@ -27,9 +29,13 @@ const useNotifications = () => {
           body: remoteMessage.notification?.body,
           android: {
             channelId,
+            smallIcon: 'ic_small_icon',
             pressAction: {
               id: 'default',
             },
+          },
+          ios: {
+            sound: 'default',
           },
         });
       } else if (remoteMessage.data) {
