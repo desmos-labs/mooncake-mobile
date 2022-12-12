@@ -3,10 +3,8 @@ import {makeStyle} from 'config/theme';
 /**
  * Style hook for the Settings screen
  */
-const useStyles = makeStyle(theme => ({
-  root: {
-    padding: theme.spacing.m,
-  },
+const useStyles = makeStyle(() => ({
+  root: {flex: 1},
   scrollViewOuter: {
     flex: 1,
   },

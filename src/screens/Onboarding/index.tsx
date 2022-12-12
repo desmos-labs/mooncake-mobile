@@ -1,4 +1,7 @@
+import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import {
+  bgonboarding,
   onboarding1,
   onboarding2,
   onboarding3,
@@ -9,6 +12,8 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Animated as ClassicAnimated, Dimensions, View} from 'react-native';
@@ -18,14 +23,11 @@ import PagerView, {
   PagerViewOnPageScrollEventData,
 } from 'react-native-pager-view';
 import {useTheme} from 'react-native-paper';
-import Animated, {FadeIn} from 'react-native-reanimated';
 import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
 
-/*
-type Props = StackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
-*/
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
 
 interface OnboardingData {
   imageSrc: Source;
@@ -35,6 +37,7 @@ interface OnboardingData {
 
 const Onboarding = () => {
   const {t} = useTranslation('onboarding');
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
@@ -104,13 +107,13 @@ const Onboarding = () => {
           width: '100%',
           height: '100%',
           alignItems: 'center',
-          marginHorizontal: theme.spacing.s,
+          paddingHorizontal: theme.spacing.m,
         }}>
-        <Spacer paddingVertical={50}>
+        <Spacer paddingTop={50} paddingBottom={30}>
           <FastImage
             source={item.imageSrc}
             style={{height: 374, width: 374}}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </Spacer>
         <Typography.H3>{item.title}</Typography.H3>
@@ -122,17 +125,17 @@ const Onboarding = () => {
     );
   }, []);
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <DView
       disableHideKeyboardTouchable={true}
       style={styles.root}
       topBar={
         <TopBar
+          style={{zIndex: 2}}
           noBackButton={true}
           rightElement={
             <Button
+              onPress={() => navigate(ROUTES.LANDING)}
               mode="text"
               style={{
                 right: 0,
@@ -145,7 +148,9 @@ const Onboarding = () => {
           }
         />
       }
-      backgroundColor={theme.colors.white}>
+      backgroundFillScreen={true}
+      backgroundImage={bgonboarding}
+      backgroundColor={theme.colors.background}>
       <AnimatedPagerView
         ref={ref}
         style={{flex: 1}}
@@ -159,11 +164,14 @@ const Onboarding = () => {
         })}
       </AnimatedPagerView>
       {selected === 3 ? (
-        <Animated.View entering={FadeIn.duration(300)}>
-          <Button mode="contained" color={theme.colors.surfaceBlack}>
+        <View style={{marginHorizontal: theme.spacing.m}}>
+          <Button
+            mode="contained"
+            color={theme.colors.surfaceBlack}
+            onPress={() => navigate(ROUTES.LANDING)}>
             {t('join butter')}
           </Button>
-        </Animated.View>
+        </View>
       ) : (
         <View
           style={{
@@ -173,7 +181,7 @@ const Onboarding = () => {
           <ScalingDot
             activeDotColor={theme.colors.butterOrange01}
             inActiveDotColor={theme.colors.lightGrey01}
-            activeDotScale={1.3}
+            activeDotScale={1.2}
             inActiveDotOpacity={1}
             dotStyle={{
               width: 8,
@@ -186,6 +194,7 @@ const Onboarding = () => {
           />
         </View>
       )}
+      <Spacer paddingTop={20} />
     </DView>
   );
 };
