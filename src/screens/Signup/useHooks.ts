@@ -78,11 +78,6 @@ const useHooks = () => {
           signAlgorithm: 'secp256k1',
         };
 
-        await saveNewAccount(account);
-        await saveLocalWallet(newWallet, newPassword);
-        await saveMnemonic(newWallet.bech32Address, mnemonic, newPassword);
-        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
-
         if (inviteCode !== '') {
           console.log('Invite code', inviteCode);
           const {signatureBytes, pubkeyBytes, signedBytes} =
@@ -108,7 +103,7 @@ const useHooks = () => {
           if (token) {
             console.log('Token', token);
             await AcceptInvite(inviteCode)
-              .then(result => {
+              .then(async result => {
                 if (result) {
                   Alert.alert(
                     'Invite redeemed!',
@@ -121,11 +116,20 @@ const useHooks = () => {
                     address,
                     password: newPassword,
                   });
+                  await saveNewAccount(account);
+                  await saveLocalWallet(newWallet, newPassword);
+                  await saveMnemonic(
+                    newWallet.bech32Address,
+                    mnemonic,
+                    newPassword,
+                  );
+                  setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
                   startPolling(1000);
                 }
               })
               .catch(e => {
                 console.log('error', e);
+                setLoading(false);
                 Alert.alert('Error', e.response.data);
               });
           }
