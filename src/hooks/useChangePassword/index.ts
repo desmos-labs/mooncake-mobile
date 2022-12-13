@@ -1,17 +1,13 @@
 import appSettingsState from '@recoil/settings';
-import {
-  deleteLocalWallet,
-  deleteMnemonic,
-  deletePasswordWithBiometrics,
-  getAccounts,
-  getLocalWallet,
-  getMnemonic,
-  saveLocalWallet,
-  saveMnemonic,
-  savePasswordWithBiometrics,
-} from 'lib/SecureStorage';
+import {getAccounts, getLocalWallet, getMnemonic} from 'lib/SecureStorage';
 import React from 'react';
 import {useRecoilValue} from 'recoil';
+import _ from 'lodash';
+import {
+  deleteOldWalletData,
+  replaceBiometricsData,
+  saveNewWalletData,
+} from './utils';
 
 /**
  * A hook that allows the user to change the password of the current active account
@@ -39,31 +35,19 @@ const useChangePassword = () => {
           return getLocalWallet(account.address, oldPassword);
         }),
       );
-      // delete old biometric password
-      if (biometrics) {
-        await deletePasswordWithBiometrics(accounts[0].address);
-      }
 
+      const cleanedWalletArr = _.compact(wallets);
       // delete old data
-      await Promise.all(
-        wallets.map(async wallet => {
-          await deleteMnemonic(wallet?.bech32Address!);
-          await deleteLocalWallet(wallet?.bech32Address!);
-        }),
-      );
+      // use compact to sanitize undefined wallets
+      await deleteOldWalletData(cleanedWalletArr);
 
-      // save new biometric password
+      // replace all biometrics passwords if biometrics is enabled
       if (biometrics) {
-        await savePasswordWithBiometrics(wallets[0]!, newPassword);
+        await replaceBiometricsData(accounts, cleanedWalletArr, newPassword);
       }
 
       // save new data
-      await Promise.all(
-        wallets.map(async wallet => {
-          await saveLocalWallet(wallet!, newPassword);
-          await saveMnemonic(wallet?.bech32Address!, mnemonic!, newPassword);
-        }),
-      );
+      await saveNewWalletData(cleanedWalletArr, mnemonic!, newPassword);
 
       return {success: true, reason: 'success'};
     },
