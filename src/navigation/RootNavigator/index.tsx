@@ -83,6 +83,7 @@ import MnemonicInput, {
 import AddProfileModal, {
   AddProfileModalParams,
 } from 'screens/Modals/AddProfileModal';
+import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
@@ -120,6 +121,7 @@ import ShowRecoveryPhrase, {
   ShowSecretPhraseParams,
 } from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
+import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
 
@@ -130,6 +132,8 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
+  [ROUTES.SIGNUP_RESULT]: undefined;
+  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
@@ -348,6 +352,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+      <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -514,6 +519,11 @@ const RootNavigator = () => {
         <Stack.Screen
           name={ROUTES.ADD_PROFILE_MODAL}
           component={AddProfileModal}
+        />
+
+        <Stack.Screen
+          name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
+          component={BackupPhraseBottomModal}
         />
         <Stack.Screen
           initialParams={{
