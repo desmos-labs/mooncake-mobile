@@ -26,11 +26,10 @@ interface Props {
 const InvitesList = ({navigate}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {invitesSectioned, data, loading, refetch, t} = useHooks();
+  const {invitesSectioned, filteredInvites, loading, refetch, t} = useHooks();
 
   const renderInvite = React.useCallback(
     ({item}: ListRenderItemInfo<Invite>) => {
-      console.log(item);
       return <InviteComponent {...item} />;
     },
     [],
@@ -53,10 +52,10 @@ const InvitesList = ({navigate}: Props) => {
         </Button>
       </View>
     );
-  }, [data]);
+  }, [filteredInvites]);
 
   const bottomComponent = useMemo(() => {
-    return data?.invite?.length === 3 ? (
+    return filteredInvites?.length === 3 ? (
       <Typography.Body6
         style={{
           color: theme.colors.grey01,
@@ -74,11 +73,11 @@ const InvitesList = ({navigate}: Props) => {
         {t('invite more')}
       </Button>
     );
-  }, [data]);
+  }, [filteredInvites]);
 
   return (
     <View style={{flex: 1}}>
-      {!data?.invite && loading ? (
+      {!filteredInvites && loading ? (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator />
         </SafeAreaView>
@@ -103,7 +102,7 @@ const InvitesList = ({navigate}: Props) => {
               </View>
             )}
           />
-          {data?.invite?.length !== 0 && bottomComponent}
+          {filteredInvites?.length !== 0 && bottomComponent}
         </>
       )}
     </View>

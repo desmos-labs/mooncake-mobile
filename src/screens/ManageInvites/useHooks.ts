@@ -1,11 +1,14 @@
 import {useQuery} from '@apollo/client';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import GetInvites from 'services/graphql/queries/GetInvites';
 
 const useHooks = () => {
+  const {activeAddress} = useActiveAccount();
   const {t} = useTranslation('invites');
   const [rewardBalance, setRewardBalance] = useState<number>();
+  const [filteredInvites, setFilteredInvites] = useState<any[]>();
   const {data, loading, refetch} = useQuery(GetInvites, {
     fetchPolicy: 'no-cache',
   });
@@ -18,15 +21,37 @@ const useHooks = () => {
     const pending: any[] = [];
     const successful: any[] = [];
 
-    data.invite.forEach((invite: any) => {
+    const filteredInvitesWithoutSelfInvite = data.invite.filter(
+      (invite: any) => invite?.claimer_address !== activeAddress,
+    );
+
+    setFilteredInvites(filteredInvitesWithoutSelfInvite);
+
+    const hasBeenInvited = data.invite.find(
+      (invite: any) => invite?.claimer_address === activeAddress,
+    );
+
+    if (hasBeenInvited) {
+      setRewardBalance(prev => (prev ? prev + 2 : 2));
+    }
+
+    filteredInvitesWithoutSelfInvite.forEach((invite: any) => {
       if (invite.claimer) {
-        successful.push({...invite, index: data.invite.indexOf(invite) + 1});
+        successful.push({
+          ...invite,
+          index: filteredInvitesWithoutSelfInvite.indexOf(invite) + 1,
+        });
       } else {
-        pending.push({...invite, index: data.invite.indexOf(invite) + 1});
+        pending.push({
+          ...invite,
+          index: filteredInvitesWithoutSelfInvite.indexOf(invite) + 1,
+        });
       }
     });
 
-    setRewardBalance(successful.length * 2);
+    setRewardBalance(prev =>
+      prev ? prev + successful.length * 2 : successful.length * 2,
+    );
 
     if (pending.length > 0 && successful.length <= 0) {
       return [{section: t('pending invites'), data: pending}];
@@ -40,7 +65,7 @@ const useHooks = () => {
     } else {
       return [];
     }
-  }, [data]);
+  }, [data, activeAddress]);
 
   return {
     invitesSectioned,
@@ -49,6 +74,7 @@ const useHooks = () => {
     loading,
     refetch,
     t,
+    filteredInvites,
   };
 };
 
