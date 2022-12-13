@@ -8,7 +8,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {Formik, FormikHelpers} from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {getLocalWallet, savePasswordWithBiometrics} from 'lib/SecureStorage';
+import {getLocalWallet, setBiometricData} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -52,7 +52,7 @@ const ManageBiometrics = () => {
         if (activeAddress) {
           const wallet = await getLocalWallet(activeAddress, password);
           if (wallet) {
-            const result = await savePasswordWithBiometrics(wallet, password);
+            const result = await setBiometricData(password);
             if (result) {
               setSettings((oldState: AppSettings) => {
                 return {
