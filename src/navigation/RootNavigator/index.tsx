@@ -99,7 +99,7 @@ import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
-import Onboarding from 'screens/Onboarding';
+import Onboarding, {OnboardingParams} from 'screens/Onboarding';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
@@ -229,7 +229,7 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // Onboarding
-  [ROUTES.ONBOARDING]: undefined;
+  [ROUTES.ONBOARDING]: OnboardingParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -255,7 +255,7 @@ const RootNavigator = () => {
       const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
       Alert.alert('You received an invite!', `${inviteCode}`);
       setInviteCode(inviteCode);
-      navigate(ROUTES.SIGNUP);
+      navigate(ROUTES.ONBOARDING, {invited: true});
     } else {
       if (link && activeAddress) {
         Alert.alert('Error', 'Your already have an account');
@@ -276,7 +276,7 @@ const RootNavigator = () => {
           const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
           Alert.alert('You received an invite!', `${inviteCode}`);
           setInviteCode(inviteCode);
-          navigate(ROUTES.SIGNUP);
+          navigate(ROUTES.ONBOARDING, {invited: true});
         } else {
           if (link && activeAddress) {
             Alert.alert('Error', 'Your already have an account');
@@ -298,7 +298,7 @@ const RootNavigator = () => {
     if (activeAddr) {
       return ROUTES.HOME_TABS;
     }
-    return ROUTES.LANDING;
+    return ROUTES.ONBOARDING;
   }, []);
 
   const theme = useTheme();
@@ -483,7 +483,11 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
 
-      <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
+      <Stack.Screen
+        name={ROUTES.ONBOARDING}
+        component={Onboarding}
+        initialParams={{invited: false}}
+      />
 
       {/* modals */}
       <Stack.Group

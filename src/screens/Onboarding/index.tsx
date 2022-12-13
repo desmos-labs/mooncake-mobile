@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   bgonboarding,
@@ -27,6 +27,10 @@ import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
 
+export interface OnboardingParams {
+  invited: boolean;
+}
+
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
 
 interface OnboardingData {
@@ -38,6 +42,9 @@ interface OnboardingData {
 const Onboarding = () => {
   const {t} = useTranslation('onboarding');
   const {navigate} = useNavigation<NavProps['navigation']>();
+  const {
+    params: {invited},
+  } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
@@ -100,6 +107,14 @@ const Onboarding = () => {
     [],
   );
 
+  const navigateToCorrectScreen = useCallback(() => {
+    if (invited) {
+      navigate(ROUTES.SIGNUP);
+    } else {
+      navigate(ROUTES.LANDING);
+    }
+  }, [invited]);
+
   const renderItem = useCallback((item: OnboardingData) => {
     return (
       <View
@@ -135,7 +150,7 @@ const Onboarding = () => {
           noBackButton={true}
           rightElement={
             <Button
-              onPress={() => navigate(ROUTES.LANDING)}
+              onPress={() => navigateToCorrectScreen()}
               mode="text"
               style={{
                 right: 0,
@@ -168,7 +183,7 @@ const Onboarding = () => {
           <Button
             mode="contained"
             color={theme.colors.surfaceBlack}
-            onPress={() => navigate(ROUTES.LANDING)}>
+            onPress={() => navigateToCorrectScreen()}>
             {t('join butter')}
           </Button>
         </View>
