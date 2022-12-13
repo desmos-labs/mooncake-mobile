@@ -7,7 +7,12 @@ import Button from 'components/Button';
 import Typography from 'components/Typography';
 import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import LocalWallet from 'lib/LocalWallet';
-import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import {
+  saveLocalWallet,
+  saveMnemonic,
+  saveNewAccount,
+  savePasswordWithBiometrics,
+} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -110,13 +115,13 @@ const Content = ({mnemonic, password}: ContentProps) => {
         signAlgorithm: 'secp256k1',
       };
 
-      await saveLocalWallet(deserializedWallet, password!);
-      await saveMnemonic(
-        deserializedWallet.bech32Address,
-        mnemonic!,
-        password!,
-      );
-      await saveNewAccount(chainAccount);
+      await Promise.all([
+        savePasswordWithBiometrics(deserializedWallet, password!),
+        saveLocalWallet(deserializedWallet, password!),
+        saveMnemonic(deserializedWallet.bech32Address, mnemonic!, password!),
+        saveNewAccount(chainAccount),
+      ]);
+
       navigate(ROUTES.SETTINGS_PROFILES);
     } catch (e) {
       console.error('error saving account', e);
