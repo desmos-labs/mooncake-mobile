@@ -92,6 +92,7 @@ const useHooks = () => {
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
+        setLoading(true);
         await changePassword({
           oldPassword: oldPassword as string,
           newPassword: formValues.newPassword,
@@ -115,6 +116,7 @@ const useHooks = () => {
             });
           },
         });
+        setLoading(false);
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
         setLoading(true);
