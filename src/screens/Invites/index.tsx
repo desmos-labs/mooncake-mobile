@@ -55,13 +55,13 @@ const Invites = () => {
     fetchPolicy: 'no-cache',
   });
 
-  const invitesGenerated = useMemo(() => {
+  const numInvitesGenerated = useMemo(() => {
     if (!data) {
-      return [];
+      return undefined;
     } else {
       return data.invite.filter(
         (invite: any) => invite?.claimer_address !== activeAddress,
-      );
+      ).length;
     }
   }, [data, activeAddress]);
 
@@ -168,8 +168,8 @@ const Invites = () => {
         shareComponent
       ) : (
         <Button
-          disabled={invitesGenerated.length === 3}
-          onPress={() => generateInvite()}
+          disabled={numInvitesGenerated === 3}
+          onPress={generateInvite}
           loading={generationLoading}
           color={theme.colors.surfaceBlack}
           style={{marginHorizontal: theme.spacing.m}}
@@ -193,9 +193,9 @@ const Invites = () => {
         <Spacer paddingTop={6} />
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
-          {invitesGenerated ? (
+          {numInvitesGenerated ? (
             <Typography.Body6 style={{color: theme.colors.midGrey}}>
-              {t('invites shared', {number: invitesGenerated.length})}
+              {t('invites shared', {number: numInvitesGenerated})}
             </Typography.Body6>
           ) : (
             <ActivityIndicator />
