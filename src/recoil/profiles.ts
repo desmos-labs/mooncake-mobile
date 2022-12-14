@@ -38,7 +38,7 @@ export const useLoadProfiles = () => {
   const loadAddrsIntoState = React.useCallback(async () => {
     const _accounts = await getAccounts();
 
-    if (_accounts) {
+    if (_accounts.length > 0) {
       setStoredAccountAddrs(_accounts.map(x => x.address));
     }
   }, []);

@@ -169,6 +169,7 @@ const PasswordManipulation = () => {
                     color={theme.colors.surfaceBlack}
                     onPress={handleSubmit}
                     disabled={
+                      loading ||
                       values.confirmPassword.length === 0 ||
                       values.newPassword.length === 0 ||
                       _.flatten(Object.values(errors)).length > 0

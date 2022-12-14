@@ -21,7 +21,7 @@ const useLogin = () => {
     }) => {
       const accounts = await getAccounts();
 
-      const activeAccount = accounts?.find(x => x.address === activeAddress);
+      const activeAccount = accounts.find(x => x.address === activeAddress);
 
       if (!activeAccount) {
         throw new Error(
