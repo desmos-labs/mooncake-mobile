@@ -47,7 +47,7 @@ const useChangePassword = () => {
       if (biometrics) {
         await Promise.all([
           deleteBiometricData(),
-          setBiometricData(newPassword),
+          setBiometricData(oldPassword, newPassword),
         ]);
       }
 

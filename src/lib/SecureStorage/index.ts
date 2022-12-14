@@ -247,20 +247,23 @@ export const getPasswordWithBiometrics = async (address: string) => {
 /**
  * Set and enable biometrics for all stored profiles
  */
-export const setBiometricData = async (password: string) => {
+export const setBiometricData = async (
+  oldPassword: string,
+  newPassword: string,
+) => {
   const accounts = await getAccounts();
   const cleanedAccounts = _.compact(accounts);
   const wallets = _.compact(
     await Promise.all(
       cleanedAccounts.map(async (account: {address: string}) => {
-        return getLocalWallet(account.address, password);
+        return getLocalWallet(account.address, oldPassword);
       }),
     ),
   );
 
   return Promise.all(
     wallets.map(async wallet => {
-      return savePasswordWithBiometrics(wallet!, password);
+      return savePasswordWithBiometrics(wallet!, newPassword);
     }),
   );
 };

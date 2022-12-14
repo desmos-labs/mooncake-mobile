@@ -52,7 +52,7 @@ const ManageBiometrics = () => {
         if (activeAddress) {
           const wallet = await getLocalWallet(activeAddress, password);
           if (wallet) {
-            const result = await setBiometricData(password);
+            const result = await setBiometricData(password, password);
             if (result) {
               setSettings((oldState: AppSettings) => {
                 return {
