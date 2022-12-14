@@ -1385,7 +1385,7 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@expo/config-plugins@^5.0.1":
+"@expo/config-plugins@^5.0.4":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-5.0.4.tgz#216fea6558fe66615af1370de55193f4181cb23e"
   integrity sha512-vzUcVpqOMs3h+hyRdhGwk+eGIOhXa5xYdd92yO17RMNHav3v/+ekMbs7XA2c3lepMO8Yd4/5hqmRw9ZTL6jGzg==
@@ -2130,10 +2130,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@notifee/react-native@^5.7.0":
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-5.7.0.tgz#10fee6594db9e53ce22efddd00f043ae95b1e605"
-  integrity sha512-2AEI4IJvk+/qij0zkTnhF9aD04u9cs2RwXBk82bR/KaoYhbUc4M97q4IYBEkE+cATGzJE+qZT1rgUWqCiUhuSw==
+"@notifee/react-native@^7.3.0":
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-7.3.0.tgz#5ded9c2c6d4dd93f65725fbdeab6071a71c13daf"
+  integrity sha512-bAZjmc08I+skS3gRCl/7KXE95N6sIiu3/8EnP9USMt2guWsvxTdoLceWl8uJ5ghP4S9VQiBJUWS29hAKhKHC/A==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -2398,29 +2398,31 @@
   resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz"
   integrity sha512-o6aam+0Ug1xGK3ABYmBm0B1YuEKfM/5kaoZO0eHbZwSpw9UzDX4G5y4Nx/K20FHqUmJHkZmLvOUFYwN4N+HqKA==
 
-"@react-native-firebase/analytics@15.4.0":
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-15.4.0.tgz#28cffb1c1a9e64a74d818f9cddc6bff38ed163d1"
-  integrity sha512-pshC2Po4Zfe5rafiexjK2lCpIGUq5Flc/swSbpvANGB64FBP3phxftQAwkO/F3sSL/I/uJTEsZ0GoKz3d1g0Jg==
+"@react-native-firebase/analytics@^16.4.6":
+  version "16.4.6"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-16.4.6.tgz#833b871014de49091cc3f50f98dbc1920b346097"
+  integrity sha512-Gp6kD3RCIy3f9u0pQgGfp5jGwNwLLxo2blsXbTsj/yHOE4g+leH/wojPPENs1yc2g6OMhzGYbO19/beCP6bIng==
 
-"@react-native-firebase/app@15.4.0":
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-15.4.0.tgz#616a6d13956fbed1ee010ca05b9e62969d19b5c5"
-  integrity sha512-1Xf1Q0x6x6dZamRjIpDLCvj4CUwozr1mvH3sc3A4J1avjGUwgqD0RR58DGd7r9akU+JmEXLHB84EZ9Aa68AHDg==
+"@react-native-firebase/app@^16.4.6":
+  version "16.4.6"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-16.4.6.tgz#929a86894b401352259e21d4cb4dab1d37de2bc7"
+  integrity sha512-rL/vhylwzj9ziKAqEOI6G3eIGiJRcI9dcM93+gG7pEv1mNBHKmhnuq9VPS8nR01qyI/PYWoKN6XecE0w7A7n4w==
   dependencies:
-    "@expo/config-plugins" "^5.0.1"
+    "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/dynamic-links@15.4.0":
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-15.4.0.tgz#2fbb744354c005b9326657908943864a957bb2b9"
-  integrity sha512-xmFdKU1lCJqRh4d4q0nklQj+bI6G9zu4S2GLuhXuvEBJZnbMzXINJzQBaaML5pAtPZfnujm9wr4RD0omU0IN8g==
+"@react-native-firebase/dynamic-links@^16.4.6":
+  version "16.4.6"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-16.4.6.tgz#d0fbe5482b5d16f67b1bed3106bc718d7dc33e5a"
+  integrity sha512-bZPdrLw1HbFVe/uHI/+p1iGA/g+9EDdP0ySmRE1GKEOX84xSZhOrjEdF5Yhzf/OGcekrG1WDlxIpwkEQCuDJpA==
+  dependencies:
+    "@expo/config-plugins" "^5.0.4"
 
-"@react-native-firebase/messaging@15.4.0":
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-15.4.0.tgz#1a6834cebe90c520a8b23180dcd52bf38dc90e08"
-  integrity sha512-irmmkAWwD0PqZc3Nua4vdDS5liPfJzis5/zC1XxZw/AS4AfoEj2yv3+r273bqx/E9aZ2Udl1GBPV2nWBDDR/yA==
+"@react-native-firebase/messaging@^16.4.6":
+  version "16.4.6"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-16.4.6.tgz#dd1a1eccff39eac6cd201792c388fc11afd6b4bf"
+  integrity sha512-5XHc++UxK+wEYifyovemr+K5aUpcDuqzGPAqc2tqrVxtsELmGi9pCOFbCuFhkg5DzNGToNT9Z79DTd+XLCVemA==
 
 "@react-native-masked-view/masked-view@^0.2.6":
   version "0.2.6"
@@ -9923,10 +9925,10 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
-react-native-image-picker@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.8.4.tgz#ac52f1e265458e944664adf1dcd0a9ee408fe083"
-  integrity sha512-Mjh2j/sddyolb16EpmprWzbtyeFvW8Xgzr/8WNi9d6bR2FC/kL78cY/a+7Yzujg5ZDtT1MWys+eWw/qtfwgGiw==
+react-native-image-picker@^4.10.2:
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.10.2.tgz#75b356c9eea70c2c4f5c1089f8758e2fa32f88a8"
+  integrity sha512-3h9PrA1dQ84rVeipzQE4eWTELvflSHNtJZN6rz7NkZyaxo9YZV8H/TswBpHwiS5YWlyu+zlLzSoWVa1opSu7GA==
 
 react-native-image-progress@^1.2.0:
   version "1.2.0"

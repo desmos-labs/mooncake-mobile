@@ -2,6 +2,7 @@
 #import "RNBootSplash.h"
 
 #import <Firebase.h>
+#import "RNFBMessagingModule.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -53,9 +54,10 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
     _bridgeAdapter = [[RCTSurfacePresenterBridgeAdapter alloc] initWithBridge:bridge contextContainer:_contextContainer];
     bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
   #endif
-
+  
+  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
   NSDictionary *initProps = [self prepareInitialProps];
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"Butter", initProps);
+  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"Butter", appProperties);
 
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
