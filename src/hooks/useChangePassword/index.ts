@@ -33,7 +33,7 @@ const useChangePassword = () => {
       oldPassword: string;
       newPassword: string;
     }) => {
-      const accounts = _.compact(await getAccounts());
+      const accounts = await getAccounts();
       if (!accounts || accounts.length === 0) {
         throw new Error('No accounts found.');
       }

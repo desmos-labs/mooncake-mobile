@@ -125,8 +125,10 @@ export const saveNewAccount = async (_account: ChainAccount) => {
   } else await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, [_account]);
 };
 
-export const getAccounts = async () =>
-  getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
+export const getAccounts = async (): Promise<ChainAccount[]> => {
+  const accounts = await getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
+  return _.compact(accounts);
+};
 
 export const saveLocalWallet = async (
   _wallet: LocalWallet,
@@ -275,7 +277,7 @@ export const setBiometricData = async (
  * Disable and remove all biometric data for all accounts.
  */
 export const deleteBiometricData = async () => {
-  const accounts = _.compact(await getAccounts());
+  const accounts = await getAccounts();
   return Promise.all(
     accounts.map(async acc => {
       return deletePasswordWithBiometrics(acc.address);
