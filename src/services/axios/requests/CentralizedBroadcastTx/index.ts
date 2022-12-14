@@ -27,7 +27,7 @@ const CentralizedBroadcastTx = async ({
   messages,
   memo,
 }: Params): Promise<Response> => {
-  // optimistic API -> /broadcast?optimistic=true
+  // optimistic API -> /broadcast?optimistic=true DO NOT USE, HIGHLY UNSTABLE
   const _response = await axiosInstance.post('/broadcast', {
     messages,
     memo,
