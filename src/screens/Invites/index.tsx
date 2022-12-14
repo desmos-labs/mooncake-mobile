@@ -168,7 +168,7 @@ const Invites = () => {
         shareComponent
       ) : (
         <Button
-          disabled={numInvitesGenerated === 3}
+          disabled={!numInvitesGenerated || numInvitesGenerated === 3}
           onPress={generateInvite}
           loading={generationLoading}
           color={theme.colors.surfaceBlack}
