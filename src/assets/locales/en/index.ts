@@ -48,6 +48,7 @@ import activities from './activities.json';
 import selectLedgerApp from './selectLedgerApp.json';
 import broadcastTx from './broadcastTx.json';
 import invites from './invites.json';
+import onboarding from './onboarding.json';
 
 const en = {
   common,
@@ -100,6 +101,7 @@ const en = {
   activities,
   broadcastTx,
   invites,
+  onboarding,
 };
 
 export default en;

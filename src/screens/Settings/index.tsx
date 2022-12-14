@@ -9,7 +9,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {deletePasswordWithBiometrics} from 'lib/SecureStorage';
+import {deleteBiometricData} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -63,7 +63,7 @@ const Settings: React.FC<NavProps> = props => {
 
   const manageBiometrics = useCallback(async () => {
     if (settings.biometrics) {
-      const result = await deletePasswordWithBiometrics(activeAddress!);
+      const result = await deleteBiometricData();
       if (result) {
         setSettings((oldState: AppSettings) => {
           return {
@@ -98,7 +98,13 @@ const Settings: React.FC<NavProps> = props => {
 
   const handleChangePassword = useCallback(async () => {
     if (chainAccount) {
-      const unlockResult = await unlockWallet({chainAccount});
+      const unlockResult = await unlockWallet({
+        chainAccount,
+        skipBiometrics: true,
+        enterPwScreenOptions: {
+          titleLabelOverride: t('passwordManipulation:changePw'),
+        },
+      });
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
           mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,

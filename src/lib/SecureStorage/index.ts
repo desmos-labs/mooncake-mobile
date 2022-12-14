@@ -26,7 +26,7 @@ const defaultOptions: Options = {
   accessControl: ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
 };
 
-enum SECURE_STORAGE_KEYS {
+export enum SECURE_STORAGE_KEYS {
   WALLET_SUFFIX = '_KEY',
   MNEMONIC_SUFFIX = '_MNEMONIC',
   WALLET_PASSWORD_SUFFIX = '_WALLET_PASSWORD',
@@ -87,38 +87,6 @@ async function setItem(
   });
 }
 
-/**
- * Save and encrypt a password to be used with biometrics auth
- * @param _wallet the wallet of the account
- * @param password the password of the account
- */
-export const savePasswordWithBiometrics = async (
-  _wallet: LocalWallet,
-  password: string,
-) => {
-  // Store the derived password for biometric unlocking
-  return setItem(
-    `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-    deriveSecurePassword(password),
-    {
-      biometrics: true,
-    },
-  );
-};
-/**
- * Get an encrypted password from biometrics auth
- * @param address the address of the account
- */
-export const getPasswordWithBiometrics = async (address: string) => {
-  // Get the password to be derived
-  return (await getItem<string>(
-    `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-    {
-      biometrics: true,
-    },
-  )) as string;
-};
-
 export const deletePasswordWithBiometrics = async (address: string) => {
   // Delete the password saved with biometrics
   return deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`);
@@ -157,8 +125,10 @@ export const saveNewAccount = async (_account: ChainAccount) => {
   } else await setItem(SECURE_STORAGE_KEYS.ACCOUNTS, [_account]);
 };
 
-export const getAccounts = async () =>
-  getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
+export const getAccounts = async (): Promise<ChainAccount[]> => {
+  const accounts = await getItem<ChainAccount[]>(SECURE_STORAGE_KEYS.ACCOUNTS);
+  return _.compact(accounts);
+};
 
 export const saveLocalWallet = async (
   _wallet: LocalWallet,
@@ -239,4 +209,78 @@ export const deleteLocalWallet = async (address: string) => {
     deleteItem(`${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`),
     deleteMnemonic(address),
   ]);
+};
+
+// biometrics
+
+/**
+ * Save and encrypt a password to be used with biometrics auth
+ * @param _wallet the wallet of the account
+ * @param password the password of the account
+ */
+export const savePasswordWithBiometrics = async (
+  _wallet: LocalWallet,
+  password: string,
+) => {
+  // Store the derived password for biometric unlocking
+  return setItem(
+    `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+    deriveSecurePassword(password),
+    {
+      biometrics: true,
+    },
+  );
+};
+
+/**
+ * Get an encrypted password from biometrics auth
+ * @param address the address of the account
+ */
+export const getPasswordWithBiometrics = async (address: string) => {
+  // Get the password to be derived
+  return (await getItem<string>(
+    `${address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+    {
+      biometrics: true,
+    },
+  )) as string;
+};
+
+/**
+ * Set and enable biometrics for all stored profiles
+ * @param {string} oldPassword - The password used to unlock the currently stored wallet data.
+ * @param {string} newPassword - The new password used to encrypt the new biometric data. If enabling biometrics, this can be the
+ *                               same as the oldPassword param.
+ */
+export const setBiometricData = async (
+  oldPassword: string,
+  newPassword: string,
+) => {
+  const accounts = await getAccounts();
+  const cleanedAccounts = _.compact(accounts);
+  const wallets = _.compact(
+    await Promise.all(
+      cleanedAccounts.map(async (account: {address: string}) => {
+        return getLocalWallet(account.address, oldPassword);
+      }),
+    ),
+  );
+
+  return Promise.all(
+    wallets.map(async wallet => {
+      return savePasswordWithBiometrics(wallet!, newPassword);
+    }),
+  );
+};
+
+/**
+ * Disable and remove all biometric data for all accounts.
+ */
+export const deleteBiometricData = async () => {
+  const accounts = await getAccounts();
+  return Promise.all(
+    accounts.map(async acc => {
+      return deletePasswordWithBiometrics(acc.address);
+    }),
+  );
 };

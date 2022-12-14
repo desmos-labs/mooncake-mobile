@@ -83,6 +83,7 @@ import MnemonicInput, {
 import AddProfileModal, {
   AddProfileModalParams,
 } from 'screens/Modals/AddProfileModal';
+import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
 import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
@@ -99,6 +100,7 @@ import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
 import NoDtagFound from 'screens/NoDtagFound';
+import Onboarding, {OnboardingParams} from 'screens/Onboarding';
 import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
@@ -120,6 +122,7 @@ import ShowRecoveryPhrase, {
   ShowSecretPhraseParams,
 } from 'screens/ShowRecoveryPhrase';
 import Signup from 'screens/Signup';
+import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
 
@@ -130,6 +133,8 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
+  [ROUTES.SIGNUP_RESULT]: undefined;
+  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
@@ -226,6 +231,9 @@ export type RootNavigatorParamList = {
   [ROUTES.INVITES]: undefined;
   [ROUTES.MANAGE_INVITES]: undefined;
   [ROUTES.IMPACT_POINTS_MODAL]: undefined;
+
+  // Onboarding
+  [ROUTES.ONBOARDING]: OnboardingParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -251,7 +259,7 @@ const RootNavigator = () => {
       const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
       Alert.alert('You received an invite!', `${inviteCode}`);
       setInviteCode(inviteCode);
-      navigate(ROUTES.SIGNUP);
+      navigate(ROUTES.ONBOARDING, {invited: true});
     } else {
       if (link && activeAddress) {
         Alert.alert('Error', 'Your already have an account');
@@ -272,7 +280,7 @@ const RootNavigator = () => {
           const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
           Alert.alert('You received an invite!', `${inviteCode}`);
           setInviteCode(inviteCode);
-          navigate(ROUTES.SIGNUP);
+          navigate(ROUTES.ONBOARDING, {invited: true});
         } else {
           if (link && activeAddress) {
             Alert.alert('Error', 'Your already have an account');
@@ -294,7 +302,7 @@ const RootNavigator = () => {
     if (activeAddr) {
       return ROUTES.HOME_TABS;
     }
-    return ROUTES.LANDING;
+    return ROUTES.ONBOARDING;
   }, []);
 
   const theme = useTheme();
@@ -348,6 +356,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+      <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -479,6 +488,12 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
 
+      <Stack.Screen
+        name={ROUTES.ONBOARDING}
+        component={Onboarding}
+        initialParams={{invited: false}}
+      />
+
       {/* modals */}
       <Stack.Group
         screenOptions={{
@@ -514,6 +529,11 @@ const RootNavigator = () => {
         <Stack.Screen
           name={ROUTES.ADD_PROFILE_MODAL}
           component={AddProfileModal}
+        />
+
+        <Stack.Screen
+          name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
+          component={BackupPhraseBottomModal}
         />
         <Stack.Screen
           initialParams={{
