@@ -101,6 +101,9 @@ const Settings: React.FC<NavProps> = props => {
       const unlockResult = await unlockWallet({
         chainAccount,
         skipBiometrics: true,
+        enterPwScreenOptions: {
+          titleLabelOverride: t('passwordManipulation:changePw'),
+        },
       });
       if (unlockResult) {
         navigate(ROUTES.PASSWORD_MANIPULATION, {
