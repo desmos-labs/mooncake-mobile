@@ -1,13 +1,18 @@
 import appSettingsState from '@recoil/settings';
-import {getAccounts, getLocalWallet, getMnemonic} from 'lib/SecureStorage';
+import {
+  deleteBiometricData,
+  getAccounts,
+  getLocalWallet,
+  getMnemonic,
+  setBiometricData,
+} from 'lib/SecureStorage';
 import React from 'react';
 import {useRecoilValue} from 'recoil';
 import _ from 'lodash';
 import {
   deleteOldWalletData,
-  replaceBiometricsData,
   saveNewWalletData,
-} from './utils';
+} from 'hooks/useChangePassword/utils';
 
 /**
  * A hook that allows the user to change the password of the current active account
@@ -30,24 +35,27 @@ const useChangePassword = () => {
       // get a mnemonic (every account will have the same mnemonic)
       const mnemonic = await getMnemonic(accounts[0].address, oldPassword);
       // get old data
-      const wallets = await Promise.all(
-        accounts.map(async (account: {address: string}) => {
-          return getLocalWallet(account.address, oldPassword);
-        }),
+      const wallets = _.compact(
+        await Promise.all(
+          accounts.map(async (account: {address: string}) => {
+            return getLocalWallet(account.address, oldPassword);
+          }),
+        ),
       );
-
-      const cleanedWalletArr = _.compact(wallets);
-      // delete old data
-      // use compact to sanitize undefined wallets
-      await deleteOldWalletData(cleanedWalletArr);
 
       // replace all biometrics passwords if biometrics is enabled
       if (biometrics) {
-        await replaceBiometricsData(accounts, cleanedWalletArr, newPassword);
+        await Promise.all([
+          deleteBiometricData(),
+          setBiometricData(newPassword),
+        ]);
       }
 
-      // save new data
-      await saveNewWalletData(cleanedWalletArr, mnemonic!, newPassword);
+      // replace wallet data
+      await Promise.all([
+        deleteOldWalletData(wallets),
+        saveNewWalletData(wallets, mnemonic!, newPassword),
+      ]);
 
       return {success: true, reason: 'success'};
     },

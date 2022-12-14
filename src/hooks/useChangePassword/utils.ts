@@ -2,14 +2,16 @@ import LocalWallet from 'lib/LocalWallet';
 import {
   deleteLocalWallet,
   deleteMnemonic,
-  deletePasswordWithBiometrics,
   saveLocalWallet,
   saveMnemonic,
-  savePasswordWithBiometrics,
 } from 'lib/SecureStorage';
-import {ChainAccount} from 'types/chains';
 
+/**
+ * Deletes all saved data of the specified wallets from secure storage.
+ * @param {LocalWallet[]} wallets - An array of LocalWallets delete.
+ */
 export const deleteOldWalletData = async (wallets: LocalWallet[]) => {
+  // maybe we could just pass an array of addresses instead.
   const deleteLocalWalletPromises = wallets.map(wallet =>
     deleteLocalWallet(wallet!.bech32Address),
   );
@@ -21,32 +23,23 @@ export const deleteOldWalletData = async (wallets: LocalWallet[]) => {
   await Promise.all([...deleteLocalWalletPromises, ...deleteMnemonicPromises]);
 };
 
-export const replaceBiometricsData = async (
-  accounts: ChainAccount[],
-  wallets: LocalWallet[],
-  newPassword: string,
-) => {
-  const deletePasswordMap = accounts.map(async acc => {
-    return deletePasswordWithBiometrics(acc.address);
-  });
-
-  const savePasswordMap = wallets.map(async wallet => {
-    return savePasswordWithBiometrics(wallet!, newPassword);
-  });
-
-  await Promise.all([...deletePasswordMap, ...savePasswordMap]);
-};
-
+/**
+ * Save wallet data to secure storage
+ * @param {LocalWallet[]} wallets - The wallets to save.
+ * @param {string} mnemonic - The mnemonic of the wallets to save. Due to how the app is structured,
+ *                            all wallets will have the save mnemonic.
+ * @param {string} newPassword - The new password to encrypt the data with.
+ */
 export const saveNewWalletData = async (
   wallets: LocalWallet[],
   mnemonic: string,
   newPassword: string,
 ) => {
   const saveLocalWalletPromises = wallets.map(wallet =>
-    saveLocalWallet(wallet!, newPassword),
+    saveLocalWallet(wallet, newPassword),
   );
   const saveMnemonicPromises = wallets.map(wallet =>
-    saveMnemonic(wallet?.bech32Address!, mnemonic!, newPassword),
+    saveMnemonic(wallet.bech32Address, mnemonic!, newPassword),
   );
 
   await Promise.all([...saveLocalWalletPromises, ...saveMnemonicPromises]);
