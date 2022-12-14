@@ -246,6 +246,9 @@ export const getPasswordWithBiometrics = async (address: string) => {
 
 /**
  * Set and enable biometrics for all stored profiles
+ * @param {string} oldPassword - The password used to unlock the currently stored wallet data.
+ * @param {string} newPassword - The new password used to encrypt the new biometric data. If enabling biometrics, this can be the
+ *                               same as the oldPassword param.
  */
 export const setBiometricData = async (
   oldPassword: string,
@@ -278,20 +281,4 @@ export const deleteBiometricData = async () => {
       return deletePasswordWithBiometrics(acc.address);
     }),
   );
-};
-
-export const replaceBiometricsData = async (
-  accounts: ChainAccount[],
-  wallets: LocalWallet[],
-  newPassword: string,
-) => {
-  const deletePasswordMap = accounts.map(async acc => {
-    return deletePasswordWithBiometrics(acc.address);
-  });
-
-  const savePasswordMap = wallets.map(async wallet => {
-    return savePasswordWithBiometrics(wallet!, newPassword);
-  });
-
-  return Promise.all([...deletePasswordMap, ...savePasswordMap]);
 };

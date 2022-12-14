@@ -20,6 +20,11 @@ import {
 const useChangePassword = () => {
   const {biometrics} = useRecoilValue(appSettingsState);
 
+  /**
+   * Change the user's password.
+   * @param {string} oldPassword - The old password.
+   * @param {string} newPassword - The new password.
+   */
   const changePassword = React.useCallback(
     async ({
       oldPassword,
