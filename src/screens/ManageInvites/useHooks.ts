@@ -1,5 +1,6 @@
 import {useQuery} from '@apollo/client';
 import useActiveAccount from 'hooks/useActiveAccount';
+import _ from 'lodash';
 import {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import GetInvites from 'services/graphql/queries/GetInvites';
@@ -18,9 +19,6 @@ const useHooks = () => {
       return [];
     }
 
-    const pending: any[] = [];
-    const successful: any[] = [];
-
     const filteredInvitesWithoutSelfInvite = data.invite.filter(
       (invite: any) => invite?.claimer_address !== activeAddress,
     );
@@ -35,19 +33,15 @@ const useHooks = () => {
       setRewardBalance(prev => (prev ? prev + 2 : 2));
     }
 
-    filteredInvitesWithoutSelfInvite.forEach((invite: any) => {
-      if (invite.claimer) {
-        successful.push({
+    const [successful, pending] = _.partition(
+      filteredInvitesWithoutSelfInvite.map((invite: any) => {
+        return {
           ...invite,
           index: filteredInvitesWithoutSelfInvite.indexOf(invite) + 1,
-        });
-      } else {
-        pending.push({
-          ...invite,
-          index: filteredInvitesWithoutSelfInvite.indexOf(invite) + 1,
-        });
-      }
-    });
+        };
+      }),
+      (invite: any) => invite.claimer,
+    );
 
     setRewardBalance(prev =>
       prev ? prev + successful.length * 2 : successful.length * 2,
