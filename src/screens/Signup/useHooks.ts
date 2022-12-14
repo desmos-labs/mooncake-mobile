@@ -30,8 +30,7 @@ import {DesmosHdPath} from 'types/hdpath';
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 const useHooks = () => {
-  const {navigate, reset, goBack, push} =
-    useNavigation<NavProps['navigation']>();
+  const {navigate, goBack, push} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
   const [inviteCode, setInviteCode] = useRecoilState(inviteCodeState);
   const signUpInfo = useRecoilValue(signUpInfoState);
@@ -180,21 +179,7 @@ const useHooks = () => {
       messages,
       offlineSigner: wallet,
       successAction: () => {
-        push(ROUTES.FULLSCREEN_STATUS_SCREEN, {
-          title: t('common:congratulations'),
-          subtitle: t('common:dtag created'),
-          buttonLabel: t('resultModal:enterApp'),
-          handleButtonPress: () => {
-            reset({
-              index: 0,
-              routes: [
-                {
-                  name: ROUTES.HOME_TABS,
-                },
-              ],
-            });
-          },
-        });
+        push(ROUTES.SIGNUP_RESULT);
       },
       failureAction: () => {
         goBack();

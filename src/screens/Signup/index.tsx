@@ -179,7 +179,7 @@ const Signup = () => {
           return (
             <>
               <KeyboardAvoidingView
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={styles.buttonGroup}>
                 <ScrollView
