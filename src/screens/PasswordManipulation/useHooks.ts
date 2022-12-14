@@ -18,6 +18,8 @@ import {useLazyQuery} from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useChangePassword from 'hooks/useChangePassword';
 import signUpPasswordState from '@recoil/signUpPasswordState';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 /**
@@ -32,6 +34,7 @@ const useHooks = () => {
 
   const {changePassword} = useChangePassword();
   const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
+  const toast = useToast();
 
   const {
     params: {mode, mnemonic, oldPassword},
@@ -92,31 +95,39 @@ const useHooks = () => {
   const handleFormSubmit = React.useCallback(
     async (formValues: typeof initialFormValues) => {
       if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
-        setLoading(true);
-        await changePassword({
-          oldPassword: oldPassword as string,
-          newPassword: formValues.newPassword,
-        });
+        try {
+          setLoading(true);
 
-        navigate(ROUTES.CONFIRM_MODAL, {
-          title: t('resultModal:success'),
-          subtitle: t('resultModal:passwordWasChanged'),
-          primaryButtonLabel: t('resultModal:goToProfile') as string,
-          onPressPrimary: () => {
-            reset({
-              index: 1,
-              routes: [
-                {
-                  name: ROUTES.HOME_TABS,
-                },
-                {
-                  name: ROUTES.USER_PROFILE,
-                },
-              ],
-            });
-          },
-        });
-        setLoading(false);
+          await changePassword({
+            oldPassword: oldPassword as string,
+            newPassword: formValues.newPassword,
+          });
+
+          navigate(ROUTES.CONFIRM_MODAL, {
+            title: t('resultModal:success'),
+            subtitle: t('resultModal:passwordWasChanged'),
+            primaryButtonLabel: t('resultModal:goToProfile') as string,
+            onPressPrimary: () => {
+              reset({
+                index: 1,
+                routes: [
+                  {
+                    name: ROUTES.HOME_TABS,
+                  },
+                  {
+                    name: ROUTES.USER_PROFILE,
+                  },
+                ],
+              });
+            },
+          });
+        } catch (err) {
+          toast.show(String(err), {
+            type: ToastConfig.ERROR_NO_RETRY,
+          });
+        } finally {
+          setLoading(false);
+        }
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
         setLoading(true);

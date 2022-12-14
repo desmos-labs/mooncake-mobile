@@ -27,10 +27,10 @@ const useChangePassword = () => {
     }: {
       oldPassword: string;
       newPassword: string;
-    }): Promise<{success: boolean; reason: string}> => {
-      const accounts = await getAccounts();
-      if (!accounts) {
-        return {success: false, reason: 'no active account found'};
+    }) => {
+      const accounts = _.compact(await getAccounts());
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found.');
       }
       // get a mnemonic (every account will have the same mnemonic)
       const mnemonic = await getMnemonic(accounts[0].address, oldPassword);
@@ -52,12 +52,10 @@ const useChangePassword = () => {
       }
 
       // replace wallet data
-      await Promise.all([
+      return Promise.all([
         deleteOldWalletData(wallets),
         saveNewWalletData(wallets, mnemonic!, newPassword),
       ]);
-
-      return {success: true, reason: 'success'};
     },
     [biometrics],
   );
