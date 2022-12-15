@@ -73,12 +73,16 @@ const Profile = () => {
   const {top} = useSafeAreaInsets();
   const [globalLoading, setGlobalLoading] = useState(true);
 
-  const {chainLinks, appLinks, refetchData} = useGetConnectedAppsAndChains();
+  const {
+    chainLinks,
+    appLinks,
+    refetchData: refetchConnectedAppsAndChains,
+  } = useGetConnectedAppsAndChains();
 
   useFocusEffect(
     React.useCallback(() => {
-      setTimeout(refetchData, 2000);
-    }, [refetchData]),
+      setTimeout(refetchConnectedAppsAndChains, 2000);
+    }, [refetchConnectedAppsAndChains]),
   );
 
   /** Animations start
