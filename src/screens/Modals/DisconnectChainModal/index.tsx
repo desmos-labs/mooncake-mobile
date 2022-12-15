@@ -18,7 +18,6 @@ import {ChainLink} from 'types/link';
 import LinkableChains from 'config/LinkableChains';
 import {MsgUnlinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import useChainLinks from 'hooks/useChainLinks';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useStyles from './useStyles';
 
@@ -41,7 +40,6 @@ const DisconnectChainModal = () => {
   } = useRoute<NavProps['route']>();
 
   const {t} = useTranslation('disconnectChain');
-  const {refetch} = useChainLinks();
   const {chainAccount} = useActiveAccount();
 
   const unlockWallet = useUnlockWallet();
@@ -78,7 +76,6 @@ const DisconnectChainModal = () => {
       messages: msgs,
       offlineSigner: unlockResponse.wallet,
       successAction: () => {
-        refetch();
         navigate(ROUTES.CONFIRM_MODAL, {
           image: modalSuccess,
           title: t('common:success'),

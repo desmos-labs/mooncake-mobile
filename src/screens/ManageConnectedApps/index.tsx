@@ -17,7 +17,7 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
+import {useRecoilValue} from 'recoil';
 import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnectedItem';
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
 import useStyles from './useStyles';
@@ -32,7 +32,7 @@ const ManageConnectedApps = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [connectedApps] = useRecoilState(connectedAppsState);
+  const connectedApps = useRecoilValue(connectedAppsState);
   const {chainAccount} = useActiveAccount();
   const unlockWallet = useUnlockWallet();
 

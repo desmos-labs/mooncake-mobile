@@ -1,0 +1,52 @@
+import {useMemo, useCallback} from 'react';
+import {useQuery} from '@apollo/client';
+import GetConnectedAppsAndChains from 'services/graphql/queries/GetConnectedAppsAndChains';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {ChainLink} from 'types/link';
+import {useSetRecoilState} from 'recoil';
+import chainLinkState from '@recoil/chainLinks';
+
+const formatChainLink = (chainLinks: any[]) =>
+  chainLinks.map(
+    link =>
+      ({
+        chainName: link.chain_config.name,
+        externalAddress: link.external_address,
+        userAddress: link.user_address,
+        creationTime: new Date(`${link.creation_time}Z`),
+      } as ChainLink),
+  );
+
+const useGetConnectedAppsAndChains = () => {
+  const [activeAddress] = useMMKVStorage(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const setChainLinks = useSetRecoilState(chainLinkState);
+
+  const {data, refetch} = useQuery(GetConnectedAppsAndChains, {
+    variables: {
+      address: activeAddress,
+    },
+  });
+
+  const formattedData = useMemo(() => {
+    if (!data) return {chainLinks: [], appLinks: []};
+    const {chain_link, application_link} = data;
+
+    const formattedChainLinks = formatChainLink(chain_link);
+    setChainLinks(formattedChainLinks);
+    return {
+      chainLinks: formattedChainLinks,
+      appLinks: application_link as ConnectedApps[],
+    };
+  }, [data]);
+
+  const refetchData = useCallback(async () => {
+    await refetch({address: activeAddress});
+  }, [activeAddress]);
+
+  return {
+    ...formattedData,
+    refetchData,
+  };
+};
+
+export default useGetConnectedAppsAndChains;

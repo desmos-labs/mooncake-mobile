@@ -1,10 +1,10 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {usePollProfileData} from '@recoil/activeProfileState';
-import {
-  connectedAppsState,
-  useGetConnectedAppsPolling,
-} from '@recoil/connectedApps';
 import {isFollowingAddr} from '@recoil/following';
 import useNumRelationships from '@recoil/numRelationshipState';
 import {
@@ -20,7 +20,6 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useChainLinks from 'hooks/useChainLinks';
 import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -43,7 +42,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilValue} from 'recoil';
 import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
 import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
 import {
@@ -51,6 +50,7 @@ import {
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import useGetConnectedAppsAndChains from 'hooks/useGetConnectedAppsAndChains';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -71,10 +71,15 @@ const Profile = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
-  const {chainLinks} = useChainLinks();
-  const [connectedApps] = useRecoilState(connectedAppsState);
   const [globalLoading, setGlobalLoading] = useState(true);
-  useGetConnectedAppsPolling();
+
+  const {chainLinks, appLinks, refetchData} = useGetConnectedAppsAndChains();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setTimeout(refetchData, 2000);
+    }, [refetchData]),
+  );
 
   /** Animations start
    * These hooks act as the animation driver for the ProfileHeader component
@@ -131,8 +136,8 @@ const Profile = () => {
   }, []);
 
   const twitterAccount = useMemo(() => {
-    return connectedApps.findIndex(app => app.application === 'twitter') !== -1;
-  }, [connectedApps]);
+    return appLinks.findIndex(app => app.application === 'twitter') !== -1;
+  }, [appLinks]);
 
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
@@ -230,17 +235,17 @@ const Profile = () => {
   const ConnectedChains = React.useMemo(() => {
     const images = [
       ...mapConnectedChainImages(chainLinks),
-      ...mapConnectedAppImages(connectedApps),
+      ...mapConnectedAppImages(appLinks),
     ];
 
     if (images.length > 3) images.length = 3;
-    if (chainLinks.length !== 0 || connectedApps.length !== 0) {
+    if (chainLinks.length !== 0 || appLinks.length !== 0) {
       return (
         <View style={{marginTop: 16}}>
           <ChainsCountersBar
             loading={false}
             connectedChainsCounter={chainLinks.length}
-            connectedAppsCounter={connectedApps.length}
+            connectedAppsCounter={appLinks.length}
             connectedChainsImages={images}
             handlePressCounters={() => navigate(ROUTES.SETTINGS)}
           />
@@ -248,7 +253,7 @@ const Profile = () => {
       );
     }
     return undefined;
-  }, [chainLinks, connectedApps]);
+  }, [chainLinks, appLinks]);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
