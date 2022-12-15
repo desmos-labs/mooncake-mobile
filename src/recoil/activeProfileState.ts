@@ -60,7 +60,6 @@ export const useGetProfileData = (address: string) => {
 
   React.useEffect(() => {
     if (!activeProfile && address) {
-      console.log('fetching');
       fetchActiveProfile(address);
     }
   }, [activeProfile, address]);
