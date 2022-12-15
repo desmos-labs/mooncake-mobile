@@ -460,7 +460,7 @@ PODS:
     - react-native-config/App (= 1.4.6)
   - react-native-config/App (1.4.6):
     - React-Core
-  - react-native-image-picker (4.8.4):
+  - react-native-image-picker (4.10.2):
     - React-Core
   - react-native-image-resizer (3.0.4):
     - React-Core
@@ -978,7 +978,7 @@ SPEC CHECKSUMS:
   react-native-blur: 3e9c8e8e9f7d17fa1b94e1a0ae9fd816675f5382
   react-native-cameraroll: 4d0cb1c3413d4b7b85beb68a8c14325d887b404c
   react-native-config: 7cd105e71d903104e8919261480858940a6b9c0e
-  react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
+  react-native-image-picker: bf34f3f516d139ed3e24c5f5a381a91819e349ea
   react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
   react-native-mmkv: b5c7f9bc369eef2b8a2aa36e8a15949989fa823f
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
