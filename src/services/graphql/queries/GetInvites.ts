@@ -14,6 +14,8 @@ const GetInvites = gql`
       link
       creation_time
       expiration_time
+      inviter_address
+      claimer_address
     }
   }
 `;

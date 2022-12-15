@@ -1,5 +1,6 @@
+import {useQuery} from '@apollo/client';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   copyIcon,
@@ -18,21 +19,30 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Image, Share, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Share,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
+import GetInvites from 'services/graphql/queries/GetInvites';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
 
 const Invites = () => {
+  const {activeAddress} = useActiveAccount();
   const [inviteGenerated, setInviteGenerated] = useState<boolean>();
   const [generationLoading, setGenerationLoading] = useState<boolean>(false);
   const [inviteLink, setInviteLink] = useState<string>('');
@@ -41,6 +51,19 @@ const Invites = () => {
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const toast = useToast();
+  const {data, refetch} = useQuery(GetInvites, {
+    fetchPolicy: 'no-cache',
+  });
+
+  const numInvitesGenerated = useMemo(() => {
+    if (!data) {
+      return undefined;
+    } else {
+      return data.invite.filter(
+        (invite: any) => invite?.claimer_address !== activeAddress,
+      ).length;
+    }
+  }, [data, activeAddress]);
 
   const rightElement = useMemo(() => {
     return (
@@ -69,6 +92,12 @@ const Invites = () => {
       console.error(error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [generationLoading]),
+  );
 
   const generateInvite = useCallback(async () => {
     try {
@@ -139,7 +168,8 @@ const Invites = () => {
         shareComponent
       ) : (
         <Button
-          onPress={() => generateInvite()}
+          disabled={!numInvitesGenerated || numInvitesGenerated === 3}
+          onPress={generateInvite}
           loading={generationLoading}
           color={theme.colors.surfaceBlack}
           style={{marginHorizontal: theme.spacing.m}}
@@ -163,9 +193,13 @@ const Invites = () => {
         <Spacer paddingTop={6} />
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
-          <Typography.Body6 style={{color: theme.colors.midGrey}}>
-            {t('invites shared', {number: 0})}
-          </Typography.Body6>
+          {numInvitesGenerated ? (
+            <Typography.Body6 style={{color: theme.colors.midGrey}}>
+              {t('invites shared', {number: numInvitesGenerated})}
+            </Typography.Body6>
+          ) : (
+            <ActivityIndicator />
+          )}
         </View>
       </View>
       <Spacer paddingVertical={16} />
