@@ -7,6 +7,11 @@ import {useSetRecoilState} from 'recoil';
 import chainLinkState from '@recoil/chainLinks';
 import {connectedAppsState} from '@recoil/connectedApps';
 
+/**
+ * Format incoming chainlink data from the server into a format that is easier to parse by the app.
+ * @param {any[]} chainLinks - An array of chainlink data from the server.
+ * @returns {ChainLink[]} - An array formatted of ChainLink objects
+ */
 const formatChainLink = (chainLinks: any[]) =>
   chainLinks.map(
     link =>
@@ -18,6 +23,9 @@ const formatChainLink = (chainLinks: any[]) =>
       } as ChainLink),
   );
 
+/**
+ * A hook that combines the fetching of a user's connected chains and applications.
+ */
 const useGetConnectedAppsAndChains = () => {
   const [activeAddress] = useMMKVStorage(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const setChainLinks = useSetRecoilState(chainLinkState);
