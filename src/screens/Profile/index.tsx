@@ -4,7 +4,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {usePollProfileData} from '@recoil/activeProfileState';
+import {useGetProfileData} from '@recoil/activeProfileState';
 import {isFollowingAddr} from '@recoil/following';
 import useNumRelationships from '@recoil/numRelationshipState';
 import {
@@ -72,6 +72,7 @@ const Profile = () => {
   const {params} = useRoute<NavProps['route']>();
   const {top} = useSafeAreaInsets();
   const [globalLoading, setGlobalLoading] = useState(true);
+  const {activeAddress, profileData} = useActiveAccount();
 
   const {
     chainLinks,
@@ -79,10 +80,33 @@ const Profile = () => {
     refetchData: refetchConnectedAppsAndChains,
   } = useGetConnectedAppsAndChains();
 
+  const {refetch: refetchProfileData, loading} = useGetProfileData(
+    activeAddress!,
+  );
+
+  const screenMode = useMemo(() => {
+    if (params?.visitingProfileAddress) {
+      return activeAddress !== params.visitingProfileAddress
+        ? 'guestProfile'
+        : 'myProfile';
+    }
+
+    return 'myProfile';
+  }, [params?.visitingProfileAddress, activeAddress]);
+
   useFocusEffect(
     React.useCallback(() => {
-      setTimeout(refetchConnectedAppsAndChains, 2000);
-    }, [refetchConnectedAppsAndChains]),
+      // only fetch profileData and connected apps if user is viewing their own profile
+      if (screenMode === 'myProfile') {
+        Promise.all([refetchProfileData, refetchConnectedAppsAndChains]).then(
+          () => {
+            console.log(
+              '[Profile.tsx]: refetching profile data and connected apps',
+            );
+          },
+        );
+      }
+    }, [refetchConnectedAppsAndChains, refetchProfileData]),
   );
 
   /** Animations start
@@ -114,18 +138,6 @@ const Profile = () => {
 
   const {visitingProfileData, visitingProfileLoading} =
     useProfileDataGivenAddress(params?.visitingProfileAddress || '');
-  const {activeAddress, profileData} = useActiveAccount();
-  const {loading, refetch} = usePollProfileData(activeAddress!);
-
-  const screenMode = useMemo(() => {
-    if (params?.visitingProfileAddress) {
-      return activeAddress !== params.visitingProfileAddress
-        ? 'guestProfile'
-        : 'myProfile';
-    }
-
-    return 'myProfile';
-  }, [params?.visitingProfileAddress, activeAddress]);
 
   const {address, bio, dtag, cover_pic, profile_pic, nickname} =
     screenMode === 'guestProfile'
@@ -300,7 +312,11 @@ const Profile = () => {
         scrollEventThrottle={10}
         // Hardcoded value to avoid overlapping with header
         refreshControl={
-          <RefreshControl enabled onRefresh={refetch} refreshing={loading} />
+          <RefreshControl
+            enabled
+            onRefresh={refetchConnectedAppsAndChains}
+            refreshing={loading}
+          />
         }
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={[styles.scrollviewContentWrapper, {marginTop: 100 + top}]}>

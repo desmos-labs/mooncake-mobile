@@ -1,7 +1,6 @@
-import {useLazyQuery, useQuery} from '@apollo/client';
-import EnvConfig from 'config/EnvConfig';
+import {useLazyQuery} from '@apollo/client';
 import React from 'react';
-import {atom, useRecoilState, useSetRecoilState} from 'recoil';
+import {atom, useRecoilState} from 'recoil';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 
 /**
@@ -15,29 +14,6 @@ const activeProfileState = atom<ProfileData | undefined>({
 });
 
 export default activeProfileState;
-
-export const usePollProfileData = (address: string) => {
-  const setActiveProfile = useSetRecoilState(activeProfileState);
-
-  const {data, loading, refetch} = useQuery(GetProfileForAddress, {
-    variables: {address},
-    pollInterval: EnvConfig.POLLING_INTERVAL,
-    fetchPolicy: 'no-cache',
-  });
-
-  React.useEffect(() => {
-    if (!data) return;
-    const {profile} = data;
-    const [firstProfile] = profile;
-
-    setActiveProfile(firstProfile);
-  }, [data]);
-
-  return {
-    loading,
-    refetch,
-  };
-};
 
 export const useGetProfileData = (address: string) => {
   const [, {loading, refetch}] = useLazyQuery(GetProfileForAddress, {
