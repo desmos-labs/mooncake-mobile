@@ -39,7 +39,6 @@ const chainLinkState = selectorFamily<ChainLink[], string>({
 
     const {chain_link} = data;
 
-    console.log(chain_link);
     return formatChainLink(chain_link);
   },
 });
