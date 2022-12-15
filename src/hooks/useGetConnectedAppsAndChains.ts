@@ -5,6 +5,7 @@ import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {ChainLink} from 'types/link';
 import {useSetRecoilState} from 'recoil';
 import chainLinkState from '@recoil/chainLinks';
+import {connectedAppsState} from '@recoil/connectedApps';
 
 const formatChainLink = (chainLinks: any[]) =>
   chainLinks.map(
@@ -20,6 +21,7 @@ const formatChainLink = (chainLinks: any[]) =>
 const useGetConnectedAppsAndChains = () => {
   const [activeAddress] = useMMKVStorage(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
   const setChainLinks = useSetRecoilState(chainLinkState);
+  const setAppLinks = useSetRecoilState(connectedAppsState);
 
   const {data, refetch} = useQuery(GetConnectedAppsAndChains, {
     variables: {
@@ -33,6 +35,7 @@ const useGetConnectedAppsAndChains = () => {
 
     const formattedChainLinks = formatChainLink(chain_link);
     setChainLinks(formattedChainLinks);
+    setAppLinks(application_link);
     return {
       chainLinks: formattedChainLinks,
       appLinks: application_link as ConnectedApps[],
