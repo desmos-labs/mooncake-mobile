@@ -50,7 +50,8 @@ import {
   mapConnectedChainImages,
 } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import useGetConnectedAppsAndChains from 'hooks/useGetConnectedAppsAndChains';
+import {useChainLinks} from '@recoil/chainLinks';
+import {useApplicationLinks} from '@recoil/connectedApps';
 import AddressCopy from './components/AddressCopy';
 import ProfileHeader from './components/ProfileHeader';
 import SocialCounter from './components/SocialCounter';
@@ -74,15 +75,20 @@ const Profile = () => {
   const [globalLoading, setGlobalLoading] = useState(true);
   const {activeAddress, profileData} = useActiveAccount();
 
-  const {
-    chainLinks,
-    appLinks,
-    refetchData: refetchConnectedAppsAndChains,
-  } = useGetConnectedAppsAndChains();
-
   const {refetch: refetchProfileData, loading} = useGetProfileData(
     activeAddress!,
   );
+
+  const {
+    chainLinks,
+    refetch: refetchChainLinks,
+    loading: chainLinksLoading,
+  } = useChainLinks(activeAddress!);
+  const {
+    appLinks,
+    refetch: refetchAppLinks,
+    loading: appLinksLoading,
+  } = useApplicationLinks(activeAddress!);
 
   const screenMode = useMemo(() => {
     if (params?.visitingProfileAddress) {
@@ -94,19 +100,19 @@ const Profile = () => {
     return 'myProfile';
   }, [params?.visitingProfileAddress, activeAddress]);
 
+  const refetchUserData = React.useCallback(() => {
+    console.log(
+      '[Profile/index.tsx]: refetching user profile data and connected apps & chains',
+    );
+    Promise.all([refetchProfileData(), refetchChainLinks(), refetchAppLinks()]);
+  }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
+
   useFocusEffect(
     React.useCallback(() => {
       // only fetch profileData and connected apps if user is viewing their own profile
-      if (screenMode === 'myProfile') {
-        Promise.all([refetchProfileData, refetchConnectedAppsAndChains]).then(
-          () => {
-            console.log(
-              '[Profile.tsx]: refetching profile data and connected apps',
-            );
-          },
-        );
-      }
-    }, [refetchConnectedAppsAndChains, refetchProfileData]),
+      refreshNumRelationships();
+      if (screenMode === 'myProfile') refetchUserData();
+    }, [refetchUserData]),
   );
 
   /** Animations start
@@ -146,10 +152,6 @@ const Profile = () => {
 
   const {numRelationships, refreshNumRelationships} =
     useNumRelationships(address);
-
-  React.useEffect(() => {
-    refreshNumRelationships();
-  }, []);
 
   const twitterAccount = useMemo(() => {
     return appLinks.findIndex(app => app.application === 'twitter') !== -1;
@@ -314,7 +316,11 @@ const Profile = () => {
         refreshControl={
           <RefreshControl
             enabled
-            onRefresh={refetchConnectedAppsAndChains}
+            onRefresh={() => {
+              screenMode === 'myProfile'
+                ? refetchUserData()
+                : refreshNumRelationships();
+            }}
             refreshing={loading}
           />
         }
@@ -384,7 +390,14 @@ const Profile = () => {
                       </Typography.Button2>
                     </Button>
                   </View>
-                  {ConnectedChains}
+                  {appLinksLoading || chainLinksLoading ? (
+                    <View
+                      style={{alignItems: 'center', justifyContent: 'center'}}>
+                      <ActivityIndicator />
+                    </View>
+                  ) : (
+                    ConnectedChains
+                  )}
                 </>
               )}
             </View>

@@ -18,8 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
 import ImageButton from 'components/ImageButton';
 import {addButton} from 'assets/images';
-import {useRecoilValue} from 'recoil';
-import chainLinkState from '@recoil/chainLinks';
+import {useChainLinks} from '@recoil/chainLinks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -32,11 +31,12 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const chainLinks = useRecoilValue(chainLinkState);
 
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  const {chainAccount} = useActiveAccount();
+  const {chainAccount, activeAddress} = useActiveAccount();
+
+  const {chainLinks} = useChainLinks(activeAddress!);
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {

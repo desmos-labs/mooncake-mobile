@@ -1,7 +1,7 @@
 import {MsgUnlinkApplicationEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {connectedAppsState} from '@recoil/connectedApps';
+import {useApplicationLinks} from '@recoil/connectedApps';
 import {modalSuccess} from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -17,7 +17,6 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
 import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnectedItem';
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
 import useStyles from './useStyles';
@@ -32,8 +31,8 @@ const ManageConnectedApps = () => {
   const styles = useStyles();
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const connectedApps = useRecoilValue(connectedAppsState);
-  const {chainAccount} = useActiveAccount();
+  const {chainAccount, activeAddress} = useActiveAccount();
+  const {appLinks} = useApplicationLinks(activeAddress!);
   const unlockWallet = useUnlockWallet();
 
   function capitalize(word: string) {
@@ -143,7 +142,7 @@ const ManageConnectedApps = () => {
       </View>
 
       <FlatList
-        data={connectedApps}
+        data={appLinks}
         renderItem={renderChainLinks}
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
