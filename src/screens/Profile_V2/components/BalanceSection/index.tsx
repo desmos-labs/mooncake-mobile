@@ -9,6 +9,7 @@ import {Divider, useTheme} from 'react-native-paper';
 import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useRecoilValue} from 'recoil';
+import useQueries from 'screens/Profile_V2/useQueries';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import useStyles from './useStyles';
 
@@ -16,32 +17,7 @@ const BalanceSection = () => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
-  const {currentChain} = useRecoilValue(appSettingsState);
-
-  const {data: balanceData, loading: balanceLoading} = useQuery(
-    GetAccountBalance,
-    {
-      variables: {
-        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
-        tokenName: 'dsm',
-      },
-      fetchPolicy: 'no-cache',
-    },
-  );
-
-  const convertedBalance = useMemo(() => {
-    let balanceToReturn;
-    if (balanceData && !balanceLoading) {
-      balanceToReturn = convertCoin(
-        balanceData?.action_account_balance?.coins[0],
-        6,
-        currentChain.currencies,
-      );
-      console.log(balanceData.token_price[0]);
-    }
-    return balanceToReturn;
-  }, [balanceData, balanceLoading, currentChain]);
-
+  const {convertedBalance, balanceData, balanceLoading} = useQueries();
   return (
     <>
       {balanceData && !balanceLoading ? (

@@ -1,7 +1,5 @@
-import {useQuery} from '@apollo/client';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import EnvConfig from 'config/EnvConfig';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -14,34 +12,14 @@ import {useTheme} from 'react-native-paper';
 import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
-import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
+import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
-type Props = {
-  posts: PostItem[];
-};
-
-const PostsSection = ({posts}: Props) => {
+const PostsSection = () => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
-
-  const {data: postsData, loading: postsLoading} = useQuery(
-    GetPostsForAddressWithLimit,
-    {
-      variables: {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        address: 'desmos1n39pwnwnsurvh8zcxwaahttmkvqtxqdmyaln7n',
-        limit: 10,
-      },
-      fetchPolicy: 'no-cache',
-    },
-  );
-
-  const posts2: [] = React.useMemo(() => {
-    if (!postsData) return [];
-    return postsData.post;
-  }, [postsData, postsLoading]);
+  const {posts, postsData, postsLoading} = useQueries();
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
@@ -67,7 +45,7 @@ const PostsSection = ({posts}: Props) => {
           }}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          data={posts2}
+          data={posts}
           renderItem={renderPosts}
         />
       ) : (

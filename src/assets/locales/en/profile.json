@@ -31,5 +31,7 @@
   "connectedApps_plural": "{{count}} Apps connected",
   "created liked tipped": "Created, liked and tipped posts",
   "transactions": "Transactions",
-  "balance": "Balance"
+  "balance": "Balance",
+  "nfts": "NFTs",
+  "badges": "Badges"
 }

@@ -31,7 +31,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import AddressCopy from 'screens/Profile_V2/components/AddressCopy';
+import BadgesSection from 'screens/Profile_V2/components/BadgesSection';
 import BalanceSection from 'screens/Profile_V2/components/BalanceSection';
+import NftsSection from 'screens/Profile_V2/components/NftsSection';
 import PostsSection from 'screens/Profile_V2/components/PostsSection';
 import UserBio from 'screens/Profile_V2/components/UserBio';
 import useStyles from './useStyles';
@@ -247,7 +249,7 @@ const Profile_V2 = () => {
         }}
       />
       <Animated.ScrollView
-        overScrollMode="never"
+        alwaysBounceVertical={false}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
         style={{
@@ -337,7 +339,11 @@ const Profile_V2 = () => {
           <View style={styles.container}>
             <BalanceSection />
             <Divider style={styles.divider} />
-            <PostsSection posts={[]} />
+            <PostsSection />
+            <Divider style={styles.divider} />
+            <NftsSection />
+            <Divider style={styles.divider} />
+            <BadgesSection />
           </View>
         </View>
       </Animated.ScrollView>
