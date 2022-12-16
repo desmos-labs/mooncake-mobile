@@ -108,6 +108,7 @@ import ChangePassword, {
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
+import Profile_V2, {UserProfileParams_V2} from 'screens/Profile_V2';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -234,6 +235,9 @@ export type RootNavigatorParamList = {
 
   // Onboarding
   [ROUTES.ONBOARDING]: OnboardingParams;
+
+  // New profile
+  [ROUTES.USER_PROFILE_V2]: UserProfileParams_V2;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -394,6 +398,7 @@ const RootNavigator = () => {
         component={ManageBiometrics}
       />
       <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      <Stack.Screen name={ROUTES.USER_PROFILE_V2} component={Profile_V2} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen

@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 44,
     resizeMode: 'cover',
     position: 'absolute',
-    top: -50,
+    top: -60,
     alignSelf: 'center',
   },
   contentGroup: {

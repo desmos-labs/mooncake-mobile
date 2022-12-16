@@ -28,6 +28,7 @@ import AcceptInvite from 'services/axios/requests/AcceptInvite';
 const routesToRender = [
   ROUTES.ONBOARDING,
   ROUTES.LOGIN,
+  ROUTES.USER_PROFILE_V2,
   ROUTES.SIGNUP_RESULT,
   ROUTES.CONFIRM_MODAL,
   ROUTES.SIGNUP,
