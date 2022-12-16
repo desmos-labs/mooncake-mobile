@@ -15,11 +15,13 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  Animated,
+  ActivityIndicator,
+  Animated as ClassicAnimated,
   ImageBackground,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -27,6 +29,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Divider, useTheme} from 'react-native-paper';
+import Animated, {FadeIn} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
@@ -36,6 +39,7 @@ import BalanceSection from 'screens/Profile_V2/components/BalanceSection';
 import NftsSection from 'screens/Profile_V2/components/NftsSection';
 import PostsSection from 'screens/Profile_V2/components/PostsSection';
 import UserBio from 'screens/Profile_V2/components/UserBio';
+import useProfileDataQueries from 'screens/Profile_V2/useProfileDataQueries';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -59,18 +63,22 @@ const Profile_V2 = () => {
   const styles = useStyles({
     insets,
   });
+  const [globalLoading, setGlobalLoading] = useState(true);
+
+  const {profileLoading, nickname, dtag, bio, address, profile_pic, cover_pic} =
+    useProfileDataQueries(params?.visitingProfileAddress);
 
   /** Animations start */
   const AnimatedImageBackground =
-    Animated.createAnimatedComponent(ImageBackground);
-  const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
-  const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+    ClassicAnimated.createAnimatedComponent(ImageBackground);
+  const AnimatedFastImage = ClassicAnimated.createAnimatedComponent(FastImage);
+  const AnimatedBlurView = ClassicAnimated.createAnimatedComponent(BlurView);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new ClassicAnimated.Value(0)).current;
   const scrollOffset = useRef(
-    new Animated.Value(45 + HEADER_HEIGHT_EXPANDED),
+    new ClassicAnimated.Value(45 + HEADER_HEIGHT_EXPANDED),
   ).current;
-  const scrollProgress = useRef(new Animated.Value(0)).current;
+  const scrollProgress = useRef(new ClassicAnimated.Value(0)).current;
 
   const scrollHandler = (event: any) => {
     const {contentOffset, contentSize, layoutMeasurement} = event.nativeEvent;
@@ -83,8 +91,26 @@ const Profile_V2 = () => {
   };
   /** Animations end */
 
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (!profileLoading) {
+      timeout = setTimeout(() => setGlobalLoading(false), 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [profileLoading]);
+
+  if (globalLoading) {
+    return (
+      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
       <StatusBar barStyle="light-content" />
       <ImageButton
         image={profileBack}
@@ -116,7 +142,7 @@ const Profile_V2 = () => {
       />
 
       {/* Refresh arrow */}
-      <Animated.View
+      <ClassicAnimated.View
         style={{
           zIndex: 2,
           position: 'absolute',
@@ -139,10 +165,10 @@ const Profile_V2 = () => {
           ],
         }}>
         <Icon name="arrow-down" color="white" size={25} />
-      </Animated.View>
+      </ClassicAnimated.View>
 
-      {/* Name + tweets count */}
-      <Animated.View
+      {/* Dtag */}
+      <ClassicAnimated.View
         style={{
           zIndex: 2,
           position: 'absolute',
@@ -174,14 +200,15 @@ const Profile_V2 = () => {
               alignSelf: 'center',
               maxWidth: '25%',
             }}>
-            @alemazzzzzzzz
+            @{dtag}
           </Typography.Subtitle3>
         </View>
-      </Animated.View>
+      </ClassicAnimated.View>
 
       {/* Banner */}
       <AnimatedImageBackground
-        source={defaultBanner}
+        resizeMode="cover"
+        source={{uri: cover_pic}}
         style={{
           position: 'absolute',
           left: 0,
@@ -214,7 +241,7 @@ const Profile_V2 = () => {
       </AnimatedImageBackground>
       {/* Tweets/profile */}
       <AnimatedFastImage
-        source={defaultProfilePic}
+        source={{uri: profile_pic}}
         style={{
           opacity: scrollY.interpolate({
             inputRange: [0, HEADER_HEIGHT_EXPANDED],
@@ -248,7 +275,7 @@ const Profile_V2 = () => {
           ],
         }}
       />
-      <Animated.ScrollView
+      <ClassicAnimated.ScrollView
         alwaysBounceVertical={false}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
@@ -289,7 +316,7 @@ const Profile_V2 = () => {
               marginTop: 10,
             }}
             numberOfLines={1}>
-            Alessandro Mazzon
+            {nickname}
           </Typography.H5>
 
           <Typography.Body7
@@ -298,13 +325,13 @@ const Profile_V2 = () => {
               color: theme.colors.darkGrey,
             }}
             numberOfLines={1}>
-            @alemaz
+            @{dtag}
           </Typography.Body7>
 
-          <AddressCopy address="desmos12312321312312" />
+          <AddressCopy address={address} />
 
           <Spacer paddingVertical={theme.spacing.m}>
-            <UserBio content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet purus sit amet dolor mollis suscipit. Nunc vitae elit sapien. Curabitur eu suscipit elit. Praesent at interdum ligula, ac semper dui. Nam eget tortor vitae nunc aliquam lacinia. Sed sollicitudin, magna pharetra porttitor ullamcorper, elit lacus convallis elit, vel tincidunt diam felis sed libero. Duis tempus ornare nisi, sed suscipit purus semper nec. Sed turpis dolor, feugiat eu massa sed, fringilla tristique dui. Aliquam euismod purus a molestie vestibulum. Suspendisse potenti." />
+            <UserBio content={bio} />
           </Spacer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
@@ -346,8 +373,8 @@ const Profile_V2 = () => {
             <BadgesSection />
           </View>
         </View>
-      </Animated.ScrollView>
-    </View>
+      </ClassicAnimated.ScrollView>
+    </Animated.View>
   );
 };
 

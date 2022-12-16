@@ -28,7 +28,7 @@ const UserBio = ({content}: Props) => {
 
   if (!content) {
     return (
-      <Typography.Caption1 style={{textAlign: 'center'}}>
+      <Typography.Caption1 style={{textAlign: 'left'}}>
         {t('noBio')}
       </Typography.Caption1>
     );
@@ -36,7 +36,6 @@ const UserBio = ({content}: Props) => {
 
   return (
     <TouchableOpacity
-      style={{alignSelf: 'center'}}
       activeOpacity={0.9}
       onPress={() => {
         if (showMoreLess) setExpanded(prev => !prev);
