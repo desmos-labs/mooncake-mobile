@@ -104,14 +104,21 @@ const Profile = () => {
     console.log(
       '[Profile/index.tsx]: refetching user profile data and connected apps & chains',
     );
-    Promise.all([refetchProfileData(), refetchChainLinks(), refetchAppLinks()]);
+    if (screenMode === 'myProfile') {
+      Promise.all([
+        refetchProfileData(),
+        refetchChainLinks(),
+        refetchAppLinks(),
+      ]);
+    } else {
+      refetchVisitingProfileData();
+    }
+    refreshNumRelationships();
   }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
 
   useFocusEffect(
     React.useCallback(() => {
-      // only fetch profileData and connected apps if user is viewing their own profile
-      refreshNumRelationships();
-      if (screenMode === 'myProfile') refetchUserData();
+      refetchUserData();
     }, [refetchUserData]),
   );
 
@@ -142,8 +149,11 @@ const Profile = () => {
   });
   /** Animations end * */
 
-  const {visitingProfileData, visitingProfileLoading} =
-    useProfileDataGivenAddress(params?.visitingProfileAddress || '');
+  const {
+    visitingProfileData,
+    visitingProfileLoading,
+    refetchVisitingProfileData,
+  } = useProfileDataGivenAddress(params?.visitingProfileAddress || '');
 
   const {address, bio, dtag, cover_pic, profile_pic, nickname} =
     screenMode === 'guestProfile'
@@ -317,9 +327,7 @@ const Profile = () => {
           <RefreshControl
             enabled
             onRefresh={() => {
-              screenMode === 'myProfile'
-                ? refetchUserData()
-                : refreshNumRelationships();
+              refetchUserData();
             }}
             refreshing={loading}
           />
