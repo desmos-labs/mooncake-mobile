@@ -54,7 +54,6 @@ const useQueries = () => {
       tokenPrice = balanceData.token_price[0].price;
       convertedAmount = parseFloat(balanceToReturn?.amount!) * tokenPrice;
     }
-    console.log(convertedAmount);
     return {
       balance: balanceToReturn,
       tokenPrice,

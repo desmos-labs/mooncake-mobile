@@ -78,7 +78,7 @@ const ReportPost = () => {
     <GestureDetector gesture={panGesture}>
       <KeyboardAvoidingView
         style={{flex: 1}}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? -20 : 0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <TouchableOpacity
           activeOpacity={1}
