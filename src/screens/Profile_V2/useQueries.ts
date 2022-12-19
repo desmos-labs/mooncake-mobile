@@ -62,9 +62,9 @@ const useQueries = () => {
     };
   }, [balanceData, balanceLoading, currentChain]);
 
-  const globalLoading = postsLoading && balanceLoading;
+  const contentLoading = postsLoading && balanceLoading;
 
-  const refetchEveryQuery = useCallback(() => {
+  const refetchContentQueries = useCallback(() => {
     refetchPosts();
     refetchBalance();
   }, []);
@@ -76,8 +76,8 @@ const useQueries = () => {
     convertedBalance,
     balanceData,
     balanceLoading,
-    globalLoading,
-    refetchEveryQuery,
+    contentLoading,
+    refetchContentQueries,
   };
 };
 

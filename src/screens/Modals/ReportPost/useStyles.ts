@@ -4,6 +4,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingBottom: theme.spacing.l,
   },
   tabIcon: {
     width: 44,

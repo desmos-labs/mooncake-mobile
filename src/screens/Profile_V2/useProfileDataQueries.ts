@@ -35,6 +35,7 @@ const useProfileDataQueries = (visitingProfileAddress?: string) => {
     cover_pic,
     profile_pic,
     nickname,
+    screenMode,
   };
 };
 

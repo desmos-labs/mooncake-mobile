@@ -38,6 +38,7 @@ import NftsSection from 'screens/Profile_V2/components/NftsSection';
 import PostsSection from 'screens/Profile_V2/components/PostsSection';
 import UserBio from 'screens/Profile_V2/components/UserBio';
 import useProfileDataQueries from 'screens/Profile_V2/useProfileDataQueries';
+import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -66,6 +67,8 @@ const Profile_V2 = () => {
   const {profileLoading, nickname, dtag, bio, address, profile_pic, cover_pic} =
     useProfileDataQueries(params?.visitingProfileAddress);
 
+  const {contentLoading} = useQueries();
+
   /** Animations start */
   const AnimatedImageBackground =
     ClassicAnimated.createAnimatedComponent(ImageBackground);
@@ -86,7 +89,7 @@ const Profile_V2 = () => {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    if (!profileLoading) {
+    if (!profileLoading && contentLoading) {
       timeout = setTimeout(() => setGlobalLoading(false), 500);
     }
     return () => {
@@ -94,12 +97,12 @@ const Profile_V2 = () => {
     };
   }, [profileLoading]);
 
-  const handlePostsSectionPressed = useCallback(() => {
+  const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
       userAddress: address,
       initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
     });
-  }, []);
+  };
 
   const handleConnectionButtonPressed = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
@@ -322,7 +325,9 @@ const Profile_V2 = () => {
             <UserBio content={bio} />
           </Spacer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
               <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
             </TouchableOpacity>
             <TouchableOpacity

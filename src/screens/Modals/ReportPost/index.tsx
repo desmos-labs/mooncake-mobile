@@ -17,8 +17,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {GestureDetector} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
+import Animated from 'react-native-reanimated';
 import {useRecoilState} from 'recoil';
+import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/useReportPost';
 import useStyles from './useStyles';
 
@@ -43,6 +46,7 @@ const ReportPost = () => {
     index: 0,
   });
   const {reportPost, loading} = useReportPost();
+  const {panGesture, animatedStyle} = useModalAnimations();
 
   useEffect(() => {
     const newState: any[] = registeredReports.map(reason => {
@@ -71,54 +75,60 @@ const ReportPost = () => {
   }, [handleSubmitReport, params.postId, goBack]);
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={goBack}
-        style={styles.container}>
-        {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-        {/* parts of the modal content are pressed */}
+    <GestureDetector gesture={panGesture}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -20 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.innerContainer}
-          onPress={() => Keyboard.dismiss()}>
-          <View style={styles.tabIcon} />
-          <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-          <Spacer paddingBottom={10} />
+          onPress={goBack}
+          style={styles.container}>
+          {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+          {/* parts of the modal content are pressed */}
+          <Animated.View style={animatedStyle}>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.innerContainer}
+              onPress={() => Keyboard.dismiss()}>
+              <View style={styles.tabIcon} />
+              <Typography.H4 style={styles.headerText}>
+                {t('header')}
+              </Typography.H4>
+              <Spacer paddingBottom={10} />
 
-          <View>
-            <CustomRadioGroup
-              values={reportReasons}
-              selectedValue={selectedReport.index}
-              onSelect={(index, value) => setSelectedReport({value, index})}
-            />
+              <View>
+                <CustomRadioGroup
+                  values={reportReasons}
+                  selectedValue={selectedReport.index}
+                  onSelect={(index, value) => setSelectedReport({value, index})}
+                />
 
-            <Spacer paddingBottom={theme.spacing.s} />
-            <DTextInput
-              editable={true}
-              inputStyle={styles.messageInput}
-              value={message}
-              onChangeText={text => setMessage(text)}
-              style={styles.textInput}
-              multiline
-              placeholder={t('message')}
-            />
-          </View>
-          <Spacer paddingVertical={30}>
-            <Button
-              loading={loading}
-              color={theme.colors.surfaceBlack}
-              mode="contained"
-              onPress={onSubmit}>
-              {t('submit')}
-            </Button>
-          </Spacer>
+                <Spacer paddingBottom={theme.spacing.s} />
+                <DTextInput
+                  editable={true}
+                  inputStyle={styles.messageInput}
+                  value={message}
+                  onChangeText={text => setMessage(text)}
+                  style={styles.textInput}
+                  multiline
+                  placeholder={t('message')}
+                />
+              </View>
+              <Spacer paddingVertical={30}>
+                <Button
+                  loading={loading}
+                  color={theme.colors.surfaceBlack}
+                  mode="contained"
+                  onPress={onSubmit}>
+                  {t('submit')}
+                </Button>
+              </Spacer>
+            </TouchableOpacity>
+          </Animated.View>
         </TouchableOpacity>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </GestureDetector>
   );
 };
 
