@@ -109,6 +109,9 @@ import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
 import Profile_V2, {UserProfileParams_V2} from 'screens/Profile_V2';
+import ManageConnectionsModal, {
+  ManageConnectionsModalParams,
+} from 'screens/Profile_V2/components/ManageConnectionsModal';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -238,6 +241,7 @@ export type RootNavigatorParamList = {
 
   // New profile
   [ROUTES.USER_PROFILE_V2]: UserProfileParams_V2;
+  [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -527,6 +531,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
         <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
+        <Stack.Screen
+          name={ROUTES.MANAGE_CONNECTIONS_MODAL}
+          component={ManageConnectionsModal}
+        />
         <Stack.Screen
           name={ROUTES.IMPACT_POINTS_MODAL}
           component={ImpactPointsModal}

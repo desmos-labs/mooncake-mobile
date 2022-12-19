@@ -1,0 +1,126 @@
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {
+  connectTwitterProfileIcon,
+  connectWalletProfileIcon,
+  manageConnectedTwitterProfileIcon,
+  manageConnectedWalletsProfileIcon,
+} from 'assets/images';
+import Spacer from 'components/Spacer';
+import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, {useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {Divider, useTheme} from 'react-native-paper';
+import useStyles from './useStyles';
+
+export type ManageConnectionsModalParams = {
+  appsConnected: boolean;
+  chainsConnected: boolean;
+};
+
+type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.MANAGE_CONNECTIONS_MODAL
+>;
+
+const ManageConnectionsModal = () => {
+  const {
+    params: {appsConnected, chainsConnected},
+  } = useRoute<NavProps['route']>();
+  const styles = useStyles();
+  const theme = useTheme();
+  const {t} = useTranslation('profile');
+  const {goBack, navigate} = useNavigation<NavProps['navigation']>();
+
+  const onPressFirstButton = useCallback(() => {
+    goBack();
+    setTimeout(() => navigate(ROUTES.CONNECT_APP, {mode: 'connect'}), 200);
+  }, []);
+
+  const onPressSecondButton = useCallback(() => {
+    goBack();
+    setTimeout(() => navigate(ROUTES.SELECT_CHAIN), 200);
+  }, []);
+
+  const onPressThirdButton = useCallback(() => {
+    goBack();
+    setTimeout(() => navigate(ROUTES.MANAGE_CONNECTED_APPS), 200);
+  }, []);
+
+  const onPressFourthButton = useCallback(() => {
+    goBack();
+    setTimeout(() => navigate(ROUTES.MANAGE_CONNECTED_CHAINS), 200);
+  }, []);
+
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={goBack}
+      style={styles.container}>
+      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+      {/* parts of the modal content are pressed */}
+      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+        <View style={styles.tabIcon} />
+        <Spacer paddingVertical={20}>
+          <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
+            <FastImage
+              source={connectTwitterProfileIcon}
+              style={styles.image}
+              tintColor={theme.colors.butterOrange01}
+            />
+            <Typography.Body6>{t('connectTwitter')}</Typography.Body6>
+          </TouchableOpacity>
+          <Divider style={styles.divider} />
+          <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
+            <FastImage
+              source={connectWalletProfileIcon}
+              style={styles.image}
+              tintColor={theme.colors.butterOrange01}
+            />
+            <Typography.Body6>{t('connectWallet')}</Typography.Body6>
+          </TouchableOpacity>
+          <Divider style={styles.divider} />
+          {appsConnected && (
+            <>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={onPressThirdButton}>
+                <FastImage
+                  source={manageConnectedTwitterProfileIcon}
+                  style={styles.image}
+                  tintColor={theme.colors.butterOrange01}
+                />
+                <Typography.Body6>
+                  {t('manageConnectedTwitter')}
+                </Typography.Body6>
+              </TouchableOpacity>
+              <Divider style={styles.divider} />
+            </>
+          )}
+          {chainsConnected && (
+            <>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={onPressFourthButton}>
+                <FastImage
+                  source={manageConnectedWalletsProfileIcon}
+                  style={styles.image}
+                />
+                <Typography.Body6>
+                  {t('manageConnectedWallets')}
+                </Typography.Body6>
+              </TouchableOpacity>
+              <Divider style={styles.divider} />
+            </>
+          )}
+        </Spacer>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+};
+
+export default ManageConnectionsModal;

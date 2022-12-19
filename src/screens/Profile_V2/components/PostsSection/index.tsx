@@ -15,7 +15,11 @@ import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
-const PostsSection = () => {
+interface Props {
+  onPress: () => void;
+}
+
+const PostsSection = ({onPress}: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
@@ -53,7 +57,7 @@ const PostsSection = () => {
           <ActivityIndicator />
         </View>
       )}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Typography.Body6
           style={{
             marginRight: theme.spacing.s,

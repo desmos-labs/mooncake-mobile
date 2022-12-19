@@ -13,7 +13,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -94,6 +94,20 @@ const Profile_V2 = () => {
     };
   }, [profileLoading]);
 
+  const handlePostsSectionPressed = useCallback(() => {
+    navigate(ROUTES.PROFILE_POSTS, {
+      userAddress: address,
+      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
+    });
+  }, []);
+
+  const handleConnectionButtonPressed = useCallback(() => {
+    navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
+      appsConnected: true,
+      chainsConnected: true,
+    });
+  }, []);
+
   if (globalLoading) {
     return (
       <SafeAreaView style={styles.flexCenter}>
@@ -122,7 +136,7 @@ const Profile_V2 = () => {
         buttonStyle={[styles.buttonStyleRight, {right: 60}]}
         style={styles.topBarImage}
         overlayComponent={
-          <PingAnimation size={10} color={theme.colors.butterOrange01} />
+          <PingAnimation size={10} color={theme.colors.red01} />
         }
         overlayPosition={{
           top: 2,
@@ -312,6 +326,7 @@ const Profile_V2 = () => {
               <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={handleConnectionButtonPressed}
               style={{
                 backgroundColor: theme.colors.surfaceGrey,
                 justifyContent: 'center',
@@ -332,7 +347,7 @@ const Profile_V2 = () => {
           <View style={styles.container}>
             <BalanceSection />
             <Divider style={styles.divider} />
-            <PostsSection />
+            <PostsSection onPress={handlePostsSectionPressed} />
             <Divider style={styles.divider} />
             <NftsSection />
             <Divider style={styles.divider} />

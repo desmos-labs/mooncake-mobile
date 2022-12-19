@@ -33,5 +33,8 @@
   "transactions": "Transactions",
   "balance": "Balance",
   "nfts": "NFTs",
-  "badges": "Badges"
+  "badges": "Badges",
+  "connectWallet": "Connect Wallet",
+  "manageConnectedTwitter": "Manage Connected Twitter",
+  "manageConnectedWallets": "Manage Connected Wallets"
 }
