@@ -7,7 +7,7 @@ const useProfileDataQueries = (visitingProfileAddress?: string) => {
   const {visitingProfileData, visitingProfileLoading} =
     useProfileDataGivenAddress(visitingProfileAddress || '');
   const {activeAddress, profileData} = useActiveAccount();
-  const {loading, refetch} = usePollProfileData(activeAddress!);
+  const {loading} = usePollProfileData(activeAddress!);
 
   const screenMode = useMemo(() => {
     if (visitingProfileAddress) {

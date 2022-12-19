@@ -5,11 +5,12 @@ import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {verticalScale} from 'react-native-size-matters';
-import useStyles from './useStyles';
 
 const BadgesSection = () => {
   const theme = useTheme();
+  /*
   const styles = useStyles();
+*/
   const {t} = useTranslation('profile');
 
   return (

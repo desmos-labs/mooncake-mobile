@@ -3,8 +3,6 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   connectIcon,
-  defaultBanner,
-  defaultProfilePic,
   profileBack,
   profileNotification,
   profileScan,
@@ -78,16 +76,11 @@ const Profile_V2 = () => {
   const scrollOffset = useRef(
     new ClassicAnimated.Value(45 + HEADER_HEIGHT_EXPANDED),
   ).current;
-  const scrollProgress = useRef(new ClassicAnimated.Value(0)).current;
 
   const scrollHandler = (event: any) => {
-    const {contentOffset, contentSize, layoutMeasurement} = event.nativeEvent;
-    const denominator = contentSize.height - layoutMeasurement.height;
-    const numerator = contentOffset.y;
-
+    const {contentOffset} = event.nativeEvent;
     scrollOffset.setValue(45 + HEADER_HEIGHT_EXPANDED - contentOffset.y);
     scrollY.setValue(contentOffset.y);
-    scrollProgress.setValue(Math.min(Math.max(numerator / denominator, 0), 1));
   };
   /** Animations end */
 
@@ -103,7 +96,7 @@ const Profile_V2 = () => {
 
   if (globalLoading) {
     return (
-      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <SafeAreaView style={styles.flexCenter}>
         <ActivityIndicator />
       </SafeAreaView>
     );
@@ -122,6 +115,7 @@ const Profile_V2 = () => {
         image={profileSettings}
         buttonStyle={[styles.buttonStyleRight, {right: 20}]}
         style={styles.topBarImage}
+        onPress={() => navigate(ROUTES.SETTINGS)}
       />
       <ImageButton
         image={profileNotification}
@@ -134,6 +128,7 @@ const Profile_V2 = () => {
           top: 2,
           left: 12,
         }}
+        onPress={() => navigate(ROUTES.ACTIVITIES)}
       />
       <ImageButton
         image={profileScan}
@@ -141,65 +136,54 @@ const Profile_V2 = () => {
         style={styles.topBarImage}
       />
 
-      {/* Refresh arrow */}
+      {/* Refresh arrow iOS */}
       <ClassicAnimated.View
-        style={{
-          zIndex: 2,
-          position: 'absolute',
-          top: insets.top + 13,
-          left: 0,
-          right: 0,
-          alignItems: 'center',
-          opacity: scrollY.interpolate({
-            inputRange: [-40, 0],
-            outputRange: [1, 0],
-          }),
-          transform: [
-            {
-              rotate: scrollY.interpolate({
-                inputRange: [-75, -15],
-                outputRange: ['180deg', '0deg'],
-                extrapolate: 'clamp',
-              }),
-            },
-          ],
-        }}>
+        style={[
+          styles.arrowView,
+          {
+            opacity: scrollY.interpolate({
+              inputRange: [-40, 0],
+              outputRange: [1, 0],
+            }),
+            transform: [
+              {
+                rotate: scrollY.interpolate({
+                  inputRange: [-75, -15],
+                  outputRange: ['180deg', '0deg'],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}>
         <Icon name="arrow-down" color="white" size={25} />
       </ClassicAnimated.View>
 
       {/* Dtag */}
       <ClassicAnimated.View
-        style={{
-          zIndex: 2,
-          position: 'absolute',
-          top: insets.top + 7,
-          left: 0,
-          right: 0,
-          opacity: scrollY.interpolate({
-            inputRange: [160, 200],
-            outputRange: [0, 1],
-          }),
-          transform: [
-            {
-              translateY: scrollY.interpolate({
-                inputRange: [140, 200],
-                outputRange: [30, 0],
-                extrapolate: 'clamp',
-              }),
-            },
-          ],
-        }}>
+        style={[
+          styles.animatedDtag,
+          {
+            opacity: scrollY.interpolate({
+              inputRange: [160, 200],
+              outputRange: [0, 1],
+            }),
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [140, 200],
+                  outputRange: [30, 0],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}>
         <View
           style={{
             paddingTop: theme.spacing.s,
           }}>
-          <Typography.Subtitle3
-            numberOfLines={1}
-            style={{
-              color: theme.colors.white,
-              alignSelf: 'center',
-              maxWidth: '25%',
-            }}>
+          <Typography.Subtitle3 numberOfLines={1} style={styles.dtag}>
             @{dtag}
           </Typography.Subtitle3>
         </View>
@@ -290,21 +274,11 @@ const Profile_V2 = () => {
                 <Typography.Subtitle3>12</Typography.Subtitle3>
                 <Typography.Caption1>Posts</Typography.Caption1>
               </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: theme.spacing.m,
-                }}>
+              <View style={styles.centerLeftSpacingM}>
                 <Typography.Subtitle3>12</Typography.Subtitle3>
                 <Typography.Caption1>Following</Typography.Caption1>
               </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: theme.spacing.m,
-                }}>
+              <View style={styles.centerLeftSpacingM}>
                 <Typography.Subtitle3>12</Typography.Subtitle3>
                 <Typography.Caption1>Followers</Typography.Caption1>
               </View>
@@ -334,15 +308,7 @@ const Profile_V2 = () => {
             <UserBio content={bio} />
           </Spacer>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: theme.colors.surfaceGrey,
-                height: 35,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 8,
-                flex: 0.95,
-              }}>
+            <TouchableOpacity style={styles.editButton}>
               <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
             </TouchableOpacity>
             <TouchableOpacity

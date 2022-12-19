@@ -31,7 +31,7 @@ const PostsSection = () => {
   );
 
   return (
-    <View style={{flex: 1, paddingVertical: theme.spacing.m}}>
+    <View style={styles.container}>
       <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
         <Typography.Body7 style={{color: theme.colors.midGrey}}>
@@ -53,14 +53,7 @@ const PostsSection = () => {
           <ActivityIndicator />
         </View>
       )}
-      <TouchableOpacity
-        style={{
-          marginTop: theme.spacing.m,
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-        }}>
+      <TouchableOpacity style={styles.button}>
         <Typography.Body6
           style={{
             marginRight: theme.spacing.s,

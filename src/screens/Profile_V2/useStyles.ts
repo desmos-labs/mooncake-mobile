@@ -40,6 +40,40 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     height: 8,
     backgroundColor: theme.colors.surfaceGrey,
   },
+  flexCenter: {flex: 1, justifyContent: 'center'},
+  arrowView: {
+    zIndex: 2,
+    position: 'absolute',
+    top: props.insets.top + 13,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  animatedDtag: {
+    zIndex: 2,
+    position: 'absolute',
+    top: props.insets.top + 7,
+    left: 0,
+    right: 0,
+  },
+  dtag: {
+    color: theme.colors.white,
+    alignSelf: 'center',
+    maxWidth: '25%',
+  },
+  centerLeftSpacingM: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: theme.spacing.m,
+  },
+  editButton: {
+    backgroundColor: theme.colors.surfaceGrey,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    flex: 0.95,
+  },
 }));
 
 export default useStyles;

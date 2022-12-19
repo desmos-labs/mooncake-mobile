@@ -43,15 +43,23 @@ const useQueries = () => {
 
   const convertedBalance = useMemo(() => {
     let balanceToReturn;
+    let tokenPrice;
+    let convertedAmount;
     if (balanceData && !balanceLoading) {
       balanceToReturn = convertCoin(
         balanceData?.action_account_balance?.coins[0],
         6,
         currentChain.currencies,
       );
-      console.log(balanceData.token_price[0]);
+      tokenPrice = balanceData.token_price[0].price;
+      convertedAmount = parseFloat(balanceToReturn?.amount!) * tokenPrice;
     }
-    return balanceToReturn;
+    console.log(convertedAmount);
+    return {
+      balance: balanceToReturn,
+      tokenPrice,
+      convertedAmount,
+    };
   }, [balanceData, balanceLoading, currentChain]);
 
   const globalLoading = postsLoading && balanceLoading;
