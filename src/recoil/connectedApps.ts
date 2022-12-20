@@ -1,35 +1,42 @@
-import {useQuery} from '@apollo/client';
-import EnvConfig from 'config/EnvConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
-import {useEffect} from 'react';
-import {atom, useSetRecoilState} from 'recoil';
-import GetAppConnectedByUser from 'services/graphql/queries/GetAppConnectedByUser';
+import {
+  selectorFamily,
+  useRecoilRefresher_UNSTABLE,
+  useRecoilValueLoadable,
+} from 'recoil';
+import client from 'services/graphql/client';
+import GetConnectedApps from 'services/graphql/queries/GetConnectedApps';
 
-export const connectedAppsState = atom<ConnectedApps[]>({
+const connectedAppsState = selectorFamily<ConnectedApps[], string>({
   key: 'connectedApps',
-  default: [],
+  get: (address: string) => async () => {
+    const {data} = await client.query({
+      query: GetConnectedApps,
+      variables: {
+        address,
+      },
+      fetchPolicy: 'no-cache',
+    });
+
+    return data.application_link;
+  },
 });
 
-/**
- * Get the list of followed accounts for the active account
- */
-export const useGetConnectedAppsPolling = () => {
-  const {activeAddress} = useActiveAccount();
-  const setConnectedApps = useSetRecoilState(connectedAppsState);
+// eslint-disable-next-line import/prefer-default-export
+export const useApplicationLinks = (address: string) => {
+  const appLinksSelector = useRecoilValueLoadable<ConnectedApps[]>(
+    connectedAppsState(address),
+  );
 
-  const {data} = useQuery<ConnectedAppsQueryData>(GetAppConnectedByUser, {
-    variables: {
-      address: activeAddress,
-    },
-    pollInterval: EnvConfig.POLLING_INTERVAL,
-    fetchPolicy: 'no-cache',
-  });
+  const refetchAppLinks = useRecoilRefresher_UNSTABLE(
+    connectedAppsState(address),
+  );
 
-  useEffect(() => {
-    if (!data) return;
-    console.log(data.application_link[0]);
-    if (data.application_link) {
-      setConnectedApps(data.application_link);
-    }
-  }, [data]);
+  const {state, contents} = appLinksSelector;
+
+  return {
+    loading: state === 'loading',
+    appLinks: state === 'hasValue' ? contents : [],
+    error: state === 'hasError' ? contents : undefined,
+    refetch: refetchAppLinks,
+  };
 };

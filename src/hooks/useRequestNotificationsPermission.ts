@@ -8,7 +8,12 @@ const useRequestNotificationsPermission = () => {
 
   const requestUserPermission = useCallback(async () => {
     try {
-      const notifeeAuth = await notifee.requestPermission();
+      const notifeeAuth = await notifee.requestPermission({
+        sound: true,
+        alert: true,
+        badge: true,
+        carPlay: true,
+      });
 
       if (notifeeAuth.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
         setSettings({...settings, notificationsPermission: true});

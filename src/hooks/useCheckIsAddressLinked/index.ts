@@ -1,6 +1,5 @@
 import React from 'react';
-import {useRecoilValue} from 'recoil';
-import chainLinkState from '@recoil/chainLinks';
+import {useChainLinks} from '@recoil/chainLinks';
 import useActiveAccount from 'hooks/useActiveAccount';
 
 /**
@@ -8,7 +7,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
  */
 const useCheckIsAddressLinked = () => {
   const {activeAddress} = useActiveAccount();
-  const chainLinks = useRecoilValue(chainLinkState);
+  const {chainLinks} = useChainLinks(activeAddress!);
 
   const linkedAddresses = React.useMemo(() => {
     // O(1) vs O(n) (set vs array)

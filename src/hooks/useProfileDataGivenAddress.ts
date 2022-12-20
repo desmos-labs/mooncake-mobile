@@ -7,18 +7,21 @@ import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress'
  *
  */
 const useProfileDataGivenAddress = (address: string) => {
-  const {data, loading: visitingProfileLoading} = useQuery(
-    GetProfileForAddress,
-    {
-      variables: {address},
-    },
-  );
+  const {
+    data,
+    loading: visitingProfileLoading,
+    refetch,
+  } = useQuery(GetProfileForAddress, {
+    variables: {address},
+    fetchPolicy: 'no-cache',
+  });
 
   const visitingProfileData = useMemo(() => data?.profile[0] || {}, [data]);
 
   return {
     visitingProfileData,
     visitingProfileLoading,
+    refetchVisitingProfileData: refetch,
   };
 };
 
