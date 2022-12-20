@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
-const GetAppConnectedByUser = gql`
-  query GetAppConnectedByUser($address: String) @api(name: desmos) {
+const GetConnectedApps = gql`
+  query GetConnectedApps($address: String) @api(name: desmos) {
     application_link(where: {user_address: {_eq: $address}}) {
       application
       creation_time
@@ -12,4 +12,4 @@ const GetAppConnectedByUser = gql`
   }
 `;
 
-export default GetAppConnectedByUser;
+export default GetConnectedApps;

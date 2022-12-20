@@ -5,7 +5,6 @@ import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useChainLinks from 'hooks/useChainLinks';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -19,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
 import ImageButton from 'components/ImageButton';
 import {addButton} from 'assets/images';
+import {useChainLinks} from '@recoil/chainLinks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -32,10 +32,11 @@ const ManageConnectedChains = () => {
   const theme = useTheme();
   const {navigate} = useNavigation<NavProps['navigation']>();
 
-  const {chainLinks} = useChainLinks();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  const {chainAccount} = useActiveAccount();
+  const {chainAccount, activeAddress} = useActiveAccount();
+
+  const {chainLinks} = useChainLinks(activeAddress!);
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
