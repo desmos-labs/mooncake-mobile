@@ -1,0 +1,79 @@
+import {makeStyle} from 'config/theme';
+import React, {useState} from 'react';
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
+import {GestureDetector} from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
+
+export type Props = TouchableOpacityProps & {
+  /**
+   * goBack navigation function
+   */
+  goBack: () => void;
+};
+
+/**
+ * Bottom-up modal wrapper, with animations and navigations
+ * The default close threshold is half of the modal height
+ * Feel free to update any prop you need
+ */
+const BottomUpModalWrapper: React.FC<Props> = props => {
+  const {goBack, children} = props;
+  const styles = useStyles();
+  const [threshold, setThreshold] = useState(0);
+  const {panGesture, animatedStyle} = useModalAnimations(threshold);
+
+  return (
+    <GestureDetector gesture={panGesture}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={goBack}
+        style={styles.container}>
+        {/* animated view to manage the dragY animation */}
+        <Animated.View
+          style={animatedStyle}
+          onLayout={event => {
+            setThreshold(event.nativeEvent.layout.height / 2);
+          }}>
+          {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+          {/* parts of the modal content are pressed */}
+          <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+            <View style={styles.tabIcon} />
+            {children}
+          </TouchableOpacity>
+        </Animated.View>
+      </TouchableOpacity>
+    </GestureDetector>
+  );
+};
+
+const useStyles = makeStyle(theme => ({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  tabIcon: {
+    width: 44,
+    height: 4,
+    borderRadius: 4,
+    backgroundColor: theme.colors.iconGrey,
+    alignSelf: 'center',
+    marginBottom: theme.spacing.s,
+  },
+  headerText: {
+    textAlign: 'left',
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.s,
+    alignSelf: 'center',
+  },
+  innerContainer: {
+    backgroundColor: theme.colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: theme.spacing.l,
+    paddingBottom: theme.spacing.l,
+    paddingTop: 10,
+  },
+}));
+
+export default BottomUpModalWrapper;

@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import useQueries from 'screens/Profile_V2/useQueries';
@@ -23,7 +23,9 @@ const ImpactPointsSection = () => {
       {impactPoints && !impactPointsLoading ? (
         <View style={styles.container}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => navigate(ROUTES.CONVERTIBLE_POINTS_MODAL)}
+              style={{flexDirection: 'row', alignItems: 'center'}}>
               <Typography.Body6
                 style={{
                   color: theme.colors.surfaceBlack,
@@ -32,7 +34,7 @@ const ImpactPointsSection = () => {
                 {t('convertible points')}
               </Typography.Body6>
               <FastImage source={infoIcon} style={{width: 22, height: 22}} />
-            </View>
+            </TouchableOpacity>
 
             <Button
               mode="text"

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions} from 'react-native';
+import {useEffect} from 'react';
 import {Gesture} from 'react-native-gesture-handler';
 import {
   useAnimatedStyle,
@@ -8,13 +8,20 @@ import {
 } from 'react-native-reanimated';
 
 /**
- * Animation hook for the PostInteractionTabs tab navigator
+ * Animation hook for every bottom-up modal
+ * modalThreshold: optional threshold value
  */
-const useModalAnimations = () => {
+const useModalAnimations = (modalThreshold?: number) => {
   const {pop} = useNavigation<any['navigation']>();
 
   const yOffset = useSharedValue(0);
-  const hideThreshold = useSharedValue(Dimensions.get('window').height);
+  const hideThreshold = useSharedValue(0);
+
+  useEffect(() => {
+    if (modalThreshold) {
+      hideThreshold.value = modalThreshold;
+    }
+  }, [modalThreshold]);
 
   /**
    * Animation driver
@@ -23,16 +30,13 @@ const useModalAnimations = () => {
     .runOnJS(true)
     .onChange(event => {
       const {changeY} = event;
-      console.log(yOffset.value);
-      // TODO: these threshold values should be tweaked
-      // also handle swipe action
       const newValue = yOffset.value + changeY;
-      if (newValue < 800 && newValue > 0) {
+      if (newValue > 0) {
         yOffset.value = newValue;
       }
     })
     .onEnd(() => {
-      if (yOffset.value > 100 && yOffset.value < hideThreshold.value) {
+      if (yOffset.value > hideThreshold.value) {
         pop();
       } else {
         yOffset.value = withTiming(0);

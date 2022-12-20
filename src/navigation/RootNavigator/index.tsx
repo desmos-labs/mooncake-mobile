@@ -68,6 +68,7 @@ import FullscreenStatusScreen, {
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Invites from 'screens/Invites';
+import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
@@ -242,6 +243,7 @@ export type RootNavigatorParamList = {
   // New profile
   [ROUTES.USER_PROFILE_V2]: UserProfileParams_V2;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
+  [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -538,6 +540,10 @@ const RootNavigator = () => {
         <Stack.Screen
           name={ROUTES.IMPACT_POINTS_MODAL}
           component={ImpactPointsModal}
+        />
+        <Stack.Screen
+          name={ROUTES.CONVERTIBLE_POINTS_MODAL}
+          component={ConvertiblePointsModal}
         />
         <Stack.Screen
           name={ROUTES.ADD_PROFILE_MODAL}
