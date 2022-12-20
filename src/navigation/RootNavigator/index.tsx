@@ -68,7 +68,7 @@ import FullscreenStatusScreen, {
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Invites from 'screens/Invites';
-import ImpactPointsModal from 'screens/Invites/components/ImpactPointsModal';
+import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';

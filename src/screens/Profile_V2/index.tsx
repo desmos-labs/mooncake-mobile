@@ -48,9 +48,10 @@ import {
 import AddressCopy from 'screens/Profile_V2/components/AddressCopy';
 import BadgesSection from 'screens/Profile_V2/components/BadgesSection';
 import BalanceSection from 'screens/Profile_V2/components/BalanceSection';
-import ChainsCountersBar from 'screens/Profile_V2/components/ChainsCountersBarv2';
+import ImpactPointsSection from 'screens/Profile_V2/components/ImpactPointsSection';
 import NftsSection from 'screens/Profile_V2/components/NftsSection';
 import PostsSection from 'screens/Profile_V2/components/PostsSection';
+import SocialAndWalletsCountersBar from 'screens/Profile_V2/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile_V2/components/UserBio';
 import useProfileDataQueries from 'screens/Profile_V2/useProfileDataQueries';
 import useQueries from 'screens/Profile_V2/useQueries';
@@ -103,6 +104,7 @@ const Profile_V2 = () => {
     refetchChainLinks,
     refetchBalance,
     refetchPosts,
+    refetchImpactPoints,
   } = useQueries();
 
   /** Animations start */
@@ -223,6 +225,7 @@ const Profile_V2 = () => {
         refetchProfileData(),
         refetchPosts(),
         refetchBalance(),
+        refetchImpactPoints(),
         refetchChainLinks(),
         refetchAppLinks(),
       ]);
@@ -262,7 +265,7 @@ const Profile_V2 = () => {
     if (chainLinks.length !== 0 || appLinks.length !== 0) {
       return (
         <View>
-          <ChainsCountersBar
+          <SocialAndWalletsCountersBar
             loading={appLinksLoading && chainLinksLoading}
             connectedChainsCounter={chainLinks.length}
             twitterUsername={appLinks[0]?.username}
@@ -478,6 +481,8 @@ const Profile_V2 = () => {
           <Spacer paddingVertical={theme.spacing.s} />
           <Divider style={styles.divider} />
           <View style={styles.container}>
+            <ImpactPointsSection />
+            <Divider style={styles.divider} />
             <BalanceSection />
             <Divider style={styles.divider} />
             <PostsSection onPress={handlePostsSectionPressed} />

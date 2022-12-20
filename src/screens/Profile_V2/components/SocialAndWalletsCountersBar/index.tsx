@@ -15,7 +15,7 @@ type Props = {
   handlePressCounters: () => void;
 };
 
-const ChainsCountersBar = ({
+const SocialAndWalletsCountersBar = ({
   loading,
   connectedChainsImages,
   connectedChainsCounter,
@@ -70,4 +70,4 @@ const ChainsCountersBar = ({
   );
 };
 
-export default ChainsCountersBar;
+export default SocialAndWalletsCountersBar;

@@ -8,6 +8,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import React, {useMemo} from 'react';
 import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
 
 const useQueries = () => {
@@ -41,6 +42,23 @@ const useQueries = () => {
       tokenName: currentChain.stakeCurrency.coinDenom,
     },
   });
+
+  const {
+    data: impactPointsData,
+    loading: impactPointsLoading,
+    refetch: refetchImpactPoints,
+  } = useQuery(GetImpactPoints);
+
+  const impactPoints = useMemo(() => {
+    if (
+      !impactPointsData?.impact_record_aggregate?.aggregate?.sum
+        ?.rewarded_points
+    ) {
+      return 0;
+    }
+    return impactPointsData.impact_record_aggregate.aggregate.sum
+      .rewarded_points;
+  }, [impactPointsData]);
 
   const convertedBalance = useMemo(() => {
     let balanceToReturn;
@@ -91,6 +109,9 @@ const useQueries = () => {
     refetchChainLinks,
     refetchBalance,
     refetchPosts,
+    impactPoints,
+    impactPointsLoading,
+    refetchImpactPoints,
   };
 };
 
