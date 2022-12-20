@@ -14,7 +14,6 @@ const connectedAppsState = selectorFamily<ConnectedApps[], string>({
       variables: {
         address,
       },
-      fetchPolicy: 'no-cache',
     });
 
     return data.application_link;

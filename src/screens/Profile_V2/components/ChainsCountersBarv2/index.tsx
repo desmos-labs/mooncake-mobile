@@ -1,16 +1,17 @@
+import {twitterIcon} from 'assets/images';
 import Typography from 'components/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import FastImage, {Source} from 'react-native-fast-image';
-import {ActivityIndicator} from 'react-native-paper';
+import {scale} from 'react-native-size-matters';
 import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
   connectedChainsImages: Source[];
   connectedChainsCounter: number;
-  connectedAppsCounter: number;
+  twitterUsername?: string;
   handlePressCounters: () => void;
 };
 
@@ -18,17 +19,34 @@ const ChainsCountersBar = ({
   loading,
   connectedChainsImages,
   connectedChainsCounter,
-  connectedAppsCounter,
+  twitterUsername,
   handlePressCounters,
 }: Props) => {
   const styles = useStyles();
   const {t} = useTranslation('profile');
 
   return loading ? (
-    <ActivityIndicator />
+    <View style={{alignSelf: 'flex-start', left: 26, height: scale(18)}}>
+      <ActivityIndicator />
+    </View>
   ) : (
-    <View style={styles.container}>
+    <View style={[styles.container, {height: scale(18)}]}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
+        {twitterUsername && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <FastImage source={twitterIcon} style={styles.iconStyle} />
+            <Typography.Body6 style={{marginLeft: 4}}>
+              {twitterUsername}
+            </Typography.Body6>
+          </View>
+        )}
+        {twitterUsername && connectedChainsImages[0] && (
+          <Typography.Body6 style={{marginHorizontal: 4}}>&</Typography.Body6>
+        )}
         {connectedChainsImages[0] && (
           <View
             style={{
@@ -44,10 +62,9 @@ const ChainsCountersBar = ({
             ))}
           </View>
         )}
-        <Typography.Button2 style={styles.text}>
-          {t('connectedChains', {count: connectedChainsCounter})} {t('and')}{' '}
-          {t('connectedApps', {count: connectedAppsCounter})}
-        </Typography.Button2>
+        <Typography.Body6 style={styles.text}>
+          {t('connectedChains', {count: connectedChainsCounter})}
+        </Typography.Body6>
       </TouchableOpacity>
     </View>
   );

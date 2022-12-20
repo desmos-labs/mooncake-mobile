@@ -41,9 +41,14 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
+import {
+  mapConnectedAppImages,
+  mapConnectedChainImages,
+} from 'screens/Profile/utils';
 import AddressCopy from 'screens/Profile_V2/components/AddressCopy';
 import BadgesSection from 'screens/Profile_V2/components/BadgesSection';
 import BalanceSection from 'screens/Profile_V2/components/BalanceSection';
+import ChainsCountersBar from 'screens/Profile_V2/components/ChainsCountersBarv2';
 import NftsSection from 'screens/Profile_V2/components/NftsSection';
 import PostsSection from 'screens/Profile_V2/components/PostsSection';
 import UserBio from 'screens/Profile_V2/components/UserBio';
@@ -89,8 +94,16 @@ const Profile_V2 = () => {
     refreshNumRelationships,
   } = useProfileDataQueries(params?.visitingProfileAddress);
 
-  const {refetchAppLinks, refetchChainLinks, refetchBalance, refetchPosts} =
-    useQueries();
+  const {
+    appLinks,
+    appLinksLoading,
+    refetchAppLinks,
+    chainLinksLoading,
+    chainLinks,
+    refetchChainLinks,
+    refetchBalance,
+    refetchPosts,
+  } = useQueries();
 
   /** Animations start */
   const AnimatedImageBackground =
@@ -136,7 +149,7 @@ const Profile_V2 = () => {
     };
   });
 
-  const d = useAnimatedStyle(() => {
+  const animatedProfilePicStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       scrollY.value,
       [0, HEADER_HEIGHT_EXPANDED],
@@ -179,13 +192,13 @@ const Profile_V2 = () => {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    if (!profileLoading) {
+    if (!profileLoading && !appLinksLoading && !chainLinksLoading) {
       timeout = setTimeout(() => setInitialLoading(false), 500);
     }
     return () => {
       clearTimeout(timeout);
     };
-  }, [profileLoading]);
+  }, [profileLoading, appLinksLoading, chainLinksLoading]);
 
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
@@ -238,6 +251,29 @@ const Profile_V2 = () => {
       refetchUserData();
     }, [refetchUserData]),
   );
+
+  const ConnectedChains = React.useMemo(() => {
+    const images = [
+      ...mapConnectedChainImages(chainLinks),
+      ...mapConnectedAppImages(appLinks),
+    ];
+
+    if (images.length > 3) images.length = 3;
+    if (chainLinks.length !== 0 || appLinks.length !== 0) {
+      return (
+        <View>
+          <ChainsCountersBar
+            loading={appLinksLoading && chainLinksLoading}
+            connectedChainsCounter={chainLinks.length}
+            twitterUsername={appLinks[0]?.username}
+            connectedChainsImages={images}
+            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+          />
+        </View>
+      );
+    }
+    return undefined;
+  }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading]);
 
   if (initialLoading) {
     return (
@@ -356,7 +392,7 @@ const Profile_V2 = () => {
             left: theme.spacing.m,
             borderColor: theme.colors.white,
           },
-          d,
+          animatedProfilePicStyle,
         ]}
       />
       <AnimatedScrollView
@@ -413,7 +449,9 @@ const Profile_V2 = () => {
 
           <Spacer paddingVertical={theme.spacing.m}>
             <UserBio content={bio} />
+            {ConnectedChains}
           </Spacer>
+
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
               style={styles.editButton}
