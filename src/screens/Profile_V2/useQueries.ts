@@ -40,7 +40,6 @@ const useQueries = () => {
       address: activeAddress,
       tokenName: currentChain.stakeCurrency.coinDenom,
     },
-    fetchPolicy: 'no-cache',
   });
 
   const convertedBalance = useMemo(() => {
