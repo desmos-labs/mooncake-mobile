@@ -1,9 +1,11 @@
 import {useQuery} from '@apollo/client';
 import {convertCoin} from '@desmoslabs/desmjs';
+import {useChainLinks} from '@recoil/chainLinks';
+import {useApplicationLinks} from '@recoil/connectedApps';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
@@ -61,12 +63,18 @@ const useQueries = () => {
     };
   }, [balanceData, balanceLoading, currentChain]);
 
-  const contentLoading = postsLoading && balanceLoading;
+  const {
+    chainLinks,
+    refetch: refetchChainLinks,
+    loading: chainLinksLoading,
+  } = useChainLinks(activeAddress!);
+  const {
+    appLinks,
+    refetch: refetchAppLinks,
+    loading: appLinksLoading,
+  } = useApplicationLinks(activeAddress!);
 
-  const refetchContentQueries = useCallback(() => {
-    refetchPosts();
-    refetchBalance();
-  }, []);
+  const contentLoading = postsLoading && balanceLoading;
 
   return {
     posts,
@@ -76,7 +84,14 @@ const useQueries = () => {
     balanceData,
     balanceLoading,
     contentLoading,
-    refetchContentQueries,
+    appLinks,
+    chainLinks,
+    appLinksLoading,
+    chainLinksLoading,
+    refetchAppLinks,
+    refetchChainLinks,
+    refetchBalance,
+    refetchPosts,
   };
 };
 

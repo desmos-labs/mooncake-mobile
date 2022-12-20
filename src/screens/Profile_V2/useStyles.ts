@@ -9,7 +9,7 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     flexGrow: 1,
     backgroundColor: theme.colors.white,
     paddingHorizontal: theme.spacing.m,
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacing.m,
     paddingBottom: 80,
   },
   profileTopBarContainer: {

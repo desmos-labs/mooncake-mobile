@@ -1,13 +1,19 @@
-import {usePollProfileData} from '@recoil/activeProfileState';
+import {useGetProfileData} from '@recoil/activeProfileState';
+import useNumRelationships from '@recoil/numRelationshipState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {useMemo} from 'react';
 
 const useProfileDataQueries = (visitingProfileAddress?: string) => {
-  const {visitingProfileData, visitingProfileLoading} =
-    useProfileDataGivenAddress(visitingProfileAddress || '');
+  const {
+    visitingProfileData,
+    visitingProfileLoading,
+    refetchVisitingProfileData,
+  } = useProfileDataGivenAddress(visitingProfileAddress || '');
   const {activeAddress, profileData} = useActiveAccount();
-  const {loading} = usePollProfileData(activeAddress!);
+  const {refetch: refetchProfileData, loading} = useGetProfileData(
+    activeAddress!,
+  );
 
   const screenMode = useMemo(() => {
     if (visitingProfileAddress) {
@@ -27,8 +33,16 @@ const useProfileDataQueries = (visitingProfileAddress?: string) => {
   const profileLoading =
     screenMode === 'myProfile' ? loading : visitingProfileLoading;
 
+  const {
+    numRelationships,
+    refreshNumRelationships,
+    loading: numRelationshipsLoading,
+  } = useNumRelationships(address);
+
   return {
     profileLoading,
+    refetchProfileData,
+    refetchVisitingProfileData,
     address,
     bio,
     dtag,
@@ -36,6 +50,9 @@ const useProfileDataQueries = (visitingProfileAddress?: string) => {
     profile_pic,
     nickname,
     screenMode,
+    numRelationships,
+    refreshNumRelationships,
+    numRelationshipsLoading,
   };
 };
 
