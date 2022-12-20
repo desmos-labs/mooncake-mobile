@@ -35,8 +35,10 @@
   "nfts": "NFTs",
   "badges": "Badges",
   "points": "Points",
-  "how to earn points": "How to earn points?",
+  "how to earn points": "How do I earn points?",
   "convertible points": "Convertible Points",
+  "connectedWallets": "{{count}} Wallets",
+  "connectedWallet": "{{count}} Wallet",
   "connectWallet": "Connect Wallet",
   "manageConnectedTwitter": "Manage Connected Twitter",
   "manageConnectedWallets": "Manage Connected Wallets"

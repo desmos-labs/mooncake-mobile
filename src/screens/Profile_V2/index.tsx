@@ -22,6 +22,7 @@ import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   ImageBackground,
+  InteractionManager,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -251,7 +252,11 @@ const Profile_V2 = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      refetchUserData();
+      const task = InteractionManager.runAfterInteractions(() => {
+        refetchUserData();
+      });
+
+      return () => task.cancel();
     }, [refetchUserData]),
   );
 

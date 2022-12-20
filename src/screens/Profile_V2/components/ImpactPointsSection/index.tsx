@@ -39,6 +39,7 @@ const ImpactPointsSection = () => {
               onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}>
               <Typography.Body7
                 style={{
+                  textTransform: 'none',
                   color: theme.colors.butterOrange01,
                 }}>
                 {t('how to earn points')}

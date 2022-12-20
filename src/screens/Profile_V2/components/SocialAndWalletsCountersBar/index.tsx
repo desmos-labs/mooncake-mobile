@@ -63,7 +63,9 @@ const SocialAndWalletsCountersBar = ({
           </View>
         )}
         <Typography.Body6 style={styles.text}>
-          {t('connectedChains', {count: connectedChainsCounter})}
+          {connectedChainsCounter === 1
+            ? t('connectedWallet', {count: connectedChainsCounter})
+            : t('connectedWallets', {count: connectedChainsCounter})}
         </Typography.Body6>
       </TouchableOpacity>
     </View>
