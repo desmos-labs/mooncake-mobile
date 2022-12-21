@@ -14,6 +14,7 @@ import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
@@ -247,6 +248,26 @@ const Profile_V2 = () => {
     await refreshNumRelationships();
   }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
 
+  const handleFollowingPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWING,
+      params: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        userAddress: address,
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
+
+  const handleFollowersPressed = () =>
+    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+      screen: ROUTES.FOLLOWERS,
+      params: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        userAddress: address,
+        headerTitle: nickname.trim() || `@${dtag}`,
+      },
+    });
+
   /**
    * Effects
    */
@@ -462,7 +483,9 @@ const Profile_V2 = () => {
                 <Typography.Subtitle3>{postsCounter || 0}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
-              <View style={styles.centerLeftSpacingM}>
+              <TouchableOpacity
+                style={styles.centerLeftSpacingM}
+                onPress={handleFollowingPressed}>
                 {numRelationshipsLoading ? (
                   <ActivityIndicator size={21} />
                 ) : (
@@ -471,8 +494,10 @@ const Profile_V2 = () => {
                   </Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('following')}</Typography.Caption1>
-              </View>
-              <View style={styles.centerLeftSpacingM}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.centerLeftSpacingM}
+                onPress={handleFollowersPressed}>
                 {numRelationshipsLoading ? (
                   <ActivityIndicator size={21} />
                 ) : (
@@ -481,7 +506,7 @@ const Profile_V2 = () => {
                   </Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('followers')}</Typography.Caption1>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
           <Typography.H5

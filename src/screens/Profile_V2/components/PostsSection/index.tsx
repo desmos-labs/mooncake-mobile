@@ -1,6 +1,8 @@
+import {useNavigation} from '@react-navigation/native';
 import {emptyPostsIcon} from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -26,14 +28,31 @@ interface Props {
 const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
   const theme = useTheme();
   const styles = useStyles();
+  const {navigate} = useNavigation<any>();
   const {t} = useTranslation('profile');
+
+  const handlePostPressed = React.useCallback(
+    ({subspaceID, id}: {subspaceID: number; id: number}) => {
+      navigate(ROUTES.POST_DETAILS, {
+        subspaceID,
+        postId: id,
+        focusCommentBox: false,
+      });
+    },
+    [],
+  );
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
       postsMargin={2}
       postsSize={104}
       postData={item}
-      onPress={() => console.log('test')}
+      onPress={() =>
+        handlePostPressed({
+          subspaceID: item.subspace_id,
+          id: item.id,
+        })
+      }
     />
   );
 
