@@ -41,5 +41,6 @@
   "connectedWallet": "{{count}} Wallet",
   "connectWallet": "Connect Wallet",
   "manageConnectedTwitter": "Manage Connected Twitter",
-  "manageConnectedWallets": "Manage Connected Wallets"
+  "manageConnectedWallets": "Manage Connected Wallets",
+  "no posts": "No created, liked or tipped posts yet"
 }
