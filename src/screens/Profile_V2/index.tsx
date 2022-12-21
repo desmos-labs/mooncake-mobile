@@ -1,9 +1,5 @@
 import {BlurView} from '@react-native-community/blur';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   connectIcon,
@@ -74,11 +70,13 @@ const Profile_V2 = () => {
   const theme = useTheme();
   const {t} = useTranslation('profile');
   const insets = useSafeAreaInsets();
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
-  const {params} = useRoute<NavProps['route']>();
+  const navigation = useNavigation<NavProps['navigation']>();
+  const route = useRoute<NavProps['route']>();
   const [initialLoading, setInitialLoading] = useState(true);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const styles = useStyles({insets});
+  const {goBack, navigate} = navigation;
+  const {params} = route;
 
   const {
     profileLoading,
@@ -92,6 +90,7 @@ const Profile_V2 = () => {
     refetchProfileData,
     refetchVisitingProfileData,
     numRelationships,
+    numRelationshipsLoading,
     refreshNumRelationships,
   } = useProfileDataQueries(params?.visitingProfileAddress);
 
@@ -242,25 +241,26 @@ const Profile_V2 = () => {
    * Effects
    */
 
-  useFocusEffect(
+  /** Commented for now, i think this is too expensive cause it is triggering way too many times */
+  /*  useFocusEffect(
     React.useCallback(() => {
       const task = InteractionManager.runAfterInteractions(() => {
         refetchUserData();
       });
       return () => task.cancel();
-    }, []),
-  );
+    }, [refetchUserData]),
+  ); */
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (userDataLoading) {
         InteractionManager.runAfterInteractions(() => {
           refetchUserData().then(() =>
-            setTimeout(() => setUserDataLoading(false), 1000),
+            setTimeout(() => setUserDataLoading(false), 500),
           );
         });
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timeout);
   }, [userDataLoading, refetchUserData]);
@@ -296,6 +296,17 @@ const Profile_V2 = () => {
             connectedChainsImages={images}
             handlePressCounters={() => navigate(ROUTES.SETTINGS)}
           />
+        </View>
+      );
+    } else if (
+      chainLinks.length !== 0 ||
+      appLinks.length !== 0 ||
+      appLinksLoading ||
+      chainLinksLoading
+    ) {
+      return (
+        <View style={{alignSelf: 'flex-start'}}>
+          <ActivityIndicator />
         </View>
       );
     }
@@ -444,15 +455,23 @@ const Profile_V2 = () => {
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
               <View style={styles.centerLeftSpacingM}>
-                <Typography.Subtitle3>
-                  {numRelationships?.numFollowing || 0}
-                </Typography.Subtitle3>
+                {numRelationshipsLoading ? (
+                  <ActivityIndicator size={21} />
+                ) : (
+                  <Typography.Subtitle3>
+                    {numRelationships?.numFollowing}
+                  </Typography.Subtitle3>
+                )}
                 <Typography.Caption1>{t('following')}</Typography.Caption1>
               </View>
               <View style={styles.centerLeftSpacingM}>
-                <Typography.Subtitle3>
-                  {numRelationships?.numFollowers || 0}
-                </Typography.Subtitle3>
+                {numRelationshipsLoading ? (
+                  <ActivityIndicator size={21} />
+                ) : (
+                  <Typography.Subtitle3>
+                    {numRelationships?.numFollowers}
+                  </Typography.Subtitle3>
+                )}
                 <Typography.Caption1>{t('followers')}</Typography.Caption1>
               </View>
             </View>
