@@ -11,7 +11,6 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, FlatList, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
@@ -31,7 +30,6 @@ export const PostsTab = () => {
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('profile');
-  const theme = useTheme();
   const {
     data: postsData,
     loading: postsLoading,
