@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {addProfileIcon, plusWhiteIcon} from 'assets/images';
+import {addProfileIcon, addNewProfileIcon} from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -60,16 +60,12 @@ const AddProfileModal = () => {
         <Spacer paddingVertical={20}>
           <Divider style={styles.divider} />
           <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
-            <FastImage
-              source={plusWhiteIcon}
-              style={styles.image}
-              tintColor={theme.colors.butterOrange01}
-            />
+            <FastImage source={addProfileIcon} style={styles.image} />
             <Typography.Body6>{t('add desmos profile')}</Typography.Body6>
           </TouchableOpacity>
           <Divider style={styles.divider} />
           <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
-            <FastImage source={addProfileIcon} style={styles.image} />
+            <FastImage source={addNewProfileIcon} style={styles.image} />
             <Typography.Body6>
               {t('create a new desmos profile')}
             </Typography.Body6>
