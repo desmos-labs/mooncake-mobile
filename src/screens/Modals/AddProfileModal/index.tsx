@@ -61,14 +61,12 @@ const AddProfileModal = () => {
           <Divider style={styles.divider} />
           <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
             <FastImage source={addProfileIcon} style={styles.image} />
-            <Typography.Body6>{t('add desmos profile')}</Typography.Body6>
+            <Typography.Body6>{t('addProfile')}</Typography.Body6>
           </TouchableOpacity>
           <Divider style={styles.divider} />
           <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
             <FastImage source={addNewProfileIcon} style={styles.image} />
-            <Typography.Body6>
-              {t('create a new desmos profile')}
-            </Typography.Body6>
+            <Typography.Body6>{t('createNewProfile')}</Typography.Body6>
           </TouchableOpacity>
           <Divider style={styles.divider} />
         </Spacer>
