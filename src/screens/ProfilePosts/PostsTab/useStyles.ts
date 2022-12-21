@@ -6,8 +6,8 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
   },
   contentContainerStyle: {
-    alignItems: 'center',
     flexGrow: 1,
+    alignItems: 'flex-start',
     backgroundColor: theme.colors.white,
     borderTopRightRadius: 24,
     borderTopLeftRadius: 24,

@@ -18,6 +18,7 @@ export default activeProfileState;
 export const useGetProfileData = (address: string) => {
   const [, {loading, refetch}] = useLazyQuery(GetProfileForAddress, {
     variables: {address},
+    fetchPolicy: 'no-cache',
   });
 
   const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);

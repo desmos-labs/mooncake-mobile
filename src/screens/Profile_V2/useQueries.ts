@@ -10,6 +10,7 @@ import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
+import GetPostsNumberForAddress from 'services/graphql/queries/GetPostsNumberForAddress';
 
 const useQueries = () => {
   const {activeAddress} = useActiveAccount();
@@ -59,6 +60,24 @@ const useQueries = () => {
     return impactPointsData.impact_record_aggregate.aggregate.sum
       .rewarded_points;
   }, [impactPointsData]);
+
+  const {
+    data: postsNumberData,
+    loading: postsCounterLoading,
+    refetch: refetchPostsCounter,
+  } = useQuery(GetPostsNumberForAddress, {
+    variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      address: activeAddress!,
+    },
+  });
+
+  const postsCounter = useMemo(() => {
+    if (!postsNumberData) {
+      return undefined;
+    }
+    return postsNumberData.post.length;
+  }, [postsNumberData]);
 
   const convertedBalance = useMemo(() => {
     let balanceToReturn;
@@ -112,6 +131,9 @@ const useQueries = () => {
     impactPoints,
     impactPointsLoading,
     refetchImpactPoints,
+    postsCounter,
+    postsCounterLoading,
+    refetchPostsCounter,
   };
 };
 

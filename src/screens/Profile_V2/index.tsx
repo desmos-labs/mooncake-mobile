@@ -17,14 +17,14 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   ImageBackground,
   InteractionManager,
+  RefreshControl,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -76,10 +76,9 @@ const Profile_V2 = () => {
   const insets = useSafeAreaInsets();
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const {params} = useRoute<NavProps['route']>();
-  const styles = useStyles({
-    insets,
-  });
   const [initialLoading, setInitialLoading] = useState(true);
+  const [userDataLoading, setUserDataLoading] = useState(false);
+  const styles = useStyles({insets});
 
   const {
     profileLoading,
@@ -106,15 +105,19 @@ const Profile_V2 = () => {
     refetchBalance,
     refetchPosts,
     refetchImpactPoints,
+    postsCounter,
+    refetchPostsCounter,
   } = useQueries();
 
-  /** Animations start */
+  /**
+   * Animations
+   */
+
   const AnimatedImageBackground =
     Animated.createAnimatedComponent(ImageBackground);
   // @ts-ignore
   const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
   const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-  const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
   const scrollY = useSharedValue(0);
   const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
@@ -191,17 +194,17 @@ const Profile_V2 = () => {
     };
   });
 
-  /** Animations end */
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      const {contentOffset} = event;
+      scrollOffset.value = 45 + HEADER_HEIGHT_EXPANDED - contentOffset.y;
+      scrollY.value = contentOffset.y;
+    },
+  });
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (!profileLoading && !appLinksLoading && !chainLinksLoading) {
-      timeout = setTimeout(() => setInitialLoading(false), 500);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [profileLoading, appLinksLoading, chainLinksLoading]);
+  /**
+   * Handlers
+   */
 
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
@@ -217,48 +220,64 @@ const Profile_V2 = () => {
     });
   }, []);
 
-  const refetchUserData = React.useCallback(() => {
-    console.log(
-      '[Profile_v2/index.tsx]: refetching user profile data, posts data and connected apps & chains',
-    );
+  const refetchUserData = React.useCallback(async () => {
+    console.log('refetching user profile data and connected apps & chains');
     if (screenMode === 'myProfile') {
-      Promise.all([
+      await Promise.all([
         refetchProfileData(),
-        refetchPosts(),
-        refetchBalance(),
-        refetchImpactPoints(),
         refetchChainLinks(),
         refetchAppLinks(),
+        refetchBalance(),
+        refetchImpactPoints(),
+        refetchPosts(),
+        refetchPostsCounter(),
       ]);
     } else {
-      refetchVisitingProfileData();
+      await refetchVisitingProfileData();
     }
-    refreshNumRelationships();
-  }, [
-    refetchProfileData,
-    refetchPosts,
-    refetchBalance,
-    refetchChainLinks,
-    refetchAppLinks,
-  ]);
+    await refreshNumRelationships();
+  }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      const {contentOffset} = event;
-      scrollOffset.value = 45 + HEADER_HEIGHT_EXPANDED - contentOffset.y;
-      scrollY.value = contentOffset.y;
-    },
-  });
+  /**
+   * Effects
+   */
 
   useFocusEffect(
     React.useCallback(() => {
       const task = InteractionManager.runAfterInteractions(() => {
         refetchUserData();
       });
-
       return () => task.cancel();
-    }, [refetchUserData]),
+    }, []),
   );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (userDataLoading) {
+        InteractionManager.runAfterInteractions(() => {
+          refetchUserData().then(() =>
+            setTimeout(() => setUserDataLoading(false), 1000),
+          );
+        });
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [userDataLoading, refetchUserData]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (!profileLoading && !appLinksLoading && !chainLinksLoading) {
+      timeout = setTimeout(() => setInitialLoading(false), 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [profileLoading, appLinksLoading, chainLinksLoading]);
+
+  /**
+   * Memoized components
+   */
 
   const ConnectedChains = React.useMemo(() => {
     const images = [
@@ -282,6 +301,61 @@ const Profile_V2 = () => {
     }
     return undefined;
   }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading]);
+
+  const Banner = useMemo(() => {
+    return (
+      <AnimatedImageBackground
+        resizeMode="cover"
+        source={{uri: cover_pic}}
+        style={[
+          {
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            zIndex: 0,
+            height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
+          },
+          animatedImageBGStyle,
+        ]}>
+        <AnimatedBlurView
+          blurType="dark"
+          blurAmount={96}
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 2,
+            },
+            animatedBlurStyle,
+          ]}
+        />
+      </AnimatedImageBackground>
+    );
+  }, [cover_pic]);
+
+  const Avatar = useMemo(() => {
+    return (
+      <AnimatedFastImage
+        source={{uri: profile_pic}}
+        style={[
+          {
+            zIndex: 2,
+            position: 'absolute',
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            borderWidth: 3,
+            left: theme.spacing.m,
+            borderColor: theme.colors.white,
+          },
+          animatedProfilePicStyle,
+        ]}
+      />
+    );
+  }, [profile_pic]);
+
+  /**
+   * Render section
+   */
 
   if (initialLoading) {
     return (
@@ -324,30 +398,6 @@ const Profile_V2 = () => {
         buttonStyle={[styles.buttonStyleRight, {right: 100}]}
         style={styles.topBarImage}
       />
-
-      {/* Refresh arrow iOS */}
-      {/*      <ClassicAnimated.View
-        style={[
-          styles.arrowView,
-          {
-            opacity: scrollY.interpolate({
-              inputRange: [-40, 0],
-              outputRange: [1, 0],
-            }),
-            transform: [
-              {
-                rotate: scrollY.interpolate({
-                  inputRange: [-75, -15],
-                  outputRange: ['180deg', '0deg'],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
-          },
-        ]}>
-        <Icon name="arrow-down" color="white" size={25} />
-      </ClassicAnimated.View> */}
-
       {/* Dtag */}
       <Animated.View style={[styles.animatedDtag, animatedDtagStyle]}>
         <View
@@ -361,52 +411,23 @@ const Profile_V2 = () => {
       </Animated.View>
 
       {/* Banner */}
-      <AnimatedImageBackground
-        resizeMode="cover"
-        source={{uri: cover_pic}}
-        style={[
-          {
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            zIndex: 0,
-            height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
-          },
-          animatedImageBGStyle,
-        ]}>
-        <AnimatedBlurView
-          blurType="dark"
-          blurAmount={96}
-          style={[
-            {
-              ...StyleSheet.absoluteFillObject,
-              zIndex: 2,
-            },
-            animatedBlurStyle,
-          ]}
-        />
-      </AnimatedImageBackground>
+      {Banner}
       {/* Profile image */}
-      <AnimatedFastImage
-        source={{uri: profile_pic}}
-        style={[
-          {
-            zIndex: 2,
-            position: 'absolute',
-            width: 100,
-            height: 100,
-            borderRadius: 50,
-            borderWidth: 3,
-            left: theme.spacing.m,
-            borderColor: theme.colors.white,
-          },
-          animatedProfilePicStyle,
-        ]}
-      />
-      <AnimatedScrollView
+      {Avatar}
+      <Animated.ScrollView
+        overScrollMode="never"
+        pinchGestureEnabled={false}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
-        scrollEventThrottle={10}
+        refreshControl={
+          <RefreshControl
+            enabled={true}
+            onRefresh={() => setUserDataLoading(true)}
+            refreshing={userDataLoading}
+            tintColor={theme.colors.white}
+          />
+        }
+        scrollEventThrottle={1}
         style={{
           marginTop: HEADER_HEIGHT_COMPACT,
           paddingTop: HEADER_HEIGHT_EXPANDED,
@@ -419,7 +440,7 @@ const Profile_V2 = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Typography.Subtitle3>0</Typography.Subtitle3>
+                <Typography.Subtitle3>{postsCounter || 0}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
               <View style={styles.centerLeftSpacingM}>
@@ -497,7 +518,7 @@ const Profile_V2 = () => {
             <BadgesSection />
           </View>
         </View>
-      </AnimatedScrollView>
+      </Animated.ScrollView>
     </Animated.View>
   );
 };

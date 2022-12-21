@@ -34,6 +34,7 @@ const chainLinkState = selectorFamily<ChainLink[], string>({
       variables: {
         address,
       },
+      fetchPolicy: 'no-cache',
     });
 
     const {chain_link} = data;
