@@ -133,8 +133,6 @@ const Profiles = () => {
         profiles.map(async (profile, index) => {
           if (index === i) {
             try {
-              setChangingProfileLoading(true);
-              console.log(chainAccount);
               const unlockResult = await unlockWallet({
                 chainAccount: chainAccount!,
                 skipBiometrics: true,
@@ -144,6 +142,7 @@ const Profiles = () => {
                 unlockResult.wallet &&
                 unlockResult.password
               ) {
+                setChangingProfileLoading(true);
                 setSigner(unlockResult.wallet);
                 setActiveAddress(profile.address);
                 await login({
