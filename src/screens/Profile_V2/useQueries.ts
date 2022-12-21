@@ -4,7 +4,6 @@ import {useChainLinks} from '@recoil/chainLinks';
 import {useApplicationLinks} from '@recoil/connectedApps';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
 import React, {useMemo} from 'react';
 import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
@@ -12,8 +11,7 @@ import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
 import GetPostsNumberForAddress from 'services/graphql/queries/GetPostsNumberForAddress';
 
-const useQueries = () => {
-  const {activeAddress} = useActiveAccount();
+const useQueries = (address?: string) => {
   const {currentChain} = useRecoilValue(appSettingsState);
   const {
     data: postsData,
@@ -22,7 +20,7 @@ const useQueries = () => {
   } = useQuery(GetPostsForAddressWithLimit, {
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      address: activeAddress,
+      address: address!,
       limit: 10,
     },
     fetchPolicy: 'no-cache',
@@ -39,7 +37,7 @@ const useQueries = () => {
     refetch: refetchBalance,
   } = useQuery(GetAccountBalance, {
     variables: {
-      address: activeAddress,
+      address: address!,
       tokenName: currentChain.stakeCurrency.coinDenom,
     },
   });
@@ -48,7 +46,7 @@ const useQueries = () => {
     data: impactPointsData,
     loading: impactPointsLoading,
     refetch: refetchImpactPoints,
-  } = useQuery(GetImpactPoints);
+  } = useQuery(GetImpactPoints, {fetchPolicy: 'no-cache'});
 
   const impactPoints = useMemo(() => {
     if (
@@ -68,8 +66,9 @@ const useQueries = () => {
   } = useQuery(GetPostsNumberForAddress, {
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      address: activeAddress!,
+      address: address!,
     },
+    nextFetchPolicy: 'no-cache',
   });
 
   const postsCounter = useMemo(() => {
@@ -103,12 +102,12 @@ const useQueries = () => {
     chainLinks,
     refetch: refetchChainLinks,
     loading: chainLinksLoading,
-  } = useChainLinks(activeAddress!);
+  } = useChainLinks(address!);
   const {
     appLinks,
     refetch: refetchAppLinks,
     loading: appLinksLoading,
-  } = useApplicationLinks(activeAddress!);
+  } = useApplicationLinks(address!);
 
   const contentLoading = postsLoading && balanceLoading;
 

@@ -9,15 +9,19 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
-import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
-const ImpactPointsSection = () => {
+const ImpactPointsSection = ({
+  impactPoints,
+  impactPointsLoading,
+}: {
+  impactPoints: number;
+  impactPointsLoading: boolean;
+}) => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
   const {navigate} = useNavigation<any>();
-  const {impactPoints, impactPointsLoading} = useQueries();
   return (
     <View>
       {impactPoints && !impactPointsLoading ? (

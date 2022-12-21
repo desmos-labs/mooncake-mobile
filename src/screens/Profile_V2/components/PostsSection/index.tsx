@@ -14,18 +14,19 @@ import {useTheme} from 'react-native-paper';
 import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
-import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
 interface Props {
   onPress: () => void;
+  posts: any[];
+  postsData: any[];
+  postsLoading: boolean;
 }
 
-const PostsSection = ({onPress}: Props) => {
+const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
-  const {posts, postsData, postsLoading} = useQueries();
 
   const renderPosts = ({item}: any) => (
     <ProfilePostCard

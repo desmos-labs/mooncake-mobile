@@ -4,14 +4,20 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import useQueries from 'screens/Profile_V2/useQueries';
 import useStyles from './useStyles';
 
-const BalanceSection = () => {
+const BalanceSection = ({
+  convertedBalance,
+  balanceData,
+  balanceLoading,
+}: {
+  convertedBalance: any;
+  balanceData: any;
+  balanceLoading: boolean;
+}) => {
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
-  const {convertedBalance, balanceData, balanceLoading} = useQueries();
   return (
     <View>
       {balanceData && !balanceLoading ? (

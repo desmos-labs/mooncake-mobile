@@ -13,6 +13,7 @@ type Props = {
   connectedChainsCounter: number;
   twitterUsername?: string;
   handlePressCounters: () => void;
+  visitingProfile: boolean;
 };
 
 const SocialAndWalletsCountersBar = ({
@@ -21,6 +22,7 @@ const SocialAndWalletsCountersBar = ({
   connectedChainsCounter,
   twitterUsername,
   handlePressCounters,
+  visitingProfile,
 }: Props) => {
   const styles = useStyles();
   const {t} = useTranslation('profile');
@@ -31,7 +33,9 @@ const SocialAndWalletsCountersBar = ({
     </View>
   ) : (
     <View style={[styles.container, {height: scale(18)}]}>
-      <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
+      <TouchableOpacity
+        onPress={visitingProfile ? undefined : handlePressCounters}
+        style={styles.button}>
         {twitterUsername && (
           <View
             style={{

@@ -13,6 +13,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
     justifyContent: 'space-between',
+    marginVertical: theme.spacing.s,
   },
   text: {
     marginLeft: 12,

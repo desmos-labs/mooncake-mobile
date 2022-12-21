@@ -19,6 +19,7 @@ const multiApiLink = ApolloLink.from([
 
 const authLink = setContext((_, {headers}) => {
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
+  console.log(bearerToken);
   return {
     headers: {
       ...headers,

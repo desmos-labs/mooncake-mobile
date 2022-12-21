@@ -68,8 +68,6 @@ import FullscreenStatusScreen, {
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Invites from 'screens/Invites';
-import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
-import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
@@ -90,12 +88,14 @@ import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
   ConsentAgreementParams,
 } from 'screens/Modals/ConsentAgreement';
+import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import DisconnectAppModal, {
   DisconnectAppParams,
 } from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
 import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
@@ -108,7 +108,6 @@ import ChangePassword, {
 } from 'screens/PasswordManipulation';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
-import Profile, {UserProfileParams} from 'screens/Profile';
 import Profile_V2, {UserProfileParams_V2} from 'screens/Profile_V2';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
@@ -146,7 +145,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
-  [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
+  [ROUTES.USER_PROFILE]: UserProfileParams_V2 | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -403,7 +402,7 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_BIOMETRICS}
         component={ManageBiometrics}
       />
-      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile_V2} />
       <Stack.Screen name={ROUTES.USER_PROFILE_V2} component={Profile_V2} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
