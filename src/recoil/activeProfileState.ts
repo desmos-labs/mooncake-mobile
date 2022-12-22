@@ -23,8 +23,8 @@ export const useGetProfileData = (address: string) => {
 
   const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);
 
-  const fetchActiveProfile = React.useCallback(async (_address: string) => {
-    const getProfileResponse = await refetch({address: _address});
+  const fetchActiveProfile = React.useCallback(async () => {
+    const getProfileResponse = await refetch({address});
 
     const {data} = getProfileResponse;
     if (!data) return;
@@ -37,13 +37,13 @@ export const useGetProfileData = (address: string) => {
 
   React.useEffect(() => {
     if (!activeProfile && address) {
-      fetchActiveProfile(address);
+      fetchActiveProfile();
     }
   }, [activeProfile, address]);
 
   return {
     profileData: activeProfile,
     loading,
-    refetch,
+    refetch: fetchActiveProfile,
   };
 };
