@@ -1,12 +1,13 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import {
   atom,
   selector,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
+  useSetRecoilState,
 } from 'recoil';
-import {useQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
@@ -50,6 +51,39 @@ export const isFollowingAddr = selectorFamily({
       return followedAddresses.has(address);
     },
 });
+
+/**
+ * A hook that exposes a function to manually update a user's following list.
+ */
+export const useGetFollowingForAddress = (address: string) => {
+  const setFollowing = useSetRecoilState(followingState);
+
+  const [, {refetch}] = useLazyQuery<GetFollowedUsersForAddressData>(
+    GetFollowedUsersForAddress,
+    {
+      variables: {
+        userAddress: address,
+      },
+      fetchPolicy: 'no-cache',
+    },
+  );
+
+  const updateFollowing = useCallback(async () => {
+    const {data} = await refetch({userAddress: address});
+    const {user_relationship} = data;
+
+    const newFollowing = user_relationship
+      .map(x => x.counterparty)
+      .filter(d => !!d);
+
+    console.log('[useGetFollowingForAddress]: following updated');
+    setFollowing(newFollowing);
+  }, [address]);
+
+  return {
+    updateFollowing,
+  };
+};
 
 /**
  * Get the list of followed accounts for the active account

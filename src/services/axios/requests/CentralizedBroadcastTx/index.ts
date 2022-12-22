@@ -74,6 +74,8 @@ export const encodeAndBroadcastTx = async ({
   const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
   const aminoEncodedMsg = client.encodeToAmino(msgs);
   client.disconnect();
+
+  console.log('[CentralizedBroadcastTx]: Broadcasting message:', msgs);
   return CentralizedBroadcastTx({
     messages: aminoEncodedMsg,
     memo,
