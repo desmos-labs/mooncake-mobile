@@ -1,11 +1,9 @@
-import {useCallback} from 'react';
 import {
   atom,
   selector,
   selectorFamily,
   useRecoilCallback,
   useRecoilValue,
-  useSetRecoilState,
 } from 'recoil';
 
 type RelationshipType = 'follow' | 'unfollow';
@@ -61,52 +59,42 @@ const useOptimisticRelationships = () => {
   const optimisticFollowing = useRecoilValue(optimisticToFollow);
   const optimisticUnfollow = useRecoilValue(optimisticToUnfollow);
 
-  const setOptimisticRelationship = useSetRecoilState(
-    optimisticRelationshipState,
-  );
-
-  const removeOptimisticRelationship = useCallback((counterParty: string) => {
-    setOptimisticRelationship(prev =>
-      prev.filter(x => x.counterParty !== counterParty),
-    );
-  }, []);
-
   const handleOptimisticRelationship = useRecoilCallback(
-    ({snapshot}) =>
+    ({snapshot, set}) =>
       async ({counterParty, type}: OptimisticRelationship) => {
         const optFollowing = await snapshot.getPromise(optimisticToFollow);
         const optUnfollow = await snapshot.getPromise(optimisticToUnfollow);
 
         // check if there is already an optimistic follow or unfollow
         if (optFollowing.find(x => x.counterParty === counterParty)) {
-          removeOptimisticRelationship(counterParty);
-          setOptimisticRelationship(prev => [
+          set(optimisticRelationshipState, prev =>
+            prev.filter(x => x.counterParty !== counterParty),
+          );
+          set(optimisticRelationshipState, prev => [
             ...prev,
-            {counterParty, type: 'unfollow'},
+            {counterParty, type: 'unfollow' as RelationshipType},
           ]);
         } else if (optUnfollow.find(x => x.counterParty === counterParty)) {
-          removeOptimisticRelationship(counterParty);
-          setOptimisticRelationship(prev => [
+          set(optimisticRelationshipState, prev =>
+            prev.filter(x => x.counterParty !== counterParty),
+          );
+
+          set(optimisticRelationshipState, prev => [
             ...prev,
-            {counterParty, type: 'follow'},
+            {counterParty, type: 'follow' as RelationshipType},
           ]);
         } else {
-          setOptimisticRelationship(prev => [...prev, {counterParty, type}]);
+          set(optimisticRelationshipState, prev => [
+            ...prev,
+            {counterParty, type},
+          ]);
         }
       },
   );
 
-  // console.log(
-  //   'following:',
-  //   optimisticFollowing,
-  //   'unfollow:',
-  //   optimisticUnfollow,
-  //   optimisticRelationship,
-  // );
   return {
     optimisticFollowing,
     optimisticUnfollow,
-    removeOptimisticRelationship,
     handleOptimisticRelationship,
   };
 };
