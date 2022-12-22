@@ -1,18 +1,16 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {addProfileIcon, addNewProfileIcon} from 'assets/images';
+import {addNewProfileIcon, addProfileIcon} from 'assets/images';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {GestureDetector} from 'react-native-gesture-handler';
 import {Divider, useTheme} from 'react-native-paper';
-import Animated from 'react-native-reanimated';
-import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 import useStyles from './useStyles';
 
 export type AddProfileModalParams = {
@@ -39,7 +37,6 @@ const AddProfileModal = () => {
   const theme = useTheme();
   const {t} = useTranslation('addProfile');
   const {goBack} = useNavigation<NavProps['navigation']>();
-  const {panGesture, animatedStyle} = useModalAnimations();
 
   const onPressFirstButton = useCallback(() => {
     goBack();
@@ -52,41 +49,23 @@ const AddProfileModal = () => {
   }, []);
 
   return (
-    <GestureDetector gesture={panGesture}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={goBack}
-        style={styles.container}>
-        {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-        {/* parts of the modal content are pressed */}
-        <Animated.View style={animatedStyle}>
-          <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-            <View style={styles.tabIcon} />
-            <Typography.H4 style={styles.headerText}>
-              {t('title')}
-            </Typography.H4>
-            <Spacer paddingVertical={20}>
-              <Divider style={styles.divider} />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={onPressFirstButton}>
-                <FastImage source={addProfileIcon} style={styles.image} />
-                <Typography.Body6>{t('addProfile')}</Typography.Body6>
-              </TouchableOpacity>
-              <Divider style={styles.divider} />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={onPressSecondButton}>
-                <FastImage source={addNewProfileIcon} style={styles.image} />
-                <Typography.Body6>{t('createNewProfile')}</Typography.Body6>
-              </TouchableOpacity>
-              <Divider style={styles.divider} />
-            </Spacer>
-            <Spacer paddingVertical={theme.spacing.s} />
-          </TouchableOpacity>
-        </Animated.View>
-      </TouchableOpacity>
-    </GestureDetector>
+    <BottomUpModalWrapper goBack={goBack}>
+      <Typography.H4 style={styles.headerText}>{t('title')}</Typography.H4>
+      <Spacer paddingVertical={20}>
+        <Divider style={styles.divider} />
+        <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
+          <FastImage source={addProfileIcon} style={styles.image} />
+          <Typography.Body6>{t('addProfile')}</Typography.Body6>
+        </TouchableOpacity>
+        <Divider style={styles.divider} />
+        <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
+          <FastImage source={addNewProfileIcon} style={styles.image} />
+          <Typography.Body6>{t('createNewProfile')}</Typography.Body6>
+        </TouchableOpacity>
+        <Divider style={styles.divider} />
+      </Spacer>
+      <Spacer paddingVertical={theme.spacing.s} />
+    </BottomUpModalWrapper>
   );
 };
 
