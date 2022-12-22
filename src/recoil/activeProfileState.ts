@@ -28,7 +28,6 @@ export const useGetProfileData = (address: string) => {
 
     const {data} = getProfileResponse;
     if (!data) return;
-
     const {profile} = data;
     const [firstProfile] = profile;
 

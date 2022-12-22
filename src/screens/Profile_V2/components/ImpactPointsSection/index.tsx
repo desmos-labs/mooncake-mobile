@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import appSettingsState from '@recoil/settings';
 import {infoIcon} from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
@@ -9,6 +10,7 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
+import {useRecoilValue} from 'recoil';
 import useStyles from './useStyles';
 
 const ImpactPointsSection = ({
@@ -22,6 +24,7 @@ const ImpactPointsSection = ({
   const styles = useStyles();
   const {t} = useTranslation('profile');
   const {navigate} = useNavigation<any>();
+  const {currentChain} = useRecoilValue(appSettingsState);
   return (
     <View>
       {impactPoints && !impactPointsLoading ? (
@@ -63,7 +66,7 @@ const ImpactPointsSection = ({
             style={{
               color: theme.colors.surfaceBlack,
             }}>
-            0 DSM
+            0 {currentChain.currencies[0].coinDenom.toUpperCase()}
           </Typography.Subtitle2>
         </View>
       ) : (

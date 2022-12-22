@@ -112,6 +112,7 @@ import Profile_V2, {UserProfileParams_V2} from 'screens/Profile_V2';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
 } from 'screens/Profile_V2/components/ManageConnectionsModal';
+import Operations from 'screens/Profile_V2/components/Operations';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -243,6 +244,7 @@ export type RootNavigatorParamList = {
   [ROUTES.USER_PROFILE_V2]: UserProfileParams_V2;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
+  [ROUTES.OPERATIONS]: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -503,6 +505,8 @@ const RootNavigator = () => {
         component={Onboarding}
         initialParams={{invited: false}}
       />
+
+      <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} />
 
       {/* modals */}
       <Stack.Group

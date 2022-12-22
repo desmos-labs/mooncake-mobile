@@ -1,4 +1,6 @@
+import {useNavigation} from '@react-navigation/native';
 import Typography from 'components/Typography';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
@@ -18,6 +20,7 @@ const BalanceSection = ({
   const theme = useTheme();
   const styles = useStyles();
   const {t} = useTranslation('profile');
+  const {navigate} = useNavigation<any>();
   return (
     <View>
       {balanceData && !balanceLoading ? (
@@ -36,13 +39,15 @@ const BalanceSection = ({
             $ {convertedBalance?.convertedAmount}
           </Typography.Body6>
           <Divider style={styles.divider} />
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigate(ROUTES.OPERATIONS)}>
             <Typography.Body6
               style={{
                 marginRight: theme.spacing.s,
                 color: theme.colors.butterOrange01,
               }}>
-              {t('transactions')}
+              {t('operations')}
             </Typography.Body6>
             <Icon
               name="angle-right"
