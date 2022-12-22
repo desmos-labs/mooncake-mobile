@@ -96,7 +96,10 @@ describe('hook: useFollowOrUnfollow', () => {
       },
     ];
 
-    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({msgs: mockMsgs});
+    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({
+      msgs: mockMsgs,
+      optimistic: expect.anything(),
+    });
   });
 
   it('unfollows a user', async () => {
@@ -146,6 +149,9 @@ describe('hook: useFollowOrUnfollow', () => {
       },
     ];
 
-    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({msgs: mockMsgs});
+    expect(encodeAndBroadcastTx).toHaveBeenCalledWith({
+      msgs: mockMsgs,
+      optimistic: expect.anything(),
+    });
   });
 });
