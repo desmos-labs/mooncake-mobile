@@ -1,7 +1,13 @@
 import {makeStyle} from 'config/theme';
 import React, {useState} from 'react';
-import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 import {GestureDetector} from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 
@@ -10,6 +16,12 @@ export type Props = TouchableOpacityProps & {
    * goBack navigation function
    */
   goBack: () => void;
+  /**
+   * optional padding
+   */
+  paddingHorizontal?: number | string;
+  paddingTop?: number | string;
+  paddingBottom?: number | string;
 };
 
 /**
@@ -18,8 +30,10 @@ export type Props = TouchableOpacityProps & {
  * Feel free to update any prop you need
  */
 const BottomUpModalWrapper: React.FC<Props> = props => {
-  const {goBack, children} = props;
+  const {goBack, paddingHorizontal, paddingTop, paddingBottom, children} =
+    props;
   const styles = useStyles();
+  const theme = useTheme();
   const [threshold, setThreshold] = useState(0);
   const {
     panGesture,
@@ -42,7 +56,17 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
           }}>
           {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
           {/* parts of the modal content are pressed */}
-          <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+          <TouchableOpacity
+            onPress={Keyboard.dismiss}
+            activeOpacity={1}
+            style={[
+              styles.innerContainer,
+              {
+                paddingHorizontal: paddingHorizontal || theme.spacing.l,
+                paddingTop: paddingTop || 10,
+                paddingBottom: paddingBottom || theme.spacing.l,
+              },
+            ]}>
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
               <Animated.View
                 style={[styles.tabIconLeft, tabAnimatedStyleLeft]}
@@ -90,9 +114,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingHorizontal: theme.spacing.l,
-    paddingBottom: theme.spacing.l,
-    paddingTop: 10,
   },
 }));
 
