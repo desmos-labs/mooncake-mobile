@@ -24,11 +24,11 @@ const UserBio = ({content}: Props) => {
   const {onLayout, animatedContainerStyle, expanded, setExpanded} =
     useAnimations();
 
-  const showMoreLess = React.useMemo(() => content.length > 64, [content]);
+  const showMoreLess = React.useMemo(() => content.length > 72, [content]);
 
   if (!content) {
     return (
-      <Typography.Caption1 style={{textAlign: 'center'}}>
+      <Typography.Caption1 style={{textAlign: 'left'}}>
         {t('noBio')}
       </Typography.Caption1>
     );
@@ -36,7 +36,6 @@ const UserBio = ({content}: Props) => {
 
   return (
     <TouchableOpacity
-      style={{alignSelf: 'center'}}
       activeOpacity={0.9}
       onPress={() => {
         if (showMoreLess) setExpanded(prev => !prev);
@@ -64,8 +63,8 @@ const UserBio = ({content}: Props) => {
                 end={{x: 1, y: 0}}
                 style={StyleSheet.absoluteFillObject}
                 colors={[
-                  addAlphaToHex(theme.colors.background, 0.1),
-                  theme.colors.background,
+                  addAlphaToHex(theme.colors.white, 0.1),
+                  theme.colors.white,
                 ]}
               />
             </View>

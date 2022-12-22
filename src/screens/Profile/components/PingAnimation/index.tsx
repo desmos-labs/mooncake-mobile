@@ -1,6 +1,6 @@
 import React from 'react';
 import {ColorValue, View} from 'react-native';
-import AnimatedRing from 'screens/Profile/components/PingAnimation/AnimatedRing';
+import AnimatedRing from './AnimatedRing';
 
 type Props = {
   /**
@@ -23,7 +23,6 @@ const PingAnimation = (props: Props) => {
       <AnimatedRing {...props} delay={1000} />
       <View
         style={{
-          zIndex: 10,
           width: size,
           height: size,
           backgroundColor: color,

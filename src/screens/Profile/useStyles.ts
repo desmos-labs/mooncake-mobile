@@ -1,89 +1,78 @@
-import {makeStyle} from 'config/theme';
-import {Dimensions, StyleSheet} from 'react-native';
-import {scale} from 'react-native-size-matters';
+import {makeStyleWithProps} from 'config/theme';
 
-const useStyles = makeStyle(theme => ({
+const useStyles = makeStyleWithProps((props: any, theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
   },
-  avatarContainer: {
-    zIndex: 2,
-  },
-  avatar: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    resizeMode: 'cover',
-    position: 'absolute',
-    top: -60,
-    alignSelf: 'center',
-  },
-  contentGroup: {
-    overflow: 'hidden',
-    paddingTop: theme.spacing.m,
-    paddingBottom: theme.spacing.s,
-  },
-  editButton: {
-    width: 32,
-    height: 32,
-    alignSelf: 'flex-end',
-  },
-  nameText: {
-    textAlign: 'center',
-    marginTop: theme.spacing.m,
-  },
-  dTagText: {
-    marginTop: theme.spacing.s,
-    textAlign: 'center',
-  },
-  socialCounterGroup: {
-    marginTop: theme.spacing.s,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  separator: {
-    backgroundColor: theme.colors.iconGrey,
-    width: StyleSheet.hairlineWidth,
-    height: '90%',
-  },
-  bannerImage: {
-    position: 'absolute',
-    width: '100%',
-    resizeMode: 'cover',
-    height: Dimensions.get('window').height * 0.6,
-  },
-  snackbar: {
-    zIndex: 2,
-    backgroundColor: theme.colors.surface,
-  },
-  contentContainerStyle: {
+  contentContainer: {
     flexGrow: 1,
-  },
-  connectButtonGroup: {
-    flex: 1,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.spacing.m,
     marginTop: theme.spacing.m,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingBottom: 80,
   },
-  connectButton: {
-    height: 42,
-    width: scale(150),
+  profileTopBarContainer: {
     flex: 1,
   },
-  twitterButton: {
-    paddingVertical: 6,
-    marginLeft: 20,
-    flexDirection: 'row',
+  buttonStyleLeft: {
+    zIndex: 3,
+    position: 'absolute',
+    top: props.insets.top + 10,
+    left: 20,
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonStyleRight: {
+    zIndex: 3,
+    position: 'absolute',
+    top: props.insets.top + 10,
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topBarImage: {height: 32, width: 32},
+  divider: {
+    marginHorizontal: -theme.spacing.m,
+    height: 8,
+    backgroundColor: theme.colors.surfaceGrey,
+  },
+  flexCenter: {flex: 1, justifyContent: 'center'},
+  arrowView: {
+    zIndex: 2,
+    position: 'absolute',
+    top: props.insets.top + 13,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  animatedDtag: {
+    zIndex: 2,
+    position: 'absolute',
+    top: props.insets.top + 7,
+    left: 0,
+    right: 0,
+  },
+  dtag: {
+    color: theme.colors.white,
+    alignSelf: 'center',
+    maxWidth: '25%',
+  },
+  centerLeftSpacingM: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: scale(150),
-    flex: 1,
+    marginLeft: theme.spacing.m,
   },
-  scrollviewContentWrapper: {
-    backgroundColor: theme.colors.white,
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
+  editButton: {
+    backgroundColor: theme.colors.surfaceGrey,
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    flex: 0.95,
   },
 }));
 

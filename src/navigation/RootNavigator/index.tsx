@@ -108,11 +108,11 @@ import ChangePassword, {
 } from 'screens/PasswordManipulation';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
-import Profile_V2, {UserProfileParams_V2} from 'screens/Profile_V2';
+import Profile, {UserProfileParams} from 'screens/Profile';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
-} from 'screens/Profile_V2/components/ManageConnectionsModal';
-import Operations from 'screens/Profile_V2/components/Operations';
+} from 'screens/Profile/components/ManageConnectionsModal';
+import Operations from 'screens/Profile/components/Operations';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -146,7 +146,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
-  [ROUTES.USER_PROFILE]: UserProfileParams_V2 | undefined;
+  [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -241,7 +241,6 @@ export type RootNavigatorParamList = {
   [ROUTES.ONBOARDING]: OnboardingParams;
 
   // New profile
-  [ROUTES.USER_PROFILE_V2]: UserProfileParams_V2;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.OPERATIONS]: undefined;
@@ -404,8 +403,7 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_BIOMETRICS}
         component={ManageBiometrics}
       />
-      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile_V2} />
-      <Stack.Screen name={ROUTES.USER_PROFILE_V2} component={Profile_V2} />
+      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen

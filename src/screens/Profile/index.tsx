@@ -1,64 +1,66 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {BlurView} from '@react-native-community/blur';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useGetProfileData} from '@recoil/activeProfileState';
 import {isFollowingAddr} from '@recoil/following';
-import useNumRelationships from '@recoil/numRelationshipState';
 import {
+  connectIcon,
   defaultBanner,
-  defaultProfilePic,
-  editButton,
-  followedIcon,
-  followIcon,
+  profileBack,
+  profileNotification,
+  profileScan,
+  profileSettings,
 } from 'assets/images';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
+  ImageBackground,
+  InteractionManager,
   RefreshControl,
   SafeAreaView,
   StatusBar,
+  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Snackbar, useTheme} from 'react-native-paper';
+import {Divider, useTheme} from 'react-native-paper';
 import Animated, {
+  Extrapolation,
   FadeIn,
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
-import ChainsCountersBar from 'screens/Profile/components/ChainsCountersBar';
-import ProfileSectionButton from 'screens/Profile/components/ProfileSectionButton';
-import {
-  mapConnectedAppImages,
-  mapConnectedChainImages,
-} from 'screens/Profile/utils';
+import PingAnimation from 'screens/Profile/components/PingAnimation';
+import {mapConnectedChainImages} from 'screens/Profile/utils';
+import AddressCopy from 'screens/Profile/components/AddressCopy';
+import BadgesSection from 'screens/Profile/components/BadgesSection';
+import BalanceSection from 'screens/Profile/components/BalanceSection';
+import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
+import NftsSection from 'screens/Profile/components/NftsSection';
+import PostsSection from 'screens/Profile/components/PostsSection';
+import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
+import UserBio from 'screens/Profile/components/UserBio';
+import useProfileDataQueries from 'screens/Profile/useProfileDataQueries';
+import useQueries from 'screens/Profile/useQueries';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import {useChainLinks} from '@recoil/chainLinks';
-import {useApplicationLinks} from '@recoil/connectedApps';
-import AddressCopy from './components/AddressCopy';
-import ProfileHeader from './components/ProfileHeader';
-import SocialCounter from './components/SocialCounter';
-import UserBio from './components/UserBio';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
+
+const HEADER_HEIGHT_COMPACT = 95;
+const HEADER_HEIGHT_EXPANDED = 60;
 
 export interface UserProfileParams {
   visitingProfileAddress?: string;
@@ -66,167 +68,191 @@ export interface UserProfileParams {
 
 const Profile = () => {
   const theme = useTheme();
-  const [showSnackbar, setShowSnackbar] = useState(false);
   const {t} = useTranslation('profile');
-  const styles = useStyles();
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
-  const {params} = useRoute<NavProps['route']>();
-  const {top} = useSafeAreaInsets();
-  const [globalLoading, setGlobalLoading] = useState(true);
-  const {activeAddress, profileData} = useActiveAccount();
-
-  const {refetch: refetchProfileData, loading} = useGetProfileData(
-    activeAddress!,
-  );
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation<NavProps['navigation']>();
+  const route = useRoute<NavProps['route']>();
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [userDataLoading, setUserDataLoading] = useState(false);
+  const styles = useStyles({insets});
+  const {goBack, navigate} = navigation;
+  const {params} = route;
 
   const {
-    chainLinks,
-    refetch: refetchChainLinks,
-    loading: chainLinksLoading,
-  } = useChainLinks(activeAddress!);
+    profileLoading,
+    nickname,
+    dtag,
+    bio,
+    address,
+    profile_pic,
+    cover_pic,
+    screenMode,
+    refetchProfileData,
+    refetchVisitingProfileData,
+    numRelationships,
+    numRelationshipsLoading,
+    refreshNumRelationships,
+  } = useProfileDataQueries(params?.visitingProfileAddress);
+
   const {
+    posts,
+    postsData,
+    postsLoading,
+    convertedBalance,
+    balanceData,
+    balanceLoading,
     appLinks,
-    refetch: refetchAppLinks,
-    loading: appLinksLoading,
-  } = useApplicationLinks(activeAddress!);
+    chainLinks,
+    appLinksLoading,
+    chainLinksLoading,
+    refetchAppLinks,
+    refetchChainLinks,
+    refetchBalance,
+    refetchPosts,
+    impactPoints,
+    impactPointsLoading,
+    refetchImpactPoints,
+    postsCounter,
+    refetchPostsCounter,
+  } = useQueries(address);
 
-  const screenMode = useMemo(() => {
-    if (params?.visitingProfileAddress) {
-      return activeAddress !== params.visitingProfileAddress
-        ? 'guestProfile'
-        : 'myProfile';
-    }
+  const isFollowing = useRecoilValue(isFollowingAddr(address!));
+  const {followOrUnfollowUser} = useFollowOrUnfollow();
 
-    return 'myProfile';
-  }, [params?.visitingProfileAddress, activeAddress]);
+  /**
+   * Animations
+   */
 
-  const refetchUserData = React.useCallback(() => {
-    console.log(
-      '[Profile/index.tsx]: refetching user profile data and connected apps & chains',
+  const AnimatedImageBackground =
+    Animated.createAnimatedComponent(ImageBackground);
+  // @ts-ignore
+  const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
+  const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+
+  const scrollY = useSharedValue(0);
+  const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
+
+  const animatedDtagStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollY.value, [160, 200], [0, 1]);
+
+    const translateY = interpolate(scrollY.value, [140, 200], [30, 0], {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    });
+
+    return {
+      opacity,
+      transform: [{translateY}],
+    };
+  });
+
+  const animatedImageBGStyle = useAnimatedStyle(() => {
+    const scale = interpolate(scrollY.value, [-200, 0], [5, 1], {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.EXTEND,
+    });
+
+    return {
+      transform: [{scale}],
+    };
+  });
+
+  const animatedBlurStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollY.value, [-50, 0, 50, 100], [1, 0, 0, 1]);
+
+    return {
+      opacity,
+    };
+  });
+
+  const animatedProfilePicStyle = useAnimatedStyle(() => {
+    const scale = interpolate(
+      scrollY.value,
+      [0, HEADER_HEIGHT_EXPANDED],
+      [1, 0.5],
+      {
+        extrapolateRight: Extrapolation.CLAMP,
+        extrapolateLeft: Extrapolation.CLAMP,
+      },
     );
+
+    const translateY = interpolate(
+      scrollY.value,
+      [0, HEADER_HEIGHT_EXPANDED],
+      [0, 46],
+      {
+        extrapolateRight: Extrapolation.CLAMP,
+        extrapolateLeft: Extrapolation.CLAMP,
+      },
+    );
+
+    const top = scrollOffset.value;
+    const opacity = interpolate(
+      scrollY.value,
+      [0, HEADER_HEIGHT_EXPANDED],
+      [1, 0],
+      {
+        extrapolateRight: Extrapolation.CLAMP,
+        extrapolateLeft: Extrapolation.CLAMP,
+      },
+    );
+
+    return {
+      opacity,
+      top,
+      transform: [{translateY}, {scale}],
+    };
+  });
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      const {contentOffset} = event;
+      scrollOffset.value = 45 + HEADER_HEIGHT_EXPANDED - contentOffset.y;
+      scrollY.value = contentOffset.y;
+    },
+  });
+
+  /**
+   * Handlers
+   */
+
+  const handlePostsSectionPressed = () => {
+    navigate(ROUTES.PROFILE_POSTS, {
+      userAddress: address!,
+      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
+    });
+  };
+
+  const handleConnectionButtonPressed = useCallback(() => {
+    navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
+      appsConnected: true,
+      chainsConnected: true,
+    });
+  }, []);
+
+  const refetchUserData = React.useCallback(async () => {
+    console.log('refetching user profile data and connected apps & chains');
     if (screenMode === 'myProfile') {
-      Promise.all([
+      await Promise.all([
         refetchProfileData(),
         refetchChainLinks(),
         refetchAppLinks(),
+        refetchBalance(),
+        refetchImpactPoints(),
+        refetchPosts(),
+        refetchPostsCounter(),
       ]);
     } else {
-      refetchVisitingProfileData();
+      await refetchVisitingProfileData();
     }
-    refreshNumRelationships();
+    await refreshNumRelationships();
   }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchUserData();
-    }, [refetchUserData]),
-  );
-
-  /** Animations start
-   * These hooks act as the animation driver for the ProfileHeader component
-   * The actual animations are created in the component itself.
-   * */
-  const scrollProgress = useSharedValue(0);
-  const scrollOffset = useSharedValue(0);
-  const AVATAR_TOP_OFFSET = 100 + top;
-
-  // Calculate the percentage of scroll and set it to shared value
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    const {contentOffset, contentSize, layoutMeasurement} = event;
-    const denominator = contentSize.height - layoutMeasurement.height;
-    const numerator = contentOffset.y;
-
-    scrollOffset.value = contentOffset.y;
-    // clamp value between 0 and 1
-    scrollProgress.value = Math.min(Math.max(numerator / denominator, 0), 1);
-  });
-
-  const animatedAvatarStyle = useAnimatedStyle(() => {
-    return {
-      top: AVATAR_TOP_OFFSET - scrollOffset.value,
-      // transform: [{scale: 1.0}],
-    };
-  });
-  /** Animations end * */
-
-  const {
-    visitingProfileData,
-    visitingProfileLoading,
-    refetchVisitingProfileData,
-  } = useProfileDataGivenAddress(params?.visitingProfileAddress || '');
-
-  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
-    screenMode === 'guestProfile'
-      ? visitingProfileData
-      : (profileData as ProfileData);
-
-  const {numRelationships, refreshNumRelationships} =
-    useNumRelationships(address);
-
-  const twitterAccount = useMemo(() => {
-    return appLinks.findIndex(app => app.application === 'twitter') !== -1;
-  }, [appLinks]);
-
-  const profileLoading =
-    screenMode === 'myProfile' ? loading : visitingProfileLoading;
-
-  const handlePressConnectAddress = useCallback(() => {
-    navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
-  }, []);
-
-  const handlePressSettings = useCallback(() => {
-    navigate(ROUTES.SETTINGS);
-  }, []);
-
-  const handlePressConnectApp = useCallback(() => {
-    navigate(ROUTES.CONNECT_APP, {mode: 'connect'});
-  }, []);
-
-  const handlePressEdit = useCallback(() => {
-    navigate(ROUTES.EDIT_PROFILE);
-  }, []);
-
-  const bannerImage = useMemo(() => {
-    return cover_pic ? {uri: cover_pic} : defaultBanner;
-  }, [cover_pic]);
-
-  const profileImage = useMemo(() => {
-    return profile_pic ? {uri: profile_pic} : defaultProfilePic;
-  }, [profile_pic]);
-
-  const isFollowing = useRecoilValue(isFollowingAddr(address));
-
-  const {followOrUnfollowUser} = useFollowOrUnfollow();
-
-  const FollowButton = useMemo(() => {
-    if (screenMode === 'myProfile') {
-      return (
-        <ImageButton
-          image={editButton}
-          style={styles.editButton}
-          onPress={handlePressEdit}
-        />
-      );
-    }
-
-    return (
-      <ImageButton
-        image={isFollowing ? followedIcon : followIcon}
-        style={styles.editButton}
-        onPress={() => followOrUnfollowUser({addrToFollow: address})}
-      />
-    );
-  }, [followOrUnfollowUser]);
-
-  const subspaceID = EnvConfig.APP_SUBSPACE_ID;
-
-  /* A hook that returns a props object that can be used to pass to a component that will navigate to
-  the following and followers screen. */
   const handleFollowingPressed = () =>
     navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
       screen: ROUTES.FOLLOWING,
       params: {
-        subspaceID,
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
         userAddress: address,
         headerTitle: nickname.trim() || `@${dtag}`,
       },
@@ -236,227 +262,354 @@ const Profile = () => {
     navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
       screen: ROUTES.FOLLOWERS,
       params: {
-        subspaceID,
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
         userAddress: address,
         headerTitle: nickname.trim() || `@${dtag}`,
       },
     });
 
-  const handlePostsSectionPressed = useCallback(() => {
-    navigate(ROUTES.PROFILE_POSTS, {
-      userAddress:
-        screenMode === 'myProfile'
-          ? activeAddress!
-          : params?.visitingProfileAddress!,
-      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
-    });
-  }, [activeAddress]);
+  /**
+   * Effects
+   */
 
-  const handleNftSectionPressed = useCallback(() => {
-    navigate(ROUTES.PROFILE_NFTS);
-  }, []);
+  /** Commented for now, i think this is too expensive cause it is triggering way too many times */
+  /*  useFocusEffect(
+    React.useCallback(() => {
+      const task = InteractionManager.runAfterInteractions(() => {
+        refetchUserData();
+      });
+      return () => task.cancel();
+    }, [refetchUserData]),
+  ); */
 
-  const handlePoapSectionPressed = useCallback(() => {
-    console.log('test');
-  }, []);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (userDataLoading) {
+        InteractionManager.runAfterInteractions(() => {
+          refetchUserData().then(() =>
+            setTimeout(() => setUserDataLoading(false), 500),
+          );
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [userDataLoading, refetchUserData]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (!profileLoading && !appLinksLoading && !chainLinksLoading) {
+      timeout = setTimeout(() => setInitialLoading(false), 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [profileLoading, appLinksLoading, chainLinksLoading]);
+
+  /**
+   * Memoized components
+   */
 
   const ConnectedChains = React.useMemo(() => {
-    const images = [
-      ...mapConnectedChainImages(chainLinks),
-      ...mapConnectedAppImages(appLinks),
-    ];
+    const images = [...mapConnectedChainImages(chainLinks)];
 
     if (images.length > 3) images.length = 3;
     if (chainLinks.length !== 0 || appLinks.length !== 0) {
       return (
-        <View style={{marginTop: 16}}>
-          <ChainsCountersBar
-            loading={false}
+        <View>
+          <SocialAndWalletsCountersBar
+            visitingProfile={screenMode !== 'myProfile'}
+            loading={appLinksLoading && chainLinksLoading}
             connectedChainsCounter={chainLinks.length}
-            connectedAppsCounter={appLinks.length}
+            twitterUsername={appLinks[0]?.username}
             connectedChainsImages={images}
             handlePressCounters={() => navigate(ROUTES.SETTINGS)}
           />
         </View>
       );
+    } else if (
+      chainLinks.length !== 0 ||
+      appLinks.length !== 0 ||
+      appLinksLoading ||
+      chainLinksLoading
+    ) {
+      return (
+        <View style={{alignSelf: 'flex-start'}}>
+          <ActivityIndicator />
+        </View>
+      );
     }
     return undefined;
-  }, [chainLinks, appLinks]);
+  }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading, screenMode]);
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (!profileLoading) {
-      timeout = setTimeout(() => setGlobalLoading(false), 500);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [profileLoading]);
-
-  if (globalLoading) {
+  const Banner = useMemo(() => {
     return (
-      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <AnimatedImageBackground
+        resizeMode="cover"
+        source={cover_pic !== '' ? {uri: cover_pic} : defaultBanner}
+        style={[
+          {
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            zIndex: 0,
+            height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
+          },
+          animatedImageBGStyle,
+        ]}>
+        <AnimatedBlurView
+          blurType="dark"
+          blurAmount={96}
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              zIndex: 2,
+            },
+            animatedBlurStyle,
+          ]}
+        />
+      </AnimatedImageBackground>
+    );
+  }, [cover_pic]);
+
+  const Avatar = useMemo(() => {
+    return (
+      <AnimatedFastImage
+        source={profile_pic !== '' ? {uri: profile_pic} : defaultBanner}
+        style={[
+          {
+            zIndex: 2,
+            position: 'absolute',
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            borderWidth: 3,
+            left: theme.spacing.m,
+            borderColor: theme.colors.white,
+          },
+          animatedProfilePicStyle,
+        ]}
+      />
+    );
+  }, [profile_pic]);
+
+  /**
+   * Render section
+   */
+
+  if (initialLoading) {
+    return (
+      <SafeAreaView style={styles.flexCenter}>
         <ActivityIndicator />
       </SafeAreaView>
     );
   }
 
   return (
-    <Animated.View entering={FadeIn.duration(250)} style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
+    <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
+      <StatusBar barStyle="light-content" />
+      <ImageButton
+        image={profileBack}
+        buttonStyle={styles.buttonStyleLeft}
+        style={styles.topBarImage}
+        onPress={goBack}
       />
-      <FastImage source={bannerImage} style={styles.bannerImage} />
-      {/* avatar needs to be in a view for positioning and ios zIndex compat */}
-      <Animated.View
-        style={[
-          styles.avatarContainer,
-          {position: 'absolute', left: 0, right: 0},
-          animatedAvatarStyle,
-        ]}>
-        <FastImage style={styles.avatar} source={profileImage} />
+      <ImageButton
+        image={profileSettings}
+        buttonStyle={[styles.buttonStyleRight, {right: 20}]}
+        style={styles.topBarImage}
+        onPress={() => navigate(ROUTES.SETTINGS)}
+      />
+      <ImageButton
+        image={profileNotification}
+        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
+        style={styles.topBarImage}
+        overlayComponent={
+          <PingAnimation size={10} color={theme.colors.red01} />
+        }
+        overlayPosition={{
+          top: 2,
+          left: 12,
+        }}
+        onPress={() => navigate(ROUTES.ACTIVITIES)}
+      />
+      <ImageButton
+        image={profileScan}
+        buttonStyle={[styles.buttonStyleRight, {right: 100}]}
+        style={styles.topBarImage}
+      />
+      {/* Dtag */}
+      <Animated.View style={[styles.animatedDtag, animatedDtagStyle]}>
+        <View
+          style={{
+            paddingTop: theme.spacing.s,
+          }}>
+          <Typography.Subtitle3 numberOfLines={1} style={styles.dtag}>
+            @{dtag}
+          </Typography.Subtitle3>
+        </View>
       </Animated.View>
+
+      {/* Banner */}
+      {Banner}
+      {/* Profile image */}
+      {Avatar}
       <Animated.ScrollView
         overScrollMode="never"
+        pinchGestureEnabled={false}
+        showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
-        scrollEventThrottle={10}
-        // Hardcoded value to avoid overlapping with header
         refreshControl={
           <RefreshControl
-            enabled
-            onRefresh={() => {
-              refetchUserData();
-            }}
-            refreshing={loading}
+            enabled={true}
+            onRefresh={() => setUserDataLoading(true)}
+            refreshing={userDataLoading}
+            tintColor={theme.colors.white}
           />
         }
-        contentContainerStyle={styles.contentContainerStyle}>
-        <View style={[styles.scrollviewContentWrapper, {marginTop: 100 + top}]}>
-          <View style={styles.contentGroup}>
-            <View style={{paddingHorizontal: theme.spacing.m}}>
-              {FollowButton}
-
-              <Typography.H3
-                style={[styles.nameText, !nickname ? {opacity: 0} : {}]}>
-                {nickname}
-              </Typography.H3>
-
-              <Typography.Body7 style={styles.dTagText}>
-                @{dtag}
-              </Typography.Body7>
-
-              <Spacer paddingVertical={theme.spacing.s}>
-                <AddressCopy
-                  address={address}
-                  externalCallback={() => setShowSnackbar(true)}
-                />
-              </Spacer>
-              <Spacer paddingVertical={6} />
-              <UserBio content={bio || ''} />
-              <View style={styles.socialCounterGroup}>
-                <TouchableOpacity onPress={handleFollowingPressed}>
-                  <SocialCounter
-                    count={numRelationships?.numFollowing}
-                    label={t('following')}
-                  />
-                </TouchableOpacity>
-
-                <View style={styles.separator} />
-
-                <TouchableOpacity onPress={handleFollowersPressed}>
-                  <SocialCounter
-                    count={numRelationships?.numFollowers}
-                    label={t('followers')}
-                  />
-                </TouchableOpacity>
+        scrollEventThrottle={1}
+        style={{
+          marginTop: HEADER_HEIGHT_COMPACT,
+          paddingTop: HEADER_HEIGHT_EXPANDED,
+        }}>
+        <View style={styles.contentContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', right: 0, marginLeft: 'auto'}}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Typography.Subtitle3>{postsCounter || 0}</Typography.Subtitle3>
+                <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
-
-              {screenMode === 'myProfile' && (
-                <>
-                  <View style={styles.connectButtonGroup}>
-                    <Button
-                      mode="outlined"
-                      style={{borderColor: theme.colors.surfaceBlack}}
-                      contentStyle={styles.connectButton}
-                      onPress={handlePressConnectAddress}>
-                      <Typography.Button2>
-                        {t('connectAddress')}
-                      </Typography.Button2>
-                    </Button>
-                    <Button
-                      disabled={twitterAccount}
-                      mode="outlined"
-                      style={{borderColor: theme.colors.surfaceBlack}}
-                      contentStyle={styles.connectButton}
-                      onPress={handlePressConnectApp}>
-                      <Typography.Button2>
-                        {twitterAccount
-                          ? 'Twitter connected'
-                          : t('connectTwitter')}
-                      </Typography.Button2>
-                    </Button>
-                  </View>
-                  {appLinksLoading || chainLinksLoading ? (
-                    <View
-                      style={{alignItems: 'center', justifyContent: 'center'}}>
-                      <ActivityIndicator />
-                    </View>
-                  ) : (
-                    ConnectedChains
-                  )}
-                </>
-              )}
+              <TouchableOpacity
+                style={styles.centerLeftSpacingM}
+                onPress={handleFollowingPressed}>
+                {numRelationshipsLoading ? (
+                  <ActivityIndicator size={21} />
+                ) : (
+                  <Typography.Subtitle3>
+                    {numRelationships?.numFollowing}
+                  </Typography.Subtitle3>
+                )}
+                <Typography.Caption1>{t('following')}</Typography.Caption1>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.centerLeftSpacingM}
+                onPress={handleFollowersPressed}>
+                {numRelationshipsLoading ? (
+                  <ActivityIndicator size={21} />
+                ) : (
+                  <Typography.Subtitle3>
+                    {numRelationships?.numFollowers}
+                  </Typography.Subtitle3>
+                )}
+                <Typography.Caption1>{t('followers')}</Typography.Caption1>
+              </TouchableOpacity>
             </View>
           </View>
-          <Spacer paddingVertical={4} />
-          {screenMode !== 'myProfile' && <Spacer paddingVertical={16} />}
-          <ProfileSectionButton
-            onPress={handlePostsSectionPressed}
-            titleLabel={t('posts')}
-            bodyLabel={t('check posts')}
-            screenMode={screenMode}
-          />
-          <ProfileSectionButton
-            onPress={handleNftSectionPressed}
-            titleLabel={t('nft')}
-            bodyLabel={t('link nft')}
-            screenMode={screenMode}
-          />
-          <ProfileSectionButton
-            onPress={handlePoapSectionPressed}
-            titleLabel={t('poap')}
-            bodyLabel={t('claim poap')}
-            screenMode={screenMode}
-          />
+          <Typography.H5
+            style={{
+              marginTop: 10,
+            }}
+            numberOfLines={1}>
+            {nickname}
+          </Typography.H5>
+
+          <Typography.Body7
+            style={{
+              marginVertical: 4,
+              color: theme.colors.darkGrey,
+            }}
+            numberOfLines={1}>
+            @{dtag}
+          </Typography.Body7>
+
+          <AddressCopy address={address} />
+
+          <Spacer paddingVertical={theme.spacing.m}>
+            <UserBio content={bio} />
+            {ConnectedChains}
+          </Spacer>
+
+          {screenMode === 'myProfile' ? (
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
+                <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleConnectionButtonPressed}
+                style={{
+                  backgroundColor: theme.colors.surfaceGrey,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 8,
+                  height: 35,
+                  width: 40,
+                }}>
+                <FastImage
+                  source={connectIcon}
+                  style={{height: 22, width: 22}}
+                  tintColor={theme.colors.surfaceBlack}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : isFollowing ? (
+            <Button
+              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              mode="contained"
+              contentStyle={{height: 36}}
+              color={theme.colors.surfaceGrey}>
+              <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
+                {t('unfollow')}
+              </Typography.Subtitle4>
+            </Button>
+          ) : (
+            <Button
+              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              mode="contained"
+              contentStyle={{height: 36}}
+              color={theme.colors.surfaceBlack}>
+              <Typography.Subtitle4 style={{color: theme.colors.white}}>
+                {t('follow')}
+              </Typography.Subtitle4>
+            </Button>
+          )}
+          <Spacer paddingVertical={theme.spacing.s} />
+          <Divider style={styles.divider} />
+          <View style={styles.container}>
+            {screenMode === 'myProfile' && (
+              <>
+                <ImpactPointsSection
+                  impactPoints={impactPoints}
+                  impactPointsLoading={impactPointsLoading}
+                />
+                <Divider style={styles.divider} />
+              </>
+            )}
+            <BalanceSection
+              balanceData={balanceData}
+              balanceLoading={balanceLoading}
+              convertedBalance={convertedBalance}
+            />
+            <Divider style={styles.divider} />
+            <PostsSection
+              onPress={handlePostsSectionPressed}
+              posts={posts}
+              postsData={postsData}
+              postsLoading={postsLoading}
+            />
+            <Divider style={styles.divider} />
+            <NftsSection />
+            <Divider style={styles.divider} />
+            <BadgesSection />
+          </View>
         </View>
       </Animated.ScrollView>
-
-      <ProfileHeader
-        disableRightButtons={screenMode === 'guestProfile'}
-        scrollProgress={scrollProgress}
-        handlePressHome={goBack}
-        handlePressNotification={() => navigate(ROUTES.ACTIVITIES)}
-        handlePressScan={() => {
-          console.log('scan');
-        }}
-        handlePressSettings={handlePressSettings}
-        hasNotification
-        username={nickname || `@${dtag}`}
-        bannerImage={bannerImage}
-      />
-
-      <Snackbar
-        visible={showSnackbar}
-        style={styles.snackbar}
-        onDismiss={() => setShowSnackbar(false)}
-        action={{
-          label: t('hide'),
-        }}
-        duration={Snackbar.DURATION_SHORT}>
-        <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
-      </Snackbar>
     </Animated.View>
   );
 };

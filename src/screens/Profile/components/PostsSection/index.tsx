@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
-import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import useStyles from './useStyles';
@@ -66,7 +65,7 @@ const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
       <FastImage
         resizeMode="contain"
         source={emptyPostsIcon}
-        style={{height: 80, width: 80, marginBottom: theme.spacing.s}}
+        style={styles.emptyImage}
       />
       <Typography.Body7 style={{color: theme.colors.midGrey}}>
         {t('no posts')}
@@ -86,10 +85,7 @@ const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
       </Spacer>
       {postsData && !postsLoading ? (
         <FlatList
-          contentContainerStyle={{
-            alignItems: 'center',
-            flexGrow: 1,
-          }}
+          contentContainerStyle={styles.flatlistContainer}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={posts}
@@ -97,7 +93,7 @@ const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
           ListEmptyComponent={emptyComponent}
         />
       ) : (
-        <View style={{height: verticalScale(145), justifyContent: 'center'}}>
+        <View style={styles.activityIndicatorView}>
           <ActivityIndicator />
         </View>
       )}
