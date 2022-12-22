@@ -18,6 +18,12 @@ type Params = {
    * Memo message (Optional)
    */
   memo?: string;
+
+  /**
+   * Should broadcast the tx under optimistic mode?
+   * Only for Relationships and Reactions
+   */
+  optimistic?: boolean;
 };
 
 /**
@@ -26,12 +32,15 @@ type Params = {
 const CentralizedBroadcastTx = async ({
   messages,
   memo,
+  optimistic,
 }: Params): Promise<Response> => {
-  // optimistic API -> /broadcast?optimistic=true DO NOT USE, HIGHLY UNSTABLE
-  const _response = await axiosInstance.post('/broadcast', {
-    messages,
-    memo,
-  });
+  const _response = await axiosInstance.post(
+    optimistic ? '/broadcast?optimistic=true' : '/broadcast',
+    {
+      messages,
+      memo,
+    },
+  );
   return _response.data;
 };
 
@@ -56,9 +65,11 @@ export const useCentralizedBroadcastTx = () => {
 export const encodeAndBroadcastTx = async ({
   msgs,
   memo,
+  optimistic,
 }: {
   msgs: EncodeObject[];
   memo?: string;
+  optimistic?: boolean;
 }): Promise<Response> => {
   const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
   const aminoEncodedMsg = client.encodeToAmino(msgs);
@@ -66,6 +77,7 @@ export const encodeAndBroadcastTx = async ({
   return CentralizedBroadcastTx({
     messages: aminoEncodedMsg,
     memo,
+    optimistic,
   });
 };
 

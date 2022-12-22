@@ -24,6 +24,7 @@ import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
+import useOptimisticRelationships from '@recoil/optimisticUI/optimisticRelationships';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -48,6 +49,8 @@ const useFollowOrUnfollow = () => {
   const {addNewPendingRelationship} = usePendingRelationships();
   const pendingRelationships = useRecoilValue(pendingRelationshipsState);
 
+  const {handleOptimisticRelationship} = useOptimisticRelationships();
+
   /**
    * Callback to follow or unfollow (create/delete relationship) a user.
    * @param {FollowOrUnfollowUserArgs}
@@ -57,6 +60,16 @@ const useFollowOrUnfollow = () => {
       addrToFollow,
       stayOnCurrentScreen = true,
     }: FollowOrUnfollowUserArgs) => {
+      const isAlreadyFollowing = !!following.find(
+        x => x.address === addrToFollow,
+      );
+
+      // TODO: handle unfollow if optimistic exists
+      await handleOptimisticRelationship({
+        counterParty: addrToFollow,
+        type: isAlreadyFollowing ? 'unfollow' : 'follow',
+      });
+
       if (pendingRelationships.length !== 0) {
         return Alert.alert(
           'PLACEHOLDER',
@@ -79,10 +92,6 @@ const useFollowOrUnfollow = () => {
           type: ToastConfig.ERROR_NO_RETRY,
         });
       }
-
-      const isAlreadyFollowing = !!following.find(
-        x => x.address === addrToFollow,
-      );
 
       setLoading(true);
       try {
@@ -110,7 +119,10 @@ const useFollowOrUnfollow = () => {
           };
         }
 
-        const result = await encodeAndBroadcastTx({msgs: [msg]});
+        const result = await encodeAndBroadcastTx({
+          msgs: [msg],
+          optimistic: true,
+        });
 
         if (result) {
           addNewPendingRelationship({
@@ -132,7 +144,13 @@ const useFollowOrUnfollow = () => {
         setLoading(false);
       }
     },
-    [activeAddress, following, addNewPendingRelationship, pendingRelationships],
+    [
+      activeAddress,
+      following,
+      addNewPendingRelationship,
+      pendingRelationships,
+      handleOptimisticRelationship,
+    ],
   );
 
   return {

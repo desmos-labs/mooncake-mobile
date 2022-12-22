@@ -15,6 +15,10 @@ import usePendingRelationships, {
   pendingRelationshipsState,
 } from '@recoil/pendingTx/pendingRelationships';
 import EnvConfig from 'config/EnvConfig';
+import {
+  hasOptimisticFollow,
+  hasOptimisticUnfollow,
+} from '@recoil/optimisticUI/optimisticRelationships';
 
 export const followingState = atom<CounterParty[]>({
   key: 'following',
@@ -34,6 +38,13 @@ export const isFollowingAddr = selectorFamily({
   get:
     (address: string) =>
     ({get}) => {
+      const hasOptFollow = get(hasOptimisticFollow(address));
+
+      const hasOptUnfollow = get(hasOptimisticUnfollow(address));
+
+      if (hasOptFollow) return true;
+      if (hasOptUnfollow) return false;
+
       const followedAddresses = get(followedAddressesState);
 
       return followedAddresses.has(address);
