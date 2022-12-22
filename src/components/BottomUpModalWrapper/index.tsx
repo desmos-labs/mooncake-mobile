@@ -21,7 +21,12 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
   const {goBack, children} = props;
   const styles = useStyles();
   const [threshold, setThreshold] = useState(0);
-  const {panGesture, animatedStyle} = useModalAnimations(threshold);
+  const {
+    panGesture,
+    animatedStyle,
+    tabAnimatedStyleLeft,
+    tabAnimatedStyleRight,
+  } = useModalAnimations(threshold);
 
   return (
     <GestureDetector gesture={panGesture}>
@@ -38,7 +43,14 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
           {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
           {/* parts of the modal content are pressed */}
           <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-            <View style={styles.tabIcon} />
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <Animated.View
+                style={[styles.tabIconLeft, tabAnimatedStyleLeft]}
+              />
+              <Animated.View
+                style={[styles.tabIconRight, tabAnimatedStyleRight]}
+              />
+            </View>
             {children}
           </TouchableOpacity>
         </Animated.View>
@@ -52,13 +64,21 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  tabIcon: {
-    width: 44,
+  tabIconLeft: {
+    marginTop: 2,
+    position: 'absolute',
+    width: 16,
     height: 4,
-    borderRadius: 4,
-    backgroundColor: theme.colors.iconGrey,
-    alignSelf: 'center',
-    marginBottom: theme.spacing.s,
+    borderTopStartRadius: 2,
+    borderBottomStartRadius: 2,
+  },
+  tabIconRight: {
+    marginTop: 2,
+    position: 'absolute',
+    width: 16,
+    height: 4,
+    borderTopEndRadius: 2,
+    borderBottomEndRadius: 2,
   },
   headerText: {
     textAlign: 'left',

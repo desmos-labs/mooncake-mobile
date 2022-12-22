@@ -20,7 +20,7 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, Dimensions, TextStyle, ViewStyle} from 'react-native';
+import {Alert, Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
@@ -328,6 +328,11 @@ const RootNavigator = () => {
     },
   };
 
+  const transitionPreset =
+    Platform.OS === 'android'
+      ? TransitionPresets.BottomSheetAndroid
+      : TransitionPresets.ModalPresentationIOS;
+
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -514,7 +519,7 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
-          ...TransitionPresets.BottomSheetAndroid,
+          ...transitionPreset,
         }}>
         <Stack.Screen
           name={ROUTES.CONSENT_AGREEMENT}
