@@ -103,26 +103,14 @@ const useOptimisticRelationships = () => {
 
         const resolvedOptRelationships = optRelationships.filter(x => {
           if (x.type === 'follow') {
-            console.log(
-              '[optimisticRelationships]: resolving FOLLOW for',
-              x.counterParty,
-            );
             return !followingSet.has(x.counterParty);
           } else {
-            console.log(
-              '[optimisticRelationships]: resolving UNFOLLOW for',
-              x.counterParty,
-            );
             return followingSet.has(x.counterParty);
           }
         });
-
         set(optimisticRelationshipState, resolvedOptRelationships);
       },
   );
-
-  console.log('follow', optimisticFollowing);
-  console.log('unfollow', optimisticUnfollow);
 
   return {
     optimisticFollowing,

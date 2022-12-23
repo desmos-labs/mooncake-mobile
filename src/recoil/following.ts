@@ -4,6 +4,7 @@ import {useLazyQuery} from '@apollo/client';
 import GetFollowedUsersForAddress, {
   GetFollowedUsersForAddressData,
 } from 'services/graphql/queries/GetFollowedUsersForAddress';
+import _ from 'lodash';
 
 import {
   hasOptimisticFollow,
@@ -61,12 +62,9 @@ export const useGetFollowingForAddress = (address: string) => {
     const {data} = await refetch({userAddress: address});
     const {user_relationship} = data;
 
-    const newFollowing = user_relationship
-      .map(x => x.counterparty)
-      .filter(d => !!d);
+    const newFollowing = user_relationship.map(x => x.counterparty);
 
-    console.log('[useGetFollowingForAddress]: following updated');
-    setFollowing(newFollowing);
+    setFollowing(_.compact(newFollowing));
   }, [address]);
 
   return {
