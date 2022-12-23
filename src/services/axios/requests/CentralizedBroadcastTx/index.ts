@@ -1,4 +1,3 @@
-import React from 'react';
 import axiosInstance from 'services/axios';
 import {AminoMsg} from '@cosmjs/amino';
 import {EncodeObject} from '@cosmjs/proto-signing';
@@ -44,24 +43,6 @@ const CentralizedBroadcastTx = async ({
   return _response.data;
 };
 
-export const useCentralizedBroadcastTx = () => {
-  const encodeAndBroadcastTx = React.useCallback(
-    async ({msgs, memo}: {msgs: EncodeObject[]; memo?: string}) => {
-      const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
-
-      const aminoEncodedMsg = client.encodeToAmino(msgs);
-
-      return CentralizedBroadcastTx({
-        messages: aminoEncodedMsg,
-        memo,
-      });
-    },
-    [],
-  );
-
-  return {encodeAndBroadcastTx};
-};
-
 export const encodeAndBroadcastTx = async ({
   msgs,
   memo,
@@ -75,7 +56,6 @@ export const encodeAndBroadcastTx = async ({
   const aminoEncodedMsg = client.encodeToAmino(msgs);
   client.disconnect();
 
-  console.log('[CentralizedBroadcastTx]: Broadcasting message:', msgs);
   return CentralizedBroadcastTx({
     messages: aminoEncodedMsg,
     memo,

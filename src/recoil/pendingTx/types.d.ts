@@ -21,14 +21,6 @@ declare global {
       | MsgDeleteRelationshipEncodeObject;
   }
 
-  interface PendingRelationship extends BasePendingTx {
-    counterPartyAddr: string;
-
-    msgType: string;
-
-    msg: MsgCreateRelationshipEncodeObject | MsgDeleteRelationshipEncodeObject;
-  }
-
   interface PendingPost extends BasePendingTx {
     postData: Partial<PostItem> & Pick<PostItem, 'id'>;
 
