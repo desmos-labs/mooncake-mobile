@@ -18,16 +18,16 @@ export default activeProfileState;
 export const useGetProfileData = (address: string) => {
   const [, {loading, refetch}] = useLazyQuery(GetProfileForAddress, {
     variables: {address},
+    fetchPolicy: 'no-cache',
   });
 
   const [activeProfile, setActiveProfile] = useRecoilState(activeProfileState);
 
-  const fetchActiveProfile = React.useCallback(async (_address: string) => {
-    const getProfileResponse = await refetch({address: _address});
+  const fetchActiveProfile = React.useCallback(async () => {
+    const getProfileResponse = await refetch({address});
 
     const {data} = getProfileResponse;
     if (!data) return;
-
     const {profile} = data;
     const [firstProfile] = profile;
 
@@ -36,13 +36,13 @@ export const useGetProfileData = (address: string) => {
 
   React.useEffect(() => {
     if (!activeProfile && address) {
-      fetchActiveProfile(address);
+      fetchActiveProfile();
     }
   }, [activeProfile, address]);
 
   return {
     profileData: activeProfile,
     loading,
-    refetch,
+    refetch: fetchActiveProfile,
   };
 };

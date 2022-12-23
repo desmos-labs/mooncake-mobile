@@ -14,7 +14,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {Linking} from 'react-native';
+import {InteractionManager, Linking} from 'react-native';
 import {getSupportedBiometryType} from 'react-native-keychain';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
@@ -78,9 +78,11 @@ const Settings: React.FC<NavProps> = props => {
   }, [activeAddress, navigate, setSettings, settings.biometrics]);
 
   useEffect(() => {
-    // Check if biometrics are supported
-    areBiometricsSupported();
-  }, [areBiometricsSupported]);
+    const interactionPromise = InteractionManager.runAfterInteractions(() => {
+      areBiometricsSupported();
+    });
+    return () => interactionPromise.cancel();
+  }, []);
 
   const handlePressSignOut = () => {
     deleteAuthToken();

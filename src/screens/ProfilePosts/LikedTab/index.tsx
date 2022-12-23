@@ -68,6 +68,8 @@ export const LikedTab = () => {
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
       postData={item.post}
+      postsSize={97}
+      postsMargin={6}
       onPress={() =>
         handlePostPressed({
           subspaceID: item.post.subspace_id,

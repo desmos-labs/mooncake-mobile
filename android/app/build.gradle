@@ -342,7 +342,9 @@ dependencies {
     }
 
     implementation "org.web3j:crypto:4.5.17"
-    implementation 'com.facebook.fresco:animated-gif:2.0.0'
+    implementation 'com.facebook.fresco:animated-gif:2.6.0'
+    implementation 'com.facebook.fresco:animated-webp:2.6.0'
+    implementation 'com.facebook.fresco:webpsupport:2.6.0'
     implementation "androidx.core:core-ktx:1.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

@@ -102,7 +102,11 @@ const PasswordManipulation = () => {
           {({handleSubmit, values, errors, setFieldValue}) => {
             return (
               <>
-                <ScrollView ref={scrollViewRef}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardDismissMode={
+                    Platform.OS === 'ios' ? 'interactive' : 'on-drag'
+                  }>
                   <View style={styles.formContainer}>
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>

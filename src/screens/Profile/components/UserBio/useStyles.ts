@@ -6,7 +6,7 @@ const useStyles = makeStyle(theme => ({
     opacity: 0,
   },
   moreText: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     color: theme.colors.accentBlue02,
   },
   gradientContainer: {

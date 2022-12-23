@@ -62,6 +62,7 @@ const LightTheme: ReactNativePaper.Theme = {
     surfaceBlack: '#25282D',
     black: '#1D1E22',
     dividerGrey: '#EFEFEF',
+    tabIconGrey: '#DEDEDE',
 
     accentRed01: '#FD565F',
     accentRed02: '#D2484F',

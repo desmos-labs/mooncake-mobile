@@ -41,7 +41,6 @@ const useLogin = () => {
       }
 
       const {wallet} = unlockResult;
-
       const {signatureBytes, pubkeyBytes, signedBytes} =
         await generateLoginData({
           wallet: wallet as OfflineDirectSigner,
@@ -54,9 +53,7 @@ const useLogin = () => {
         pubkeyBytes,
         signedBytes,
       });
-
       updateAuthToken(token);
-
       return true;
     },
     [],

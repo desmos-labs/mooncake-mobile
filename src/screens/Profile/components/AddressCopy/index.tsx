@@ -34,12 +34,11 @@ const AddressCopy = ({address, externalCallback}: Props) => {
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
       }}>
       <Typography.Body7
         numberOfLines={1}
         ellipsizeMode="middle"
-        style={{maxWidth: '40%', color: theme.colors.grey01}}>
+        style={{maxWidth: '35%', color: theme.colors.darkGrey}}>
         {address}
       </Typography.Body7>
 

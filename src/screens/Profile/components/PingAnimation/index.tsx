@@ -1,6 +1,6 @@
 import React from 'react';
 import {ColorValue, View} from 'react-native';
-import AnimatedRing from 'screens/Profile/components/PingAnimation/AnimatedRing';
+import AnimatedRing from './AnimatedRing';
 
 type Props = {
   /**

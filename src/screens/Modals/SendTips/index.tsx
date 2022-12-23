@@ -1,4 +1,5 @@
 import {infoIcon} from 'assets/images';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -9,15 +10,12 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import useHooks, {TIP_AMOUNTS} from './useHooks';
 import useStyles from './useStyles';
 
@@ -45,181 +43,174 @@ const SendTips = () => {
   } = useHooks();
 
   return (
-    // marginTop to offset the tabIcon's top spacing
-    <SafeAreaView edges={['top']} style={{flex: 1, marginTop: theme.spacing.l}}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={goBack}
-          style={styles.container}>
-          {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-          {/* parts of the modal content are pressed */}
-
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.innerContainer}
-            onPress={() => Keyboard.dismiss()}>
-            <View style={styles.tabIcon} />
-            <Formik
-              initialValues={initialFormValues}
-              onSubmit={handlePressConfirm}
-              validate={validateForm}>
-              {({handleSubmit, values, errors, setFieldValue}) => {
-                return (
-                  <ScrollView contentContainerStyle={styles.contentContainer}>
-                    <Typography.H4 style={styles.headerText}>
-                      {t('header')}
-                    </Typography.H4>
-                    <Spacer paddingBottom={16} />
-                    <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
-                    <Spacer paddingBottom={14} />
-                    <View style={styles.buttonGroup}>
-                      {TIP_AMOUNTS.map(value => {
-                        return (
-                          <Button
-                            key={String(value)}
-                            disabled={
-                              !editable || shouldDisableTipButton[String(value)]
-                            }
-                            mode={
-                              values.amount === String(value)
-                                ? 'contained'
-                                : 'outlined'
-                            }
-                            style={{
-                              minWidth: 106,
-                              borderColor: theme.colors.surfaceBlack,
-                            }}
-                            contentStyle={[
-                              {height: 42},
-                              shouldDisableTipButton[String(value)]
-                                ? {
-                                    backgroundColor: theme.colors.grey01,
-                                  }
-                                : {
-                                    backgroundColor:
-                                      values.amount === String(value)
-                                        ? theme.colors.primary
-                                        : 'white',
-                                  },
-                            ]}
-                            onPress={() => {
-                              setFieldValue('amount', String(value), true);
-                            }}>
-                            <Typography.Subtitle3
-                              style={
-                                shouldDisableTipButton[String(value)]
-                                  ? {
-                                      color: theme.colors.white,
-                                      textTransform: 'uppercase',
-                                    }
-                                  : {
-                                      color:
-                                        values.amount === String(value)
-                                          ? theme.colors.white
-                                          : theme.colors.surfaceBlack,
-                                      textTransform: 'uppercase',
-                                    }
-                              }>
-                              {value} DSM
-                            </Typography.Subtitle3>
-                          </Button>
-                        );
-                      })}
-                    </View>
-                    <Spacer paddingBottom={20} />
-                    <DTextInput
-                      editable={editable}
-                      value={values.amount}
-                      onChangeText={(value: string) => {
-                        setFieldValue('amount', value, true);
-                      }}
-                      keyboardType="numeric"
-                      numberOfLines={1}
-                      style={styles.textInput}
-                      placeholder={t('insert amount')}
-                      rightElement={
-                        <Typography.Subtitle3 numberOfLines={1}>
-                          DSM
-                        </Typography.Subtitle3>
-                      }
-                    />
-                    {errors.amount && (
-                      <Typography.Caption1
-                        style={{marginTop: 6, color: theme.colors.pink01}}>
-                        {errors.amount}
-                      </Typography.Caption1>
-                    )}
-                    <Spacer paddingBottom={10} />
-
-                    {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
-                    {loading ? (
-                      <ActivityIndicator
-                        style={{left: 0, marginRight: 'auto'}}
-                        size={16}
-                        color={theme.colors.butterOrange01}
-                      />
-                    ) : (
-                      <Typography.Body7
-                        style={{color: theme.colors.accentGreen01}}>
-                        {/* we will need to format accordingly this number */}
-                        {t('available')} {convertedBalance?.amount}{' '}
-                        {convertedBalance?.denom.toUpperCase()}
-                      </Typography.Body7>
-                    )}
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Image
-                        source={infoIcon}
-                        style={{width: 16, height: 16, marginRight: 4}}
-                      />
-                      <Typography.Body7
-                        style={{
-                          color: theme.colors.surfaceBlack,
-                          marginVertical: theme.spacing.s,
-                        }}>
-                        {t('warning fee', {
-                          fee: tipFee,
-                        })}
-                      </Typography.Body7>
-                    </View>
-
-                    <Spacer paddingVertical={20}>
-                      <Typography.Subtitle3>
-                        {t('message')}
-                      </Typography.Subtitle3>
-                    </Spacer>
-                    <DTextInput
-                      editable={editable}
-                      inputStyle={styles.messageInput}
-                      value={message}
-                      onChangeText={text => setMessage(text)}
-                      style={styles.textInput}
-                      multiline
-                      placeholder={t('message')}
-                    />
-                    <Spacer paddingVertical={30}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{flex: 1}}>
+      <BottomUpModalWrapper
+        goBack={goBack}
+        paddingHorizontal={0.1}
+        paddingBottom={0.1}>
+        <Formik
+          initialValues={initialFormValues}
+          onSubmit={handlePressConfirm}
+          validate={validateForm}>
+          {({handleSubmit, values, errors, setFieldValue}) => {
+            return (
+              <ScrollView contentContainerStyle={styles.contentContainer}>
+                <Typography.H4 style={styles.headerText}>
+                  {t('header')}
+                </Typography.H4>
+                <Spacer paddingBottom={16} />
+                <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
+                <Spacer paddingBottom={14} />
+                <View style={styles.buttonGroup}>
+                  {TIP_AMOUNTS.map(value => {
+                    return (
                       <Button
-                        loading={sendTipLoading}
-                        mode="contained"
-                        color={theme.colors.surfaceBlack}
-                        onPress={handleSubmit}
+                        key={String(value)}
                         disabled={
-                          values.amount === '' ||
-                          _.flatten(Object.values(errors)).length > 0
-                        }>
-                        {t('common:confirm')}
+                          !editable || shouldDisableTipButton[String(value)]
+                        }
+                        mode={
+                          values.amount === String(value)
+                            ? 'contained'
+                            : 'outlined'
+                        }
+                        style={[
+                          {
+                            minWidth: 106,
+                          },
+                          shouldDisableTipButton[String(value)]
+                            ? {
+                                borderColor: theme.colors.tabIconGrey,
+                              }
+                            : {
+                                borderColor: theme.colors.surfaceBlack,
+                              },
+                        ]}
+                        contentStyle={[
+                          {height: 42},
+                          shouldDisableTipButton[String(value)]
+                            ? {
+                                backgroundColor: theme.colors.tabIconGrey,
+                              }
+                            : {
+                                backgroundColor:
+                                  values.amount === String(value)
+                                    ? theme.colors.primary
+                                    : 'white',
+                              },
+                        ]}
+                        onPress={() => {
+                          setFieldValue('amount', String(value), true);
+                        }}>
+                        <Typography.Subtitle3
+                          style={
+                            shouldDisableTipButton[String(value)]
+                              ? {
+                                  color: theme.colors.white,
+                                  textTransform: 'uppercase',
+                                }
+                              : {
+                                  color:
+                                    values.amount === String(value)
+                                      ? theme.colors.white
+                                      : theme.colors.surfaceBlack,
+                                  textTransform: 'uppercase',
+                                }
+                          }>
+                          {value} DSM
+                        </Typography.Subtitle3>
                       </Button>
-                    </Spacer>
-                  </ScrollView>
-                );
-              }}
-            </Formik>
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+                    );
+                  })}
+                </View>
+                <Spacer paddingBottom={20} />
+                <DTextInput
+                  editable={editable}
+                  value={values.amount}
+                  onChangeText={(value: string) => {
+                    setFieldValue('amount', value, true);
+                  }}
+                  keyboardType="numeric"
+                  numberOfLines={1}
+                  style={styles.textInput}
+                  placeholder={t('insert amount')}
+                  rightElement={
+                    <Typography.Subtitle3 numberOfLines={1}>
+                      DSM
+                    </Typography.Subtitle3>
+                  }
+                />
+                {errors.amount && (
+                  <Typography.Caption1
+                    style={{marginTop: 6, color: theme.colors.pink01}}>
+                    {errors.amount}
+                  </Typography.Caption1>
+                )}
+                <Spacer paddingBottom={10} />
+
+                {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
+                {loading ? (
+                  <ActivityIndicator
+                    style={{left: 0, marginRight: 'auto'}}
+                    size={16}
+                    color={theme.colors.butterOrange01}
+                  />
+                ) : (
+                  <Typography.Body7 style={{color: theme.colors.accentGreen01}}>
+                    {/* we will need to format accordingly this number */}
+                    {t('available')} {convertedBalance?.amount}{' '}
+                    {convertedBalance?.denom.toUpperCase()}
+                  </Typography.Body7>
+                )}
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={infoIcon}
+                    style={{width: 16, height: 16, marginRight: 4}}
+                  />
+                  <Typography.Body7
+                    style={{
+                      color: theme.colors.surfaceBlack,
+                      marginVertical: theme.spacing.s,
+                    }}>
+                    {t('warning fee', {
+                      fee: tipFee,
+                    })}
+                  </Typography.Body7>
+                </View>
+
+                <Spacer paddingVertical={20}>
+                  <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
+                </Spacer>
+                <DTextInput
+                  editable={editable}
+                  inputStyle={styles.messageInput}
+                  value={message}
+                  onChangeText={text => setMessage(text)}
+                  style={styles.textInput}
+                  multiline
+                  placeholder={t('message')}
+                />
+                <Spacer paddingVertical={30}>
+                  <Button
+                    loading={sendTipLoading}
+                    mode="contained"
+                    color={theme.colors.surfaceBlack}
+                    onPress={handleSubmit}
+                    disabled={
+                      values.amount === '' ||
+                      _.flatten(Object.values(errors)).length > 0
+                    }>
+                    {t('common:confirm')}
+                  </Button>
+                </Spacer>
+              </ScrollView>
+            );
+          }}
+        </Formik>
+      </BottomUpModalWrapper>
+    </KeyboardAvoidingView>
   );
 };
 

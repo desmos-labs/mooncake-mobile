@@ -5,6 +5,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {createImageProgress} from 'react-native-image-progress';
 import useStyles from './useStyles';
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
    */
   handlePress: () => void;
 };
+const Image = createImageProgress(FastImage);
 
 const ProfileItem = ({nickname, dtag, handlePress, avatar}: Props) => {
   const styles = useStyles();
@@ -35,15 +37,22 @@ const ProfileItem = ({nickname, dtag, handlePress, avatar}: Props) => {
   const {t} = useTranslation('selectDtag');
 
   return (
-    <DropShadowWrapper>
+    <DropShadowWrapper
+      outerShadowProps={{
+        startColor: 'rgba(37, 87, 188, 0.07)',
+        distance: 40,
+        offset: [10, 20],
+      }}>
       <TouchableOpacity onPress={handlePress} style={styles.container}>
-        <FastImage
+        <Image
+          resizeMode="cover"
           source={
             // @ts-ignore
             !avatar || avatar!.uri === '[do-not-modify]'
               ? defaultProfilePic
               : avatar
           }
+          imageStyle={{borderRadius: 23}}
           style={styles.avatar}
         />
         <View>

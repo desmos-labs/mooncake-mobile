@@ -12,7 +12,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -32,6 +32,7 @@ export type NavProps = StackScreenProps<
 const Profiles = () => {
   const {biometrics} = useRecoilValue(appSettingsState);
   const {profiles, loadAddrsIntoState} = useLoadProfiles();
+  const [changingProfileLoading, setChangingProfileLoading] = useState(false);
   const {activeAddress, chainAccount, setActiveAddress} = useActiveAccount();
   const {t} = useTranslation('settings');
   const styles = useStyles();
@@ -132,7 +133,6 @@ const Profiles = () => {
         profiles.map(async (profile, index) => {
           if (index === i) {
             try {
-              console.log(chainAccount);
               const unlockResult = await unlockWallet({
                 chainAccount: chainAccount!,
                 skipBiometrics: true,
@@ -142,6 +142,7 @@ const Profiles = () => {
                 unlockResult.wallet &&
                 unlockResult.password
               ) {
+                setChangingProfileLoading(true);
                 setSigner(unlockResult.wallet);
                 setActiveAddress(profile.address);
                 await login({
@@ -153,12 +154,14 @@ const Profiles = () => {
               }
             } catch (e) {
               console.error(e);
+            } finally {
+              setChangingProfileLoading(false);
             }
           }
         }),
       );
     },
-    [chainAccount, profiles],
+    [chainAccount, profiles, login],
   );
 
   const values = useMemo(() => {
@@ -176,7 +179,10 @@ const Profiles = () => {
   }, [profiles, activeAddress]);
 
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
+    <DView
+      style={styles.root}
+      topBar={<TopBar />}
+      showLoadingOverlay={changingProfileLoading}>
       <View style={styles.titleBar}>
         <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity style={styles.plusButton} onPress={navigateToModal}>

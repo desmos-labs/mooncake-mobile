@@ -1,6 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Button from 'components/Button';
 import CustomRadioGroup from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
@@ -10,13 +11,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/useReportPost';
@@ -75,49 +70,38 @@ const ReportPost = () => {
       style={{flex: 1}}
       keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={goBack}
-        style={styles.container}>
-        {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-        {/* parts of the modal content are pressed */}
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.innerContainer}
-          onPress={() => Keyboard.dismiss()}>
-          <View style={styles.tabIcon} />
-          <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-          <Spacer paddingBottom={10} />
+      <BottomUpModalWrapper goBack={goBack}>
+        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+        <Spacer paddingBottom={10} />
 
-          <View>
-            <CustomRadioGroup
-              values={reportReasons}
-              selectedValue={selectedReport.index}
-              onSelect={(index, value) => setSelectedReport({value, index})}
-            />
+        <View>
+          <CustomRadioGroup
+            values={reportReasons}
+            selectedValue={selectedReport.index}
+            onSelect={(index, value) => setSelectedReport({value, index})}
+          />
 
-            <Spacer paddingBottom={theme.spacing.s} />
-            <DTextInput
-              editable={true}
-              inputStyle={styles.messageInput}
-              value={message}
-              onChangeText={text => setMessage(text)}
-              style={styles.textInput}
-              multiline
-              placeholder={t('message')}
-            />
-          </View>
-          <Spacer paddingVertical={30}>
-            <Button
-              loading={loading}
-              color={theme.colors.surfaceBlack}
-              mode="contained"
-              onPress={onSubmit}>
-              {t('submit')}
-            </Button>
-          </Spacer>
-        </TouchableOpacity>
-      </TouchableOpacity>
+          <Spacer paddingBottom={theme.spacing.s} />
+          <DTextInput
+            editable={true}
+            inputStyle={styles.messageInput}
+            value={message}
+            onChangeText={text => setMessage(text)}
+            style={styles.textInput}
+            multiline
+            placeholder={t('message')}
+          />
+        </View>
+        <Spacer paddingVertical={30}>
+          <Button
+            loading={loading}
+            color={theme.colors.surfaceBlack}
+            mode="contained"
+            onPress={onSubmit}>
+            {t('submit')}
+          </Button>
+        </Spacer>
+      </BottomUpModalWrapper>
     </KeyboardAvoidingView>
   );
 };
