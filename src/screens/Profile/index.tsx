@@ -592,6 +592,7 @@ const Profile = () => {
               </>
             )}
             <BalanceSection
+              address={address!}
               balanceData={balanceData}
               balanceLoading={balanceLoading}
               convertedBalance={convertedBalance}

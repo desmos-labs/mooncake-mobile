@@ -6,14 +6,14 @@ import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
 
-const useHooks = () => {
+const useHooks = (address: string) => {
   const {currentChain} = useRecoilValue(appSettingsState);
 
   const {data: balanceData, loading: balanceLoading} = useQuery(
     GetAccountBalance,
     {
       variables: {
-        address: 'desmos1fzwdn6up494llducvdv0375guhnkwdunux6k3j',
+        address,
         tokenName: currentChain.stakeCurrency.coinDenom,
       },
     },
@@ -21,7 +21,7 @@ const useHooks = () => {
 
   const {data, error} = useQuery(GetTransactionsByAddress, {
     variables: {
-      address: '{desmos1fzwdn6up494llducvdv0375guhnkwdunux6k3j}',
+      address: `{${address}}`,
     },
   });
 

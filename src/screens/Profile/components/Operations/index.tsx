@@ -1,22 +1,29 @@
+import {useRoute} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-/*
+export interface OperationsParams {
+  address: string;
+}
+
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.OPERATIONS>;
-*/
 
 const Operations = () => {
   const {t} = useTranslation('operations');
   const theme = useTheme();
   const styles = useStyles();
-  const {convertedBalance} = useHooks();
+  const {params} = useRoute<NavProps['route']>();
+  const {convertedBalance} = useHooks(params.address);
 
   return (
     <DView

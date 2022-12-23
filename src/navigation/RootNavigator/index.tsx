@@ -112,7 +112,9 @@ import Profile, {UserProfileParams} from 'screens/Profile';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
 } from 'screens/Profile/components/ManageConnectionsModal';
-import Operations from 'screens/Profile/components/Operations';
+import Operations, {
+  OperationsParams,
+} from 'screens/Profile/components/Operations';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -243,7 +245,7 @@ export type RootNavigatorParamList = {
   // New profile
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
-  [ROUTES.OPERATIONS]: undefined;
+  [ROUTES.OPERATIONS]: OperationsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();

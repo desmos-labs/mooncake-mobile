@@ -9,10 +9,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
 const BalanceSection = ({
+  address,
   convertedBalance,
   balanceData,
   balanceLoading,
 }: {
+  address: string;
   convertedBalance: any;
   balanceData: any;
   balanceLoading: boolean;
@@ -41,7 +43,7 @@ const BalanceSection = ({
           <Divider style={styles.divider} />
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigate(ROUTES.OPERATIONS)}>
+            onPress={() => navigate(ROUTES.OPERATIONS, {address})}>
             <Typography.Body6
               style={{
                 marginRight: theme.spacing.s,
