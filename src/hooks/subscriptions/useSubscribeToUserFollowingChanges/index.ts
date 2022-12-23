@@ -4,6 +4,7 @@ import {useEffect, useRef} from 'react';
 import _ from 'lodash';
 import SubUserRelationshipCounterPartyAddr from 'services/graphql/subscriptions/SubUserRelationshipCounterPartyAddr';
 import {useGetFollowingForAddress} from '@recoil/following';
+import useOptimisticRelationships from '@recoil/optimisticUI/optimisticRelationships';
 
 const useSubscribeToUserFollowingChanges = () => {
   const {activeAddress} = useActiveAccount();
@@ -14,6 +15,8 @@ const useSubscribeToUserFollowingChanges = () => {
       address: activeAddress,
     },
   });
+
+  const {resolveOptimisticRelationships} = useOptimisticRelationships();
 
   const storedFollowing = useRef<string>('');
 
@@ -39,6 +42,7 @@ const useSubscribeToUserFollowingChanges = () => {
       updateFollowing().then(() => {
         // update existing counter, make API call to update user's following list
         storedFollowing.current = JSON.stringify(counterPartyArr);
+        return resolveOptimisticRelationships();
       });
     }
   }, [JSON.stringify(data), storedFollowing.current]);

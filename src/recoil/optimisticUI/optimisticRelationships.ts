@@ -5,6 +5,7 @@ import {
   useRecoilCallback,
   useRecoilValue,
 } from 'recoil';
+import {followedAddressesState} from '@recoil/following';
 
 type RelationshipType = 'follow' | 'unfollow';
 
@@ -92,10 +93,42 @@ const useOptimisticRelationships = () => {
       },
   );
 
+  const resolveOptimisticRelationships = useRecoilCallback(
+    ({snapshot, set}) =>
+      async () => {
+        const optRelationships = await snapshot.getPromise(
+          optimisticRelationshipState,
+        );
+        const followingSet = await snapshot.getPromise(followedAddressesState);
+
+        const resolvedOptRelationships = optRelationships.filter(x => {
+          if (x.type === 'follow') {
+            console.log(
+              '[optimisticRelationships]: resolving FOLLOW for',
+              x.counterParty,
+            );
+            return !followingSet.has(x.counterParty);
+          } else {
+            console.log(
+              '[optimisticRelationships]: resolving UNFOLLOW for',
+              x.counterParty,
+            );
+            return followingSet.has(x.counterParty);
+          }
+        });
+
+        set(optimisticRelationshipState, resolvedOptRelationships);
+      },
+  );
+
+  console.log('follow', optimisticFollowing);
+  console.log('unfollow', optimisticUnfollow);
+
   return {
     optimisticFollowing,
     optimisticUnfollow,
     handleOptimisticRelationship,
+    resolveOptimisticRelationships,
   };
 };
 
