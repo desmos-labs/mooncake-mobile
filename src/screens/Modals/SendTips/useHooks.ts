@@ -31,7 +31,7 @@ const useHooks = () => {
   const {goBack, pop} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('sendTips');
   const {refetch, loading, data} = useQuery(getAccountBalance, {
-    variables: {address: activeAddress},
+    variables: {address: activeAddress, tokenName: ''},
   });
 
   useFocusEffect(

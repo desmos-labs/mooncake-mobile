@@ -5,13 +5,12 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
     borderRadius: 12,
-    padding: 16,
+    paddingHorizontal: theme.spacing.m,
+    paddingVertical: 20,
   },
   avatar: {
     width: 46,
     height: 46,
-    borderRadius: 23,
-    resizeMode: 'cover',
     marginRight: theme.spacing.m,
   },
 }));

@@ -20,7 +20,7 @@ import PostInteractionTabs, {
 import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, Dimensions, TextStyle, ViewStyle} from 'react-native';
+import {Alert, Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
@@ -68,7 +68,6 @@ import FullscreenStatusScreen, {
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
 import Invites from 'screens/Invites';
-import ImpactPointsModal from 'screens/Invites/components/ImpactPointsModal';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
 import LookingForDevices from 'screens/LookingForDevices';
@@ -89,12 +88,14 @@ import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
 import ConsentAgreement, {
   ConsentAgreementParams,
 } from 'screens/Modals/ConsentAgreement';
+import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
 import DisconnectAppModal, {
   DisconnectAppParams,
 } from 'screens/Modals/DisconnectAppModal';
 import DisconnectChainModal, {
   DisconnectChainParams,
 } from 'screens/Modals/DisconnectChainModal';
+import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
 import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
@@ -108,6 +109,12 @@ import ChangePassword, {
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
 import Profile, {UserProfileParams} from 'screens/Profile';
+import ManageConnectionsModal, {
+  ManageConnectionsModalParams,
+} from 'screens/Profile/components/ManageConnectionsModal';
+import Operations, {
+  OperationsParams,
+} from 'screens/Profile/components/Operations';
 import ProfileNfts from 'screens/ProfileNfts';
 import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
 import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
@@ -235,6 +242,11 @@ export type RootNavigatorParamList = {
 
   // Onboarding
   [ROUTES.ONBOARDING]: OnboardingParams;
+
+  // New profile
+  [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
+  [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
+  [ROUTES.OPERATIONS]: OperationsParams;
 };
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
@@ -320,6 +332,11 @@ const RootNavigator = () => {
       backgroundColor: 'rgb(175,175,175)',
     },
   };
+
+  const transitionPreset =
+    Platform.OS === 'android'
+      ? TransitionPresets.BottomSheetAndroid
+      : TransitionPresets.ModalPresentationIOS;
 
   return (
     <Stack.Navigator
@@ -497,6 +514,8 @@ const RootNavigator = () => {
         initialParams={{invited: false}}
       />
 
+      <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} />
+
       {/* modals */}
       <Stack.Group
         screenOptions={{
@@ -505,7 +524,7 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
-          ...TransitionPresets.BottomSheetAndroid,
+          ...transitionPreset,
         }}>
         <Stack.Screen
           name={ROUTES.CONSENT_AGREEMENT}
@@ -526,8 +545,16 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
         <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
         <Stack.Screen
+          name={ROUTES.MANAGE_CONNECTIONS_MODAL}
+          component={ManageConnectionsModal}
+        />
+        <Stack.Screen
           name={ROUTES.IMPACT_POINTS_MODAL}
           component={ImpactPointsModal}
+        />
+        <Stack.Screen
+          name={ROUTES.CONVERTIBLE_POINTS_MODAL}
+          component={ConvertiblePointsModal}
         />
         <Stack.Screen
           name={ROUTES.ADD_PROFILE_MODAL}

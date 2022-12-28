@@ -82,6 +82,7 @@ declare global {
       black: string;
       backgroundBlue: string;
       dividerGrey: string;
+      tabIconGrey: string;
 
       accentRed01: string;
       accentRed02: string;

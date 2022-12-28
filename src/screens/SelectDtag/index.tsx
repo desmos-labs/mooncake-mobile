@@ -1,3 +1,4 @@
+import TopBar from 'components/TopBar';
 import React from 'react';
 import ProfileItem from 'screens/SelectDtag/components/ProfileItem';
 import {useQuery} from '@apollo/client';
@@ -114,12 +115,9 @@ const SelectDtag = () => {
   }
 
   return (
-    <DView>
+    <DView topBar={<TopBar />}>
       <Spacer padding={16}>
         <Typography.H4>{t('header')}</Typography.H4>
-        <Spacer paddingVertical={16}>
-          <Typography.Body6>{t('description')}</Typography.Body6>
-        </Spacer>
       </Spacer>
 
       <FlatList

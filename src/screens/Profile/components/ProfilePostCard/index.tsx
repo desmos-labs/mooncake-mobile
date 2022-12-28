@@ -8,10 +8,18 @@ type Props = {
   postData: PostItem;
 
   onPress: () => void;
+
+  postsSize: number;
+  postsMargin: string | number;
 };
 
-const ProfilePostCard = ({postData, onPress}: Props) => {
-  const styles = useStyles();
+const ProfilePostCard = ({
+  postData,
+  onPress,
+  postsSize,
+  postsMargin,
+}: Props) => {
+  const styles = useStyles({size: postsSize, margin: postsMargin});
 
   const {attachments} = postData;
 

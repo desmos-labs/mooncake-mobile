@@ -70,6 +70,8 @@ export const TippedTab = () => {
     return (
       <ProfilePostCard
         postData={item.post}
+        postsSize={97}
+        postsMargin={6}
         onPress={() =>
           handlePostPressed({
             subspaceID: item.post.subspace_id,

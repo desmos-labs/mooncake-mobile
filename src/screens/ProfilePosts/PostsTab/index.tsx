@@ -30,7 +30,6 @@ export const PostsTab = () => {
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('profile');
-
   const {
     data: postsData,
     loading: postsLoading,
@@ -72,6 +71,8 @@ export const PostsTab = () => {
   const renderPosts = ({item}: any) => (
     <ProfilePostCard
       postData={item}
+      postsSize={97}
+      postsMargin={6}
       onPress={() =>
         handlePostPressed({
           subspaceID: item.subspace_id,

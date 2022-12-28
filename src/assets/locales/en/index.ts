@@ -49,6 +49,7 @@ import selectLedgerApp from './selectLedgerApp.json';
 import broadcastTx from './broadcastTx.json';
 import invites from './invites.json';
 import onboarding from './onboarding.json';
+import operations from './operations.json';
 
 const en = {
   common,
@@ -102,6 +103,7 @@ const en = {
   broadcastTx,
   invites,
   onboarding,
+  operations,
 };
 
 export default en;

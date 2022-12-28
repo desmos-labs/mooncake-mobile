@@ -158,7 +158,7 @@ export const expandCommentIcon = require('./images/expandComment.png');
 
 export const checkBlackIcon = require('./images/checkBlack.png');
 
-export const addProfileIcon = require('./images/addProfile.png');
+export const addNewProfileIcon = require('./images/addNewProfileIcon.png');
 
 export const invitesBanner = require('./images/invites/invitesLogo.png');
 export const invitesBanner2 = require('./images/invites/invitesLogo2.png');
@@ -209,6 +209,14 @@ export const butterflyLandingIcon = require('./images/butterflyLanding.png');
 export const addButton = require('./images/addButton.png');
 
 export const verifiedIcon = require('./images/verified.png');
+
+export const emptyPostsIcon = require('./images/emptyPosts.png');
+
+export const connectTwitterProfileIcon = require('./images/connectTwitterProfile.png');
+export const connectWalletProfileIcon = require('./images/connectWalletProfile.png');
+export const manageConnectedTwitterProfileIcon = require('./images/manageConnectedTwitterProfile.png');
+export const manageConnectedWalletsProfileIcon = require('./images/manageConnectedWalletProfile.png');
+export const addProfileIcon = require('./images/addProfileIcon.png');
 
 // Socials
 

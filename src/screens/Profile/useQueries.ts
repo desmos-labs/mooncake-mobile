@@ -1,0 +1,139 @@
+import {useQuery} from '@apollo/client';
+import {convertCoin} from '@desmoslabs/desmjs';
+import {useChainLinks} from '@recoil/chainLinks';
+import {useApplicationLinks} from '@recoil/connectedApps';
+import appSettingsState from '@recoil/settings';
+import EnvConfig from 'config/EnvConfig';
+import React, {useMemo} from 'react';
+import {useRecoilValue} from 'recoil';
+import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
+import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
+import GetPostsNumberForAddress from 'services/graphql/queries/GetPostsNumberForAddress';
+
+const useQueries = (address?: string) => {
+  const {currentChain} = useRecoilValue(appSettingsState);
+  const {
+    data: postsData,
+    loading: postsLoading,
+    refetch: refetchPosts,
+  } = useQuery(GetPostsForAddressWithLimit, {
+    variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      address: address!,
+      limit: 10,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  const posts: [] = React.useMemo(() => {
+    if (!postsData) return [];
+    return postsData.post;
+  }, [postsData, postsLoading]);
+
+  const {
+    data: balanceData,
+    loading: balanceLoading,
+    refetch: refetchBalance,
+  } = useQuery(GetAccountBalance, {
+    variables: {
+      address: address!,
+      tokenName: currentChain.stakeCurrency.coinDenom,
+    },
+  });
+
+  const {
+    data: impactPointsData,
+    loading: impactPointsLoading,
+    refetch: refetchImpactPoints,
+  } = useQuery(GetImpactPoints, {fetchPolicy: 'no-cache'});
+
+  const impactPoints = useMemo(() => {
+    if (
+      !impactPointsData?.impact_record_aggregate?.aggregate?.sum
+        ?.rewarded_points
+    ) {
+      return 0;
+    }
+    return impactPointsData.impact_record_aggregate.aggregate.sum
+      .rewarded_points;
+  }, [impactPointsData]);
+
+  const {
+    data: postsNumberData,
+    loading: postsCounterLoading,
+    refetch: refetchPostsCounter,
+  } = useQuery(GetPostsNumberForAddress, {
+    variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      address: address!,
+    },
+    nextFetchPolicy: 'no-cache',
+  });
+
+  const postsCounter = useMemo(() => {
+    if (!postsNumberData) {
+      return undefined;
+    }
+    return postsNumberData.post.length;
+  }, [postsNumberData]);
+
+  const convertedBalance = useMemo(() => {
+    let balanceToReturn;
+    let tokenPrice;
+    let convertedAmount;
+    if (balanceData && !balanceLoading) {
+      balanceToReturn = convertCoin(
+        balanceData?.action_account_balance?.coins[0],
+        6,
+        currentChain.currencies,
+      );
+      tokenPrice = balanceData.token_price[0].price;
+      convertedAmount = parseFloat(balanceToReturn?.amount!) * tokenPrice;
+    }
+    return {
+      balance: balanceToReturn,
+      tokenPrice,
+      convertedAmount,
+    };
+  }, [balanceData, balanceLoading, currentChain]);
+
+  const {
+    chainLinks,
+    refetch: refetchChainLinks,
+    loading: chainLinksLoading,
+  } = useChainLinks(address!);
+  const {
+    appLinks,
+    refetch: refetchAppLinks,
+    loading: appLinksLoading,
+  } = useApplicationLinks(address!);
+
+  const contentLoading = postsLoading && balanceLoading;
+
+  return {
+    posts,
+    postsData,
+    postsLoading,
+    convertedBalance,
+    balanceData,
+    balanceLoading,
+    contentLoading,
+    appLinks,
+    chainLinks,
+    appLinksLoading,
+    chainLinksLoading,
+    refetchAppLinks,
+    refetchChainLinks,
+    refetchBalance,
+    refetchPosts,
+    impactPoints,
+    impactPointsLoading,
+    refetchImpactPoints,
+    postsCounter,
+    postsCounterLoading,
+    refetchPostsCounter,
+  };
+};
+
+export default useQueries;

@@ -36,7 +36,6 @@ const useStyles = makeStyle(theme => ({
     paddingBottom: theme.spacing.s,
   },
   textInput: {
-    backgroundColor: theme.colors.background,
     borderColor: theme.colors.lightGrey01,
   },
 }));

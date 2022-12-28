@@ -1,13 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {addProfileIcon, plusWhiteIcon} from 'assets/images';
+import {addNewProfileIcon, addProfileIcon} from 'assets/images';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Divider, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
@@ -48,37 +49,23 @@ const AddProfileModal = () => {
   }, []);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={goBack}
-      style={styles.container}>
-      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-      {/* parts of the modal content are pressed */}
-      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-        <View style={styles.tabIcon} />
-        <Typography.H4 style={styles.headerText}>{t('title')}</Typography.H4>
-        <Spacer paddingVertical={20}>
-          <Divider style={styles.divider} />
-          <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
-            <FastImage
-              source={plusWhiteIcon}
-              style={styles.image}
-              tintColor={theme.colors.butterOrange01}
-            />
-            <Typography.Body6>{t('add desmos profile')}</Typography.Body6>
-          </TouchableOpacity>
-          <Divider style={styles.divider} />
-          <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
-            <FastImage source={addProfileIcon} style={styles.image} />
-            <Typography.Body6>
-              {t('create a new desmos profile')}
-            </Typography.Body6>
-          </TouchableOpacity>
-          <Divider style={styles.divider} />
-        </Spacer>
-        <Spacer paddingVertical={theme.spacing.s} />
-      </TouchableOpacity>
-    </TouchableOpacity>
+    <BottomUpModalWrapper goBack={goBack}>
+      <Typography.H4 style={styles.headerText}>{t('title')}</Typography.H4>
+      <Spacer paddingVertical={20}>
+        <Divider style={styles.divider} />
+        <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
+          <FastImage source={addProfileIcon} style={styles.image} />
+          <Typography.Body6>{t('addProfile')}</Typography.Body6>
+        </TouchableOpacity>
+        <Divider style={styles.divider} />
+        <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
+          <FastImage source={addNewProfileIcon} style={styles.image} />
+          <Typography.Body6>{t('createNewProfile')}</Typography.Body6>
+        </TouchableOpacity>
+        <Divider style={styles.divider} />
+      </Spacer>
+      <Spacer paddingVertical={theme.spacing.s} />
+    </BottomUpModalWrapper>
   );
 };
 

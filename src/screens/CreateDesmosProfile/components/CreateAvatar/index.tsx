@@ -28,7 +28,6 @@ const CreateAvatar = ({avatar, handlePressEdit}: Props) => {
         style={{
           width: 35,
           height: 35,
-          resizeMode: 'contain',
           position: 'absolute',
           bottom: -5,
           right: -5,

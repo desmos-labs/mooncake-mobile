@@ -7,7 +7,10 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {ReactNode, useCallback} from 'react';
 import {TouchableOpacity, View} from 'react-native';
+import {GestureDetector} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
+import Animated from 'react-native-reanimated';
+import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 import useStyles from './useStyles';
 
 export type BottomModalParams = {
@@ -38,6 +41,7 @@ const BottomModal = () => {
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
+  const {panGesture, animatedStyle} = useModalAnimations();
 
   const {goBack} = useNavigation<NavProps['navigation']>();
 
@@ -47,27 +51,31 @@ const BottomModal = () => {
   }, []);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={goBack}
-      style={styles.container}>
-      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-      {/* parts of the modal content are pressed */}
-      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-        <View style={styles.tabIcon} />
-        <Typography.H4 style={styles.headerText}>{title}</Typography.H4>
-        <Typography.Body5>{body}</Typography.Body5>
+    <GestureDetector gesture={panGesture}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={goBack}
+        style={styles.container}>
+        {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
+        {/* parts of the modal content are pressed */}
+        <Animated.View style={animatedStyle}>
+          <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+            <View style={styles.tabIcon} />
+            <Typography.H4 style={styles.headerText}>{title}</Typography.H4>
+            <Typography.Body5>{body}</Typography.Body5>
 
-        <Spacer paddingVertical={40}>
-          <Button
-            color={theme.colors.surfaceBlack}
-            mode="contained"
-            onPress={onPressButton}>
-            {primaryButtonLabel}
-          </Button>
-        </Spacer>
+            <Spacer paddingVertical={40}>
+              <Button
+                color={theme.colors.surfaceBlack}
+                mode="contained"
+                onPress={onPressButton}>
+                {primaryButtonLabel}
+              </Button>
+            </Spacer>
+          </TouchableOpacity>
+        </Animated.View>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </GestureDetector>
   );
 };
 
