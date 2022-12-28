@@ -6,6 +6,7 @@ import {
   useRecoilValue,
 } from 'recoil';
 import {followedAddressesState} from '@recoil/following';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
 type RelationshipType = 'follow' | 'unfollow';
 
@@ -17,7 +18,15 @@ type OptimisticRelationship = {
 
 const optimisticRelationshipState = atom<OptimisticRelationship[]>({
   key: 'optimisticRelationships',
-  default: [],
+  default: getMMKV(MMKVKEYS.OPTIMISTIC_RELATIONSHIPS) || [],
+  effects: [
+    ({onSet}) => {
+      onSet(newValue => {
+        console.log('setting optimistic relationship', newValue);
+        setMMKV(MMKVKEYS.OPTIMISTIC_RELATIONSHIPS, newValue);
+      });
+    },
+  ],
 });
 
 export const optimisticToFollow = selector<OptimisticRelationship[]>({
