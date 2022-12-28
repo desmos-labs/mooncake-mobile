@@ -4,11 +4,9 @@ import {
   selectorFamily,
   useRecoilCallback,
   useRecoilValue,
-  useResetRecoilState,
 } from 'recoil';
 import {followedAddressesState} from '@recoil/following';
-import {deleteMMKV, getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {useCallback} from 'react';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
 type RelationshipType = 'follow' | 'unfollow';
 
@@ -18,7 +16,7 @@ type OptimisticRelationship = {
   type: RelationshipType;
 };
 
-const optimisticRelationshipState = atom<OptimisticRelationship[]>({
+export const optimisticRelationshipState = atom<OptimisticRelationship[]>({
   key: 'optimisticRelationships',
   default: getMMKV(MMKVKEYS.OPTIMISTIC_RELATIONSHIPS) || [],
   effects: [
@@ -69,9 +67,6 @@ export const hasOptimisticUnfollow = selectorFamily<boolean, string>({
 const useOptimisticRelationships = () => {
   const optimisticFollowing = useRecoilValue(optimisticToFollow);
   const optimisticUnfollow = useRecoilValue(optimisticToUnfollow);
-  const resetOptimisticRelationShipsState = useResetRecoilState(
-    optimisticRelationshipState,
-  );
 
   const handleOptimisticRelationship = useRecoilCallback(
     ({snapshot, set}) =>
@@ -125,17 +120,11 @@ const useOptimisticRelationships = () => {
       },
   );
 
-  const resetOptimisticRelationships = useCallback(() => {
-    resetOptimisticRelationShipsState();
-    deleteMMKV(MMKVKEYS.OPTIMISTIC_RELATIONSHIPS);
-  }, []);
-
   return {
     optimisticFollowing,
     optimisticUnfollow,
     handleOptimisticRelationship,
     resolveOptimisticRelationships,
-    resetOptimisticRelationships,
   };
 };
 

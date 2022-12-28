@@ -22,7 +22,7 @@ import {useRecoilValue, useSetRecoilState} from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
-import useOptimisticRelationships from '@recoil/optimisticUI/optimisticRelationships';
+import useResetOptimisticUI from '@recoil/optimisticUI/useResetOptimisticUI';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<
@@ -44,7 +44,7 @@ const Profiles = () => {
   const setSigner = useSetRecoilState(signerState);
   const {login} = useLogin();
 
-  const {resetOptimisticRelationships} = useOptimisticRelationships();
+  const {resetOptimisticUI} = useResetOptimisticUI();
 
   const navigateToConfirmModal = useCallback((index: number) => {
     navigate({
@@ -159,7 +159,7 @@ const Profiles = () => {
               console.error(e);
             } finally {
               setChangingProfileLoading(false);
-              resetOptimisticRelationships();
+              resetOptimisticUI();
             }
           }
         }),
