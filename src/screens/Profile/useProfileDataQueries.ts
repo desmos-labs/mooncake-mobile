@@ -2,7 +2,7 @@ import {useGetProfileData} from '@recoil/activeProfileState';
 import useNumRelationships from '@recoil/numRelationshipState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 
 const useProfileDataQueries = (visitingProfileAddress?: string) => {
   const {
@@ -14,6 +14,14 @@ const useProfileDataQueries = (visitingProfileAddress?: string) => {
   const {refetch: refetchProfileData, loading} = useGetProfileData(
     activeAddress!,
   );
+
+  /**
+   * Refetch profile data if activeAddress changes
+   */
+  useEffect(() => {
+    console.log('refetching profile data');
+    refetchProfileData();
+  }, [activeAddress]);
 
   const screenMode = useMemo(() => {
     if (visitingProfileAddress) {
