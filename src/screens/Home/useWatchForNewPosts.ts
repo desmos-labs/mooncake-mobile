@@ -8,8 +8,28 @@ import {
 import EnvConfig from 'config/EnvConfig';
 import {useRecoilValue} from 'recoil';
 import {followingState} from '@recoil/following';
+import ROUTES from 'navigation/routes';
+import ToastConfig from 'config/ToastConfig';
+import {useToast} from 'react-native-toast-notifications';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {NavProps} from 'screens/Home/index';
+import {useTranslation} from 'react-i18next';
 
-const useWatchForNewPosts = () => {
+/**
+ * Subscribe to new posts in discover and following tab and show a notification
+ * when a new post is detected.
+ *
+ * @param {function} onPressNotification - What to do when the notification is pressed
+ */
+const useWatchForNewPosts = (onPressNotification: () => void) => {
+  const {t} = useTranslation('home');
+  const toast = useToast();
+  const {params} = useRoute<NavProps['route']>();
+  const {getState} = useNavigation();
+  const currentScreen: any =
+    // @ts-ignore
+    getState().history[_.get(getState(), 'history').length - 1 || 0].key;
+
   const [hasNewDiscoverPosts, setHasNewDiscoverPosts] =
     useState<boolean>(false);
   const [hasNewFollowingPosts, setHasNewFollowingPosts] =
@@ -76,12 +96,43 @@ const useWatchForNewPosts = () => {
     storedPostAggregateFollowing.current,
   ]);
 
-  return {
-    hasNewDiscoverPosts,
-    setHasNewFollowingPosts,
-    setHasNewDiscoverPosts,
-    hasNewFollowingPosts,
-  };
+  /**
+   * Show notification if new posts from following are detected
+   */
+  useEffect(() => {
+    if (
+      hasNewFollowingPosts &&
+      params?.type === 'following' &&
+      currentScreen.includes(ROUTES.HOME_FOLLOWING)
+    ) {
+      toast.show(t('newFollowingPost'), {
+        type: ToastConfig.SUCCESS,
+        onPress: () => {
+          onPressNotification();
+          setHasNewFollowingPosts(false);
+        },
+      });
+    }
+  }, [hasNewFollowingPosts, JSON.stringify(currentScreen)]);
+
+  /**
+   * Show notification if new posts from discover tab is detected
+   */
+  useEffect(() => {
+    if (
+      hasNewDiscoverPosts &&
+      params?.type === 'discover' &&
+      currentScreen.includes(ROUTES.HOME_DISCOVER)
+    ) {
+      toast.show(t('newDiscoverPost'), {
+        type: ToastConfig.SUCCESS,
+        onPress: () => {
+          onPressNotification();
+          setHasNewDiscoverPosts(false);
+        },
+      });
+    }
+  }, [hasNewDiscoverPosts, JSON.stringify(currentScreen)]);
 };
 
 export default useWatchForNewPosts;

@@ -8,7 +8,7 @@ import {
   commentIconCommented,
 } from 'assets/images';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -28,7 +28,6 @@ import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
-import {useNavigation, useRoute} from '@react-navigation/native';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import useStyles from './useStyles';
 
@@ -71,14 +70,8 @@ const Home = () => {
     checkIfPostIsPending,
   } = useHooks();
 
-  const {
-    hasNewFollowingPosts,
-    setHasNewDiscoverPosts,
-    setHasNewFollowingPosts,
-    hasNewDiscoverPosts,
-  } = useWatchForNewPosts();
-
-  const scrollToFirstIndex = useCallback(() => {
+  const handlePressNewPostNotification = useCallback(() => {
+    fetchNewestPosts();
     if (postListRef && postListRef.current) {
       postListRef.current.scrollToIndex({
         animated: true,
@@ -87,47 +80,7 @@ const Home = () => {
     }
   }, [postListRef]);
 
-  const {params} = useRoute<NavProps['route']>();
-  const {getState} = useNavigation();
-
-  const navState = getState();
-  const currentScreen: any =
-    // @ts-ignore
-    getState().history[_.get(navState, 'history').length - 1 || 0].key;
-
-  useEffect(() => {
-    if (
-      hasNewFollowingPosts &&
-      params?.type === 'following' &&
-      currentScreen.includes(ROUTES.HOME_FOLLOWING)
-    ) {
-      toast.show(t('home:newFollowingPost'), {
-        type: ToastConfig.SUCCESS,
-        onPress: () => {
-          fetchNewestPosts();
-          scrollToFirstIndex();
-          setHasNewFollowingPosts(false);
-        },
-      });
-    }
-  }, [hasNewFollowingPosts, JSON.stringify(currentScreen)]);
-
-  useEffect(() => {
-    if (
-      hasNewDiscoverPosts &&
-      params?.type === 'discover' &&
-      currentScreen.includes(ROUTES.HOME_DISCOVER)
-    ) {
-      toast.show(t('home:newDiscoverPost'), {
-        type: ToastConfig.SUCCESS,
-        onPress: () => {
-          fetchNewestPosts();
-          scrollToFirstIndex();
-          setHasNewDiscoverPosts(false);
-        },
-      });
-    }
-  }, [hasNewDiscoverPosts, JSON.stringify(currentScreen)]);
+  useWatchForNewPosts(handlePressNewPostNotification);
 
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
