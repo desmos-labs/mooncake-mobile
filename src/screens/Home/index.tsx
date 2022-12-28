@@ -7,9 +7,8 @@ import {
   tipIconTipped,
   commentIconCommented,
 } from 'assets/images';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -28,11 +27,15 @@ import _ from 'lodash';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
+import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import useStyles from './useStyles';
 
+// discover and following share the same params
 export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.HOME_TABS
+  HomeTabsParamList,
+  ROUTES.HOME_DISCOVER
 >;
 
 export type HomeParams = {
@@ -49,6 +52,7 @@ const Home = () => {
   const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
+  const postListRef = useRef<any>();
 
   const lockPostPress = useRef(false);
 
@@ -66,6 +70,64 @@ const Home = () => {
     onViewableItemsChanged,
     checkIfPostIsPending,
   } = useHooks();
+
+  const {
+    hasNewFollowingPosts,
+    setHasNewDiscoverPosts,
+    setHasNewFollowingPosts,
+    hasNewDiscoverPosts,
+  } = useWatchForNewPosts();
+
+  const scrollToFirstIndex = useCallback(() => {
+    if (postListRef && postListRef.current) {
+      postListRef.current.scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
+  }, [postListRef]);
+
+  const {params} = useRoute<NavProps['route']>();
+  const {getState} = useNavigation();
+
+  const navState = getState();
+  const currentScreen: any =
+    // @ts-ignore
+    getState().history[_.get(navState, 'history').length - 1 || 0].key;
+
+  useEffect(() => {
+    if (
+      hasNewFollowingPosts &&
+      params?.type === 'following' &&
+      currentScreen.includes(ROUTES.HOME_FOLLOWING)
+    ) {
+      toast.show(t('home:newFollowingPost'), {
+        type: ToastConfig.SUCCESS,
+        onPress: () => {
+          fetchNewestPosts();
+          scrollToFirstIndex();
+          setHasNewFollowingPosts(false);
+        },
+      });
+    }
+  }, [hasNewFollowingPosts, JSON.stringify(currentScreen)]);
+
+  useEffect(() => {
+    if (
+      hasNewDiscoverPosts &&
+      params?.type === 'discover' &&
+      currentScreen.includes(ROUTES.HOME_DISCOVER)
+    ) {
+      toast.show(t('home:newDiscoverPost'), {
+        type: ToastConfig.SUCCESS,
+        onPress: () => {
+          fetchNewestPosts();
+          scrollToFirstIndex();
+          setHasNewDiscoverPosts(false);
+        },
+      });
+    }
+  }, [hasNewDiscoverPosts, JSON.stringify(currentScreen)]);
 
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
@@ -157,6 +219,7 @@ const Home = () => {
         backgroundColor: theme.colors.background,
       }}>
       <FlatList
+        ref={postListRef}
         data={posts}
         horizontal
         pagingEnabled
