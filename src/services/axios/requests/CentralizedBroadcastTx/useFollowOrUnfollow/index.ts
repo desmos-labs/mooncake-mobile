@@ -62,8 +62,6 @@ const useFollowOrUnfollow = () => {
           x => x.address === addrToFollow,
         );
 
-        console.log('isAlreadyFollowing:', isAlreadyFollowing);
-
         await handleOptimisticRelationship({
           counterParty: addrToFollow,
           type: isAlreadyFollowing ? 'unfollow' : 'follow',

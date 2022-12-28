@@ -22,7 +22,6 @@ const optimisticRelationshipState = atom<OptimisticRelationship[]>({
   effects: [
     ({onSet}) => {
       onSet(newValue => {
-        console.log('setting optimistic relationship', newValue);
         setMMKV(MMKVKEYS.OPTIMISTIC_RELATIONSHIPS, newValue);
       });
     },

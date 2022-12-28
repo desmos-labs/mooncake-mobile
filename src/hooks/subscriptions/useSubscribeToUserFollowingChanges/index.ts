@@ -35,10 +35,6 @@ const useSubscribeToUserFollowingChanges = () => {
       followingCount &&
       JSON.stringify(counterPartyArr) !== storedFollowing.current
     ) {
-      console.log(
-        '[useSubscribeToUserFollowingChanges]: Updating stored value',
-        counterPartyArr.length,
-      );
       updateFollowing().then(() => {
         // update existing counter, make API call to update user's following list
         storedFollowing.current = JSON.stringify(counterPartyArr);
