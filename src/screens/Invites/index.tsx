@@ -57,7 +57,6 @@ const Invites = () => {
 
   const numInvitesGenerated = useMemo(() => {
     if (!data) {
-      console.log('no data');
       return undefined;
     } else {
       return data.invite.filter(
