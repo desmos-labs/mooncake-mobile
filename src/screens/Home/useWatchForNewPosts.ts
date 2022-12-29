@@ -11,9 +11,10 @@ import {followingState} from '@recoil/following';
 import ROUTES from 'navigation/routes';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NavProps} from 'screens/Home/index';
 import {useTranslation} from 'react-i18next';
+import appSettingsState from '@recoil/settings';
 
 /**
  * Subscribe to new posts in discover and following tab and show a notification
@@ -26,9 +27,13 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   const toast = useToast();
   const {params} = useRoute<NavProps['route']>();
   const {getState} = useNavigation();
+  const {newDiscPostNotification, newFollowPostNotification} =
+    useRecoilValue(appSettingsState);
   const currentScreen: any =
     // @ts-ignore
     getState().history[_.get(getState(), 'history').length - 1 || 0].key;
+
+  const isFocused = useIsFocused();
 
   const [hasNewDiscoverPosts, setHasNewDiscoverPosts] =
     useState<boolean>(false);
@@ -71,8 +76,8 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
     if (numPosts && numPosts !== storedPostAggregate.current) {
       if (storedPostAggregate.current !== 0) {
-        setHasNewDiscoverPosts(true);
       }
+      setHasNewDiscoverPosts(true);
 
       storedPostAggregate.current = numPosts;
     }
@@ -100,6 +105,8 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
    * Show notification if new posts from following are detected
    */
   useEffect(() => {
+    if (!newFollowPostNotification || !isFocused) return;
+
     if (
       hasNewFollowingPosts &&
       params?.type === 'following' &&
@@ -113,12 +120,19 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
         },
       });
     }
-  }, [hasNewFollowingPosts, JSON.stringify(currentScreen)]);
+  }, [
+    hasNewFollowingPosts,
+    JSON.stringify(currentScreen),
+    newFollowPostNotification,
+    isFocused,
+  ]);
 
   /**
    * Show notification if new posts from discover tab is detected
    */
   useEffect(() => {
+    if (!newDiscPostNotification || !isFocused) return;
+
     if (
       hasNewDiscoverPosts &&
       params?.type === 'discover' &&
@@ -132,7 +146,12 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
         },
       });
     }
-  }, [hasNewDiscoverPosts, JSON.stringify(currentScreen)]);
+  }, [
+    hasNewDiscoverPosts,
+    JSON.stringify(currentScreen),
+    newDiscPostNotification,
+    isFocused,
+  ]);
 };
 
 export default useWatchForNewPosts;

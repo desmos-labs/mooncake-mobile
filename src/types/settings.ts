@@ -27,4 +27,6 @@ export type AppSettings = {
   registeredReports: any[];
   contractsConfig: any[];
   currentChain: ChainInfo;
+  newDiscPostNotification: boolean;
+  newFollowPostNotification: boolean;
 };
