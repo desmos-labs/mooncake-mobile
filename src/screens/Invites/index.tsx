@@ -57,6 +57,7 @@ const Invites = () => {
 
   const numInvitesGenerated = useMemo(() => {
     if (!data) {
+      console.log('no data');
       return undefined;
     } else {
       return data.invite.filter(
@@ -64,6 +65,15 @@ const Invites = () => {
       ).length;
     }
   }, [data, activeAddress]);
+
+  const requiredPoints = useMemo(() => {
+    if (numInvitesGenerated === undefined) {
+      return undefined;
+    }
+    if (numInvitesGenerated === 0) return 0;
+    if (numInvitesGenerated === 1) return 100;
+    if (numInvitesGenerated >= 2) return 150;
+  }, [numInvitesGenerated]);
 
   const rightElement = useMemo(() => {
     return (
@@ -108,8 +118,8 @@ const Invites = () => {
         setInviteLink(response.link);
         setInviteGenerated(true);
       }
-    } catch (e) {
-      toast.show('Max amount of invites already reached', {
+    } catch (e: any) {
+      toast.show(e.response.data.toString(), {
         type: ToastConfig.ERROR_NO_RETRY,
       });
       setInviteGenerated(false);
@@ -168,7 +178,9 @@ const Invites = () => {
         shareComponent
       ) : (
         <Button
-          disabled={!numInvitesGenerated || numInvitesGenerated === 3}
+          disabled={
+            numInvitesGenerated === undefined || numInvitesGenerated === 3
+          }
           onPress={generateInvite}
           loading={generationLoading}
           color={theme.colors.surfaceBlack}
@@ -180,10 +192,14 @@ const Invites = () => {
       <Spacer paddingVertical={theme.spacing.m} />
       <View style={{alignItems: 'center'}}>
         <View style={styles.rowCenter}>
-          <Typography.Subtitle2>
-            {t('points', {number: 0})}
-          </Typography.Subtitle2>
-          <Typography.Body5> {t('requried')}</Typography.Body5>
+          {requiredPoints !== undefined ? (
+            <Typography.Subtitle2>
+              {t('points', {number: requiredPoints})}
+            </Typography.Subtitle2>
+          ) : (
+            <ActivityIndicator />
+          )}
+          <Typography.Body5> {t('required')}</Typography.Body5>
           <ImageButton
             onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}
             image={infoIcon}
@@ -193,7 +209,7 @@ const Invites = () => {
         <Spacer paddingTop={6} />
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
-          {numInvitesGenerated ? (
+          {numInvitesGenerated !== undefined ? (
             <Typography.Body6 style={{color: theme.colors.midGrey}}>
               {t('invites shared', {number: numInvitesGenerated})}
             </Typography.Body6>
