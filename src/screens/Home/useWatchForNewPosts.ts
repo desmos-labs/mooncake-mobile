@@ -15,6 +15,7 @@ import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NavProps} from 'screens/Home/index';
 import {useTranslation} from 'react-i18next';
 import appSettingsState from '@recoil/settings';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 /**
  * Subscribe to new posts in discover and following tab and show a notification
@@ -27,6 +28,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   const toast = useToast();
   const {params} = useRoute<NavProps['route']>();
   const {getState} = useNavigation();
+  const {activeAddress} = useActiveAccount();
   const {newDiscPostNotification, newFollowPostNotification} =
     useRecoilValue(appSettingsState);
   const currentScreen: any =
@@ -47,7 +49,10 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
   const {data: postAggregateData} = useSubscription(PostAggregateSubscription, {
     fetchPolicy: 'no-cache',
-    variables: {subspaceID: EnvConfig.APP_SUBSPACE_ID},
+    variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      userAddress: activeAddress,
+    },
   });
 
   const {data: postAggregateFollowingData} = useSubscription(

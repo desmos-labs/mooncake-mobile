@@ -1,10 +1,16 @@
 import {gql} from '@apollo/client';
 
 export const PostAggregateSubscription = gql`
-  subscription PostAggregateSubscription($subspaceID: bigint!)
-  @api(name: butter) {
+  subscription PostAggregateSubscription(
+    $subspaceID: bigint!
+    $userAddress: String!
+  ) @api(name: butter) {
     post_aggregate(
-      where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
+      where: {
+        subspace_id: {_eq: $subspaceID}
+        _not: {conversation: {}}
+        _and: {author_address: {_neq: $userAddress}}
+      }
     ) {
       aggregate {
         count
