@@ -272,15 +272,15 @@ const Profile = () => {
    * Effects
    */
 
-  /** Commented for now, i think this is too expensive cause it is triggering way too many times */
-  /*  useFocusEffect(
-    React.useCallback(() => {
-      const task = InteractionManager.runAfterInteractions(() => {
-        refetchUserData();
-      });
-      return () => task.cancel();
-    }, [refetchUserData]),
-  ); */
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log('refetch user data onFocus');
+  //     const task = InteractionManager.runAfterInteractions(() => {
+  //       refetchUserData();
+  //     });
+  //     return () => task.cancel();
+  //   }, [refetchUserData]),
+  // );
 
   useEffect(() => {
     const timeout = setTimeout(() => {

@@ -13,11 +13,11 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {ChainAccount} from 'types/chains';
 import LocalWallet from 'lib/LocalWallet';
 import {useRecoilValue, useResetRecoilState} from 'recoil';
 import createLocalWalletState from '@recoil/createLocalWalletState';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 export type SelectDtagParamList = {
   accountsWithWalletData: {
@@ -37,6 +37,7 @@ const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
 
   const {reset} = useNavigation<NavProps['navigation']>();
+  const {setActiveAddress} = useActiveAccount();
 
   const {
     params: {accountsWithWalletData, password},
@@ -76,7 +77,9 @@ const SelectDtag = () => {
       );
     }
     await saveNewAccount(chainAccount);
-    setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+
+    setActiveAddress(address);
+    // setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
 
     resetCreateLocalWalletAtom();
 

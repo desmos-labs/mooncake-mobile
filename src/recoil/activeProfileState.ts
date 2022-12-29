@@ -32,13 +32,7 @@ export const useGetProfileData = (address: string) => {
     const [firstProfile] = profile;
 
     setActiveProfile(firstProfile);
-  }, []);
-
-  React.useEffect(() => {
-    if (!activeProfile && address) {
-      fetchActiveProfile();
-    }
-  }, [activeProfile, address]);
+  }, [address]);
 
   return {
     profileData: activeProfile,
