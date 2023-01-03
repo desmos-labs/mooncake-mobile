@@ -2,6 +2,7 @@ import {
   decryptData,
   deriveSecurePassword,
   encryptData,
+  EncryptedData,
 } from 'lib/EncryptionUtils';
 
 import LocalWallet from 'lib/LocalWallet';
@@ -136,7 +137,7 @@ export const saveLocalWallet = async (
 ) => {
   const walletKey = `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
-  const walletToSave = encryptData(_wallet.serialize(), password);
+  const walletToSave = await encryptData(_wallet.serialize(), password);
 
   return setItem(walletKey, walletToSave);
 };
@@ -150,12 +151,12 @@ export const getLocalWallet = async (
   const walletKey = `${address}${SECURE_STORAGE_KEYS.WALLET_SUFFIX}`;
 
   if (!useBiometrics) {
-    walletPassword = deriveSecurePassword(walletPassword!);
+    walletPassword = await deriveSecurePassword(walletPassword!);
   }
 
-  const encryptedData = await getItem<string>(walletKey);
+  const encryptedData = await getItem<EncryptedData>(walletKey);
 
-  const decryptedData = decryptData(encryptedData!, walletPassword!);
+  const decryptedData = await decryptData(encryptedData!, walletPassword!);
 
   return LocalWallet.deserialize(decryptedData);
 };
@@ -173,7 +174,7 @@ export const saveMnemonic = async (
 ) => {
   const mnemonicKey = `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`;
 
-  const encryptedMnemonic = encryptData(mnemonic, password);
+  const encryptedMnemonic = await encryptData(mnemonic, password);
 
   return setItem(mnemonicKey, encryptedMnemonic, {password});
 };
@@ -186,10 +187,10 @@ export const getMnemonic = async (
   let _password = password;
 
   if (!useBiometrics) {
-    _password = deriveSecurePassword(password!);
+    _password = await deriveSecurePassword(password!);
   }
 
-  const encryptedData = await getItem<string>(
+  const encryptedData = await getItem<EncryptedData>(
     `${address}${SECURE_STORAGE_KEYS.MNEMONIC_SUFFIX}`,
     {
       password: _password,
