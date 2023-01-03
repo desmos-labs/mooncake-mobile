@@ -121,7 +121,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
         type: ToastConfig.SUCCESS,
         onPress: () => {
           onPressNotification();
-          setHasNewFollowingPosts(false);
+          resetNewPostNotificationState();
         },
       });
     }
@@ -147,7 +147,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
         type: ToastConfig.SUCCESS,
         onPress: () => {
           onPressNotification();
-          setHasNewDiscoverPosts(false);
+          resetNewPostNotificationState();
         },
       });
     }
@@ -157,6 +157,16 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
     newDiscPostNotification,
     isFocused,
   ]);
+
+  // I think this function is pretty lightweight and doesn't need to be useCallback'd
+  const resetNewPostNotificationState = () => {
+    if (params.type === 'discover') setHasNewDiscoverPosts(false);
+    else if (params.type === 'following') setHasNewFollowingPosts(false);
+  };
+
+  return {
+    resetNewPostNotificationState,
+  };
 };
 
 export default useWatchForNewPosts;

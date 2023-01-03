@@ -80,7 +80,9 @@ const Home = () => {
     }
   }, [postListRef]);
 
-  useWatchForNewPosts(handlePressNewPostNotification);
+  const {resetNewPostNotificationState} = useWatchForNewPosts(
+    handlePressNewPostNotification,
+  );
 
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
@@ -143,6 +145,8 @@ const Home = () => {
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const detectValue = 1.2;
       const xV = _.get(e, 'nativeEvent.velocity.x');
+
+      resetNewPostNotificationState();
       if (Platform.OS === 'ios') {
         if (xV < -detectValue && selectedPostIndex === 0) {
           fetchNewestPosts();
