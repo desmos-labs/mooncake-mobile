@@ -1,4 +1,12 @@
-import {convertCoin} from '@desmoslabs/desmjs';
+import {
+  convertCoin,
+  MsgAddReactionTypeUrl,
+  MsgCreatePostTypeUrl,
+  MsgCreateRelationshipTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+  MsgRemoveReactionTypeUrl,
+  MsgSaveProfileTypeUrl,
+} from '@desmoslabs/desmjs';
 import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
@@ -51,17 +59,17 @@ const Operations = () => {
 
   const getCorrectTitle = useCallback((msgType: string) => {
     switch (msgType) {
-      case 'desmos.posts.v2.MsgCreatePost':
+      case MsgCreatePostTypeUrl:
         return t('create comment post');
-      case 'desmos.relationships.v1.MsgCreateRelationship':
+      case MsgCreateRelationshipTypeUrl:
         return t('follow user');
-      case 'desmos.relationships.v1.MsgDeleteRelationship':
+      case MsgDeleteRelationshipTypeUrl:
         return t('unfollow user');
-      case 'desmos.reactions.v1.MsgAddReaction':
+      case MsgAddReactionTypeUrl:
         return t('add reaction');
-      case 'desmos.reactions.v1.MsgRemoveReaction':
+      case MsgRemoveReactionTypeUrl:
         return t('remove reaction');
-      case 'desmos.profiles.v3.MsgSaveProfile':
+      case MsgSaveProfileTypeUrl:
         return t('edit profile');
       default:
         return 'Not mapped';
@@ -70,14 +78,15 @@ const Operations = () => {
 
   const getCorrectImage = useCallback((msgType: string) => {
     switch (msgType) {
-      case 'desmos.posts.v2.MsgCreatePost':
+      case MsgCreatePostTypeUrl:
         return createPostTxIcon;
-      case 'desmos.relationships.v1.MsgCreateRelationship':
-      case 'desmos.relationships.v1.MsgDeleteRelationship':
+      case MsgCreateRelationshipTypeUrl:
+      case MsgDeleteRelationshipTypeUrl:
         return editProfileTxIcon;
-      case 'desmos.reactions.v1.MsgAddReaction':
+      case MsgAddReactionTypeUrl:
+      case MsgRemoveReactionTypeUrl:
         return addReactionTxIcon;
-      case 'desmos.profiles.v3.MsgSaveProfile':
+      case MsgSaveProfileTypeUrl:
         return editProfileTxIcon;
       default:
         return defaultProfilePic;
@@ -95,11 +104,7 @@ const Operations = () => {
         <FastImage
           resizeMode="contain"
           source={emptyPostsIcon}
-          style={{
-            width: 72,
-            height: 72,
-            marginBottom: theme.spacing.s,
-          }}
+          style={styles.emptyIcon}
         />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
       </View>
@@ -108,8 +113,8 @@ const Operations = () => {
 
   const renderTx = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
-      const title = getCorrectTitle(item.type);
-      const image = getCorrectImage(item.type);
+      const title = getCorrectTitle(`/${item.type}`);
+      const image = getCorrectImage(`/${item.type}`);
       const fees = convertCoin(item.fees[0], 6, currentChain.currencies);
       return (
         <TxComponent
@@ -121,7 +126,7 @@ const Operations = () => {
         />
       );
     },
-    [currentChain],
+    [currentChain, getCorrectImage, getCorrectTitle],
   );
 
   return (
@@ -170,13 +175,7 @@ const Operations = () => {
             });
           }}
           renderSectionHeader={({section: {section}}) => (
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: theme.colors.white,
-                paddingTop: theme.spacing.m,
-                paddingBottom: theme.spacing.s,
-              }}>
+            <View style={styles.sectionHeader}>
               <Typography.Button2>{section}</Typography.Button2>
             </View>
           )}
