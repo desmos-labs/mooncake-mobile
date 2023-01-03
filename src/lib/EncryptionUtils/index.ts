@@ -52,6 +52,5 @@ export const decryptData = async (
   data: EncryptedData,
   password: string,
 ): Promise<string> => {
-  const securePassword: string = await deriveSecurePassword(password);
-  return Aes.decrypt(data.cipher, securePassword, data.iv, 'aes-256-cbc');
+  return Aes.decrypt(data.cipher, password, data.iv, 'aes-256-cbc');
 };

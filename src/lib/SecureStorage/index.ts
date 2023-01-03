@@ -226,7 +226,7 @@ export const savePasswordWithBiometrics = async (
   // Store the derived password for biometric unlocking
   return setItem(
     `${_wallet.bech32Address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
-    deriveSecurePassword(password),
+    await deriveSecurePassword(password),
     {
       biometrics: true,
     },
