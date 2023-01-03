@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -107,7 +106,7 @@ const Activities = () => {
 
   return (
     <DView
-      topBar={<TopBar />}
+      edges={['top', 'left', 'right']}
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>

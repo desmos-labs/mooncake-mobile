@@ -15,20 +15,10 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
   profileTopBarContainer: {
     flex: 1,
   },
-  buttonStyleLeft: {
-    zIndex: 3,
-    position: 'absolute',
-    top: props.insets.top + 10,
-    left: 20,
-    height: 32,
-    width: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   buttonStyleRight: {
     zIndex: 3,
     position: 'absolute',
-    top: props.insets.top + 10,
+    top: props.insets.top + 6,
     height: 32,
     width: 32,
     alignItems: 'center',

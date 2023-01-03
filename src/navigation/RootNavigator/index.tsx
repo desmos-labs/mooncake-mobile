@@ -13,6 +13,9 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
+import BottomTabs, {
+  BottomTabsParamList,
+} from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import PostInteractionTabs, {
   PostInteractionTabsParamList,
@@ -188,6 +191,9 @@ export type RootNavigatorParamList = {
 
   // Post interaction tabs
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+
+  // Bottom tabs
+  [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -386,6 +392,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
+      <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen
         initialParams={{
           postId: 1,

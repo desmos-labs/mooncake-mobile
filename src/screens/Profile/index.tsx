@@ -5,8 +5,6 @@ import {isFollowingAddr} from '@recoil/following';
 import {
   connectIcon,
   defaultBanner,
-  profileBack,
-  profileNotification,
   profileScan,
   profileSettings,
 } from 'assets/images';
@@ -42,8 +40,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
-import PingAnimation from 'screens/Profile/components/PingAnimation';
-import {mapConnectedChainImages} from 'screens/Profile/utils';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BadgesSection from 'screens/Profile/components/BadgesSection';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
@@ -54,6 +50,7 @@ import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWal
 import UserBio from 'screens/Profile/components/UserBio';
 import useProfileDataQueries from 'screens/Profile/useProfileDataQueries';
 import useQueries from 'screens/Profile/useQueries';
+import {mapConnectedChainImages} from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useStyles from './useStyles';
 
@@ -75,7 +72,7 @@ const Profile = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const styles = useStyles({insets});
-  const {goBack, navigate} = navigation;
+  const {navigate} = navigation;
   const {params} = route;
 
   const {
@@ -409,33 +406,14 @@ const Profile = () => {
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
       <StatusBar barStyle="light-content" />
       <ImageButton
-        image={profileBack}
-        buttonStyle={styles.buttonStyleLeft}
-        style={styles.topBarImage}
-        onPress={goBack}
-      />
-      <ImageButton
         image={profileSettings}
         buttonStyle={[styles.buttonStyleRight, {right: 20}]}
         style={styles.topBarImage}
         onPress={() => navigate(ROUTES.SETTINGS)}
       />
       <ImageButton
-        image={profileNotification}
-        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
-        style={styles.topBarImage}
-        overlayComponent={
-          <PingAnimation size={10} color={theme.colors.red01} />
-        }
-        overlayPosition={{
-          top: 2,
-          left: 12,
-        }}
-        onPress={() => navigate(ROUTES.ACTIVITIES)}
-      />
-      <ImageButton
         image={profileScan}
-        buttonStyle={[styles.buttonStyleRight, {right: 100}]}
+        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
         style={styles.topBarImage}
       />
       {/* Dtag */}

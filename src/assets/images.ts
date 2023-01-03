@@ -223,3 +223,11 @@ export const addProfileIcon = require('./images/addProfileIcon.png');
 export const twitterIcon = require('./images/twitter.png');
 
 export const twitterIconBlack = require('./images/twitterBlack.png');
+
+// Bottom tabs bar
+
+export const bottomActivitiesIcon = require('./images/bottomBarIcons/bottomActivities.png');
+export const bottomCommunitiesIcon = require('./images/bottomBarIcons/bottomCommunities.png');
+export const bottomHomeIcon = require('./images/bottomBarIcons/bottomHome.png');
+export const bottomProfileIcon = require('./images/bottomBarIcons/bottomProfile.png');
+export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.png');
