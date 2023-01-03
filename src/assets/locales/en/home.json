@@ -1,5 +1,7 @@
 {
   "HOME_DISCOVER": "Discover",
   "HOME_FOLLOWING": "Following",
-  "noMorePosts": "You have read the most\nrecent post!"
+  "noMorePosts": "You have read the most\nrecent post!",
+  "newDiscoverPost": "There are new Posts! Tap to refresh.",
+  "newFollowingPost": "There are new Posts from your followers! Tap to refresh."
 }

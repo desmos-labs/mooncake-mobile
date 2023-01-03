@@ -30,5 +30,7 @@
   "telegram": "Telegram",
   "github": "Github",
   "discord": "Discord",
-  "medium": "Medium"
+  "medium": "Medium",
+  "notifyOnNewDiscPosts": "Notify on new Discover Posts",
+  "notifyOnNewFollowPosts": "Notify on new Following Posts"
 }
