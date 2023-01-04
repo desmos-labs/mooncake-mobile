@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   atom,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil';
-import {useQuery} from '@apollo/client';
+import {useLazyQuery, useQuery} from '@apollo/client';
 import GetLastPostsByAddress from 'services/graphql/queries/GetLastPostsByAddress';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -66,3 +66,37 @@ const usePollLatestPostsByUser = (limit: number) => {
 };
 
 export default usePollLatestPostsByUser;
+
+export const useGetLatestPostsByActiveAddress = () => {
+  const {activeAddress} = useActiveAccount();
+  const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
+
+  useSyncPendingPosts();
+
+  const [, {refetch}] = useLazyQuery(GetLastPostsByAddress, {
+    variables: {
+      limit: 5,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      user: activeAddress,
+      reaction: {
+        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+        registered_reaction_id: 9,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
+  });
+
+  const getLatestPostsByActiveAddress = useCallback(async () => {
+    const {data} = await refetch({
+      user: activeAddress,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+    });
+    const {post} = data;
+    setLatestPostsByUser(post);
+  }, [refetch, activeAddress]);
+
+  return {
+    getLatestPostsByActiveAddress,
+  };
+};
