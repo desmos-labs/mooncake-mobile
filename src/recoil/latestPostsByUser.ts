@@ -6,18 +6,10 @@ import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 
 import {useSyncPendingPosts} from 'hooks/usePendingPosts';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
 export const latestPostsByUserState = atom<PostItem[]>({
   key: 'latestPosts',
-  default: getMMKV(MMKVKEYS.PENDING_POSTS) || [],
-  effects: [
-    ({onSet}) => {
-      onSet(newValue => {
-        setMMKV(MMKVKEYS.PENDING_POSTS, newValue);
-      });
-    },
-  ],
+  default: [],
 });
 
 /**
