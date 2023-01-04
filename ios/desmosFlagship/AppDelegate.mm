@@ -63,8 +63,7 @@ static void ClearKeychainIfNecessary() {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Add this line to call the above function
-    ClearKeychainIfNecessary();
+  ClearKeychainIfNecessary();
   [FIRApp configure];
   RCTAppSetupPrepareApp(application);
 
