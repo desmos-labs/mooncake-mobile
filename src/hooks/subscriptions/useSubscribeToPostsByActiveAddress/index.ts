@@ -5,7 +5,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useEffect, useRef} from 'react';
 import {useGetLatestPostsByActiveAddress} from '@recoil/latestPostsByUser';
 
-const useSubscribeToUsersPosts = () => {
+const useSubscribeToPostsByActiveAddress = () => {
   const {activeAddress} = useActiveAccount();
 
   const {getLatestPostsByActiveAddress} = useGetLatestPostsByActiveAddress();
@@ -39,4 +39,4 @@ const useSubscribeToUsersPosts = () => {
   ]);
 };
 
-export default useSubscribeToUsersPosts;
+export default useSubscribeToPostsByActiveAddress;
