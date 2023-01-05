@@ -89,6 +89,16 @@ const useHooks = () => {
     [activeAddress],
   );
 
+  const handlePressReport = React.useCallback(
+    (postId: number, subspaceId: number) => {
+      navigate(ROUTES.REPORT_POST, {
+        postId,
+        subspaceId,
+      });
+    },
+    [],
+  );
+
   const handlePressFollow = React.useCallback(
     async (address: string) => {
       const result = await followOrUnfollowUser({addrToFollow: address});
@@ -157,6 +167,7 @@ const useHooks = () => {
     handlePressTip,
     handleAddReaction,
     handlePressComments,
+    handlePressReport,
     posts: combinedPosts,
     selectedPostIndex,
     checkIfPostIsPending,
