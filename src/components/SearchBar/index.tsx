@@ -1,19 +1,16 @@
+import {magnifyingGlass} from 'assets/images';
 import React from 'react';
 import {Image, TextInput, View} from 'react-native';
-import {magnifyingGlass} from 'assets/images';
-import {useTranslation} from 'react-i18next';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
   handleChange: (text: string) => void;
+  searchPlaceHolder: string;
 };
 
-const SearchBar = ({handleChange}: Props) => {
+const SearchBar = ({handleChange, searchPlaceHolder}: Props) => {
   const styles = useStyles();
-
-  const {t} = useTranslation('selectChain');
-
   const theme = useTheme();
 
   return (
@@ -23,7 +20,7 @@ const SearchBar = ({handleChange}: Props) => {
         style={styles.input}
         onChangeText={handleChange}
         placeholderTextColor={theme.colors.grey02}
-        placeholder={t('searchPlaceholder')}
+        placeholder={searchPlaceHolder}
       />
     </View>
   );

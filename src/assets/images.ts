@@ -44,11 +44,9 @@ export const xprtIcon = require('./images/xprt.png');
 
 export const copyIcon = require('./images/copy.png');
 
-export const moreIcon = require('./images/more.png');
-
 export const modalSuccess = require('./images/modalSuccess.png');
 
-export const modalFail = require('./images/modalFail.png');
+export const placeholderIcon = require('./images/placeholderIcon.png');
 
 export const iconCrossBlack = require('./images/iconCrossBlack.png');
 
@@ -56,7 +54,9 @@ export const ledgerIcon = require('./images/ledgerIcon.png');
 
 export const checkboxIcon = require('./images/checkboxIcon.png');
 
-export const followIcon = require('./images/followIcon.png');
+export const followBlackIcon = require('./images/followBlackIcon.png');
+
+export const unfollowBlackIcon = require('./images/unfollowBlackIcon.png');
 
 export const commentIconCommented = require('./images/commentIconCommented.png');
 
@@ -73,8 +73,6 @@ export const defaultBanner = require('./images/defaultBanner.png');
 export const plusWhiteIcon = require('./images/plusWhite.png');
 
 export const settingsButton = require('./images/settingsButton.png');
-
-export const editButton = require('./images/editButton.png');
 
 export const errorImage = require('./images/errorImage.png');
 
@@ -124,6 +122,10 @@ export const createPost = require('./images/createPost.png');
 
 export const noMorePosts = require('./images/noMorePosts.png');
 
+export const homeTipIcon = require('./images/homeTipIcon.png');
+
+export const homeInviteIcon = require('./images/homeInviteIcon.png');
+
 export const connectIcon = require('./images/connectIcon.png');
 
 export const authorizationImage = require('./images/authorizationImage.png');
@@ -133,8 +135,6 @@ export const commentMore = require('./images/commentMore.png');
 export const commentLiked = require('./images/commentLiked.png');
 
 export const followedIcon = require('assets/images/unfollowIcon.png');
-
-export const followBlackIcon = require('./images/followBlackLight.png');
 
 export const reportIcon = require('./images/report.png');
 
@@ -194,8 +194,6 @@ export const postBG = [
 
 export const profileScan = require('./images/profileScan.png');
 
-export const profileNotification = require('./images/profileNotification.png');
-
 export const profileBack = require('./images/profileBack.png');
 
 export const profileSettings = require('./images/profileSettings.png');
@@ -221,8 +219,6 @@ export const addProfileIcon = require('./images/addProfileIcon.png');
 // Socials
 
 export const twitterIcon = require('./images/twitter.png');
-
-export const twitterIconBlack = require('./images/twitterBlack.png');
 
 // Bottom tabs bar
 

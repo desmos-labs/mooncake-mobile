@@ -9,11 +9,10 @@ import {isFollowingAddr} from '@recoil/following';
 import {
   defaultProfilePic,
   followBlackIcon,
-  followedIcon,
-  followIcon,
   moreBlackIcon,
   reportIcon,
   shareBlackIcon,
+  unfollowBlackIcon,
 } from 'assets/images';
 import BackButton from 'components/BackButton';
 import DView from 'components/DView';
@@ -318,7 +317,7 @@ const PostDetails = () => {
           {activeAddress !== post?.author?.address && (
             <ImageButton
               style={[styles.followIcon]}
-              image={isFollowingAddress ? followedIcon : followIcon}
+              image={isFollowingAddress ? unfollowBlackIcon : followBlackIcon}
               onPress={async () => {
                 await followOrUnfollowUser({
                   addrToFollow: post?.author?.address,
@@ -401,7 +400,7 @@ const PostDetails = () => {
                 });
               }
             },
-            icon: followBlackIcon,
+            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
           },
           {
             label: t('report'),

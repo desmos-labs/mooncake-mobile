@@ -1,59 +1,103 @@
-import {defaultProfilePic, followedIcon, followIcon} from 'assets/images';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
+import {isFollowingAddr} from '@recoil/following';
+import {loadingOrange} from 'assets/animations';
+import {
+  commentIcon,
+  commentIconCommented,
+  commentLiked,
+  commentLikeEmptyIcon,
+  defaultProfilePic,
+  followBlackIcon,
+  homeTipIcon,
+  moreBlackIcon,
+  reportIcon,
+  unfollowBlackIcon,
+} from 'assets/images';
+import ImageButton from 'components/ImageButton';
+import PopupMenu from 'components/PopupMenu';
+import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
-import React, {useMemo} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
+import React, {useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
-import {isFollowingAddr} from '@recoil/following';
-import ThemedLottieView from 'components/ThemedLottieView';
-import {loadingWhite} from 'assets/animations';
-import {mapPostFontSize} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 interface Props
   extends Pick<
     PostItem,
-    'author' | 'isPending' | 'attachments' | 'text' | 'id'
+    | 'author'
+    | 'isPending'
+    | 'attachments'
+    | 'text'
+    | 'id'
+    | 'commentPresence'
+    | 'reactionPresence'
+    | 'reactions'
+    | 'repliesCount'
   > {
   /**
    * What to do when the author's avatar, name, or dtag is pressed.
    */
   onPressAuthor: () => void;
-
+  /**
+   * What to do when the report button is pressed.
+   */
+  onPressReport: () => void;
   /**
    * What to do if the follow button is pressed.
    */
   onPressFollow: () => void;
-
   /**
-   * What to do if the post details button is pressed.
+   * What to do if the entire post is pressed.
    */
   onPressDetails: () => void;
-}
-
-enum POST_TYPE {
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-  IMAGE_TEXT = 'IMAGE_TEXT',
+  /**
+   * What to do if the post like button is pressed.
+   */
+  onPressLike: () => void;
+  /**
+   * What to do if the post comment button is pressed.
+   */
+  onPressComment: () => void;
+  /**
+   * What to do if the post tip button is pressed.
+   */
+  onPressTip: () => void;
 }
 
 // The post dimensions are controlled by the Carousel
 const PostCard = ({
   onPressAuthor,
   onPressFollow,
+  onPressReport,
+  onPressLike,
+  onPressComment,
+  onPressTip,
   onPressDetails,
   author,
   isPending,
   attachments,
   text,
   id,
+  reactionPresence,
+  commentPresence,
+  reactions,
+  repliesCount,
 }: Props) => {
   const styles = useStyles();
-
+  const theme = useTheme();
+  const {t} = useTranslation('home');
   const {activeAddress, profileData} = useActiveAccount();
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<{
+    x: number;
+    y: number;
+  }>();
 
   // Use the current active user's profile data if the post is pending
   const authorData = React.useMemo(() => {
@@ -62,152 +106,193 @@ const PostCard = ({
     } else return author;
   }, [isPending, profileData]);
 
-  const {profile_pic, nickname, dtag} = authorData;
-
-  const {MediaAttachment} = useRenderMediaAttachment({attachments});
-
   const isFollowing = useRecoilValue(isFollowingAddr(authorData?.address));
 
-  const Avatar = React.useMemo(() => {
-    return (
-      <ProfileHeaderButton
-        onPress={onPressAuthor}
-        imageSrc={(profile_pic && {uri: profile_pic}) || defaultProfilePic}
-        style={{height: 40, width: 40, alignSelf: 'center', borderRadius: 20}}
-      />
-    );
-  }, [profile_pic]);
-
-  // Hopefully we come up with a more elegant way to do this in the future
-  const Content = React.useMemo(() => {
-    const followUnfollowButton = authorData.address !== activeAddress && (
-      <View>
-        <ProfileHeaderButton
-          imageSrc={isFollowing ? followedIcon : followIcon}
-          onPress={onPressFollow}
-        />
-      </View>
-    );
-
-    const checkPostType = () => {
-      if (text && attachments.length === 0) {
-        return POST_TYPE.TEXT;
-      }
-      if (text && attachments.length > 0) {
-        return POST_TYPE.IMAGE_TEXT;
-      }
-      if (!text && attachments.length > 0) {
-        return POST_TYPE.IMAGE;
-      }
-
-      // This should never be reached. Logged post id's should be checked for
-      // validity
-      // TODO: make this less naive
-      console.log('Default post behavior for post id', id);
-      return POST_TYPE.TEXT;
-    };
-
-    const postType = checkPostType();
-
-    if (postType === POST_TYPE.TEXT || postType === POST_TYPE.IMAGE) {
-      return (
-        <>
-          <View style={styles.textContainer}>
-            <Typography.H2
-              style={[
-                styles.textStyle,
-                {fontSize: mapPostFontSize(text?.length)},
-              ]}>
-              {text}
-            </Typography.H2>
-          </View>
-          <View style={styles.bottomGroup}>
-            <TouchableOpacity
-              onPress={onPressAuthor}
-              style={styles.profileGroup}>
-              {Avatar}
-              <View style={styles.nameGroup}>
-                {nickname && (
-                  <Typography.Subtitle2 style={styles.profileText}>
-                    {nickname}
-                  </Typography.Subtitle2>
-                )}
-
-                <Typography.Body6 style={styles.profileText}>
-                  {`@${dtag}`}
-                </Typography.Body6>
-              </View>
-            </TouchableOpacity>
-
-            {followUnfollowButton}
-          </View>
-        </>
-      );
-    }
-    if (postType === POST_TYPE.IMAGE_TEXT) {
-      return (
-        <View>
-          <LinearGradient
-            style={styles.textGradient}
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,1)']}
-          />
-          <View style={styles.bottomGroup}>
-            <View style={{flex: 1}}>
-              <TouchableOpacity
-                onPress={onPressAuthor}
-                style={styles.profileGroup}>
-                {Avatar}
-                <View style={styles.nameGroup}>
-                  {nickname && (
-                    <Typography.Subtitle2 style={styles.profileText}>
-                      {nickname}
-                    </Typography.Subtitle2>
-                  )}
-
-                  <Typography.Body6 style={styles.profileText}>
-                    {`@${dtag}`}
-                  </Typography.Body6>
-                </View>
-              </TouchableOpacity>
-              <Typography.Body7 numberOfLines={2} style={styles.imagePostText}>
-                {text}
-              </Typography.Body7>
-            </View>
-
-            {followUnfollowButton}
-          </View>
-        </View>
-      );
-    }
-  }, [isFollowing]);
+  const {MediaAttachment} = useRenderMediaAttachment({
+    attachments,
+    useAutoSize: true,
+    horizontalPaddingWithAutoSize: 32,
+    imageStyle: {borderRadius: 10},
+  });
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
       return (
         <ThemedLottieView
-          source={loadingWhite}
+          source={loadingOrange}
           autoPlay
           style={{
-            width: 40,
-            height: 40,
+            width: 30,
+            height: 30,
             position: 'absolute',
             top: 2,
-            left: 2,
+            left: 'auto',
+            right: 0,
           }}
         />
       );
-    } else return undefined;
-  }, [isPending]);
+    } else if (activeAddress !== authorData?.address) {
+      return (
+        <ImageButton
+          onPress={event => {
+            setMenuAnchor({
+              x: event.nativeEvent.pageX,
+              y: event.nativeEvent.pageY,
+            });
+            setMenuVisible(true);
+          }}
+          tintColor={theme.colors.surfaceBlack}
+          image={moreBlackIcon}
+          buttonStyle={{
+            marginTop: theme.spacing.s,
+            marginRight: theme.spacing.xs,
+          }}
+          style={{width: 20, height: 20}}
+        />
+      );
+    }
+  }, [authorData, activeAddress, isPending, setMenuVisible, setMenuAnchor]);
+
+  const ProfileInfo = React.useMemo(() => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: theme.spacing.s,
+        }}>
+        <TouchableOpacity
+          style={{flexDirection: 'row'}}
+          onPress={onPressAuthor}>
+          <FastImage
+            source={
+              (authorData?.profile_pic && {uri: authorData?.profile_pic}) ||
+              defaultProfilePic
+            }
+            style={{
+              height: 48,
+              width: 48,
+              alignSelf: 'center',
+              borderRadius: 24,
+              marginRight: theme.spacing.s,
+            }}
+          />
+          <View style={{flexDirection: 'column'}}>
+            <Typography.Subtitle2>{authorData?.nickname}</Typography.Subtitle2>
+            <Typography.Body6 style={{color: theme.colors.midGrey}}>
+              @{authorData?.dtag}
+            </Typography.Body6>
+          </View>
+        </TouchableOpacity>
+        {PendingIndicator}
+      </View>
+    );
+  }, [authorData?.profile_pic]);
+
+  const BottomBar = React.useMemo(() => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: theme.spacing.m,
+          justifyContent: 'space-between',
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <ImageButton
+            onPress={onPressLike}
+            tintColor={theme.colors.grey02}
+            image={
+              reactionPresence?.aggregate?.count >= 1
+                ? commentLiked
+                : commentLikeEmptyIcon
+            }
+            style={{height: 24, width: 24, marginRight: theme.spacing.xs}}
+          />
+          <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+            {reactions?.length}
+          </Typography.Subtitle3>
+          <TouchableOpacity
+            onPress={onPressComment}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: theme.spacing.s,
+              marginLeft: theme.spacing.l,
+            }}>
+            <FastImage
+              tintColor={theme.colors.grey02}
+              source={
+                commentPresence?.aggregate?.count >= 1
+                  ? commentIconCommented
+                  : commentIcon
+              }
+              style={{height: 24, width: 24, marginRight: theme.spacing.xs}}
+            />
+            <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+              {repliesCount?.aggregate?.count}
+            </Typography.Subtitle3>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          onPress={onPressTip}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: theme.spacing.s,
+          }}>
+          <FastImage
+            tintColor={theme.colors.grey02}
+            source={homeTipIcon}
+            style={{height: 22, width: 22, marginRight: theme.spacing.xs}}
+          />
+          <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+            {t('tip')}
+          </Typography.Subtitle3>
+        </TouchableOpacity>
+      </View>
+    );
+  }, [
+    commentPresence,
+    reactionPresence,
+    onPressComment,
+    onPressTip,
+    onPressLike,
+  ]);
 
   return (
     <TouchableOpacity
-      style={styles.container}
-      onPress={onPressDetails}
+      key={id}
       activeOpacity={0.9}
-      key={id}>
-      {MediaAttachment}
-      {Content}
-      {PendingIndicator}
+      style={styles.container}
+      onPress={onPressDetails}>
+      {ProfileInfo}
+      <Typography.Body6 style={{marginVertical: theme.spacing.xs}}>
+        {text}
+      </Typography.Body6>
+      {MediaAttachment && (
+        <View style={{flex: 1, alignItems: 'center'}}>{MediaAttachment}</View>
+      )}
+      {BottomBar}
+      <PopupMenu
+        anchor={menuAnchor}
+        visible={menuVisible}
+        closeMenu={() => setMenuVisible(false)}
+        menuItems={[
+          {
+            label: t('follow'),
+            onPress: onPressFollow,
+            icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+          },
+          {
+            label: t('report'),
+            onPress: onPressReport,
+            icon: reportIcon,
+          },
+        ]}
+      />
     </TouchableOpacity>
   );
 };

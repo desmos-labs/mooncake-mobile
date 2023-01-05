@@ -383,6 +383,7 @@ const Profile = () => {
             borderWidth: 3,
             left: theme.spacing.m,
             borderColor: theme.colors.white,
+            backgroundColor: theme.colors.white,
           },
           animatedProfilePicStyle,
         ]}
