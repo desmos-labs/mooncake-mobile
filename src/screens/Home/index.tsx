@@ -209,6 +209,7 @@ const Home = () => {
                   type: ToastConfig.ERROR_NO_RETRY,
                 });
               }
+
               handlePressComments(posts[selectedPostIndex].id);
             }}
             interactionCount={_.get(

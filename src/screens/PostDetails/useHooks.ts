@@ -26,6 +26,7 @@ import {
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import EnvConfig from 'config/EnvConfig';
 import {FlatList} from 'react-native';
+import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
 
 const useHooks = ({
   postID,
@@ -103,6 +104,11 @@ const useHooks = ({
       subspaceID,
     },
     fetchPolicy: 'no-cache',
+  });
+
+  useSubscribeToPostComments({
+    postID,
+    updateAction: commentsRefetch,
   });
 
   /**
@@ -280,6 +286,7 @@ const useHooks = ({
     handlePressReport,
     pageRefetch,
     scrollViewRef,
+    commentsRefetch,
   };
 };
 
