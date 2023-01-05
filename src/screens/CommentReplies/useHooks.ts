@@ -25,6 +25,7 @@ import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
+import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
 
 const useHooks = ({
   postID,
@@ -122,6 +123,11 @@ const useHooks = ({
       subspaceID,
     },
     fetchPolicy: 'no-cache',
+  });
+
+  useSubscribeToPostComments({
+    postID: commentID,
+    updateAction: commentsRefetch,
   });
 
   const mainComment = React.useMemo(() => {
