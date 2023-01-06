@@ -9,7 +9,6 @@ import signUpInfoState from '@recoil/signUpInfoState';
 import signUpPasswordState from '@recoil/signUpPasswordState';
 import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -26,6 +25,7 @@ import UploadMedia from 'services/axios/requests/UploadMedia';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
@@ -38,6 +38,7 @@ const useHooks = () => {
   const [loading, setLoading] = React.useState(false);
   const [addressToCheck, setAddressToCheck] = React.useState('');
   const [signupValues, setSignupValues] = React.useState<any>({});
+  const {setActiveAddress} = useActiveAccount();
   const {data, startPolling, stopPolling} = useQuery(GetAccountBalance, {
     variables: {
       address: addressToCheck,
@@ -122,7 +123,8 @@ const useHooks = () => {
                     mnemonic,
                     newPassword,
                   );
-                  setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
+                  setActiveAddress(address);
+                  // setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
                   startPolling(1000);
                 }
               })

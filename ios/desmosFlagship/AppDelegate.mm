@@ -34,15 +34,41 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 @end
 #endif
 
+/**
+ Deletes all Keychain items accessible by this app if this is the first time the user launches the app
+ */
+static void ClearKeychainIfNecessary() {
+    // Checks wether or not this is the first time the app is run
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAS_RUN_BEFORE"] == NO) {
+        // Set the appropriate value so we don't clear next time the app is launched
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HAS_RUN_BEFORE"];
+
+        NSArray *secItemClasses = @[
+            (__bridge id)kSecClassGenericPassword,
+            (__bridge id)kSecClassInternetPassword,
+            (__bridge id)kSecClassCertificate,
+            (__bridge id)kSecClassKey,
+            (__bridge id)kSecClassIdentity
+        ];
+
+        // Maps through all Keychain classes and deletes all items that match
+        for (id secItemClass in secItemClasses) {
+            NSDictionary *spec = @{(__bridge id)kSecClass: secItemClass};
+            SecItemDelete((__bridge CFDictionaryRef)spec);
+        }
+    }
+}
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  ClearKeychainIfNecessary();
   [FIRApp configure];
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  
+
   #if RCT_DEV
     [bridge moduleForClass:[RCTDevLoadingView class]];
   #endif
@@ -54,7 +80,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
     _bridgeAdapter = [[RCTSurfacePresenterBridgeAdapter alloc] initWithBridge:bridge contextContainer:_contextContainer];
     bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
   #endif
-  
+
   NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
   NSDictionary *initProps = [self prepareInitialProps];
   UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"Butter", appProperties);

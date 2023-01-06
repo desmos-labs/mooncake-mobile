@@ -7,7 +7,6 @@ import createLocalWalletState from '@recoil/createLocalWalletState';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import LocalWallet, {DEFAULT_WALLET_OPTIONS} from 'lib/LocalWallet';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -18,6 +17,7 @@ import {Asset} from 'react-native-image-picker';
 import {UnwrapRecoilValue} from 'recoil';
 import UploadMedia from 'services/axios/requests/UploadMedia';
 import {ChainAccount, ChainAccountType} from 'types/chains';
+import useActiveAccount from 'hooks/useActiveAccount';
 
 function useHandleFormSubmit(
   initialFormState: {nickname: string; dTag: string; bio: string},
@@ -31,6 +31,7 @@ function useHandleFormSubmit(
     useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const {t} = useTranslation('createProfile');
   const unlockWallet = useUnlockWallet();
+  const {setActiveAddress} = useActiveAccount();
 
   return useCallback(
     async (formValues: typeof initialFormState) => {
@@ -100,7 +101,8 @@ function useHandleFormSubmit(
               await saveLocalWallet(wallet, password!);
               await saveNewAccount(newAccount);
               await saveMnemonic(wallet.bech32Address, mnemonic, password!);
-              setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
+              setActiveAddress(wallet.bech32Address);
+              // setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, wallet.bech32Address);
             } else if (createLedgerAccount && createLedgerAccount.account) {
               const {account: ledgerAccount} = createLedgerAccount;
 

@@ -7,7 +7,6 @@ import {
   tipIconTipped,
   commentIconCommented,
 } from 'assets/images';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {
@@ -28,11 +27,14 @@ import _ from 'lodash';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {useTranslation} from 'react-i18next';
+import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import useStyles from './useStyles';
 
+// discover and following share the same params
 export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.HOME_TABS
+  HomeTabsParamList,
+  ROUTES.HOME_DISCOVER
 >;
 
 export type HomeParams = {
@@ -49,6 +51,7 @@ const Home = () => {
   const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
+  const postListRef = useRef<any>();
 
   const lockPostPress = useRef(false);
 
@@ -66,6 +69,20 @@ const Home = () => {
     onViewableItemsChanged,
     checkIfPostIsPending,
   } = useHooks();
+
+  const handlePressNewPostNotification = useCallback(() => {
+    fetchNewestPosts();
+    if (postListRef && postListRef.current) {
+      postListRef.current.scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
+  }, [postListRef]);
+
+  const {resetNewPostNotificationState} = useWatchForNewPosts(
+    handlePressNewPostNotification,
+  );
 
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
@@ -128,6 +145,8 @@ const Home = () => {
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const detectValue = 1.2;
       const xV = _.get(e, 'nativeEvent.velocity.x');
+
+      resetNewPostNotificationState();
       if (Platform.OS === 'ios') {
         if (xV < -detectValue && selectedPostIndex === 0) {
           fetchNewestPosts();
@@ -157,6 +176,7 @@ const Home = () => {
         backgroundColor: theme.colors.background,
       }}>
       <FlatList
+        ref={postListRef}
         data={posts}
         horizontal
         pagingEnabled
