@@ -1,4 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
+import {loadingOrange} from 'assets/animations';
+import ThemedLottieView from 'components/ThemedLottieView';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -43,7 +45,18 @@ const Home = () => {
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
       if (item.emptyComponent) {
-        return null;
+        return (
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <ThemedLottieView
+              style={{width: '10%', alignSelf: 'center'}}
+              autoPlay
+              loop={true}
+              source={loadingOrange}
+              resizeMode="cover"
+            />
+          </View>
+        );
       }
       return (
         <PostCard
@@ -54,6 +67,7 @@ const Home = () => {
           id={item.id}
           reactionPresence={item.reactionPresence}
           commentPresence={item.commentPresence}
+          tipPresence={item.tipPresence}
           reactions={item.reactions}
           repliesCount={item.repliesCount}
           creation_date={item.creation_date}
@@ -107,6 +121,7 @@ const Home = () => {
     [
       lockPostPress.current,
       handlePressFollow,
+      handlePressReport,
       handlePressAuthor,
       handlePressDetails,
       handlePressComments,

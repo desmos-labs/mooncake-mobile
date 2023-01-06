@@ -8,6 +8,7 @@ import {
   defaultProfilePic,
   followBlackIcon,
   homeTipIcon,
+  homeTipIconFilled,
   moreBlackIcon,
   reportIcon,
   unfollowBlackIcon,
@@ -44,6 +45,7 @@ interface Props
     | 'id'
     | 'commentPresence'
     | 'reactionPresence'
+    | 'tipPresence'
     | 'reactions'
     | 'repliesCount'
     | 'creation_date'
@@ -95,6 +97,7 @@ const PostCard = ({
   creation_date,
   reactionPresence,
   commentPresence,
+  tipPresence,
   reactions,
   repliesCount,
 }: Props) => {
@@ -167,14 +170,7 @@ const PostCard = ({
         <ThemedLottieView
           source={loadingOrange}
           autoPlay
-          style={{
-            width: 30,
-            height: 30,
-            position: 'absolute',
-            top: 2,
-            left: 'auto',
-            right: 0,
-          }}
+          style={styles.pendingIcon}
         />
       );
     } else if (activeAddress !== authorData?.address) {
@@ -201,13 +197,7 @@ const PostCard = ({
 
   const ProfileInfo = React.useMemo(() => {
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: theme.spacing.s,
-        }}>
+      <View style={styles.profileInfoView}>
         <TouchableOpacity
           style={{flexDirection: 'row'}}
           onPress={onPressAuthor}>
@@ -216,13 +206,7 @@ const PostCard = ({
               (authorData?.profile_pic && {uri: authorData?.profile_pic}) ||
               defaultProfilePic
             }
-            style={{
-              height: 48,
-              width: 48,
-              alignSelf: 'center',
-              borderRadius: 24,
-              marginRight: theme.spacing.s,
-            }}
+            style={styles.profilePic}
           />
           <View style={{flexDirection: 'column'}}>
             <Typography.Subtitle2>{authorData?.nickname}</Typography.Subtitle2>
@@ -248,45 +232,53 @@ const PostCard = ({
 
   const BottomBar = React.useMemo(() => {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginVertical: theme.spacing.m,
-          justifyContent: 'space-between',
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.bottomBarView}>
+        <View style={styles.bottomBarInnerView}>
           <ImageButton
             onPress={onPressLike}
-            tintColor={theme.colors.grey02}
+            tintColor={
+              reactionPresence?.aggregate?.count >= 1
+                ? theme.colors.butterOrange01
+                : theme.colors.grey02
+            }
             image={
               reactionPresence?.aggregate?.count >= 1
                 ? commentLiked
                 : commentLikeEmptyIcon
             }
-            style={{height: 24, width: 24, marginRight: theme.spacing.xs}}
+            style={styles.bottomBarIcon}
           />
-          <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+          <Typography.Subtitle3
+            style={
+              reactionPresence?.aggregate?.count >= 1
+                ? {color: theme.colors.butterOrange01}
+                : {color: theme.colors.grey02}
+            }>
             {reactions?.length}
           </Typography.Subtitle3>
           <TouchableOpacity
             onPress={onPressComment}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginRight: theme.spacing.s,
-              marginLeft: theme.spacing.l,
-            }}>
+            style={styles.commentButton}>
             <FastImage
-              tintColor={theme.colors.grey02}
+              resizeMode="cover"
+              tintColor={
+                commentPresence?.aggregate?.count >= 1
+                  ? theme.colors.butterOrange01
+                  : theme.colors.grey02
+              }
               source={
                 commentPresence?.aggregate?.count >= 1
                   ? commentIconCommented
                   : commentIcon
               }
-              style={{height: 24, width: 24, marginRight: theme.spacing.xs}}
+              style={styles.bottomBarIcon}
             />
-            <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+            <Typography.Subtitle3
+              style={
+                commentPresence?.aggregate?.count >= 1
+                  ? {color: theme.colors.butterOrange01}
+                  : {color: theme.colors.grey02}
+              }>
               {repliesCount?.aggregate?.count}
             </Typography.Subtitle3>
           </TouchableOpacity>
@@ -300,11 +292,18 @@ const PostCard = ({
             marginHorizontal: theme.spacing.s,
           }}>
           <FastImage
-            tintColor={theme.colors.grey02}
-            source={homeTipIcon}
-            style={{height: 22, width: 22, marginRight: theme.spacing.xs}}
+            resizeMode="cover"
+            source={
+              tipPresence.aggregate.count >= 1 ? homeTipIconFilled : homeTipIcon
+            }
+            style={styles.bottomBarIcon}
           />
-          <Typography.Subtitle3 style={{color: theme.colors.grey02}}>
+          <Typography.Subtitle3
+            style={
+              tipPresence?.aggregate?.count >= 1
+                ? {color: theme.colors.butterOrange01}
+                : {color: theme.colors.grey02}
+            }>
             {t('tip')}
           </Typography.Subtitle3>
         </TouchableOpacity>
@@ -313,6 +312,7 @@ const PostCard = ({
   }, [
     commentPresence,
     reactionPresence,
+    tipPresence,
     onPressComment,
     onPressTip,
     onPressLike,
@@ -329,7 +329,7 @@ const PostCard = ({
         {text}
       </Typography.Body6>
       {MediaAttachment && (
-        <View style={{flex: 1, alignItems: 'center'}}>{MediaAttachment}</View>
+        <View style={styles.mediaView}>{MediaAttachment}</View>
       )}
       {BottomBar}
       <PopupMenu

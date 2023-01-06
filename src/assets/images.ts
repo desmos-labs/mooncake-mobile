@@ -124,6 +124,8 @@ export const noMorePosts = require('./images/noMorePosts.png');
 
 export const homeTipIcon = require('./images/homeTipIcon.png');
 
+export const homeTipIconFilled = require('./images/homeTipIconFilled.png');
+
 export const homeInviteIcon = require('./images/homeInviteIcon.png');
 
 export const connectIcon = require('./images/connectIcon.png');

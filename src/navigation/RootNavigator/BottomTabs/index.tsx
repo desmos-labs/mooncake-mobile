@@ -9,7 +9,6 @@ import {
   bottomHomeIcon,
   bottomProfileIcon,
   middleButtonIcon,
-  plusWhiteIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import LoadingOverlay from 'components/LoadingOverlay';
@@ -21,7 +20,6 @@ import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useToast} from 'react-native-toast-notifications';
@@ -130,15 +128,8 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
             <View key={route.key} style={styles.middleButtonView}>
               <ImageButton
                 onPress={handlePressCreatePost}
-                overlayComponent={
-                  <FastImage
-                    source={plusWhiteIcon}
-                    tintColor={theme.colors.white}
-                    style={styles.overlayImage}
-                  />
-                }
                 image={middleButtonIcon}
-                style={{height: 36, width: 62, alignSelf: 'center'}}
+                style={{height: 41, width: 41, alignSelf: 'center'}}
               />
             </View>
           );

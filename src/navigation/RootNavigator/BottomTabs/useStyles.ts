@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     marginHorizontal: theme.spacing.s,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.l,
+    paddingHorizontal: theme.spacing.m,
   },
   buttonView: {
     backgroundColor: theme.colors.white,
