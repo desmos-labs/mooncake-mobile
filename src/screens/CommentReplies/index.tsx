@@ -184,7 +184,7 @@ const CommentReplies = () => {
           commented={mainComment?.commentPresence?.aggregate?.count > 0}
           tipped={mainComment?.tipPresence?.aggregate?.count > 0}
           liked={mainComment?.reactionPresence?.aggregate?.count > 0}
-          repliesCounter={mainComment?.repliesCount?.aggregate?.count}
+          repliesCounter={comments.length}
           loading={mainCommentLoading}
           handlePressMore={event => {
             setAnchor({
