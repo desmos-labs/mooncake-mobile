@@ -576,6 +576,8 @@ PODS:
     - FirebaseCoreExtension (= 10.2.0)
     - React-Core
     - RNFBApp
+  - RNFlashList (1.4.0):
+    - React-Core
   - RNGestureHandler (2.5.0):
     - React-Core
   - RNKeychain (8.1.0):
@@ -726,6 +728,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -899,6 +902,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFlashList:
+    :path: "../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -1012,12 +1017,13 @@ SPEC CHECKSUMS:
   RNFBApp: a61f530d08a0f5996b1fbdcbd1b8bb077d5d61a1
   RNFBDynamicLinks: db8903a4c376ba91c32725a6707b6ddb54f27938
   RNFBMessaging: f7a90ac199e1bc771e9e09058ed0354efd047182
+  RNFlashList: 399bf6a0db68f594ad2c86aaff3ea39564f39f8a
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNKeychain: c442b8512802a20cab4db3e3a1cf53e4731615bc
   RNLocalize: a64514b46a01375fdfae9349036b4dc7130333b5
   RNNotifee: d585266dd69e1f355d26d074cbfdbdfa6c94b7d5
   RNPermissions: eac721f71748c4472d6e876038270b75397d6ee7
-  RNReanimated: c05ab709424725d7713cf3bba894c144d8833c7c
+  RNReanimated: 716e6ac0b527a10ea58e88f8dcb29f228c7f5091
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
