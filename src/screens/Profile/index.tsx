@@ -376,7 +376,11 @@ const Profile = () => {
 
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <ImageButton
         image={profileSettings}
         buttonStyle={[styles.buttonStyleRight, {right: 20}]}

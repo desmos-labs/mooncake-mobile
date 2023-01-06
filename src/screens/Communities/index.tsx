@@ -12,7 +12,7 @@ const Communities = () => {
 
   return (
     <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.H3>Coming soon..</Typography.H3>
+      <Typography.Body6>Coming soon..</Typography.Body6>
     </DView>
   );
 };

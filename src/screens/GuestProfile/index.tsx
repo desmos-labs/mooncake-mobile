@@ -358,7 +358,11 @@ const GuestProfile = () => {
 
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
       <ImageButton
         image={profileBack}
         buttonStyle={styles.buttonStyleLeft}
