@@ -294,7 +294,9 @@ const PostCard = ({
           <FastImage
             resizeMode="cover"
             source={
-              tipPresence.aggregate.count >= 1 ? homeTipIconFilled : homeTipIcon
+              tipPresence?.aggregate?.count >= 1
+                ? homeTipIconFilled
+                : homeTipIcon
             }
             style={styles.bottomBarIcon}
           />
