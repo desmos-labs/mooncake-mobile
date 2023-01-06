@@ -16,8 +16,16 @@ import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+  parseISO,
+} from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
@@ -38,6 +46,7 @@ interface Props
     | 'reactionPresence'
     | 'reactions'
     | 'repliesCount'
+    | 'creation_date'
   > {
   /**
    * What to do when the author's avatar, name, or dtag is pressed.
@@ -83,6 +92,7 @@ const PostCard = ({
   attachments,
   text,
   id,
+  creation_date,
   reactionPresence,
   commentPresence,
   reactions,
@@ -92,7 +102,7 @@ const PostCard = ({
   const theme = useTheme();
   const {t} = useTranslation('home');
   const {activeAddress, profileData} = useActiveAccount();
-
+  const formattedDate = useFormatTimeForPostDetails(creation_date);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<{
     x: number;
@@ -114,6 +124,42 @@ const PostCard = ({
     horizontalPaddingWithAutoSize: 32,
     imageStyle: {borderRadius: 10},
   });
+
+  const calculatedCreationDate = useMemo(() => {
+    const parsedTime = parseISO(`${creation_date}Z`);
+    const now = new Date();
+    const secondsDiff = differenceInSeconds(now, parsedTime);
+    const minutesDiff = differenceInMinutes(now, parsedTime);
+    const hoursDiff = differenceInHours(now, parsedTime);
+    const daysDiff = differenceInDays(now, parsedTime);
+
+    if (secondsDiff < 60) {
+      return {
+        timeUnit: t('seconds ago'),
+        time: secondsDiff,
+      };
+    } else if (minutesDiff < 60) {
+      return {
+        timeUnit: t('minutes ago'),
+        time: minutesDiff,
+      };
+    } else if (hoursDiff < 24) {
+      return {
+        timeUnit: t('hours ago'),
+        time: hoursDiff,
+      };
+    } else if (daysDiff < 28) {
+      return {
+        timeUnit: t('days ago'),
+        time: daysDiff,
+      };
+    } else {
+      return {
+        timeUnit: '',
+        time: formattedDate,
+      };
+    }
+  }, [creation_date, formattedDate]);
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
@@ -180,15 +226,25 @@ const PostCard = ({
           />
           <View style={{flexDirection: 'column'}}>
             <Typography.Subtitle2>{authorData?.nickname}</Typography.Subtitle2>
-            <Typography.Body6 style={{color: theme.colors.midGrey}}>
-              @{authorData?.dtag}
-            </Typography.Body6>
+            <View style={{flexDirection: 'row'}}>
+              <Typography.Body6 style={{color: theme.colors.midGrey}}>
+                @{authorData?.dtag}
+              </Typography.Body6>
+              <Typography.Body6
+                style={{
+                  color: theme.colors.midGrey,
+                  marginLeft: theme.spacing.xs,
+                }}>
+                · {calculatedCreationDate.time}{' '}
+                {calculatedCreationDate.timeUnit}
+              </Typography.Body6>
+            </View>
           </View>
         </TouchableOpacity>
         {PendingIndicator}
       </View>
     );
-  }, [authorData?.profile_pic]);
+  }, [authorData?.profile_pic, calculatedCreationDate]);
 
   const BottomBar = React.useMemo(() => {
     return (

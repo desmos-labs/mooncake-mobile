@@ -56,6 +56,7 @@ const Home = () => {
           commentPresence={item.commentPresence}
           reactions={item.reactions}
           repliesCount={item.repliesCount}
+          creation_date={item.creation_date}
           onPressAuthor={() => handlePressAuthor(item.author_address)}
           onPressDetails={() => {
             if (lockPostPress.current) return;

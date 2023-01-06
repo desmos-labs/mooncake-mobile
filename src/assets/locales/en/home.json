@@ -2,5 +2,9 @@
   "HOME_DISCOVER": "Discover",
   "HOME_FOLLOWING": "Following",
   "noMorePosts": "You have read the most\nrecent post!",
-  "tip": "Tip"
+  "tip": "Tip",
+  "seconds ago": "seconds ago",
+  "minutes ago": "minutes ago",
+  "hours ago": "hours ago",
+  "days ago": "days ago"
 }
