@@ -157,7 +157,7 @@ const useHooks = () => {
                 coinType: 852,
                 change: 0,
                 account: idx,
-                addressIndex: idx,
+                addressIndex: 0,
               },
               signAlgorithm: 'secp256k1',
             };
