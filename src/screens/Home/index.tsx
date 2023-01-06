@@ -1,21 +1,23 @@
+import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {loadingOrange} from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
+import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import ToastConfig from 'config/ToastConfig';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.HOME_TABS
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>,
+  StackScreenProps<HomeTabsParamList>
 >;
 
 export type HomeParams = {
@@ -25,8 +27,8 @@ export type HomeParams = {
 const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
+  const styles = useStyles();
   const postListRef = useRef<any>();
-
   const lockPostPress = useRef(false);
 
   const {
@@ -62,10 +64,9 @@ const Home = () => {
     ({item}: ListRenderItemInfo<PostItem>) => {
       if (item.emptyComponent) {
         return (
-          <View
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.lottieOuterView}>
             <ThemedLottieView
-              style={{width: '10%', alignSelf: 'center'}}
+              style={styles.lottieView}
               autoPlay
               loop={true}
               source={loadingOrange}
@@ -146,34 +147,27 @@ const Home = () => {
     ],
   );
 
-  const theme = useTheme();
-
   const onRefresh = useCallback(() => {
     fetchNewestPosts();
     resetNewPostNotificationState();
   }, [fetchNewestPosts, resetNewPostNotificationState]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.white,
-        paddingTop: theme.spacing.m,
-      }}>
+    <View style={styles.homeView}>
       <FlatList
         ref={postListRef}
         data={posts}
         refreshing={loading}
         onRefresh={onRefresh}
-        style={{
-          flex: 1,
-        }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        style={styles.flatlist}
+        contentContainerStyle={styles.flatlistInner}
         renderItem={renderPost}
         showsVerticalScrollIndicator={false}
         onEndReached={fetchMorePosts}
+        initialNumToRender={6}
+        maxToRenderPerBatch={6}
+        windowSize={10}
+        updateCellsBatchingPeriod={100}
       />
     </View>
   );

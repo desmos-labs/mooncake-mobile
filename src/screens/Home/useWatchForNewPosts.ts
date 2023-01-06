@@ -114,7 +114,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
     if (
       hasNewFollowingPosts &&
-      params?.type === 'following' &&
+      params?.params?.type === 'following' &&
       currentScreen.includes(ROUTES.HOME_FOLLOWING)
     ) {
       toast.show(t('newFollowingPost'), {
@@ -140,7 +140,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
     if (
       hasNewDiscoverPosts &&
-      params?.type === 'discover' &&
+      params?.params?.type === 'discover' &&
       currentScreen.includes(ROUTES.HOME_DISCOVER)
     ) {
       toast.show(t('newDiscoverPost'), {
@@ -160,8 +160,10 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
   // I think this function is pretty lightweight and doesn't need to be useCallback'd
   const resetNewPostNotificationState = () => {
-    if (params.type === 'discover') setHasNewDiscoverPosts(false);
-    else if (params.type === 'following') setHasNewFollowingPosts(false);
+    if (params.params?.type === 'discover') setHasNewDiscoverPosts(false);
+    else if (params.params?.type === 'following') {
+      setHasNewFollowingPosts(false);
+    }
   };
 
   return {

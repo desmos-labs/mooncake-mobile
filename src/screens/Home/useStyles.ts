@@ -1,52 +1,19 @@
 import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  container: {
+  homeView: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingVertical: theme.spacing.l,
+    backgroundColor: theme.colors.white,
+    paddingTop: theme.spacing.m,
   },
-  headerGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.l,
-  },
-  postContainer: {},
-  tabContainer: {
+  flatlist: {
     flex: 1,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
   },
-  interactionButtonGroup: {
-    justifyContent: 'space-evenly',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 24,
+  flatlistInner: {
+    flexGrow: 1,
   },
-  carousel: {
-    alignItems: 'center',
-  },
-  profileButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    resizeMode: 'cover',
-  },
-  createPostButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    resizeMode: 'contain',
-    backgroundColor: theme.colors.butterOrange01,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    width: 26,
-    height: 26,
-    resizeMode: 'contain',
-  },
+  lottieView: {width: '10%', alignSelf: 'center'},
+  lottieOuterView: {flex: 1, alignItems: 'center', justifyContent: 'center'},
 }));
 
 export default useStyles;

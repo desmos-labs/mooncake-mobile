@@ -18,7 +18,7 @@ const useRenderMediaAttachment = ({
   horizontalPaddingWithAutoSize?: number;
 }) => {
   const [imageDimensions, setImageDimensions] = useState({h: 0, w: 0});
-
+  const [loading, setLoading] = useState(true);
   const calculateCorrectSize = useCallback(
     ({height, width}: {height: number; width: number}) => {
       // calculate image width and height
@@ -43,6 +43,8 @@ const useRenderMediaAttachment = ({
     if ('uri' in attachment.content) {
       return (
         <FastImage
+          onLoadStart={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}
           onLoad={e =>
             calculateCorrectSize({
               height: e.nativeEvent.height,
@@ -71,6 +73,7 @@ const useRenderMediaAttachment = ({
 
   return {
     MediaAttachment,
+    loading,
   };
 };
 
