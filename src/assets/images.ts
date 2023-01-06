@@ -218,6 +218,15 @@ export const manageConnectedTwitterProfileIcon = require('./images/manageConnect
 export const manageConnectedWalletsProfileIcon = require('./images/manageConnectedWalletProfile.png');
 export const addProfileIcon = require('./images/addProfileIcon.png');
 
+// TX
+
+export const sendTipsTxIcon = require('./images/txIcons/sendTipsTx.png');
+export const editProfileTxIcon = require('./images/txIcons/editProfileTx.png');
+export const claimBadgeTxIcon = require('./images/txIcons/claimBadgeTx.png');
+export const createPostTxIcon = require('./images/txIcons/createPostTx.png');
+export const addReactionTxIcon = require('./images/txIcons/addReactionTx.png');
+export const sendReportTxIcon = require('./images/txIcons/sendReportTx.png');
+
 // Socials
 
 export const twitterIcon = require('./images/twitter.png');

@@ -77,6 +77,23 @@ const Settings: React.FC<NavProps> = props => {
     }
   }, [activeAddress, navigate, setSettings, settings.biometrics]);
 
+  const manageNewPostNotif = useCallback(
+    (type: 'discover' | 'following') => () => {
+      if (type === 'discover') {
+        setSettings(prev => ({
+          ...prev,
+          newDiscPostNotification: !settings.newDiscPostNotification,
+        }));
+      } else if (type === 'following') {
+        setSettings(prev => ({
+          ...prev,
+          newFollowPostNotification: !settings.newFollowPostNotification,
+        }));
+      }
+    },
+    [settings.newDiscPostNotification, settings.newFollowPostNotification],
+  );
+
   useEffect(() => {
     const interactionPromise = InteractionManager.runAfterInteractions(() => {
       areBiometricsSupported();
@@ -190,6 +207,16 @@ const Settings: React.FC<NavProps> = props => {
         <SectionButton
           label={t('notifications')}
           onPress={() => Linking.openSettings()}
+        />
+        <SectionSwitch
+          label={t('notifyOnNewDiscPosts')}
+          value={settings.newDiscPostNotification}
+          onValueChange={manageNewPostNotif('discover')}
+        />
+        <SectionSwitch
+          label={t('notifyOnNewFollowPosts')}
+          value={settings.newFollowPostNotification}
+          onValueChange={manageNewPostNotif('following')}
         />
         {/* removed as of Sept 23, DFP-497 */}
         {/* <SectionButton label={t('faq')} onPress={() => console.log('faq')} /> */}

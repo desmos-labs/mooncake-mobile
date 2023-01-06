@@ -17,6 +17,8 @@ export const DefaultAppSettings: AppSettings = {
   registeredReports: [],
   contractsConfig: [],
   currentChain: DesmosTestnet,
+  newDiscPostNotification: true,
+  newFollowPostNotification: true,
 };
 
 /**

@@ -1,16 +1,17 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {loadingOrange} from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
-import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
+import ToastConfig from 'config/ToastConfig';
+import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 
 export type NavProps = StackScreenProps<
   RootNavigatorParamList,
@@ -24,6 +25,7 @@ export type HomeParams = {
 const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
+  const postListRef = useRef<any>();
 
   const lockPostPress = useRef(false);
 
@@ -41,6 +43,20 @@ const Home = () => {
     checkIfPostIsPending,
     loading,
   } = useHooks();
+
+  const handlePressNewPostNotification = useCallback(() => {
+    fetchNewestPosts();
+    if (postListRef && postListRef.current) {
+      postListRef.current.scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
+  }, [postListRef]);
+
+  const {resetNewPostNotificationState} = useWatchForNewPosts(
+    handlePressNewPostNotification,
+  );
 
   const renderPost = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
@@ -132,6 +148,11 @@ const Home = () => {
 
   const theme = useTheme();
 
+  const onRefresh = useCallback(() => {
+    fetchNewestPosts();
+    resetNewPostNotificationState();
+  }, [fetchNewestPosts, resetNewPostNotificationState]);
+
   return (
     <View
       style={{
@@ -140,10 +161,10 @@ const Home = () => {
         paddingTop: theme.spacing.m,
       }}>
       <FlatList
-        initialNumToRender={10}
+        ref={postListRef}
         data={posts}
         refreshing={loading}
-        onRefresh={fetchNewestPosts}
+        onRefresh={onRefresh}
         style={{
           flex: 1,
         }}

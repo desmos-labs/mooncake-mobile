@@ -1,24 +1,46 @@
-import CryptoES from 'crypto-es';
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {NativeModules} from 'react-native';
+import Aes from 'react-native-aes-crypto';
+
+export interface EncryptedData {
+  iv: string;
+  cipher: string;
+}
+
 /**
  * Derive a safe password using the pbkdf2 algorithm.
  * @param password The password from which will be derived the safer password.
  */
-export const deriveSecurePassword = (password: string): string => {
-  const pw = CryptoES.PBKDF2(password, 'salt_dfp', {
-    keySize: 256 / 32,
-    iterations: 1000,
-  });
-
-  return pw.toString();
+export const deriveSecurePassword = async (
+  password: string,
+): Promise<string> => {
+  return Aes.pbkdf2(password, password, 100000, 256);
 };
+
 /**
  * Encrypts the provided text using the AES algorithm.
  * @param text The text to encrypt.
  * @param password The password used to generate the cipher key.
  */
-export const encryptData = (text: string, password: string): string => {
-  const securePassword: string = deriveSecurePassword(password);
-  return CryptoES.AES.encrypt(text, securePassword).toString();
+export const encryptData = async (
+  text: string,
+  password: string,
+): Promise<EncryptedData> => {
+  const securePassword: string = await deriveSecurePassword(password);
+  const iv: string = await Aes.randomKey(16);
+
+  const encryptedData = await Aes.encrypt(
+    text,
+    securePassword,
+    iv,
+    'aes-256-cbc',
+  );
+
+  return {
+    cipher: encryptedData,
+    iv,
+  };
 };
 
 /**
@@ -26,11 +48,9 @@ export const encryptData = (text: string, password: string): string => {
  * @param data The data to be decrypted.
  * @param password The password used to generate the cipher key.
  */
-export const decryptData = (data: string, password: string): string => {
-  const decryptedData = CryptoES.AES.decrypt(data, password).toString(
-    CryptoES.enc.Utf8,
-  );
-
-  if (!decryptedData) throw new Error('Incorrect password');
-  return decryptedData;
+export const decryptData = async (
+  data: EncryptedData,
+  password: string,
+): Promise<string> => {
+  return Aes.decrypt(data.cipher, password, data.iv, 'aes-256-cbc');
 };
