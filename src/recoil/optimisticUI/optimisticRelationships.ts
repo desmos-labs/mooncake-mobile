@@ -79,19 +79,13 @@ const useOptimisticRelationships = () => {
           set(optimisticRelationshipState, prev =>
             prev.filter(x => x.counterParty !== counterParty),
           );
-          set(optimisticRelationshipState, prev => [
-            ...prev,
-            {counterParty, type: 'unfollow' as RelationshipType},
-          ]);
+          set(optimisticRelationshipState, prev => [...prev]);
         } else if (optUnfollow.find(x => x.counterParty === counterParty)) {
           set(optimisticRelationshipState, prev =>
             prev.filter(x => x.counterParty !== counterParty),
           );
 
-          set(optimisticRelationshipState, prev => [
-            ...prev,
-            {counterParty, type: 'follow' as RelationshipType},
-          ]);
+          set(optimisticRelationshipState, prev => [...prev]);
         } else {
           set(optimisticRelationshipState, prev => [
             ...prev,

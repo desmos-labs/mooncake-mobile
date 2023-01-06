@@ -7,7 +7,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
-import {followingState} from '@recoil/following';
+import {isFollowingAddr} from '@recoil/following';
 import {useRecoilCallback} from 'recoil';
 import {
   MsgCreateRelationship,
@@ -56,10 +56,8 @@ const useFollowOrUnfollow = () => {
       }: FollowOrUnfollowUserArgs) => {
         if (!activeAddress) throw new Error('No active address found');
 
-        const following = await snapshot.getPromise(followingState);
-
-        const isAlreadyFollowing = !!following.find(
-          x => x.address === addrToFollow,
+        const isAlreadyFollowing = await snapshot.getPromise(
+          isFollowingAddr(addrToFollow),
         );
 
         await handleOptimisticRelationship({
