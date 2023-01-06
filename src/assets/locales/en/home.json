@@ -1,6 +1,8 @@
 {
   "HOME_DISCOVER": "Discover",
   "HOME_FOLLOWING": "Following",
+  "follow": "Follow",
+  "report": "Report",
   "tip": "Tip",
   "seconds ago": "seconds ago",
   "minutes ago": "minutes ago",
