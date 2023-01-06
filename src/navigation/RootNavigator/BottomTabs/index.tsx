@@ -77,7 +77,6 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   const toast = useToast();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
-
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
 

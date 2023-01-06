@@ -1,6 +1,7 @@
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import postsListScrollToTop from '@recoil/postsListRef';
 import {butterflyLandingIcon, homeInviteIcon} from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
@@ -8,8 +9,8 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
+import {useSetRecoilState} from 'recoil';
 import PostTypeTab from 'screens/Home/components/PostTypeTab';
 import useStyles from './useStyles';
 
@@ -19,6 +20,7 @@ const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
   const styles = useStyles();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
+  const scrollToTop = useSetRecoilState(postsListScrollToTop);
 
   return (
     <View style={styles.container}>
@@ -28,10 +30,11 @@ const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <FastImage
+        <ImageButton
           tintColor={theme.colors.butterOrange01}
           style={styles.butterflyImage}
-          source={butterflyLandingIcon}
+          image={butterflyLandingIcon}
+          onPress={() => scrollToTop(true)}
         />
 
         <HomeSearchBar

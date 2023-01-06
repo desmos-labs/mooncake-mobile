@@ -1,15 +1,17 @@
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import postsListScrollToTop from '@recoil/postsListRef';
 import {loadingOrange} from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
+import {useRecoilState} from 'recoil';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
@@ -28,9 +30,9 @@ const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
   const styles = useStyles();
-  const postListRef = useRef<any>();
+  const postListRef = useRef<FlatList>(null);
   const lockPostPress = useRef(false);
-
+  const [scrollToTop, setScrollToTop] = useRecoilState(postsListScrollToTop);
   const {
     handlePressDetails,
     handlePressFollow,
@@ -151,6 +153,16 @@ const Home = () => {
     fetchNewestPosts();
     resetNewPostNotificationState();
   }, [fetchNewestPosts, resetNewPostNotificationState]);
+
+  /**
+   * Little trick to scroll to top from a parent component, the HomeTabBar in this case
+   */
+  useEffect(() => {
+    if (scrollToTop) {
+      postListRef.current?.scrollToOffset({animated: true, offset: 0});
+      setScrollToTop(false);
+    }
+  }, [scrollToTop, postListRef]);
 
   return (
     <View style={styles.homeView}>

@@ -1,16 +1,16 @@
-import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import ROUTES from 'navigation/routes';
-import {StatusBar, View} from 'react-native';
-import Home, {HomeParams} from 'screens/Home';
-import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useTheme} from 'react-native-paper';
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import useActiveAccount from 'hooks/useActiveAccount';
-import ThemedLottieView from 'components/ThemedLottieView';
 import {broadcastAnim} from 'assets/animations';
+import ThemedLottieView from 'components/ThemedLottieView';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useRefreshSession from 'hooks/useRefreshSession';
+import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {StatusBar, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import Home, {HomeParams} from 'screens/Home';
 
 export type HomeTabsParamList = {
   [ROUTES.HOME_DISCOVER]: HomeParams;
@@ -24,7 +24,6 @@ const HomeTabs = () => {
   const theme = useTheme();
   const {top} = useSafeAreaInsets();
   const {refreshSession} = useRefreshSession();
-
   const {profileData} = useActiveAccount();
 
   const [screenReady, setScreenReady] = React.useState(false);
