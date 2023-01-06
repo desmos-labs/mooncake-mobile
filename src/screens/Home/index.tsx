@@ -177,9 +177,6 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={fetchMorePosts}
         initialNumToRender={6}
-        maxToRenderPerBatch={6}
-        windowSize={10}
-        updateCellsBatchingPeriod={100}
       />
     </View>
   );

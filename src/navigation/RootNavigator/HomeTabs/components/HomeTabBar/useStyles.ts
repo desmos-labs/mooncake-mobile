@@ -12,7 +12,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
   },
   tabContainer: {
-    marginTop: theme.spacing.s,
+    marginTop: theme.spacing.xs,
     justifyContent: 'center',
   },
   rightButton: {

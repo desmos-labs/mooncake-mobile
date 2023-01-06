@@ -4,7 +4,7 @@ const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.white,
-    paddingTop: theme.spacing.s,
+    paddingVertical: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
   },
   middleButtonView: {
