@@ -46,7 +46,7 @@ const PostComponent = ({postData}: Props) => {
         </View>
       );
     }
-  }, [postData]);
+  }, [JSON.stringify(postData)]);
 
   return (
     <View onStartShouldSetResponder={() => true} style={styles.container}>
