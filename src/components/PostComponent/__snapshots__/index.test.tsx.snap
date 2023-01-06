@@ -81,23 +81,34 @@ exports[`component: PostComponent renders image posts 1`] = `
       }
     }
   >
-    <View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    >
       <View
         style={
           Array [
             Object {
               "overflow": "hidden",
             },
-            Object {
-              "height": 630,
-              "width": 750,
-            },
+            Array [
+              Object {
+                "height": 0,
+                "width": 0,
+              },
+              undefined,
+            ],
           ]
         }
       >
         <FastImageView
           defaultSource={null}
           onFastImageLoad={[Function]}
+          onFastImageLoadEnd={[Function]}
+          onFastImageLoadStart={[Function]}
           resizeMode="cover"
           source={
             Object {
@@ -146,16 +157,21 @@ exports[`component: PostComponent renders textImage posts 1`] = `
             Object {
               "overflow": "hidden",
             },
-            Object {
-              "height": 630,
-              "width": 750,
-            },
+            Array [
+              Object {
+                "height": 0,
+                "width": 0,
+              },
+              undefined,
+            ],
           ]
         }
       >
         <FastImageView
           defaultSource={null}
           onFastImageLoad={[Function]}
+          onFastImageLoadEnd={[Function]}
+          onFastImageLoadStart={[Function]}
           resizeMode="cover"
           source={
             Object {
