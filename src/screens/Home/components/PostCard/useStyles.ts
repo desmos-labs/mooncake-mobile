@@ -20,7 +20,7 @@ const useStyles = makeStyle(theme => ({
   bottomBarView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: theme.spacing.m,
+    marginTop: theme.spacing.m,
     justifyContent: 'space-between',
   },
   bottomBarIcon: {height: 24, width: 24, marginRight: theme.spacing.xs},
@@ -45,7 +45,7 @@ const useStyles = makeStyle(theme => ({
     right: 0,
   },
   bottomBarInnerView: {flexDirection: 'row', alignItems: 'center'},
-  mediaView: {flex: 1, alignItems: 'center', marginTop: theme.spacing.xs},
+  mediaView: {alignItems: 'center', marginTop: theme.spacing.xs},
 }));
 
 export default useStyles;

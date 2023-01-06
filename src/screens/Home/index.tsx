@@ -1,17 +1,17 @@
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import postsListScrollToTop from '@recoil/postsListRef';
-import {loadingOrange} from 'assets/animations';
-import ThemedLottieView from 'components/ThemedLottieView';
+import {FlashList} from '@shopify/flash-list';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import {View} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
+import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
@@ -30,7 +30,7 @@ const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
   const styles = useStyles();
-  const postListRef = useRef<FlatList>(null);
+  const postListRef = useRef<any>(null);
   const lockPostPress = useRef(false);
   const [scrollToTop, setScrollToTop] = useRecoilState(postsListScrollToTop);
   const {
@@ -63,17 +63,17 @@ const Home = () => {
   );
 
   const renderPost = React.useCallback(
-    ({item}: ListRenderItemInfo<PostItem>) => {
+    ({item}: any) => {
       if (item.emptyComponent) {
         return (
           <View style={styles.lottieOuterView}>
-            <ThemedLottieView
+            {/*            <ThemedLottieView
               style={styles.lottieView}
               autoPlay
               loop={true}
               source={loadingOrange}
               resizeMode="cover"
-            />
+            /> */}
           </View>
         );
       }
@@ -166,7 +166,7 @@ const Home = () => {
 
   return (
     <View style={styles.homeView}>
-      <FlatList
+      {/*      <FlatList
         ref={postListRef}
         data={posts}
         refreshing={loading}
@@ -177,6 +177,18 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={fetchMorePosts}
         initialNumToRender={6}
+      /> */}
+
+      <FlashList
+        ref={postListRef}
+        data={posts}
+        refreshing={loading}
+        onRefresh={onRefresh}
+        renderItem={renderPost}
+        showsVerticalScrollIndicator={false}
+        onEndReached={fetchMorePosts}
+        estimatedItemSize={150}
+        ItemSeparatorComponent={HomeItemSeparatorComponent}
       />
     </View>
   );

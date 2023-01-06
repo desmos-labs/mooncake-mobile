@@ -93,7 +93,6 @@ const PostCard = ({
   isPending,
   attachments,
   text,
-  id,
   creation_date,
   reactionPresence,
   commentPresence,
@@ -228,7 +227,7 @@ const PostCard = ({
         {PendingIndicator}
       </View>
     );
-  }, [authorData?.profile_pic, calculatedCreationDate]);
+  }, [authorData, author, calculatedCreationDate]);
 
   const BottomBar = React.useMemo(() => {
     return (
@@ -322,7 +321,6 @@ const PostCard = ({
 
   return (
     <TouchableOpacity
-      key={id}
       activeOpacity={0.9}
       style={styles.container}
       onPress={onPressDetails}>

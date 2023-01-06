@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {useCallback, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Dimensions, ImageStyle, StyleProp, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
@@ -17,22 +17,21 @@ const useRenderMediaAttachment = ({
   useAutoSize?: boolean;
   horizontalPaddingWithAutoSize?: number;
 }) => {
-  const [imageDimensions, setImageDimensions] = useState({h: 0, w: 0});
+  const [dimensions, setDimensions] = useState({
+    height: 0,
+    width: 0,
+  });
   const [loading, setLoading] = useState(true);
-  const calculateCorrectSize = useCallback(
-    ({height, width}: {height: number; width: number}) => {
-      // calculate image width and height
-      const screenWidth =
-        Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0);
-      const scaleFactor = width / screenWidth;
-      const imageHeight = height / scaleFactor;
-      setImageDimensions({
-        w: screenWidth,
-        h: imageHeight,
-      });
-    },
-    [horizontalPaddingWithAutoSize],
-  );
+
+  const imageHeight = useMemo(() => {
+    if (!dimensions.height) {
+      return 0;
+    }
+    const ratio =
+      (Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0)) /
+      dimensions.width;
+    return dimensions.height * ratio;
+  }, [dimensions, horizontalPaddingWithAutoSize]);
 
   const MediaAttachment = React.useMemo(() => {
     // currently only render one attachment
@@ -45,12 +44,12 @@ const useRenderMediaAttachment = ({
         <FastImage
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
-          onLoad={e =>
-            calculateCorrectSize({
-              height: e.nativeEvent.height,
-              width: e.nativeEvent.width,
-            })
-          }
+          onLoad={e => {
+            const {
+              nativeEvent: {width, height},
+            } = e;
+            setDimensions({width, height});
+          }}
           source={{
             uri: _.get(attachment, 'content.uri'),
           }}
@@ -59,8 +58,10 @@ const useRenderMediaAttachment = ({
             useAutoSize
               ? [
                   {
-                    height: imageDimensions.h,
-                    width: imageDimensions.w,
+                    height: imageHeight,
+                    width:
+                      Dimensions.get('window').width -
+                      (horizontalPaddingWithAutoSize || 0),
                   },
                   imageStyle,
                 ]
@@ -69,7 +70,13 @@ const useRenderMediaAttachment = ({
         />
       );
     }
-  }, [attachments, useAutoSize, imageDimensions, calculateCorrectSize]);
+  }, [
+    attachments,
+    useAutoSize,
+    imageHeight,
+    horizontalPaddingWithAutoSize,
+    dimensions,
+  ]);
 
   return {
     MediaAttachment,
