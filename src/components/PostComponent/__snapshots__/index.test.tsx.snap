@@ -97,6 +97,7 @@ exports[`component: PostComponent renders image posts 1`] = `
       >
         <FastImageView
           defaultSource={null}
+          onFastImageLoad={[Function]}
           resizeMode="cover"
           source={
             Object {
@@ -154,6 +155,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
       >
         <FastImageView
           defaultSource={null}
+          onFastImageLoad={[Function]}
           resizeMode="cover"
           source={
             Object {
