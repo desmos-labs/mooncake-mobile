@@ -1,9 +1,11 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {
   CompositeScreenProps,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
 import useGetPosts from 'hooks/useGetPosts';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
@@ -22,14 +24,20 @@ import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
 import _ from 'lodash';
 
-type DiscoverNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
-  StackScreenProps<RootNavigatorParamList>
->;
-
 type FollowingNavProps = CompositeScreenProps<
   StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
-  StackScreenProps<RootNavigatorParamList>
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
+>;
+
+type DiscoverNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
 >;
 
 const postFamilyMap = {
@@ -81,8 +89,8 @@ const useHooks = () => {
       if (activeAddress === address) {
         navigate(ROUTES.USER_PROFILE);
       } else {
-        navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: address,
+        navigate(ROUTES.GUEST_PROFILE, {
+          address,
         });
       }
     },

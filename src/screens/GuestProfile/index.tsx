@@ -1,20 +1,16 @@
 import {BlurView} from '@react-native-community/blur';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {
-  connectIcon,
-  defaultBanner,
-  profileScan,
-  profileSettings,
-} from 'assets/images';
+import {isFollowingAddr} from '@recoil/following';
+import {defaultBanner, profileBack} from 'assets/images';
+import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -38,36 +34,40 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useRecoilValue} from 'recoil';
+import useGuestProfileDataQueries from 'screens/GuestProfile/useGuestProfileDataQueries';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BadgesSection from 'screens/Profile/components/BadgesSection';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
-import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
 import NftsSection from 'screens/Profile/components/NftsSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile/components/UserBio';
-import useProfileDataQueries from 'screens/Profile/useProfileDataQueries';
 import useQueries from 'screens/Profile/useQueries';
 import {mapConnectedChainImages} from 'screens/Profile/utils';
+import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useStyles from './useStyles';
 
-type NavProps = CompositeScreenProps<
-  StackScreenProps<BottomTabsParamList, ROUTES.USER_PROFILE>,
-  StackScreenProps<RootNavigatorParamList>
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GUEST_PROFILE>;
 
 const HEADER_HEIGHT_COMPACT = 95;
 const HEADER_HEIGHT_EXPANDED = 60;
 
-const Profile = () => {
+export interface GuestProfileParams {
+  address: string;
+}
+
+const GuestProfile = () => {
   const theme = useTheme();
   const {t} = useTranslation('profile');
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavProps['navigation']>();
+  const route = useRoute<NavProps['route']>();
   const [initialLoading, setInitialLoading] = useState(true);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const styles = useStyles({insets});
-  const {navigate} = navigation;
+  const {navigate, goBack} = navigation;
+  const {params} = route;
 
   const {
     profileLoading,
@@ -77,11 +77,11 @@ const Profile = () => {
     address,
     profile_pic,
     cover_pic,
-    refetchProfileData,
+    refetchVisitingProfileData,
     numRelationships,
     numRelationshipsLoading,
     refreshNumRelationships,
-  } = useProfileDataQueries();
+  } = useGuestProfileDataQueries(params?.address!);
 
   const {
     posts,
@@ -96,14 +96,11 @@ const Profile = () => {
     chainLinksLoading,
     refetchAppLinks,
     refetchChainLinks,
-    refetchBalance,
-    refetchPosts,
-    impactPoints,
-    impactPointsLoading,
-    refetchImpactPoints,
     postsCounter,
-    refetchPostsCounter,
   } = useQueries(address);
+
+  const isFollowing = useRecoilValue(isFollowingAddr(address!));
+  const {followOrUnfollowUser} = useFollowOrUnfollow();
 
   /**
    * Animations
@@ -209,26 +206,11 @@ const Profile = () => {
     });
   };
 
-  const handleConnectionButtonPressed = useCallback(() => {
-    navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
-      appsConnected: true,
-      chainsConnected: true,
-    });
-  }, []);
-
   const refetchUserData = React.useCallback(async () => {
     console.log('refetching user profile data and connected apps & chains');
-    await Promise.all([
-      refetchProfileData(),
-      refetchChainLinks(),
-      refetchAppLinks(),
-      refetchBalance(),
-      refetchImpactPoints(),
-      refetchPosts(),
-      refetchPostsCounter(),
-    ]);
+    await refetchVisitingProfileData();
     await refreshNumRelationships();
-  }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
+  }, [refetchChainLinks, refetchAppLinks]);
 
   const handleFollowingPressed = () =>
     navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
@@ -286,7 +268,7 @@ const Profile = () => {
       return (
         <View>
           <SocialAndWalletsCountersBar
-            visitingProfile={false}
+            visitingProfile={true}
             loading={appLinksLoading && chainLinksLoading}
             connectedChainsCounter={chainLinks.length}
             twitterUsername={appLinks[0]?.username}
@@ -378,15 +360,10 @@ const Profile = () => {
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
       <StatusBar barStyle="light-content" />
       <ImageButton
-        image={profileSettings}
-        buttonStyle={[styles.buttonStyleRight, {right: 20}]}
+        image={profileBack}
+        buttonStyle={styles.buttonStyleLeft}
         style={styles.topBarImage}
-        onPress={() => navigate(ROUTES.SETTINGS)}
-      />
-      <ImageButton
-        image={profileScan}
-        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
-        style={styles.topBarImage}
+        onPress={goBack}
       />
       {/* Dtag */}
       <Animated.View style={[styles.animatedDtag, animatedDtagStyle]}>
@@ -482,40 +459,31 @@ const Profile = () => {
             <UserBio content={bio} />
             {ConnectedChains}
           </Spacer>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
-              <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleConnectionButtonPressed}
-              style={{
-                backgroundColor: theme.colors.surfaceGrey,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 8,
-                height: 35,
-                width: 40,
-              }}>
-              <FastImage
-                source={connectIcon}
-                style={{height: 22, width: 22}}
-                tintColor={theme.colors.surfaceBlack}
-              />
-            </TouchableOpacity>
-          </View>
 
+          {isFollowing ? (
+            <Button
+              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              mode="contained"
+              contentStyle={{height: 36}}
+              color={theme.colors.surfaceGrey}>
+              <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
+                {t('unfollow')}
+              </Typography.Subtitle4>
+            </Button>
+          ) : (
+            <Button
+              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              mode="contained"
+              contentStyle={{height: 36}}
+              color={theme.colors.surfaceBlack}>
+              <Typography.Subtitle4 style={{color: theme.colors.white}}>
+                {t('follow')}
+              </Typography.Subtitle4>
+            </Button>
+          )}
           <Spacer paddingVertical={theme.spacing.s} />
           <Divider style={styles.divider} />
           <View style={styles.container}>
-            <>
-              <ImpactPointsSection
-                impactPoints={impactPoints}
-                impactPointsLoading={impactPointsLoading}
-              />
-              <Divider style={styles.divider} />
-            </>
             <BalanceSection
               address={address!}
               balanceData={balanceData}
@@ -540,4 +508,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default GuestProfile;

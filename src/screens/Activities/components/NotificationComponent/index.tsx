@@ -1,4 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
@@ -9,6 +10,7 @@ import ToastConfig from 'config/ToastConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -22,7 +24,10 @@ import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcas
 import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
+type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>,
+  BottomTabScreenProps<BottomTabsParamList>
+>;
 
 const NotificationComponent = ({
   data: {type, post_id},
@@ -34,13 +39,13 @@ const NotificationComponent = ({
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
-  const {navigate, push} = useNavigation<NavProps['navigation']>();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(relationship_creator || ''),
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
-  const {profileData} = useActiveAccount();
+  const {activeAddress, profileData} = useActiveAccount();
   const toast = useToast();
 
   const checkPostType = useCallback(() => {
@@ -61,11 +66,15 @@ const NotificationComponent = ({
 
   const navigateToProfile = useCallback(
     (address: string) => {
-      push(ROUTES.USER_PROFILE, {
-        visitingProfileAddress: address!,
-      });
+      if (activeAddress === address) {
+        navigate(ROUTES.USER_PROFILE);
+      } else {
+        navigate(ROUTES.GUEST_PROFILE, {
+          address,
+        });
+      }
     },
-    [push],
+    [activeAddress],
   );
 
   const navigateToCorrectScreen = useCallback(() => {

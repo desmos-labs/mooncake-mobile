@@ -26,7 +26,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {useResetRecoilState} from 'recoil';
 import Activities from 'screens/Activities';
 import Communities from 'screens/Communities';
-import Profile, {UserProfileParams} from 'screens/Profile';
+import Profile from 'screens/Profile';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {
@@ -42,7 +42,7 @@ export type BottomTabsParamList = {
 
   [ROUTES.CREATE_BUTTON]: undefined;
 
-  [ROUTES.USER_PROFILE]: UserProfileParams;
+  [ROUTES.USER_PROFILE]: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();

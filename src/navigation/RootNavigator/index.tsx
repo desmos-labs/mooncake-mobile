@@ -70,6 +70,7 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
+import GuestProfile, {GuestProfileParams} from 'screens/GuestProfile';
 import Invites from 'screens/Invites';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
@@ -111,7 +112,6 @@ import ChangePassword, {
 } from 'screens/PasswordManipulation';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
-import Profile, {UserProfileParams} from 'screens/Profile';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
 } from 'screens/Profile/components/ManageConnectionsModal';
@@ -151,7 +151,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
-  [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
+  [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -420,7 +420,7 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_BIOMETRICS}
         component={ManageBiometrics}
       />
-      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
