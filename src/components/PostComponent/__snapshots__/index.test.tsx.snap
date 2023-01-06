@@ -97,7 +97,7 @@ exports[`component: PostComponent renders image posts 1`] = `
             Array [
               Object {
                 "height": 0,
-                "width": 0,
+                "width": 750,
               },
               undefined,
             ],
@@ -160,7 +160,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
             Array [
               Object {
                 "height": 0,
-                "width": 0,
+                "width": 750,
               },
               undefined,
             ],
