@@ -156,7 +156,7 @@ const useHooks = () => {
               hdPath: {
                 coinType: 852,
                 change: 0,
-                account: 0,
+                account: idx,
                 addressIndex: idx,
               },
               signAlgorithm: 'secp256k1',
