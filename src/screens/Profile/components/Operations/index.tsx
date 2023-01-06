@@ -3,6 +3,7 @@ import {
   MsgAddReactionTypeUrl,
   MsgCreatePostTypeUrl,
   MsgCreateRelationshipTypeUrl,
+  MsgCreateReportTypeUrl,
   MsgDeleteRelationshipTypeUrl,
   MsgRemoveReactionTypeUrl,
   MsgSaveProfileTypeUrl,
@@ -15,6 +16,7 @@ import {
   defaultProfilePic,
   editProfileTxIcon,
   emptyPostsIcon,
+  sendReportTxIcon,
 } from 'assets/images';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -22,7 +24,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -30,7 +32,7 @@ import {
   SectionList,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage, {Source} from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import TxComponent from 'screens/Profile/components/Operations/components/TxComponent';
 import useHooks from './useHooks';
@@ -57,41 +59,25 @@ const Operations = () => {
     operationsDataRefetch,
   } = useHooks(params.address);
 
-  const getCorrectTitle = useCallback((msgType: string) => {
-    switch (msgType) {
-      case MsgCreatePostTypeUrl:
-        return t('create comment post');
-      case MsgCreateRelationshipTypeUrl:
-        return t('follow user');
-      case MsgDeleteRelationshipTypeUrl:
-        return t('unfollow user');
-      case MsgAddReactionTypeUrl:
-        return t('add reaction');
-      case MsgRemoveReactionTypeUrl:
-        return t('remove reaction');
-      case MsgSaveProfileTypeUrl:
-        return t('edit profile');
-      default:
-        return 'Not mapped';
-    }
-  }, []);
+  const titleMap: {[index: string]: string} = {
+    [MsgCreatePostTypeUrl]: t('create comment post'),
+    [MsgCreateRelationshipTypeUrl]: t('follow user'),
+    [MsgDeleteRelationshipTypeUrl]: t('unfollow user'),
+    [MsgAddReactionTypeUrl]: t('add reaction'),
+    [MsgRemoveReactionTypeUrl]: t('remove reaction'),
+    [MsgSaveProfileTypeUrl]: t('edit profile'),
+    [MsgCreateReportTypeUrl]: t('create report'),
+  };
 
-  const getCorrectImage = useCallback((msgType: string) => {
-    switch (msgType) {
-      case MsgCreatePostTypeUrl:
-        return createPostTxIcon;
-      case MsgCreateRelationshipTypeUrl:
-      case MsgDeleteRelationshipTypeUrl:
-        return editProfileTxIcon;
-      case MsgAddReactionTypeUrl:
-      case MsgRemoveReactionTypeUrl:
-        return addReactionTxIcon;
-      case MsgSaveProfileTypeUrl:
-        return editProfileTxIcon;
-      default:
-        return defaultProfilePic;
-    }
-  }, []);
+  const imageMap: {[index: string]: Source} = {
+    [MsgCreatePostTypeUrl]: createPostTxIcon,
+    [MsgCreateRelationshipTypeUrl]: editProfileTxIcon,
+    [MsgDeleteRelationshipTypeUrl]: editProfileTxIcon,
+    [MsgAddReactionTypeUrl]: addReactionTxIcon,
+    [MsgRemoveReactionTypeUrl]: addReactionTxIcon,
+    [MsgSaveProfileTypeUrl]: editProfileTxIcon,
+    [MsgCreateReportTypeUrl]: sendReportTxIcon,
+  };
 
   const EmptyOperations = useMemo(() => {
     return operationsDataLoading ? null : (
@@ -113,20 +99,19 @@ const Operations = () => {
 
   const renderTx = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
-      const title = getCorrectTitle(`/${item.type}`);
-      const image = getCorrectImage(`/${item.type}`);
       const fees = convertCoin(item.fees[0], 6, currentChain.currencies);
+      console.log(item.type);
       return (
         <TxComponent
           timestamp={item.timestamp}
           fees={parseFloat(fees?.amount || '0').toFixed(4)}
-          title={title}
-          image={image}
+          title={titleMap[`/${item.type}`] || 'Not mapped'}
+          image={imageMap[`/${item.type}`] || defaultProfilePic}
           chain={currentChain}
         />
       );
     },
-    [currentChain, getCorrectImage, getCorrectTitle],
+    [currentChain, titleMap, imageMap],
   );
 
   return (
