@@ -2,6 +2,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import postsListScrollToTop from '@recoil/postsListRef';
 import {FlashList} from '@shopify/flash-list';
+import {ListRenderItemInfo} from '@shopify/flash-list/src/FlashListProps';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
@@ -63,7 +64,7 @@ const Home = () => {
   );
 
   const renderPost = React.useCallback(
-    ({item}: any) => {
+    ({item}: ListRenderItemInfo<PostItem>) => {
       if (item.emptyComponent) {
         return (
           <View style={styles.lottieOuterView}>
@@ -177,6 +178,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={fetchMorePosts}
         initialNumToRender={6}
+        ItemSeparatorComponent={HomeItemSeparatorComponent}
       /> */}
 
       <FlashList
@@ -188,6 +190,9 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         onEndReached={fetchMorePosts}
         estimatedItemSize={150}
+        getItemType={item => {
+          return item.id;
+        }}
         ItemSeparatorComponent={HomeItemSeparatorComponent}
       />
     </View>
