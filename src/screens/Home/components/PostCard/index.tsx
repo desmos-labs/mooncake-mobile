@@ -17,13 +17,7 @@ import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInSeconds,
-  parseISO,
-} from 'date-fns';
+import {parseISO} from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
@@ -33,6 +27,7 @@ import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
+import {formatMsToHumanReadable} from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 interface Props
@@ -130,36 +125,31 @@ const PostCard = ({
   const calculatedCreationDate = useMemo(() => {
     const parsedTime = parseISO(`${creation_date}Z`);
     const now = new Date();
-    const secondsDiff = differenceInSeconds(now, parsedTime);
-    const minutesDiff = differenceInMinutes(now, parsedTime);
-    const hoursDiff = differenceInHours(now, parsedTime);
-    const daysDiff = differenceInDays(now, parsedTime);
+    // const secondsDiff = differenceInSeconds(now, parsedTime);
+    // const minutesDiff = differenceInMinutes(now, parsedTime);
+    // const hoursDiff = differenceInHours(now, parsedTime);
+    // const daysDiff = differenceInDays(now, parsedTime);
 
-    if (secondsDiff < 60) {
-      return {
-        timeUnit: t('seconds ago'),
-        time: secondsDiff,
-      };
-    } else if (minutesDiff < 60) {
-      return {
-        timeUnit: t('minutes ago'),
-        time: minutesDiff,
-      };
-    } else if (hoursDiff < 24) {
-      return {
-        timeUnit: t('hours ago'),
-        time: hoursDiff,
-      };
-    } else if (daysDiff < 28) {
-      return {
-        timeUnit: t('days ago'),
-        time: daysDiff,
-      };
+    const differenceInUnix = now.getTime() - parsedTime.getTime();
+
+    if (differenceInUnix < 59999) {
+      return t('seconds ago', {
+        count: formatMsToHumanReadable(differenceInUnix, 'seconds'),
+      });
+    } else if (differenceInUnix < 3599999) {
+      return t('minutes ago', {
+        count: formatMsToHumanReadable(differenceInUnix, 'minutes'),
+      });
+    } else if (differenceInUnix < 86399999) {
+      return t('hours ago', {
+        count: formatMsToHumanReadable(differenceInUnix, 'hours'),
+      });
+    } else if (differenceInUnix < 31556951999) {
+      return t('days ago', {
+        count: formatMsToHumanReadable(differenceInUnix, 'days'),
+      });
     } else {
-      return {
-        timeUnit: '',
-        time: formattedDate,
-      };
+      return formattedDate;
     }
   }, [creation_date, formattedDate]);
 
@@ -218,8 +208,7 @@ const PostCard = ({
                   color: theme.colors.midGrey,
                   marginLeft: theme.spacing.xs,
                 }}>
-                · {calculatedCreationDate.time}{' '}
-                {calculatedCreationDate.timeUnit}
+                · {calculatedCreationDate}
               </Typography.Body6>
             </View>
           </View>
