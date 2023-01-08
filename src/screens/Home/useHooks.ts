@@ -1,20 +1,11 @@
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import useGetPosts from 'hooks/useGetPosts';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
 import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import {ViewToken} from 'react-native';
 import {useRecoilValue} from 'recoil';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import {StackScreenProps} from '@react-navigation/stack';
-import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import {
   PendingPostEnum,
@@ -23,22 +14,7 @@ import {
 import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
 import _ from 'lodash';
-
-type FollowingNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
-    StackScreenProps<RootNavigatorParamList>
-  >
->;
-
-type DiscoverNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
-    StackScreenProps<RootNavigatorParamList>
-  >
->;
+import {NavProps} from 'screens/Home';
 
 const postFamilyMap = {
   [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
@@ -49,13 +25,10 @@ const postFamilyMap = {
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {name: routeName} = useRoute<
-    DiscoverNavProps['route'] | FollowingNavProps['route']
-  >();
+  const {name: routeName} = useRoute<NavProps['route']>();
 
-  const {navigate} = useNavigation<
-    DiscoverNavProps['navigation'] | FollowingNavProps['navigation']
-  >();
+  const {navigate} = useNavigation<NavProps['navigation']>();
+
   const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
   const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 

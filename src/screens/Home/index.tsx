@@ -16,12 +16,27 @@ import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparato
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import useStyles from './useStyles';
 
-export type NavProps = CompositeScreenProps<
-  StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>,
-  StackScreenProps<HomeTabsParamList>
+type FollowingNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
 >;
+
+type DiscoverNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
+>;
+
+export type NavProps = DiscoverNavProps | FollowingNavProps;
 
 export type HomeParams = {
   type: 'discover' | 'following';
