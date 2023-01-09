@@ -120,6 +120,7 @@ const PostCard = ({
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
     imageStyle: {borderRadius: 10},
+    resizeMode: 'contain',
   });
 
   const calculatedCreationDate = useMemo(() => {

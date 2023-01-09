@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, {useMemo, useState} from 'react';
 import {Dimensions, ImageStyle, StyleProp, StyleSheet} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage, {ResizeMode} from 'react-native-fast-image';
 
 /**
  * A hook to serve as a singular point to handle rendering of post media attachments
@@ -10,11 +10,13 @@ const useRenderMediaAttachment = ({
   attachments,
   imageStyle,
   useAutoSize,
+  resizeMode,
   horizontalPaddingWithAutoSize,
 }: {
   attachments?: PostAttachment[];
   imageStyle?: StyleProp<ImageStyle>;
   useAutoSize?: boolean;
+  resizeMode: ResizeMode;
   horizontalPaddingWithAutoSize?: number;
 }) => {
   const [dimensions, setDimensions] = useState({
@@ -42,7 +44,7 @@ const useRenderMediaAttachment = ({
     if ('uri' in attachment.content) {
       return (
         <FastImage
-          resizeMode="contain"
+          resizeMode={resizeMode}
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
           onLoad={e => {
@@ -77,6 +79,7 @@ const useRenderMediaAttachment = ({
     imageHeight,
     horizontalPaddingWithAutoSize,
     dimensions,
+    resizeMode,
   ]);
 
   return {

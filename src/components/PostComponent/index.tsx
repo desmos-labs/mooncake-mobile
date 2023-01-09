@@ -21,6 +21,7 @@ const PostComponent = ({postData}: Props) => {
 
   const {MediaAttachment} = useRenderMediaAttachment({
     attachments,
+    resizeMode: 'contain',
     useAutoSize: true,
   });
 
