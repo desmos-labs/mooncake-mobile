@@ -235,10 +235,6 @@ const Home = () => {
           onEndReached={fetchMorePosts}
           estimatedItemSize={388}
           getItemType={item => {
-            const hasAttachments = item?.attachments?.length > 0;
-            if (item.text && !hasAttachments) return 0;
-            if (!item.text && hasAttachments) return 1;
-            if (item.text && hasAttachments) return 2;
             return item.id;
           }}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
