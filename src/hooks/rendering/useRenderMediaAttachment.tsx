@@ -42,6 +42,7 @@ const useRenderMediaAttachment = ({
     if ('uri' in attachment.content) {
       return (
         <FastImage
+          resizeMode="contain"
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
           onLoad={e => {

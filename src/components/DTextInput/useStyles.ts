@@ -20,7 +20,8 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     lineHeight: 21,
     letterSpacing: 0.025,
     textAlign: 'left',
-    paddingHorizontal: 11,
+    paddingRight: 12,
+    paddingLeft: 6,
     flexGrow: 1,
     flex: 0.95,
     // textAlignVertical: props.multiline === true ? 'top' : 'center',
@@ -33,6 +34,11 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     padding: 0,
     margin: 0,
     paddingRight: 8,
+  },
+  left: {
+    padding: 0,
+    margin: 0,
+    paddingLeft: 12,
   },
 }));
 

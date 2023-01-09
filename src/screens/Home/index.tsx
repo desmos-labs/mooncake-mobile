@@ -1,16 +1,18 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import postsListScrollToTop from '@recoil/postsListRef';
-import {FlashList} from '@shopify/flash-list';
-import {ListRenderItemInfo} from '@shopify/flash-list/src/FlashListProps';
+import postsListOptions from '@recoil/postsListRef';
+import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
+import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import ContentLoader, {Circle, Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, TouchableWithoutFeedback, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
@@ -18,8 +20,6 @@ import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparato
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import useStyles from './useStyles';
 
 type FollowingNavProps = CompositeScreenProps<
@@ -51,7 +51,7 @@ const Home = () => {
   const theme = useTheme();
   const postListRef = useRef<any>(null);
   const lockPostPress = useRef(false);
-  const [scrollToTop, setScrollToTop] = useRecoilState(postsListScrollToTop);
+  const [listOptions, setListOptions] = useRecoilState(postsListOptions);
   const {
     handlePressDetails,
     handlePressFollow,
@@ -184,43 +184,67 @@ const Home = () => {
    * Little trick to scroll to top from a parent component, the HomeTabBar in this case
    */
   useEffect(() => {
-    if (scrollToTop) {
+    if (listOptions.scrollToTop) {
       postListRef.current?.scrollToOffset({animated: true, offset: 0});
-      setScrollToTop(false);
+      setListOptions({...listOptions, scrollToTop: false});
     }
-  }, [scrollToTop, postListRef]);
+  }, [listOptions.scrollToTop, postListRef]);
+
+  const SearchView = useMemo(() => {
+    return (
+      listOptions.searchBarFocused && (
+        <TouchableWithoutFeedback
+          onPress={() =>
+            setListOptions({...listOptions, searchBarFocused: false})
+          }>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: theme.spacing.m,
+              backgroundColor: theme.colors.white,
+              zIndex: 20,
+            }}>
+            <Typography.Body6>
+              We are Anonymous, we are legion, we do not forgive, we do not
+              forget. Expect us.
+            </Typography.Body6>
+          </View>
+        </TouchableWithoutFeedback>
+      )
+    );
+  }, [listOptions]);
 
   return (
-    <View style={styles.homeView}>
-      {/*      <FlatList
-        ref={postListRef}
-        data={posts}
-        refreshing={loading}
-        onRefresh={onRefresh}
-        style={styles.flatlist}
-        contentContainerStyle={styles.flatlistInner}
-        renderItem={renderPost}
-        showsVerticalScrollIndicator={false}
-        onEndReached={fetchMorePosts}
-        initialNumToRender={6}
-        ItemSeparatorComponent={HomeItemSeparatorComponent}
-      /> */}
-
-      <FlashList
-        ref={postListRef}
-        data={posts}
-        refreshing={loading}
-        onRefresh={onRefresh}
-        renderItem={renderPost}
-        showsVerticalScrollIndicator={false}
-        onEndReached={fetchMorePosts}
-        estimatedItemSize={150}
-        getItemType={item => {
-          return item.id;
-        }}
-        ItemSeparatorComponent={HomeItemSeparatorComponent}
-      />
-    </View>
+    <>
+      {SearchView}
+      <View style={styles.homeView}>
+        <FlashList
+          ref={postListRef}
+          data={posts}
+          refreshing={loading}
+          onRefresh={onRefresh}
+          renderItem={renderPost}
+          showsVerticalScrollIndicator={false}
+          onEndReached={fetchMorePosts}
+          estimatedItemSize={388}
+          getItemType={item => {
+            const hasAttachments = item?.attachments?.length > 0;
+            if (item.text && !hasAttachments) return 0;
+            if (!item.text && hasAttachments) return 1;
+            if (item.text && hasAttachments) return 2;
+            return item.id;
+          }}
+          ItemSeparatorComponent={HomeItemSeparatorComponent}
+        />
+      </View>
+    </>
   );
 };
 

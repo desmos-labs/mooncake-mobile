@@ -5,6 +5,7 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     backgroundColor: theme.colors.white,
     paddingTop: theme.spacing.m,
+    zIndex: 1,
   },
   flatlist: {
     flex: 1,

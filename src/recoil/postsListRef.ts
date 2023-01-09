@@ -1,8 +1,18 @@
 import {atom} from 'recoil';
 
-const postsListScrollToTop = atom<boolean>({
+export type ListOptions = {
+  scrollToTop: boolean;
+  searchBarFocused: boolean;
+};
+
+export const DefaultListOptions = {
+  scrollToTop: false,
+  searchBarFocused: false,
+};
+
+const postsListOptions = atom<ListOptions>({
   key: 'posts',
-  default: false,
+  default: DefaultListOptions,
 });
 
-export default postsListScrollToTop;
+export default postsListOptions;

@@ -2,12 +2,14 @@ import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   butterflyImage: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 18,
     resizeMode: 'cover',
+    marginRight: theme.spacing.xs,
   },
   container: {
+    marginTop: theme.spacing.xs,
     paddingHorizontal: theme.spacing.m,
     backgroundColor: theme.colors.white,
   },
@@ -24,8 +26,8 @@ const useStyles = makeStyle(theme => ({
     marginLeft: theme.spacing.xs,
   },
   icon: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     resizeMode: 'contain',
   },
 }));
