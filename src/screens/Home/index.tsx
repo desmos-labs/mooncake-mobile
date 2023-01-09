@@ -196,21 +196,9 @@ const Home = () => {
         <TouchableWithoutFeedback
           onPress={() =>
             setListOptions({...listOptions, searchBarFocused: false})
-          }>
-          <View
-            style={{
-              flex: 1,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: theme.spacing.m,
-              backgroundColor: theme.colors.white,
-              zIndex: 20,
-            }}>
+          }
+          style={{flex: 1, zIndex: 2}}>
+          <View style={styles.absoluteView}>
             <Typography.Body6>
               We are Anonymous, we are legion, we do not forgive, we do not
               forget. Expect us.
@@ -224,8 +212,9 @@ const Home = () => {
   return (
     <>
       {SearchView}
-      <View style={styles.homeView}>
+      <View style={{flex: 1, zIndex: 1, backgroundColor: theme.colors.white}}>
         <FlashList
+          keyExtractor={item => item.id.toString()}
           ref={postListRef}
           data={posts}
           refreshing={loading}
@@ -234,9 +223,7 @@ const Home = () => {
           showsVerticalScrollIndicator={false}
           onEndReached={fetchMorePosts}
           estimatedItemSize={388}
-          getItemType={item => {
-            return item.id;
-          }}
+          getItemType={item => item.id}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
         />
       </View>
