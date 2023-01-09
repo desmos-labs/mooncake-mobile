@@ -321,7 +321,7 @@ const RootNavigator = () => {
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
     if (activeAddr) {
-      return ROUTES.HOME_TABS;
+      return ROUTES.BOTTOM_TABS;
     }
     return ROUTES.ONBOARDING;
   }, []);

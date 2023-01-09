@@ -1,20 +1,20 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import useGetPosts from 'hooks/useGetPosts';
-import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {ViewToken} from 'react-native';
-import {useRecoilValue} from 'recoil';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
-import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
+import EnvConfig from 'config/EnvConfig';
+import useGetPosts from 'hooks/useGetPosts';
+import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
 import _ from 'lodash';
+import ROUTES from 'navigation/routes';
+import React, {useCallback} from 'react';
+import {ViewToken} from 'react-native';
+import {useRecoilValue} from 'recoil';
 import {NavProps} from 'screens/Home';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 
 const postFamilyMap = {
   [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
@@ -56,6 +56,19 @@ const useHooks = () => {
       {id: -1, emptyComponent: true} as any,
     ];
   }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
+
+  /** Preload Idea */
+  /*  const imagesToPreload: Source[] = useMemo(() => {
+    return _.flatMap(posts, item => item.attachments).map(item => {
+      return {
+        uri: _.get(item, 'content.uri'),
+      };
+    });
+  }, [posts]);
+
+  useEffect(() => {
+    FastImage.preload(imagesToPreload);
+  }, [imagesToPreload]); */
 
   const checkIfPostIsPending = (postId: number) => {
     return parsedPendingPosts.find(x => x.id === postId)?.isPending;
