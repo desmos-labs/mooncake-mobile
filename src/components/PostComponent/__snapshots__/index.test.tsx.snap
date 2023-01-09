@@ -109,7 +109,7 @@ exports[`component: PostComponent renders image posts 1`] = `
           onFastImageLoad={[Function]}
           onFastImageLoadEnd={[Function]}
           onFastImageLoadStart={[Function]}
-          resizeMode="cover"
+          resizeMode="contain"
           source={
             Object {
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
@@ -172,7 +172,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
           onFastImageLoad={[Function]}
           onFastImageLoadEnd={[Function]}
           onFastImageLoadStart={[Function]}
-          resizeMode="cover"
+          resizeMode="contain"
           source={
             Object {
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
