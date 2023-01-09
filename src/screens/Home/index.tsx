@@ -8,8 +8,10 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useRef} from 'react';
+import ContentLoader, {Circle, Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {Dimensions, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -46,6 +48,7 @@ const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
   const styles = useStyles();
+  const theme = useTheme();
   const postListRef = useRef<any>(null);
   const lockPostPress = useRef(false);
   const [scrollToTop, setScrollToTop] = useRecoilState(postsListScrollToTop);
@@ -82,14 +85,21 @@ const Home = () => {
     ({item}: ListRenderItemInfo<PostItem>) => {
       if (item.emptyComponent) {
         return (
-          <View style={styles.lottieOuterView}>
-            {/*            <ThemedLottieView
-              style={styles.lottieView}
-              autoPlay
-              loop={true}
-              source={loadingOrange}
-              resizeMode="cover"
-            /> */}
+          <View style={{flex: 1, marginHorizontal: theme.spacing.m}}>
+            <ContentLoader
+              animate={true}
+              speed={2}
+              width={Dimensions.get('window').width - 32}
+              height={166}
+              backgroundColor={theme.colors.surfaceGrey}
+              foregroundColor={theme.colors.background}>
+              <Rect x="64" y="18" rx="3" ry="3" width="88" height="8" />
+              <Rect x="64" y="38" rx="3" ry="3" width="110" height="8" />
+              <Rect x="6" y="66" rx="3" ry="3" width="320" height="8" />
+              <Rect x="6" y="86" rx="3" ry="3" width="280" height="8" />
+              <Rect x="6" y="106" rx="3" ry="3" width="330" height="8" />
+              <Circle cx="30" cy="30" r="25" />
+            </ContentLoader>
           </View>
         );
       }
