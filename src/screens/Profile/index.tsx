@@ -1,5 +1,9 @@
 import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import {
@@ -272,15 +276,16 @@ const Profile = () => {
    * Effects
    */
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     console.log('refetch user data onFocus');
-  //     const task = InteractionManager.runAfterInteractions(() => {
-  //       refetchUserData();
-  //     });
-  //     return () => task.cancel();
-  //   }, [refetchUserData]),
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('refetch user data onFocus');
+      const task = InteractionManager.runAfterInteractions(() => {
+        // Only refresh following list on focus
+        refreshNumRelationships();
+      });
+      return () => task.cancel();
+    }, [refetchUserData]),
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
