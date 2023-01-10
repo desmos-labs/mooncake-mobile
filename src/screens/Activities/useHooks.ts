@@ -45,44 +45,42 @@ const useHooks = () => {
   };
 
   const fetchNotificationDetails = useCallback(async () => {
-    if (data) {
-      try {
-        setNotificationsDetailsLoading(true);
-        const results = await Promise.all(
-          data.notification.map(async (singleNot: any) => {
-            const {data: profileData} = await client.query({
-              query: GetProfileForAddress,
+    if (!data) return;
+    try {
+      const results = await Promise.all(
+        data.notification.map(async (singleNot: any) => {
+          const {data: profileData} = await client.query({
+            query: GetProfileForAddress,
+            variables: {
+              address: getCorrectAddress(singleNot),
+            },
+            fetchPolicy: 'no-cache',
+          });
+          if (singleNot?.data?.post_id) {
+            const {data: postData} = await client.query({
+              query: GetPostBySubspaceIDandPostID,
               variables: {
-                address: getCorrectAddress(singleNot),
+                postID: singleNot.data.post_id,
+                subspaceID: EnvConfig.APP_SUBSPACE_ID,
               },
               fetchPolicy: 'no-cache',
             });
-            if (singleNot?.data?.post_id) {
-              const {data: postData} = await client.query({
-                query: GetPostBySubspaceIDandPostID,
-                variables: {
-                  postID: singleNot.data.post_id,
-                  subspaceID: EnvConfig.APP_SUBSPACE_ID,
-                },
-                fetchPolicy: 'no-cache',
-              });
-              return {
-                ...singleNot,
-                profile: profileData.profile[0],
-                post: postData.posts[0],
-              };
-            }
-            return {...singleNot, profile: profileData.profile[0]};
-          }),
-        );
-        if (results) {
-          setNotificationsWithProfile(results);
-        }
-      } catch (e: any) {
-        console.error(e);
-      } finally {
-        setNotificationsDetailsLoading(false);
+            return {
+              ...singleNot,
+              profile: profileData.profile[0],
+              post: postData.posts[0],
+            };
+          }
+          return {...singleNot, profile: profileData.profile[0]};
+        }),
+      );
+      if (results) {
+        setNotificationsWithProfile(results);
       }
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setNotificationsDetailsLoading(false);
     }
   }, [data]);
 

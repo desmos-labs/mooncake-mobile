@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
+import NotificationContentLoader from 'components/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -110,52 +111,62 @@ const Activities = () => {
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      <Typography.H3>{t('activities')}</Typography.H3>
-      {data?.notification?.length >= 0 && !notificationsLoading ? (
-        <SectionList
-          keyExtractor={(item, index) => item.timestamp + index}
-          refreshing={notificationsLoading}
-          onRefresh={notificationsRefetch}
-          style={{flex: 1}}
-          contentContainerStyle={{flexGrow: 1}}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={EmptyActivities}
-          sections={notificationsData}
-          renderItem={renderNotification}
-          ListFooterComponent={globalLoading ? <ActivityIndicator /> : null}
-          onEndReached={() => {
-            notificationsFetchMore({
-              variables: {
-                offset: data.notification.length,
-              },
-              updateQuery: (prev, {fetchMoreResult}) => {
-                if (!fetchMoreResult) {
-                  return prev;
-                }
-                return {
-                  ...prev,
-                  notification: [
-                    ...prev.notification,
-                    ...fetchMoreResult.notification,
-                  ],
-                };
-              },
-            });
-          }}
-          renderSectionHeader={({section: {section}}) => (
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: theme.colors.white,
-                paddingTop: theme.spacing.m,
-                paddingBottom: theme.spacing.s,
-              }}>
-              <Typography.Button2>{section}</Typography.Button2>
-            </View>
-          )}
-        />
+      {data?.notification?.length >= 0 && !globalLoading ? (
+        <>
+          <Typography.H3>{t('activities')}</Typography.H3>
+          <SectionList
+            keyExtractor={(item, index) => item.timestamp + index}
+            refreshing={notificationsLoading}
+            onRefresh={notificationsRefetch}
+            style={{flex: 1}}
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={EmptyActivities}
+            sections={notificationsData}
+            renderItem={renderNotification}
+            ListFooterComponent={() => <NotificationContentLoader />}
+            initialNumToRender={8}
+            onEndReached={() => {
+              notificationsFetchMore({
+                variables: {
+                  offset: data.notification.length,
+                },
+                updateQuery: (prev, {fetchMoreResult}) => {
+                  if (!fetchMoreResult) {
+                    return prev;
+                  }
+                  return {
+                    ...prev,
+                    notification: [
+                      ...prev.notification,
+                      ...fetchMoreResult.notification,
+                    ],
+                  };
+                },
+              });
+            }}
+            renderSectionHeader={({section: {section}}) => (
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: theme.colors.white,
+                  paddingTop: theme.spacing.m,
+                  paddingBottom: theme.spacing.s,
+                }}>
+                <Typography.Button2>{section}</Typography.Button2>
+              </View>
+            )}
+          />
+        </>
       ) : (
-        <ActivityIndicator />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: theme.colors.white,
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator />
+        </View>
       )}
     </DView>
   );
