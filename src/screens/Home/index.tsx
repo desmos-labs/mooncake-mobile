@@ -12,7 +12,7 @@ import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {RefreshControl, TouchableWithoutFeedback, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
@@ -204,8 +204,13 @@ const Home = () => {
           keyExtractor={item => item.id.toString()}
           ref={postListRef}
           data={posts}
-          refreshing={loading}
-          onRefresh={onRefresh}
+          refreshControl={
+            <RefreshControl
+              enabled
+              onRefresh={onRefresh}
+              refreshing={loading}
+            />
+          }
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
           estimatedItemSize={388}

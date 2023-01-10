@@ -217,15 +217,13 @@ const PostCard = ({
         {PendingIndicator}
       </View>
     );
-  }, 
-  [
+  }, [
     authorData?.dtag,
     authorData?.nickname,
     authorData?.profile_pic,
     calculatedCreationDate,
     PendingIndicator,
-  ]
-  );
+  ]);
 
   const BottomBar = React.useMemo(() => {
     return (
