@@ -3,7 +3,7 @@ import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
-import NotificationContentLoader from 'components/NotificationContentLoader';
+import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
@@ -106,6 +106,10 @@ const Activities = () => {
     [],
   );
 
+  const footerComponent = () => {
+    return <NotificationContentLoader />;
+  };
+
   return (
     <DView
       edges={['top', 'left', 'right']}
@@ -125,7 +129,7 @@ const Activities = () => {
             ListEmptyComponent={EmptyActivities}
             sections={notificationsData}
             renderItem={renderNotification}
-            ListFooterComponent={() => <NotificationContentLoader />}
+            ListFooterComponent={footerComponent}
             initialNumToRender={8}
             onEndReached={() => {
               notificationsFetchMore({

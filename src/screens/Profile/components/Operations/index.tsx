@@ -19,6 +19,7 @@ import {
   sendReportTxIcon,
 } from 'assets/images';
 import DView from 'components/DView';
+import OperationContentLoader from 'components/Loaders/OperationContentLoader';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -113,6 +114,10 @@ const Operations = () => {
     [currentChain, titleMap, imageMap],
   );
 
+  const footerComponent = () => {
+    return <OperationContentLoader />;
+  };
+
   return (
     <DView
       topBar={<TopBar />}
@@ -140,6 +145,7 @@ const Operations = () => {
           ListEmptyComponent={EmptyOperations}
           sections={operationsData}
           renderItem={renderTx}
+          ListFooterComponent={footerComponent}
           onEndReached={() => {
             operationsDataFetchMore({
               variables: {

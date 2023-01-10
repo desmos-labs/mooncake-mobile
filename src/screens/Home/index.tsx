@@ -3,7 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import postsListOptions from '@recoil/postsListRef';
 import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
-import HomePostContentLoader from 'components/HomePostContentLoader';
+import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
