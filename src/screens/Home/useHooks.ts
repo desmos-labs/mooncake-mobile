@@ -6,11 +6,9 @@ import {
 import {POST_TYPE} from '@recoil/posts';
 import EnvConfig from 'config/EnvConfig';
 import useGetPosts from 'hooks/useGetPosts';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import _ from 'lodash';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {ViewToken} from 'react-native';
+import React from 'react';
 import {useRecoilValue} from 'recoil';
 import {NavProps} from 'screens/Home';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
@@ -26,16 +24,10 @@ const postFamilyMap = {
  */
 const useHooks = () => {
   const {name: routeName} = useRoute<NavProps['route']>();
-
+  const {handleNavigateToProfile} = useNavigateToProfile();
   const {navigate} = useNavigation<NavProps['navigation']>();
-
-  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
-  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
-
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
-
   const {posts, fetchMorePosts, fetchNewestPosts, loading} = useGetPosts({
     type: postFamilyMap[routeName],
   });
@@ -57,35 +49,9 @@ const useHooks = () => {
     ];
   }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
-  /** Preload Idea */
-  /*  const imagesToPreload: Source[] = useMemo(() => {
-    return _.flatMap(posts, item => item.attachments).map(item => {
-      return {
-        uri: _.get(item, 'content.uri'),
-      };
-    });
-  }, [posts]);
-
-  useEffect(() => {
-    FastImage.preload(imagesToPreload);
-  }, [imagesToPreload]); */
-
   const checkIfPostIsPending = (postId: number) => {
     return parsedPendingPosts.find(x => x.id === postId)?.isPending;
   };
-
-  const handlePressAuthor = useCallback(
-    (address: string) => {
-      if (activeAddress === address) {
-        navigate(ROUTES.USER_PROFILE);
-      } else {
-        navigate(ROUTES.GUEST_PROFILE, {
-          address,
-        });
-      }
-    },
-    [activeAddress],
-  );
 
   const handlePressReport = React.useCallback(
     (postId: number, subspaceId: number) => {
@@ -148,31 +114,19 @@ const useHooks = () => {
     [],
   );
 
-  const onViewableItemsChanged = useCallback(
-    (a: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
-      const index = _.get(a, 'viewableItems[0].index');
-      if (index !== undefined) {
-        setSelectedPostIndex(index);
-      }
-    },
-    [],
-  );
-
   return {
     handlePressDetails,
     handlePressFollow,
-    handlePressAuthor,
+    handleNavigateToProfile,
     handlePressTip,
     handleAddReaction,
     handlePressComments,
     handlePressReport,
     posts: combinedPosts,
-    selectedPostIndex,
     checkIfPostIsPending,
     loading,
     fetchNewestPosts,
     fetchMorePosts,
-    onViewableItemsChanged,
   };
 };
 

@@ -8,9 +8,10 @@ import {
 import sharedPostState from '@recoil/sharedPostState';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
 import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
@@ -34,7 +35,7 @@ const useHooks = ({
   const {createPost, loading} = useCreatePost();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
-
+  const {handleNavigateToProfile} = useNavigateToProfile();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
   const scrollViewRef = useRef<FlatList>(null);
@@ -205,19 +206,6 @@ const useHooks = ({
       postId,
       subspaceId,
     });
-
-  const handleNavigateToProfile = useCallback(
-    (address: string) => {
-      if (activeAddress === address) {
-        navigate(ROUTES.USER_PROFILE);
-      } else {
-        navigate(ROUTES.GUEST_PROFILE, {
-          address,
-        });
-      }
-    },
-    [activeAddress],
-  );
 
   const handleCommentReply = () =>
     createPost({conversationId: postID, referencedPostId: commentID});

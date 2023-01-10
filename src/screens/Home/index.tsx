@@ -55,7 +55,7 @@ const Home = () => {
   const {
     handlePressDetails,
     handlePressFollow,
-    handlePressAuthor,
+    handleNavigateToProfile,
     handlePressTip,
     handleAddReaction,
     handlePressComments,
@@ -103,7 +103,7 @@ const Home = () => {
           reactions={item.reactions}
           repliesCount={item.repliesCount}
           creation_date={item.creation_date}
-          onPressAuthor={() => handlePressAuthor(item.author_address)}
+          onPressAuthor={() => handleNavigateToProfile(item.author_address)}
           onPressDetails={() => {
             if (lockPostPress.current) return;
 
@@ -154,7 +154,7 @@ const Home = () => {
       lockPostPress.current,
       handlePressFollow,
       handlePressReport,
-      handlePressAuthor,
+      handleNavigateToProfile,
       handlePressDetails,
       handlePressComments,
       handleAddReaction,

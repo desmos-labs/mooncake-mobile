@@ -9,6 +9,7 @@ import EnvConfig from 'config/EnvConfig';
 import ToastConfig from 'config/ToastConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
@@ -45,9 +46,9 @@ const NotificationComponent = ({
     isFollowingAddr(relationship_creator || ''),
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
-  const {activeAddress, profileData} = useActiveAccount();
+  const {profileData} = useActiveAccount();
   const toast = useToast();
-
+  const {handleNavigateToProfile} = useNavigateToProfile();
   const checkPostType = useCallback(() => {
     const isOriginalPost = post.conversation === null;
     const reply = post.replies.find(
@@ -63,19 +64,6 @@ const NotificationComponent = ({
       reply,
     };
   }, []);
-
-  const navigateToProfile = useCallback(
-    (address: string) => {
-      if (activeAddress === address) {
-        navigate(ROUTES.USER_PROFILE);
-      } else {
-        navigate(ROUTES.GUEST_PROFILE, {
-          address,
-        });
-      }
-    },
-    [activeAddress],
-  );
 
   const navigateToCorrectScreen = useCallback(() => {
     if (type === NotificationTypesEnum.Comment) {
@@ -142,7 +130,7 @@ const NotificationComponent = ({
         return (
           <View style={styles.flexRowView}>
             <ImageButton
-              onPress={() => navigateToProfile(profile.address!)}
+              onPress={() => handleNavigateToProfile(profile.address!)}
               style={styles.avatar}
               image={{uri: profile.profile_pic}}
             />
@@ -175,7 +163,7 @@ const NotificationComponent = ({
         return (
           <View style={styles.flexRowView}>
             <ImageButton
-              onPress={() => navigateToProfile(profile.address!)}
+              onPress={() => handleNavigateToProfile(profile.address!)}
               style={styles.avatar}
               image={{uri: profile.profile_pic}}
             />
@@ -202,7 +190,7 @@ const NotificationComponent = ({
         return (
           <View style={styles.flexRowView}>
             <ImageButton
-              onPress={() => navigateToProfile(profile.address!)}
+              onPress={() => handleNavigateToProfile(profile.address!)}
               style={styles.avatar}
               image={{uri: profile.profile_pic}}
             />
@@ -229,7 +217,7 @@ const NotificationComponent = ({
         return (
           <View style={styles.flexRowView}>
             <ImageButton
-              onPress={() => navigateToProfile(profile.address!)}
+              onPress={() => handleNavigateToProfile(profile.address!)}
               style={styles.avatar}
               image={{uri: profile.profile_pic}}
             />
