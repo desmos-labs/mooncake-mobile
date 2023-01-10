@@ -88,8 +88,8 @@ export const generateHdPaths = ({
     return {
       coinType,
       change: 0,
-      account: 0,
-      addressIndex: startingIndex + idx,
+      account: startingIndex + idx,
+      addressIndex: 0,
     };
   });
 

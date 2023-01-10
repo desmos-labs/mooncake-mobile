@@ -1,13 +1,15 @@
 import {useQuery} from '@apollo/client';
 import {convertCoin} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
+import {parseISO} from 'date-fns';
+import {formatInTimeZone} from 'date-fns-tz';
 import {useMemo} from 'react';
 import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
-import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
+import GetPastActions from 'services/graphql/queries/GetPastActions';
 
 const useHooks = (address: string) => {
-  const {currentChain} = useRecoilValue(appSettingsState);
+  const {currentChain, currentTimezone} = useRecoilValue(appSettingsState);
 
   const {data: balanceData, loading: balanceLoading} = useQuery(
     GetAccountBalance,
@@ -19,9 +21,17 @@ const useHooks = (address: string) => {
     },
   );
 
-  const {data, error} = useQuery(GetTransactionsByAddress, {
+  const {
+    data: pastActionsData,
+    loading: operationsDataLoading,
+    refetch: operationsDataRefetch,
+    error,
+    fetchMore: operationsDataFetchMore,
+  } = useQuery(GetPastActions, {
     variables: {
-      address: `{${address}}`,
+      userAddress: address,
+      limit: 10,
+      offset: 0,
     },
   });
 
@@ -46,15 +56,56 @@ const useHooks = (address: string) => {
   }, [balanceData, balanceLoading, currentChain]);
 
   const operationsData = useMemo(() => {
-    if (!data) {
+    if (!pastActionsData) {
       return [];
     }
-    return [];
-  }, [data, error]);
+    const dates: any[] = pastActionsData.messages_by_address.map((msg: any) => {
+      return msg.timestamp.slice(0, -9);
+    });
+
+    const uniqueDates = [...new Set(dates)];
+
+    const sections = uniqueDates.map(date => {
+      const parsedTime = parseISO(`${date}Z`);
+
+      const formattedDate = formatInTimeZone(
+        parsedTime,
+        currentTimezone,
+        'dd MMM, yyyy',
+      );
+
+      return {
+        section: formattedDate,
+        data: new Array(0),
+      };
+    });
+
+    pastActionsData.messages_by_address.forEach((msg: any) => {
+      const parsedTime = parseISO(`${msg.timestamp}Z`);
+
+      const formattedDate = formatInTimeZone(
+        parsedTime,
+        currentTimezone,
+        'dd MMM, yyyy',
+      );
+
+      const sectionToPopulate = sections.find(
+        section => section.section === formattedDate,
+      );
+      if (sectionToPopulate) sectionToPopulate.data.push(msg);
+    });
+
+    return sections;
+  }, [pastActionsData, error]);
 
   return {
+    pastActionsData,
     operationsData,
     convertedBalance,
+    currentChain,
+    operationsDataFetchMore,
+    operationsDataLoading,
+    operationsDataRefetch,
   };
 };
 
