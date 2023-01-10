@@ -147,13 +147,10 @@ const EnterCommentBottomBar: React.FC<Props> = ({
       keyboardVerticalOffset={Platform.OS === 'ios' ? bottom + 40 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
-        viewStyle={[
-          styles.shadow,
-          !keyboardShow ? {paddingBottom: bottom} : {},
-        ]}
-        startColor="rgba(51, 51, 51, 0.15)"
-        distance={30}
-        radius={0}>
+        stretch={true}
+        style={[styles.shadow, !keyboardShow ? {paddingBottom: bottom} : {}]}
+        startColor="rgba(51, 51, 51, 0.1)"
+        distance={30}>
         <View style={styles.container}>
           {profileImage ? (
             <FastImage source={profileImage} style={styles.profilePic} />

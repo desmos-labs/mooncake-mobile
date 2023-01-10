@@ -19,11 +19,13 @@ const useRenderMediaAttachment = ({
   resizeMode: ResizeMode;
   horizontalPaddingWithAutoSize?: number;
 }) => {
+  const imageWidth =
+    Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0);
   const [dimensions, setDimensions] = useState({
     height: 0,
     width: 0,
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const imageHeight = useMemo(() => {
     if (!dimensions.height) {
@@ -55,6 +57,7 @@ const useRenderMediaAttachment = ({
           }}
           source={{
             uri: _.get(attachment, 'content.uri'),
+            priority: FastImage.priority.high,
           }}
           // @ts-ignore
           style={
@@ -62,9 +65,7 @@ const useRenderMediaAttachment = ({
               ? [
                   {
                     height: imageHeight,
-                    width:
-                      Dimensions.get('window').width -
-                      (horizontalPaddingWithAutoSize || 0),
+                    width: imageWidth,
                   },
                   imageStyle,
                 ]
@@ -77,9 +78,10 @@ const useRenderMediaAttachment = ({
     attachments,
     useAutoSize,
     imageHeight,
-    horizontalPaddingWithAutoSize,
+    imageWidth,
     dimensions,
     resizeMode,
+    loading,
   ]);
 
   return {
