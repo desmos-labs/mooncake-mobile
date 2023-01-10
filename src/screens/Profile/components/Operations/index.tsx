@@ -100,7 +100,6 @@ const Operations = () => {
   const renderTx = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
       const fees = convertCoin(item.fees[0], 6, currentChain.currencies);
-      console.log(item.type);
       return (
         <TxComponent
           timestamp={item.timestamp}
@@ -132,6 +131,7 @@ const Operations = () => {
       {pastActionsData?.messages_by_address?.length >= 0 &&
       !operationsDataLoading ? (
         <SectionList
+          keyExtractor={item => item.transaction_hash}
           refreshing={operationsDataLoading}
           onRefresh={operationsDataRefetch}
           style={{flex: 1}}

@@ -48,7 +48,9 @@ const ManageConnectedApps = () => {
       }),
       primaryButtonLabel: t('resultModal:goToProfile') as string,
       onPressPrimary: () => {
-        navigate(ROUTES.USER_PROFILE);
+        navigate(ROUTES.BOTTOM_TABS, {
+          screen: ROUTES.USER_PROFILE,
+        });
       },
     });
   }, []);

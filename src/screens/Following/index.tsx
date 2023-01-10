@@ -60,8 +60,8 @@ export const Following: FC<NavProps> = ({route}) => {
         <FollowingListItem
           {...item}
           onPress={() => {
-            push(ROUTES.USER_PROFILE, {
-              visitingProfileAddress: item.address,
+            push(ROUTES.GUEST_PROFILE, {
+              address: item.address,
             });
           }}
         />

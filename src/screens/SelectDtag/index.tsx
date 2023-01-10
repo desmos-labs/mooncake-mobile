@@ -87,7 +87,7 @@ const SelectDtag = () => {
       index: 0,
       routes: [
         {
-          name: ROUTES.HOME_TABS,
+          name: ROUTES.BOTTOM_TABS,
         },
       ],
     });

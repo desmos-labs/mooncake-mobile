@@ -2,6 +2,7 @@ import {
   ApolloClient,
   ApolloLink,
   createHttpLink,
+  defaultDataIdFromObject,
   InMemoryCache,
 } from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
@@ -26,6 +27,18 @@ const multiApiLink = ApolloLink.from([
   }),
 ]);
 
+const cache = new InMemoryCache({
+  dataIdFromObject(object) {
+    switch (object.__typename) {
+      case 'post_attachment':
+        // @ts-ignore
+        return `post_attachment:${object.content.uri}`;
+
+      default:
+        return defaultDataIdFromObject(object);
+    }
+  },
+});
 const authLink = setContext((_, {headers}) => {
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
   return {
@@ -37,7 +50,7 @@ const authLink = setContext((_, {headers}) => {
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache,
   link: authLink.concat(multiApiLink),
 });
 

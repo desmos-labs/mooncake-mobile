@@ -221,10 +221,10 @@ const Home = () => {
           onRefresh={onRefresh}
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
-          onEndReached={fetchMorePosts}
           estimatedItemSize={388}
           getItemType={item => item.id}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
+          onEndReached={() => fetchMorePosts()}
         />
       </View>
     </>

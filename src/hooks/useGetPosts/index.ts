@@ -54,36 +54,41 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     }
   }, [followingAddrs, activeAddress]);
 
-  const {data, refetch, loading} = useQuery(queryVars.query, {
+  const {data, refetch, loading, fetchMore} = useQuery(queryVars.query, {
     variables: queryVars.variables,
-    fetchPolicy: 'no-cache',
-    errorPolicy: 'ignore',
   });
 
   const fetchMorePosts = React.useCallback(() => {
     if (loading) return;
-    refetch({
-      ...queryVars.variables,
-      offset: posts.length,
+    fetchMore({
+      variables: {
+        offset: posts.length,
+      },
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          post: [...prev.post, ...fetchMoreResult.post],
+        };
+      },
     });
   }, [posts.length, loading, queryVars.variables]);
 
   React.useEffect(() => {
     if (data) {
       const {post} = data;
-      setPosts(prev => _.uniqBy([...prev, ...post], 'id'));
+      setPosts(() => _.uniqBy([...post], 'id'));
     }
   }, [JSON.stringify(data)]);
 
   // Reset the fetch offset to restart post fetching
   const fetchNewestPosts = React.useCallback(() => {
-    setPosts([]);
-
     refetch({
       ...queryVars.variables,
       offset: 0,
-    }).then(a => {
-      setPosts(_.get(a, 'data.post', []));
     });
   }, [loading, JSON.stringify(queryVars)]);
 
