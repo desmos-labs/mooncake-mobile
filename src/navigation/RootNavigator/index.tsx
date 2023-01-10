@@ -269,7 +269,7 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
   const {navigate} = useNavigation<any>();
-  const {activeAddress, refetch: fetchProfileData} = useActiveAccount();
+  const {activeAddress} = useActiveAccount();
   const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
@@ -295,9 +295,6 @@ const RootNavigator = () => {
   };
 
   useEffect(() => {
-    // fetch profile data
-    fetchProfileData();
-
     // Hide the splashscreen
     RNBootSplash.hide({fade: true});
 

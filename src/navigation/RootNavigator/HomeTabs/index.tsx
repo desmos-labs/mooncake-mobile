@@ -24,7 +24,7 @@ const HomeTabs = () => {
   const theme = useTheme();
   const {top} = useSafeAreaInsets();
   const {refreshSession} = useRefreshSession();
-  const {profileData} = useActiveAccount();
+  const {profileData, refetch: fetchProfileData} = useActiveAccount();
 
   const [screenReady, setScreenReady] = React.useState(false);
 
@@ -34,6 +34,8 @@ const HomeTabs = () => {
 
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
+    fetchProfileData();
+
     refreshSession();
   }, []);
 
