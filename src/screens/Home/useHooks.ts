@@ -123,6 +123,7 @@ const useHooks = () => {
     handlePressComments,
     handlePressReport,
     posts: combinedPosts,
+    queryPostsData: posts,
     checkIfPostIsPending,
     loading,
     fetchNewestPosts,

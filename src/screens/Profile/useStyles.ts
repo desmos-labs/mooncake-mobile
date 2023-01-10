@@ -30,7 +30,11 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     height: 8,
     backgroundColor: theme.colors.surfaceGrey,
   },
-  flexCenter: {flex: 1, justifyContent: 'center'},
+  flexCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: theme.colors.white,
+  },
   arrowView: {
     zIndex: 2,
     position: 'absolute',

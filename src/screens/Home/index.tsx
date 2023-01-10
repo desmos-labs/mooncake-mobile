@@ -12,7 +12,12 @@ import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {RefreshControl, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
@@ -65,6 +70,7 @@ const Home = () => {
     fetchMorePosts,
     checkIfPostIsPending,
     loading,
+    queryPostsData,
   } = useHooks();
 
   const handlePressNewPostNotification = useCallback(() => {
@@ -199,26 +205,38 @@ const Home = () => {
   return (
     <>
       {SearchView}
-      <View style={{flex: 1, zIndex: 1, backgroundColor: theme.colors.white}}>
-        <FlashList
-          keyExtractor={item => item.id.toString()}
-          ref={postListRef}
-          data={posts}
-          refreshControl={
-            <RefreshControl
-              enabled
-              onRefresh={onRefresh}
-              refreshing={loading}
-            />
-          }
-          renderItem={renderPost}
-          showsVerticalScrollIndicator={false}
-          estimatedItemSize={388}
-          getItemType={item => item.id}
-          ItemSeparatorComponent={HomeItemSeparatorComponent}
-          onEndReached={() => fetchMorePosts()}
-        />
-      </View>
+      {queryPostsData ? (
+        <View style={{flex: 1, zIndex: 1, backgroundColor: theme.colors.white}}>
+          <FlashList
+            keyExtractor={item => item.id.toString()}
+            ref={postListRef}
+            data={posts}
+            refreshControl={
+              <RefreshControl
+                enabled
+                onRefresh={onRefresh}
+                refreshing={loading}
+              />
+            }
+            renderItem={renderPost}
+            showsVerticalScrollIndicator={false}
+            estimatedItemSize={388}
+            getItemType={item => item.id}
+            ItemSeparatorComponent={HomeItemSeparatorComponent}
+            onEndReached={() => fetchMorePosts()}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: theme.colors.white,
+          }}>
+          <ActivityIndicator />
+        </View>
+      )}
     </>
   );
 };

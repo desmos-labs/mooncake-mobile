@@ -5,7 +5,9 @@ import {makeStyle} from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: {
-    padding: theme.spacing.m,
+    paddingHorizontal: theme.spacing.m,
+    paddingTop: theme.spacing.m,
+    paddingBottom: theme.spacing.l,
   },
   scrollView: {
     flexGrow: 1,
