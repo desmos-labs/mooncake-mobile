@@ -19,13 +19,6 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  overlayImage: {
-    width: 24,
-    height: 24,
-    alignSelf: 'center',
-    marginTop: 'auto',
-    marginBottom: 'auto',
-  },
 }));
 
 export default useStyles;

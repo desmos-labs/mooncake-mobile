@@ -9,6 +9,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Dimensions, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Animated, {
@@ -26,6 +27,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
 
 const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
   const styles = useStyles();
+  const {t} = useTranslation('home');
   const {navigate} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const [listOptions, setListOptions] = useRecoilState(postsListOptions);
@@ -74,7 +76,7 @@ const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
         <Animated.View style={[{position: 'absolute'}, animatedStyle]}>
           <HomeSearchBar
             focused={focused}
-            searchPlaceHolder="Search something"
+            searchPlaceHolder={t('search something')}
             handleChange={() => console.log('test')}
             onFocus={() => {
               searchBarWidth.value = withTiming(

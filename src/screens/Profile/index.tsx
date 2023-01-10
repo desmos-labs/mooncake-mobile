@@ -217,7 +217,6 @@ const Profile = () => {
   }, []);
 
   const refetchUserData = React.useCallback(async () => {
-    console.log('refetching user profile data and connected apps & chains');
     await Promise.all([
       refetchProfileData(),
       refetchChainLinks(),
@@ -226,9 +225,18 @@ const Profile = () => {
       refetchImpactPoints(),
       refetchPosts(),
       refetchPostsCounter(),
+      refreshNumRelationships(),
     ]);
-    await refreshNumRelationships();
-  }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
+  }, [
+    refetchProfileData,
+    refetchChainLinks,
+    refetchAppLinks,
+    refetchBalance,
+    refetchImpactPoints,
+    refetchPosts,
+    refetchPostsCounter,
+    refreshNumRelationships,
+  ]);
 
   const handleFollowingPressed = () =>
     navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {

@@ -75,7 +75,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         };
       },
     });
-  }, [posts.length, loading, queryVars.variables]);
+  }, [posts.length, loading]);
 
   React.useEffect(() => {
     if (data) {
