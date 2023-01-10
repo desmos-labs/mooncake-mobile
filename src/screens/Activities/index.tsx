@@ -74,14 +74,10 @@ const Activities = () => {
     notificationsFetchMore,
   } = useHooks();
 
+  // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
     return globalLoading ? null : (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View style={styles.emptyView}>
         <Image
           source={errorImage}
           style={{
@@ -151,25 +147,14 @@ const Activities = () => {
               });
             }}
             renderSectionHeader={({section: {section}}) => (
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: theme.colors.white,
-                  paddingTop: theme.spacing.m,
-                  paddingBottom: theme.spacing.s,
-                }}>
+              <View style={styles.sectionHeader}>
                 <Typography.Button2>{section}</Typography.Button2>
               </View>
             )}
           />
         </>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: theme.colors.white,
-            justifyContent: 'center',
-          }}>
+        <View style={styles.flexCenter}>
           <ActivityIndicator />
         </View>
       )}
