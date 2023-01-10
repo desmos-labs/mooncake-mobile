@@ -1,10 +1,12 @@
-import {useNavigation} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -20,7 +22,10 @@ import NotificationComponent from 'screens/Activities/components/NotificationCom
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
+type NavProps = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabsParamList, ROUTES.ACTIVITIES>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 export interface CompleteNotification {
   data: {
