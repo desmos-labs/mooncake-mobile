@@ -127,6 +127,7 @@ const ConnectAddressAdvanced = () => {
       }
 
       // TODO: refactor and fix
+      // @ts-ignore
       return navigate(nextRouteOverride);
     }
 

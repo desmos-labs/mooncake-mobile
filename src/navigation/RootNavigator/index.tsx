@@ -2,7 +2,11 @@ import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import {
+  BottomSheetAndroid,
+  ModalPresentationIOS,
+} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -254,6 +258,11 @@ export type RootNavigatorParamList = {
   [ROUTES.OPERATIONS]: OperationsParams;
 };
 
+const NativeTransition = Platform.select({
+  ios: ModalPresentationIOS,
+  default: BottomSheetAndroid,
+});
+
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
 // Feel free to put wip screens here
@@ -339,15 +348,12 @@ const RootNavigator = () => {
     },
   };
 
-  const transitionPreset =
-    Platform.OS === 'android'
-      ? TransitionPresets.BottomSheetAndroid
-      : TransitionPresets.ModalPresentationIOS;
-
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
-      screenOptions={{headerShown: false}}>
+      screenOptions={{
+        headerShown: false,
+      }}>
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
@@ -531,7 +537,7 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
-          ...transitionPreset,
+          ...NativeTransition,
         }}>
         <Stack.Screen
           name={ROUTES.CONSENT_AGREEMENT}

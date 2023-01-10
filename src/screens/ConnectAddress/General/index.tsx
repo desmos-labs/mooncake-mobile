@@ -120,6 +120,7 @@ const ConnectAddressGeneral = () => {
 
           // TODO: refactor and fix
           setSelectedExternalAccount(item);
+          // @ts-ignore
           return navigation.navigate(nextRouteOverride);
         }
 
