@@ -124,7 +124,6 @@ const useOptimisticRelationships = () => {
       },
   );
 
-  console.log('follow', [...optimisticFollowing, ...optimisticUnfollow]);
   return {
     optimisticFollowing,
     optimisticUnfollow,
