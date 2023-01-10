@@ -19,12 +19,16 @@ exports[`component: DropShadowWrapper renders 1`] = `
         Array [
           Object {
             "bottom": 0,
-            "left": 10,
+            "left": 0,
             "position": "absolute",
             "right": 0,
-            "top": 20,
+            "top": 0,
           },
           undefined,
+          Object {
+            "start": 10,
+            "top": 20,
+          },
         ]
       }
     >
@@ -40,8 +44,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": 0,
             },
             Object {
@@ -66,7 +70,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="left"
+              name="start.0"
               x1="1"
               x2="0"
               y1="0"
@@ -77,7 +81,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
             fill={
               Array [
                 1,
-                "left",
+                "start.0",
               ]
             }
             height="100%"
@@ -104,8 +108,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": 0,
             },
             Object {
@@ -130,7 +134,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="right"
+              name="end.0"
               x1="0"
               x2="1"
               y1="0"
@@ -141,7 +145,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
             fill={
               Array [
                 1,
-                "right",
+                "end.0",
               ]
             }
             height="100%"
@@ -168,9 +172,9 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 0,
               "position": "absolute",
-              "top": "100%",
+              "start": 0,
+              "top": -40,
             },
             Object {
               "flex": 0,
@@ -194,18 +198,18 @@ exports[`component: DropShadowWrapper renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="bottom"
+              name="top.0"
               x1="0"
               x2="0"
-              y1="0"
-              y2="1"
+              y1="1"
+              y2="0"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "bottom",
+                "top.0",
               ]
             }
             height={40}
@@ -232,9 +236,9 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 0,
               "position": "absolute",
-              "top": -40,
+              "start": 0,
+              "top": "100%",
             },
             Object {
               "flex": 0,
@@ -258,18 +262,18 @@ exports[`component: DropShadowWrapper renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="top"
+              name="bottom.0"
               x1="0"
               x2="0"
-              y1="1"
-              y2="0"
+              y1="0"
+              y2="1"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "top",
+                "bottom.0",
               ]
             }
             height={40}
@@ -296,8 +300,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": -40,
             },
             Object {
@@ -320,30 +324,35 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 Array [
                   0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topLeft"
+              name="topStart.0"
               rx={40}
               ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,40 a40,40 0 0 1 40 -40 v40 v0 h0 h-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topLeft",
+                "topStart.0",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -359,8 +368,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": -40,
               "transform": Array [
                 Object {
@@ -399,30 +408,35 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 Array [
                   0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topRight"
+              name="topEnd.0"
               rx={40}
               ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,0 a40,40 0 0 1 40,40 h-40 h0 v0 v-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topRight",
+                "topEnd.0",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -438,8 +452,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": "100%",
               "transform": Array [
                 Object {
@@ -478,30 +492,35 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 Array [
                   0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomLeft"
+              name="bottomStart.0"
               rx={40}
               ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M40,40 a40,40 0 0 1 -40,-40 h40 h0 v0 v40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomLeft",
+                "bottomStart.0",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -517,8 +536,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": "100%",
               "transform": Array [
                 Object {
@@ -560,30 +579,35 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 Array [
                   0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomRight"
+              name="bottomEnd.0"
               rx={40}
               ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M40,0 a40,40 0 0 1 -40,40 v-40 v0 h0 h40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomRight",
+                "bottomEnd.0",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -626,7 +650,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 ]
               }
               maskUnits={0}
-              name="maskPaintBelow"
+              name="maskInside.0"
               width="100%"
               x="0%"
               y="0%"
@@ -727,7 +751,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
             fill={4280637372}
             fillOpacity={0.1}
             height="100%"
-            mask="maskPaintBelow"
+            mask="maskInside.0"
             propList={
               Array [
                 "fill",
@@ -748,14 +772,15 @@ exports[`component: DropShadowWrapper renders 1`] = `
         Array [
           Object {
             "alignSelf": "flex-start",
+            "borderBottomLeftRadius": 0,
+            "borderBottomRightRadius": 0,
+            "borderTopLeftRadius": 0,
+            "borderTopRightRadius": 0,
           },
-          undefined,
-          Array [
-            undefined,
-            Object {
-              "alignSelf": "stretch",
-            },
-          ],
+          Object {},
+          Object {
+            "alignSelf": "stretch",
+          },
         ]
       }
     >
@@ -774,6 +799,10 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 "top": 0,
               },
               undefined,
+              Object {
+                "start": 0,
+                "top": 0,
+              },
             ]
           }
         >
@@ -789,9 +818,9 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
-                  "top": 15,
+                  "start": -6,
+                  "top": 0,
                 },
                 Object {
                   "flex": 0,
@@ -815,7 +844,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="left"
+                  name="start.1"
                   x1="1"
                   x2="0"
                   y1="0"
@@ -826,7 +855,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "left",
+                    "start.1",
                   ]
                 }
                 height="100%"
@@ -837,7 +866,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -853,9 +882,9 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
-                  "top": 15,
+                  "start": "100%",
+                  "top": 0,
                 },
                 Object {
                   "flex": 0,
@@ -879,7 +908,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="right"
+                  name="end.1"
                   x1="0"
                   x2="1"
                   y1="0"
@@ -890,7 +919,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "right",
+                    "end.1",
                   ]
                 }
                 height="100%"
@@ -901,7 +930,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -917,72 +946,8 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": 15,
                   "position": "absolute",
-                  "top": "100%",
-                },
-                Object {
-                  "flex": 0,
-                  "height": 7,
-                  "width": "100%",
-                },
-              ]
-            }
-            width="100%"
-          >
-            <RNSVGGroup>
-              <RNSVGDefs>
-                <RNSVGLinearGradient
-                  gradient={
-                    Array [
-                      0,
-                      168826920,
-                      1,
-                      1054760,
-                    ]
-                  }
-                  gradientTransform={null}
-                  gradientUnits={0}
-                  name="bottom"
-                  x1="0"
-                  x2="0"
-                  y1="0"
-                  y2="1"
-                />
-              </RNSVGDefs>
-              <RNSVGRect
-                fill={
-                  Array [
-                    1,
-                    "bottom",
-                  ]
-                }
-                height={6}
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                width="100%"
-                x={-30}
-                y={0}
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <RNSVGSvgView
-            bbHeight={7}
-            bbWidth="100%"
-            focusable={false}
-            height={7}
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                Object {
-                  "left": 15,
-                  "position": "absolute",
+                  "start": 0,
                   "top": -6,
                 },
                 Object {
@@ -1007,7 +972,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="top"
+                  name="top.1"
                   x1="0"
                   x2="0"
                   y1="1"
@@ -1018,7 +983,7 @@ exports[`component: DropShadowWrapper renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "top",
+                    "top.1",
                   ]
                 }
                 height={6}
@@ -1028,16 +993,16 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   ]
                 }
                 width="100%"
-                x={-30}
+                x={-0}
                 y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth="100%"
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -1045,62 +1010,133 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": 0,
+                  "top": "100%",
+                },
+                Object {
+                  "flex": 0,
+                  "height": 7,
+                  "width": "100%",
+                },
+              ]
+            }
+            width="100%"
+          >
+            <RNSVGGroup>
+              <RNSVGDefs>
+                <RNSVGLinearGradient
+                  gradient={
+                    Array [
+                      0,
+                      168826920,
+                      1,
+                      1054760,
+                    ]
+                  }
+                  gradientTransform={null}
+                  gradientUnits={0}
+                  name="bottom.1"
+                  x1="0"
+                  x2="0"
+                  y1="0"
+                  y2="1"
+                />
+              </RNSVGDefs>
+              <RNSVGRect
+                fill={
+                  Array [
+                    1,
+                    "bottom.1",
+                  ]
+                }
+                height={6}
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                width="100%"
+                x={-0}
+                y={0}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+          <RNSVGSvgView
+            bbHeight={7}
+            bbWidth={7}
+            focusable={false}
+            height={7}
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                Object {
+                  "position": "absolute",
+                  "start": -6,
                   "top": -6,
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 7,
+                  "width": 7,
                 },
               ]
             }
-            width={22}
+            width={7}
           >
             <RNSVGGroup>
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
-                  cy={21}
-                  fx={21}
-                  fy={21}
+                  cx={6}
+                  cy={6}
+                  fx={6}
+                  fy={6}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0,
+                      0,
+                      0,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topLeft"
-                  rx={21}
-                  ry={21}
+                  name="topStart.1"
+                  rx={6}
+                  ry={6}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,21 a21,21 0 0 1 21 -21 v6 a15,15 0 0 0 -15,15 h-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topLeft",
+                    "topStart.1",
                   ]
                 }
+                height={6}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={6}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth={7}
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -1108,23 +1144,23 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": -6,
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -0,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 7,
+                  "width": 7,
                 },
               ]
             }
-            width={22}
+            width={7}
           >
             <RNSVGGroup
               matrix={
@@ -1141,45 +1177,52 @@ exports[`component: DropShadowWrapper renders 1`] = `
               <RNSVGDefs>
                 <RNSVGRadialGradient
                   cx={0}
-                  cy={21}
+                  cy={6}
                   fx={0}
-                  fy={21}
+                  fy={6}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0,
+                      0,
+                      0,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topRight"
-                  rx={21}
-                  ry={21}
+                  name="topEnd.1"
+                  rx={6}
+                  ry={6}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,0 a21,21 0 0 1 21,21 h-6 a15,15 0 0 0 -15,-15 v-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topRight",
+                    "topEnd.1",
                   ]
                 }
+                height={6}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={6}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth={7}
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -1187,23 +1230,23 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": -6,
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateY": -15,
+                      "translateY": -0,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 7,
+                  "width": 7,
                 },
               ]
             }
-            width={22}
+            width={7}
           >
             <RNSVGGroup
               matrix={
@@ -1219,46 +1262,53 @@ exports[`component: DropShadowWrapper renders 1`] = `
             >
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
+                  cx={6}
                   cy={0}
-                  fx={21}
+                  fx={6}
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0,
+                      0,
+                      0,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomLeft"
-                  rx={21}
-                  ry={21}
+                  name="bottomStart.1"
+                  rx={6}
+                  ry={6}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,21 a21,21 0 0 1 -21,-21 h6 a15,15 0 0 0 15,15 v6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomLeft",
+                    "bottomStart.1",
                   ]
                 }
+                height={6}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={6}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth={7}
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -1266,26 +1316,26 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -0,
                     },
                     Object {
-                      "translateY": -15,
+                      "translateY": -0,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 7,
+                  "width": 7,
                 },
               ]
             }
-            width={22}
+            width={7}
           >
             <RNSVGGroup
               matrix={
@@ -1307,32 +1357,39 @@ exports[`component: DropShadowWrapper renders 1`] = `
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0,
+                      0,
+                      0,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomRight"
-                  rx={21}
-                  ry={21}
+                  name="bottomEnd.1"
+                  rx={6}
+                  ry={6}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,0 a21,21 0 0 1 -21,21 v-6 a15,15 0 0 0 15,-15 h6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomRight",
+                    "bottomEnd.1",
                   ]
                 }
+                height={6}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={6}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -1344,14 +1401,15 @@ exports[`component: DropShadowWrapper renders 1`] = `
             Array [
               Object {
                 "alignSelf": "flex-start",
+                "borderBottomLeftRadius": 0,
+                "borderBottomRightRadius": 0,
+                "borderTopLeftRadius": 0,
+                "borderTopRightRadius": 0,
               },
-              undefined,
-              Array [
-                undefined,
-                Object {
-                  "alignSelf": "stretch",
-                },
-              ],
+              Object {},
+              Object {
+                "alignSelf": "stretch",
+              },
             ]
           }
         />
@@ -1380,12 +1438,16 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
         Array [
           Object {
             "bottom": 0,
-            "left": 10,
+            "left": 0,
             "position": "absolute",
             "right": 0,
-            "top": 20,
+            "top": 0,
           },
           undefined,
+          Object {
+            "start": 10,
+            "top": 20,
+          },
         ]
       }
     >
@@ -1401,9 +1463,9 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
-              "top": 14,
+              "start": -40,
+              "top": 0,
             },
             Object {
               "flex": 0,
@@ -1427,7 +1489,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="left"
+              name="start.2"
               x1="1"
               x2="0"
               y1="0"
@@ -1438,7 +1500,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             fill={
               Array [
                 1,
-                "left",
+                "start.2",
               ]
             }
             height="100%"
@@ -1449,7 +1511,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             }
             width={40}
             x={0}
-            y={-28}
+            y={-0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1465,9 +1527,9 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
-              "top": 14,
+              "start": "100%",
+              "top": 0,
             },
             Object {
               "flex": 0,
@@ -1491,7 +1553,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="right"
+              name="end.2"
               x1="0"
               x2="1"
               y1="0"
@@ -1502,7 +1564,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             fill={
               Array [
                 1,
-                "right",
+                "end.2",
               ]
             }
             height="100%"
@@ -1513,7 +1575,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             }
             width={40}
             x={0}
-            y={-28}
+            y={-0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1529,72 +1591,8 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 14,
               "position": "absolute",
-              "top": "100%",
-            },
-            Object {
-              "flex": 0,
-              "height": 41,
-              "width": "100%",
-            },
-          ]
-        }
-        width="100%"
-      >
-        <RNSVGGroup>
-          <RNSVGDefs>
-            <RNSVGLinearGradient
-              gradient={
-                Array [
-                  0,
-                  438654908,
-                  1,
-                  2447292,
-                ]
-              }
-              gradientTransform={null}
-              gradientUnits={0}
-              name="bottom"
-              x1="0"
-              x2="0"
-              y1="0"
-              y2="1"
-            />
-          </RNSVGDefs>
-          <RNSVGRect
-            fill={
-              Array [
-                1,
-                "bottom",
-              ]
-            }
-            height={40}
-            propList={
-              Array [
-                "fill",
-              ]
-            }
-            width="100%"
-            x={-28}
-            y={0}
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <RNSVGSvgView
-        bbHeight={41}
-        bbWidth="100%"
-        focusable={false}
-        height={41}
-        style={
-          Array [
-            Object {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            Object {
-              "left": 14,
-              "position": "absolute",
+              "start": 0,
               "top": -40,
             },
             Object {
@@ -1619,7 +1617,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="top"
+              name="top.2"
               x1="0"
               x2="0"
               y1="1"
@@ -1630,7 +1628,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             fill={
               Array [
                 1,
-                "top",
+                "top.2",
               ]
             }
             height={40}
@@ -1640,16 +1638,16 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               ]
             }
             width="100%"
-            x={-28}
+            x={-0}
             y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
       <RNSVGSvgView
-        bbHeight={55}
-        bbWidth={55}
+        bbHeight={41}
+        bbWidth="100%"
         focusable={false}
-        height={55}
+        height={41}
         style={
           Array [
             Object {
@@ -1657,62 +1655,131 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": 0,
+              "top": "100%",
+            },
+            Object {
+              "flex": 0,
+              "height": 41,
+              "width": "100%",
+            },
+          ]
+        }
+        width="100%"
+      >
+        <RNSVGGroup>
+          <RNSVGDefs>
+            <RNSVGLinearGradient
+              gradient={
+                Array [
+                  0,
+                  438654908,
+                  1,
+                  2447292,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="bottom.2"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2="1"
+            />
+          </RNSVGDefs>
+          <RNSVGRect
+            fill={
+              Array [
+                1,
+                "bottom.2",
+              ]
+            }
+            height={40}
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+            width="100%"
+            x={-0}
+            y={0}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+      <RNSVGSvgView
+        bbHeight={41}
+        bbWidth={41}
+        focusable={false}
+        height={41}
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "position": "absolute",
+              "start": -40,
               "top": -40,
             },
             Object {
               "flex": 0,
-              "height": 55,
-              "width": 55,
+              "height": 41,
+              "width": 41,
             },
           ]
         }
-        width={55}
+        width={41}
       >
         <RNSVGGroup>
           <RNSVGDefs>
             <RNSVGRadialGradient
-              cx={54}
-              cy={54}
-              fx={54}
-              fy={54}
+              cx={40}
+              cy={40}
+              fx={40}
+              fy={40}
               gradient={
                 Array [
-                  0.25925925925925924,
+                  0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topLeft"
-              rx={54}
-              ry={54}
+              name="topStart.2"
+              rx={40}
+              ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,54 a54,54 0 0 1 54 -54 v40 v14 h-14 h-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topLeft",
+                "topStart.2",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
       <RNSVGSvgView
-        bbHeight={55}
-        bbWidth={55}
+        bbHeight={41}
+        bbWidth={41}
         focusable={false}
-        height={55}
+        height={41}
         style={
           Array [
             Object {
@@ -1720,23 +1787,23 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": -40,
               "transform": Array [
                 Object {
-                  "translateX": -14,
+                  "translateX": -0,
                 },
               ],
             },
             Object {
               "flex": 0,
-              "height": 55,
-              "width": 55,
+              "height": 41,
+              "width": 41,
             },
           ]
         }
-        width={55}
+        width={41}
       >
         <RNSVGGroup
           matrix={
@@ -1753,45 +1820,50 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
           <RNSVGDefs>
             <RNSVGRadialGradient
               cx={0}
-              cy={54}
+              cy={40}
               fx={0}
-              fy={54}
+              fy={40}
               gradient={
                 Array [
-                  0.25925925925925924,
+                  0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topRight"
-              rx={54}
-              ry={54}
+              name="topEnd.2"
+              rx={40}
+              ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,0 a54,54 0 0 1 54,54 h-40 h-14 v-14 v-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topRight",
+                "topEnd.2",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
       <RNSVGSvgView
-        bbHeight={55}
-        bbWidth={55}
+        bbHeight={41}
+        bbWidth={41}
         focusable={false}
-        height={55}
+        height={41}
         style={
           Array [
             Object {
@@ -1799,23 +1871,23 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": "100%",
               "transform": Array [
                 Object {
-                  "translateY": -14,
+                  "translateY": -0,
                 },
               ],
             },
             Object {
               "flex": 0,
-              "height": 55,
-              "width": 55,
+              "height": 41,
+              "width": 41,
             },
           ]
         }
-        width={55}
+        width={41}
       >
         <RNSVGGroup
           matrix={
@@ -1831,46 +1903,51 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
         >
           <RNSVGDefs>
             <RNSVGRadialGradient
-              cx={54}
+              cx={40}
               cy={0}
-              fx={54}
+              fx={40}
               fy={0}
               gradient={
                 Array [
-                  0.25925925925925924,
+                  0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomLeft"
-              rx={54}
-              ry={54}
+              name="bottomStart.2"
+              rx={40}
+              ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,54 a54,54 0 0 1 -54,-54 h40 h14 v14 v40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomLeft",
+                "bottomStart.2",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
       <RNSVGSvgView
-        bbHeight={55}
-        bbWidth={55}
+        bbHeight={41}
+        bbWidth={41}
         focusable={false}
-        height={55}
+        height={41}
         style={
           Array [
             Object {
@@ -1878,26 +1955,26 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": "100%",
               "transform": Array [
                 Object {
-                  "translateX": -14,
+                  "translateX": -0,
                 },
                 Object {
-                  "translateY": -14,
+                  "translateY": -0,
                 },
               ],
             },
             Object {
               "flex": 0,
-              "height": 55,
-              "width": 55,
+              "height": 41,
+              "width": 41,
             },
           ]
         }
-        width={55}
+        width={41}
       >
         <RNSVGGroup
           matrix={
@@ -1919,32 +1996,37 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               fy={0}
               gradient={
                 Array [
-                  0.25925925925925924,
+                  0,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomRight"
-              rx={54}
-              ry={54}
+              name="bottomEnd.2"
+              rx={40}
+              ry={40}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,0 a54,54 0 0 1 -54,54 v-40 v-14 h14 h40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomRight",
+                "bottomEnd.2",
               ]
             }
+            height={40}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={40}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1987,7 +2069,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
                 ]
               }
               maskUnits={0}
-              name="maskPaintBelow"
+              name="maskInside.2"
               width="100%"
               x="0%"
               y="0%"
@@ -2006,26 +2088,26 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
               />
               <RNSVGRect
                 fill={4278190080}
-                height={14}
+                height={0}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
-                width={14}
+                width={0}
                 x={0}
                 y={0}
               />
               <RNSVGRect
                 fill={4278190080}
-                height={14}
+                height={0}
                 matrix={
                   Array [
                     1,
                     0,
                     0,
                     1,
-                    -14,
+                    0,
                     0,
                   ]
                 }
@@ -2034,13 +2116,13 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
                     "fill",
                   ]
                 }
-                width={14}
+                width={0}
                 x="100%"
                 y={0}
               />
               <RNSVGRect
                 fill={4278190080}
-                height={14}
+                height={0}
                 matrix={
                   Array [
                     1,
@@ -2048,7 +2130,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
                     0,
                     1,
                     0,
-                    -14,
+                    0,
                   ]
                 }
                 propList={
@@ -2056,21 +2138,21 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
                     "fill",
                   ]
                 }
-                width={14}
+                width={0}
                 x={0}
                 y="100%"
               />
               <RNSVGRect
                 fill={4278190080}
-                height={14}
+                height={0}
                 matrix={
                   Array [
                     1,
                     0,
                     0,
                     1,
-                    -14,
-                    -14,
+                    0,
+                    0,
                   ]
                 }
                 propList={
@@ -2078,7 +2160,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
                     "fill",
                   ]
                 }
-                width={14}
+                width={0}
                 x="100%"
                 y="100%"
               />
@@ -2088,7 +2170,7 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
             fill={4280637372}
             fillOpacity={0.1}
             height="100%"
-            mask="maskPaintBelow"
+            mask="maskInside.2"
             propList={
               Array [
                 "fill",
@@ -2109,14 +2191,15 @@ exports[`component: DropShadowWrapper renders with disableInnerWrapper 1`] = `
         Array [
           Object {
             "alignSelf": "flex-start",
+            "borderBottomLeftRadius": 0,
+            "borderBottomRightRadius": 0,
+            "borderTopLeftRadius": 0,
+            "borderTopRightRadius": 0,
           },
-          undefined,
-          Array [
-            undefined,
-            Object {
-              "alignSelf": "stretch",
-            },
-          ],
+          Object {},
+          Object {
+            "alignSelf": "stretch",
+          },
         ]
       }
     />

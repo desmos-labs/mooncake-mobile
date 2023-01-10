@@ -112,6 +112,7 @@ exports[`component: PostComponent renders image posts 1`] = `
           resizeMode="contain"
           source={
             Object {
+              "priority": "high",
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
             }
           }
@@ -175,6 +176,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
           resizeMode="contain"
           source={
             Object {
+              "priority": "high",
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
             }
           }
