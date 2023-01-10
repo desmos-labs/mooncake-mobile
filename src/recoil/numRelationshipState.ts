@@ -7,6 +7,7 @@ import {
 import client from 'services/graphql/client';
 import GetNumRelationshipsForAddress from 'services/graphql/queries/GetNumRelationshipsForAddress';
 import _ from 'lodash';
+import {optimisticRelationshipModifier} from '@recoil/optimisticUI/optimisticRelationships';
 
 type NumRelationshipType = {
   numFollowing: number;
@@ -21,27 +22,31 @@ const numRelationshipState = selectorFamily<
   string
 >({
   key: 'numRelationshipState',
-  get: (address: string) => async () => {
-    const {data} = await client.query({
-      query: GetNumRelationshipsForAddress,
-      variables: {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        address,
-      },
-      fetchPolicy: 'no-cache',
-    });
+  get:
+    (address: string) =>
+    async ({get}) => {
+      const {data} = await client.query({
+        query: GetNumRelationshipsForAddress,
+        variables: {
+          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          address,
+        },
+        fetchPolicy: 'no-cache',
+      });
 
-    if (data) {
-      const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
-      const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
+      const optRelationshipMod = get(optimisticRelationshipModifier);
 
-      return {
-        numFollowers,
-        numFollowing,
-      };
-    }
-    return undefined;
-  },
+      if (data) {
+        const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
+        const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
+
+        return {
+          numFollowers,
+          numFollowing: numFollowing + optRelationshipMod,
+        };
+      }
+      return undefined;
+    },
 });
 
 /**

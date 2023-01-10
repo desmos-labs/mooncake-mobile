@@ -44,6 +44,16 @@ export const optimisticToUnfollow = selector<OptimisticRelationship[]>({
   },
 });
 
+export const optimisticRelationshipModifier = selector<number>({
+  key: 'optimisticRelationshipModifier',
+  get: ({get}) => {
+    const optFollow = get(optimisticToFollow);
+    const optUnFollow = get(optimisticToUnfollow);
+
+    return optFollow.length - optUnFollow.length;
+  },
+});
+
 export const hasOptimisticFollow = selectorFamily<boolean, string>({
   key: 'hasOptimisticFollow',
   get:
@@ -114,6 +124,7 @@ const useOptimisticRelationships = () => {
       },
   );
 
+  console.log('follow', [...optimisticFollowing, ...optimisticUnfollow]);
   return {
     optimisticFollowing,
     optimisticUnfollow,
