@@ -55,7 +55,6 @@ const Home = () => {
   const styles = useStyles();
   const theme = useTheme();
   const postListRef = useRef<any>(null);
-  const lockPostPress = useRef(false);
   const [listOptions, setListOptions] = useRecoilState(postsListOptions);
   const {
     handlePressDetails,
@@ -111,8 +110,6 @@ const Home = () => {
           creation_date={item.creation_date}
           onPressAuthor={() => handleNavigateToProfile(item.author_address)}
           onPressDetails={() => {
-            if (lockPostPress.current) return;
-
             if (checkIfPostIsPending(item.id)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
@@ -157,7 +154,6 @@ const Home = () => {
       );
     },
     [
-      lockPostPress.current,
       handlePressFollow,
       handlePressReport,
       handleNavigateToProfile,
@@ -190,7 +186,7 @@ const Home = () => {
           onPress={() =>
             setListOptions({...listOptions, searchBarFocused: false})
           }
-          style={{flex: 1, zIndex: 2}}>
+          style={styles.searchView}>
           <View style={styles.absoluteView}>
             <Typography.Body6>
               We are Anonymous, we are legion, we do not forgive, we do not
@@ -205,7 +201,7 @@ const Home = () => {
   return (
     <>
       {queryPostsData ? (
-        <View style={{flex: 1, zIndex: 1, backgroundColor: theme.colors.white}}>
+        <View style={styles.homeView}>
           <FlashList
             keyExtractor={item => item.id.toString()}
             ref={postListRef}
@@ -226,13 +222,7 @@ const Home = () => {
           />
         </View>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: theme.colors.white,
-          }}>
+        <View style={styles.loadingView}>
           <ActivityIndicator />
         </View>
       )}

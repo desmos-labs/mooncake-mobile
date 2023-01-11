@@ -25,7 +25,7 @@ const useRenderMediaAttachment = ({
     height: 0,
     width: 0,
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const imageHeight = useMemo(() => {
     if (!dimensions.height) {

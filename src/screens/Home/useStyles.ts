@@ -26,6 +26,13 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     zIndex: 2,
   },
+  loadingView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.white,
+  },
+  searchView: {flex: 1, zIndex: 2},
 }));
 
 export default useStyles;
