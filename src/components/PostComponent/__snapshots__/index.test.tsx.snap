@@ -81,25 +81,38 @@ exports[`component: PostComponent renders image posts 1`] = `
       }
     }
   >
-    <View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    >
       <View
         style={
           Array [
             Object {
               "overflow": "hidden",
             },
-            Object {
-              "height": 630,
-              "width": 750,
-            },
+            Array [
+              Object {
+                "height": 0,
+                "width": 750,
+              },
+              undefined,
+            ],
           ]
         }
       >
         <FastImageView
           defaultSource={null}
-          resizeMode="cover"
+          onFastImageLoad={[Function]}
+          onFastImageLoadEnd={[Function]}
+          onFastImageLoadStart={[Function]}
+          resizeMode="contain"
           source={
             Object {
+              "priority": "high",
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
             }
           }
@@ -145,18 +158,25 @@ exports[`component: PostComponent renders textImage posts 1`] = `
             Object {
               "overflow": "hidden",
             },
-            Object {
-              "height": 630,
-              "width": 750,
-            },
+            Array [
+              Object {
+                "height": 0,
+                "width": 750,
+              },
+              undefined,
+            ],
           ]
         }
       >
         <FastImageView
           defaultSource={null}
-          resizeMode="cover"
+          onFastImageLoad={[Function]}
+          onFastImageLoadEnd={[Function]}
+          onFastImageLoadStart={[Function]}
+          resizeMode="contain"
           source={
             Object {
+              "priority": "high",
               "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
             }
           }

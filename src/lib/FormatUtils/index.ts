@@ -96,3 +96,20 @@ export const mapPostFontSize = (numChars: number) => {
 
   return fontSize;
 };
+
+const msUnitMap: {[index: string]: number} = {
+  seconds: 1000,
+  minutes: 60000,
+  hours: 3600000,
+  days: 86400000,
+};
+
+/**
+ * Formats a given millisecond value into a given time unit.
+ */
+export const formatMsToHumanReadable = (
+  ms: number,
+  unit: 'seconds' | 'minutes' | 'hours' | 'days',
+) => {
+  return Number((ms / msUnitMap[unit]).toFixed(0));
+};

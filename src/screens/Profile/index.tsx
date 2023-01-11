@@ -1,21 +1,18 @@
 import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {isFollowingAddr} from '@recoil/following';
 import {
   connectIcon,
   defaultBanner,
-  profileBack,
-  profileNotification,
   profileScan,
   profileSettings,
 } from 'assets/images';
-import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -41,9 +38,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRecoilValue} from 'recoil';
-import PingAnimation from 'screens/Profile/components/PingAnimation';
-import {mapConnectedChainImages} from 'screens/Profile/utils';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BadgesSection from 'screens/Profile/components/BadgesSection';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
@@ -54,29 +48,26 @@ import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWal
 import UserBio from 'screens/Profile/components/UserBio';
 import useProfileDataQueries from 'screens/Profile/useProfileDataQueries';
 import useQueries from 'screens/Profile/useQueries';
-import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {mapConnectedChainImages} from 'screens/Profile/utils';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.USER_PROFILE>;
+type NavProps = CompositeScreenProps<
+  StackScreenProps<BottomTabsParamList, ROUTES.USER_PROFILE>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 const HEADER_HEIGHT_COMPACT = 95;
 const HEADER_HEIGHT_EXPANDED = 60;
-
-export interface UserProfileParams {
-  visitingProfileAddress?: string;
-}
 
 const Profile = () => {
   const theme = useTheme();
   const {t} = useTranslation('profile');
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavProps['navigation']>();
-  const route = useRoute<NavProps['route']>();
   const [initialLoading, setInitialLoading] = useState(true);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const styles = useStyles({insets});
-  const {goBack, navigate} = navigation;
-  const {params} = route;
+  const {navigate} = navigation;
 
   const {
     profileLoading,
@@ -86,13 +77,11 @@ const Profile = () => {
     address,
     profile_pic,
     cover_pic,
-    screenMode,
     refetchProfileData,
-    refetchVisitingProfileData,
     numRelationships,
     numRelationshipsLoading,
     refreshNumRelationships,
-  } = useProfileDataQueries(params?.visitingProfileAddress);
+  } = useProfileDataQueries();
 
   const {
     posts,
@@ -115,9 +104,6 @@ const Profile = () => {
     postsCounter,
     refetchPostsCounter,
   } = useQueries(address);
-
-  const isFollowing = useRecoilValue(isFollowingAddr(address!));
-  const {followOrUnfollowUser} = useFollowOrUnfollow();
 
   /**
    * Animations
@@ -231,22 +217,26 @@ const Profile = () => {
   }, []);
 
   const refetchUserData = React.useCallback(async () => {
-    console.log('refetching user profile data and connected apps & chains');
-    if (screenMode === 'myProfile') {
-      await Promise.all([
-        refetchProfileData(),
-        refetchChainLinks(),
-        refetchAppLinks(),
-        refetchBalance(),
-        refetchImpactPoints(),
-        refetchPosts(),
-        refetchPostsCounter(),
-      ]);
-    } else {
-      await refetchVisitingProfileData();
-    }
-    await refreshNumRelationships();
-  }, [refetchProfileData, refetchChainLinks, refetchAppLinks]);
+    await Promise.all([
+      refetchProfileData(),
+      refetchChainLinks(),
+      refetchAppLinks(),
+      refetchBalance(),
+      refetchImpactPoints(),
+      refetchPosts(),
+      refetchPostsCounter(),
+      refreshNumRelationships(),
+    ]);
+  }, [
+    refetchProfileData,
+    refetchChainLinks,
+    refetchAppLinks,
+    refetchBalance,
+    refetchImpactPoints,
+    refetchPosts,
+    refetchPostsCounter,
+    refreshNumRelationships,
+  ]);
 
   const handleFollowingPressed = () =>
     navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
@@ -267,20 +257,6 @@ const Profile = () => {
         headerTitle: nickname.trim() || `@${dtag}`,
       },
     });
-
-  /**
-   * Effects
-   */
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     console.log('refetch user data onFocus');
-  //     const task = InteractionManager.runAfterInteractions(() => {
-  //       refetchUserData();
-  //     });
-  //     return () => task.cancel();
-  //   }, [refetchUserData]),
-  // );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -318,7 +294,7 @@ const Profile = () => {
       return (
         <View>
           <SocialAndWalletsCountersBar
-            visitingProfile={screenMode !== 'myProfile'}
+            visitingProfile={false}
             loading={appLinksLoading && chainLinksLoading}
             connectedChainsCounter={chainLinks.length}
             twitterUsername={appLinks[0]?.username}
@@ -340,7 +316,7 @@ const Profile = () => {
       );
     }
     return undefined;
-  }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading, screenMode]);
+  }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading]);
 
   const Banner = useMemo(() => {
     return (
@@ -386,6 +362,7 @@ const Profile = () => {
             borderWidth: 3,
             left: theme.spacing.m,
             borderColor: theme.colors.white,
+            backgroundColor: theme.colors.white,
           },
           animatedProfilePicStyle,
         ]}
@@ -407,12 +384,10 @@ const Profile = () => {
 
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar barStyle="light-content" />
-      <ImageButton
-        image={profileBack}
-        buttonStyle={styles.buttonStyleLeft}
-        style={styles.topBarImage}
-        onPress={goBack}
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
       />
       <ImageButton
         image={profileSettings}
@@ -421,21 +396,8 @@ const Profile = () => {
         onPress={() => navigate(ROUTES.SETTINGS)}
       />
       <ImageButton
-        image={profileNotification}
-        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
-        style={styles.topBarImage}
-        overlayComponent={
-          <PingAnimation size={10} color={theme.colors.red01} />
-        }
-        overlayPosition={{
-          top: 2,
-          left: 12,
-        }}
-        onPress={() => navigate(ROUTES.ACTIVITIES)}
-      />
-      <ImageButton
         image={profileScan}
-        buttonStyle={[styles.buttonStyleRight, {right: 100}]}
+        buttonStyle={[styles.buttonStyleRight, {right: 60}]}
         style={styles.topBarImage}
       />
       {/* Dtag */}
@@ -532,65 +494,40 @@ const Profile = () => {
             <UserBio content={bio} />
             {ConnectedChains}
           </Spacer>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
+              <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleConnectionButtonPressed}
+              style={{
+                backgroundColor: theme.colors.surfaceGrey,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 8,
+                height: 35,
+                width: 40,
+              }}>
+              <FastImage
+                source={connectIcon}
+                style={{height: 22, width: 22}}
+                tintColor={theme.colors.surfaceBlack}
+              />
+            </TouchableOpacity>
+          </View>
 
-          {screenMode === 'myProfile' ? (
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
-                <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleConnectionButtonPressed}
-                style={{
-                  backgroundColor: theme.colors.surfaceGrey,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 8,
-                  height: 35,
-                  width: 40,
-                }}>
-                <FastImage
-                  source={connectIcon}
-                  style={{height: 22, width: 22}}
-                  tintColor={theme.colors.surfaceBlack}
-                />
-              </TouchableOpacity>
-            </View>
-          ) : isFollowing ? (
-            <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
-              mode="contained"
-              contentStyle={{height: 36}}
-              color={theme.colors.surfaceGrey}>
-              <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
-                {t('unfollow')}
-              </Typography.Subtitle4>
-            </Button>
-          ) : (
-            <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
-              mode="contained"
-              contentStyle={{height: 36}}
-              color={theme.colors.surfaceBlack}>
-              <Typography.Subtitle4 style={{color: theme.colors.white}}>
-                {t('follow')}
-              </Typography.Subtitle4>
-            </Button>
-          )}
           <Spacer paddingVertical={theme.spacing.s} />
           <Divider style={styles.divider} />
           <View style={styles.container}>
-            {screenMode === 'myProfile' && (
-              <>
-                <ImpactPointsSection
-                  impactPoints={impactPoints}
-                  impactPointsLoading={impactPointsLoading}
-                />
-                <Divider style={styles.divider} />
-              </>
-            )}
+            <>
+              <ImpactPointsSection
+                impactPoints={impactPoints}
+                impactPointsLoading={impactPointsLoading}
+              />
+              <Divider style={styles.divider} />
+            </>
             <BalanceSection
               address={address!}
               balanceData={balanceData}

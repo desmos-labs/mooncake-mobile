@@ -1,5 +1,10 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   connectChainState,
@@ -19,6 +24,7 @@ import useGenerateProof from 'hooks/useGenerateProof';
 import {removeNonNumbers} from 'lib/FormatUtils';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -27,9 +33,9 @@ import {IconButton, useTheme} from 'react-native-paper';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import useStyles from '../useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CONNECT_ADDRESS_ADVANCED
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_ADDRESS_ADVANCED>,
+  BottomTabScreenProps<BottomTabsParamList>
 >;
 
 export type ConnectAddressAdvancedParams = {
@@ -115,11 +121,13 @@ const ConnectAddressAdvanced = () => {
     if (!generatedAccount || !activeAddress) return;
     if (nextRouteOverride) {
       if (loadedProfileMap?.has(generatedAccount.address)) {
-        return navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: generatedAccount.address,
+        return navigate(ROUTES.BOTTOM_TABS, {
+          screen: ROUTES.USER_PROFILE,
         });
       }
 
+      // TODO: refactor and fix
+      // @ts-ignore
       return navigate(nextRouteOverride);
     }
 

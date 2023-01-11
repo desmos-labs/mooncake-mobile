@@ -12,7 +12,13 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ScrollView, View} from 'react-native';
+import {
+  ActivityIndicator,
+  InteractionManager,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import GrantSection from 'screens/Grants/components/GrantSection';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
@@ -29,13 +35,12 @@ const Grants: React.FC<NavProps> = props => {
   const theme = useTheme();
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const [loading, setLoading] = useState<boolean>(false);
-  const [fetchingGrants, setFetchingGrants] = useState<boolean>(false);
+  const [fetchingGrants, setFetchingGrants] = useState<boolean>(true);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
   const {getAuthzGrants} = useGetAuthzGrants();
 
   const fetchGrants = useCallback(async () => {
     try {
-      setFetchingGrants(true);
       const {grants} = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
@@ -47,7 +52,7 @@ const Grants: React.FC<NavProps> = props => {
     } catch (e) {
       console.error(e);
     } finally {
-      setFetchingGrants(false);
+      setTimeout(() => setFetchingGrants(false), 300);
     }
   }, [getAuthzGrants]);
 
@@ -96,7 +101,9 @@ const Grants: React.FC<NavProps> = props => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchGrants();
+      InteractionManager.runAfterInteractions(() => {
+        fetchGrants();
+      });
     }, [fetchGrants]),
   );
 
@@ -104,12 +111,22 @@ const Grants: React.FC<NavProps> = props => {
     navigate(ROUTES.GRANTS_DETAILS, {section});
   }, []);
 
+  if (fetchingGrants) {
+    return (
+      <SafeAreaView
+        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <DView
       showLoadingOverlay={fetchingGrants || loading}
       style={styles.root}
       topBar={<TopBar />}
       disableHideKeyboardTouchable={true}
+      edges={['top', 'left', 'right']}
       backgroundColor={theme.colors.white}>
       <Spacer paddingBottom={16}>
         <Typography.H3>{t('grant permissions')}</Typography.H3>

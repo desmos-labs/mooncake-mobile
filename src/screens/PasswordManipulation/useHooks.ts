@@ -112,10 +112,14 @@ const useHooks = () => {
                 index: 1,
                 routes: [
                   {
-                    name: ROUTES.HOME_TABS,
-                  },
-                  {
-                    name: ROUTES.USER_PROFILE,
+                    name: ROUTES.BOTTOM_TABS,
+                    state: {
+                      routes: [
+                        {
+                          name: ROUTES.USER_PROFILE,
+                        },
+                      ],
+                    },
                   },
                 ],
               });

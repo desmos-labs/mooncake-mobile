@@ -1,0 +1,186 @@
+import {
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import sharedPostState from '@recoil/sharedPostState';
+import {
+  bottomActivitiesIcon,
+  bottomCommunitiesIcon,
+  bottomHomeIcon,
+  bottomProfileIcon,
+  middleButtonIcon,
+} from 'assets/images';
+import ImageButton from 'components/ImageButton';
+import LoadingOverlay from 'components/LoadingOverlay';
+import ToastConfig from 'config/ToastConfig';
+import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import useActiveAccount from 'hooks/useActiveAccount';
+import {GrantEnums} from 'lib/desmos/msgtypes';
+import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import ROUTES from 'navigation/routes';
+import React, {useCallback} from 'react';
+import {View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useToast} from 'react-native-toast-notifications';
+import {useResetRecoilState} from 'recoil';
+import Activities from 'screens/Activities';
+import Communities from 'screens/Communities';
+import Profile from 'screens/Profile';
+import useStyles from './useStyles';
+
+export interface Props extends BottomTabBarProps {
+  setLoading: (_value: boolean) => void;
+}
+
+export type BottomTabsParamList = {
+  [ROUTES.HOME_TABS]: HomeTabsParamList;
+
+  [ROUTES.COMMUNITIES]: undefined;
+
+  [ROUTES.ACTIVITIES]: undefined;
+
+  [ROUTES.CREATE_BUTTON]: undefined;
+
+  [ROUTES.USER_PROFILE]: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabsParamList>();
+
+/**
+ * Navigation bottom tabs
+ */
+
+// Fake component to have a button inside the navigation barß
+const MiddleFakeComponent = () => {
+  return null;
+};
+
+const getCorrectImage = (routeName: string) => {
+  switch (routeName) {
+    case ROUTES.HOME_TABS:
+      return bottomHomeIcon;
+    case ROUTES.USER_PROFILE:
+      return bottomProfileIcon;
+    case ROUTES.ACTIVITIES:
+      return bottomActivitiesIcon;
+    case ROUTES.COMMUNITIES:
+      return bottomCommunitiesIcon;
+  }
+};
+
+const BottomTabBar = ({state, navigation, setLoading}: Props) => {
+  const styles = useStyles();
+  const {navigate} = navigation;
+  const {activeAddress} = useActiveAccount();
+  const theme = useTheme();
+  const toast = useToast();
+  const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const handlePressCreatePost = React.useCallback(async () => {
+    if (!activeAddress) return;
+
+    resetSharedPostState();
+    setLoading(true);
+
+    try {
+      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
+
+      const {success} = await checkAndUpdateGrants({
+        grantsToRequest,
+      });
+
+      if (success) {
+        navigate(ROUTES.CREATE_TEXT_POST);
+      } else {
+        toast.show('[PLACEHOLDER]Authorization is required.', {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
+      }
+    } catch (err) {
+      toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
+    } finally {
+      setLoading(false);
+    }
+  }, [activeAddress, checkAndUpdateGrants]);
+
+  return (
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
+      {state.routes.map((route, index) => {
+        const isFocused = state.index === index;
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            // @ts-ignore
+            navigation.navigate({name: route.name, merge: true});
+          }
+        };
+
+        if (route.name === ROUTES.CREATE_BUTTON) {
+          return (
+            <View key={route.key} style={styles.middleButtonView}>
+              <ImageButton
+                onPress={handlePressCreatePost}
+                image={middleButtonIcon}
+                style={{height: 41, width: 41, alignSelf: 'center'}}
+              />
+            </View>
+          );
+        }
+
+        return (
+          <View key={route.key} style={styles.buttonView}>
+            <ImageButton
+              onPress={onPress}
+              tintColor={
+                isFocused
+                  ? theme.colors.butterOrange01
+                  : theme.colors.lightGrey02
+              }
+              image={getCorrectImage(route.name)}
+              style={{height: 32, width: 32, alignSelf: 'center'}}
+            />
+          </View>
+        );
+      })}
+    </SafeAreaView>
+  );
+};
+
+const BottomTabsNavigator = () => {
+  const [loading, setLoading] = React.useState(false);
+  const theme = useTheme();
+  const renderTabBar = useCallback(
+    (props: BottomTabBarProps) => (
+      <BottomTabBar {...props} setLoading={setLoading} />
+    ),
+    [setLoading],
+  );
+
+  return (
+    <View style={{flex: 1, backgroundColor: theme.colors.white}}>
+      <Tab.Navigator
+        tabBar={renderTabBar}
+        initialRouteName={ROUTES.HOME_TABS}
+        screenOptions={{headerShown: false}}>
+        <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
+        <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
+        <Tab.Screen
+          name={ROUTES.CREATE_BUTTON}
+          component={MiddleFakeComponent}
+        />
+        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
+        <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      </Tab.Navigator>
+      <LoadingOverlay isVisible={loading} />
+    </View>
+  );
+};
+
+export default BottomTabsNavigator;

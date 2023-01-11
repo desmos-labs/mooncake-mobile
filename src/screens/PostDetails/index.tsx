@@ -1,4 +1,6 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {
+  CompositeScreenProps,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -9,11 +11,10 @@ import {isFollowingAddr} from '@recoil/following';
 import {
   defaultProfilePic,
   followBlackIcon,
-  followedIcon,
-  followIcon,
   moreBlackIcon,
   reportIcon,
   shareBlackIcon,
+  unfollowBlackIcon,
 } from 'assets/images';
 import BackButton from 'components/BackButton';
 import DView from 'components/DView';
@@ -27,6 +28,7 @@ import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -53,9 +55,9 @@ import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcas
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.POST_DETAILS
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
+  BottomTabScreenProps<BottomTabsParamList>
 >;
 
 export type PostDetailsParams = {
@@ -109,7 +111,6 @@ const PostDetails = () => {
     handleExpandComment,
     handlePressCounters,
     handlePressSendTips,
-    navigateToProfile,
     handlePostComment,
     handleAddReaction,
     postCommentLoading,
@@ -173,17 +174,17 @@ const PostDetails = () => {
       return (
         <ProfileHeaderButton
           imageSrc={{uri: post?.author.profile_pic}}
-          onPress={() => navigateToProfile(post?.author?.address)}
+          onPress={() => handleNavigateToProfile(post?.author?.address)}
         />
       );
     }
     return (
       <ProfileHeaderButton
         imageSrc={defaultProfilePic}
-        onPress={() => navigateToProfile(post?.author?.address)}
+        onPress={() => handleNavigateToProfile(post?.author?.address)}
       />
     );
-  }, [post?.author?.profile_pic]);
+  }, [post?.author?.profile_pic, handleNavigateToProfile]);
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {
@@ -318,7 +319,7 @@ const PostDetails = () => {
           {activeAddress !== post?.author?.address && (
             <ImageButton
               style={[styles.followIcon]}
-              image={isFollowingAddress ? followedIcon : followIcon}
+              image={isFollowingAddress ? unfollowBlackIcon : followBlackIcon}
               onPress={async () => {
                 await followOrUnfollowUser({
                   addrToFollow: post?.author?.address,
@@ -401,7 +402,7 @@ const PostDetails = () => {
                 });
               }
             },
-            icon: followBlackIcon,
+            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
           },
           {
             label: t('report'),

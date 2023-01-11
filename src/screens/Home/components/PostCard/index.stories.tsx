@@ -45,6 +45,7 @@ const textPostData: PostItem = {
     },
   },
   tips: [],
+  transactions: [],
 };
 
 const imagePostData: PostItem = {
@@ -76,24 +77,25 @@ const imageAndTextPostData: PostItem = {
 };
 
 const textPost: CompType = {
-  postData: textPostData,
+  ...textPostData,
 
   onPressAuthor: action('onPressAuthor'),
-
   onPressFollow: action('onPressFollow'),
-
   onPressDetails: action('onPressDetails'),
+  onPressReport: action('onPressReport'),
+  onPressLike: action('onPressLike'),
+  onPressComment: action('onPressComment'),
+  onPressTip: action('onPressTip'),
 };
 
 const imagePost: CompType = {
   ...textPost,
-
-  postData: imagePostData,
+  ...imagePostData,
 };
 
 const textAndImagePost: CompType = {
   ...textPost,
-  postData: imageAndTextPostData,
+  ...imageAndTextPostData,
 };
 
 // These dimensions are not the same as the ones found on the

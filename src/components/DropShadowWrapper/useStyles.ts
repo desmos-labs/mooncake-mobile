@@ -1,12 +1,8 @@
 import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(() => ({
-  externalShadow: {
-    alignSelf: 'stretch',
-  },
-  innerShadow: {
-    alignSelf: 'stretch',
-  },
+  externalShadow: {},
+  innerShadow: {},
 }));
 
 export default useStyles;

@@ -15,7 +15,8 @@ const useStyles = makeStyle(theme => ({
     marginLeft: theme.spacing.s,
     flexDirection: 'column',
     justifyContent: 'center',
-    maxWidth: '60%',
+    maxWidth: '57%',
+    alignSelf: 'flex-start',
   },
   followButton: {
     minWidth: 86,

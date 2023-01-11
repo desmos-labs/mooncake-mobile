@@ -18,7 +18,7 @@ const useAutoLoginFromSignUp = () => {
   const {activeAddress} = useActiveAccount();
   const {login} = useLogin();
   const toast = useToast();
-  const {replace} = useNavigation<NavProps['navigation']>();
+  const {reset} = useNavigation<NavProps['navigation']>();
 
   React.useEffect(() => {
     if (!signUpPassword || !activeAddress) return;
@@ -30,11 +30,14 @@ const useAutoLoginFromSignUp = () => {
       });
 
       if (loginResponse) {
-        replace(ROUTES.HOME_TABS, {
-          screen: ROUTES.HOME_DISCOVER,
-          params: {
-            type: 'discover',
-          },
+        console.log('auto login');
+        reset({
+          index: 0,
+          routes: [
+            {
+              name: ROUTES.BOTTOM_TABS,
+            },
+          ],
         });
       } else {
         throw new Error('Invalid login response from server.');

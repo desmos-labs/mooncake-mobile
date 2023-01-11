@@ -19,12 +19,16 @@ exports[`component: Section renders 1`] = `
         Array [
           Object {
             "bottom": 0,
-            "left": 10,
+            "left": 0,
             "position": "absolute",
             "right": 0,
-            "top": 20,
+            "top": 0,
           },
           undefined,
+          Object {
+            "start": 10,
+            "top": 20,
+          },
         ]
       }
     >
@@ -40,8 +44,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": 14,
             },
             Object {
@@ -66,7 +70,7 @@ exports[`component: Section renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="left"
+              name="start.0"
               x1="1"
               x2="0"
               y1="0"
@@ -77,7 +81,7 @@ exports[`component: Section renders 1`] = `
             fill={
               Array [
                 1,
-                "left",
+                "start.0",
               ]
             }
             height="100%"
@@ -104,8 +108,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": 14,
             },
             Object {
@@ -130,7 +134,7 @@ exports[`component: Section renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="right"
+              name="end.0"
               x1="0"
               x2="1"
               y1="0"
@@ -141,7 +145,7 @@ exports[`component: Section renders 1`] = `
             fill={
               Array [
                 1,
-                "right",
+                "end.0",
               ]
             }
             height="100%"
@@ -168,9 +172,9 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 14,
               "position": "absolute",
-              "top": "100%",
+              "start": 14,
+              "top": -40,
             },
             Object {
               "flex": 0,
@@ -194,18 +198,18 @@ exports[`component: Section renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="bottom"
+              name="top.0"
               x1="0"
               x2="0"
-              y1="0"
-              y2="1"
+              y1="1"
+              y2="0"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "bottom",
+                "top.0",
               ]
             }
             height={40}
@@ -232,9 +236,9 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 14,
               "position": "absolute",
-              "top": -40,
+              "start": 14,
+              "top": "100%",
             },
             Object {
               "flex": 0,
@@ -258,18 +262,18 @@ exports[`component: Section renders 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="top"
+              name="bottom.0"
               x1="0"
               x2="0"
-              y1="1"
-              y2="0"
+              y1="0"
+              y2="1"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "top",
+                "bottom.0",
               ]
             }
             height={40}
@@ -296,8 +300,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": -40,
             },
             Object {
@@ -320,30 +324,35 @@ exports[`component: Section renders 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topLeft"
+              name="topStart.0"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,54 a54,54 0 0 1 54 -54 v40 v14 h-14 h-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topLeft",
+                "topStart.0",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -359,8 +368,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": -40,
               "transform": Array [
                 Object {
@@ -399,30 +408,35 @@ exports[`component: Section renders 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topRight"
+              name="topEnd.0"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,0 a54,54 0 0 1 54,54 h-40 h-14 v-14 v-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topRight",
+                "topEnd.0",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -438,8 +452,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": "100%",
               "transform": Array [
                 Object {
@@ -478,30 +492,35 @@ exports[`component: Section renders 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomLeft"
+              name="bottomStart.0"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,54 a54,54 0 0 1 -54,-54 h40 h14 v14 v40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomLeft",
+                "bottomStart.0",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -517,8 +536,8 @@ exports[`component: Section renders 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": "100%",
               "transform": Array [
                 Object {
@@ -560,30 +579,35 @@ exports[`component: Section renders 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomRight"
+              name="bottomEnd.0"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,0 a54,54 0 0 1 -54,54 v-40 v-14 h14 h40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomRight",
+                "bottomEnd.0",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -626,7 +650,7 @@ exports[`component: Section renders 1`] = `
                 ]
               }
               maskUnits={0}
-              name="maskPaintBelow"
+              name="maskInside.0"
               width="100%"
               x="0%"
               y="0%"
@@ -727,7 +751,7 @@ exports[`component: Section renders 1`] = `
             fill={4280637372}
             fillOpacity={0.1}
             height="100%"
-            mask="maskPaintBelow"
+            mask="maskInside.0"
             propList={
               Array [
                 "fill",
@@ -748,20 +772,18 @@ exports[`component: Section renders 1`] = `
         Array [
           Object {
             "alignSelf": "flex-start",
+            "borderBottomLeftRadius": 14,
+            "borderBottomRightRadius": 14,
+            "borderTopLeftRadius": 14,
+            "borderTopRightRadius": 14,
           },
-          undefined,
-          Array [
-            Array [
-              undefined,
-              Object {
-                "backgroundColor": "#F7F8FA",
-                "borderRadius": 14,
-              },
-            ],
-            Object {
-              "alignSelf": "stretch",
-            },
-          ],
+          Object {
+            "backgroundColor": "#F7F8FA",
+            "borderRadius": 14,
+          },
+          Object {
+            "alignSelf": "stretch",
+          },
         ]
       }
     >
@@ -780,6 +802,10 @@ exports[`component: Section renders 1`] = `
                 "top": 0,
               },
               undefined,
+              Object {
+                "start": 0,
+                "top": 0,
+              },
             ]
           }
         >
@@ -795,9 +821,9 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
-                  "top": 15,
+                  "start": -6,
+                  "top": 14,
                 },
                 Object {
                   "flex": 0,
@@ -821,7 +847,7 @@ exports[`component: Section renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="left"
+                  name="start.1"
                   x1="1"
                   x2="0"
                   y1="0"
@@ -832,7 +858,7 @@ exports[`component: Section renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "left",
+                    "start.1",
                   ]
                 }
                 height="100%"
@@ -843,7 +869,7 @@ exports[`component: Section renders 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-28}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -859,9 +885,9 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
-                  "top": 15,
+                  "start": "100%",
+                  "top": 14,
                 },
                 Object {
                   "flex": 0,
@@ -885,7 +911,7 @@ exports[`component: Section renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="right"
+                  name="end.1"
                   x1="0"
                   x2="1"
                   y1="0"
@@ -896,7 +922,7 @@ exports[`component: Section renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "right",
+                    "end.1",
                   ]
                 }
                 height="100%"
@@ -907,7 +933,7 @@ exports[`component: Section renders 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-28}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -923,72 +949,8 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": 15,
                   "position": "absolute",
-                  "top": "100%",
-                },
-                Object {
-                  "flex": 0,
-                  "height": 7,
-                  "width": "100%",
-                },
-              ]
-            }
-            width="100%"
-          >
-            <RNSVGGroup>
-              <RNSVGDefs>
-                <RNSVGLinearGradient
-                  gradient={
-                    Array [
-                      0,
-                      168826920,
-                      1,
-                      1054760,
-                    ]
-                  }
-                  gradientTransform={null}
-                  gradientUnits={0}
-                  name="bottom"
-                  x1="0"
-                  x2="0"
-                  y1="0"
-                  y2="1"
-                />
-              </RNSVGDefs>
-              <RNSVGRect
-                fill={
-                  Array [
-                    1,
-                    "bottom",
-                  ]
-                }
-                height={6}
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                width="100%"
-                x={-30}
-                y={0}
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <RNSVGSvgView
-            bbHeight={7}
-            bbWidth="100%"
-            focusable={false}
-            height={7}
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                Object {
-                  "left": 15,
-                  "position": "absolute",
+                  "start": 14,
                   "top": -6,
                 },
                 Object {
@@ -1013,7 +975,7 @@ exports[`component: Section renders 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="top"
+                  name="top.1"
                   x1="0"
                   x2="0"
                   y1="1"
@@ -1024,7 +986,7 @@ exports[`component: Section renders 1`] = `
                 fill={
                   Array [
                     1,
-                    "top",
+                    "top.1",
                   ]
                 }
                 height={6}
@@ -1034,16 +996,16 @@ exports[`component: Section renders 1`] = `
                   ]
                 }
                 width="100%"
-                x={-30}
+                x={-28}
                 y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth="100%"
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -1051,62 +1013,133 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": 14,
+                  "top": "100%",
+                },
+                Object {
+                  "flex": 0,
+                  "height": 7,
+                  "width": "100%",
+                },
+              ]
+            }
+            width="100%"
+          >
+            <RNSVGGroup>
+              <RNSVGDefs>
+                <RNSVGLinearGradient
+                  gradient={
+                    Array [
+                      0,
+                      168826920,
+                      1,
+                      1054760,
+                    ]
+                  }
+                  gradientTransform={null}
+                  gradientUnits={0}
+                  name="bottom.1"
+                  x1="0"
+                  x2="0"
+                  y1="0"
+                  y2="1"
+                />
+              </RNSVGDefs>
+              <RNSVGRect
+                fill={
+                  Array [
+                    1,
+                    "bottom.1",
+                  ]
+                }
+                height={6}
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                width="100%"
+                x={-28}
+                y={0}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+          <RNSVGSvgView
+            bbHeight={21}
+            bbWidth={21}
+            focusable={false}
+            height={21}
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                Object {
+                  "position": "absolute",
+                  "start": -6,
                   "top": -6,
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup>
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
-                  cy={21}
-                  fx={21}
-                  fy={21}
+                  cx={20}
+                  cy={20}
+                  fx={20}
+                  fy={20}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topLeft"
-                  rx={21}
-                  ry={21}
+                  name="topStart.1"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,21 a21,21 0 0 1 21 -21 v6 a15,15 0 0 0 -15,15 h-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topLeft",
+                    "topStart.1",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -1114,23 +1147,23 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": -6,
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -1147,45 +1180,52 @@ exports[`component: Section renders 1`] = `
               <RNSVGDefs>
                 <RNSVGRadialGradient
                   cx={0}
-                  cy={21}
+                  cy={20}
                   fx={0}
-                  fy={21}
+                  fy={20}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topRight"
-                  rx={21}
-                  ry={21}
+                  name="topEnd.1"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,0 a21,21 0 0 1 21,21 h-6 a15,15 0 0 0 -15,-15 v-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topRight",
+                    "topEnd.1",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -1193,23 +1233,23 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": -6,
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateY": -15,
+                      "translateY": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -1225,46 +1265,53 @@ exports[`component: Section renders 1`] = `
             >
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
+                  cx={20}
                   cy={0}
-                  fx={21}
+                  fx={20}
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomLeft"
-                  rx={21}
-                  ry={21}
+                  name="bottomStart.1"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,21 a21,21 0 0 1 -21,-21 h6 a15,15 0 0 0 15,15 v6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomLeft",
+                    "bottomStart.1",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -1272,26 +1319,26 @@ exports[`component: Section renders 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -14,
                     },
                     Object {
-                      "translateY": -15,
+                      "translateY": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -1313,32 +1360,39 @@ exports[`component: Section renders 1`] = `
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomRight"
-                  rx={21}
-                  ry={21}
+                  name="bottomEnd.1"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,0 a21,21 0 0 1 -21,21 v-6 a15,15 0 0 0 15,-15 h6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomRight",
+                    "bottomEnd.1",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -1350,18 +1404,19 @@ exports[`component: Section renders 1`] = `
             Array [
               Object {
                 "alignSelf": "flex-start",
+                "borderBottomLeftRadius": 14,
+                "borderBottomRightRadius": 14,
+                "borderTopLeftRadius": 14,
+                "borderTopRightRadius": 14,
               },
-              undefined,
-              Array [
-                Object {
-                  "backgroundColor": "#F7F8FA",
-                  "borderRadius": 14,
-                  "padding": 16,
-                },
-                Object {
-                  "alignSelf": "stretch",
-                },
-              ],
+              Object {
+                "backgroundColor": "#F7F8FA",
+                "borderRadius": 14,
+                "padding": 16,
+              },
+              Object {
+                "alignSelf": "stretch",
+              },
             ]
           }
         >
@@ -1396,12 +1451,16 @@ exports[`component: Section renders with title 1`] = `
         Array [
           Object {
             "bottom": 0,
-            "left": 10,
+            "left": 0,
             "position": "absolute",
             "right": 0,
-            "top": 20,
+            "top": 0,
           },
           undefined,
+          Object {
+            "start": 10,
+            "top": 20,
+          },
         ]
       }
     >
@@ -1417,8 +1476,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": 14,
             },
             Object {
@@ -1443,7 +1502,7 @@ exports[`component: Section renders with title 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="left"
+              name="start.2"
               x1="1"
               x2="0"
               y1="0"
@@ -1454,7 +1513,7 @@ exports[`component: Section renders with title 1`] = `
             fill={
               Array [
                 1,
-                "left",
+                "start.2",
               ]
             }
             height="100%"
@@ -1481,8 +1540,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": 14,
             },
             Object {
@@ -1507,7 +1566,7 @@ exports[`component: Section renders with title 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="right"
+              name="end.2"
               x1="0"
               x2="1"
               y1="0"
@@ -1518,7 +1577,7 @@ exports[`component: Section renders with title 1`] = `
             fill={
               Array [
                 1,
-                "right",
+                "end.2",
               ]
             }
             height="100%"
@@ -1545,9 +1604,9 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 14,
               "position": "absolute",
-              "top": "100%",
+              "start": 14,
+              "top": -40,
             },
             Object {
               "flex": 0,
@@ -1571,18 +1630,18 @@ exports[`component: Section renders with title 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="bottom"
+              name="top.2"
               x1="0"
               x2="0"
-              y1="0"
-              y2="1"
+              y1="1"
+              y2="0"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "bottom",
+                "top.2",
               ]
             }
             height={40}
@@ -1609,9 +1668,9 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": 14,
               "position": "absolute",
-              "top": -40,
+              "start": 14,
+              "top": "100%",
             },
             Object {
               "flex": 0,
@@ -1635,18 +1694,18 @@ exports[`component: Section renders with title 1`] = `
               }
               gradientTransform={null}
               gradientUnits={0}
-              name="top"
+              name="bottom.2"
               x1="0"
               x2="0"
-              y1="1"
-              y2="0"
+              y1="0"
+              y2="1"
             />
           </RNSVGDefs>
           <RNSVGRect
             fill={
               Array [
                 1,
-                "top",
+                "bottom.2",
               ]
             }
             height={40}
@@ -1673,8 +1732,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": -40,
             },
             Object {
@@ -1697,30 +1756,35 @@ exports[`component: Section renders with title 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topLeft"
+              name="topStart.2"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,54 a54,54 0 0 1 54 -54 v40 v14 h-14 h-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topLeft",
+                "topStart.2",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1736,8 +1800,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": -40,
               "transform": Array [
                 Object {
@@ -1776,30 +1840,35 @@ exports[`component: Section renders with title 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="topRight"
+              name="topEnd.2"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M0,0 a54,54 0 0 1 54,54 h-40 h-14 v-14 v-40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "topRight",
+                "topEnd.2",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1815,8 +1884,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": -40,
               "position": "absolute",
+              "start": -40,
               "top": "100%",
               "transform": Array [
                 Object {
@@ -1855,30 +1924,35 @@ exports[`component: Section renders with title 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomLeft"
+              name="bottomStart.2"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,54 a54,54 0 0 1 -54,-54 h40 h14 v14 v40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomLeft",
+                "bottomStart.2",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -1894,8 +1968,8 @@ exports[`component: Section renders with title 1`] = `
               "borderWidth": 0,
             },
             Object {
-              "left": "100%",
               "position": "absolute",
+              "start": "100%",
               "top": "100%",
               "transform": Array [
                 Object {
@@ -1937,30 +2011,35 @@ exports[`component: Section renders with title 1`] = `
                 Array [
                   0.25925925925925924,
                   438654908,
+                  0.9999999999999999,
+                  2447292,
                   1,
                   2447292,
                 ]
               }
               gradientTransform={null}
               gradientUnits={1}
-              name="bottomRight"
+              name="bottomEnd.2"
               rx={54}
               ry={54}
             />
           </RNSVGDefs>
-          <RNSVGPath
-            d="M54,0 a54,54 0 0 1 -54,54 v-40 v-14 h14 h40 Z"
+          <RNSVGRect
             fill={
               Array [
                 1,
-                "bottomRight",
+                "bottomEnd.2",
               ]
             }
+            height={54}
             propList={
               Array [
                 "fill",
               ]
             }
+            width={54}
+            x={0}
+            y={0}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -2003,7 +2082,7 @@ exports[`component: Section renders with title 1`] = `
                 ]
               }
               maskUnits={0}
-              name="maskPaintBelow"
+              name="maskInside.2"
               width="100%"
               x="0%"
               y="0%"
@@ -2104,7 +2183,7 @@ exports[`component: Section renders with title 1`] = `
             fill={4280637372}
             fillOpacity={0.1}
             height="100%"
-            mask="maskPaintBelow"
+            mask="maskInside.2"
             propList={
               Array [
                 "fill",
@@ -2125,20 +2204,18 @@ exports[`component: Section renders with title 1`] = `
         Array [
           Object {
             "alignSelf": "flex-start",
+            "borderBottomLeftRadius": 14,
+            "borderBottomRightRadius": 14,
+            "borderTopLeftRadius": 14,
+            "borderTopRightRadius": 14,
           },
-          undefined,
-          Array [
-            Array [
-              undefined,
-              Object {
-                "backgroundColor": "#F7F8FA",
-                "borderRadius": 14,
-              },
-            ],
-            Object {
-              "alignSelf": "stretch",
-            },
-          ],
+          Object {
+            "backgroundColor": "#F7F8FA",
+            "borderRadius": 14,
+          },
+          Object {
+            "alignSelf": "stretch",
+          },
         ]
       }
     >
@@ -2157,6 +2234,10 @@ exports[`component: Section renders with title 1`] = `
                 "top": 0,
               },
               undefined,
+              Object {
+                "start": 0,
+                "top": 0,
+              },
             ]
           }
         >
@@ -2172,9 +2253,9 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
-                  "top": 15,
+                  "start": -6,
+                  "top": 14,
                 },
                 Object {
                   "flex": 0,
@@ -2198,7 +2279,7 @@ exports[`component: Section renders with title 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="left"
+                  name="start.3"
                   x1="1"
                   x2="0"
                   y1="0"
@@ -2209,7 +2290,7 @@ exports[`component: Section renders with title 1`] = `
                 fill={
                   Array [
                     1,
-                    "left",
+                    "start.3",
                   ]
                 }
                 height="100%"
@@ -2220,7 +2301,7 @@ exports[`component: Section renders with title 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-28}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -2236,9 +2317,9 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
-                  "top": 15,
+                  "start": "100%",
+                  "top": 14,
                 },
                 Object {
                   "flex": 0,
@@ -2262,7 +2343,7 @@ exports[`component: Section renders with title 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="right"
+                  name="end.3"
                   x1="0"
                   x2="1"
                   y1="0"
@@ -2273,7 +2354,7 @@ exports[`component: Section renders with title 1`] = `
                 fill={
                   Array [
                     1,
-                    "right",
+                    "end.3",
                   ]
                 }
                 height="100%"
@@ -2284,7 +2365,7 @@ exports[`component: Section renders with title 1`] = `
                 }
                 width={6}
                 x={0}
-                y={-30}
+                y={-28}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -2300,72 +2381,8 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": 15,
                   "position": "absolute",
-                  "top": "100%",
-                },
-                Object {
-                  "flex": 0,
-                  "height": 7,
-                  "width": "100%",
-                },
-              ]
-            }
-            width="100%"
-          >
-            <RNSVGGroup>
-              <RNSVGDefs>
-                <RNSVGLinearGradient
-                  gradient={
-                    Array [
-                      0,
-                      168826920,
-                      1,
-                      1054760,
-                    ]
-                  }
-                  gradientTransform={null}
-                  gradientUnits={0}
-                  name="bottom"
-                  x1="0"
-                  x2="0"
-                  y1="0"
-                  y2="1"
-                />
-              </RNSVGDefs>
-              <RNSVGRect
-                fill={
-                  Array [
-                    1,
-                    "bottom",
-                  ]
-                }
-                height={6}
-                propList={
-                  Array [
-                    "fill",
-                  ]
-                }
-                width="100%"
-                x={-30}
-                y={0}
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <RNSVGSvgView
-            bbHeight={7}
-            bbWidth="100%"
-            focusable={false}
-            height={7}
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                Object {
-                  "left": 15,
-                  "position": "absolute",
+                  "start": 14,
                   "top": -6,
                 },
                 Object {
@@ -2390,7 +2407,7 @@ exports[`component: Section renders with title 1`] = `
                   }
                   gradientTransform={null}
                   gradientUnits={0}
-                  name="top"
+                  name="top.3"
                   x1="0"
                   x2="0"
                   y1="1"
@@ -2401,7 +2418,7 @@ exports[`component: Section renders with title 1`] = `
                 fill={
                   Array [
                     1,
-                    "top",
+                    "top.3",
                   ]
                 }
                 height={6}
@@ -2411,16 +2428,16 @@ exports[`component: Section renders with title 1`] = `
                   ]
                 }
                 width="100%"
-                x={-30}
+                x={-28}
                 y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={7}
+            bbWidth="100%"
             focusable={false}
-            height={22}
+            height={7}
             style={
               Array [
                 Object {
@@ -2428,62 +2445,133 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": 14,
+                  "top": "100%",
+                },
+                Object {
+                  "flex": 0,
+                  "height": 7,
+                  "width": "100%",
+                },
+              ]
+            }
+            width="100%"
+          >
+            <RNSVGGroup>
+              <RNSVGDefs>
+                <RNSVGLinearGradient
+                  gradient={
+                    Array [
+                      0,
+                      168826920,
+                      1,
+                      1054760,
+                    ]
+                  }
+                  gradientTransform={null}
+                  gradientUnits={0}
+                  name="bottom.3"
+                  x1="0"
+                  x2="0"
+                  y1="0"
+                  y2="1"
+                />
+              </RNSVGDefs>
+              <RNSVGRect
+                fill={
+                  Array [
+                    1,
+                    "bottom.3",
+                  ]
+                }
+                height={6}
+                propList={
+                  Array [
+                    "fill",
+                  ]
+                }
+                width="100%"
+                x={-28}
+                y={0}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+          <RNSVGSvgView
+            bbHeight={21}
+            bbWidth={21}
+            focusable={false}
+            height={21}
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                Object {
+                  "position": "absolute",
+                  "start": -6,
                   "top": -6,
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup>
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
-                  cy={21}
-                  fx={21}
-                  fy={21}
+                  cx={20}
+                  cy={20}
+                  fx={20}
+                  fy={20}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topLeft"
-                  rx={21}
-                  ry={21}
+                  name="topStart.3"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,21 a21,21 0 0 1 21 -21 v6 a15,15 0 0 0 -15,15 h-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topLeft",
+                    "topStart.3",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -2491,23 +2579,23 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": -6,
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -2524,45 +2612,52 @@ exports[`component: Section renders with title 1`] = `
               <RNSVGDefs>
                 <RNSVGRadialGradient
                   cx={0}
-                  cy={21}
+                  cy={20}
                   fx={0}
-                  fy={21}
+                  fy={20}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="topRight"
-                  rx={21}
-                  ry={21}
+                  name="topEnd.3"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M0,0 a21,21 0 0 1 21,21 h-6 a15,15 0 0 0 -15,-15 v-6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "topRight",
+                    "topEnd.3",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -2570,23 +2665,23 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": -6,
                   "position": "absolute",
+                  "start": -6,
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateY": -15,
+                      "translateY": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -2602,46 +2697,53 @@ exports[`component: Section renders with title 1`] = `
             >
               <RNSVGDefs>
                 <RNSVGRadialGradient
-                  cx={21}
+                  cx={20}
                   cy={0}
-                  fx={21}
+                  fx={20}
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomLeft"
-                  rx={21}
-                  ry={21}
+                  name="bottomStart.3"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,21 a21,21 0 0 1 -21,-21 h6 a15,15 0 0 0 15,15 v6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomLeft",
+                    "bottomStart.3",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
           <RNSVGSvgView
-            bbHeight={22}
-            bbWidth={22}
+            bbHeight={21}
+            bbWidth={21}
             focusable={false}
-            height={22}
+            height={21}
             style={
               Array [
                 Object {
@@ -2649,26 +2751,26 @@ exports[`component: Section renders with title 1`] = `
                   "borderWidth": 0,
                 },
                 Object {
-                  "left": "100%",
                   "position": "absolute",
+                  "start": "100%",
                   "top": "100%",
                   "transform": Array [
                     Object {
-                      "translateX": -15,
+                      "translateX": -14,
                     },
                     Object {
-                      "translateY": -15,
+                      "translateY": -14,
                     },
                   ],
                 },
                 Object {
                   "flex": 0,
-                  "height": 22,
-                  "width": 22,
+                  "height": 21,
+                  "width": 21,
                 },
               ]
             }
-            width={22}
+            width={21}
           >
             <RNSVGGroup
               matrix={
@@ -2690,32 +2792,39 @@ exports[`component: Section renders with title 1`] = `
                   fy={0}
                   gradient={
                     Array [
-                      0.7142857142857143,
+                      0.7,
+                      0,
+                      0.7,
                       168826920,
+                      0.9999999999999999,
+                      1054760,
                       1,
                       1054760,
                     ]
                   }
                   gradientTransform={null}
                   gradientUnits={1}
-                  name="bottomRight"
-                  rx={21}
-                  ry={21}
+                  name="bottomEnd.3"
+                  rx={20}
+                  ry={20}
                 />
               </RNSVGDefs>
-              <RNSVGPath
-                d="M21,0 a21,21 0 0 1 -21,21 v-6 a15,15 0 0 0 15,-15 h6 Z"
+              <RNSVGRect
                 fill={
                   Array [
                     1,
-                    "bottomRight",
+                    "bottomEnd.3",
                   ]
                 }
+                height={20}
                 propList={
                   Array [
                     "fill",
                   ]
                 }
+                width={20}
+                x={0}
+                y={0}
               />
             </RNSVGGroup>
           </RNSVGSvgView>
@@ -2727,18 +2836,19 @@ exports[`component: Section renders with title 1`] = `
             Array [
               Object {
                 "alignSelf": "flex-start",
+                "borderBottomLeftRadius": 14,
+                "borderBottomRightRadius": 14,
+                "borderTopLeftRadius": 14,
+                "borderTopRightRadius": 14,
               },
-              undefined,
-              Array [
-                Object {
-                  "backgroundColor": "#F7F8FA",
-                  "borderRadius": 14,
-                  "padding": 16,
-                },
-                Object {
-                  "alignSelf": "stretch",
-                },
-              ],
+              Object {
+                "backgroundColor": "#F7F8FA",
+                "borderRadius": 14,
+                "padding": 16,
+              },
+              Object {
+                "alignSelf": "stretch",
+              },
             ]
           }
         >

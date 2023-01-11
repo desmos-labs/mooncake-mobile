@@ -40,6 +40,7 @@ interface Props extends TouchableOpacityProps {
   };
 
   hitSlopValue?: number;
+  tintColor?: string;
 }
 
 const ImageButton = ({
@@ -49,6 +50,7 @@ const ImageButton = ({
   overlayPosition,
   hitSlopValue,
   buttonStyle,
+  tintColor,
   ...rest
 }: Props) => {
   const hitSlop = hitSlopValue
@@ -65,7 +67,12 @@ const ImageButton = ({
       style={[{opacity: rest.disabled ? 0.3 : 1}, buttonStyle]}
       hitSlop={hitSlop}
       {...rest}>
-      <FastImage resizeMode="cover" style={style} source={image} />
+      <FastImage
+        resizeMode="cover"
+        style={style}
+        source={image}
+        tintColor={tintColor}
+      />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>
           {overlayComponent}

@@ -12,7 +12,7 @@ import ROUTES from 'navigation/routes';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import {NavProps} from 'screens/Home/index';
+import {NavProps} from 'screens/Home';
 import {useTranslation} from 'react-i18next';
 import appSettingsState from '@recoil/settings';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -160,8 +160,10 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
   // I think this function is pretty lightweight and doesn't need to be useCallback'd
   const resetNewPostNotificationState = () => {
-    if (params.type === 'discover') setHasNewDiscoverPosts(false);
-    else if (params.type === 'following') setHasNewFollowingPosts(false);
+    if (params?.type === 'discover') setHasNewDiscoverPosts(false);
+    else if (params?.type === 'following') {
+      setHasNewFollowingPosts(false);
+    }
   };
 
   return {

@@ -118,6 +118,7 @@ const Onboarding = () => {
   const renderItem = useCallback((item: OnboardingData) => {
     return (
       <View
+        key={item.title}
         style={{
           width: '100%',
           height: '100%',

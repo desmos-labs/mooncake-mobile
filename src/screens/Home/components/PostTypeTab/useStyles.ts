@@ -6,7 +6,7 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.backgroundGrey,
+    backgroundColor: theme.colors.white,
     borderRadius: 14,
     overflow: 'hidden',
     justifyContent: 'center',

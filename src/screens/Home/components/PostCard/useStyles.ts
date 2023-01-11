@@ -1,67 +1,51 @@
 import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 
 /**
  * Theme hook for the PostCard component
  */
 const useStyles = makeStyle(theme => ({
   container: {
-    borderRadius: 18,
-    backgroundColor: theme.colors.butterOrange01,
-    justifyContent: 'flex-end',
-    overflow: 'hidden',
-    width: '100%',
-    height: '100%',
     alignSelf: 'center',
-  },
-  textContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing.l,
-    ...StyleSheet.absoluteFillObject,
-  },
-  bottomGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    width: Dimensions.get('window').width,
     padding: theme.spacing.m,
   },
-  profileGroup: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-  profileText: {
-    color: theme.colors.white,
-  },
-  textStyle: {
-    // same as inputStyle in CreateTextPost/useStyles
-    color: theme.colors.white,
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 22,
-    lineHeight: 27,
-    letterSpacing: 0.0015,
-    textAlign: 'center',
-  },
-  imagePostText: {
-    marginTop: theme.spacing.s,
-    color: theme.colors.white,
+  profilePic: {
+    height: 48,
+    width: 48,
+    alignSelf: 'center',
+    borderRadius: 24,
     marginRight: theme.spacing.s,
   },
-  blankAvatar: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-    borderRadius: 20,
-    backgroundColor: theme.colors.backgroundGrey,
+  bottomBarView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing.m,
+    justifyContent: 'space-between',
   },
-  nameGroup: {
-    marginLeft: theme.spacing.s,
-    justifyContent: 'center',
+  bottomBarIcon: {height: 24, width: 24, marginRight: theme.spacing.xs},
+  profileInfoView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.s,
   },
-  textGradient: {
-    ...StyleSheet.absoluteFillObject,
-    top: -25,
+  commentButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: theme.spacing.s,
+    marginLeft: theme.spacing.l,
   },
+  pendingIcon: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    top: 2,
+    left: 'auto',
+    right: 0,
+  },
+  bottomBarInnerView: {flexDirection: 'row', alignItems: 'center'},
+  mediaView: {alignItems: 'center', marginTop: theme.spacing.xs},
 }));
 
 export default useStyles;

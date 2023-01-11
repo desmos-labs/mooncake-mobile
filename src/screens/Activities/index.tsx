@@ -1,10 +1,12 @@
-import {useNavigation} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
-import TopBar from 'components/TopBar';
+import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -20,7 +22,10 @@ import NotificationComponent from 'screens/Activities/components/NotificationCom
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>;
+type NavProps = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabsParamList, ROUTES.ACTIVITIES>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 export interface CompleteNotification {
   data: {
@@ -69,14 +74,10 @@ const Activities = () => {
     notificationsFetchMore,
   } = useHooks();
 
+  // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
     return globalLoading ? null : (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View style={styles.emptyView}>
         <Image
           source={errorImage}
           style={{
@@ -105,58 +106,61 @@ const Activities = () => {
     [],
   );
 
+  const footerComponent = () => {
+    return <NotificationContentLoader />;
+  };
+
   return (
     <DView
-      topBar={<TopBar />}
+      edges={['top', 'left', 'right']}
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      <Typography.H3>{t('activities')}</Typography.H3>
-      {data?.notification?.length >= 0 && !notificationsLoading ? (
-        <SectionList
-          keyExtractor={(item, index) => item.timestamp + index}
-          refreshing={notificationsLoading}
-          onRefresh={notificationsRefetch}
-          style={{flex: 1}}
-          contentContainerStyle={{flexGrow: 1}}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={EmptyActivities}
-          sections={notificationsData}
-          renderItem={renderNotification}
-          ListFooterComponent={globalLoading ? <ActivityIndicator /> : null}
-          onEndReached={() => {
-            notificationsFetchMore({
-              variables: {
-                offset: data.notification.length,
-              },
-              updateQuery: (prev, {fetchMoreResult}) => {
-                if (!fetchMoreResult) {
-                  return prev;
-                }
-                return {
-                  ...prev,
-                  notification: [
-                    ...prev.notification,
-                    ...fetchMoreResult.notification,
-                  ],
-                };
-              },
-            });
-          }}
-          renderSectionHeader={({section: {section}}) => (
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: theme.colors.white,
-                paddingTop: theme.spacing.m,
-                paddingBottom: theme.spacing.s,
-              }}>
-              <Typography.Button2>{section}</Typography.Button2>
-            </View>
-          )}
-        />
+      {data?.notification?.length >= 0 && !globalLoading ? (
+        <>
+          <Typography.H3>{t('activities')}</Typography.H3>
+          <SectionList
+            keyExtractor={(item, index) => item.timestamp + index}
+            refreshing={notificationsLoading}
+            onRefresh={notificationsRefetch}
+            style={{flex: 1}}
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={EmptyActivities}
+            sections={notificationsData}
+            renderItem={renderNotification}
+            ListFooterComponent={footerComponent}
+            initialNumToRender={8}
+            onEndReached={() => {
+              notificationsFetchMore({
+                variables: {
+                  offset: data.notification.length,
+                },
+                updateQuery: (prev, {fetchMoreResult}) => {
+                  if (!fetchMoreResult) {
+                    return prev;
+                  }
+                  return {
+                    ...prev,
+                    notification: [
+                      ...prev.notification,
+                      ...fetchMoreResult.notification,
+                    ],
+                  };
+                },
+              });
+            }}
+            renderSectionHeader={({section: {section}}) => (
+              <View style={styles.sectionHeader}>
+                <Typography.Button2>{section}</Typography.Button2>
+              </View>
+            )}
+          />
+        </>
       ) : (
-        <ActivityIndicator />
+        <View style={styles.flexCenter}>
+          <ActivityIndicator />
+        </View>
       )}
     </DView>
   );
