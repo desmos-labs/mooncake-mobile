@@ -204,7 +204,6 @@ const Home = () => {
 
   return (
     <>
-      {SearchView}
       {queryPostsData ? (
         <View style={{flex: 1, zIndex: 1, backgroundColor: theme.colors.white}}>
           <FlashList
@@ -237,6 +236,7 @@ const Home = () => {
           <ActivityIndicator />
         </View>
       )}
+      {SearchView}
     </>
   );
 };
