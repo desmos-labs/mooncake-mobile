@@ -1,3 +1,5 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {passwordStrength} from 'check-password-strength';
 import Button from 'components/Button';
@@ -11,6 +13,7 @@ import {Formik} from 'formik';
 import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -41,9 +44,9 @@ export type PasswordManipulationParams = {
   oldPassword?: string;
 };
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.PASSWORD_MANIPULATION
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.PASSWORD_MANIPULATION>,
+  BottomTabScreenProps<BottomTabsParamList, ROUTES.USER_PROFILE>
 >;
 
 const PasswordManipulation = () => {

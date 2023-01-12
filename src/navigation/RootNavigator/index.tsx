@@ -2,7 +2,11 @@ import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
 import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import {
+  BottomSheetAndroid,
+  ModalPresentationIOS,
+} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -13,6 +17,9 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
 } from 'navigation/RootNavigator/AuthorizeWalletStack';
+import BottomTabs, {
+  BottomTabsParamList,
+} from 'navigation/RootNavigator/BottomTabs';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import PostInteractionTabs, {
   PostInteractionTabsParamList,
@@ -67,6 +74,7 @@ import FullscreenStatusScreen, {
 } from 'screens/FullscreenStatusScreen';
 import Grants from 'screens/Grants';
 import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
+import GuestProfile, {GuestProfileParams} from 'screens/GuestProfile';
 import Invites from 'screens/Invites';
 import Landing from 'screens/Landing';
 import Login, {LoginParams} from 'screens/Login';
@@ -108,7 +116,6 @@ import ChangePassword, {
 } from 'screens/PasswordManipulation';
 import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
 import PostTypeSelection from 'screens/PostTypeSelection';
-import Profile, {UserProfileParams} from 'screens/Profile';
 import ManageConnectionsModal, {
   ManageConnectionsModalParams,
 } from 'screens/Profile/components/ManageConnectionsModal';
@@ -149,7 +156,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
-  [ROUTES.USER_PROFILE]: UserProfileParams | undefined;
+  [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
@@ -189,6 +196,9 @@ export type RootNavigatorParamList = {
 
   // Post interaction tabs
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+
+  // Bottom tabs
+  [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -249,13 +259,18 @@ export type RootNavigatorParamList = {
   [ROUTES.OPERATIONS]: OperationsParams;
 };
 
+const NativeTransition = Platform.select({
+  ios: ModalPresentationIOS,
+  default: BottomSheetAndroid,
+});
+
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
   const {navigate} = useNavigation<any>();
-  const {activeAddress, refetch: fetchProfileData} = useActiveAccount();
+  const {activeAddress} = useActiveAccount();
   const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
@@ -284,9 +299,6 @@ const RootNavigator = () => {
   };
 
   useEffect(() => {
-    // fetch profile data
-    fetchProfileData();
-
     // Hide the splashscreen
     RNBootSplash.hide({fade: true});
 
@@ -319,7 +331,7 @@ const RootNavigator = () => {
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
 
     if (activeAddr) {
-      return ROUTES.HOME_TABS;
+      return ROUTES.BOTTOM_TABS;
     }
     return ROUTES.ONBOARDING;
   }, []);
@@ -337,15 +349,12 @@ const RootNavigator = () => {
     },
   };
 
-  const transitionPreset =
-    Platform.OS === 'android'
-      ? TransitionPresets.BottomSheetAndroid
-      : TransitionPresets.ModalPresentationIOS;
-
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
-      screenOptions={{headerShown: false}}>
+      screenOptions={{
+        headerShown: false,
+      }}>
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
@@ -390,6 +399,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
+      <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen
         initialParams={{
           postId: 1,
@@ -417,7 +427,7 @@ const RootNavigator = () => {
         name={ROUTES.MANAGE_BIOMETRICS}
         component={ManageBiometrics}
       />
-      <Stack.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+      <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} />
       <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} />
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen
@@ -528,7 +538,7 @@ const RootNavigator = () => {
           },
           presentation: 'transparentModal',
           cardOverlayEnabled: true,
-          ...transitionPreset,
+          ...NativeTransition,
         }}>
         <Stack.Screen
           name={ROUTES.CONSENT_AGREEMENT}

@@ -265,7 +265,7 @@ const Signup = () => {
                     <Spacer paddingBottom={theme.spacing.m} />
                     <Typography.Subtitle2
                       style={{marginBottom: theme.spacing.s}}>
-                      {t('signup:invite code optional')}
+                      {t('signup:invite code')}
                     </Typography.Subtitle2>
                     <DTextInput
                       onFocus={() => {

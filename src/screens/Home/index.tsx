@@ -1,73 +1,75 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {
-  commentIcon,
-  commentLikeEmptyIcon,
-  tipIcon,
-  commentLiked,
-  tipIconTipped,
-  commentIconCommented,
-} from 'assets/images';
+import postsListOptions from '@recoil/postsListRef';
+import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
+import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
+import Typography from 'components/Typography';
+import ToastConfig from 'config/ToastConfig';
+import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
-  Dimensions,
-  FlatList,
-  ListRenderItemInfo,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
+  ActivityIndicator,
+  RefreshControl,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import InteractionButton from 'screens/Home/components/InteractionButton';
-import NoMorePosts from 'screens/Home/components/NoMorePosts';
+import {useTheme} from 'react-native-paper';
+import {useToast} from 'react-native-toast-notifications';
+import {useRecoilState} from 'recoil';
+import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
-import {useTheme} from 'react-native-paper';
-import _ from 'lodash';
-import {useToast} from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
-import {useTranslation} from 'react-i18next';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
-import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import useStyles from './useStyles';
 
-// discover and following share the same params
-export type NavProps = StackScreenProps<
-  HomeTabsParamList,
-  ROUTES.HOME_DISCOVER
+type FollowingNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
 >;
+
+type DiscoverNavProps = CompositeScreenProps<
+  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<RootNavigatorParamList>
+  >
+>;
+
+export type NavProps = DiscoverNavProps | FollowingNavProps;
 
 export type HomeParams = {
   type: 'discover' | 'following';
 };
 
-const getItemLayout = (data: any, index: number) => ({
-  length: Dimensions.get('window').width,
-  offset: Dimensions.get('window').width * index,
-  index,
-});
-
 const Home = () => {
-  const styles = useStyles();
   const toast = useToast();
   const {t} = useTranslation();
-  const postListRef = useRef<any>();
-
-  const lockPostPress = useRef(false);
-
+  const styles = useStyles();
+  const theme = useTheme();
+  const postListRef = useRef<any>(null);
+  const [listOptions, setListOptions] = useRecoilState(postsListOptions);
   const {
     handlePressDetails,
     handlePressFollow,
-    handlePressAuthor,
+    handleNavigateToProfile,
     handlePressTip,
     handleAddReaction,
     handlePressComments,
+    handlePressReport,
     posts,
-    selectedPostIndex,
     fetchNewestPosts,
     fetchMorePosts,
-    onViewableItemsChanged,
     checkIfPostIsPending,
+    loading,
+    queryPostsData,
   } = useHooks();
 
   const handlePressNewPostNotification = useCallback(() => {
@@ -88,192 +90,144 @@ const Home = () => {
     ({item}: ListRenderItemInfo<PostItem>) => {
       if (item.emptyComponent) {
         return (
-          <View
-            style={{
-              width: Dimensions.get('window').width,
-              padding: 24,
-            }}>
-            <NoMorePosts />
+          <View style={{flex: 1, marginHorizontal: theme.spacing.m}}>
+            <HomePostContentLoader />
           </View>
         );
       }
       return (
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            padding: 24,
-          }}>
-          <PostCard
-            author={item.author}
-            isPending={item.isPending}
-            attachments={item.attachments}
-            text={item.text}
-            id={item.id}
-            onPressAuthor={() => handlePressAuthor(item.author_address)}
-            onPressDetails={() => {
-              if (lockPostPress.current) return;
-
-              if (checkIfPostIsPending(item.id)) {
-                return toast.show(t('toast:postTxInProgress'), {
-                  type: ToastConfig.ERROR_NO_RETRY,
-                });
-              }
-              handlePressDetails(item.id, item.subspace_id);
-            }}
-            onPressFollow={() => handlePressFollow(item.author_address)}
-          />
-        </View>
+        <PostCard
+          author={item.author}
+          isPending={item.isPending}
+          attachments={item.attachments}
+          text={item.text}
+          id={item.id}
+          reactionPresence={item.reactionPresence}
+          commentPresence={item.commentPresence}
+          tipPresence={item.tipPresence}
+          reactions={item.reactions}
+          repliesCount={item.repliesCount}
+          creation_date={item.creation_date}
+          onPressAuthor={() => handleNavigateToProfile(item.author_address)}
+          onPressDetails={() => {
+            if (checkIfPostIsPending(item.id)) {
+              return toast.show(t('toast:postTxInProgress'), {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handlePressDetails(item.id, item.subspace_id);
+          }}
+          onPressLike={() => {
+            if (checkIfPostIsPending(item.id)) {
+              return toast.show(t('toast:postTxInProgress'), {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handleAddReaction(item.id);
+          }}
+          onPressComment={() => {
+            if (checkIfPostIsPending(item.id)) {
+              return toast.show(t('toast:postTxInProgress'), {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handlePressComments(item.id);
+          }}
+          onPressTip={() => {
+            if (checkIfPostIsPending(item.id) || !item.author) {
+              return toast.show(t('toast:postTxInProgress'), {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handlePressTip(item.author!.address, item.id);
+          }}
+          onPressFollow={() => handlePressFollow(item.author_address)}
+          onPressReport={() => {
+            if (checkIfPostIsPending(item.id) || !item.author) {
+              return toast.show(t('toast:postTxInProgress'), {
+                type: ToastConfig.ERROR_NO_RETRY,
+              });
+            }
+            handlePressReport(item.id, item.subspace_id);
+          }}
+        />
       );
     },
     [
-      lockPostPress.current,
       handlePressFollow,
-      handlePressAuthor,
+      handlePressReport,
+      handleNavigateToProfile,
       handlePressDetails,
+      handlePressComments,
+      handleAddReaction,
+      handlePressTip,
     ],
   );
 
-  const theme = useTheme();
+  const onRefresh = useCallback(() => {
+    fetchNewestPosts();
+    resetNewPostNotificationState();
+  }, [fetchNewestPosts, resetNewPostNotificationState]);
 
-  const onScrollBeginDrag = useCallback(() => {
-    if (selectedPostIndex === 0) {
-      lockPostPress.current = true;
+  /**
+   * Little trick to scroll to top from a parent component, the HomeTabBar in this case
+   */
+  useEffect(() => {
+    if (listOptions.scrollToTop) {
+      postListRef.current?.scrollToOffset({animated: true, offset: 0});
+      setListOptions({...listOptions, scrollToTop: false});
     }
-  }, [selectedPostIndex, lockPostPress.current]);
+  }, [listOptions.scrollToTop, postListRef]);
 
-  const onScrollEndDrag = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const detectValue = 1.2;
-      const xV = _.get(e, 'nativeEvent.velocity.x');
-
-      resetNewPostNotificationState();
-      if (Platform.OS === 'ios') {
-        if (xV < -detectValue && selectedPostIndex === 0) {
-          fetchNewestPosts();
-        }
-      } else if (Platform.OS === 'android') {
-        if (xV > detectValue && selectedPostIndex === 0) {
-          fetchNewestPosts();
-        }
-      }
-
-      lockPostPress.current = false;
-    },
-    [selectedPostIndex, lockPostPress.current],
-  );
-
-  const viewabilityConfig = useMemo(() => {
-    return {
-      waitForInteraction: true,
-      viewAreaCoveragePercentThreshold: 95,
-    };
-  }, []);
+  const SearchView = useMemo(() => {
+    return (
+      listOptions.searchBarFocused && (
+        <TouchableWithoutFeedback
+          onPress={() =>
+            setListOptions({...listOptions, searchBarFocused: false})
+          }
+          style={styles.searchView}>
+          <View style={styles.absoluteView}>
+            <Typography.Body6>
+              We are Anonymous, we are legion, we do not forgive, we do not
+              forget. Expect us.
+            </Typography.Body6>
+          </View>
+        </TouchableWithoutFeedback>
+      )
+    );
+  }, [listOptions]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}>
-      <FlatList
-        ref={postListRef}
-        data={posts}
-        horizontal
-        pagingEnabled
-        style={{
-          flex: 1,
-        }}
-        renderItem={renderPost}
-        windowSize={3}
-        showsHorizontalScrollIndicator={false}
-        // comment these 2 props when developing for a smoother experience
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        onScrollBeginDrag={onScrollBeginDrag}
-        onScrollEndDrag={onScrollEndDrag}
-        // comment end
-        onEndReachedThreshold={3}
-        onEndReached={fetchMorePosts}
-        scrollToOverflowEnabled={false}
-        overScrollMode="never"
-        bounces={false}
-        getItemLayout={getItemLayout}
-      />
-
-      {posts.length > 0 && selectedPostIndex !== posts.length && (
-        <View style={styles.interactionButtonGroup}>
-          <InteractionButton
-            onPress={() => {
-              if (checkIfPostIsPending(posts[selectedPostIndex].id)) {
-                return toast.show(t('toast:postTxInProgress'), {
-                  type: ToastConfig.ERROR_NO_RETRY,
-                });
-              }
-
-              handlePressComments(posts[selectedPostIndex].id);
-            }}
-            interactionCount={_.get(
-              posts[selectedPostIndex],
-              'repliesCount.aggregate.count',
-              0,
-            )}
-            icon={
-              _.get(
-                posts[selectedPostIndex],
-                'repliesCount.aggregate.count',
-                0,
-              ) > 0
-                ? commentIconCommented
-                : commentIcon
+    <>
+      {queryPostsData ? (
+        <View style={styles.homeView}>
+          <FlashList
+            keyExtractor={item => item.id.toString()}
+            ref={postListRef}
+            data={posts}
+            refreshControl={
+              <RefreshControl
+                enabled
+                onRefresh={onRefresh}
+                refreshing={loading}
+              />
             }
-          />
-
-          <InteractionButton
-            onPress={() => {
-              if (checkIfPostIsPending(posts[selectedPostIndex].id)) {
-                return toast.show(t('toast:postTxInProgress'), {
-                  type: ToastConfig.ERROR_NO_RETRY,
-                });
-              }
-              handleAddReaction(posts[selectedPostIndex].id);
-            }}
-            interactionCount={_.get(
-              posts[selectedPostIndex],
-              'reactions.length',
-              0,
-            )}
-            icon={
-              _.get(posts[selectedPostIndex], 'reactions.length', 0) > 0
-                ? commentLiked
-                : commentLikeEmptyIcon
-            }
-          />
-
-          <InteractionButton
-            onPress={() => {
-              if (
-                checkIfPostIsPending(posts[selectedPostIndex].id) ||
-                !posts[selectedPostIndex].author
-              ) {
-                return toast.show(t('toast:postTxInProgress'), {
-                  type: ToastConfig.ERROR_NO_RETRY,
-                });
-              }
-              handlePressTip(
-                posts[selectedPostIndex].author!.address,
-                posts[selectedPostIndex].id,
-              );
-            }}
-            interactionCount={_.get(posts[selectedPostIndex], 'tips.length', 0)}
-            icon={
-              _.get(posts[selectedPostIndex], 'tips.length', 0) > 0
-                ? tipIconTipped
-                : tipIcon
-            }
+            renderItem={renderPost}
+            showsVerticalScrollIndicator={false}
+            estimatedItemSize={388}
+            getItemType={item => item.id}
+            ItemSeparatorComponent={HomeItemSeparatorComponent}
+            onEndReached={() => fetchMorePosts()}
           />
         </View>
+      ) : (
+        <View style={styles.loadingView}>
+          <ActivityIndicator />
+        </View>
       )}
-    </View>
+      {SearchView}
+    </>
   );
 };
 

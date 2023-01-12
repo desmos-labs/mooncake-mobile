@@ -92,8 +92,8 @@ const useHooks = () => {
           successAction: () =>
             navigate(ROUTES.CONFIRM_MODAL, {
               onPressPrimary: () =>
-                navigate(ROUTES.USER_PROFILE, {
-                  visitingProfileAddress: accounts[0].address,
+                navigate(ROUTES.BOTTOM_TABS, {
+                  screen: ROUTES.USER_PROFILE,
                 }),
               title: t('common:success'),
               subtitle: t('connected'),
@@ -112,8 +112,8 @@ const useHooks = () => {
               secondaryButtonLabel: t('common:goToProfile')!,
               secondaryButtonMode: 'outlined',
               onPressSecondary: () =>
-                navigate(ROUTES.USER_PROFILE, {
-                  visitingProfileAddress: accounts[0].address,
+                navigate(ROUTES.BOTTOM_TABS, {
+                  screen: ROUTES.USER_PROFILE,
                 }),
             }),
         });

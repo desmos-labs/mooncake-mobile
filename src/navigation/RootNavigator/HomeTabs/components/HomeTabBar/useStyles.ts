@@ -1,36 +1,34 @@
 import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  profileButton: {
+  butterflyImage: {
     width: 36,
     height: 36,
     borderRadius: 18,
     resizeMode: 'cover',
+    marginRight: theme.spacing.xs,
   },
   container: {
-    backgroundColor: theme.colors.background,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.l,
+    marginTop: theme.spacing.xs,
+    paddingBottom: theme.spacing.s,
+    paddingHorizontal: theme.spacing.m,
+    backgroundColor: theme.colors.white,
   },
   tabContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
+    marginTop: theme.spacing.xs,
     justifyContent: 'center',
   },
-  createPostButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  rightButton: {
+    width: 24,
+    height: 24,
     resizeMode: 'contain',
-    backgroundColor: theme.colors.butterOrange01,
     alignItems: 'center',
     justifyContent: 'center',
+    marginLeft: theme.spacing.xs,
   },
   icon: {
-    width: 26,
-    height: 26,
+    width: 36,
+    height: 36,
     resizeMode: 'contain',
   },
 }));

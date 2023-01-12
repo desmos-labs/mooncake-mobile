@@ -180,10 +180,15 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
           mode="contained"
           color="red"
           onPress={() =>
-            navigate(ROUTES.HOME_TABS, {
-              screen: ROUTES.HOME_DISCOVER,
+            navigate(ROUTES.BOTTOM_TABS, {
+              screen: ROUTES.HOME_TABS,
               params: {
-                type: 'discover',
+                HOME_DISCOVER: {
+                  type: 'discover',
+                },
+                HOME_FOLLOWING: {
+                  type: 'following',
+                },
               },
             })
           }>

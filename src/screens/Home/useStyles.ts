@@ -1,52 +1,38 @@
 import {makeStyle} from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  container: {
+  homeView: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingVertical: theme.spacing.l,
+    backgroundColor: theme.colors.white,
+    paddingTop: theme.spacing.m,
+    zIndex: 1,
   },
-  headerGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.l,
-  },
-  postContainer: {},
-  tabContainer: {
+  flatlist: {
     flex: 1,
-    paddingHorizontal: 16,
+  },
+  flatlistInner: {
+    flexGrow: 1,
+  },
+  absoluteView: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
-  },
-  interactionButtonGroup: {
-    justifyContent: 'space-evenly',
-    flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 24,
+    padding: theme.spacing.m,
+    backgroundColor: theme.colors.white,
+    zIndex: 2,
   },
-  carousel: {
-    alignItems: 'center',
-  },
-  profileButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    resizeMode: 'cover',
-  },
-  createPostButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    resizeMode: 'contain',
-    backgroundColor: theme.colors.butterOrange01,
+  loadingView: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: theme.colors.white,
   },
-  icon: {
-    width: 26,
-    height: 26,
-    resizeMode: 'contain',
-  },
+  searchView: {flex: 1, zIndex: 2},
 }));
 
 export default useStyles;

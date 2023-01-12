@@ -1,17 +1,16 @@
-import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import ROUTES from 'navigation/routes';
-import {StatusBar} from 'react-native';
-import Home, {HomeParams} from 'screens/Home';
-import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useTheme} from 'react-native-paper';
-import LoadingOverlay from 'components/LoadingOverlay';
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import useActiveAccount from 'hooks/useActiveAccount';
-import ThemedLottieView from 'components/ThemedLottieView';
 import {broadcastAnim} from 'assets/animations';
+import ThemedLottieView from 'components/ThemedLottieView';
+import useActiveAccount from 'hooks/useActiveAccount';
 import useRefreshSession from 'hooks/useRefreshSession';
+import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {StatusBar, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import Home, {HomeParams} from 'screens/Home';
 
 export type HomeTabsParamList = {
   [ROUTES.HOME_DISCOVER]: HomeParams;
@@ -23,11 +22,9 @@ const Tab = createMaterialTopTabNavigator<HomeTabsParamList>();
 
 const HomeTabs = () => {
   const theme = useTheme();
-  const [loading, setLoading] = React.useState(false);
   const {top} = useSafeAreaInsets();
   const {refreshSession} = useRefreshSession();
-
-  const {profileData} = useActiveAccount();
+  const {profileData, refetch: fetchProfileData} = useActiveAccount();
 
   const [screenReady, setScreenReady] = React.useState(false);
 
@@ -37,14 +34,14 @@ const HomeTabs = () => {
 
   // Refresh the token if we have one, otherwise have the user relog
   React.useEffect(() => {
+    fetchProfileData();
+
     refreshSession();
   }, []);
 
   const renderTabBar = React.useCallback(
-    (props: MaterialTopTabBarProps) => (
-      <HomeTabBar {...props} setLoading={setLoading} />
-    ),
-    [loading],
+    (props: MaterialTopTabBarProps) => <HomeTabBar {...props} />,
+    [],
   );
 
   if (!screenReady) {
@@ -57,13 +54,12 @@ const HomeTabs = () => {
   }
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
-        backgroundColor: theme.colors.background,
+        backgroundColor: theme.colors.white,
         paddingTop: Math.max(24, top),
-      }}
-      edges={['bottom']}>
+      }}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -86,8 +82,7 @@ const HomeTabs = () => {
           component={Home}
         />
       </Tab.Navigator>
-      <LoadingOverlay isVisible={loading} />
-    </SafeAreaView>
+    </View>
   );
 };
 

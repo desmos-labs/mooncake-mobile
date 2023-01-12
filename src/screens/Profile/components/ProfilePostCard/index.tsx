@@ -23,7 +23,10 @@ const ProfilePostCard = ({
 
   const {attachments} = postData;
 
-  const {MediaAttachment} = useRenderMediaAttachment({attachments});
+  const {MediaAttachment} = useRenderMediaAttachment({
+    attachments,
+    resizeMode: 'cover',
+  });
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>

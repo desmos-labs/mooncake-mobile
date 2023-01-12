@@ -2,13 +2,13 @@ import {ApolloProvider} from '@apollo/client';
 import {NavigationContainer} from '@react-navigation/native';
 import CustomToast from 'components/CustomToast';
 import LightTheme from 'config/theme/LightTheme';
+import ToastConfig from 'config/ToastConfig';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ToastProvider} from 'react-native-toast-notifications';
 import {RecoilRoot} from 'recoil';
-import ToastConfig from 'config/ToastConfig';
 import client from 'services/graphql/client';
 
 const App = () => {

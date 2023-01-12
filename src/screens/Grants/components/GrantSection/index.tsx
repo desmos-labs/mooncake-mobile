@@ -41,13 +41,11 @@ const Section: React.FC<Props> = props => {
       outerShadowProps={{
         startColor: 'rgba(37, 87, 188, 0.07)',
         offset: [10, 20],
-        radius: 40,
         distance: 40,
       }}
       innerShadowProps={{
         startColor: 'rgba(16, 24, 40, 0.05)',
         offset: [0, 1],
-        radius: 12,
         distance: 8,
       }}>
       <TouchableOpacity style={styles.container} onPress={onPress}>

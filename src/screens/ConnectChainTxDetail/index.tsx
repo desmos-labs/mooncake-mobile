@@ -128,7 +128,9 @@ const ConnectChainTxDetail = () => {
             chain: selectedChain.name.toUpperCase(),
           }),
           onPressPrimary: () => {
-            navigate(ROUTES.USER_PROFILE);
+            navigate(ROUTES.BOTTOM_TABS, {
+              screen: ROUTES.USER_PROFILE,
+            });
           },
           primaryButtonLabel: t('resultModal:goToProfile') as string,
         });

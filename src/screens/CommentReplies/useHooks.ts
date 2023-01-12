@@ -1,6 +1,5 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import activeProfileState from '@recoil/activeProfileState';
 import {
   pendingCommentsByPost,
   PendingPostEnum,
@@ -8,16 +7,13 @@ import {
 } from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
 import EnvConfig from 'config/EnvConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useRef} from 'react';
 import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
-import {
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
+import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
@@ -36,11 +32,11 @@ const useHooks = ({
   subspaceID: number;
   commentID: number;
 }) => {
-  const [profile] = useRecoilState(activeProfileState);
+  const {activeAddress} = useActiveAccount();
   const {createPost, loading} = useCreatePost();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
-
+  const {handleNavigateToProfile} = useNavigateToProfile();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
 
   const scrollViewRef = useRef<FlatList>(null);
@@ -75,7 +71,7 @@ const useHooks = ({
     variables: {
       postID: commentID,
       subspaceID,
-      user: profile?.address,
+      user: activeAddress,
       reaction: {
         '@type': '/desmos.reactions.v1.RegisteredReactionValue',
         registered_reaction_id: 9,
@@ -93,7 +89,7 @@ const useHooks = ({
     variables: {
       postID: commentID,
       subspaceID,
-      user: profile?.address,
+      user: activeAddress,
       reaction: {
         '@type': '/desmos.reactions.v1.RegisteredReactionValue',
         registered_reaction_id: 9,
@@ -215,11 +211,6 @@ const useHooks = ({
     navigate(ROUTES.REPORT_POST, {
       postId,
       subspaceId,
-    });
-
-  const handleNavigateToProfile = (address: string) =>
-    navigate(ROUTES.USER_PROFILE, {
-      visitingProfileAddress: address,
     });
 
   const handleCommentReply = () =>

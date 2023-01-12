@@ -1,5 +1,10 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {
+  CompositeScreenProps,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   ExternalAccount,
@@ -17,6 +22,7 @@ import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useGenerateProof from 'hooks/useGenerateProof';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -25,9 +31,9 @@ import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import useStyles from '../useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CONNECT_ADDRESS_GENERAL
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_ADDRESS_GENERAL>,
+  BottomTabScreenProps<BottomTabsParamList>
 >;
 
 export type ConnectAddressGeneralParams = {
@@ -107,13 +113,14 @@ const ConnectAddressGeneral = () => {
       const handlePress = async () => {
         if (nextRouteOverride) {
           if (loadedProfileMap?.has(item.address)) {
-            return navigation.navigate(ROUTES.USER_PROFILE, {
-              visitingProfileAddress: item.address,
+            return navigation.navigate(ROUTES.BOTTOM_TABS, {
+              screen: ROUTES.USER_PROFILE,
             });
           }
 
-          // TODO: refactor
+          // TODO: refactor and fix
           setSelectedExternalAccount(item);
+          // @ts-ignore
           return navigation.navigate(nextRouteOverride);
         }
 

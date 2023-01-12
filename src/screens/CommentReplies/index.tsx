@@ -1,4 +1,9 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {
+  CompositeScreenProps,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
 import {isFollowingAddr} from '@recoil/following';
@@ -10,6 +15,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -30,9 +36,9 @@ import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcas
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.COMMENT_REPLIES
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.COMMENT_REPLIES>,
+  BottomTabScreenProps<BottomTabsParamList>
 >;
 
 export type CommentRepliesParams = {

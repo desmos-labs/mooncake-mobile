@@ -22,6 +22,7 @@ type Props = {
    * Override image style
    */
   style?: React.ComponentProps<typeof FastImage>['style'];
+  tintColor?: string;
 };
 
 const ProfileHeaderButton = ({
@@ -29,10 +30,16 @@ const ProfileHeaderButton = ({
   onPress,
   style,
   containerStyle,
+  tintColor,
 }: Props) => {
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
-      <FastImage source={imageSrc} style={style || styles.defaultStyle} />
+      <FastImage
+        resizeMode="cover"
+        source={imageSrc}
+        style={style || styles.defaultStyle}
+        tintColor={tintColor}
+      />
     </TouchableOpacity>
   );
 };
