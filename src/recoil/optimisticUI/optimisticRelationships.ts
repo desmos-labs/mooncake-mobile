@@ -7,6 +7,7 @@ import {
 } from 'recoil';
 import {followedAddressesState} from '@recoil/following';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import activeAddressState from '@recoil/activeAddressState';
 
 type RelationshipType = 'follow' | 'unfollow';
 
@@ -44,14 +45,30 @@ export const optimisticToUnfollow = selector<OptimisticRelationship[]>({
   },
 });
 
-export const optimisticRelationshipModifier = selector<number>({
+export const optimisticRelationshipModifier = selectorFamily<number, string>({
   key: 'optimisticRelationshipModifier',
-  get: ({get}) => {
-    const optFollow = get(optimisticToFollow);
-    const optUnFollow = get(optimisticToUnfollow);
+  get:
+    (address: string) =>
+    ({get}) => {
+      const optFollow = get(optimisticToFollow);
+      const optUnFollow = get(optimisticToUnfollow);
 
-    return optFollow.length - optUnFollow.length;
-  },
+      const activeAddress = get(activeAddressState);
+
+      if (activeAddress === address) {
+        return optFollow.length - optUnFollow.length;
+      }
+
+      const numOptFollowForAddress = optFollow.filter(
+        x => x.counterParty === address,
+      ).length;
+
+      const numOptUnFollowForAddress = optUnFollow.filter(
+        x => x.counterParty === address,
+      ).length;
+
+      return numOptFollowForAddress - numOptUnFollowForAddress;
+    },
 });
 
 export const hasOptimisticFollow = selectorFamily<boolean, string>({

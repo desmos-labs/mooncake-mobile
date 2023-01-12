@@ -8,6 +8,7 @@ import client from 'services/graphql/client';
 import GetNumRelationshipsForAddress from 'services/graphql/queries/GetNumRelationshipsForAddress';
 import _ from 'lodash';
 import {optimisticRelationshipModifier} from '@recoil/optimisticUI/optimisticRelationships';
+import activeAddressState from '@recoil/activeAddressState';
 
 type NumRelationshipType = {
   numFollowing: number;
@@ -34,15 +35,27 @@ const numRelationshipState = selectorFamily<
         fetchPolicy: 'no-cache',
       });
 
-      const optRelationshipMod = get(optimisticRelationshipModifier);
+      const activeAddress = get(activeAddressState);
+      const optRelationshipMod = get(optimisticRelationshipModifier(address));
+
+      console.log('relationship mod', optRelationshipMod);
 
       if (data) {
         const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
         const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
 
+        // Locally modify the active user's number of FOLLOWING (i.e the number of users they are currently following)
+        if (activeAddress === address) {
+          return {
+            numFollowers,
+            numFollowing: numFollowing + optRelationshipMod,
+          };
+        }
+
+        // Locally modify the guest profile's number of FOLLOWERS
         return {
-          numFollowers,
-          numFollowing: numFollowing + optRelationshipMod,
+          numFollowers: numFollowers + optRelationshipMod,
+          numFollowing,
         };
       }
       return undefined;

@@ -1,5 +1,9 @@
 import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import {defaultBanner, profileBack} from 'assets/images';
@@ -82,6 +86,17 @@ const GuestProfile = () => {
     numRelationshipsLoading,
     refreshNumRelationships,
   } = useGuestProfileDataQueries(params?.address!);
+
+  // refresh number of followers on screen focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const task = InteractionManager.runAfterInteractions(() => {
+        // Only refresh following list on focus
+        refreshNumRelationships();
+      });
+      return () => task.cancel();
+    }, [refreshNumRelationships]),
+  );
 
   const {
     posts,
