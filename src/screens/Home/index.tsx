@@ -240,6 +240,7 @@ const Home = () => {
           ListFooterComponent={footerComponent}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={fetchMorePosts}
+          onEndReachedThreshold={0.5}
         />
       </View>
       {SearchView}
