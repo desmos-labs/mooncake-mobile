@@ -6,7 +6,6 @@ import {
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
-import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
@@ -21,7 +20,7 @@ import {GetCommentReplies} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
-import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
+import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToCommentReplies';
 
 const useHooks = ({
   postID,
@@ -83,8 +82,6 @@ const useHooks = ({
     data: commentReplies,
     loading: commentsLoading,
     refetch: commentsRefetch,
-    startPolling,
-    stopPolling,
   } = useQuery(GetCommentReplies, {
     variables: {
       postID: commentID,
@@ -95,7 +92,6 @@ const useHooks = ({
         registered_reaction_id: 9,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -118,11 +114,10 @@ const useHooks = ({
       postID: commentID,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
   });
 
-  useSubscribeToPostComments({
-    postID: commentID,
+  useSubscribeToCommentReplies({
+    commentID,
     updateAction: commentsRefetch,
   });
 
@@ -166,18 +161,6 @@ const useHooks = ({
       prev.filter(x => !txHashesToRemove.includes(x.txHash)),
     );
   }, [commentReplies]);
-
-  /**
-   * Start/stop polling comments if there is a pending comment for the parent post.
-   */
-  React.useEffect(() => {
-    if (pendingCommentsOfPost.length > 0) {
-      startPolling(EnvConfig.POLLING_INTERVAL);
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd();
-      }, 500);
-    } else stopPolling();
-  }, [scrollViewRef, pendingCommentsOfPost]);
 
   const comments = useMemo(() => {
     if (!commentReplies) return [];

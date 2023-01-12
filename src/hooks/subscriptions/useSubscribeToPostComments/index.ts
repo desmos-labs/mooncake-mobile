@@ -23,10 +23,10 @@ const useSubscribeToPostComments = ({postID, updateAction}: Props) => {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       postID,
     },
-    fetchPolicy: 'no-cache',
   });
 
   useEffect(() => {
+    console.log('hello world', data);
     if (!data) return;
 
     const {

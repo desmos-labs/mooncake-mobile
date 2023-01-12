@@ -6,7 +6,6 @@ import {
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
-import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
@@ -57,15 +56,12 @@ const useHooks = ({
         registered_reaction_id: 9,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
     data: postComments,
     loading: commentsLoading,
     refetch: commentsRefetch,
-    startPolling,
-    stopPolling,
   } = useQuery(GetPostComments, {
     variables: {
       postID,
@@ -121,18 +117,6 @@ const useHooks = ({
       prev.filter(x => !txHashesToRemove.includes(x.txHash)),
     );
   }, [postComments]);
-
-  /**
-   * Start/stop polling comments if there is a pending comment for the parent post.
-   */
-  React.useEffect(() => {
-    if (pendingCommentsOfPost.length > 0) {
-      startPolling(EnvConfig.POLLING_INTERVAL);
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd();
-      }, 500);
-    } else stopPolling();
-  }, [scrollViewRef, pendingCommentsOfPost]);
 
   const comments = useMemo(() => {
     if (!postComments) return [];

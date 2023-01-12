@@ -4,7 +4,11 @@ import {gql} from '@apollo/client';
  * Subscribe to the number of replies of a given comment
  */
 const PostCommentsAggregateSubscription = gql`
-  post_aggregate(
+  subscription PostCommentsAggregateSubscription(
+    $commentID: bigint
+    $subspaceID: bigint
+  ) @api(name: butter) {
+    post_aggregate(
       where: {
         subspace_id: {_eq: $subspaceID}
         references: {
@@ -13,8 +17,9 @@ const PostCommentsAggregateSubscription = gql`
         }
       }
     ) {
-    aggregate {
-      count
+      aggregate {
+        count
+      }
     }
   }
 `;
