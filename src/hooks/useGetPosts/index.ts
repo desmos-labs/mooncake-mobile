@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetPosts from 'services/graphql/queries/GetPosts';
@@ -17,9 +17,10 @@ const POSTS_PER_FETCH = 10;
 // Get posts up to a given timestamp
 const useGetPosts = ({type}: {type: POST_TYPE}) => {
   const {posts, setPosts} = usePostsFamily(type);
-
   const {activeAddress} = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [refetching, setRefetching] = useState(false);
 
   const queryVars = React.useMemo(() => {
     if (type === POST_TYPE.DISCOVER) {
@@ -58,9 +59,10 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     variables: queryVars.variables,
   });
 
-  const fetchMorePosts = React.useCallback(() => {
-    if (loading) return;
-    fetchMore({
+  const fetchMorePosts = React.useCallback(async () => {
+    setFetchingMore(true);
+    console.log('fetching more');
+    await fetchMore({
       variables: {
         offset: posts.length,
       },
@@ -74,8 +76,17 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
           post: [...prev.post, ...fetchMoreResult.post],
         };
       },
-    });
-  }, [posts.length, loading]);
+    }).finally(() => setTimeout(() => setFetchingMore(false), 500));
+  }, [posts.length, loading, fetchMore]);
+
+  // Reset the fetch offset to restart post fetching
+  const fetchNewestPosts = React.useCallback(async () => {
+    setRefetching(true);
+    await refetch({
+      ...queryVars.variables,
+      offset: 0,
+    }).finally(() => setTimeout(() => setRefetching(false), 500));
+  }, [loading, JSON.stringify(queryVars), refetch]);
 
   React.useEffect(() => {
     if (data) {
@@ -83,14 +94,6 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       setPosts(() => _.uniqBy([...post], 'id'));
     }
   }, [JSON.stringify(data)]);
-
-  // Reset the fetch offset to restart post fetching
-  const fetchNewestPosts = React.useCallback(() => {
-    refetch({
-      ...queryVars.variables,
-      offset: 0,
-    });
-  }, [loading, JSON.stringify(queryVars)]);
 
   React.useEffect(() => {
     if (type === POST_TYPE.FOLLOWING) {
@@ -103,6 +106,8 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     fetchMorePosts,
     fetchNewestPosts,
     loading,
+    fetchingMore,
+    refetching,
   };
 };
 
