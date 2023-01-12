@@ -28,9 +28,9 @@ export const broadcastAnim: LottieAnimation = {
   dark: require('./animations/broadcastTx.json'),
 };
 
-export const loadingWhite: LottieAnimation = {
-  light: require('./animations/loading_white.json'),
-  dark: require('./animations/loading_white.json')
+export const loadingYellow: LottieAnimation = {
+  light: require('./animations/loading_yellow.json'),
+  dark: require('./animations/loading_yellow.json')
 }
 
 export const loadingOrange: LottieAnimation = {
