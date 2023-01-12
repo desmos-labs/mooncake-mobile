@@ -3,8 +3,8 @@ import {gql} from '@apollo/client';
 /**
  * Subscribe to the number of replies of a given comment
  */
-const PostCommentsAggregateSubscription = gql`
-  subscription PostCommentsAggregateSubscription(
+const CommentRepliesAggregateSubscriptions = gql`
+  subscription CommentRepliesAggregateSubscriptions(
     $commentID: bigint
     $subspaceID: bigint
   ) @api(name: butter) {
@@ -24,4 +24,4 @@ const PostCommentsAggregateSubscription = gql`
   }
 `;
 
-export default PostCommentsAggregateSubscription;
+export default CommentRepliesAggregateSubscriptions;
