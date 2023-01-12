@@ -31,7 +31,6 @@ export const useGetLatestPostsByActiveAddress = () => {
         registered_reaction_id: 9,
       },
     },
-    notifyOnNetworkStatusChange: true,
   });
 
   const getLatestPostsByActiveAddress = useCallback(async () => {

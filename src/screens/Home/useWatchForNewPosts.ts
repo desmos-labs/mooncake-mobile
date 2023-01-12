@@ -61,9 +61,8 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
       if (numPosts && numPosts !== storedPostAggregate.current) {
         if (storedPostAggregate.current !== 0) {
+          setHasNewDiscoverPosts(true);
         }
-
-        setHasNewDiscoverPosts(true);
 
         storedPostAggregate.current = numPosts;
       }
@@ -77,9 +76,8 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
 
       if (numPosts && numPosts !== storedPostAggregateFollowing.current) {
         if (storedPostAggregateFollowing.current !== 0) {
+          setHasNewFollowingPosts(true);
         }
-
-        setHasNewFollowingPosts(true);
 
         storedPostAggregateFollowing.current = numPosts;
       }
