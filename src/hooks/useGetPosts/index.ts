@@ -61,7 +61,6 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
 
   const fetchMorePosts = React.useCallback(async () => {
     setFetchingMore(true);
-    console.log('fetching more');
     await fetchMore({
       variables: {
         offset: posts.length,
@@ -77,7 +76,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         };
       },
     }).finally(() => setTimeout(() => setFetchingMore(false), 500));
-  }, [posts.length, loading, fetchMore]);
+  }, [posts.length, fetchMore]);
 
   // Reset the fetch offset to restart post fetching
   const fetchNewestPosts = React.useCallback(async () => {

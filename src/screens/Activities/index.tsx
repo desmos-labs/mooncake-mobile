@@ -3,7 +3,6 @@ import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
-import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
@@ -68,28 +67,32 @@ const Activities = () => {
   const {
     data,
     notificationsData,
-    globalLoading,
+    fetchMore,
+    refetch,
+    refetching,
     notificationsLoading,
-    notificationsRefetch,
-    notificationsFetchMore,
   } = useHooks();
 
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
-    return globalLoading ? null : (
-      <View style={styles.emptyView}>
-        <Image
-          source={errorImage}
-          style={{
-            width: 139,
-            height: 163.55,
-            resizeMode: 'cover',
-          }}
-        />
-        <Typography.Body5>{t('no activities')}</Typography.Body5>
-      </View>
-    );
-  }, [t, globalLoading]);
+    if (!data && !notificationsLoading) {
+      return (
+        <View style={styles.emptyView}>
+          <Image
+            source={errorImage}
+            style={{
+              width: 139,
+              height: 163.55,
+              resizeMode: 'cover',
+            }}
+          />
+          <Typography.Body5>{t('no activities')}</Typography.Body5>
+        </View>
+      );
+    }
+
+    return null;
+  }, [t, notificationsLoading]);
 
   const renderNotification = React.useCallback(
     ({item}: ListRenderItemInfo<CompleteNotification>) => {
@@ -106,62 +109,40 @@ const Activities = () => {
     [],
   );
 
-  const footerComponent = () => {
-    return <NotificationContentLoader />;
-  };
+  if (!data || notificationsLoading || !notificationsData) {
+    return (
+      <View style={styles.flexCenter}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <DView
       edges={['top', 'left', 'right']}
+      scrollable={false}
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      {data?.notification?.length >= 0 && !globalLoading ? (
-        <>
-          <Typography.H3>{t('activities')}</Typography.H3>
-          <SectionList
-            keyExtractor={(item, index) => item.timestamp + index}
-            refreshing={notificationsLoading}
-            onRefresh={notificationsRefetch}
-            style={{flex: 1}}
-            contentContainerStyle={{flexGrow: 1}}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={EmptyActivities}
-            sections={notificationsData}
-            renderItem={renderNotification}
-            ListFooterComponent={footerComponent}
-            initialNumToRender={8}
-            onEndReached={() => {
-              notificationsFetchMore({
-                variables: {
-                  offset: data.notification.length,
-                },
-                updateQuery: (prev, {fetchMoreResult}) => {
-                  if (!fetchMoreResult) {
-                    return prev;
-                  }
-                  return {
-                    ...prev,
-                    notification: [
-                      ...prev.notification,
-                      ...fetchMoreResult.notification,
-                    ],
-                  };
-                },
-              });
-            }}
-            renderSectionHeader={({section: {section}}) => (
-              <View style={styles.sectionHeader}>
-                <Typography.Button2>{section}</Typography.Button2>
-              </View>
-            )}
-          />
-        </>
-      ) : (
-        <View style={styles.flexCenter}>
-          <ActivityIndicator />
-        </View>
-      )}
+      <Typography.H3>{t('activities')}</Typography.H3>
+      <SectionList
+        keyExtractor={(item, index) => item.timestamp + index}
+        refreshing={refetching}
+        onRefresh={refetch}
+        style={{flex: 1}}
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={EmptyActivities}
+        sections={notificationsData}
+        renderItem={renderNotification}
+        onEndReachedThreshold={0.5}
+        onEndReached={({distanceFromEnd}) => fetchMore(distanceFromEnd)}
+        renderSectionHeader={({section: {section}}) => (
+          <View style={styles.sectionHeader}>
+            <Typography.Button2>{section}</Typography.Button2>
+          </View>
+        )}
+      />
     </DView>
   );
 };

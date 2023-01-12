@@ -17,6 +17,8 @@ const useHooks = () => {
   const [notificationsDetailsLoading, setNotificationsDetailsLoading] =
     useState(true);
   const {t} = useTranslation('activities');
+  const [refetching, setRefetching] = useState(false);
+  const [fetchingMore, setFetchingMore] = useState(false);
   const {
     data,
     loading: notificationsLoading,
@@ -24,7 +26,7 @@ const useHooks = () => {
     fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
     variables: {
-      limit: 7,
+      limit: 10,
       offset: 0,
     },
   });
@@ -84,6 +86,44 @@ const useHooks = () => {
     }
   }, [data]);
 
+  const refetch = useCallback(async () => {
+    setRefetching(true);
+    await Promise.allSettled([
+      notificationsRefetch(),
+      fetchNotificationDetails(),
+    ]).finally(() => setTimeout(() => setRefetching(false), 500));
+  }, [
+    data?.notification?.length,
+    notificationsRefetch,
+    fetchNotificationDetails,
+  ]);
+
+  const fetchMore = useCallback(
+    async (distanceFromEnd: number) => {
+      if (distanceFromEnd < 0) return;
+      console.log('fetch more', distanceFromEnd);
+      setFetchingMore(true);
+      await notificationsFetchMore({
+        variables: {
+          offset: data.notification.length,
+        },
+        updateQuery: (prev, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return prev;
+          }
+          return {
+            ...prev,
+            notification: [
+              ...prev.notification,
+              ...fetchMoreResult.notification,
+            ],
+          };
+        },
+      }).finally(() => setTimeout(() => setFetchingMore(false), 1000));
+    },
+    [data?.notification?.length, notificationsFetchMore],
+  );
+
   useEffect(() => {
     fetchNotificationDetails();
   }, [fetchNotificationDetails]);
@@ -137,15 +177,17 @@ const useHooks = () => {
       }
     }, [notificationsWithProfile, t]);
 
-  const globalLoading = notificationsLoading || notificationsDetailsLoading;
-
   return {
     data,
     notificationsData,
-    globalLoading,
     notificationsLoading,
     notificationsRefetch,
     notificationsFetchMore,
+    notificationsDetailsLoading,
+    refetch,
+    refetching,
+    fetchMore,
+    fetchingMore,
   };
 };
 
