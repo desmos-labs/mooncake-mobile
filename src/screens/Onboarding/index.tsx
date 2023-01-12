@@ -10,7 +10,6 @@ import {
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -117,23 +116,16 @@ const Onboarding = () => {
 
   const renderItem = useCallback((item: OnboardingData) => {
     return (
-      <View
-        key={item.title}
-        style={{
-          width: '100%',
-          height: '100%',
-          alignItems: 'center',
-          paddingHorizontal: theme.spacing.m,
-        }}>
+      <View key={item.title} style={styles.itemView}>
         <Spacer paddingTop={50} paddingBottom={30}>
           <FastImage
             source={item.imageSrc}
-            style={{height: 374, width: 374}}
+            style={styles.image}
             resizeMode="cover"
           />
         </Spacer>
         <Typography.H3>{item.title}</Typography.H3>
-        <Spacer paddingVertical={theme.spacing.m} />
+        <Spacer paddingVertical={theme.spacing.s} />
         <Typography.Body6 style={{textAlign: 'center'}}>
           {item.subtitle}
         </Typography.Body6>
@@ -145,25 +137,6 @@ const Onboarding = () => {
     <DView
       disableHideKeyboardTouchable={true}
       style={styles.root}
-      topBar={
-        <TopBar
-          style={{zIndex: 2}}
-          noBackButton={true}
-          rightElement={
-            <Button
-              onPress={() => navigateToCorrectScreen()}
-              mode="text"
-              style={{
-                right: 0,
-                marginLeft: 'auto',
-                marginVertical: theme.spacing.s,
-              }}
-              color={theme.colors.surfaceBlack}>
-              <Typography.Button2>{t('skip')}</Typography.Button2>
-            </Button>
-          }
-        />
-      }
       backgroundFillScreen={true}
       backgroundImage={bgonboarding}
       backgroundColor={theme.colors.background}>
@@ -189,28 +162,20 @@ const Onboarding = () => {
           </Button>
         </View>
       ) : (
-        <View
-          style={{
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}>
+        <View style={styles.dotView}>
           <ScalingDot
             activeDotColor={theme.colors.butterOrange01}
             inActiveDotColor={theme.colors.lightGrey01}
             activeDotScale={1.2}
             inActiveDotOpacity={1}
-            dotStyle={{
-              width: 8,
-              height: 8,
-              marginHorizontal: 6,
-            }}
+            dotStyle={styles.dotStyle}
             data={data}
             // @ts-ignore
             scrollX={scrollX}
           />
         </View>
       )}
-      <Spacer paddingTop={20} />
+      <Spacer paddingTop={40} />
     </DView>
   );
 };
