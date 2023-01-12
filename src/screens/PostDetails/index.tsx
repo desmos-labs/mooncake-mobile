@@ -364,7 +364,7 @@ const PostDetails = () => {
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={postLoading}
-        onRefresh={() => pageRefetch()}
+        onRefresh={pageRefetch}
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}

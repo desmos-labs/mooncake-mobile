@@ -10,7 +10,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
 import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
@@ -170,14 +170,14 @@ const useHooks = ({
     ];
   }, [commentReplies, pendingCommentsOfPost]);
 
-  const pageRefetch = async () => {
+  const pageRefetch = useCallback(async () => {
     await Promise.all([
       mainCommentRefetch,
       commentsRefetch,
       reactionsRefetch,
       tipsRefetch,
     ]);
-  };
+  }, [mainCommentRefetch, commentsRefetch, reactionsRefetch, tipsRefetch]);
 
   const handlePressCounters = () =>
     navigate(ROUTES.POST_INTERACTION, {

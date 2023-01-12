@@ -11,7 +11,7 @@ import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList} from 'react-native';
 import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
@@ -127,14 +127,14 @@ const useHooks = ({
     ];
   }, [pendingCommentsOfPost, postComments]);
 
-  const pageRefetch = async () => {
+  const pageRefetch = useCallback(async () => {
     await Promise.all([
       postRefetch,
       commentsRefetch,
       reactionsRefetch,
       tipsRefetch,
     ]);
-  };
+  }, [postRefetch, commentsRefetch, reactionsRefetch, tipsRefetch]);
 
   const post = React.useMemo(() => {
     if (!originalPost) return {};
