@@ -13,7 +13,7 @@ import {WebSocketLink} from '@apollo/client/link/ws';
 
 const multiApiLink = ApolloLink.from([
   new MultiAPILink({
-    endpoints: EnvConfig.GQL_ENDPOINT,
+    endpoints: EnvConfig.GQL_ENDPOINT as any,
     httpSuffix: '/v1/graphql',
     wsSuffix: '/v1/graphql',
     createHttpLink,
@@ -34,6 +34,9 @@ const cache = new InMemoryCache({
         // @ts-ignore
         return `post_attachment:${object.content.uri}`;
 
+      case 'user_relationship':
+        // @ts-ignore
+        return `user_relationship:${object.content.counterparty_address}`;
       default:
         return defaultDataIdFromObject(object);
     }

@@ -10,7 +10,6 @@ const useSubscribeToUserFollowingChanges = () => {
   const {activeAddress} = useActiveAccount();
   const {updateFollowing} = useGetFollowingForAddress(activeAddress!);
   const {data} = useSubscription(SubUserRelationshipCounterPartyAddr, {
-    fetchPolicy: 'no-cache',
     variables: {
       address: activeAddress,
     },
@@ -35,6 +34,7 @@ const useSubscribeToUserFollowingChanges = () => {
       followingCount &&
       JSON.stringify(counterPartyArr) !== storedFollowing.current
     ) {
+      console.log('following changed');
       updateFollowing().then(() => {
         // update existing counter, make API call to update user's following list
         storedFollowing.current = JSON.stringify(counterPartyArr);
