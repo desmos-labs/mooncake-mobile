@@ -4,7 +4,7 @@ import {gql} from '@apollo/client';
  * Subscribe to the number of comments of a given postID
  */
 const PostCommentsAggregateSubscription = gql`
-  subscription UserPostAggregateSubscription(
+  subscription PostCommentsAggregateSubscription(
     $subspaceID: bigint!
     $postID: bigint!
   ) @api(name: butter) {
