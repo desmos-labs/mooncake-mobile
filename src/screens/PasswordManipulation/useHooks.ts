@@ -137,7 +137,7 @@ const useHooks = () => {
         setLoading(true);
         // perhaps move this into global config
         const ACCOUNT_SEARCH_LIMIT = 2;
-        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+        const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC!);
 
         const {confirmPassword} = formValues;
 
@@ -165,7 +165,6 @@ const useHooks = () => {
               },
               signAlgorithm: 'secp256k1',
             };
-
             return {
               wallet: wallet.serialize(),
               account: await client.getAccount(wallet.bech32Address),
