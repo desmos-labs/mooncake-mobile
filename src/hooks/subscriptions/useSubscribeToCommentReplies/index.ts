@@ -1,7 +1,9 @@
 import {useSubscription} from '@apollo/client';
 import EnvConfig from 'config/EnvConfig';
-import {useEffect, useRef} from 'react';
+import {useCallback, useRef} from 'react';
 import CommentRepliesAggregateSubscription from 'services/graphql/subscriptions/CommentRepliesAggregateSubscription';
+import {OnDataOptions} from '@apollo/client/react/types/types';
+import _ from 'lodash';
 
 type Props = {
   /**
@@ -18,27 +20,28 @@ type Props = {
 const useSubscribeToCommentReplies = ({commentID, updateAction}: Props) => {
   const savedCount = useRef<number>(0);
 
-  const {data} = useSubscription(CommentRepliesAggregateSubscription, {
+  const onData = useCallback(
+    (options: OnDataOptions) => {
+      const count = _.get(
+        options,
+        'data.data.post_aggregate.aggregate.count',
+        0,
+      );
+      if (savedCount && savedCount.current !== count) {
+        savedCount.current = count;
+        updateAction();
+      }
+    },
+    [savedCount.current, updateAction],
+  );
+
+  useSubscription(CommentRepliesAggregateSubscription, {
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       commentID,
     },
+    onData,
   });
-
-  useEffect(() => {
-    if (!data) return;
-
-    const {
-      post_aggregate: {
-        aggregate: {count},
-      },
-    } = data;
-
-    if (savedCount.current !== count) {
-      savedCount.current = count;
-      updateAction();
-    }
-  }, [JSON.stringify(data), savedCount.current, updateAction]);
 };
 
 export default useSubscribeToCommentReplies;

@@ -16,6 +16,7 @@ import {NavProps} from 'screens/Home';
 import {useTranslation} from 'react-i18next';
 import appSettingsState from '@recoil/settings';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {OnDataOptions} from '@apollo/client/react/types/types';
 
 /**
  * Subscribe to new posts in discover and following tab and show a notification
@@ -47,64 +48,62 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
     return following.map(x => x.address);
   }, [JSON.stringify(following)]);
 
-  const {data: postAggregateData} = useSubscription(PostAggregateSubscription, {
+  const storedPostAggregate = useRef<number>(0);
+  const storedPostAggregateFollowing = useRef<number>(0);
+
+  const processData = useCallback((aggregateData: any) => {
+    return _.get(aggregateData, 'data.post_aggregate.aggregate.count');
+  }, []);
+
+  const onNewDiscoverData = useCallback(
+    (options: OnDataOptions) => {
+      const numPosts = processData(options.data);
+
+      if (numPosts && numPosts !== storedPostAggregate.current) {
+        if (storedPostAggregate.current !== 0) {
+        }
+
+        setHasNewDiscoverPosts(true);
+
+        storedPostAggregate.current = numPosts;
+      }
+    },
+    [storedPostAggregate.current],
+  );
+
+  const onNewFollowingData = useCallback(
+    (options: OnDataOptions) => {
+      const numPosts = processData(options.data);
+
+      if (numPosts && numPosts !== storedPostAggregateFollowing.current) {
+        if (storedPostAggregateFollowing.current !== 0) {
+        }
+
+        setHasNewFollowingPosts(true);
+
+        storedPostAggregateFollowing.current = numPosts;
+      }
+    },
+    [storedPostAggregateFollowing.current],
+  );
+
+  useSubscription(PostAggregateSubscription, {
     fetchPolicy: 'no-cache',
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       userAddress: activeAddress,
     },
+    onData: onNewDiscoverData,
   });
 
-  const {data: postAggregateFollowingData} = useSubscription(
-    PostAggregateSubscriptionFollowing,
-    {
-      fetchPolicy: 'no-cache',
-      variables: {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        followingAddrs,
-      },
+  useSubscription(PostAggregateSubscriptionFollowing, {
+    fetchPolicy: 'no-cache',
+    variables: {
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      followingAddrs,
     },
-  );
-
-  const storedPostAggregate = useRef<number>(0);
-  const storedPostAggregateFollowing = useRef<number>(0);
-
-  const processData = useCallback((aggregateData: any) => {
-    return _.get(aggregateData, 'post_aggregate.aggregate.count');
-  }, []);
-
-  /**
-   * Watch discover posts
-   */
-  useEffect(() => {
-    const numPosts = processData(postAggregateData);
-
-    if (numPosts && numPosts !== storedPostAggregate.current) {
-      if (storedPostAggregate.current !== 0) {
-        setHasNewDiscoverPosts(true);
-      }
-
-      storedPostAggregate.current = numPosts;
-    }
-  }, [JSON.stringify(postAggregateData), storedPostAggregate.current]);
-
-  /**
-   * Watch following posts
-   */
-  useEffect(() => {
-    const numPosts = processData(postAggregateFollowingData);
-
-    if (numPosts && numPosts !== storedPostAggregate.current) {
-      if (storedPostAggregateFollowing.current !== 0) {
-        setHasNewFollowingPosts(true);
-      }
-
-      storedPostAggregateFollowing.current = numPosts;
-    }
-  }, [
-    JSON.stringify(storedPostAggregateFollowing),
-    storedPostAggregateFollowing.current,
-  ]);
+    onData: onNewFollowingData,
+  });
 
   /**
    * Show notification if new posts from following are detected
