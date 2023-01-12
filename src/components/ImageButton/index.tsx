@@ -1,4 +1,5 @@
-import React, {ReactNode} from 'react';
+import {placeholderIcon} from 'assets/images';
+import React, {ReactNode, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -61,7 +62,7 @@ const ImageButton = ({
         left: hitSlopValue,
       }
     : undefined;
-
+  const [imageSource, setImageSource] = useState(image);
   return (
     <TouchableOpacity
       style={[{opacity: rest.disabled ? 0.3 : 1}, buttonStyle]}
@@ -70,8 +71,9 @@ const ImageButton = ({
       <FastImage
         resizeMode="cover"
         style={style}
-        source={image}
+        source={imageSource}
         tintColor={tintColor}
+        onError={() => setImageSource(placeholderIcon)}
       />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>

@@ -25,7 +25,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -61,7 +61,10 @@ const Operations = () => {
     refetching,
     fetchingMore,
   } = useHooks(params.address);
-
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(false);
   const titleMap: {[index: string]: string} = {
     [MsgCreatePostTypeUrl]: t('create comment post'),
     [MsgCreateRelationshipTypeUrl]: t('follow user'),
@@ -154,7 +157,15 @@ const Operations = () => {
           sections={operationsData}
           renderItem={renderTx}
           ListFooterComponent={footerComponent}
-          onEndReached={fetchMore}
+          onMomentumScrollBegin={() =>
+            setOnEndReachedCalledDuringMomentum(false)
+          }
+          onEndReached={({distanceFromEnd}) => {
+            if (!onEndReachedCalledDuringMomentum) {
+              fetchMore(distanceFromEnd);
+              setOnEndReachedCalledDuringMomentum(true);
+            }
+          }}
           onEndReachedThreshold={0.5}
           renderSectionHeader={({section: {section}}) => (
             <View style={styles.sectionHeader}>

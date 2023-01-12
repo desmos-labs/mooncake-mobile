@@ -44,28 +44,32 @@ const useHooks = (address: string) => {
     });
   }, [operationsDataRefetch]);
 
-  const fetchMore = useCallback(async () => {
-    setFetchingMore(true);
-    await operationsDataFetchMore({
-      variables: {
-        offset: pastActionsData?.messages_by_address.length,
-      },
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) {
-          return prev;
-        }
-        return {
-          ...prev,
-          messages_by_address: [
-            ...prev.messages_by_address,
-            ...fetchMoreResult.messages_by_address,
-          ],
-        };
-      },
-    }).finally(() => {
-      setTimeout(() => setFetchingMore(false), 1000);
-    });
-  }, [pastActionsData?.messages_by_address.length]);
+  const fetchMore = useCallback(
+    async (distanceFromEnd: number) => {
+      if (distanceFromEnd < 0) return;
+      setFetchingMore(true);
+      await operationsDataFetchMore({
+        variables: {
+          offset: pastActionsData?.messages_by_address.length,
+        },
+        updateQuery: (prev, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return prev;
+          }
+          return {
+            ...prev,
+            messages_by_address: [
+              ...prev.messages_by_address,
+              ...fetchMoreResult.messages_by_address,
+            ],
+          };
+        },
+      }).finally(() => {
+        setTimeout(() => setFetchingMore(false), 1000);
+      });
+    },
+    [pastActionsData?.messages_by_address.length],
+  );
 
   const convertedBalance = useMemo(() => {
     let balanceToReturn;

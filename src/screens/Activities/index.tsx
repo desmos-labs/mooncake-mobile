@@ -3,11 +3,12 @@ import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
+import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -70,8 +71,14 @@ const Activities = () => {
     fetchMore,
     refetch,
     refetching,
+    fetchingMore,
     notificationsLoading,
   } = useHooks();
+
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(false);
 
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
@@ -109,6 +116,14 @@ const Activities = () => {
     [],
   );
 
+  const footerComponent = useMemo(() => {
+    if (fetchingMore) {
+      return <NotificationContentLoader />;
+    } else {
+      return null;
+    }
+  }, [fetchingMore]);
+
   if (!data || notificationsLoading || !notificationsData) {
     return (
       <View style={styles.flexCenter}>
@@ -126,7 +141,9 @@ const Activities = () => {
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
       <SectionList
-        keyExtractor={(item, index) => item.timestamp + index}
+        keyExtractor={(item, index) =>
+          String(`notificationKey${index + item.timestamp}`)
+        }
         refreshing={refetching}
         onRefresh={refetch}
         style={{flex: 1}}
@@ -135,8 +152,15 @@ const Activities = () => {
         ListEmptyComponent={EmptyActivities}
         sections={notificationsData}
         renderItem={renderNotification}
+        ListFooterComponent={footerComponent}
         onEndReachedThreshold={0.5}
-        onEndReached={({distanceFromEnd}) => fetchMore(distanceFromEnd)}
+        onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+        onEndReached={({distanceFromEnd}) => {
+          if (!onEndReachedCalledDuringMomentum) {
+            fetchMore(distanceFromEnd);
+            setOnEndReachedCalledDuringMomentum(true);
+          }
+        }}
         renderSectionHeader={({section: {section}}) => (
           <View style={styles.sectionHeader}>
             <Typography.Button2>{section}</Typography.Button2>

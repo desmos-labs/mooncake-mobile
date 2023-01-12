@@ -13,7 +13,7 @@ import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -268,9 +268,9 @@ const NotificationComponent = ({
       default:
         return <View />;
     }
-  }, [formattedDate, isFollowingAddress, followOrUnfollowUser]);
+  }, [formattedDate, isFollowingAddress, followOrUnfollowUser, checkPostType]);
 
   return <View style={styles.container}>{content}</View>;
 };
 
-export default NotificationComponent;
+export default memo(NotificationComponent);
