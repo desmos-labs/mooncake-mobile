@@ -23,7 +23,6 @@ const useSubscribeToCommentReplies = ({commentID, updateAction}: Props) => {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       commentID,
     },
-    fetchPolicy: 'no-cache',
   });
 
   useEffect(() => {
