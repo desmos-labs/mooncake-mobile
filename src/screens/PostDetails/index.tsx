@@ -130,7 +130,6 @@ const PostDetails = () => {
   const {top} = useSafeAreaInsets();
   useFocusEffect(
     React.useCallback(() => {
-      console.log('post author', post?.author?.address);
       setPopupMenuParams({
         postId: post.id,
         subspaceId: post.subspace_id,

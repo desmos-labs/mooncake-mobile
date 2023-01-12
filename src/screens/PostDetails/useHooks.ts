@@ -76,7 +76,6 @@ const useHooks = ({
         registered_reaction_id: 9,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -88,7 +87,6 @@ const useHooks = ({
       postID,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -100,7 +98,6 @@ const useHooks = ({
       postID,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
   });
 
   useSubscribeToPostComments({

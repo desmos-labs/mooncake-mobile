@@ -33,6 +33,9 @@ const cache = new InMemoryCache({
       case 'post_attachment':
         // @ts-ignore
         return `post_attachment:${object.content.uri}`;
+      case 'post.author':
+        // @ts-ignore
+        return `post.author:${object.content.address}`;
 
       default:
         return defaultDataIdFromObject(object);
