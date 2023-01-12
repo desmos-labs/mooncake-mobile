@@ -32,7 +32,6 @@ export const useGetLatestPostsByActiveAddress = () => {
       },
     },
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'no-cache',
   });
 
   const getLatestPostsByActiveAddress = useCallback(async () => {

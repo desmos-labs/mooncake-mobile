@@ -26,7 +26,6 @@ const useSubscribeToPostComments = ({postID, updateAction}: Props) => {
   });
 
   useEffect(() => {
-    console.log('hello world', data);
     if (!data) return;
 
     const {
