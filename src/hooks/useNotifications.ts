@@ -32,13 +32,15 @@ const useNotifications = () => {
     if (appStateVisible !== 'active') {
       const unsubscribe = messaging().onMessage(async remoteMessage => {
         const txHash = _.get(remoteMessage, 'data.tx_hash');
-        createTransactionSnackbar(
-          remoteMessage,
-          toast,
-          txHash,
-          findPendingTxByHash,
-        );
-        createLocalNotification(remoteMessage);
+        if (txHash) {
+          createTransactionSnackbar(
+            remoteMessage,
+            toast,
+            txHash,
+            findPendingTxByHash,
+          );
+          createLocalNotification(remoteMessage);
+        }
       });
       return unsubscribe;
     }

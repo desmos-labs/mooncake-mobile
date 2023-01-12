@@ -1,31 +1,27 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import activeProfileState from '@recoil/activeProfileState';
-import sharedPostState from '@recoil/sharedPostState';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import ROUTES from 'navigation/routes';
-import React, {useMemo, useRef} from 'react';
-import {
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
-import {NavProps} from 'screens/PostDetails/index';
-import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
-import {GetPostComments} from 'services/graphql/queries/GetComments';
-import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
-import {GetPostTips} from 'services/graphql/queries/GetPostTips';
-import {GetPostReactions} from 'services/graphql/queries/GetReactions';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import {
   pendingCommentsByPost,
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
-import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import sharedPostState from '@recoil/sharedPostState';
 import EnvConfig from 'config/EnvConfig';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import ROUTES from 'navigation/routes';
+import React, {useMemo, useRef} from 'react';
 import {FlatList} from 'react-native';
+import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
+import {NavProps} from 'screens/PostDetails/index';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
+import {GetPostComments} from 'services/graphql/queries/GetComments';
+import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
+import {GetPostTips} from 'services/graphql/queries/GetPostTips';
+import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 
 const useHooks = ({
   postID,
@@ -35,10 +31,11 @@ const useHooks = ({
   subspaceID: number;
 }) => {
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const [profile] = useRecoilState(activeProfileState);
+  const {activeAddress, profileData} = useActiveAccount();
   const {createPost, loading} = useCreatePost();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const {handleNavigateToProfile} = useNavigateToProfile();
   const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
   const setPendingComments = useSetRecoilState(
     pendingPostsState(PendingPostEnum.COMMENT),
@@ -53,7 +50,7 @@ const useHooks = ({
     variables: {
       postID,
       subspaceID,
-      user: profile?.address,
+      user: activeAddress,
       reaction: {
         '@type': '/desmos.reactions.v1.RegisteredReactionValue',
         registered_reaction_id: 9,
@@ -72,7 +69,7 @@ const useHooks = ({
     variables: {
       postID,
       subspaceID,
-      user: profile?.address,
+      user: activeAddress,
       reaction: {
         '@type': '/desmos.reactions.v1.RegisteredReactionValue',
         registered_reaction_id: 9,
@@ -223,19 +220,8 @@ const useHooks = ({
     [],
   );
 
-  const handleNavigateToProfile = (address: string) =>
-    navigate(ROUTES.USER_PROFILE, {
-      visitingProfileAddress: address,
-    });
-
   React.useEffect(() => {
     resetSharedPostState();
-  }, []);
-
-  const navigateToProfile = React.useCallback((authorAddress: string) => {
-    navigate(ROUTES.USER_PROFILE, {
-      visitingProfileAddress: authorAddress,
-    });
   }, []);
 
   const handlePressSendTips = React.useCallback(
@@ -258,7 +244,7 @@ const useHooks = ({
   }, []);
 
   return {
-    profile,
+    profile: profileData,
     post,
     postLoading,
     comments,
@@ -272,7 +258,6 @@ const useHooks = ({
     handleExpandComment,
     handlePressCounters,
     handlePressSendTips,
-    navigateToProfile,
     handlePostComment,
     handleAddReaction,
     handleNavigateToProfile,

@@ -19,6 +19,7 @@ import {
   sendReportTxIcon,
 } from 'assets/images';
 import DView from 'components/DView';
+import OperationContentLoader from 'components/Loaders/OperationContentLoader';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -100,7 +101,6 @@ const Operations = () => {
   const renderTx = React.useCallback(
     ({item}: ListRenderItemInfo<any>) => {
       const fees = convertCoin(item.fees[0], 6, currentChain.currencies);
-      console.log(item.type);
       return (
         <TxComponent
           timestamp={item.timestamp}
@@ -113,6 +113,10 @@ const Operations = () => {
     },
     [currentChain, titleMap, imageMap],
   );
+
+  const footerComponent = () => {
+    return <OperationContentLoader />;
+  };
 
   return (
     <DView
@@ -132,6 +136,7 @@ const Operations = () => {
       {pastActionsData?.messages_by_address?.length >= 0 &&
       !operationsDataLoading ? (
         <SectionList
+          keyExtractor={item => item.transaction_hash}
           refreshing={operationsDataLoading}
           onRefresh={operationsDataRefetch}
           style={{flex: 1}}
@@ -140,6 +145,7 @@ const Operations = () => {
           ListEmptyComponent={EmptyOperations}
           sections={operationsData}
           renderItem={renderTx}
+          ListFooterComponent={footerComponent}
           onEndReached={() => {
             operationsDataFetchMore({
               variables: {

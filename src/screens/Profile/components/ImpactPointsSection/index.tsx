@@ -27,7 +27,7 @@ const ImpactPointsSection = ({
   const {currentChain} = useRecoilValue(appSettingsState);
   return (
     <View>
-      {impactPoints && !impactPointsLoading ? (
+      {!impactPointsLoading ? (
         <View style={styles.container}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity

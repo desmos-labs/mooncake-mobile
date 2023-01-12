@@ -1,92 +1,142 @@
-import React from 'react';
-import ProfileHeaderButton from 'components/ProfileHeaderButton';
-import {defaultProfilePic, plusWhiteIcon} from 'assets/images';
-import {View} from 'react-native';
-import PostTypeTab from 'screens/Home/components/PostTypeTab';
 import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import postsListOptions from '@recoil/postsListRef';
+import {butterflyLandingIcon, homeInviteIcon} from 'assets/images';
+import HomeSearchBar from 'components/HomeSearchBar';
+import ImageButton from 'components/ImageButton';
+import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import useActiveAccount from 'hooks/useActiveAccount';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import ToastConfig from 'config/ToastConfig';
-import {useToast} from 'react-native-toast-notifications';
-import {useResetRecoilState} from 'recoil';
-import sharedPostState from '@recoil/sharedPostState';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Dimensions, TouchableOpacity} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {useRecoilState} from 'recoil';
+import PostTypeTab from 'screens/Home/components/PostTypeTab';
 import useStyles from './useStyles';
-
-interface Props extends MaterialTopTabBarProps {
-  setLoading: (_value: boolean) => void;
-}
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
 
-const HomeTabBar = ({state, position, navigation, setLoading}: Props) => {
+const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
   const styles = useStyles();
+  const {t} = useTranslation('home');
   const {navigate} = useNavigation<NavProps['navigation']>();
-  const {activeAddress, profileData} = useActiveAccount();
-  const toast = useToast();
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const theme = useTheme();
+  const [listOptions, setListOptions] = useRecoilState(postsListOptions);
+  const searchBarWidth = useSharedValue(
+    Dimensions.get('window').width - 64 - 48,
+  );
+  const xOffset = useSharedValue(0);
+  const [focused, setFocused] = useState(false);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width: searchBarWidth.value,
+      transform: [{translateX: xOffset.value}],
+    };
+  });
 
-  const handlePressCreatePost = React.useCallback(async () => {
-    if (!activeAddress) return;
-
-    resetSharedPostState();
-    setLoading(true);
-
-    try {
-      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
-
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest,
-      });
-
-      if (success) {
-        navigate(ROUTES.CREATE_TEXT_POST);
-      } else {
-        toast.show('[PLACEHOLDER]Authorization is required.', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
-    } catch (err) {
-      toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (!listOptions.searchBarFocused) {
+      setFocused(false);
     }
-  }, [activeAddress, checkAndUpdateGrants]);
+  }, [listOptions.searchBarFocused]);
 
   return (
-    <View style={styles.container}>
-      <ProfileHeaderButton
-        style={styles.profileButton}
-        imageSrc={
-          profileData?.profile_pic
-            ? {uri: profileData?.profile_pic}
-            : defaultProfilePic
-        }
-        onPress={() => {
-          navigate(ROUTES.USER_PROFILE);
-        }}
-      />
+    <Animated.View style={styles.container}>
+      <Animated.View
+        style={{
+          height: 44,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {!listOptions.searchBarFocused && (
+          <Animated.View
+            entering={FadeIn.duration(300)}
+            exiting={FadeOut.duration(300)}
+            style={{position: 'absolute', left: 0, right: 'auto'}}>
+            <ImageButton
+              tintColor={theme.colors.butterOrange01}
+              style={styles.butterflyImage}
+              image={butterflyLandingIcon}
+              onPress={() =>
+                setListOptions({...listOptions, scrollToTop: true})
+              }
+            />
+          </Animated.View>
+        )}
+        <Animated.View style={[{position: 'absolute'}, animatedStyle]}>
+          <HomeSearchBar
+            focused={focused}
+            searchPlaceHolder={t('search something')}
+            handleChange={() => console.log('test')}
+            onFocus={() => {
+              searchBarWidth.value = withTiming(
+                Dimensions.get('window').width - 64 - 24,
+              );
+              xOffset.value = withTiming(-32);
+              setFocused(true);
+              setListOptions({...listOptions, searchBarFocused: true});
+            }}
+            onBlur={() => {
+              searchBarWidth.value = withTiming(
+                Dimensions.get('window').width - 64 - 48,
+              );
+              xOffset.value = withTiming(0);
+              setListOptions({...listOptions, searchBarFocused: false});
+            }}
+          />
+        </Animated.View>
 
-      <View style={styles.tabContainer}>
-        <PostTypeTab
-          state={state}
-          position={position}
-          navigation={navigation}
-        />
-      </View>
-
-      <ProfileHeaderButton
-        containerStyle={styles.createPostButton}
-        style={styles.icon}
-        imageSrc={plusWhiteIcon}
-        onPress={handlePressCreatePost}
-      />
-    </View>
+        {!listOptions.searchBarFocused ? (
+          <Animated.View
+            exiting={FadeOut.duration(300)}
+            style={{position: 'absolute', left: 'auto', right: 0}}>
+            <ImageButton
+              style={styles.rightButton}
+              image={homeInviteIcon}
+              onPress={() => navigate(ROUTES.INVITES)}
+            />
+          </Animated.View>
+        ) : (
+          <Animated.View
+            style={{
+              marginLeft: theme.spacing.m,
+              position: 'absolute',
+              left: 'auto',
+              right: 0,
+            }}
+            exiting={FadeOut.duration(300)}>
+            <TouchableOpacity
+              onPress={() => {
+                setListOptions({...listOptions, searchBarFocused: false});
+                setFocused(false);
+              }}>
+              <Typography.Body6>Cancel</Typography.Body6>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+      </Animated.View>
+      {!listOptions.searchBarFocused && (
+        <Animated.View
+          style={styles.tabContainer}
+          exiting={FadeOut.duration(300)}>
+          <PostTypeTab
+            state={state}
+            position={position}
+            navigation={navigation}
+          />
+        </Animated.View>
+      )}
+    </Animated.View>
   );
 };
 

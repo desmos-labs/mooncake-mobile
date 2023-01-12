@@ -18,6 +18,28 @@ const mockTextPostData = {
   text: "I'm a ninja turtle that is a teenager.",
   conversation: null,
   id: 3,
+  tips: [],
+  transactions: [],
+  commentPresence: {
+    aggregate: {
+      count: 0,
+    },
+  },
+  reactionPresence: {
+    aggregate: {
+      count: 0,
+    },
+  },
+  tipPresence: {
+    aggregate: {
+      count: 0,
+    },
+  },
+  repliesCount: {
+    aggregate: {
+      count: 0,
+    },
+  },
 };
 
 const mockImagePostData = {

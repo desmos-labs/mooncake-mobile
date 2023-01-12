@@ -10,7 +10,9 @@ const RenderComponent = () => {
     console.log(value);
   }, [value]);
 
-  return <SearchBar handleChange={setValue} />;
+  return (
+    <SearchBar handleChange={setValue} searchPlaceHolder="search placeholder" />
+  );
 };
 
 storiesOf('components/SearchBar', module)

@@ -1,7 +1,19 @@
 {
   "HOME_DISCOVER": "Discover",
   "HOME_FOLLOWING": "Following",
+  "follow": "Follow",
+  "report": "Report",
+  "tip": "Tip",
+  "seconds ago": "{{count}} second ago",
+  "seconds ago_plural": "{{count}} seconds ago",
+  "minutes ago": "{{count}} minute ago",
+  "minutes ago_plural": "{{count}} minutes ago",
+  "hours ago": "{{count}} hour ago",
+  "hours ago_plural": "{{count}} hours ago",
+  "days ago": "{{count}} day ago",
+  "days ago_plural": "{{count}} days ago",
   "noMorePosts": "You have read the most\nrecent post!",
   "newDiscoverPost": "There are new Posts! Tap to refresh.",
-  "newFollowingPost": "There are new Posts from your followers! Tap to refresh."
+  "newFollowingPost": "There are new Posts from your followers! Tap to refresh.",
+  "search something": "Search something"
 }

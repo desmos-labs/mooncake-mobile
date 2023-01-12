@@ -1,36 +1,18 @@
-import {
-  CompositeScreenProps,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import useGetPosts from 'hooks/useGetPosts';
-import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {ViewToken} from 'react-native';
-import {useRecoilValue} from 'recoil';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import {StackScreenProps} from '@react-navigation/stack';
-import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
-import EnvConfig from 'config/EnvConfig';
 import {POST_TYPE} from '@recoil/posts';
-import _ from 'lodash';
-
-type DiscoverNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
-  StackScreenProps<RootNavigatorParamList>
->;
-
-type FollowingNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
-  StackScreenProps<RootNavigatorParamList>
->;
+import EnvConfig from 'config/EnvConfig';
+import useGetPosts from 'hooks/useGetPosts';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import {useRecoilValue} from 'recoil';
+import {NavProps} from 'screens/Home';
+import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
+import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 
 const postFamilyMap = {
   [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
@@ -41,20 +23,11 @@ const postFamilyMap = {
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {name: routeName} = useRoute<
-    DiscoverNavProps['route'] | FollowingNavProps['route']
-  >();
-
-  const {navigate} = useNavigation<
-    DiscoverNavProps['navigation'] | FollowingNavProps['navigation']
-  >();
-  const [selectedPostIndex, setSelectedPostIndex] = React.useState(0);
-  const [activeAddress] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-
+  const {name: routeName} = useRoute<NavProps['route']>();
+  const {handleNavigateToProfile} = useNavigateToProfile();
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
-
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
-
   const {posts, fetchMorePosts, fetchNewestPosts, loading} = useGetPosts({
     type: postFamilyMap[routeName],
   });
@@ -69,24 +42,25 @@ const useHooks = () => {
 
   // sort and combine pending posts with posts from API
   const combinedPosts = React.useMemo(() => {
-    return [...parsedPendingPosts, ...posts, {emptyComponent: true} as any];
+    return [
+      ...parsedPendingPosts,
+      ...posts,
+      {id: -1, emptyComponent: true} as any,
+    ];
   }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
   const checkIfPostIsPending = (postId: number) => {
     return parsedPendingPosts.find(x => x.id === postId)?.isPending;
   };
 
-  const handlePressAuthor = useCallback(
-    (address: string) => {
-      if (activeAddress === address) {
-        navigate(ROUTES.USER_PROFILE);
-      } else {
-        navigate(ROUTES.USER_PROFILE, {
-          visitingProfileAddress: address,
-        });
-      }
+  const handlePressReport = React.useCallback(
+    (postId: number, subspaceId: number) => {
+      navigate(ROUTES.REPORT_POST, {
+        postId,
+        subspaceId,
+      });
     },
-    [activeAddress],
+    [],
   );
 
   const handlePressFollow = React.useCallback(
@@ -140,30 +114,20 @@ const useHooks = () => {
     [],
   );
 
-  const onViewableItemsChanged = useCallback(
-    (a: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
-      const index = _.get(a, 'viewableItems[0].index');
-      if (index !== undefined) {
-        setSelectedPostIndex(index);
-      }
-    },
-    [],
-  );
-
   return {
     handlePressDetails,
     handlePressFollow,
-    handlePressAuthor,
+    handleNavigateToProfile,
     handlePressTip,
     handleAddReaction,
     handlePressComments,
+    handlePressReport,
     posts: combinedPosts,
-    selectedPostIndex,
+    queryPostsData: posts,
     checkIfPostIsPending,
     loading,
     fetchNewestPosts,
     fetchMorePosts,
-    onViewableItemsChanged,
   };
 };
 

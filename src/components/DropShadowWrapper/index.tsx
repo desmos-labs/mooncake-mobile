@@ -1,6 +1,5 @@
 import React from 'react';
-import {ColorValue, ViewProps, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {ColorValue, StyleProp, ViewProps, ViewStyle} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
@@ -35,12 +34,11 @@ export type Props = ViewProps & {
 
   outerShadowProps?: React.ComponentProps<typeof Shadow>;
 
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 const DropShadowWrapper: React.FC<Props> = props => {
   const styles = useStyles();
-  const theme = useTheme();
 
   const {
     children,
@@ -56,11 +54,11 @@ const DropShadowWrapper: React.FC<Props> = props => {
   if (disableInnerWrapper) {
     return (
       <Shadow
-        viewStyle={[innerStyle, styles.externalShadow]}
+        style={[style, styles.externalShadow]}
+        stretch={true}
         startColor={(customColor as any) || 'rgba(37, 87, 188, 0.1)'}
         distance={40}
         offset={[10, 20]}
-        radius={theme.roundness}
         {...outerShadowProps}>
         {children}
       </Shadow>
@@ -69,16 +67,17 @@ const DropShadowWrapper: React.FC<Props> = props => {
 
   return (
     <Shadow
-      viewStyle={[style, styles.externalShadow]}
+      stretch={true}
+      style={[style, styles.externalShadow]}
       startColor={(customColor as any) || 'rgba(37, 87, 188, 0.1)'}
       distance={40}
       offset={[10, 20]}
       {...outerShadowProps}>
       <Shadow
-        viewStyle={[innerStyle, styles.innerShadow]}
+        stretch={true}
+        style={[innerStyle, styles.innerShadow]}
         startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.04)'}
         distance={customDistance || 6}
-        radius={theme.roundness + 1}
         {...innerShadowProps}>
         {children}
       </Shadow>

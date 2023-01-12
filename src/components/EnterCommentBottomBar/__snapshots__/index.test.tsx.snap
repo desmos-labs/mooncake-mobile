@@ -33,6 +33,10 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               "top": 0,
             },
             undefined,
+            Object {
+              "start": 0,
+              "top": 0,
+            },
           ]
         }
       >
@@ -48,8 +52,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": -30,
                 "position": "absolute",
+                "start": -30,
                 "top": 0,
               },
               Object {
@@ -67,14 +71,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    439563059,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={0}
-                name="left"
+                name="start.0"
                 x1="1"
                 x2="0"
                 y1="0"
@@ -85,7 +89,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               fill={
                 Array [
                   1,
-                  "left",
+                  "start.0",
                 ]
               }
               height="100%"
@@ -112,8 +116,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": "100%",
                 "position": "absolute",
+                "start": "100%",
                 "top": 0,
               },
               Object {
@@ -131,14 +135,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    439563059,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={0}
-                name="right"
+                name="end.0"
                 x1="0"
                 x2="1"
                 y1="0"
@@ -149,7 +153,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               fill={
                 Array [
                   1,
-                  "right",
+                  "end.0",
                 ]
               }
               height="100%"
@@ -176,9 +180,9 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": 0,
                 "position": "absolute",
-                "top": "100%",
+                "start": 0,
+                "top": -30,
               },
               Object {
                 "flex": 0,
@@ -195,25 +199,25 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    439563059,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={0}
-                name="bottom"
+                name="top.0"
                 x1="0"
                 x2="0"
-                y1="0"
-                y2="1"
+                y1="1"
+                y2="0"
               />
             </RNSVGDefs>
             <RNSVGRect
               fill={
                 Array [
                   1,
-                  "bottom",
+                  "top.0",
                 ]
               }
               height={30}
@@ -240,9 +244,9 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": 0,
                 "position": "absolute",
-                "top": -30,
+                "start": 0,
+                "top": "100%",
               },
               Object {
                 "flex": 0,
@@ -259,25 +263,25 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    439563059,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={0}
-                name="top"
+                name="bottom.0"
                 x1="0"
                 x2="0"
-                y1="1"
-                y2="0"
+                y1="0"
+                y2="1"
               />
             </RNSVGDefs>
             <RNSVGRect
               fill={
                 Array [
                   1,
-                  "top",
+                  "bottom.0",
                 ]
               }
               height={30}
@@ -304,8 +308,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": -30,
                 "position": "absolute",
+                "start": -30,
                 "top": -30,
               },
               Object {
@@ -327,31 +331,38 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    0,
+                    0,
+                    439563059,
+                    0.9999999999999999,
+                    3355443,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={1}
-                name="topLeft"
+                name="topStart.0"
                 rx={30}
                 ry={30}
               />
             </RNSVGDefs>
-            <RNSVGPath
-              d="M0,30 a30,30 0 0 1 30 -30 v30 a0,0 0 0 0 0,0 h-30 Z"
+            <RNSVGRect
               fill={
                 Array [
                   1,
-                  "topLeft",
+                  "topStart.0",
                 ]
               }
+              height={30}
               propList={
                 Array [
                   "fill",
                 ]
               }
+              width={30}
+              x={0}
+              y={0}
             />
           </RNSVGGroup>
         </RNSVGSvgView>
@@ -367,8 +378,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": "100%",
                 "position": "absolute",
+                "start": "100%",
                 "top": -30,
                 "transform": Array [
                   Object {
@@ -406,31 +417,38 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    0,
+                    0,
+                    439563059,
+                    0.9999999999999999,
+                    3355443,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={1}
-                name="topRight"
+                name="topEnd.0"
                 rx={30}
                 ry={30}
               />
             </RNSVGDefs>
-            <RNSVGPath
-              d="M0,0 a30,30 0 0 1 30,30 h-30 a0,0 0 0 0 0,0 v-30 Z"
+            <RNSVGRect
               fill={
                 Array [
                   1,
-                  "topRight",
+                  "topEnd.0",
                 ]
               }
+              height={30}
               propList={
                 Array [
                   "fill",
                 ]
               }
+              width={30}
+              x={0}
+              y={0}
             />
           </RNSVGGroup>
         </RNSVGSvgView>
@@ -446,8 +464,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": -30,
                 "position": "absolute",
+                "start": -30,
                 "top": "100%",
                 "transform": Array [
                   Object {
@@ -485,31 +503,38 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    0,
+                    0,
+                    439563059,
+                    0.9999999999999999,
+                    3355443,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={1}
-                name="bottomLeft"
+                name="bottomStart.0"
                 rx={30}
                 ry={30}
               />
             </RNSVGDefs>
-            <RNSVGPath
-              d="M30,30 a30,30 0 0 1 -30,-30 h30 a0,0 0 0 0 0,0 v30 Z"
+            <RNSVGRect
               fill={
                 Array [
                   1,
-                  "bottomLeft",
+                  "bottomStart.0",
                 ]
               }
+              height={30}
               propList={
                 Array [
                   "fill",
                 ]
               }
+              width={30}
+              x={0}
+              y={0}
             />
           </RNSVGGroup>
         </RNSVGSvgView>
@@ -525,8 +550,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 "borderWidth": 0,
               },
               Object {
-                "left": "100%",
                 "position": "absolute",
+                "start": "100%",
                 "top": "100%",
                 "transform": Array [
                   Object {
@@ -567,31 +592,38 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 gradient={
                   Array [
                     0,
-                    640889651,
+                    0,
+                    0,
+                    439563059,
+                    0.9999999999999999,
+                    3355443,
                     1,
                     3355443,
                   ]
                 }
                 gradientTransform={null}
                 gradientUnits={1}
-                name="bottomRight"
+                name="bottomEnd.0"
                 rx={30}
                 ry={30}
               />
             </RNSVGDefs>
-            <RNSVGPath
-              d="M30,0 a30,30 0 0 1 -30,30 v-30 a0,0 0 0 0 0,0 h30 Z"
+            <RNSVGRect
               fill={
                 Array [
                   1,
-                  "bottomRight",
+                  "bottomEnd.0",
                 ]
               }
+              height={30}
               propList={
                 Array [
                   "fill",
                 ]
               }
+              width={30}
+              x={0}
+              y={0}
             />
           </RNSVGGroup>
         </RNSVGSvgView>
@@ -603,18 +635,20 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           Array [
             Object {
               "alignSelf": "flex-start",
+              "borderBottomLeftRadius": 0,
+              "borderBottomRightRadius": 0,
+              "borderTopLeftRadius": 0,
+              "borderTopRightRadius": 0,
             },
-            undefined,
-            Array [
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "paddingHorizontal": 20,
-                "paddingTop": 20,
-              },
-              Object {
-                "paddingBottom": 0,
-              },
-            ],
+            Object {
+              "backgroundColor": "#FFFFFF",
+              "paddingBottom": 0,
+              "paddingHorizontal": 20,
+              "paddingTop": 20,
+            },
+            Object {
+              "alignSelf": "stretch",
+            },
           ]
         }
       >

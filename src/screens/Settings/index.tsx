@@ -167,10 +167,10 @@ const Settings: React.FC<NavProps> = props => {
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
       <Section style={styles.spacer} title={t('account')}>
-        <SectionButton
+        {/*        <SectionButton
           label={t('profiles')}
           onPress={() => navigate(ROUTES.SETTINGS_PROFILES)}
-        />
+        /> */}
         <SectionButton
           label={t('manage connected addresses')}
           onPress={() => {

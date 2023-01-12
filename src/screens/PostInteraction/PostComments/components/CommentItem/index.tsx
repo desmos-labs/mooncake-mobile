@@ -95,6 +95,7 @@ const CommentItem = ({
       borderRadius: 24,
       resizeMode: 'contain',
     },
+    resizeMode: 'cover',
   });
 
   return (

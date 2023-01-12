@@ -1,4 +1,6 @@
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {
+  CompositeScreenProps,
   useFocusEffect,
   useNavigation,
   useRoute,
@@ -17,6 +19,8 @@ import useClearUserData from 'hooks/useClearUserData';
 import {getPasswordWithBiometrics} from 'lib/SecureStorage';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
+import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -36,7 +40,13 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
+export type NavProps = CompositeScreenProps<
+  StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+    StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>
+  >
+>;
 
 export type LoginParams = {
   // Callback to be executed if login is successful.
@@ -83,10 +93,15 @@ const Login = () => {
             if (routes.length > 1) {
               pop();
             } else {
-              navigate(ROUTES.HOME_TABS, {
-                screen: ROUTES.HOME_DISCOVER,
+              navigate(ROUTES.BOTTOM_TABS, {
+                screen: ROUTES.HOME_TABS,
                 params: {
-                  type: 'discover',
+                  HOME_DISCOVER: {
+                    type: 'discover',
+                  },
+                  HOME_FOLLOWING: {
+                    type: 'following',
+                  },
                 },
               });
             }
@@ -138,12 +153,19 @@ const Login = () => {
         if (!_.get(params, 'noPop')) {
           const {routes} = getState();
           if (routes.length > 1) {
+            console.log('pop');
             pop();
           } else {
-            navigate(ROUTES.HOME_TABS, {
-              screen: ROUTES.HOME_DISCOVER,
+            console.log('navigation');
+            navigate(ROUTES.BOTTOM_TABS, {
+              screen: ROUTES.HOME_TABS,
               params: {
-                type: 'discover',
+                HOME_DISCOVER: {
+                  type: 'discover',
+                },
+                HOME_FOLLOWING: {
+                  type: 'following',
+                },
               },
             });
           }

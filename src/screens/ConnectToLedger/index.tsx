@@ -117,7 +117,7 @@ const ConnectToLedger = () => {
 
       const accounts = await ledgerSigner.getAccounts();
 
-      const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC);
+      const client = await DesmosClient.connect(EnvConfig.DESMOS_RPC!);
 
       const chainAccounts: ChainAccount[] = accounts.map((acc, idx) => ({
         address: acc.address,

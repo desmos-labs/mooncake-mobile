@@ -37,7 +37,7 @@
   "points": "Points",
   "how to earn points": "How do I earn points?",
   "convertible points": "Convertible Points",
-  "connectedWallets": "{{count}} Wallets",
+  "connectedWallet_plural": "{{count}} Wallets",
   "connectedWallet": "{{count}} Wallet",
   "connectWallet": "Connect Wallet",
   "manageConnectedTwitter": "Manage Connected Twitter",

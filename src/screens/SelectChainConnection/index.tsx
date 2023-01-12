@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {selectedChainState} from '@recoil/connectChainState';
 import DView from 'components/DView';
+import SearchBar from 'components/SearchBar';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -15,7 +16,6 @@ import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
-import SearchBar from 'screens/SelectChainConnection/components/SearchBar';
 import {ChainAsset, LinkableChain} from 'types/chains';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_CHAIN>;
@@ -82,7 +82,10 @@ const SelectChainConnection = () => {
               marginHorizontal: -theme.spacing.m,
               paddingBottom: theme.spacing.m,
             }}>
-            <SearchBar handleChange={setFilter} />
+            <SearchBar
+              handleChange={setFilter}
+              searchPlaceHolder={t('searchPlaceholder')}
+            />
           </View>
         );
       }
