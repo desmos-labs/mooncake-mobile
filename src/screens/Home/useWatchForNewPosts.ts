@@ -86,7 +86,6 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   );
 
   useSubscription(PostAggregateSubscription, {
-    fetchPolicy: 'no-cache',
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       userAddress: activeAddress,
@@ -95,7 +94,6 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   });
 
   useSubscription(PostAggregateSubscriptionFollowing, {
-    fetchPolicy: 'no-cache',
     variables: {
       subspaceID: EnvConfig.APP_SUBSPACE_ID,
       followingAddrs,
