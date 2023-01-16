@@ -1,6 +1,8 @@
 import {gql} from '@apollo/client';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsLikedForAddress = gql`
+  ${POST_FIELDS}
   query LikedUserPosts($subspaceID: bigint, $address: String)
   @api(name: butter) {
     reaction(
@@ -10,36 +12,7 @@ const GetPostsLikedForAddress = gql`
       }
     ) {
       post {
-        id
-        creation_date
-        author_address
-        attachments {
-          id
-          content
-        }
-        author {
-          address
-          bio
-          dtag
-          profile_pic
-          nickname
-        }
-        subspace_id
-        reactions {
-          id
-          value
-        }
-        reactions_aggregate {
-          aggregate {
-            count
-          }
-        }
-        text
-        conversation {
-          author {
-            address
-          }
-        }
+        ...PostFields
       }
     }
   }

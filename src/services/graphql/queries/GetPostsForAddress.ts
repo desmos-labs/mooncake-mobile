@@ -1,6 +1,8 @@
 import {gql} from '@apollo/client';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsForAddress = gql`
+  ${POST_FIELDS}
   query GetPostsForAddress($subspaceID: bigint!, $address: String)
   @api(name: butter) {
     post(
@@ -11,36 +13,7 @@ const GetPostsForAddress = gql`
         _not: {conversation: {}}
       }
     ) {
-      id
-      creation_date
-      author_address
-      attachments {
-        id
-        content
-      }
-      author {
-        address
-        bio
-        dtag
-        profile_pic
-        nickname
-      }
-      subspace_id
-      reactions {
-        id
-        value
-      }
-      reactions_aggregate {
-        aggregate {
-          count
-        }
-      }
-      text
-      conversation {
-        author {
-          address
-        }
-      }
+      ...PostFields
     }
   }
 `;

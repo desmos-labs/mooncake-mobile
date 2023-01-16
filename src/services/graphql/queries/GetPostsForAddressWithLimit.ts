@@ -1,6 +1,8 @@
 import {gql} from '@apollo/client';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsForAddressWithLimit = gql`
+  ${POST_FIELDS}
   query GetPostsForAddress($subspaceID: bigint!, $address: String, $limit: Int!)
   @api(name: butter) {
     post(
@@ -12,36 +14,7 @@ const GetPostsForAddressWithLimit = gql`
       }
       limit: $limit
     ) {
-      id
-      creation_date
-      author_address
-      attachments {
-        id
-        content
-      }
-      author {
-        address
-        bio
-        dtag
-        profile_pic
-        nickname
-      }
-      subspace_id
-      reactions {
-        id
-        value
-      }
-      reactions_aggregate {
-        aggregate {
-          count
-        }
-      }
-      text
-      conversation {
-        author {
-          address
-        }
-      }
+      ...PostFields
     }
   }
 `;

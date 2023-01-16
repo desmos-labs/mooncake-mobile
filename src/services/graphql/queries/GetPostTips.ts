@@ -1,4 +1,5 @@
 import {gql} from '@apollo/client';
+import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 export const GetPostTips = gql`
   query PostTips($postID: bigint, $subspaceID: bigint) @api(name: butter) {
@@ -20,41 +21,13 @@ export const GetPostTips = gql`
 `;
 
 export const GetTippedPostsFromAddress = gql`
+  ${POST_FIELDS}
   query TippedPosts($subspaceID: bigint!, $user: String!) @api(name: butter) {
     tip_post(
       where: {subspace_id: {_eq: $subspaceID}, sender_address: {_eq: $user}}
     ) {
       post {
-        id
-        creation_date
-        author_address
-        attachments {
-          id
-          content
-        }
-        author {
-          address
-          bio
-          dtag
-          profile_pic
-          nickname
-        }
-        subspace_id
-        reactions {
-          id
-          value
-        }
-        reactions_aggregate {
-          aggregate {
-            count
-          }
-        }
-        text
-        conversation {
-          author {
-            address
-          }
-        }
+        ...PostFields
       }
     }
   }
