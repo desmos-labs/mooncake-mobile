@@ -6,13 +6,12 @@ import {
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
-import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList} from 'react-native';
 import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
@@ -22,6 +21,7 @@ import {GetPostComments} from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
+import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
 
 const useHooks = ({
   postID,
@@ -56,15 +56,12 @@ const useHooks = ({
         registered_reaction_id: 9,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
     data: postComments,
     loading: commentsLoading,
     refetch: commentsRefetch,
-    startPolling,
-    stopPolling,
   } = useQuery(GetPostComments, {
     variables: {
       postID,
@@ -75,7 +72,6 @@ const useHooks = ({
         registered_reaction_id: 9,
       },
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -87,7 +83,6 @@ const useHooks = ({
       postID,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -99,7 +94,11 @@ const useHooks = ({
       postID,
       subspaceID,
     },
-    fetchPolicy: 'no-cache',
+  });
+
+  useSubscribeToPostComments({
+    postID,
+    updateAction: commentsRefetch,
   });
 
   /**
@@ -119,18 +118,6 @@ const useHooks = ({
     );
   }, [postComments]);
 
-  /**
-   * Start/stop polling comments if there is a pending comment for the parent post.
-   */
-  React.useEffect(() => {
-    if (pendingCommentsOfPost.length > 0) {
-      startPolling(EnvConfig.POLLING_INTERVAL);
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd();
-      }, 500);
-    } else stopPolling();
-  }, [scrollViewRef, pendingCommentsOfPost]);
-
   const comments = useMemo(() => {
     if (!postComments) return [];
 
@@ -140,14 +127,14 @@ const useHooks = ({
     ];
   }, [pendingCommentsOfPost, postComments]);
 
-  const pageRefetch = async () => {
+  const pageRefetch = useCallback(async () => {
     await Promise.all([
       postRefetch,
       commentsRefetch,
       reactionsRefetch,
       tipsRefetch,
     ]);
-  };
+  }, [postRefetch, commentsRefetch, reactionsRefetch, tipsRefetch]);
 
   const post = React.useMemo(() => {
     if (!originalPost) return {};
