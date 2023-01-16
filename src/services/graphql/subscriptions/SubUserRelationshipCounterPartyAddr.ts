@@ -2,8 +2,8 @@ import {gql} from '@apollo/client';
 
 const SubUserRelationshipCounterPartyAddr = gql`
   subscription SubUserRelationshipCounterPartyAddr($address: String!)
-  @api(name: desmos) {
-    user_relationship(where: {creator: {address: {_eq: $address}}}) {
+  @api(name: butter) {
+    user_relationship(where: {creator_address: {_eq: $address}}) {
       counterparty_address
     }
   }
