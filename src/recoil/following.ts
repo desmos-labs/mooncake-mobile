@@ -1,20 +1,9 @@
-import {useEffect} from 'react';
+import {atom, selector, selectorFamily} from 'recoil';
+
 import {
-  atom,
-  selector,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import {useQuery} from '@apollo/client';
-import GetFollowedUsersForAddress, {
-  GetFollowedUsersForAddressData,
-} from 'services/graphql/queries/GetFollowedUsersForAddress';
-import useActiveAccount from 'hooks/useActiveAccount';
-import usePendingRelationships, {
-  pendingRelationshipsState,
-} from '@recoil/pendingTx/pendingRelationships';
-import EnvConfig from 'config/EnvConfig';
+  hasOptimisticFollow,
+  hasOptimisticUnfollow,
+} from '@recoil/optimisticUI/optimisticRelationships';
 
 export const followingState = atom<CounterParty[]>({
   key: 'following',
@@ -34,55 +23,15 @@ export const isFollowingAddr = selectorFamily({
   get:
     (address: string) =>
     ({get}) => {
+      const hasOptFollow = get(hasOptimisticFollow(address));
+
+      const hasOptUnfollow = get(hasOptimisticUnfollow(address));
+
+      if (hasOptFollow) return true;
+      if (hasOptUnfollow) return false;
+
       const followedAddresses = get(followedAddressesState);
 
       return followedAddresses.has(address);
     },
 });
-
-/**
- * Get the list of followed accounts for the active account
- */
-export const useGetFollowingPolling = () => {
-  const {activeAddress} = useActiveAccount();
-  const [, setFollowing] = useRecoilState(followingState);
-  const {syncPendingRelationships} = usePendingRelationships();
-  const pendingRelationships = useRecoilValue(pendingRelationshipsState);
-
-  const {data, startPolling, stopPolling, refetch} =
-    useQuery<GetFollowedUsersForAddressData>(GetFollowedUsersForAddress, {
-      variables: {
-        userAddress: activeAddress,
-      },
-      fetchPolicy: 'no-cache',
-    });
-
-  useEffect(() => {
-    if (!data) return;
-    const {user_relationship} = data;
-
-    const newFollowing = user_relationship
-      .map(x => x.counterparty)
-      .filter(d => !!d);
-
-    setFollowing(newFollowing);
-
-    syncPendingRelationships(newFollowing.map(x => x.address));
-  }, [JSON.stringify(data)]);
-
-  useEffect(() => {
-    if (activeAddress) {
-      refetch({
-        userAddress: activeAddress,
-      });
-    }
-  }, [activeAddress]);
-
-  useEffect(() => {
-    if (pendingRelationships.length > 0) {
-      startPolling(EnvConfig.POLLING_INTERVAL);
-    } else {
-      stopPolling();
-    }
-  }, [pendingRelationships.length]);
-};

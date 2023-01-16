@@ -2,6 +2,7 @@
   "HOME_DISCOVER": "Discover",
   "HOME_FOLLOWING": "Following",
   "follow": "Follow",
+  "unfollow": "Unfollow",
   "report": "Report",
   "tip": "Tip",
   "seconds ago": "{{count}} second ago",

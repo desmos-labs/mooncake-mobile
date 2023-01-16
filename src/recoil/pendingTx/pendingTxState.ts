@@ -1,5 +1,4 @@
 import {selector} from 'recoil';
-import {pendingRelationshipsState} from '@recoil/pendingTx/pendingRelationships';
 import {
   PendingPostEnum,
   pendingPostsState,
@@ -11,11 +10,10 @@ import {
 const pendingTxState = selector<PendingTx[]>({
   key: 'pendingTx',
   get: ({get}) => {
-    const pendingRelationships = get(pendingRelationshipsState);
     const pendingPosts = get(pendingPostsState(PendingPostEnum.POST));
     const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
 
-    return [...pendingRelationships, ...pendingPosts, ...pendingComments];
+    return [...pendingPosts, ...pendingComments];
   },
 });
 

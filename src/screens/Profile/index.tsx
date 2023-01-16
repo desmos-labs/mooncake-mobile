@@ -1,5 +1,9 @@
 import {BlurView} from '@react-native-community/blur';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
   connectIcon,
@@ -82,6 +86,17 @@ const Profile = () => {
     numRelationshipsLoading,
     refreshNumRelationships,
   } = useProfileDataQueries();
+
+  // refresh number of followers on screen focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const task = InteractionManager.runAfterInteractions(() => {
+        // Only refresh following list on focus
+        refreshNumRelationships();
+      });
+      return () => task.cancel();
+    }, [refreshNumRelationships]),
+  );
 
   const {
     posts,

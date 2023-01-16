@@ -48,8 +48,11 @@ const useAddOrUpdateGrants = () => {
   const revokeGrants = React.useCallback(
     async (selectedGrants?: GrantEnums[]) => {
       if (!chainAccount) throw new Error('No active chain account found.');
+      if (!butterConfig?.desmos_address) {
+        throw new Error('No granteeAddress found.');
+      }
 
-      const grantee = butterConfig.desmos_address;
+      const grantee = butterConfig?.desmos_address;
       const granter = chainAccount.address;
 
       const grantsData = await getAuthzGrants();
@@ -114,7 +117,7 @@ const useAddOrUpdateGrants = () => {
         image: authorizationImage,
       });
     },
-    [chainAccount, butterConfig.desmos_address],
+    [chainAccount, butterConfig?.desmos_address],
   );
 
   /**

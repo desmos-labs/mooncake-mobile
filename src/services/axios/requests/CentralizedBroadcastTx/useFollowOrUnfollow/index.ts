@@ -7,12 +7,8 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
-import {followingState} from '@recoil/following';
-import {useRecoilValue} from 'recoil';
-import usePendingRelationships, {
-  pendingRelationshipsState,
-} from '@recoil/pendingTx/pendingRelationships';
-import {Alert} from 'react-native';
+import {isFollowingAddr} from '@recoil/following';
+import {useRecoilCallback} from 'recoil';
 import {
   MsgCreateRelationship,
   MsgDeleteRelationship,
@@ -24,6 +20,8 @@ import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
+import useOptimisticRelationships from 'hooks/useOptimisticRelationships';
+import useGetFollowingForAddress from 'hooks/useGetFollowingForAddress';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -43,96 +41,99 @@ const useFollowOrUnfollow = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
   const toast = useToast();
   const {t} = useTranslation('toast');
-  const following = useRecoilValue(followingState);
   const [loading, setLoading] = React.useState(false);
-  const {addNewPendingRelationship} = usePendingRelationships();
-  const pendingRelationships = useRecoilValue(pendingRelationshipsState);
+
+  const {updateFollowing} = useGetFollowingForAddress(activeAddress);
+
+  const {
+    handleOptimisticRelationship,
+    resolveOptimisticRelationshipForAddress,
+  } = useOptimisticRelationships();
 
   /**
    * Callback to follow or unfollow (create/delete relationship) a user.
    * @param {FollowOrUnfollowUserArgs}
    */
-  const followOrUnfollowUser = React.useCallback(
-    async ({
-      addrToFollow,
-      stayOnCurrentScreen = true,
-    }: FollowOrUnfollowUserArgs) => {
-      if (pendingRelationships.length !== 0) {
-        return Alert.alert(
-          'PLACEHOLDER',
-          'There is a pending follow or unfollow transaction. Please wait for the pending transaction to finish and try again.',
+  const followOrUnfollowUser = useRecoilCallback(
+    ({snapshot}) =>
+      async ({
+        addrToFollow,
+        stayOnCurrentScreen = true,
+      }: FollowOrUnfollowUserArgs) => {
+        if (!activeAddress) throw new Error('No active address found');
+
+        setLoading(true);
+
+        const isAlreadyFollowing = await snapshot.getPromise(
+          isFollowingAddr(addrToFollow),
         );
-      }
-      if (!activeAddress) throw new Error('No active address found');
-      const grantsToRequest = [
-        GrantEnums.MsgCreateRelationship,
-        GrantEnums.MsgDeleteRelationship,
-      ];
 
-      const {success} = await checkAndUpdateGrants({
-        grantsToRequest,
-        stayOnCurrentScreen,
-      });
-
-      if (!success) {
-        return toast.show(t('errorAuthRequired'), {
-          type: ToastConfig.ERROR_NO_RETRY,
+        await handleOptimisticRelationship({
+          counterParty: addrToFollow,
+          type: isAlreadyFollowing ? 'unfollow' : 'follow',
         });
-      }
 
-      const isAlreadyFollowing = !!following.find(
-        x => x.address === addrToFollow,
-      );
+        const grantsToRequest = [
+          GrantEnums.MsgCreateRelationship,
+          GrantEnums.MsgDeleteRelationship,
+        ];
 
-      setLoading(true);
-      try {
-        let msg:
-          | MsgDeleteRelationshipEncodeObject
-          | MsgCreateRelationshipEncodeObject;
+        const {success} = await checkAndUpdateGrants({
+          grantsToRequest,
+          stayOnCurrentScreen,
+        });
 
-        if (isAlreadyFollowing) {
-          msg = {
-            typeUrl: GrantEnums.MsgDeleteRelationship,
-            value: MsgDeleteRelationship.fromPartial({
-              signer: activeAddress,
-              counterparty: addrToFollow,
-              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-            }),
-          };
-        } else {
-          msg = {
-            typeUrl: GrantEnums.MsgCreateRelationship,
-            value: MsgCreateRelationship.fromPartial({
-              signer: activeAddress,
-              counterparty: addrToFollow,
-              subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
-            }),
-          };
+        if (!success) {
+          return toast.show(t('errorAuthRequired'), {
+            type: ToastConfig.ERROR_NO_RETRY,
+          });
         }
 
-        const result = await encodeAndBroadcastTx({msgs: [msg]});
+        try {
+          let msg:
+            | MsgDeleteRelationshipEncodeObject
+            | MsgCreateRelationshipEncodeObject;
 
-        if (result) {
-          addNewPendingRelationship({
-            counterPartyAddr: addrToFollow,
-            msgType: msg.typeUrl,
-            timestamp: new Date().getTime(),
-            txHash: result.tx_hash,
-            msg,
+          if (isAlreadyFollowing) {
+            msg = {
+              typeUrl: GrantEnums.MsgDeleteRelationship,
+              value: MsgDeleteRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              }),
+            };
+          } else {
+            msg = {
+              typeUrl: GrantEnums.MsgCreateRelationship,
+              value: MsgCreateRelationship.fromPartial({
+                signer: activeAddress,
+                counterparty: addrToFollow,
+                subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
+              }),
+            };
+          }
+
+          const result = await encodeAndBroadcastTx({
+            msgs: [msg],
+            optimistic: true,
           });
 
-          return true;
-        }
+          if (result) {
+            return true;
+          }
 
-        throw new Error('Error broadcasting transaction');
-      } catch (err: any) {
-        console.log('useFollowOrUnfollowUser', String(err));
-        toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeAddress, following, addNewPendingRelationship, pendingRelationships],
+          throw new Error('Error broadcasting transaction');
+        } catch (err: any) {
+          console.log('useFollowOrUnfollowUser', String(err));
+          toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
+        } finally {
+          setLoading(false);
+          await updateFollowing();
+          await resolveOptimisticRelationshipForAddress(addrToFollow);
+        }
+      },
+    [activeAddress, handleOptimisticRelationship],
   );
 
   return {

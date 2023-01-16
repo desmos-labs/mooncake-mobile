@@ -1,5 +1,5 @@
 import {placeholderIcon} from 'assets/images';
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -63,6 +63,11 @@ const ImageButton = ({
       }
     : undefined;
   const [imageSource, setImageSource] = useState(image);
+
+  useEffect(() => {
+    setImageSource(image);
+  }, [image]);
+
   return (
     <TouchableOpacity
       style={[{opacity: rest.disabled ? 0.3 : 1}, buttonStyle]}

@@ -43,18 +43,17 @@ const GetFeeGrantCount = gql`
 export const useGetAuthzGrants = () => {
   const {activeAddress} = useActiveAccount();
 
-  const {
-    butterConfig: {desmos_address: grantsAddress},
-  } = useButterConfig();
+  const {butterConfig} = useButterConfig();
 
   const getAuthzGrants = React.useCallback(async (): Promise<{
     has_fee_grant: boolean;
     grants: {
       msg_type: GrantEnums;
-
       expiration: string;
     }[];
   }> => {
+    const grantsAddress = _.get(butterConfig, 'desmos_address');
+
     if (!grantsAddress) {
       throw new Error('[DEBUG] grantsAddress not found');
     }
@@ -97,7 +96,7 @@ export const useGetAuthzGrants = () => {
       has_fee_grant,
       grants: formattedGrants,
     };
-  }, [activeAddress, grantsAddress]);
+  }, [activeAddress, JSON.stringify(butterConfig)]);
 
   return {
     getAuthzGrants,
