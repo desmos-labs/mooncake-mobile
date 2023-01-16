@@ -87,47 +87,7 @@ exports[`component: PostComponent renders image posts 1`] = `
           "flex": 1,
         }
       }
-    >
-      <View
-        style={
-          Array [
-            Object {
-              "overflow": "hidden",
-            },
-            Array [
-              Object {
-                "height": 0,
-                "width": 750,
-              },
-              undefined,
-            ],
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          onFastImageLoad={[Function]}
-          onFastImageLoadEnd={[Function]}
-          onFastImageLoadStart={[Function]}
-          resizeMode="contain"
-          source={
-            Object {
-              "priority": "high",
-              "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-            }
-          }
-          style={
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
-    </View>
+    />
   </View>
 </View>
 `;
@@ -152,45 +112,6 @@ exports[`component: PostComponent renders textImage posts 1`] = `
     }
   >
     <View>
-      <View
-        style={
-          Array [
-            Object {
-              "overflow": "hidden",
-            },
-            Array [
-              Object {
-                "height": 0,
-                "width": 750,
-              },
-              undefined,
-            ],
-          ]
-        }
-      >
-        <FastImageView
-          defaultSource={null}
-          onFastImageLoad={[Function]}
-          onFastImageLoadEnd={[Function]}
-          onFastImageLoadStart={[Function]}
-          resizeMode="contain"
-          source={
-            Object {
-              "priority": "high",
-              "uri": "https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg",
-            }
-          }
-          style={
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
       <Text
         style={
           Array [

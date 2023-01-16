@@ -235,8 +235,7 @@ const Home = () => {
           }
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
-          estimatedItemSize={388}
-          getItemType={item => item.id}
+          estimatedItemSize={497}
           ListFooterComponent={footerComponent}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={fetchMorePosts}

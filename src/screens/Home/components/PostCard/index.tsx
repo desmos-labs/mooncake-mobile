@@ -111,7 +111,7 @@ const PostCard = ({
     if (isPending) {
       return profileData || ({} as any);
     } else return author;
-  }, [isPending, profileData]);
+  }, [author, isPending, profileData]);
 
   const isFollowing = useRecoilValue(isFollowingAddr(authorData?.address));
 
@@ -119,7 +119,7 @@ const PostCard = ({
     attachments,
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
-    imageStyle: {borderRadius: 10},
+    imageStyle: {borderRadius: 10, backgroundColor: theme.colors.background},
     resizeMode: 'contain',
   });
 
@@ -179,7 +179,7 @@ const PostCard = ({
         />
       );
     }
-  }, [authorData, activeAddress, isPending, setMenuVisible, setMenuAnchor]);
+  }, [isPending, activeAddress, authorData?.address]);
 
   const ProfileInfo = React.useMemo(() => {
     return (
@@ -214,11 +214,12 @@ const PostCard = ({
       </View>
     );
   }, [
-    authorData?.dtag,
-    authorData?.nickname,
+    onPressAuthor,
     authorData?.profile_pic,
-    calculatedCreationDate,
+    authorData?.nickname,
+    authorData?.dtag,
     isPending,
+    calculatedCreationDate,
     PendingIndicator,
   ]);
 
@@ -304,12 +305,14 @@ const PostCard = ({
       </View>
     );
   }, [
-    commentPresence,
-    reactionPresence,
-    tipPresence,
-    onPressComment,
-    onPressTip,
     onPressLike,
+    reactionPresence?.aggregate?.count,
+    reactions?.length,
+    onPressComment,
+    commentPresence?.aggregate?.count,
+    repliesCount?.aggregate?.count,
+    onPressTip,
+    tipPresence?.aggregate?.count,
   ]);
 
   return (
