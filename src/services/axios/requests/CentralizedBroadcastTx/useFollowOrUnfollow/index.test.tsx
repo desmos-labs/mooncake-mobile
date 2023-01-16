@@ -29,6 +29,17 @@ jest.mock('@desmoslabs/desmjs', () => ({
   },
 }));
 
+const mockResolveOptimisticRelationshipForAddress = jest.fn();
+jest.mock('hooks/useOptimisticRelationships', () => () => ({
+  handleOptimisticRelationship: jest.fn(),
+  resolveOptimisticRelationshipForAddress:
+    mockResolveOptimisticRelationshipForAddress,
+}));
+
+jest.mock('hooks/useGetFollowingForAddress', () => () => ({
+  updateFollowing: jest.fn(),
+}));
+
 jest.mock('@apollo/client', () => ({
   gql: () => jest.fn(),
 }));
@@ -49,7 +60,7 @@ jest.mock('@desmoslabs/desmjs', () => ({
 }));
 
 describe('hook: useFollowOrUnfollow', () => {
-  it('follows a user', async () => {
+  it('follows a user and resolves the optimistic UI', async () => {
     const mockCounterParty = 'mockCounterParty';
 
     const mockCheckAndUpdateGrants = jest.fn(() => ({success: true}));
@@ -100,9 +111,13 @@ describe('hook: useFollowOrUnfollow', () => {
       msgs: mockMsgs,
       optimistic: expect.anything(),
     });
+
+    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(
+      mockCounterParty,
+    );
   });
 
-  it('unfollows a user', async () => {
+  it('unfollows a user and resolves the optimistic UI', async () => {
     const mockCounterParty = 'mockCounterParty';
 
     const mockCheckAndUpdateGrants = jest.fn(() => ({success: true}));
@@ -153,5 +168,9 @@ describe('hook: useFollowOrUnfollow', () => {
       msgs: mockMsgs,
       optimistic: expect.anything(),
     });
+
+    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(
+      mockCounterParty,
+    );
   });
 });

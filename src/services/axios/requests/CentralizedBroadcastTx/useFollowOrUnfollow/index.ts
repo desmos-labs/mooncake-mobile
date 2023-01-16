@@ -7,7 +7,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
-import {isFollowingAddr, useGetFollowingForAddress} from '@recoil/following';
+import {isFollowingAddr} from '@recoil/following';
 import {useRecoilCallback} from 'recoil';
 import {
   MsgCreateRelationship,
@@ -20,7 +20,8 @@ import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
-import useOptimisticRelationships from '@recoil/optimisticUI/optimisticRelationships';
+import useOptimisticRelationships from 'hooks/useOptimisticRelationships';
+import useGetFollowingForAddress from 'hooks/useGetFollowingForAddress';
 
 /**
  * @typedef FollowOrUnfollowUserArgs - Arguments for the followOrUnfollowUser callback
@@ -44,10 +45,10 @@ const useFollowOrUnfollow = () => {
 
   const {updateFollowing} = useGetFollowingForAddress(activeAddress);
 
-  const {handleOptimisticRelationship} = useOptimisticRelationships();
-
-  const {resolveOptimisticRelationshipForAddress} =
-    useOptimisticRelationships();
+  const {
+    handleOptimisticRelationship,
+    resolveOptimisticRelationshipForAddress,
+  } = useOptimisticRelationships();
 
   /**
    * Callback to follow or unfollow (create/delete relationship) a user.

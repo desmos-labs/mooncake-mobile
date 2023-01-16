@@ -1,10 +1,4 @@
-import {useCallback} from 'react';
-import {atom, selector, selectorFamily, useSetRecoilState} from 'recoil';
-import {useLazyQuery} from '@apollo/client';
-import GetFollowedUsersForAddress, {
-  GetFollowedUsersForAddressData,
-} from 'services/graphql/queries/GetFollowedUsersForAddress';
-import _ from 'lodash';
+import {atom, selector, selectorFamily} from 'recoil';
 
 import {
   hasOptimisticFollow,
@@ -41,33 +35,3 @@ export const isFollowingAddr = selectorFamily({
       return followedAddresses.has(address);
     },
 });
-
-/**
- * A hook that exposes a function to manually update a user's following list.
- */
-export const useGetFollowingForAddress = (address: string) => {
-  const setFollowing = useSetRecoilState(followingState);
-
-  const [, {refetch}] = useLazyQuery<GetFollowedUsersForAddressData>(
-    GetFollowedUsersForAddress,
-    {
-      variables: {
-        userAddress: address,
-      },
-      fetchPolicy: 'no-cache',
-    },
-  );
-
-  const updateFollowing = useCallback(async () => {
-    const {data} = await refetch({userAddress: address});
-    const {user_relationship} = data;
-
-    const newFollowing = user_relationship.map(x => x.counterparty);
-
-    setFollowing(_.compact(newFollowing));
-  }, [address]);
-
-  return {
-    updateFollowing,
-  };
-};
