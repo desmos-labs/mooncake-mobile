@@ -7,6 +7,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import inviteCodeState from '@recoil/inviteCodeState';
 import signUpInfoState from '@recoil/signUpInfoState';
 import signUpPasswordState from '@recoil/signUpPasswordState';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {GenericMsgEnums} from 'lib/desmos/msgtypes';
 import LocalWallet, {randomMnemonic} from 'lib/LocalWallet';
 import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
@@ -22,10 +23,9 @@ import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import Login from 'services/axios/requests/Login';
 import {generateLoginData} from 'services/axios/requests/Login/utils';
 import UploadMedia from 'services/axios/requests/UploadMedia';
-import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import GetAccountBalanceOnStartup from 'services/graphql/queries/GetAccountBalanceOnStartup';
 import {ChainAccount, ChainAccountType} from 'types/chains';
 import {DesmosHdPath} from 'types/hdpath';
-import useActiveAccount from 'hooks/useActiveAccount';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
@@ -39,13 +39,16 @@ const useHooks = () => {
   const [addressToCheck, setAddressToCheck] = React.useState('');
   const [signupValues, setSignupValues] = React.useState<any>({});
   const {setActiveAddress} = useActiveAccount();
-  const {data, startPolling, stopPolling} = useQuery(GetAccountBalance, {
-    variables: {
-      address: addressToCheck,
+  const {data, startPolling, stopPolling} = useQuery(
+    GetAccountBalanceOnStartup,
+    {
+      variables: {
+        address: addressToCheck,
+      },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'network-only',
     },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only',
-  });
+  );
 
   const initialFormValues = {
     dTag: '',
@@ -193,8 +196,8 @@ const useHooks = () => {
     console.log('Waiting the account to be on-chain');
     if (
       data &&
-      data.action_account_balance.coins.length > 0 &&
-      data.action_account_balance.coins[0].amount !== 0
+      data?.action_account_balance?.coins?.length > 0 &&
+      data?.action_account_balance?.coins[0]?.amount !== 0
     ) {
       console.log('Account on chain found, saving the profile on chain now');
       stopPolling();

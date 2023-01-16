@@ -2,6 +2,7 @@ import {useQuery} from '@apollo/client';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {useButterConfig} from '@recoil/butterConfigState';
 import {
   copyIcon,
   infoIcon,
@@ -36,6 +37,7 @@ import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
+import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetInvites from 'services/graphql/queries/GetInvites';
 import useStyles from './useStyles';
 
@@ -43,6 +45,7 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
 
 const Invites = () => {
   const {activeAddress} = useActiveAccount();
+  const {butterConfig} = useButterConfig();
   const [inviteGenerated, setInviteGenerated] = useState<boolean>();
   const [generationLoading, setGenerationLoading] = useState<boolean>(false);
   const [inviteLink, setInviteLink] = useState<string>('');
@@ -54,6 +57,21 @@ const Invites = () => {
   const {data, refetch} = useQuery(GetInvites, {
     fetchPolicy: 'no-cache',
   });
+
+  const {data: impactPointsData} = useQuery(GetImpactPoints, {
+    fetchPolicy: 'no-cache',
+  });
+
+  const impactPoints = useMemo(() => {
+    if (
+      !impactPointsData?.impact_record_aggregate?.aggregate?.sum
+        ?.rewarded_points
+    ) {
+      return 0;
+    }
+    return impactPointsData.impact_record_aggregate.aggregate.sum
+      .rewarded_points;
+  }, [impactPointsData]);
 
   const numInvitesGenerated = useMemo(() => {
     if (!data) {
@@ -69,10 +87,18 @@ const Invites = () => {
     if (numInvitesGenerated === undefined) {
       return undefined;
     }
-    if (numInvitesGenerated === 0) return 0;
-    if (numInvitesGenerated === 1) return 100;
-    if (numInvitesGenerated >= 2) return 150;
-  }, [numInvitesGenerated]);
+    const maxInvitesNumber =
+      butterConfig?.invites?.required_impact_points.length;
+    const required =
+      parseInt(
+        butterConfig?.invites?.required_impact_points[numInvitesGenerated],
+        10,
+      ) - impactPoints;
+    if (numInvitesGenerated >= maxInvitesNumber) {
+      return 0;
+    }
+    return required < 0 ? 0 : required;
+  }, [numInvitesGenerated, butterConfig, impactPoints]);
 
   const rightElement = useMemo(() => {
     return (
@@ -178,7 +204,9 @@ const Invites = () => {
       ) : (
         <Button
           disabled={
-            numInvitesGenerated === undefined || numInvitesGenerated === 3
+            numInvitesGenerated === undefined ||
+            numInvitesGenerated ===
+              butterConfig?.invites?.required_impact_points?.length
           }
           onPress={generateInvite}
           loading={generationLoading}
@@ -210,7 +238,10 @@ const Invites = () => {
           <Image source={inviteUserIcon} style={styles.iconRight} />
           {numInvitesGenerated !== undefined ? (
             <Typography.Body6 style={{color: theme.colors.midGrey}}>
-              {t('invites shared', {number: numInvitesGenerated})}
+              {t('invites shared', {
+                number: numInvitesGenerated,
+                total: butterConfig?.invites?.required_impact_points?.length,
+              })}
             </Typography.Body6>
           ) : (
             <ActivityIndicator />
