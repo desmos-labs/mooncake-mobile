@@ -140,6 +140,7 @@ import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
 import useSubscribeToUserFollowingChanges from 'hooks/subscriptions/useSubscribeToUserFollowingChanges';
+import useSubscribeToPostsByActiveAddress from 'hooks/subscriptions/useSubscribeToPostsByActiveAddress';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -280,7 +281,9 @@ const RootNavigator = () => {
   // Start polling queries
   usePollingQueries();
 
+  // Start subscriptions
   useSubscribeToUserFollowingChanges();
+  useSubscribeToPostsByActiveAddress();
 
   const {t} = useTranslation();
 

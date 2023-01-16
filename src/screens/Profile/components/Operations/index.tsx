@@ -25,7 +25,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -55,11 +55,16 @@ const Operations = () => {
     operationsData,
     pastActionsData,
     currentChain,
-    operationsDataFetchMore,
+    fetchMore,
     operationsDataLoading,
-    operationsDataRefetch,
+    refetch,
+    refetching,
+    fetchingMore,
   } = useHooks(params.address);
-
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(false);
   const titleMap: {[index: string]: string} = {
     [MsgCreatePostTypeUrl]: t('create comment post'),
     [MsgCreateRelationshipTypeUrl]: t('follow user'),
@@ -114,9 +119,13 @@ const Operations = () => {
     [currentChain, titleMap, imageMap],
   );
 
-  const footerComponent = () => {
-    return <OperationContentLoader />;
-  };
+  const footerComponent = useMemo(() => {
+    if (fetchingMore) {
+      return <OperationContentLoader />;
+    } else {
+      return null;
+    }
+  }, [fetchingMore]);
 
   return (
     <DView
@@ -136,9 +145,11 @@ const Operations = () => {
       {pastActionsData?.messages_by_address?.length >= 0 &&
       !operationsDataLoading ? (
         <SectionList
-          keyExtractor={item => item.transaction_hash}
-          refreshing={operationsDataLoading}
-          onRefresh={operationsDataRefetch}
+          refreshing={refetching}
+          onRefresh={refetch}
+          keyExtractor={(item, index) =>
+            String(`operationKey${index + item.timestamp}`)
+          }
           style={{flex: 1}}
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
@@ -146,25 +157,16 @@ const Operations = () => {
           sections={operationsData}
           renderItem={renderTx}
           ListFooterComponent={footerComponent}
-          onEndReached={() => {
-            operationsDataFetchMore({
-              variables: {
-                offset: pastActionsData?.messages_by_address.length,
-              },
-              updateQuery: (prev, {fetchMoreResult}) => {
-                if (!fetchMoreResult) {
-                  return prev;
-                }
-                return {
-                  ...prev,
-                  messages_by_address: [
-                    ...prev.messages_by_address,
-                    ...fetchMoreResult.messages_by_address,
-                  ],
-                };
-              },
-            });
+          onMomentumScrollBegin={() =>
+            setOnEndReachedCalledDuringMomentum(false)
+          }
+          onEndReached={({distanceFromEnd}) => {
+            if (!onEndReachedCalledDuringMomentum) {
+              fetchMore(distanceFromEnd);
+              setOnEndReachedCalledDuringMomentum(true);
+            }
           }}
+          onEndReachedThreshold={0.5}
           renderSectionHeader={({section: {section}}) => (
             <View style={styles.sectionHeader}>
               <Typography.Button2>{section}</Typography.Button2>

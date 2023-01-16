@@ -18,7 +18,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -53,7 +52,6 @@ const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
   const styles = useStyles();
-  const theme = useTheme();
   const postListRef = useRef<any>(null);
   const [listOptions, setListOptions] = useRecoilState(postsListOptions);
   const {
@@ -68,87 +66,89 @@ const Home = () => {
     fetchNewestPosts,
     fetchMorePosts,
     checkIfPostIsPending,
-    loading,
     queryPostsData,
+    loading,
+    refetching,
+    fetchingMore,
   } = useHooks();
 
-  const handlePressNewPostNotification = useCallback(() => {
-    fetchNewestPosts();
+  const handlePressNewPostNotification = useCallback(async () => {
+    await fetchNewestPosts();
     if (postListRef && postListRef.current) {
       postListRef.current.scrollToIndex({
         animated: true,
         index: 0,
       });
     }
-  }, [postListRef]);
+  }, [postListRef, fetchNewestPosts]);
 
   const {resetNewPostNotificationState} = useWatchForNewPosts(
     handlePressNewPostNotification,
   );
 
   const renderPost = React.useCallback(
-    ({item}: ListRenderItemInfo<PostItem>) => {
-      if (item.emptyComponent) {
+    ({item}: ListRenderItemInfo<Partial<PostItem> | PostItem>) => {
+      if (!item) {
         return (
-          <View style={{flex: 1, marginHorizontal: theme.spacing.m}}>
+          <View style={styles.loaderView}>
             <HomePostContentLoader />
           </View>
         );
       }
       return (
         <PostCard
-          author={item.author}
+          author={item.author!}
           isPending={item.isPending}
-          attachments={item.attachments}
-          text={item.text}
-          id={item.id}
-          reactionPresence={item.reactionPresence}
-          commentPresence={item.commentPresence}
-          tipPresence={item.tipPresence}
-          reactions={item.reactions}
-          repliesCount={item.repliesCount}
-          creation_date={item.creation_date}
-          onPressAuthor={() => handleNavigateToProfile(item.author_address)}
+          attachments={item.attachments!}
+          text={item.text!}
+          id={item.id!}
+          reactionPresence={item.reactionPresence!}
+          commentPresence={item.commentPresence!}
+          tipPresence={item.tipPresence!}
+          reactions={item.reactions!}
+          repliesCount={item.repliesCount!}
+          creation_date={item.creation_date!}
+          onPressAuthor={() => handleNavigateToProfile(item.author_address!)}
           onPressDetails={() => {
-            if (checkIfPostIsPending(item.id)) {
+            if (checkIfPostIsPending(item.id!)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressDetails(item.id, item.subspace_id);
+            handlePressDetails(item.id!, item.subspace_id!);
           }}
           onPressLike={() => {
-            if (checkIfPostIsPending(item.id)) {
+            if (checkIfPostIsPending(item.id!)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handleAddReaction(item.id);
+            handleAddReaction(item.id!);
           }}
           onPressComment={() => {
-            if (checkIfPostIsPending(item.id)) {
+            if (checkIfPostIsPending(item.id!)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressComments(item.id);
+            handlePressComments(item.id!);
           }}
           onPressTip={() => {
-            if (checkIfPostIsPending(item.id) || !item.author) {
+            if (checkIfPostIsPending(item.id!) || !item.author) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressTip(item.author!.address, item.id);
+            handlePressTip(item.author!.address, item.id!);
           }}
-          onPressFollow={() => handlePressFollow(item.author_address)}
+          onPressFollow={() => handlePressFollow(item.author_address!)}
           onPressReport={() => {
-            if (checkIfPostIsPending(item.id) || !item.author) {
+            if (checkIfPostIsPending(item.id!) || !item.author) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressReport(item.id, item.subspace_id);
+            handlePressReport(item.id!, item.subspace_id!);
           }}
         />
       );
@@ -161,11 +161,24 @@ const Home = () => {
       handlePressComments,
       handleAddReaction,
       handlePressTip,
+      fetchingMore,
     ],
   );
 
-  const onRefresh = useCallback(() => {
-    fetchNewestPosts();
+  const footerComponent = useMemo(() => {
+    if (fetchingMore) {
+      return (
+        <View style={styles.loaderView}>
+          <HomePostContentLoader />
+        </View>
+      );
+    } else {
+      return null;
+    }
+  }, [fetchingMore]);
+
+  const onRefresh = useCallback(async () => {
+    await fetchNewestPosts();
     resetNewPostNotificationState();
   }, [fetchNewestPosts, resetNewPostNotificationState]);
 
@@ -198,34 +211,38 @@ const Home = () => {
     );
   }, [listOptions]);
 
+  if (!queryPostsData || !posts || loading) {
+    return (
+      <View style={styles.loadingView}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <>
-      {queryPostsData ? (
-        <View style={styles.homeView}>
-          <FlashList
-            keyExtractor={item => item.id.toString()}
-            ref={postListRef}
-            data={posts}
-            refreshControl={
-              <RefreshControl
-                enabled
-                onRefresh={onRefresh}
-                refreshing={loading}
-              />
-            }
-            renderItem={renderPost}
-            showsVerticalScrollIndicator={false}
-            estimatedItemSize={388}
-            getItemType={item => item.id}
-            ItemSeparatorComponent={HomeItemSeparatorComponent}
-            onEndReached={() => fetchMorePosts()}
-          />
-        </View>
-      ) : (
-        <View style={styles.loadingView}>
-          <ActivityIndicator />
-        </View>
-      )}
+      <View style={styles.homeView}>
+        <FlashList
+          keyExtractor={(item, index) => `${index}item+${item.id}`}
+          ref={postListRef}
+          data={posts}
+          refreshControl={
+            <RefreshControl
+              enabled
+              onRefresh={onRefresh}
+              refreshing={refetching}
+            />
+          }
+          renderItem={renderPost}
+          showsVerticalScrollIndicator={false}
+          estimatedItemSize={388}
+          getItemType={item => item.id}
+          ListFooterComponent={footerComponent}
+          ItemSeparatorComponent={HomeItemSeparatorComponent}
+          onEndReached={fetchMorePosts}
+          onEndReachedThreshold={0.5}
+        />
+      </View>
       {SearchView}
     </>
   );

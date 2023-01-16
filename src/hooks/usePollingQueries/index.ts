@@ -1,10 +1,10 @@
 /**
  * Queries that will poll at a constant interval to keep user data in sync
  */
-import usePollLatestPostsByUser from '@recoil/latestPostsByUser';
+import {useGetFollowingPolling} from '@recoil/following';
 
 const usePollingQueries = () => {
-  usePollLatestPostsByUser(5);
+  useGetFollowingPolling();
 };
 
 export default usePollingQueries;

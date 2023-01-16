@@ -22,7 +22,7 @@ import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {formatMsToHumanReadable} from 'lib/FormatUtils';
-import React, {useMemo, useState} from 'react';
+import React, {memo, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -126,10 +126,6 @@ const PostCard = ({
   const calculatedCreationDate = useMemo(() => {
     const parsedTime = parseISO(`${creation_date}Z`);
     const now = new Date();
-    // const secondsDiff = differenceInSeconds(now, parsedTime);
-    // const minutesDiff = differenceInMinutes(now, parsedTime);
-    // const hoursDiff = differenceInHours(now, parsedTime);
-    // const daysDiff = differenceInDays(now, parsedTime);
 
     const differenceInUnix = now.getTime() - parsedTime.getTime();
 
@@ -209,7 +205,7 @@ const PostCard = ({
                   color: theme.colors.midGrey,
                   marginLeft: theme.spacing.xs,
                 }}>
-                · {calculatedCreationDate}
+                {!isPending && `· ${calculatedCreationDate}`}
               </Typography.Body6>
             </View>
           </View>
@@ -222,6 +218,7 @@ const PostCard = ({
     authorData?.nickname,
     authorData?.profile_pic,
     calculatedCreationDate,
+    isPending,
     PendingIndicator,
   ]);
 
@@ -327,7 +324,7 @@ const PostCard = ({
       {MediaAttachment && (
         <View style={styles.mediaView}>{MediaAttachment}</View>
       )}
-      {BottomBar}
+      {!isPending && BottomBar}
       <PopupMenu
         anchor={menuAnchor}
         visible={menuVisible}
@@ -349,4 +346,4 @@ const PostCard = ({
   );
 };
 
-export default PostCard;
+export default memo(PostCard);

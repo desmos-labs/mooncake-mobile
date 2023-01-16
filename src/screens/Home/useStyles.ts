@@ -32,6 +32,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     backgroundColor: theme.colors.white,
   },
+  loaderView: {flex: 1, marginHorizontal: theme.spacing.m},
   searchView: {flex: 1, zIndex: 2},
 }));
 

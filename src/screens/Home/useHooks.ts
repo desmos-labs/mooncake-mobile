@@ -28,7 +28,14 @@ const useHooks = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
-  const {posts, fetchMorePosts, fetchNewestPosts, loading} = useGetPosts({
+  const {
+    posts,
+    fetchMorePosts,
+    fetchNewestPosts,
+    loading,
+    refetching,
+    fetchingMore,
+  } = useGetPosts({
     type: postFamilyMap[routeName],
   });
 
@@ -41,12 +48,8 @@ const useHooks = () => {
   }, [JSON.stringify(pendingPosts)]);
 
   // sort and combine pending posts with posts from API
-  const combinedPosts = React.useMemo(() => {
-    return [
-      ...parsedPendingPosts,
-      ...posts,
-      {id: -1, emptyComponent: true} as any,
-    ];
+  const combinedPosts: Partial<PostItem>[] = React.useMemo(() => {
+    return [...parsedPendingPosts, ...posts];
   }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
   const checkIfPostIsPending = (postId: number) => {
@@ -126,6 +129,8 @@ const useHooks = () => {
     queryPostsData: posts,
     checkIfPostIsPending,
     loading,
+    refetching,
+    fetchingMore,
     fetchNewestPosts,
     fetchMorePosts,
   };

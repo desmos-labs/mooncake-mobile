@@ -1,18 +1,10 @@
-import React from 'react';
-import {
-  atom,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
-import {useQuery} from '@apollo/client';
+import {useCallback} from 'react';
+import {atom, useSetRecoilState} from 'recoil';
+import {useLazyQuery} from '@apollo/client';
 import GetLastPostsByAddress from 'services/graphql/queries/GetLastPostsByAddress';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+
 import {useSyncPendingPosts} from 'hooks/usePendingPosts';
 
 export const latestPostsByUserState = atom<PostItem[]>({
@@ -21,48 +13,36 @@ export const latestPostsByUserState = atom<PostItem[]>({
 });
 
 /**
- * A hook that manages logic related to polling the user's latest posts
- * @param {number} limit - The amount of posts to poll
+ * Get the last 5 posts from the current user's active address
  */
-const usePollLatestPostsByUser = (limit: number) => {
+export const useGetLatestPostsByActiveAddress = () => {
   const {activeAddress} = useActiveAccount();
   const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
-  const resetLatestPosts = useResetRecoilState(latestPostsByUserState);
-  const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
+
   useSyncPendingPosts();
 
-  const {data, startPolling, stopPolling, loading} = useQuery(
-    GetLastPostsByAddress,
-    {
-      variables: {
-        limit,
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        user: activeAddress!,
-        reaction: {
-          '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-          registered_reaction_id: 9,
-        },
+  const [, {refetch}] = useLazyQuery(GetLastPostsByAddress, {
+    variables: {
+      limit: 5,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      user: activeAddress,
+      reaction: {
+        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
+        registered_reaction_id: 9,
       },
-      notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'no-cache',
     },
-  );
+  });
 
-  React.useEffect(() => {
-    if (!loading && data) {
-      const {post} = data;
-      setLatestPostsByUser(post);
-    }
-  }, [JSON.stringify(data)]);
+  const getLatestPostsByActiveAddress = useCallback(async () => {
+    const {data} = await refetch({
+      user: activeAddress,
+      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+    });
+    const {post} = data;
+    setLatestPostsByUser(post);
+  }, [refetch, activeAddress]);
 
-  React.useEffect(() => {
-    if (pendingPosts.length > 0) {
-      startPolling(EnvConfig.POLLING_INTERVAL);
-    } else {
-      resetLatestPosts();
-      stopPolling();
-    }
-  }, [pendingPosts.length]);
+  return {
+    getLatestPostsByActiveAddress,
+  };
 };
-
-export default usePollLatestPostsByUser;

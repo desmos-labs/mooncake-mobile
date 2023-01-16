@@ -1,6 +1,7 @@
 import {atomFamily, selectorFamily} from 'recoil';
 import Long from 'long';
 import _ from 'lodash';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
 export enum PendingPostEnum {
   'POST',
@@ -12,7 +13,25 @@ export enum PendingPostEnum {
  */
 export const pendingPostsState = atomFamily<PendingPost[], PendingPostEnum>({
   key: 'pendingPosts',
-  default: [],
+  default: type => {
+    if (type === PendingPostEnum.POST) {
+      return getMMKV(MMKVKEYS.PENDING_POSTS) || [];
+    } else if (type === PendingPostEnum.COMMENT) {
+      return getMMKV(MMKVKEYS.PENDING_COMMENTS) || [];
+    }
+    return [];
+  },
+  effects: type => [
+    ({onSet}) => {
+      onSet(newValue => {
+        if (type === PendingPostEnum.POST) {
+          setMMKV(MMKVKEYS.PENDING_POSTS, newValue);
+        } else if (type === PendingPostEnum.COMMENT) {
+          setMMKV(MMKVKEYS.PENDING_COMMENTS, newValue);
+        }
+      });
+    },
+  ],
 });
 
 /**
