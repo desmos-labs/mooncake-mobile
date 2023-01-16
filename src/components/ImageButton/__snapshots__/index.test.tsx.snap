@@ -39,6 +39,7 @@ exports[`component: ImageButton renders 1`] = `
     >
       <FastImageView
         defaultSource={null}
+        onFastImageError={[Function]}
         resizeMode="cover"
         source={
           Object {

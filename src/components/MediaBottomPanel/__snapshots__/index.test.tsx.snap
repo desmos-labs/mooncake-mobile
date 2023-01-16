@@ -95,6 +95,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             >
               <FastImageView
                 defaultSource={null}
+                onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
                   Object {
@@ -160,6 +161,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             >
               <FastImageView
                 defaultSource={null}
+                onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
                   Object {
@@ -220,6 +222,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             >
               <FastImageView
                 defaultSource={null}
+                onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
                   Object {

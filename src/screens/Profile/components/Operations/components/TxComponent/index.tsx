@@ -1,7 +1,7 @@
 import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import React from 'react';
+import React, {memo} from 'react';
 import {View} from 'react-native';
 import FastImage, {Source} from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
@@ -42,4 +42,4 @@ const TxComponent = ({
   );
 };
 
-export default TxComponent;
+export default memo(TxComponent);

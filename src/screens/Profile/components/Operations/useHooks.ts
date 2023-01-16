@@ -3,14 +3,15 @@ import {convertCoin} from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import {parseISO} from 'date-fns';
 import {formatInTimeZone} from 'date-fns-tz';
-import {useMemo} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 import GetPastActions from 'services/graphql/queries/GetPastActions';
 
 const useHooks = (address: string) => {
   const {currentChain, currentTimezone} = useRecoilValue(appSettingsState);
-
+  const [refetching, setRefetching] = useState(false);
+  const [fetchingMore, setFetchingMore] = useState(false);
   const {data: balanceData, loading: balanceLoading} = useQuery(
     GetAccountBalance,
     {
@@ -27,13 +28,48 @@ const useHooks = (address: string) => {
     refetch: operationsDataRefetch,
     error,
     fetchMore: operationsDataFetchMore,
+    networkStatus,
   } = useQuery(GetPastActions, {
     variables: {
       userAddress: address,
-      limit: 10,
+      limit: 8,
       offset: 0,
     },
   });
+
+  const refetch = useCallback(async () => {
+    setRefetching(true);
+    await operationsDataRefetch().finally(() => {
+      setTimeout(() => setRefetching(false), 500);
+    });
+  }, [operationsDataRefetch]);
+
+  const fetchMore = useCallback(
+    async (distanceFromEnd: number) => {
+      if (distanceFromEnd < 0) return;
+      setFetchingMore(true);
+      await operationsDataFetchMore({
+        variables: {
+          offset: pastActionsData?.messages_by_address.length,
+        },
+        updateQuery: (prev, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return prev;
+          }
+          return {
+            ...prev,
+            messages_by_address: [
+              ...prev.messages_by_address,
+              ...fetchMoreResult.messages_by_address,
+            ],
+          };
+        },
+      }).finally(() => {
+        setTimeout(() => setFetchingMore(false), 1000);
+      });
+    },
+    [pastActionsData?.messages_by_address.length],
+  );
 
   const convertedBalance = useMemo(() => {
     let balanceToReturn;
@@ -53,7 +89,7 @@ const useHooks = (address: string) => {
       tokenPrice,
       convertedAmount,
     };
-  }, [balanceData, balanceLoading, currentChain]);
+  }, [balanceData, balanceLoading, currentChain?.currencies]);
 
   const operationsData = useMemo(() => {
     if (!pastActionsData) {
@@ -96,16 +132,19 @@ const useHooks = (address: string) => {
     });
 
     return sections;
-  }, [pastActionsData, error]);
+  }, [pastActionsData?.messages_by_address, error]);
 
   return {
     pastActionsData,
     operationsData,
     convertedBalance,
     currentChain,
-    operationsDataFetchMore,
+    fetchingMore,
+    fetchMore,
     operationsDataLoading,
-    operationsDataRefetch,
+    refetch,
+    refetching,
+    networkStatus,
   };
 };
 
