@@ -236,12 +236,6 @@ const Home = () => {
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
           estimatedItemSize={497}
-          getItemType={item => {
-            if (item.text && !item.attachments) return 1;
-            else if (!item.text && item.attachments) return 2;
-            else if (item.text && item.attachments) return 3;
-            else return 4;
-          }}
           ListFooterComponent={footerComponent}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={fetchMorePosts}
