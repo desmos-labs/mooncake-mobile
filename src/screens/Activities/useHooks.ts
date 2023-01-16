@@ -84,7 +84,7 @@ const useHooks = () => {
     } finally {
       setNotificationsDetailsLoading(false);
     }
-  }, [data]);
+  }, [JSON.stringify(data)]);
 
   const refetch = useCallback(async () => {
     setRefetching(true);
@@ -92,16 +92,11 @@ const useHooks = () => {
       notificationsRefetch(),
       fetchNotificationDetails(),
     ]).finally(() => setTimeout(() => setRefetching(false), 500));
-  }, [
-    data?.notification?.length,
-    notificationsRefetch,
-    fetchNotificationDetails,
-  ]);
+  }, [notificationsRefetch, fetchNotificationDetails]);
 
   const fetchMore = useCallback(
     async (distanceFromEnd: number) => {
       if (distanceFromEnd < 0) return;
-      console.log('fetch more', distanceFromEnd);
       setFetchingMore(true);
       await notificationsFetchMore({
         variables: {
