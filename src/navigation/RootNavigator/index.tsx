@@ -12,7 +12,6 @@ import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
-import usePollingQueries from 'hooks/usePollingQueries';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
@@ -139,8 +138,7 @@ import Signup from 'screens/Signup';
 import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import useSubscribeToUserFollowingChanges from 'hooks/subscriptions/useSubscribeToUserFollowingChanges';
-import useSubscribeToPostsByActiveAddress from 'hooks/subscriptions/useSubscribeToPostsByActiveAddress';
+import useSubscriptions from 'hooks/useSubscriptions';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -278,12 +276,8 @@ const RootNavigator = () => {
   useNotifications();
   // End initialization
 
-  // Start polling queries
-  usePollingQueries();
-
   // Start subscriptions
-  useSubscribeToUserFollowingChanges();
-  useSubscribeToPostsByActiveAddress();
+  useSubscriptions();
 
   const {t} = useTranslation();
 
