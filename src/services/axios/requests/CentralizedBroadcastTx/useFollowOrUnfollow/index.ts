@@ -56,6 +56,8 @@ const useFollowOrUnfollow = () => {
       }: FollowOrUnfollowUserArgs) => {
         if (!activeAddress) throw new Error('No active address found');
 
+        setLoading(true);
+
         const isAlreadyFollowing = await snapshot.getPromise(
           isFollowingAddr(addrToFollow),
         );
@@ -81,7 +83,6 @@ const useFollowOrUnfollow = () => {
           });
         }
 
-        setLoading(true);
         try {
           let msg:
             | MsgDeleteRelationshipEncodeObject

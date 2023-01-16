@@ -14,7 +14,7 @@ import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -115,7 +115,17 @@ const GuestProfile = () => {
   } = useQueries(address);
 
   const isFollowing = useRecoilValue(isFollowingAddr(address!));
-  const {followOrUnfollowUser} = useFollowOrUnfollow();
+  const {followOrUnfollowUser, loading: followOrUnFollowLoading} =
+    useFollowOrUnfollow();
+
+  const handlePressFollow = useCallback(
+    async (_address: string) => {
+      await followOrUnfollowUser({addrToFollow: _address});
+
+      refreshNumRelationships();
+    },
+    [refreshNumRelationships, followOrUnfollowUser],
+  );
 
   /**
    * Animations
@@ -213,7 +223,6 @@ const GuestProfile = () => {
   /**
    * Handlers
    */
-
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
       userAddress: address!,
@@ -481,7 +490,8 @@ const GuestProfile = () => {
 
           {isFollowing ? (
             <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              loading={followOrUnFollowLoading}
+              onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}
               color={theme.colors.surfaceGrey}>
@@ -491,7 +501,8 @@ const GuestProfile = () => {
             </Button>
           ) : (
             <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              loading={followOrUnFollowLoading}
+              onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}
               color={theme.colors.surfaceBlack}>

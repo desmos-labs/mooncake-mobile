@@ -7,8 +7,6 @@ import {
 import client from 'services/graphql/client';
 import GetNumRelationshipsForAddress from 'services/graphql/queries/GetNumRelationshipsForAddress';
 import _ from 'lodash';
-import {optimisticRelationshipModifier} from '@recoil/optimisticUI/optimisticRelationships';
-import activeAddressState from '@recoil/activeAddressState';
 
 type NumRelationshipType = {
   numFollowing: number;
@@ -23,43 +21,28 @@ const numRelationshipState = selectorFamily<
   string
 >({
   key: 'numRelationshipState',
-  get:
-    (address: string) =>
-    async ({get}) => {
-      const {data} = await client.query({
-        query: GetNumRelationshipsForAddress,
-        variables: {
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
-          address,
-        },
-        fetchPolicy: 'no-cache',
-      });
+  get: (address: string) => async () => {
+    const {data} = await client.query({
+      query: GetNumRelationshipsForAddress,
+      variables: {
+        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        address,
+      },
+      fetchPolicy: 'no-cache',
+    });
 
-      const activeAddress = get(activeAddressState);
-      const optRelationshipMod = get(optimisticRelationshipModifier(address));
+    if (data) {
+      const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
+      const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
 
-      console.log('relationship mod', optRelationshipMod);
-
-      if (data) {
-        const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
-        const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
-
-        // Locally modify the active user's number of FOLLOWING (i.e the number of users they are currently following)
-        if (activeAddress === address) {
-          return {
-            numFollowers,
-            numFollowing: numFollowing + optRelationshipMod,
-          };
-        }
-
-        // Locally modify the guest profile's number of FOLLOWERS
-        return {
-          numFollowers: numFollowers + optRelationshipMod,
-          numFollowing,
-        };
-      }
-      return undefined;
-    },
+      // Locally modify the guest profile's number of FOLLOWERS
+      return {
+        numFollowers,
+        numFollowing,
+      };
+    }
+    return undefined;
+  },
 });
 
 /**
