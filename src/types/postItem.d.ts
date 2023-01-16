@@ -65,8 +65,8 @@ declare global {
 
   interface PostAttachment {
     id: number;
-
     content: Media | Poll;
+    size: {height: number; width: number}[];
   }
 
   interface MediaContent {

@@ -119,7 +119,7 @@ const PostCard = ({
     attachments,
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
-    imageStyle: {borderRadius: 10},
+    imageStyle: {borderRadius: 10, backgroundColor: theme.colors.background},
     resizeMode: 'contain',
   });
 

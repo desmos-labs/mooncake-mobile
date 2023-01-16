@@ -8,6 +8,10 @@ const POST_FIELDS = gql`
     attachments {
       id
       content
+      size {
+        width
+        height
+      }
     }
     author {
       address
