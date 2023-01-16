@@ -38,8 +38,6 @@ const numRelationshipState = selectorFamily<
       const activeAddress = get(activeAddressState);
       const optRelationshipMod = get(optimisticRelationshipModifier(address));
 
-      console.log('relationship mod', optRelationshipMod);
-
       if (data) {
         const numFollowers = _.get(data, 'followage_aggregate.aggregate.count');
         const numFollowing = _.get(data, 'following_aggregate.aggregate.count');
@@ -54,10 +52,7 @@ const numRelationshipState = selectorFamily<
 
         // Locally modify the guest profile's number of FOLLOWERS
         return {
-          // [Kevin]: commented out as I can't figure out a good way to sync
-          // the data from BE with the local value without the value changing constantly
-          // numFollowers: numFollowers + optRelationshipMod,
-          numFollowers,
+          numFollowers: numFollowers + optRelationshipMod,
           numFollowing,
         };
       }

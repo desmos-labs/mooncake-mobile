@@ -7,7 +7,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import {useToast} from 'react-native-toast-notifications';
 import {useTranslation} from 'react-i18next';
 import ToastConfig from 'config/ToastConfig';
-import {isFollowingAddr} from '@recoil/following';
+import {isFollowingAddr, useGetFollowingForAddress} from '@recoil/following';
 import {useRecoilCallback} from 'recoil';
 import {
   MsgCreateRelationship,
@@ -42,7 +42,12 @@ const useFollowOrUnfollow = () => {
   const {t} = useTranslation('toast');
   const [loading, setLoading] = React.useState(false);
 
+  const {updateFollowing} = useGetFollowingForAddress(activeAddress);
+
   const {handleOptimisticRelationship} = useOptimisticRelationships();
+
+  const {resolveOptimisticRelationshipForAddress} =
+    useOptimisticRelationships();
 
   /**
    * Callback to follow or unfollow (create/delete relationship) a user.
@@ -123,6 +128,8 @@ const useFollowOrUnfollow = () => {
           toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
         } finally {
           setLoading(false);
+          await updateFollowing();
+          await resolveOptimisticRelationshipForAddress(addrToFollow);
         }
       },
     [activeAddress, handleOptimisticRelationship],

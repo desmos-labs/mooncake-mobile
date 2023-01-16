@@ -141,11 +141,28 @@ const useOptimisticRelationships = () => {
       },
   );
 
+  const resolveOptimisticRelationshipForAddress = useRecoilCallback(
+    ({snapshot, set}) =>
+      async (address: string) => {
+        console.log('resolving optimistic relationship for address');
+        const optRelationships = await snapshot.getPromise(
+          optimisticRelationshipState,
+        );
+
+        const filteredOptRelationships = optRelationships.filter(
+          x => x.counterParty !== address,
+        );
+
+        set(optimisticRelationshipState, filteredOptRelationships);
+      },
+  );
+
   return {
     optimisticFollowing,
     optimisticUnfollow,
     handleOptimisticRelationship,
     resolveOptimisticRelationships,
+    resolveOptimisticRelationshipForAddress,
   };
 };
 

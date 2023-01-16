@@ -115,13 +115,11 @@ const GuestProfile = () => {
   } = useQueries(address);
 
   const isFollowing = useRecoilValue(isFollowingAddr(address!));
-  const {followOrUnfollowUser, loading: followOrUnFollowLoading} =
-    useFollowOrUnfollow();
+  const {followOrUnfollowUser} = useFollowOrUnfollow();
 
   const handlePressFollow = useCallback(
     async (_address: string) => {
       await followOrUnfollowUser({addrToFollow: _address});
-
       refreshNumRelationships();
     },
     [refreshNumRelationships, followOrUnfollowUser],
@@ -130,7 +128,6 @@ const GuestProfile = () => {
   /**
    * Animations
    */
-
   const AnimatedImageBackground =
     Animated.createAnimatedComponent(ImageBackground);
   // @ts-ignore
@@ -231,7 +228,6 @@ const GuestProfile = () => {
   };
 
   const refetchUserData = React.useCallback(async () => {
-    console.log('refetching user profile data and connected apps & chains');
     await refetchVisitingProfileData();
     await refreshNumRelationships();
   }, [refetchChainLinks, refetchAppLinks]);
@@ -490,7 +486,6 @@ const GuestProfile = () => {
 
           {isFollowing ? (
             <Button
-              loading={followOrUnFollowLoading}
               onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}
@@ -501,7 +496,6 @@ const GuestProfile = () => {
             </Button>
           ) : (
             <Button
-              loading={followOrUnFollowLoading}
               onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}

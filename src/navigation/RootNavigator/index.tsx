@@ -138,7 +138,7 @@ import Signup from 'screens/Signup';
 import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import useSubscriptions from 'hooks/useSubscriptions';
+import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
