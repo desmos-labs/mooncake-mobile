@@ -331,7 +331,7 @@ const PostCard = ({
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
-            label: t('follow'),
+            label: isFollowing ? t('unfollow') : t('follow'),
             onPress: onPressFollow,
             icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
           },

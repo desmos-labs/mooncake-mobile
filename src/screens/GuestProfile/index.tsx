@@ -1,5 +1,9 @@
 import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import {defaultBanner, profileBack} from 'assets/images';
@@ -10,7 +14,7 @@ import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -83,6 +87,17 @@ const GuestProfile = () => {
     refreshNumRelationships,
   } = useGuestProfileDataQueries(params?.address!);
 
+  // refresh number of followers on screen focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const task = InteractionManager.runAfterInteractions(() => {
+        // Only refresh following list on focus
+        refreshNumRelationships();
+      });
+      return () => task.cancel();
+    }, [refreshNumRelationships]),
+  );
+
   const {
     posts,
     postsData,
@@ -102,10 +117,17 @@ const GuestProfile = () => {
   const isFollowing = useRecoilValue(isFollowingAddr(address!));
   const {followOrUnfollowUser} = useFollowOrUnfollow();
 
+  const handlePressFollow = useCallback(
+    async (_address: string) => {
+      await followOrUnfollowUser({addrToFollow: _address});
+      refreshNumRelationships();
+    },
+    [refreshNumRelationships, followOrUnfollowUser],
+  );
+
   /**
    * Animations
    */
-
   const AnimatedImageBackground =
     Animated.createAnimatedComponent(ImageBackground);
   // @ts-ignore
@@ -198,7 +220,6 @@ const GuestProfile = () => {
   /**
    * Handlers
    */
-
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
       userAddress: address!,
@@ -207,7 +228,6 @@ const GuestProfile = () => {
   };
 
   const refetchUserData = React.useCallback(async () => {
-    console.log('refetching user profile data and connected apps & chains');
     await refetchVisitingProfileData();
     await refreshNumRelationships();
   }, [refetchChainLinks, refetchAppLinks]);
@@ -466,7 +486,7 @@ const GuestProfile = () => {
 
           {isFollowing ? (
             <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}
               color={theme.colors.surfaceGrey}>
@@ -476,7 +496,7 @@ const GuestProfile = () => {
             </Button>
           ) : (
             <Button
-              onPress={() => followOrUnfollowUser({addrToFollow: address})}
+              onPress={() => handlePressFollow(address)}
               mode="contained"
               contentStyle={{height: 36}}
               color={theme.colors.surfaceBlack}>

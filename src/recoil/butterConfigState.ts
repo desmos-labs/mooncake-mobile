@@ -1,7 +1,10 @@
-import {useLazyQuery} from '@apollo/client';
-import React from 'react';
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
+import {
+  selector,
+  useRecoilRefresher_UNSTABLE,
+  useRecoilValueLoadable,
+} from 'recoil';
 import GetConfig from 'services/graphql/queries/GetConfig';
+import client from 'services/graphql/client';
 
 export interface ButterConfigState {
   // Desmos address of the account used by the APIs
@@ -13,11 +16,12 @@ export interface ButterConfigState {
  * A recoil atom used to store the config details of the Butter app, retrieved
  * from API
  */
-const butterConfigState = atom<ButterConfigState>({
+const butterConfigState = selector<ButterConfigState>({
   key: 'chainConfig',
-  default: {
-    desmos_address: '',
-    ibc: {},
+  get: async () => {
+    const {data} = await client.query({query: GetConfig});
+
+    return data.config as ButterConfigState;
   },
 });
 
@@ -26,28 +30,15 @@ const butterConfigState = atom<ButterConfigState>({
  * to manually update the atom.
  */
 export const useButterConfig = () => {
-  const butterConfig = useRecoilValue(butterConfigState);
+  const butterConfig = useRecoilValueLoadable(butterConfigState);
+
+  const refetchButterConfig = useRecoilRefresher_UNSTABLE(butterConfigState);
 
   return {
-    butterConfig,
-  };
-};
-
-export const useGetButterConfig = () => {
-  const setButterConfig = useSetRecoilState(butterConfigState);
-  const [getConfigQuery] = useLazyQuery(GetConfig, {
-    fetchPolicy: 'no-cache',
-  });
-
-  const getButterConfig = React.useCallback(async () => {
-    await getConfigQuery().then(result => {
-      if (result) {
-        setButterConfig(result.data.config);
-      }
-    });
-  }, []);
-
-  return {
-    getButterConfig,
+    butterConfig:
+      butterConfig.state === 'hasValue'
+        ? butterConfig.contents
+        : ({} as ButterConfigState),
+    refetchButterConfig,
   };
 };

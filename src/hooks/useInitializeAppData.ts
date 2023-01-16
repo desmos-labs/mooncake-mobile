@@ -6,7 +6,7 @@ import * as RNLocalize from 'react-native-localize';
 import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
 import {profileParamsState} from '@recoil/profileParams';
-import {useGetButterConfig} from '@recoil/butterConfigState';
+import {useButterConfig} from '@recoil/butterConfigState';
 import {postParamsState} from '@recoil/postParamsState';
 import {useInitializeAxios} from 'services/axios';
 import {useLazyQuery} from '@apollo/client';
@@ -31,17 +31,15 @@ const useInitializeAppData = () => {
     fetchPolicy: 'no-cache',
   });
 
-  const {getButterConfig} = useGetButterConfig();
+  // this will also fetch butterConfig for the first time as it is undefined
+  useButterConfig();
 
   // Not the most elegant way, but it will do for now
   React.useEffect(() => {
     const initAppData = async () => {
       const desmosParams = await getDesmosParams();
 
-      const [appConfig] = await Promise.all([
-        getSubspaceConfig(),
-        getButterConfig(),
-      ]);
+      const [appConfig] = await Promise.all([getSubspaceConfig()]);
 
       const {subspace_report_reason, subspace_registered_reaction, contract} =
         appConfig.data;

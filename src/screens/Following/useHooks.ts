@@ -4,8 +4,7 @@ import {QueueData as QueueFollowers} from 'services/graphql/queries/GetPaginated
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useSetRecoilState} from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
-import isEqual from 'lodash/isEqual';
-import uniqBy from 'lodash/uniqBy';
+import _ from 'lodash';
 
 type QueueData = QueueFollowing | QueueFollowers;
 
@@ -55,14 +54,14 @@ const useHooks = (
   useEffect(() => {
     if (!dataOrNull) return;
     setPaginatedData(prevData => {
-      const newData = dataOrNull.paginatedFollowers.map(({_}) => _);
-      const mergedData = uniqBy(
+      const newData = dataOrNull.paginatedFollowers.map(({_: ps}) => ps);
+      const mergedData = _.uniqBy(
         offset < prevData.length
           ? prevData.slice(0, offset).concat(newData) // refetch or concurrent fetchMore
           : prevData.concat(newData),
         'address',
       );
-      return isEqual(prevData, mergedData) ? prevData : mergedData;
+      return _.isEqual(prevData, mergedData) ? prevData : mergedData;
     });
   }, [dataOrNull, offset]);
 
@@ -99,7 +98,7 @@ const useHooks = (
   return {
     loading,
     error,
-    data: paginatedData,
+    data: _.compact(paginatedData),
     fetchMore: fetchMoreCallback,
     refetch: refetchCallback,
   };
