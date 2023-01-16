@@ -20,8 +20,9 @@ const useRenderMediaAttachment = ({
   horizontalPaddingWithAutoSize?: number;
 }) => {
   const [loading, setLoading] = useState(true);
+  const screenDimensions = Dimensions.get('window');
   const imageWidth =
-    Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0);
+    screenDimensions.width - (horizontalPaddingWithAutoSize || 0);
 
   const MediaAttachment = React.useMemo(() => {
     // currently only render one attachment
