@@ -8,6 +8,9 @@ const GetConfig = gql`
         port
         channel
       }
+      invites {
+        required_impact_points
+      }
     }
   }
 `;

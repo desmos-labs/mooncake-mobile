@@ -10,6 +10,9 @@ export interface ButterConfigState {
   // Desmos address of the account used by the APIs
   desmos_address: string;
   ibc: any;
+  invites: {
+    required_impact_points: any[];
+  };
 }
 
 /**
