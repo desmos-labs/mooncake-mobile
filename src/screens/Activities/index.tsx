@@ -12,7 +12,7 @@ import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {Divider, useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -75,6 +75,16 @@ const Activities = () => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
 
+  const stickyHeaderIndices = notificationsData
+    .map((item, index) => {
+      if (typeof item === 'string') {
+        return index;
+      } else {
+        return null;
+      }
+    })
+    .filter(item => item !== null) as number[];
+
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
     if (!data && !notificationsLoading) {
@@ -98,6 +108,13 @@ const Activities = () => {
 
   const renderNotification = React.useCallback(({item}: string | any) => {
     if (typeof item === 'string') {
+      if (item === 'divider') {
+        return (
+          <View style={styles.divider}>
+            <Divider />
+          </View>
+        );
+      }
       return (
         <View style={styles.sectionHeader}>
           <Typography.Button2>{item}</Typography.Button2>
@@ -118,7 +135,11 @@ const Activities = () => {
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
-      return <NotificationContentLoader />;
+      return (
+        <View style={{paddingHorizontal: theme.spacing.m}}>
+          <NotificationContentLoader />
+        </View>
+      );
     } else {
       return null;
     }
@@ -139,16 +160,6 @@ const Activities = () => {
     );
   }
 
-  const stickyHeaderIndices = notificationsData
-    .map((item, index) => {
-      if (typeof item === 'string') {
-        return index;
-      } else {
-        return null;
-      }
-    })
-    .filter(item => item !== null) as number[];
-
   return (
     <DView
       edges={['top', 'left', 'right']}
@@ -156,7 +167,14 @@ const Activities = () => {
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      <Typography.H3>{t('activities')}</Typography.H3>
+      <View
+        style={{
+          backgroundColor: theme.colors.white,
+          zIndex: 2,
+          paddingHorizontal: theme.spacing.m,
+        }}>
+        <Typography.H3>{t('activities')}</Typography.H3>
+      </View>
       <FlashList
         keyExtractor={(item, index) =>
           typeof item === 'string'

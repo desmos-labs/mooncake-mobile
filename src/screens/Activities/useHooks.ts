@@ -164,6 +164,7 @@ const useHooks = () => {
       return [
         t('this week'),
         ...thisWeekNotifications,
+        'divider',
         t('earlier'),
         ...earlierNotifications,
       ];
