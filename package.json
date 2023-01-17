@@ -43,8 +43,6 @@
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
     "@shopify/flash-list": "^1.4.0",
-    "@types/axios": "^0.14.0",
-    "@types/react-native-simple-radio-button": "^2.7.2",
     "asyncstorage-down": "^4.2.0",
     "axios": "^0.27.2",
     "big-integer": "^1.6.51",
@@ -110,6 +108,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react-native-simple-radio-button": "^2.7.2",
     "@babel/core": "^7.20.12",
     "@babel/runtime": "^7.20.7",
     "@react-native-community/eslint-config": "^3.2.0",
