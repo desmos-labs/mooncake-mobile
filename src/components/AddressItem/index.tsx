@@ -38,12 +38,10 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
     }
   }, [address]);
 
-  console.log(settings.currentChain.currencies);
   const balanceData = useMemo(() => {
     if (!data?.action_account_balance) {
       return null;
     } else if (data?.action_account_balance?.coins[0] && !loading) {
-      console.log('convert coin');
       return convertCoin(
         data?.action_account_balance?.coins[0],
         6,
@@ -51,8 +49,6 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
       );
     }
   }, [data]);
-
-  console.log(balanceData);
 
   const rightElement = React.useMemo(() => {
     if (isAlreadyLinked) {
