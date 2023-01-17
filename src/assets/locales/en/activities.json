@@ -2,6 +2,8 @@
   "activities": "Activities",
   "this week": "This week",
   "earlier": "Earlier",
+  "you": "You",
+  "unlocked a new invite": "Unlocked a new invite",
   "liked": "Liked your post",
   "liked comment": "Liked your comment to a post",
   "liked reply": "Liked your reply to a comment",
@@ -10,6 +12,7 @@
   "followed you": "Started following you",
   "no activities": "No Activities",
   "liked your post": "Liked your post",
+  "claimed your invite": "Claimed your invite",
   "started following you": "started following you",
   "tipped you": "tipped {{amount}} DSM to your post"
 }

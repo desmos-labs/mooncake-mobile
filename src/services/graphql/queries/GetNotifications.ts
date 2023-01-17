@@ -11,6 +11,7 @@ const GetNotifications = gql`
       user_address
       data
       timestamp
+      type
     }
   }
 `;
