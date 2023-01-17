@@ -13,7 +13,7 @@ import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -120,14 +120,6 @@ const NotificationComponent = ({
           headerTitle: profileData?.nickname.trim() || `@${profileData?.dtag}`,
         },
       });
-    }
-    if (type === NotificationTypesEnum.InviteClaimed) {
-      navigate(ROUTES.GUEST_PROFILE, {
-        address: profile?.address!,
-      });
-    }
-    if (type === NotificationTypesEnum.InviteUnlocked) {
-      navigate(ROUTES.INVITES);
     }
   }, [profileData]);
 
@@ -283,7 +275,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() => navigate(ROUTES.MANAGE_INVITES)}>
               <Typography.Subtitle3>
                 @{profile.dtag.trimStart()}
                 <Typography.Body6> {t('claimed your invite')}</Typography.Body6>
@@ -304,7 +296,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() => navigate(ROUTES.INVITES)}>
               <Typography.Subtitle3>
                 {t('you')}{' '}
                 <Typography.Body6>
@@ -329,4 +321,4 @@ const NotificationComponent = ({
   return <View style={styles.container}>{content}</View>;
 };
 
-export default memo(NotificationComponent);
+export default NotificationComponent;

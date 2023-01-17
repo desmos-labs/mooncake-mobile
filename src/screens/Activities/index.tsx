@@ -158,6 +158,11 @@ const Activities = () => {
       style={styles.container}>
       <Typography.H3>{t('activities')}</Typography.H3>
       <FlashList
+        keyExtractor={(item, index) =>
+          typeof item === 'string'
+            ? `sectionHeader${index}`
+            : `row${item.timestamp}`
+        }
         refreshing={refetching}
         onRefresh={refetch}
         showsVerticalScrollIndicator={false}
