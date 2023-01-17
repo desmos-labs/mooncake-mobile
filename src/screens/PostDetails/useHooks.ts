@@ -12,7 +12,7 @@ import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Keyboard} from 'react-native';
 import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
@@ -184,6 +184,7 @@ const useHooks = ({
 
   const handlePostComment = React.useCallback(async () => {
     await createPost({conversationId: postID, referencedPostId: postID});
+    Keyboard.dismiss();
   }, [postID]);
 
   const handleAddReaction = React.useCallback(
