@@ -88,10 +88,9 @@ const useHooks = () => {
 
   const refetch = useCallback(async () => {
     setRefetching(true);
-    await Promise.allSettled([
-      notificationsRefetch(),
-      fetchNotificationDetails(),
-    ]).finally(() => setTimeout(() => setRefetching(false), 500));
+    await notificationsRefetch().finally(() =>
+      setTimeout(() => setRefetching(false), 500),
+    );
   }, [notificationsRefetch, fetchNotificationDetails]);
 
   const fetchMore = useCallback(
