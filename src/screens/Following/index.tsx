@@ -6,8 +6,9 @@ import {useTranslation} from 'react-i18next';
 import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import GetPaginatedFollowers from 'services/graphql/queries/GetPaginatedFollowers';
 import GetPaginatedFollowing from 'services/graphql/queries/GetPaginatedFollowing';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import EmptyFollowers from './components/EmptyFollowers';
 import EmptyFollowing from './components/EmptyFollowing';
 import Error from './components/Error';
@@ -42,7 +43,6 @@ export const Following: FC<NavProps> = ({route}) => {
   const {subspaceID, userAddress} = route.params;
   const styles = useStyles();
   const {t} = useTranslation('common');
-  const {push} = useNavigation<NavProps['navigation']>();
 
   const isFollowing = route.name === (ROUTES.FOLLOWING as string);
 
@@ -54,15 +54,15 @@ export const Following: FC<NavProps> = ({route}) => {
   const [itemError, setItemError] = useState<string>('');
   const resetError = useCallback(() => setItemError(''), []);
 
+  const {handleNavigateToProfile} = useNavigateToProfile();
+
   const renderItem = useCallback(
     ({item}: ListRenderItemInfo<ProfileSummary>) => {
       return (
         <FollowingListItem
           {...item}
           onPress={() => {
-            push(ROUTES.GUEST_PROFILE, {
-              address: item.address,
-            });
+            handleNavigateToProfile(item.address);
           }}
         />
       );
