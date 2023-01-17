@@ -11,17 +11,22 @@ const useStyles = makeStyle(theme => ({
   container: {
     marginTop: theme.spacing.xs,
     paddingBottom: theme.spacing.s,
-    paddingHorizontal: theme.spacing.m,
+    paddingHorizontal: 12,
     backgroundColor: theme.colors.white,
+  },
+  animatedView: {
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabContainer: {
     marginTop: theme.spacing.xs,
     justifyContent: 'center',
   },
   rightButton: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
+    width: 36,
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: theme.spacing.xs,
