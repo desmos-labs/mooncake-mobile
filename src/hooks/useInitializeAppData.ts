@@ -1,7 +1,7 @@
 import {DesmosMainnet} from '@desmoslabs/desmjs';
 import {DesmosTestnet} from '@desmoslabs/desmjs/build/types/chains';
 import EnvConfig from 'config/EnvConfig';
-import React from 'react';
+import {useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import {useSetRecoilState} from 'recoil';
 import appSettingsState from '@recoil/settings';
@@ -13,6 +13,9 @@ import {useLazyQuery} from '@apollo/client';
 import GetSubspaceConfig from 'services/graphql/queries/GetSubspaceConfig';
 import _ from 'lodash';
 import GetDesmosParams from 'services/graphql/queries/GetDesmosParams';
+import useGetFollowingForAddress from 'hooks/useGetFollowingForAddress';
+import useActiveAccount from 'hooks/useActiveAccount';
+import useOptimisticRelationships from 'hooks/useOptimisticRelationships';
 
 const useInitializeAppData = () => {
   const setAppSettings = useSetRecoilState(appSettingsState);
@@ -34,8 +37,12 @@ const useInitializeAppData = () => {
   // this will also fetch butterConfig for the first time as it is undefined
   useButterConfig();
 
+  const {activeAddress} = useActiveAccount();
+  const {updateFollowing} = useGetFollowingForAddress(activeAddress);
+  const {resolveOptimisticRelationships} = useOptimisticRelationships();
+
   // Not the most elegant way, but it will do for now
-  React.useEffect(() => {
+  useEffect(() => {
     const initAppData = async () => {
       const desmosParams = await getDesmosParams();
 
@@ -64,7 +71,13 @@ const useInitializeAppData = () => {
       }));
     };
 
+    const resolveOutstandingOptimisticRelationships = async () => {
+      await updateFollowing();
+      await resolveOptimisticRelationships();
+    };
+
     initAppData();
+    resolveOutstandingOptimisticRelationships();
   }, []);
 };
 
