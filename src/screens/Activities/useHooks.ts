@@ -84,7 +84,7 @@ const useHooks = () => {
     } finally {
       setNotificationsDetailsLoading(false);
     }
-  }, [JSON.stringify(data)]);
+  }, [data]);
 
   const refetch = useCallback(async () => {
     setRefetching(true);
@@ -170,7 +170,7 @@ const useHooks = () => {
       } else {
         return [];
       }
-    }, [notificationsWithProfile, t]);
+    }, [notificationsWithProfile]);
 
   return {
     data,

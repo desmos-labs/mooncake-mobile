@@ -1,3 +1,4 @@
+import notifee, {EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import useFindPendingTx from 'hooks/useFindPendingTx';
 import {
@@ -17,6 +18,18 @@ const useNotifications = () => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        notifee.onForegroundEvent(({type, detail}) => {
+          switch (type) {
+            case EventType.DISMISSED:
+              console.log('User dismissed notification', detail.notification);
+              break;
+            case EventType.PRESS:
+              console.log('User pressed notification', detail.notification);
+              break;
+          }
+        });
+      }
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
     });

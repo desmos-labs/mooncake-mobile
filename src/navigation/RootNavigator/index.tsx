@@ -1,3 +1,4 @@
+import notifee from '@notifee/react-native';
 import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
@@ -9,6 +10,7 @@ import {
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
+import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
@@ -138,7 +140,6 @@ import Signup from 'screens/Signup';
 import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -280,6 +281,26 @@ const RootNavigator = () => {
   useSubscriptions();
 
   const {t} = useTranslation();
+
+  // Bootstrap sequence function
+  async function bootstrap() {
+    const initialNotification = await notifee.getInitialNotification();
+
+    if (initialNotification) {
+      console.log(
+        'Notification caused application to open',
+        initialNotification.notification,
+      );
+      console.log(
+        'Press action used to open the app',
+        initialNotification.pressAction,
+      );
+    }
+  }
+
+  useEffect(() => {
+    bootstrap().catch(console.error);
+  }, []);
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
     if (link && !activeAddress) {

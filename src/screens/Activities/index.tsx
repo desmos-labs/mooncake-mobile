@@ -82,7 +82,12 @@ const Activities = () => {
 
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
-    if (!data && !notificationsLoading) {
+    if (
+      notificationsData.length === 0 &&
+      data?.notification?.length === 0 &&
+      !refetching &&
+      !fetchingMore
+    ) {
       return (
         <View style={styles.emptyView}>
           <Image
@@ -99,7 +104,7 @@ const Activities = () => {
     }
 
     return null;
-  }, [t, notificationsLoading]);
+  }, [data, notificationsLoading]);
 
   const renderNotification = React.useCallback(
     ({item}: ListRenderItemInfo<CompleteNotification>) => {
@@ -113,7 +118,7 @@ const Activities = () => {
         />
       );
     },
-    [],
+    [navigation],
   );
 
   const footerComponent = useMemo(() => {
