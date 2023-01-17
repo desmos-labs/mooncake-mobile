@@ -10,7 +10,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -71,6 +71,11 @@ const Home = () => {
     refetching,
     fetchingMore,
   } = useHooks();
+
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(false);
 
   const handlePressNewPostNotification = useCallback(async () => {
     await fetchNewestPosts();
@@ -237,8 +242,16 @@ const Home = () => {
           showsVerticalScrollIndicator={false}
           estimatedItemSize={497}
           ListFooterComponent={footerComponent}
+          onMomentumScrollBegin={() =>
+            setOnEndReachedCalledDuringMomentum(false)
+          }
           ItemSeparatorComponent={HomeItemSeparatorComponent}
-          onEndReached={fetchMorePosts}
+          onEndReached={async () => {
+            if (!onEndReachedCalledDuringMomentum) {
+              await fetchMorePosts();
+              setOnEndReachedCalledDuringMomentum(true);
+            }
+          }}
           onEndReachedThreshold={0.5}
         />
       </View>
