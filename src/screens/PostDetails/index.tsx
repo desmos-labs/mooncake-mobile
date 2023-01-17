@@ -30,16 +30,13 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  Keyboard,
-  KeyboardEventName,
   ListRenderItemInfo,
-  Platform,
   View,
 } from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
@@ -138,35 +135,6 @@ const PostDetails = () => {
       pageRefetch();
     }, [post, params]),
   );
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.select({
-        ios: 'keyboardWillShow',
-        android: 'keyboardDidShow',
-      }) as KeyboardEventName,
-      () => {
-        if (comments.length > 0) {
-          setTimeout(
-            () => scrollViewRef?.current?.scrollToEnd({animated: true}),
-            100,
-          );
-        } else {
-          setTimeout(
-            () =>
-              scrollViewRef?.current?.scrollToOffset({
-                animated: true,
-                offset: Dimensions.get('window').height,
-              }),
-            100,
-          );
-        }
-      },
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-    };
-  }, [comments.length]);
 
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
@@ -372,6 +340,7 @@ const PostDetails = () => {
         contentContainerStyle={styles.flatListContainer}
         data={[...comments]}
         ListEmptyComponent={ListEmptyComponent}
+        keyboardDismissMode="on-drag"
       />
       <EnterCommentBottomBar
         loading={postCommentLoading}
