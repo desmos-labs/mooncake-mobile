@@ -9,9 +9,6 @@ import {waitFor} from '@testing-library/react-native';
 
 jest.mock('@apollo/client', () => ({
   __esModule: true,
-  // useQuery: (query: any) => {
-  //   // other mocks if needed
-  // },
   gql: jest.fn(),
   useLazyQuery: jest.fn().mockImplementation(() => [jest.fn(), {data: {}}]),
 }));
