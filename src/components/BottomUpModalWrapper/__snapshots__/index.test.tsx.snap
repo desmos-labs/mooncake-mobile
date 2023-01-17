@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component: BottomUpModalWrapper renders 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "flex": 1,
+        "justifyContent": "flex-end",
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      animatedStyle={
+        Object {
+          "value": Object {
+            "transform": Array [
+              Object {
+                "translateY": 0,
+              },
+            ],
+          },
+        }
+      }
+      collapsable={false}
+      onLayout={[Function]}
+      style={
+        Object {
+          "transform": Array [
+            Object {
+              "translateY": 0,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "backgroundColor": "#FFFFFF",
+            "borderTopLeftRadius": 24,
+            "borderTopRightRadius": 24,
+            "opacity": 1,
+            "paddingBottom": 24,
+            "paddingHorizontal": 24,
+            "paddingTop": 10,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "flexDirection": "row",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "backgroundColor": "rgba(222, 222, 222, 1)",
+                  "marginTop": 2,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                    Object {
+                      "translateY": 0,
+                    },
+                    Object {
+                      "rotate": "0rad",
+                    },
+                    Object {
+                      "translateX": -8,
+                    },
+                    Object {
+                      "translateX": -0,
+                    },
+                    Object {
+                      "translateY": -0,
+                    },
+                  ],
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "backgroundColor": "rgba(222, 222, 222, 1)",
+                "borderBottomStartRadius": 2,
+                "borderTopStartRadius": 2,
+                "height": 4,
+                "marginTop": 2,
+                "position": "absolute",
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateY": 0,
+                  },
+                  Object {
+                    "rotate": "0rad",
+                  },
+                  Object {
+                    "translateX": -8,
+                  },
+                  Object {
+                    "translateX": -0,
+                  },
+                  Object {
+                    "translateY": -0,
+                  },
+                ],
+                "width": 16,
+              }
+            }
+          />
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "backgroundColor": "rgba(222, 222, 222, 1)",
+                  "marginTop": 2,
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                    Object {
+                      "translateY": 0,
+                    },
+                    Object {
+                      "rotate": "0rad",
+                    },
+                    Object {
+                      "translateX": 8,
+                    },
+                    Object {
+                      "translateX": -0,
+                    },
+                    Object {
+                      "translateY": -0,
+                    },
+                  ],
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "backgroundColor": "rgba(222, 222, 222, 1)",
+                "borderBottomEndRadius": 2,
+                "borderTopEndRadius": 2,
+                "height": 4,
+                "marginTop": 2,
+                "position": "absolute",
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateY": 0,
+                  },
+                  Object {
+                    "rotate": "0rad",
+                  },
+                  Object {
+                    "translateX": 8,
+                  },
+                  Object {
+                    "translateX": -0,
+                  },
+                  Object {
+                    "translateY": -0,
+                  },
+                ],
+                "width": 16,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
