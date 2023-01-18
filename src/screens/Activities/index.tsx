@@ -1,6 +1,7 @@
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {FlashList} from '@shopify/flash-list';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
@@ -10,14 +11,8 @@ import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Image,
-  ListRenderItemInfo,
-  SectionList,
-  View,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {ActivityIndicator, Image, View} from 'react-native';
+import {Divider, useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -80,6 +75,16 @@ const Activities = () => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(false);
 
+  const stickyHeaderIndices = notificationsData
+    .map((item, index) => {
+      if (typeof item === 'string') {
+        return index;
+      } else {
+        return null;
+      }
+    })
+    .filter(item => item !== null) as number[];
+
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
     if (!data && !notificationsLoading) {
@@ -101,8 +106,21 @@ const Activities = () => {
     return null;
   }, [t, notificationsLoading]);
 
-  const renderNotification = React.useCallback(
-    ({item}: ListRenderItemInfo<CompleteNotification>) => {
+  const renderNotification = React.useCallback(({item}: string | any) => {
+    if (typeof item === 'string') {
+      if (item === 'divider') {
+        return (
+          <View style={styles.divider}>
+            <Divider />
+          </View>
+        );
+      }
+      return (
+        <View style={styles.sectionHeader}>
+          <Typography.Button2>{item}</Typography.Button2>
+        </View>
+      );
+    } else {
       return (
         <NotificationComponent
           profile={item.profile}
@@ -112,19 +130,29 @@ const Activities = () => {
           data={item.data}
         />
       );
-    },
-    [],
-  );
+    }
+  }, []);
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
-      return <NotificationContentLoader />;
+      return (
+        <View style={{paddingHorizontal: theme.spacing.m}}>
+          <NotificationContentLoader />
+        </View>
+      );
     } else {
       return null;
     }
   }, [fetchingMore]);
 
-  if (!data || notificationsLoading || !notificationsData) {
+  if (
+    !data ||
+    data?.notification?.length === 0 ||
+    !notificationsData ||
+    notificationsData.length === 0 ||
+    notificationsLoading ||
+    !notificationsData
+  ) {
     return (
       <View style={styles.flexCenter}>
         <ActivityIndicator />
@@ -139,33 +167,40 @@ const Activities = () => {
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      <Typography.H3>{t('activities')}</Typography.H3>
-      <SectionList
+      <View
+        style={{
+          backgroundColor: theme.colors.white,
+          zIndex: 2,
+          paddingHorizontal: theme.spacing.m,
+        }}>
+        <Typography.H3>{t('activities')}</Typography.H3>
+      </View>
+      <FlashList
         keyExtractor={(item, index) =>
-          String(`notificationKey${index + item.timestamp}`)
+          typeof item === 'string'
+            ? `sectionHeader${index}`
+            : `row${item.timestamp}`
         }
         refreshing={refetching}
         onRefresh={refetch}
-        style={{flex: 1}}
-        contentContainerStyle={{flexGrow: 1}}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyActivities}
-        sections={notificationsData}
+        data={notificationsData}
         renderItem={renderNotification}
         ListFooterComponent={footerComponent}
         onEndReachedThreshold={0.5}
+        estimatedItemSize={90}
+        stickyHeaderIndices={stickyHeaderIndices}
         onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-        onEndReached={({distanceFromEnd}) => {
+        getItemType={item => {
+          return typeof item === 'string' ? 'sectionHeader' : 'row';
+        }}
+        onEndReached={() => {
           if (!onEndReachedCalledDuringMomentum) {
-            fetchMore(distanceFromEnd);
+            fetchMore(0);
             setOnEndReachedCalledDuringMomentum(true);
           }
         }}
-        renderSectionHeader={({section: {section}}) => (
-          <View style={styles.sectionHeader}>
-            <Typography.Button2>{section}</Typography.Button2>
-          </View>
-        )}
       />
     </DView>
   );

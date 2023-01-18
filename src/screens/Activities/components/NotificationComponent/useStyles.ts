@@ -3,7 +3,7 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
-    paddingVertical: theme.spacing.m,
+    padding: theme.spacing.m,
   },
   avatar: {
     width: 40,

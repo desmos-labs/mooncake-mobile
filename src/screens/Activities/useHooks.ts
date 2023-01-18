@@ -32,7 +32,7 @@ const useHooks = () => {
   });
 
   const getCorrectAddress = (notification: any) => {
-    switch (notification.data.type) {
+    switch (notification.type) {
       case NotificationTypesEnum.Comment:
         return notification.data.comment_author;
       case NotificationTypesEnum.Follow:
@@ -41,6 +41,10 @@ const useHooks = () => {
         return notification.data.reply_author;
       case NotificationTypesEnum.Reaction:
         return notification.data.reaction_author;
+      case NotificationTypesEnum.InviteClaimed:
+        return notification.data.claimer_address;
+      case NotificationTypesEnum.InviteUnlocked:
+        return notification.data.recipient;
       default:
         return '';
     }
@@ -88,10 +92,9 @@ const useHooks = () => {
 
   const refetch = useCallback(async () => {
     setRefetching(true);
-    await Promise.allSettled([
-      notificationsRefetch(),
-      fetchNotificationDetails(),
-    ]).finally(() => setTimeout(() => setRefetching(false), 500));
+    await notificationsRefetch().finally(() =>
+      setTimeout(() => setRefetching(false), 500),
+    );
   }, [notificationsRefetch, fetchNotificationDetails]);
 
   const fetchMore = useCallback(
@@ -123,54 +126,51 @@ const useHooks = () => {
     fetchNotificationDetails();
   }, [fetchNotificationDetails]);
 
-  const notificationsData: [] | {data: any[]; section: string}[] =
-    useMemo(() => {
-      if (!notificationsWithProfile) return [];
-      const sortedArray = _.orderBy(
-        notificationsWithProfile,
-        [obj => new Date(obj.timestamp)],
-        ['desc'],
-      );
-      const thisWeekNotifications: any[] = [];
-      const earlierNotifications: any[] = [];
-      sortedArray.forEach(
-        (singleNotification: {
-          timestamp: any;
-          data: any;
-          user_address: string;
-        }) => {
-          const parsedTime = parseISO(`${singleNotification.timestamp!}Z`);
-          if (
-            -differenceInCalendarDays(new Date(parsedTime), Date.now()) <= 7
-          ) {
-            thisWeekNotifications.push(singleNotification);
-          } else {
-            earlierNotifications.push(singleNotification);
-          }
-        },
-      );
-      if (
-        thisWeekNotifications.length <= 0 &&
-        earlierNotifications.length > 0
-      ) {
-        return [{section: t('earlier'), data: earlierNotifications}];
-      } else if (
-        thisWeekNotifications.length > 0 &&
-        earlierNotifications.length <= 0
-      ) {
-        return [{section: t('this week'), data: thisWeekNotifications}];
-      } else if (
-        thisWeekNotifications.length > 0 &&
-        earlierNotifications.length > 0
-      ) {
-        return [
-          {section: t('this week'), data: thisWeekNotifications},
-          {section: t('earlier'), data: earlierNotifications},
-        ];
-      } else {
-        return [];
-      }
-    }, [notificationsWithProfile, t]);
+  const notificationsData: (string | any)[] = useMemo(() => {
+    if (!notificationsWithProfile) return [];
+    const sortedArray = _.orderBy(
+      notificationsWithProfile,
+      [obj => new Date(obj.timestamp)],
+      ['desc'],
+    );
+    const thisWeekNotifications: any[] = [];
+    const earlierNotifications: any[] = [];
+    sortedArray.forEach(
+      (singleNotification: {
+        timestamp: any;
+        data: any;
+        user_address: string;
+      }) => {
+        const parsedTime = parseISO(`${singleNotification.timestamp!}Z`);
+        if (-differenceInCalendarDays(new Date(parsedTime), Date.now()) <= 7) {
+          thisWeekNotifications.push(singleNotification);
+        } else {
+          earlierNotifications.push(singleNotification);
+        }
+      },
+    );
+    if (thisWeekNotifications.length <= 0 && earlierNotifications.length > 0) {
+      return [t('earlier'), ...earlierNotifications];
+    } else if (
+      thisWeekNotifications.length > 0 &&
+      earlierNotifications.length <= 0
+    ) {
+      return [t('this week'), ...thisWeekNotifications];
+    } else if (
+      thisWeekNotifications.length > 0 &&
+      earlierNotifications.length > 0
+    ) {
+      return [
+        t('this week'),
+        ...thisWeekNotifications,
+        'divider',
+        t('earlier'),
+        ...earlierNotifications,
+      ];
+    } else {
+      return [];
+    }
+  }, [notificationsWithProfile, t]);
 
   return {
     data,
