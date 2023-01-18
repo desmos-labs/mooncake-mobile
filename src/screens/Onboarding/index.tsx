@@ -10,6 +10,7 @@ import {
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -137,6 +138,29 @@ const Onboarding = () => {
     <DView
       disableHideKeyboardTouchable={true}
       style={styles.root}
+      topBar={
+        <TopBar
+          style={{zIndex: 2}}
+          noBackButton={true}
+          rightElement={
+            selected !== 3 ? (
+              <Button
+                onPress={() => navigateToCorrectScreen()}
+                mode="text"
+                style={{
+                  right: 0,
+                  marginLeft: 'auto',
+                  marginVertical: theme.spacing.s,
+                }}
+                color={theme.colors.surfaceBlack}>
+                <Typography.Button2>{t('skip')}</Typography.Button2>
+              </Button>
+            ) : (
+              <View style={{height: 37}} />
+            )
+          }
+        />
+      }
       backgroundFillScreen={true}
       backgroundImage={bgonboarding}
       backgroundColor={theme.colors.background}>

@@ -4,7 +4,7 @@ import {makeStyle} from 'config/theme';
  * Style hook for the Settings screen
  */
 const useStyles = makeStyle(theme => ({
-  root: {flex: 1, paddingTop: theme.spacing.xl},
+  root: {flex: 1, paddingTop: theme.spacing.m},
   scrollViewOuter: {
     flex: 1,
   },
