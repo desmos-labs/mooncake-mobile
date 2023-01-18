@@ -70,8 +70,6 @@ export const commentLikeEmptyIcon = require('./images/commentLikeIconEmpty.png')
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
-export const plusWhiteIcon = require('./images/plusWhite.png');
-
 export const settingsButton = require('./images/settingsButton.png');
 
 export const errorImage = require('./images/errorImage.png');
@@ -122,10 +120,6 @@ export const createPost = require('./images/createPost.png');
 
 export const noMorePosts = require('./images/noMorePosts.png');
 
-export const homeTipIcon = require('./images/homeTipIcon.png');
-
-export const homeTipIconFilled = require('./images/homeTipIconFilled.png');
-
 export const homeInviteIcon = require('./images/homeInviteIcon.png');
 
 export const connectIcon = require('./images/connectIcon.png');
@@ -135,8 +129,6 @@ export const authorizationImage = require('./images/authorizationImage.png');
 export const commentMore = require('./images/commentMore.png');
 
 export const commentLiked = require('./images/commentLiked.png');
-
-export const followedIcon = require('assets/images/unfollowIcon.png');
 
 export const reportIcon = require('./images/report.png');
 
