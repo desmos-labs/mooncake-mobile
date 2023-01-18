@@ -65,6 +65,13 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     borderRadius: 8,
     flex: 0.95,
   },
+  followButton: {
+    height: 32,
+    backgroundColor: theme.colors.surfaceGrey,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: theme.roundness,
+  },
 }));
 
 export default useStyles;
