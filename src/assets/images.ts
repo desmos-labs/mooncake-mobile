@@ -238,3 +238,12 @@ export const bottomCommunitiesIcon = require('./images/bottomBarIcons/bottomComm
 export const bottomHomeIcon = require('./images/bottomBarIcons/bottomHome.png');
 export const bottomProfileIcon = require('./images/bottomBarIcons/bottomProfile.png');
 export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.png');
+
+// Post icons
+
+export const postCommentedIcon = require('./images/homePostIcons/postCommentedIcon.png');
+export const postToCommentIcon = require('./images/homePostIcons/postToCommentIcon.png');
+export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
+export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
+export const postTippedIcon = require('./images/homePostIcons/postTippedIcon.png');
+export const postToTipIcon = require('./images/homePostIcons/postToTipIcon.png');
