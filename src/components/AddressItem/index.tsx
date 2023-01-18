@@ -66,7 +66,6 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
           color={theme.colors.butterOrange01}
         />
       );
-      // can't write a unit test for this case for some reason
     } else if (balanceData) {
       return (
         <Typography.Subtitle4 style={styles.alignRight}>
