@@ -182,11 +182,7 @@ const Signup = () => {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={styles.buttonGroup}>
-                <ScrollView
-                  ref={scrollViewRef}
-                  keyboardDismissMode={
-                    Platform.OS === 'ios' ? 'interactive' : 'on-drag'
-                  }>
+                <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag">
                   <View style={styles.formContainer}>
                     <View style={styles.dTagRowContainer}>
                       <Typography.Subtitle2>

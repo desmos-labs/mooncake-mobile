@@ -261,6 +261,7 @@ const CommentReplies = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
+        keyboardDismissMode="on-drag"
       />
       <EnterCommentBottomBar
         loading={commentReplyLoading}
