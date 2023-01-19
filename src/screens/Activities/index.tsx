@@ -32,6 +32,7 @@ export interface CompleteNotification {
      * Notification post id, could be an id of a comment, reply, or root post
      */
     post_id?: string;
+    subspace_id?: string;
     comment_id?: string;
     reply_id?: string;
   };

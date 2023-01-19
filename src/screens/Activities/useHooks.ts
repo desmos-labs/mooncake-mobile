@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client';
-import EnvConfig from 'config/EnvConfig';
 import {differenceInCalendarDays, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -67,7 +66,7 @@ const useHooks = () => {
               query: GetPostBySubspaceIDandPostID,
               variables: {
                 postID: singleNot.data.post_id,
-                subspaceID: EnvConfig.APP_SUBSPACE_ID,
+                subspaceID: singleNot.data.subspace_id,
               },
               fetchPolicy: 'no-cache',
             });

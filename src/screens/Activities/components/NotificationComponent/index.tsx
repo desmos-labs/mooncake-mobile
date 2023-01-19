@@ -5,7 +5,6 @@ import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
-import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
@@ -30,7 +29,7 @@ type NavProps = CompositeScreenProps<
 >;
 
 const NotificationComponent = ({
-  data: {type, post_id},
+  data: {type, post_id, subspace_id},
   profile,
   timestamp,
   relationship_creator,
@@ -68,15 +67,15 @@ const NotificationComponent = ({
   const navigateToCorrectScreen = useCallback(() => {
     if (type === NotificationTypesEnum.Comment) {
       navigate(ROUTES.POST_DETAILS, {
-        subspaceId: EnvConfig.APP_SUBSPACE_ID,
         postId: parseInt(post_id!, 10),
+        subspaceId: parseInt(subspace_id!, 10),
         focusCommentBox: false,
       });
     }
     if (type === NotificationTypesEnum.Reply) {
       navigate(ROUTES.COMMENT_REPLIES, {
         commentId: parseInt(post_id!, 10),
-        subspaceId: EnvConfig.APP_SUBSPACE_ID,
+        subspaceId: parseInt(subspace_id!, 10),
       });
     }
     if (type === NotificationTypesEnum.Reaction) {
@@ -85,18 +84,18 @@ const NotificationComponent = ({
         if (isReply) {
           navigate(ROUTES.COMMENT_REPLIES, {
             commentId: reply.reference.id,
-            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+            subspaceId: parseInt(subspace_id!, 10),
           });
         } else {
           navigate(ROUTES.COMMENT_REPLIES, {
             commentId: parseInt(post_id!, 10),
-            subspaceId: EnvConfig.APP_SUBSPACE_ID,
+            subspaceId: parseInt(subspace_id!, 10),
           });
         }
       } else {
         navigate(ROUTES.POST_DETAILS, {
-          subspaceId: EnvConfig.APP_SUBSPACE_ID,
           postId: parseInt(post_id!, 10),
+          subspaceId: parseInt(subspace_id!, 10),
           focusCommentBox: false,
         });
       }
@@ -105,7 +104,7 @@ const NotificationComponent = ({
       navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
         screen: ROUTES.FOLLOWING,
         params: {
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          subspaceID: parseInt(subspace_id!, 10),
           userAddress: profileData?.address!,
           headerTitle: profileData?.nickname.trim() || `@${profileData?.dtag}`,
         },
