@@ -51,13 +51,7 @@ const HomeTabBar = ({state, position, navigation}: MaterialTopTabBarProps) => {
 
   return (
     <Animated.View style={styles.container}>
-      <Animated.View
-        style={{
-          height: 44,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <Animated.View style={styles.animatedView}>
         {!listOptions.searchBarFocused && (
           <Animated.View
             entering={FadeIn.duration(300)}

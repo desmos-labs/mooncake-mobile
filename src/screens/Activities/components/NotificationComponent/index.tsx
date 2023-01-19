@@ -13,7 +13,7 @@ import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -50,8 +50,8 @@ const NotificationComponent = ({
   const toast = useToast();
   const {handleNavigateToProfile} = useNavigateToProfile();
   const checkPostType = useCallback(() => {
-    const isOriginalPost = post.conversation === null;
-    const reply = post.replies.find(
+    const isOriginalPost = post?.conversation === null;
+    const reply = post?.replies.find(
       (rep: any) => rep.reference.id === post.conversation.id,
     );
     const isComment = reply !== null && !isOriginalPost;
@@ -265,12 +265,60 @@ const NotificationComponent = ({
             </View>
           </View>
         );
+      case NotificationTypesEnum.InviteClaimed:
+        return (
+          <View style={styles.flexRowView}>
+            <ImageButton
+              onPress={() => handleNavigateToProfile(profile.address!)}
+              style={styles.avatar}
+              image={{uri: profile.profile_pic}}
+            />
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={() => navigate(ROUTES.MANAGE_INVITES)}>
+              <Typography.Subtitle3>
+                @{profile.dtag.trimStart()}
+                <Typography.Body6> {t('claimed your invite')}</Typography.Body6>
+              </Typography.Subtitle3>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
+            </TouchableOpacity>
+          </View>
+        );
+      case NotificationTypesEnum.InviteUnlocked:
+        return (
+          <View style={styles.flexRowView}>
+            <ImageButton
+              onPress={() => handleNavigateToProfile(profile.address!)}
+              style={styles.avatar}
+              image={{uri: profile.profile_pic}}
+            />
+            <TouchableOpacity
+              style={styles.profileView}
+              onPress={() => navigate(ROUTES.INVITES)}>
+              <Typography.Subtitle3>
+                {t('you')}{' '}
+                <Typography.Body6>
+                  {t('unlocked a new invite')}
+                </Typography.Body6>
+              </Typography.Subtitle3>
+              <Typography.Body7 style={{color: theme.colors.grey02}}>
+                {formattedDate}
+              </Typography.Body7>
+            </TouchableOpacity>
+          </View>
+        );
       default:
-        return <View />;
+        return (
+          <View>
+            <Typography.Body6>Not mapped</Typography.Body6>
+          </View>
+        );
     }
   }, [formattedDate, isFollowingAddress, followOrUnfollowUser, checkPostType]);
 
   return <View style={styles.container}>{content}</View>;
 };
 
-export default memo(NotificationComponent);
+export default NotificationComponent;

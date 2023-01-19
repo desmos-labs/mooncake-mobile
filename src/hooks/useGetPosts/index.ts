@@ -75,7 +75,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
           post: [...prev.post, ...fetchMoreResult.post],
         };
       },
-    }).finally(() => setFetchingMore(false));
+    }).finally(() => setTimeout(() => setFetchingMore(false), 500));
   }, [posts.length, fetchMore]);
 
   // Reset the fetch offset to restart post fetching

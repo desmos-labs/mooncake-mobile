@@ -458,9 +458,9 @@ PODS:
     - React-Core
   - react-native-cameraroll (5.0.2):
     - React-Core
-  - react-native-config (1.4.11):
-    - react-native-config/App (= 1.4.11)
-  - react-native-config/App (1.4.11):
+  - react-native-config (1.4.12):
+    - react-native-config/App (= 1.4.12)
+  - react-native-config/App (1.4.12):
     - React-Core
   - react-native-image-picker (4.10.3):
     - React-Core
@@ -547,7 +547,7 @@ PODS:
     - React-perflogger (= 0.70.6)
   - RNBluetoothStateManager (1.3.4):
     - React-Core
-  - RNBootSplash (4.4.0):
+  - RNBootSplash (4.4.1):
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
@@ -578,20 +578,20 @@ PODS:
     - RNFBApp
   - RNFlashList (1.4.0):
     - React-Core
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNKeychain (8.1.1):
     - React-Core
   - RNLocalize (2.2.4):
     - React-Core
-  - RNNotifee (7.3.0):
+  - RNNotifee (7.4.0):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.3.0)
-  - RNNotifee/NotifeeCore (7.3.0):
+    - RNNotifee/NotifeeCore (= 7.4.0)
+  - RNNotifee/NotifeeCore (7.4.0):
     - React-Core
   - RNPermissions (3.6.1):
     - React-Core
-  - RNReanimated (2.13.0):
+  - RNReanimated (2.14.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -988,7 +988,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-blur: 3e9c8e8e9f7d17fa1b94e1a0ae9fd816675f5382
   react-native-cameraroll: 4d0cb1c3413d4b7b85beb68a8c14325d887b404c
-  react-native-config: bcafda5b4c51491ee1b0e1d0c4e3905bc7b56c1b
+  react-native-config: 5e3e0c7798522b1a0d7641f7ffa5363044e16397
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
   react-native-mmkv: b5c7f9bc369eef2b8a2aa36e8a15949989fa823f
@@ -1008,7 +1008,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RNBluetoothStateManager: ae6a26260cbdf1827b58bd3bcc563527d61e6488
-  RNBootSplash: 8ecffd190fae05291b671ea2280c5238f15499a9
+  RNBootSplash: 4f968c1e098c7ec97939ace039f735e3d335bd4b
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
@@ -1018,12 +1018,12 @@ SPEC CHECKSUMS:
   RNFBDynamicLinks: db8903a4c376ba91c32725a6707b6ddb54f27938
   RNFBMessaging: f7a90ac199e1bc771e9e09058ed0354efd047182
   RNFlashList: 399bf6a0db68f594ad2c86aaff3ea39564f39f8a
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNLocalize: 0df7970cfc60389f00eb62fd7c097dc75af3fb4f
-  RNNotifee: d585266dd69e1f355d26d074cbfdbdfa6c94b7d5
+  RNNotifee: da8dcf09f079ea22f46e239d7c406e10d4525a5f
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
-  RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
+  RNReanimated: 8125b2324ba03108136ab5dd506fc49b2454da24
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
