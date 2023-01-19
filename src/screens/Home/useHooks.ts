@@ -8,7 +8,7 @@ import EnvConfig from 'config/EnvConfig';
 import useGetPosts from 'hooks/useGetPosts';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useRecoilValue} from 'recoil';
 import {NavProps} from 'screens/Home';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
@@ -52,9 +52,12 @@ const useHooks = () => {
     return [...parsedPendingPosts, ...posts];
   }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
 
-  const checkIfPostIsPending = (postId: number) => {
-    return parsedPendingPosts.find(x => x.id === postId)?.isPending;
-  };
+  const checkIfPostIsPending = useCallback(
+    (postId: number) => {
+      return parsedPendingPosts.find(x => x.id === postId)?.isPending;
+    },
+    [parsedPendingPosts],
+  );
 
   const handlePressReport = React.useCallback(
     (postId: number, subspaceId: number) => {
@@ -75,17 +78,18 @@ const useHooks = () => {
   );
 
   const handlePressDetails = React.useCallback(
-    (id: number, subspaceID: number) => {
+    (id: number, subspaceId: number) => {
+      if (checkIfPostIsPending(id)) return;
       navigate({
         name: ROUTES.POST_DETAILS,
         params: {
           focusCommentBox: false,
           postId: id,
-          subspaceID,
+          subspaceId,
         },
       });
     },
-    [],
+    [checkIfPostIsPending],
   );
 
   const handleAddReaction = React.useCallback(
@@ -98,14 +102,14 @@ const useHooks = () => {
 
       console.log(result);
     },
-    [addOrRemoveReaction],
+    [addOrRemoveReaction, checkIfPostIsPending],
   );
 
   const handlePressComments = React.useCallback((postId: number) => {
     navigate(ROUTES.POST_DETAILS, {
-      focusCommentBox: true,
       postId,
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
+      subspaceId: EnvConfig.APP_SUBSPACE_ID,
+      focusCommentBox: true,
     });
   }, []);
 

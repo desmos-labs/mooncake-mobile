@@ -1,6 +1,7 @@
 import notifee, {EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import useFindPendingTx from 'hooks/useFindPendingTx';
+import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import {
   createLocalNotification,
   createTransactionSnackbar,
@@ -9,27 +10,36 @@ import _ from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
+import NotificationTypesEnum from 'types/notificationTypes';
 
 const useNotifications = () => {
   const toast = useToast();
   const {findPendingTxByHash} = useFindPendingTx();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
+
+  useEffect(() => {
+    const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+      const {notification} = detail;
+      switch (type) {
+        case EventType.PRESS:
+          console.log('User pressed notification', detail.notification);
+          navigateToCorrectScreen({
+            type: notification?.data?.type as NotificationTypesEnum,
+            post_id: notification?.data?.post_id as string,
+            comment_id: notification?.data?.comment_id as string,
+            reply_id: notification?.data?.reply_id as string,
+            subspace_id: notification?.data?.subspace_id as string,
+          });
+      }
+    });
+
+    return unsubscribe;
+  }, [navigateToCorrectScreen]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'active') {
-        notifee.onForegroundEvent(({type, detail}) => {
-          switch (type) {
-            case EventType.DISMISSED:
-              console.log('User dismissed notification', detail.notification);
-              break;
-            case EventType.PRESS:
-              console.log('User pressed notification', detail.notification);
-              break;
-          }
-        });
-      }
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
     });

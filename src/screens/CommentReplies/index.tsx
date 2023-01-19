@@ -43,10 +43,6 @@ export type NavProps = CompositeScreenProps<
 
 export type CommentRepliesParams = {
   /**
-   * Original post ID, the main root post
-   */
-  postId: number;
-  /**
    * Main comment ID, the one displayed on top of the screen, the id to use inside every query related to the main comment
    */
   commentId: number;
@@ -96,7 +92,6 @@ const CommentReplies = () => {
     handleNavigateToProfile,
     scrollViewRef,
   } = useHooks({
-    postID: params.postId,
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });

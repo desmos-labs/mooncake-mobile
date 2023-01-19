@@ -30,7 +30,7 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -65,7 +65,7 @@ export type PostDetailsParams = {
   /**
    * susbpace_id of the post
    */
-  subspaceID: number;
+  subspaceId: number;
   /**
    * focus the comment box when navigating to this screen
    */
@@ -117,14 +117,19 @@ const PostDetails = () => {
     scrollViewRef,
   } = useHooks({
     postID: params.postId,
-    subspaceID: params.subspaceID,
+    subspaceID: params.subspaceId,
   });
 
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(popupMenuParams?.authorAddress || ''),
   );
 
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
+
   const {top} = useSafeAreaInsets();
+
   useFocusEffect(
     React.useCallback(() => {
       setPopupMenuParams({
@@ -133,7 +138,7 @@ const PostDetails = () => {
         authorAddress: post?.author?.address,
       });
       pageRefetch();
-    }, [post, params]),
+    }, [post.id, post.subspace_id, post?.author?.address, pageRefetch]),
   );
 
   const Avatar = React.useMemo(() => {
@@ -151,7 +156,11 @@ const PostDetails = () => {
         onPress={() => handleNavigateToProfile(post?.author?.address)}
       />
     );
-  }, [post?.author?.profile_pic, handleNavigateToProfile]);
+  }, [
+    post?.author?.profile_pic,
+    post?.author?.address,
+    handleNavigateToProfile,
+  ]);
 
   const renderItem = React.useCallback(
     ({item}: ListRenderItemInfo<PostItem>) => {

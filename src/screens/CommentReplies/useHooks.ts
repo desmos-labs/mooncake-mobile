@@ -23,11 +23,9 @@ import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToCommentReplies';
 
 const useHooks = ({
-  postID,
   subspaceID,
   commentID,
 }: {
-  postID: number;
   subspaceID: number;
   commentID: number;
 }) => {
@@ -123,6 +121,7 @@ const useHooks = ({
 
   const mainComment = React.useMemo(() => {
     if (!originalComment) return undefined;
+    console.log(originalComment.posts[0].conversation);
     return originalComment.posts[0];
   }, [originalComment]);
 
@@ -196,8 +195,12 @@ const useHooks = ({
       subspaceId,
     });
 
-  const handleCommentReply = () =>
-    createPost({conversationId: postID, referencedPostId: commentID});
+  const handleCommentReply = useCallback(async () => {
+    await createPost({
+      conversationId: mainComment.conversation.id,
+      referencedPostId: commentID,
+    });
+  }, [commentID, createPost, mainComment]);
 
   const handleAddReaction = (postId: number) =>
     addOrRemoveReaction({postId, stayOnCurrentScreen: true});

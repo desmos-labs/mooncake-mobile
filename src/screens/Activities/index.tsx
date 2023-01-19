@@ -32,6 +32,8 @@ export interface CompleteNotification {
      * Notification post id, could be an id of a comment, reply, or root post
      */
     post_id?: string;
+    comment_id?: string;
+    reply_id?: string;
   };
   /**
    * Profile of the notification author
@@ -104,7 +106,7 @@ const Activities = () => {
     }
 
     return null;
-  }, [t, notificationsLoading]);
+  }, [notificationsLoading]);
 
   const renderNotification = React.useCallback(({item}: string | any) => {
     if (typeof item === 'string') {

@@ -6,7 +6,6 @@ import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import ToastConfig from 'config/ToastConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
@@ -49,6 +48,7 @@ const NotificationComponent = ({
   const {profileData} = useActiveAccount();
   const toast = useToast();
   const {handleNavigateToProfile} = useNavigateToProfile();
+
   const checkPostType = useCallback(() => {
     const isOriginalPost = post?.conversation === null;
     const reply = post?.replies.find(
@@ -63,49 +63,39 @@ const NotificationComponent = ({
       isReply,
       reply,
     };
-  }, []);
+  }, [post?.conversation, post?.replies]);
 
   const navigateToCorrectScreen = useCallback(() => {
     if (type === NotificationTypesEnum.Comment) {
       navigate(ROUTES.POST_DETAILS, {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
+        subspaceId: EnvConfig.APP_SUBSPACE_ID,
         postId: parseInt(post_id!, 10),
         focusCommentBox: false,
       });
     }
     if (type === NotificationTypesEnum.Reply) {
-      const {reply} = checkPostType();
-      if (!reply) {
-        toast.show('Something went wrong', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      } else {
-        navigate(ROUTES.COMMENT_REPLIES, {
-          postId: post.conversation.id,
-          commentId: reply.post.id,
-          subspaceId: EnvConfig.APP_SUBSPACE_ID,
-        });
-      }
+      navigate(ROUTES.COMMENT_REPLIES, {
+        commentId: parseInt(post_id!, 10),
+        subspaceId: EnvConfig.APP_SUBSPACE_ID,
+      });
     }
     if (type === NotificationTypesEnum.Reaction) {
       const {isOriginalPost, isReply, reply} = checkPostType();
       if (!isOriginalPost) {
         if (isReply) {
           navigate(ROUTES.COMMENT_REPLIES, {
-            postId: post.conversation.id,
             commentId: reply.reference.id,
             subspaceId: EnvConfig.APP_SUBSPACE_ID,
           });
         } else {
           navigate(ROUTES.COMMENT_REPLIES, {
-            postId: post.conversation.id,
             commentId: parseInt(post_id!, 10),
             subspaceId: EnvConfig.APP_SUBSPACE_ID,
           });
         }
       } else {
         navigate(ROUTES.POST_DETAILS, {
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          subspaceId: EnvConfig.APP_SUBSPACE_ID,
           postId: parseInt(post_id!, 10),
           focusCommentBox: false,
         });
@@ -121,7 +111,16 @@ const NotificationComponent = ({
         },
       });
     }
-  }, [profileData]);
+  }, [
+    checkPostType,
+    navigate,
+    post_id,
+    profileData?.address,
+    profileData?.dtag,
+    profileData?.nickname,
+    toast,
+    type,
+  ]);
 
   const content = useMemo(() => {
     switch (type) {
