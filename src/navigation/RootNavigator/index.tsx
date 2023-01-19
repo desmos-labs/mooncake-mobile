@@ -12,6 +12,7 @@ import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 import useActiveAccount from 'hooks/useActiveAccount';
+import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
@@ -140,6 +141,7 @@ import Signup from 'screens/Signup';
 import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
+import NotificationTypesEnum from 'types/notificationTypes';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -274,9 +276,9 @@ const RootNavigator = () => {
   const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
-  useNotifications();
+  const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
+  useNotifications(navigateToCorrectScreen);
   // End initialization
-
   // Start subscriptions
   useSubscriptions();
 
@@ -285,16 +287,16 @@ const RootNavigator = () => {
   // Bootstrap sequence function
   async function bootstrap() {
     const initialNotification = await notifee.getInitialNotification();
-
     if (initialNotification) {
-      console.log(
-        'Notification caused application to open',
-        initialNotification.notification,
-      );
-      console.log(
-        'Press action used to open the app',
-        initialNotification.pressAction,
-      );
+      const {notification} = initialNotification;
+      console.log('User pressed notification', notification);
+      navigateToCorrectScreen({
+        type: notification?.data?.type as NotificationTypesEnum,
+        post_id: notification?.data?.post_id as string,
+        comment_id: notification?.data?.comment_id as string,
+        reply_id: notification?.data?.reply_id as string,
+        subspace_id: notification?.data?.subspace_id as string,
+      });
     }
   }
 

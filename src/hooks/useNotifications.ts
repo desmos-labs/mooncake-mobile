@@ -1,7 +1,6 @@
 import notifee, {EventType} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import useFindPendingTx from 'hooks/useFindPendingTx';
-import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import {
   createLocalNotification,
   createTransactionSnackbar,
@@ -12,16 +11,30 @@ import {AppState} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import NotificationTypesEnum from 'types/notificationTypes';
 
-const useNotifications = () => {
+const useNotifications = (
+  navigateToCorrectScreen: ({
+    type,
+    post_id,
+    comment_id,
+    reply_id,
+    subspace_id,
+  }: {
+    type: NotificationTypesEnum;
+    post_id?: string;
+    comment_id?: string;
+    reply_id?: string;
+    subspace_id?: string;
+  }) => void,
+) => {
   const toast = useToast();
   const {findPendingTxByHash} = useFindPendingTx();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
-  const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
 
   useEffect(() => {
     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
       const {notification} = detail;
+      console.log(notification);
       switch (type) {
         case EventType.PRESS:
           console.log('User pressed notification', detail.notification);
@@ -35,7 +48,7 @@ const useNotifications = () => {
       }
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, [navigateToCorrectScreen]);
 
   useEffect(() => {
@@ -43,7 +56,6 @@ const useNotifications = () => {
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
     });
-
     return () => {
       subscription.remove();
     };
@@ -56,16 +68,16 @@ const useNotifications = () => {
       const unsubscribe = messaging().onMessage(async remoteMessage => {
         const txHash = _.get(remoteMessage, 'data.tx_hash');
         if (txHash) {
-          createTransactionSnackbar(
+          await createTransactionSnackbar(
             remoteMessage,
             toast,
             txHash,
             findPendingTxByHash,
           );
-          createLocalNotification(remoteMessage);
+          await createLocalNotification(remoteMessage);
         }
       });
-      return unsubscribe;
+      return () => unsubscribe();
     }
   }, [toast]);
 };

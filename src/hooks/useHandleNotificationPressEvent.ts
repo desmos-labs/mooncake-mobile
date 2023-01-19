@@ -24,6 +24,10 @@ const useHandleNotificationPressEvent = () => {
       reply_id?: string;
       subspace_id?: string;
     }) => {
+      console.log(type);
+      console.log(post_id);
+      console.log(comment_id);
+      console.log(reply_id);
       if (type === NotificationTypesEnum.Comment && comment_id) {
         console.log('navigate to comment');
         navigate(ROUTES.POST_DETAILS, {
@@ -37,11 +41,19 @@ const useHandleNotificationPressEvent = () => {
           commentId: parseInt(post_id!, 10),
           subspaceId: parseInt(subspace_id!, 10),
         });
-      } else if (type === NotificationTypesEnum.Reaction && post_id) {
+      } else if (type === NotificationTypesEnum.Reaction_Post && post_id) {
         navigate(ROUTES.POST_DETAILS, {
           subspaceId: parseInt(subspace_id!, 10),
           postId: parseInt(post_id!, 10),
           focusCommentBox: false,
+        });
+      } else if (
+        type === NotificationTypesEnum.Reaction_Comment ||
+        type === NotificationTypesEnum.Reaction_Reply
+      ) {
+        navigate(ROUTES.COMMENT_REPLIES, {
+          commentId: parseInt(post_id!, 10),
+          subspaceId: parseInt(subspace_id!, 10),
         });
       } else {
         Alert.alert('Unmapped notification handling');
