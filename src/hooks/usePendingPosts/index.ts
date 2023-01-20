@@ -1,7 +1,7 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {latestPostsByUserState} from '@recoil/latestPostsByUser';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   PendingPostEnum,
   pendingPostsState,
@@ -107,11 +107,21 @@ const usePendingPosts = () => {
     );
   }, []);
 
+  /**
+   * Format pending post data into a format that is easier for render code to use
+   */
+  const parsedPendingPosts = useMemo(() => {
+    return pendingPosts
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(x => x.postData);
+  }, [pendingPosts]);
+
   return {
     resolveByTxHash,
     resolveByExternalId,
     addNewPendingPost,
     pendingPosts, // reexport pendingPosts for convenience
+    parsedPendingPosts,
   };
 };
 
