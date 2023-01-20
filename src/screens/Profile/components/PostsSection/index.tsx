@@ -22,9 +22,16 @@ interface Props {
   posts: any[];
   postsData: any[];
   postsLoading: boolean;
+  guestProfile?: boolean;
 }
 
-const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
+const PostsSection = ({
+  onPress,
+  postsData,
+  postsLoading,
+  posts,
+  guestProfile,
+}: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const {navigate} = useNavigation<any>();
@@ -77,7 +84,7 @@ const PostsSection = ({onPress, postsData, postsLoading, posts}: Props) => {
     <View style={styles.container}>
       <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
-        {posts.length !== 0 && !postsLoading && (
+        {posts.length !== 0 && !postsLoading && !guestProfile && (
           <Typography.Body7 style={{color: theme.colors.midGrey}}>
             {t('created liked tipped')}
           </Typography.Body7>

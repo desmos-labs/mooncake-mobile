@@ -1,11 +1,11 @@
 import messaging from '@react-native-firebase/messaging';
-import {useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import ROUTES from 'navigation/routes';
+import {useCallback} from 'react';
 import axiosInstance from 'services/axios';
 import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import RefreshSession from 'services/axios/requests/RefreshSession';
-import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
 
 /**
  * A hook that restores axios bearer token and redirects the user to the login screen
@@ -17,6 +17,16 @@ const useRefreshSession = () => {
   const refreshSession = useCallback(async () => {
     const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
+    // Notifications token refresh
+    try {
+      console.log('Obtaining notifications token');
+      const notificationsToken = await messaging().getToken();
+      await PostNotificationToken(notificationsToken.toString());
+    } catch (err: any) {
+      console.error('NOTIFICATIONS TOKEN', err);
+    }
+
+    // Bearer token refresh
     try {
       if (bearerToken) {
         console.log('Restoring bearer token');
@@ -25,13 +35,11 @@ const useRefreshSession = () => {
         };
 
         await RefreshSession();
-
-        const notificationsToken = await messaging().getToken();
-        await PostNotificationToken(notificationsToken.toString());
       } else {
         throw new Error('No bearer token found');
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('BEARER TOKEN', err);
       replace(ROUTES.LOGIN);
     }
   }, []);

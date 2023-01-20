@@ -28,7 +28,6 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.s,
   },
   commentButton: {
     flexDirection: 'row',
@@ -45,7 +44,7 @@ const useStyles = makeStyle(theme => ({
     right: 0,
   },
   bottomBarInnerView: {flexDirection: 'row', alignItems: 'center'},
-  mediaView: {alignItems: 'center', marginTop: theme.spacing.xs},
+  mediaView: {alignItems: 'center', marginTop: theme.spacing.m},
 }));
 
 export default useStyles;

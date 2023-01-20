@@ -5,6 +5,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
+import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
@@ -13,11 +14,13 @@ const BalanceSection = ({
   convertedBalance,
   balanceData,
   balanceLoading,
+  guestProfile,
 }: {
   address: string;
   convertedBalance: any;
   balanceData: any;
   balanceLoading: boolean;
+  guestProfile?: boolean;
 }) => {
   const theme = useTheme();
   const styles = useStyles();
@@ -26,7 +29,11 @@ const BalanceSection = ({
   return (
     <View>
       {balanceData && !balanceLoading ? (
-        <View style={styles.container}>
+        <View
+          style={[
+            styles.container,
+            !guestProfile && {height: verticalScale(140)},
+          ]}>
           <Typography.Body6>
             {convertedBalance?.balance?.denom.toUpperCase()} {t('balance')}
           </Typography.Body6>
@@ -40,24 +47,28 @@ const BalanceSection = ({
           <Typography.Body6 style={{color: theme.colors.midGrey}}>
             $ {convertedBalance?.convertedAmount}
           </Typography.Body6>
-          <Divider style={styles.divider} />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigate(ROUTES.OPERATIONS, {address})}>
-            <Typography.Body6
-              style={{
-                marginRight: theme.spacing.s,
-                color: theme.colors.butterOrange01,
-              }}>
-              {t('operations')}
-            </Typography.Body6>
-            <Icon
-              name="angle-right"
-              color={theme.colors.butterOrange01}
-              size={22}
-              allowFontScaling
-            />
-          </TouchableOpacity>
+          {!guestProfile && (
+            <>
+              <Divider style={styles.divider} />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigate(ROUTES.OPERATIONS, {address})}>
+                <Typography.Body6
+                  style={{
+                    marginRight: theme.spacing.s,
+                    color: theme.colors.butterOrange01,
+                  }}>
+                  {t('operations')}
+                </Typography.Body6>
+                <Icon
+                  name="angle-right"
+                  color={theme.colors.butterOrange01}
+                  size={22}
+                  allowFontScaling
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       ) : (
         <View style={styles.container}>

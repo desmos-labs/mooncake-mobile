@@ -1,15 +1,15 @@
 import {isFollowingAddr} from '@recoil/following';
 import {loadingOrange} from 'assets/animations';
 import {
-  commentIcon,
-  commentIconCommented,
-  commentLiked,
-  commentLikeEmptyIcon,
   defaultProfilePic,
   followBlackIcon,
-  homeTipIcon,
-  homeTipIconFilled,
   moreBlackIcon,
+  postCommentedIcon,
+  postLikedIcon,
+  postTippedIcon,
+  postToCommentIcon,
+  postToLikeIcon,
+  postToTipIcon,
   reportIcon,
   unfollowBlackIcon,
 } from 'assets/images';
@@ -236,8 +236,8 @@ const PostCard = ({
             }
             image={
               reactionPresence?.aggregate?.count >= 1
-                ? commentLiked
-                : commentLikeEmptyIcon
+                ? postLikedIcon
+                : postToLikeIcon
             }
             style={styles.bottomBarIcon}
           />
@@ -261,8 +261,8 @@ const PostCard = ({
               }
               source={
                 commentPresence?.aggregate?.count >= 1
-                  ? commentIconCommented
-                  : commentIcon
+                  ? postCommentedIcon
+                  : postToCommentIcon
               }
               style={styles.bottomBarIcon}
             />
@@ -288,8 +288,8 @@ const PostCard = ({
             resizeMode="cover"
             source={
               tipPresence?.aggregate?.count >= 1
-                ? homeTipIconFilled
-                : homeTipIcon
+                ? postTippedIcon
+                : postToTipIcon
             }
             style={styles.bottomBarIcon}
           />
@@ -321,9 +321,11 @@ const PostCard = ({
       style={styles.container}
       onPress={onPressDetails}>
       {ProfileInfo}
-      <Typography.Body6 style={{marginVertical: theme.spacing.xs}}>
-        {text}
-      </Typography.Body6>
+      {text && (
+        <Typography.Body6 style={{marginTop: theme.spacing.m}}>
+          {text}
+        </Typography.Body6>
+      )}
       {MediaAttachment && (
         <View style={styles.mediaView}>{MediaAttachment}</View>
       )}

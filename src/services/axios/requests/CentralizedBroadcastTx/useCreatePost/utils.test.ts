@@ -15,7 +15,11 @@ describe('utils: useCreatePost utils', () => {
 
       const result = await uploadImageForPost({mediaFile: mockMediaFile});
 
-      expect(result).toEqual({uri: mockUrl, mimeType: mockMediaFile.type});
+      expect(result).toEqual({
+        uri: mockUrl,
+        mimeType: mockMediaFile.type,
+        size: expect.anything(),
+      });
     });
   });
 });

@@ -9,7 +9,10 @@ import UploadMedia, {
 export const uploadImageForPost = async ({
   mediaFile,
   onUploadProgress,
-}: UploadMediaParams): Promise<{uri: string; mimeType: string} | undefined> => {
+}: UploadMediaParams): Promise<
+  | {uri: string; mimeType: string; size: {width: number; height: number}}
+  | undefined
+> => {
   try {
     const uploadResponse = await UploadMedia({
       mediaFile,
@@ -20,7 +23,14 @@ export const uploadImageForPost = async ({
 
     const {type} = mediaFile;
 
-    return {uri: url, mimeType: type || ''};
+    return {
+      uri: url,
+      mimeType: type || '',
+      size: {
+        width: mediaFile.width || 0,
+        height: mediaFile.height || 0,
+      },
+    };
   } catch (err: any) {
     if (err.toString().includes('413')) {
       throw new Error('Error 413 from server: Image too large');

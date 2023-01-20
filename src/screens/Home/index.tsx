@@ -1,3 +1,4 @@
+import {AndroidColor} from '@notifee/react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -18,6 +19,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilState} from 'recoil';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -52,6 +54,7 @@ const Home = () => {
   const toast = useToast();
   const {t} = useTranslation();
   const styles = useStyles();
+  const theme = useTheme();
   const postListRef = useRef<any>(null);
   const [listOptions, setListOptions] = useRecoilState(postsListOptions);
   const {
@@ -233,6 +236,8 @@ const Home = () => {
           data={posts}
           refreshControl={
             <RefreshControl
+              tintColor={theme.colors.surfaceBlack}
+              colors={[AndroidColor.BLACK]}
               enabled
               onRefresh={onRefresh}
               refreshing={refetching}

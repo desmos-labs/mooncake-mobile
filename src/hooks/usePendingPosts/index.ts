@@ -1,7 +1,7 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {latestPostsByUserState} from '@recoil/latestPostsByUser';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   PendingPostEnum,
   pendingPostsState,
@@ -21,6 +21,11 @@ export const isTxHashInLatestPost = (
     const txHashes = x.transactions.map(y => y.hash);
     return txHashes.includes(txHash);
   });
+
+export const isExternalIdInLatestPosts = (
+  externalId: string,
+  posts: PostItem[],
+) => posts.find(y => y.external_id === externalId);
 
 export const useSyncPendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(
@@ -47,16 +52,21 @@ export const useSyncPendingPosts = () => {
   const syncPendingPosts = React.useCallback(
     (newPosts: PostItem[], _pendingPosts: PendingPost[]) => {
       const postsToTransfer: PostItem[] = [];
-      const txHashesToRemove: string[] = [];
+      const externalIdsToRemove: string[] = [];
+
       _pendingPosts.forEach(x => {
-        const post = isTxHashInLatestPost(x.txHash, newPosts);
+        const post = isExternalIdInLatestPosts(
+          x.msg.value.externalId,
+          newPosts,
+        );
         if (post) {
           postsToTransfer.push(post);
-          txHashesToRemove.push(x.txHash);
+          externalIdsToRemove.push(x.msg.value.externalId);
         }
       });
+
       setPendingPosts(prev =>
-        prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+        prev.filter(x => !externalIdsToRemove.includes(x.msg.value.externalId)),
       );
       setPosts(prev => [...postsToTransfer, ...prev]);
     },
@@ -91,10 +101,27 @@ const usePendingPosts = () => {
     setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
   }, []);
 
+  const resolveByExternalId = useCallback((externalId: string) => {
+    setPendingPosts(prev =>
+      prev.filter(x => x.msg.value.externalId !== externalId),
+    );
+  }, []);
+
+  /**
+   * Format pending post data into a format that is easier for render code to use
+   */
+  const parsedPendingPosts = useMemo(() => {
+    return pendingPosts
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(x => x.postData);
+  }, [pendingPosts]);
+
   return {
     resolveByTxHash,
+    resolveByExternalId,
     addNewPendingPost,
     pendingPosts, // reexport pendingPosts for convenience
+    parsedPendingPosts,
   };
 };
 

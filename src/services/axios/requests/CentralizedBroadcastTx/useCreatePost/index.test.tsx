@@ -104,7 +104,7 @@ describe('hooks: useCreatePost', () => {
       value: MsgCreatePost.fromPartial({
         subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
         sectionId: 0,
-        externalId: '',
+        externalId: expect.anything(),
         text: mockPostText,
         referencedPosts: [
           PostReference.fromPartial({
@@ -158,7 +158,7 @@ describe('hooks: useCreatePost', () => {
       value: MsgCreatePost.fromPartial({
         subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
         sectionId: 0,
-        externalId: '',
+        externalId: expect.anything(),
         text: mockPostText,
         referencedPosts: [
           PostReference.fromPartial({

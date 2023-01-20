@@ -13,8 +13,6 @@ declare global {
 
     timestamp: number;
 
-    txHash: string;
-
     msg:
       | MsgCreatePostEncodeObject
       | MsgCreateRelationshipEncodeObject

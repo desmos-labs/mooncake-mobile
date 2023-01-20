@@ -8,7 +8,7 @@ import {
 import sharedPostState from '@recoil/sharedPostState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import {isExternalIdInLatestPosts} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
@@ -151,13 +151,18 @@ const useHooks = ({
     const _comments = commentReplies.post_reference.map((x: any) => x.post);
     const txHashesToRemove: string[] = [];
     pendingCommentsOfPost.forEach(x => {
-      const comment = isTxHashInLatestPost(x.txHash, _comments);
+      const comment = isExternalIdInLatestPosts(
+        x.msg.value.externalId,
+        _comments,
+      );
+
       if (comment) {
-        txHashesToRemove.push(x.txHash);
+        txHashesToRemove.push(x.msg.value.externalId);
       }
     });
+
     setPendingComments(prev =>
-      prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+      prev.filter(x => !txHashesToRemove.includes(x.msg.value.externalId)),
     );
   }, [commentReplies]);
 

@@ -7,7 +7,6 @@ import {
 import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import {defaultBanner, profileBack} from 'assets/images';
-import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -485,34 +484,30 @@ const GuestProfile = () => {
           </Spacer>
 
           {isFollowing ? (
-            <Button
-              onPress={() => handlePressFollow(address)}
-              mode="contained"
-              contentStyle={{height: 36}}
-              color={theme.colors.surfaceGrey}>
+            <TouchableOpacity
+              style={styles.followButton}
+              onPress={() => handlePressFollow(address)}>
               <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
-                {t('unfollow')}
+                {t('following')}
               </Typography.Subtitle4>
-            </Button>
+            </TouchableOpacity>
           ) : (
-            <Button
-              onPress={() => handlePressFollow(address)}
-              mode="contained"
-              contentStyle={{height: 36}}
-              color={theme.colors.surfaceBlack}>
+            <TouchableOpacity
+              style={styles.followButton}
+              onPress={() => handlePressFollow(address)}>
               <Typography.Subtitle4 style={{color: theme.colors.white}}>
                 {t('follow')}
               </Typography.Subtitle4>
-            </Button>
+            </TouchableOpacity>
           )}
           <Spacer paddingVertical={theme.spacing.s} />
-          <Divider style={styles.divider} />
           <View style={styles.container}>
             <BalanceSection
               address={address!}
               balanceData={balanceData}
               balanceLoading={balanceLoading}
               convertedBalance={convertedBalance}
+              guestProfile={true}
             />
             <Divider style={styles.divider} />
             <PostsSection
@@ -520,6 +515,7 @@ const GuestProfile = () => {
               posts={posts}
               postsData={postsData}
               postsLoading={postsLoading}
+              guestProfile={true}
             />
             <Divider style={styles.divider} />
             <NftsSection />

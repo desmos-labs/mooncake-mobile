@@ -1,5 +1,6 @@
 import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
+import {Asset} from 'react-native-image-picker';
 
 export type UploadEvent = {
   /**
@@ -15,11 +16,11 @@ export type UploadEvent = {
 
 // This can be manually constructed or passed the
 // imageAsset from useImageFromDevice hook.
-export type ImageMedia = {
+export interface ImageMedia extends Asset {
   uri?: string;
   type?: string;
   fileName?: string;
-};
+}
 
 export type UploadAssetType = ImageMedia;
 
