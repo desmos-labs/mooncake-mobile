@@ -103,7 +103,12 @@ const useCreatePost = () => {
 
           const _attachments = attachmentUploadResult
             ? [attachmentUploadResult].map(x =>
-                mediaToAny(Media.fromPartial(x)),
+                mediaToAny(
+                  Media.fromPartial({
+                    uri: x.uri,
+                    mimeType: x.mimeType,
+                  }),
+                ),
               )
             : [];
 
@@ -153,8 +158,14 @@ const useCreatePost = () => {
                     {
                       id: 0,
                       content: {
-                        ...attachmentUploadResult,
+                        uri: attachmentUploadResult.uri,
+                        mimeType: attachmentUploadResult.mimeType,
                       },
+                      size: [
+                        {
+                          ...attachmentUploadResult.size,
+                        },
+                      ],
                     },
                   ]
                 : [],
