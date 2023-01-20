@@ -515,6 +515,7 @@ const GuestProfile = () => {
               posts={posts}
               postsData={postsData}
               postsLoading={postsLoading}
+              guestProfile={true}
             />
             <Divider style={styles.divider} />
             <NftsSection />
