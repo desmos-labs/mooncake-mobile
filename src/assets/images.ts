@@ -70,8 +70,6 @@ export const commentLikeEmptyIcon = require('./images/commentLikeIconEmpty.png')
 
 export const defaultBanner = require('./images/defaultBanner.png');
 
-export const plusWhiteIcon = require('./images/plusWhite.png');
-
 export const settingsButton = require('./images/settingsButton.png');
 
 export const errorImage = require('./images/errorImage.png');
@@ -122,10 +120,6 @@ export const createPost = require('./images/createPost.png');
 
 export const noMorePosts = require('./images/noMorePosts.png');
 
-export const homeTipIcon = require('./images/homeTipIcon.png');
-
-export const homeTipIconFilled = require('./images/homeTipIconFilled.png');
-
 export const homeInviteIcon = require('./images/homeInviteIcon.png');
 
 export const connectIcon = require('./images/connectIcon.png');
@@ -135,8 +129,6 @@ export const authorizationImage = require('./images/authorizationImage.png');
 export const commentMore = require('./images/commentMore.png');
 
 export const commentLiked = require('./images/commentLiked.png');
-
-export const followedIcon = require('assets/images/unfollowIcon.png');
 
 export const reportIcon = require('./images/report.png');
 
@@ -238,3 +230,12 @@ export const bottomCommunitiesIcon = require('./images/bottomBarIcons/bottomComm
 export const bottomHomeIcon = require('./images/bottomBarIcons/bottomHome.png');
 export const bottomProfileIcon = require('./images/bottomBarIcons/bottomProfile.png');
 export const middleButtonIcon = require('./images/bottomBarIcons/middleButton.png');
+
+// Post icons
+
+export const postCommentedIcon = require('./images/homePostIcons/postCommentedIcon.png');
+export const postToCommentIcon = require('./images/homePostIcons/postToCommentIcon.png');
+export const postLikedIcon = require('./images/homePostIcons/postLikedIcon.png');
+export const postToLikeIcon = require('./images/homePostIcons/postToLikeIcon.png');
+export const postTippedIcon = require('./images/homePostIcons/postTippedIcon.png');
+export const postToTipIcon = require('./images/homePostIcons/postToTipIcon.png');
