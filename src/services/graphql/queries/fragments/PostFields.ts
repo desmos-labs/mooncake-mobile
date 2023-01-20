@@ -13,6 +13,7 @@ const POST_FIELDS = gql`
         height
       }
     }
+    external_id
     author {
       address
       bio

@@ -1,18 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
 import {POST_TYPE} from '@recoil/posts';
 import EnvConfig from 'config/EnvConfig';
 import useGetPosts from 'hooks/useGetPosts';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useRecoilValue} from 'recoil';
 import {NavProps} from 'screens/Home';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import usePendingPosts from 'hooks/usePendingPosts';
 
 const postFamilyMap = {
   [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
@@ -27,7 +23,7 @@ const useHooks = () => {
   const {handleNavigateToProfile} = useNavigateToProfile();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
-  const pendingPosts = useRecoilValue(pendingPostsState(PendingPostEnum.POST));
+  const {parsedPendingPosts} = usePendingPosts();
   const {
     posts,
     fetchMorePosts,
@@ -40,12 +36,6 @@ const useHooks = () => {
   });
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
-
-  const parsedPendingPosts = React.useMemo(() => {
-    return pendingPosts
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(x => x.postData);
-  }, [JSON.stringify(pendingPosts)]);
 
   // sort and combine pending posts with posts from API
   const combinedPosts: Partial<PostItem>[] = React.useMemo(() => {

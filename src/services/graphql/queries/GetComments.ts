@@ -45,6 +45,7 @@ export const GetPostComments = gql`
 `;
 
 export const GetCommentReplies = gql`
+  ${POST_FIELDS}
   query PostComments(
     $postID: bigint
     $subspaceID: bigint
@@ -58,34 +59,7 @@ export const GetCommentReplies = gql`
         id
       }
       post {
-        id
-        creation_date
-        author_address
-        attachments {
-          id
-          content
-        }
-        author {
-          address
-          bio
-          dtag
-          profile_pic
-          nickname
-        }
-        subspace_id
-        reactions {
-          id
-          value
-        }
-        text
-        conversation {
-          author {
-            address
-          }
-        }
-        transactions {
-          hash
-        }
+        ...PostFields
         repliesCount: referees_aggregate(
           where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
         ) {

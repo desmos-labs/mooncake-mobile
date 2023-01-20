@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import {useQuery} from '@apollo/client';
 import GetPosts from 'services/graphql/queries/GetPosts';
@@ -55,8 +55,15 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     }
   }, [followingAddrs, activeAddress]);
 
-  const {data, refetch, loading, fetchMore} = useQuery(queryVars.query, {
+  const onCompletedCallback = useCallback((data: any) => {
+    const {post} = data;
+    setPosts(() => _.uniqBy([...post], 'id'));
+  }, []);
+
+  const {refetch, loading, fetchMore} = useQuery(queryVars.query, {
     variables: queryVars.variables,
+
+    onCompleted: onCompletedCallback,
   });
 
   const fetchMorePosts = React.useCallback(async () => {
@@ -87,13 +94,10 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
     }).finally(() => setTimeout(() => setRefetching(false), 500));
   }, [loading, JSON.stringify(queryVars), refetch]);
 
-  React.useEffect(() => {
-    if (data) {
-      const {post} = data;
-      setPosts(() => _.uniqBy([...post], 'id'));
-    }
-  }, [JSON.stringify(data)]);
-
+  /**
+   * Refetch following post data if the user has followed/unfollowed a new user, or
+   * has switched accounts
+   */
   React.useEffect(() => {
     if (type === POST_TYPE.FOLLOWING) {
       fetchNewestPosts();
