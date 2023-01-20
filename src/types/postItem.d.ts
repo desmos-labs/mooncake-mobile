@@ -11,6 +11,8 @@ declare global {
 
     author_address: string;
 
+    external_id: string;
+
     author: PostAuthor;
 
     subspace_id: number;

@@ -1,7 +1,7 @@
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {latestPostsByUserState} from '@recoil/latestPostsByUser';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   PendingPostEnum,
   pendingPostsState,
@@ -47,16 +47,20 @@ export const useSyncPendingPosts = () => {
   const syncPendingPosts = React.useCallback(
     (newPosts: PostItem[], _pendingPosts: PendingPost[]) => {
       const postsToTransfer: PostItem[] = [];
-      const txHashesToRemove: string[] = [];
+      const externalIdsToRemove: string[] = [];
+
       _pendingPosts.forEach(x => {
-        const post = isTxHashInLatestPost(x.txHash, newPosts);
+        const post = newPosts.find(
+          y => y.external_id === x.msg.value.externalId,
+        );
         if (post) {
           postsToTransfer.push(post);
-          txHashesToRemove.push(x.txHash);
+          externalIdsToRemove.push(x.msg.value.externalId);
         }
       });
+
       setPendingPosts(prev =>
-        prev.filter(x => !txHashesToRemove.includes(x.txHash)),
+        prev.filter(x => !externalIdsToRemove.includes(x.msg.value.externalId)),
       );
       setPosts(prev => [...postsToTransfer, ...prev]);
     },
@@ -91,8 +95,15 @@ const usePendingPosts = () => {
     setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
   }, []);
 
+  const resolveByExternalId = useCallback((externalId: string) => {
+    setPendingPosts(prev =>
+      prev.filter(x => x.msg.value.externalId !== externalId),
+    );
+  }, []);
+
   return {
     resolveByTxHash,
+    resolveByExternalId,
     addNewPendingPost,
     pendingPosts, // reexport pendingPosts for convenience
   };

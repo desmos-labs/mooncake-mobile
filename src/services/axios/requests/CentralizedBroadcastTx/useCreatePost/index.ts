@@ -29,6 +29,7 @@ import {
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
+import {v4 as uuidv4} from 'uuid';
 
 /**
  *
@@ -56,7 +57,7 @@ const useCreatePost = () => {
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
-  const {addNewPendingPost} = usePendingPosts();
+  const {addNewPendingPost, resolveByExternalId} = usePendingPosts();
   const addNewPendingComment = useSetRecoilState(
     pendingPostsState(PendingPostEnum.COMMENT),
   );
@@ -117,12 +118,14 @@ const useCreatePost = () => {
               ]
             : [];
 
+          const externalId = uuidv4();
+
           const msg: MsgCreatePostEncodeObject = {
             typeUrl: GrantEnums.MsgCreatePost,
             value: MsgCreatePost.fromPartial({
               subspaceId: Long.fromNumber(EnvConfig.APP_SUBSPACE_ID),
               sectionId: 0,
-              externalId: '',
+              externalId,
               text: postText,
               referencedPosts: _referencedPosts,
               conversationId: _conversationId,
@@ -132,48 +135,52 @@ const useCreatePost = () => {
             }),
           };
 
-          const sendPostResponse = await encodeAndBroadcastTx({msgs: [msg]});
-          if (sendPostResponse) {
-            // only reset state when we're sure the post has been successfully broadcasted
-            resetSharedPostState();
-            // don't add comments to pending for now
-            const _pendingPost: PendingPost = {
-              postData: {
-                // id can be any number, since it is assigned by the server
-                id: Date.now(),
-                subspace_id: EnvConfig.APP_SUBSPACE_ID,
-                isPending: true,
+          // if (sendPostResponse) {
+          // only reset state when we're sure the post has been successfully broadcasted
+          resetSharedPostState();
+          // don't add comments to pending for now
+          const _pendingPost: PendingPost = {
+            postData: {
+              // id can be any number, since it is assigned by the server
+              id: Date.now(),
+              subspace_id: EnvConfig.APP_SUBSPACE_ID,
+              isPending: true,
 
-                text: postText,
+              text: postText,
 
-                attachments: attachmentUploadResult
-                  ? [
-                      {
-                        id: 0,
-                        content: {
-                          ...attachmentUploadResult,
-                        },
+              attachments: attachmentUploadResult
+                ? [
+                    {
+                      id: 0,
+                      content: {
+                        ...attachmentUploadResult,
                       },
-                    ]
-                  : [],
+                    },
+                  ]
+                : [],
 
-                author_address: activeAddress,
-              },
-              txHash: sendPostResponse.tx_hash,
-              timestamp: Date.now(),
-              msgType: GrantEnums.MsgCreatePost,
+              author_address: activeAddress,
+            },
+            // txHash: sendPostResponse.tx_hash,
+            timestamp: Date.now(),
+            msgType: GrantEnums.MsgCreatePost,
 
-              msg,
-            };
+            msg,
+          };
 
-            if (_referencedPosts.length === 0) {
-              addNewPendingPost(_pendingPost);
-            } else {
-              addNewPendingComment(prev => [_pendingPost, ...prev]);
-            }
-
-            return sendPostResponse;
+          if (_referencedPosts.length === 0) {
+            addNewPendingPost(_pendingPost);
+          } else {
+            addNewPendingComment(prev => [_pendingPost, ...prev]);
           }
+
+          // resolve the pending post if an error occurs during broadcast
+          encodeAndBroadcastTx({msgs: [msg]}).catch(() => {
+            resolveByExternalId(externalId);
+          });
+
+          return true;
+          // }
         } catch (err: any) {
           toast.show(`Error creating post: ${err.toString()}`, {
             type: ToastConfig.ERROR_NO_RETRY,
