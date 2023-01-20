@@ -22,6 +22,11 @@ export const isTxHashInLatestPost = (
     return txHashes.includes(txHash);
   });
 
+export const isExternalIdInLatestPosts = (
+  externalId: string,
+  posts: PostItem[],
+) => posts.find(y => y.external_id === externalId);
+
 export const useSyncPendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(
     pendingPostsState(PendingPostEnum.POST),
@@ -50,8 +55,9 @@ export const useSyncPendingPosts = () => {
       const externalIdsToRemove: string[] = [];
 
       _pendingPosts.forEach(x => {
-        const post = newPosts.find(
-          y => y.external_id === x.msg.value.externalId,
+        const post = isExternalIdInLatestPosts(
+          x.msg.value.externalId,
+          newPosts,
         );
         if (post) {
           postsToTransfer.push(post);

@@ -45,6 +45,7 @@ export const GetPostComments = gql`
 `;
 
 export const GetCommentReplies = gql`
+  ${POST_FIELDS}
   query PostComments(
     $postID: bigint
     $subspaceID: bigint
@@ -61,6 +62,7 @@ export const GetCommentReplies = gql`
         id
         creation_date
         author_address
+        external_id
         attachments {
           id
           content
