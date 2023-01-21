@@ -1,16 +1,12 @@
-import dynamicLinks, {
-  FirebaseDynamicLinksTypes,
-} from '@react-native-firebase/dynamic-links';
-import {NavigatorScreenParams, useNavigation} from '@react-navigation/native';
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   BottomSheetAndroid,
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
-import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
-import useActiveAccount from 'hooks/useActiveAccount';
+import useDynamicLinks from 'hooks/useDynamicLinks';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
@@ -25,11 +21,10 @@ import PostInteractionTabs, {
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
+import {Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
 import ActionAuthorization, {
   ActionAuthorizationParams,
 } from 'screens/ActionAuthorization';
@@ -267,67 +262,24 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // Feel free to put wip screens here
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
-  const {navigate} = useNavigation<any>();
-  const {activeAddress} = useActiveAccount();
-  const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
   useNotifications();
+  useDynamicLinks();
   // End initialization
   // Start subscriptions
   useSubscriptions();
 
   const {t} = useTranslation();
+  const theme = useTheme();
 
-  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
-    if (link && !activeAddress) {
-      const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-      Alert.alert('You received an invite!', `${inviteCode}`);
-      setInviteCode(inviteCode);
-      navigate(ROUTES.ONBOARDING, {invited: true});
-    } else {
-      if (link && activeAddress) {
-        Alert.alert('Error', 'Your already have an account');
-      }
-    }
-  };
-
-  useEffect(() => {
-    // Listen to Firebase dynamic links, foreground and background modes
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    dynamicLinks()
-      .getInitialLink()
-      .then(link => {
-        if (link && !activeAddress) {
-          const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-          Alert.alert('You received an invite!', `${inviteCode}`);
-          setInviteCode(inviteCode);
-          navigate(ROUTES.ONBOARDING, {invited: true});
-        } else {
-          if (link && activeAddress) {
-            Alert.alert('Error', 'Your already have an account');
-          }
-        }
-      });
-    // Clear the subscription
-    return () => unsubscribe();
-  }, []);
-
+  /**
+   * This need to be removed
+   */
   /* To allow going back to previous screen via swipe left. */
   const {height, width} = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
 
-  const initialRouteName = React.useMemo(() => {
-    if (__DEV__) return ROUTES.DEV_SCREEN;
-    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
-
-    if (activeAddr) {
-      return ROUTES.BOTTOM_TABS;
-    }
-    return ROUTES.ONBOARDING;
-  }, []);
-
-  const theme = useTheme();
   const styles: {[key: string]: ViewStyle | TextStyle} = {
     followingAndFollowers: {
       backgroundColor: theme.colors.white,
@@ -339,6 +291,20 @@ const RootNavigator = () => {
       backgroundColor: 'rgb(175,175,175)',
     },
   };
+
+  /**
+   * End
+   */
+
+  const initialRouteName = React.useMemo(() => {
+    if (__DEV__) return ROUTES.DEV_SCREEN;
+    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+
+    if (activeAddr) {
+      return ROUTES.BOTTOM_TABS;
+    }
+    return ROUTES.ONBOARDING;
+  }, []);
 
   return (
     <Stack.Navigator
