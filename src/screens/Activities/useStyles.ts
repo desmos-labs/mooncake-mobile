@@ -12,7 +12,8 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   sectionHeader: {
-    paddingTop: theme.spacing.m,
+    backgroundColor: theme.colors.white,
+    paddingTop: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
     paddingBottom: theme.spacing.s,
   },

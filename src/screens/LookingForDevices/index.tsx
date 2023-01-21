@@ -128,7 +128,7 @@ const LookingForDevices = () => {
     if (!screenReady) {
       return (
         <View style={styles.centeredContainer}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
     }

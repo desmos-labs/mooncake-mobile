@@ -15,6 +15,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
+  Platform,
   RefreshControl,
   TouchableWithoutFeedback,
   View,
@@ -222,7 +223,7 @@ const Home = () => {
   if (!queryPostsData || !posts || loading) {
     return (
       <View style={styles.loadingView}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </View>
     );
   }
@@ -241,6 +242,7 @@ const Home = () => {
               enabled
               onRefresh={onRefresh}
               refreshing={refetching}
+              progressViewOffset={Platform.OS === 'android' ? 30 : 0}
             />
           }
           renderItem={renderPost}

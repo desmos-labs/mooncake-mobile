@@ -235,7 +235,7 @@ const CommentReplies = () => {
 
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-      <ActivityIndicator />
+      <ActivityIndicator color={theme.colors.surfaceBlack} />
     </SafeAreaView>
   ) : (
     <DView

@@ -174,7 +174,7 @@ const Operations = () => {
           )}
         />
       ) : (
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       )}
     </DView>
   );

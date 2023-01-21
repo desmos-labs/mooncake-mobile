@@ -59,6 +59,7 @@ const ConnectApp = () => {
             {twitterUsername === '' ||
               (checkingUsername ? (
                 <ActivityIndicator
+                  color={theme.colors.surfaceBlack}
                   style={{alignSelf: 'flex-start', marginLeft: 6}}
                 />
               ) : (

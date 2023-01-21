@@ -171,7 +171,7 @@ const useHooks = () => {
     } else {
       return [];
     }
-  }, [notificationsWithProfile, t]);
+  }, [notificationsWithProfile]);
 
   return {
     data,

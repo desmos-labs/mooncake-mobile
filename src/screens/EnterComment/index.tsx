@@ -127,7 +127,10 @@ const EnterComment = () => {
                 style={styles.avatar}
               />
             ) : (
-              <ActivityIndicator style={styles.avatar} />
+              <ActivityIndicator
+                style={styles.avatar}
+                color={theme.colors.surfaceBlack}
+              />
             )}
           </View>
 

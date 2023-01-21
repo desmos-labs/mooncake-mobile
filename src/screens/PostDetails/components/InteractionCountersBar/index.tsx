@@ -3,7 +3,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage, {Source} from 'react-native-fast-image';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -22,6 +22,7 @@ const InteractionCountersBar = ({
   handlePressCounters,
 }: Props) => {
   const styles = useStyles();
+  const theme = useTheme();
   const {t} = useTranslation('postDetails');
   // TODO i dont like this but i had not found any better idea
   const calculatedWidth =
@@ -32,7 +33,7 @@ const InteractionCountersBar = ({
       : 70;
 
   return loading ? (
-    <ActivityIndicator />
+    <ActivityIndicator color={theme.colors.surfaceBlack} />
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>

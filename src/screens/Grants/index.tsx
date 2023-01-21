@@ -115,7 +115,7 @@ const Grants: React.FC<NavProps> = props => {
     return (
       <SafeAreaView
         style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </SafeAreaView>
     );
   }

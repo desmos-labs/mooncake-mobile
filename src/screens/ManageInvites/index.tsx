@@ -41,7 +41,10 @@ const ManageInvites = () => {
           {rewardBalance !== undefined ? (
             <Typography.H1>{rewardBalance} DSM</Typography.H1>
           ) : (
-            <ActivityIndicator style={{flex: 1}} />
+            <ActivityIndicator
+              color={theme.colors.surfaceBlack}
+              style={{flex: 1}}
+            />
           )}
         </View>
         <FastImage

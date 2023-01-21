@@ -11,6 +11,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, FlatList, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import GetPostsForAddress from 'services/graphql/queries/GetPostsForAddress';
@@ -27,6 +28,7 @@ export type PostsTabParams = {
 
 export const PostsTab = () => {
   const styles = useStyles();
+  const theme = useTheme();
   const {params} = useRoute<NavProps['route']>();
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('profile');
@@ -58,9 +60,9 @@ export const PostsTab = () => {
   }, [postsData, postsLoading]);
 
   const handlePostPressed = React.useCallback(
-    ({subspaceID, id}: {subspaceID: number; id: number}) => {
+    ({subspaceId, id}: {subspaceId: number; id: number}) => {
       navigate(ROUTES.POST_DETAILS, {
-        subspaceID,
+        subspaceId,
         postId: id,
         focusCommentBox: false,
       });
@@ -75,7 +77,7 @@ export const PostsTab = () => {
       postsMargin={6}
       onPress={() =>
         handlePostPressed({
-          subspaceID: item.subspace_id,
+          subspaceId: item.subspace_id,
           id: item.id,
         })
       }
@@ -103,7 +105,7 @@ export const PostsTab = () => {
           }
         />
       ) : (
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       )}
     </View>
   );

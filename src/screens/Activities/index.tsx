@@ -10,9 +10,15 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, RefreshControl, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  RefreshControl,
+  View,
+} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import NotificationTypesEnum from 'types/notificationTypes';
@@ -111,7 +117,7 @@ const Activities = () => {
     return null;
   }, [notificationsLoading]);
 
-  const renderNotification = React.useCallback(({item}: string | any) => {
+  const renderNotification = ({item}: string | any) => {
     if (typeof item === 'string') {
       if (item === 'divider') {
         return (
@@ -136,17 +142,6 @@ const Activities = () => {
         />
       );
     }
-  }, []);
-
-  const headerComponent = () => {
-    return (
-      <View
-        style={{
-          paddingHorizontal: theme.spacing.m,
-        }}>
-        <Typography.H3>{t('activities')}</Typography.H3>
-      </View>
-    );
   };
 
   const footerComponent = useMemo(() => {
@@ -161,10 +156,14 @@ const Activities = () => {
     }
   }, [fetchingMore]);
 
-  if (!data || notificationsLoading || !notificationsData) {
+  useEffect(() => {
+    console.log(notificationsData);
+  }, [notificationsData]);
+
+  if (!data || !notificationsData) {
     return (
       <View style={styles.flexCenter}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </View>
     );
   }
@@ -176,6 +175,12 @@ const Activities = () => {
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
+      <View
+        style={{
+          paddingHorizontal: theme.spacing.m,
+        }}>
+        <Typography.H3>{t('activities')}</Typography.H3>
+      </View>
       <FlashList
         keyExtractor={(item, index) =>
           typeof item === 'string'
@@ -189,11 +194,11 @@ const Activities = () => {
             enabled
             onRefresh={refetch}
             refreshing={refetching}
+            progressViewOffset={Platform.OS === 'android' ? 80 : 0}
           />
         }
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyActivities}
-        ListHeaderComponent={headerComponent}
         data={notificationsData}
         renderItem={renderNotification}
         ListFooterComponent={footerComponent}

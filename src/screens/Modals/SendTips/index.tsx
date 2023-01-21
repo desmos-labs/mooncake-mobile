@@ -155,7 +155,7 @@ const SendTips = () => {
                   <ActivityIndicator
                     style={{left: 0, marginRight: 'auto'}}
                     size={16}
-                    color={theme.colors.butterOrange01}
+                    color={theme.colors.surfaceBlack}
                   />
                 ) : (
                   <Typography.Body7 style={{color: theme.colors.accentGreen01}}>

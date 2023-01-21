@@ -246,7 +246,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
           </Button>
         )
       ) : (
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       )}
     </DView>
   );
