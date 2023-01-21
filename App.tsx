@@ -5,6 +5,7 @@ import LightTheme from 'config/theme/LightTheme';
 import ToastConfig from 'config/ToastConfig';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ToastProvider} from 'react-native-toast-notifications';
@@ -33,7 +34,8 @@ const App = () => {
           }}>
           <ApolloProvider client={client}>
             <RecoilRoot>
-              <NavigationContainer>
+              <NavigationContainer
+                onReady={() => RNBootSplash.hide({fade: true})}>
                 <RootNavigator />
               </NavigationContainer>
             </RecoilRoot>

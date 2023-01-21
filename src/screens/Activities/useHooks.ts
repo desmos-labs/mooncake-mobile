@@ -38,7 +38,9 @@ const useHooks = () => {
         return notification.data.relationship_creator;
       case NotificationTypesEnum.Reply:
         return notification.data.reply_author;
-      case NotificationTypesEnum.Reaction:
+      case NotificationTypesEnum.Reaction_Post:
+      case NotificationTypesEnum.Reaction_Comment:
+      case NotificationTypesEnum.Reaction_Reply:
         return notification.data.reaction_author;
       case NotificationTypesEnum.InviteClaimed:
         return notification.data.claimer_address;
@@ -94,7 +96,7 @@ const useHooks = () => {
     await notificationsRefetch().finally(() =>
       setTimeout(() => setRefetching(false), 500),
     );
-  }, [notificationsRefetch, fetchNotificationDetails]);
+  }, [notificationsRefetch]);
 
   const fetchMore = useCallback(
     async (distanceFromEnd: number) => {
@@ -122,7 +124,7 @@ const useHooks = () => {
   );
 
   useEffect(() => {
-    fetchNotificationDetails();
+    fetchNotificationDetails().catch(err => console.error(err));
   }, [fetchNotificationDetails]);
 
   const notificationsData: (string | any)[] = useMemo(() => {

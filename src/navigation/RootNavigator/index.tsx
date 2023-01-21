@@ -1,4 +1,3 @@
-import notifee from '@notifee/react-native';
 import dynamicLinks, {
   FirebaseDynamicLinksTypes,
 } from '@react-native-firebase/dynamic-links';
@@ -12,7 +11,6 @@ import inviteCodeState from '@recoil/inviteCodeState';
 import EnvConfig from 'config/EnvConfig';
 import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 import useActiveAccount from 'hooks/useActiveAccount';
-import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useInitializeAppData from 'hooks/useInitializeAppData';
 import useNotifications from 'hooks/useNotifications';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
@@ -30,7 +28,6 @@ import ROUTES from 'navigation/routes';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
-import RNBootSplash from 'react-native-bootsplash';
 import {useTheme} from 'react-native-paper';
 import {useSetRecoilState} from 'recoil';
 import ActionAuthorization, {
@@ -141,7 +138,6 @@ import Signup from 'screens/Signup';
 import SignupResult from 'screens/SignupResult';
 import WelcomeBack from 'screens/WelcomeBack';
 import WelcomePage from 'screens/WelcomePage';
-import NotificationTypesEnum from 'types/notificationTypes';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -276,33 +272,12 @@ const RootNavigator = () => {
   const setInviteCode = useSetRecoilState(inviteCodeState);
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
-  const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
-  useNotifications(navigateToCorrectScreen);
+  useNotifications();
   // End initialization
   // Start subscriptions
   useSubscriptions();
 
   const {t} = useTranslation();
-
-  // Bootstrap sequence function
-  async function bootstrap() {
-    const initialNotification = await notifee.getInitialNotification();
-    if (initialNotification) {
-      const {notification} = initialNotification;
-      console.log('User pressed notification', notification);
-      navigateToCorrectScreen({
-        type: notification?.data?.type as NotificationTypesEnum,
-        post_id: notification?.data?.post_id as string,
-        comment_id: notification?.data?.comment_id as string,
-        reply_id: notification?.data?.reply_id as string,
-        subspace_id: notification?.data?.subspace_id as string,
-      });
-    }
-  }
-
-  useEffect(() => {
-    bootstrap().catch(console.error);
-  }, []);
 
   const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink) => {
     if (link && !activeAddress) {
@@ -318,9 +293,6 @@ const RootNavigator = () => {
   };
 
   useEffect(() => {
-    // Hide the splashscreen
-    RNBootSplash.hide({fade: true});
-
     // Listen to Firebase dynamic links, foreground and background modes
     const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
     dynamicLinks()

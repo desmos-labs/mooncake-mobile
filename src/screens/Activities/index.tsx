@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
+import NotificationTypesEnum from 'types/notificationTypes';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -27,7 +28,7 @@ export interface CompleteNotification {
     /**
      * {NotificationsTypeEnum} Notification type
      */
-    type: string;
+    type: NotificationTypesEnum;
     /**
      * Notification post id, could be an id of a comment, reply, or root post
      */

@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
+import useActiveAccount from 'hooks/useActiveAccount';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useCallback} from 'react';
@@ -9,7 +10,7 @@ import NotificationTypesEnum from 'types/notificationTypes';
 const useHandleNotificationPressEvent = () => {
   const {navigate} =
     useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
-
+  const {profileData} = useActiveAccount();
   const navigateToCorrectScreen = useCallback(
     ({
       type,
@@ -24,10 +25,6 @@ const useHandleNotificationPressEvent = () => {
       reply_id?: string;
       subspace_id?: string;
     }) => {
-      console.log(type);
-      console.log(post_id);
-      console.log(comment_id);
-      console.log(reply_id);
       if (type === NotificationTypesEnum.Comment && comment_id) {
         console.log('navigate to comment');
         navigate(ROUTES.POST_DETAILS, {
@@ -52,14 +49,10 @@ const useHandleNotificationPressEvent = () => {
         type === NotificationTypesEnum.Reaction_Reply
       ) {
         navigate(ROUTES.COMMENT_REPLIES, {
-          commentId: parseInt(post_id!, 10),
+          commentId: parseInt(comment_id!, 10),
           subspaceId: parseInt(subspace_id!, 10),
         });
-      } else {
-        Alert.alert('Unmapped notification handling');
-      }
-
-      /*      if (type === NotificationTypesEnum.Follow) {
+      } else if (type === NotificationTypesEnum.Follow) {
         navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
           screen: ROUTES.FOLLOWING,
           params: {
@@ -69,9 +62,15 @@ const useHandleNotificationPressEvent = () => {
               profileData?.nickname.trim() || `@${profileData?.dtag}`,
           },
         });
-      } */
+      } else if (type === NotificationTypesEnum.InviteClaimed) {
+        navigate(ROUTES.MANAGE_INVITES);
+      } else if (type === NotificationTypesEnum.InviteUnlocked) {
+        navigate(ROUTES.INVITES);
+      } else {
+        Alert.alert('Unmapped notification handling');
+      }
     },
-    [navigate],
+    [navigate, profileData?.address, profileData?.dtag, profileData?.nickname],
   );
 
   return {

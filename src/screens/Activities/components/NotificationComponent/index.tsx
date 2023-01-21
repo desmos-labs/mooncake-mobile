@@ -1,35 +1,28 @@
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
 import {isFollowingAddr} from '@recoil/following';
 import Button from 'components/Button';
 import ImageButton from 'components/ImageButton';
 import Typography from 'components/Typography';
-import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
-import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
-import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import {CompleteNotification} from 'screens/Activities';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
-type NavProps = CompositeScreenProps<
+/* type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.ACTIVITIES>,
   BottomTabScreenProps<BottomTabsParamList>
->;
+>; */
 
 const NotificationComponent = ({
-  data: {type, post_id, subspace_id},
+  data: {type, post_id, comment_id, reply_id, subspace_id},
   profile,
   timestamp,
   relationship_creator,
@@ -38,93 +31,19 @@ const NotificationComponent = ({
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
-  const {navigate} = useNavigation<NavProps['navigation']>();
   const formattedDate = useFormatTimeForPostDetails(timestamp);
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(relationship_creator || ''),
   );
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
-  const {profileData} = useActiveAccount();
-  const toast = useToast();
   const {handleNavigateToProfile} = useNavigateToProfile();
-
-  const checkPostType = useCallback(() => {
-    const isOriginalPost = post?.conversation === null;
-    const reply = post?.replies.find(
-      (rep: any) => rep.reference.id === post.conversation.id,
-    );
-    const isComment = reply !== null && !isOriginalPost;
-    const isReply = !isOriginalPost && !isComment;
-
-    return {
-      isOriginalPost,
-      isComment,
-      isReply,
-      reply,
-    };
-  }, [post?.conversation, post?.replies]);
-
-  const navigateToCorrectScreen = useCallback(() => {
-    if (type === NotificationTypesEnum.Comment) {
-      navigate(ROUTES.POST_DETAILS, {
-        postId: parseInt(post_id!, 10),
-        subspaceId: parseInt(subspace_id!, 10),
-        focusCommentBox: false,
-      });
-    }
-    if (type === NotificationTypesEnum.Reply) {
-      navigate(ROUTES.COMMENT_REPLIES, {
-        commentId: parseInt(post_id!, 10),
-        subspaceId: parseInt(subspace_id!, 10),
-      });
-    }
-    if (type === NotificationTypesEnum.Reaction) {
-      const {isOriginalPost, isReply, reply} = checkPostType();
-      if (!isOriginalPost) {
-        if (isReply) {
-          navigate(ROUTES.COMMENT_REPLIES, {
-            commentId: reply.reference.id,
-            subspaceId: parseInt(subspace_id!, 10),
-          });
-        } else {
-          navigate(ROUTES.COMMENT_REPLIES, {
-            commentId: parseInt(post_id!, 10),
-            subspaceId: parseInt(subspace_id!, 10),
-          });
-        }
-      } else {
-        navigate(ROUTES.POST_DETAILS, {
-          postId: parseInt(post_id!, 10),
-          subspaceId: parseInt(subspace_id!, 10),
-          focusCommentBox: false,
-        });
-      }
-    }
-    if (type === NotificationTypesEnum.Follow) {
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-        screen: ROUTES.FOLLOWING,
-        params: {
-          subspaceID: parseInt(subspace_id!, 10),
-          userAddress: profileData?.address!,
-          headerTitle: profileData?.nickname.trim() || `@${profileData?.dtag}`,
-        },
-      });
-    }
-  }, [
-    checkPostType,
-    navigate,
-    post_id,
-    profileData?.address,
-    profileData?.dtag,
-    profileData?.nickname,
-    toast,
-    type,
-  ]);
+  const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
 
   const content = useMemo(() => {
     switch (type) {
-      case NotificationTypesEnum.Reaction: {
-        const {isOriginalPost, isComment, isReply} = checkPostType();
+      case NotificationTypesEnum.Reaction_Post:
+      case NotificationTypesEnum.Reaction_Comment:
+      case NotificationTypesEnum.Reaction_Reply: {
         return (
           <View style={styles.flexRowView}>
             <ImageButton
@@ -134,14 +53,25 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6>
                   {' '}
-                  {isOriginalPost && t('liked your post')}
-                  {isComment && t('liked comment')}
-                  {isReply && t('liked reply')}
+                  {type === NotificationTypesEnum.Reaction_Post &&
+                    t('liked your post')}
+                  {type === NotificationTypesEnum.Reaction_Comment &&
+                    t('liked comment')}
+                  {type === NotificationTypesEnum.Reaction_Reply &&
+                    t('liked reply')}
                 </Typography.Body6>
               </Typography.Subtitle3>
               <Typography.Body7 style={{color: theme.colors.grey02}}>
@@ -167,7 +97,15 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented')}</Typography.Body6>
@@ -194,7 +132,15 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented reply')}</Typography.Body6>
@@ -221,7 +167,15 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={navigateToCorrectScreen}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('followed you')}</Typography.Body6>
@@ -273,7 +227,15 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => navigate(ROUTES.MANAGE_INVITES)}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 @{profile.dtag.trimStart()}
                 <Typography.Body6> {t('claimed your invite')}</Typography.Body6>
@@ -294,7 +256,15 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => navigate(ROUTES.INVITES)}>
+              onPress={() =>
+                navigateToCorrectScreen({
+                  type,
+                  post_id,
+                  comment_id,
+                  reply_id,
+                  subspace_id,
+                })
+              }>
               <Typography.Subtitle3>
                 {t('you')}{' '}
                 <Typography.Body6>
@@ -307,14 +277,28 @@ const NotificationComponent = ({
             </TouchableOpacity>
           </View>
         );
-      default:
+      default: {
+        console.log(type);
         return (
           <View>
-            <Typography.Body6>Not mapped</Typography.Body6>
+            <Typography.Body6>Not mapped or old notification</Typography.Body6>
           </View>
         );
+      }
     }
-  }, [formattedDate, isFollowingAddress, followOrUnfollowUser, checkPostType]);
+  }, [
+    type,
+    formattedDate,
+    isFollowingAddress,
+    handleNavigateToProfile,
+    navigateToCorrectScreen,
+    post_id,
+    comment_id,
+    reply_id,
+    subspace_id,
+    followOrUnfollowUser,
+    relationship_creator,
+  ]);
 
   return <View style={styles.container}>{content}</View>;
 };

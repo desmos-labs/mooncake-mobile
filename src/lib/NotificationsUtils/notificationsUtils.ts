@@ -14,18 +14,18 @@ export const createLocalNotification = async (remoteMessage: any) => {
       vibration: true,
       lights: true,
     });
-
     await notifee.displayNotification({
       title: remoteMessage.data?.notification_title,
       body: remoteMessage.data?.notification_body,
       android: {
         channelId,
         smallIcon: 'ic_small_icon',
-        color: '#FEB027',
+        color: '#fcce28',
         pressAction: {
           id: 'default',
         },
       },
+      data: remoteMessage.data,
       ios: {
         interruptionLevel: 'active',
         foregroundPresentationOptions: {

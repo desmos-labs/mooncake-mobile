@@ -485,7 +485,7 @@ const GuestProfile = () => {
 
           {isFollowing ? (
             <TouchableOpacity
-              style={styles.followButton}
+              style={styles.unfollowButton}
               onPress={() => handlePressFollow(address)}>
               <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
                 {t('following')}
