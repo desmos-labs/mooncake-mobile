@@ -1,9 +1,9 @@
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {latestPostsByUserState} from '@recoil/latestPostsByUser';
 import {POST_TYPE, usePostsFamily} from '@recoil/posts';
 import React, {useCallback, useMemo} from 'react';
 import {
-  PendingPostEnum,
+  allPendingPostsState,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
 
@@ -28,9 +28,7 @@ export const isExternalIdInLatestPosts = (
 ) => posts.find(y => y.external_id === externalId);
 
 export const useSyncPendingPosts = () => {
-  const [pendingPosts, setPendingPosts] = useRecoilState(
-    pendingPostsState(PendingPostEnum.POST),
-  );
+  const [pendingPosts, setPendingPosts] = useRecoilState(allPendingPostsState);
   const latestPostsByUser = useRecoilValue(latestPostsByUserState);
 
   const {setPosts} = usePostsFamily(POST_TYPE.DISCOVER);
@@ -81,28 +79,19 @@ export const useSyncPendingPosts = () => {
  * onto the chain.
  */
 const usePendingPosts = () => {
-  const [pendingPosts, setPendingPosts] = useRecoilState(
-    pendingPostsState(PendingPostEnum.POST),
-  );
+  const setAllPendingPosts = useSetRecoilState(allPendingPostsState);
+  const pendingPosts = useRecoilValue(pendingPostsState);
 
   /**
    * Add a new pending relationship to recoil state.
    * @param {PendingPost} newPost - The new relationship to be added.
    */
   const addNewPendingPost = React.useCallback((newPost: PendingPost) => {
-    setPendingPosts(prev => [...prev, newPost]);
-  }, []);
-
-  /**
-   * Remove a pending post by its txHash.
-   * @param {string} txHash - The txHash to remove.
-   */
-  const resolveByTxHash = React.useCallback((txHash: string) => {
-    setPendingPosts(prev => prev.filter(x => x.txHash !== txHash));
+    setAllPendingPosts(prev => [...prev, newPost]);
   }, []);
 
   const resolveByExternalId = useCallback((externalId: string) => {
-    setPendingPosts(prev =>
+    setAllPendingPosts(prev =>
       prev.filter(x => x.msg.value.externalId !== externalId),
     );
   }, []);
@@ -117,7 +106,6 @@ const usePendingPosts = () => {
   }, [pendingPosts]);
 
   return {
-    resolveByTxHash,
     resolveByExternalId,
     addNewPendingPost,
     pendingPosts, // reexport pendingPosts for convenience

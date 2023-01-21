@@ -14,21 +14,14 @@ import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
 import {UploadEvent} from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
-import {
-  useRecoilCallback,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
+import {useRecoilCallback, useResetRecoilState} from 'recoil';
 import sharedPostState from '@recoil/sharedPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 import usePendingPosts from 'hooks/usePendingPosts';
-import {
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+import {PendingPostEnum} from '@recoil/pendingTx/pendingPosts';
 import {v4 as uuidv4} from 'uuid';
 
 /**
@@ -58,9 +51,6 @@ const useCreatePost = () => {
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   const {addNewPendingPost, resolveByExternalId} = usePendingPosts();
-  const addNewPendingComment = useSetRecoilState(
-    pendingPostsState(PendingPostEnum.COMMENT),
-  );
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
@@ -145,6 +135,10 @@ const useCreatePost = () => {
           resetSharedPostState();
           // don't add comments to pending for now
           const _pendingPost: PendingPost = {
+            postType:
+              _referencedPosts.length === 0
+                ? PendingPostEnum.POST
+                : PendingPostEnum.COMMENT,
             postData: {
               // id can be any number, since it is assigned by the server
               id: Date.now(),
@@ -179,11 +173,7 @@ const useCreatePost = () => {
             msg,
           };
 
-          if (_referencedPosts.length === 0) {
-            addNewPendingPost(_pendingPost);
-          } else {
-            addNewPendingComment(prev => [_pendingPost, ...prev]);
-          }
+          addNewPendingPost(_pendingPost);
 
           // resolve the pending post if an error occurs during broadcast
           encodeAndBroadcastTx({msgs: [msg]}).catch(() => {

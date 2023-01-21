@@ -4,6 +4,7 @@ import {
   MsgCreateRelationshipEncodeObject,
   MsgDeleteRelationshipEncodeObject,
 } from '@desmoslabs/desmjs';
+import {PendingPostEnum} from '@recoil/pendingTx/pendingPosts';
 
 export {};
 
@@ -12,6 +13,8 @@ declare global {
     msgType: GrantEnums;
 
     timestamp: number;
+
+    postType: PendingPostEnum;
 
     msg:
       | MsgCreatePostEncodeObject

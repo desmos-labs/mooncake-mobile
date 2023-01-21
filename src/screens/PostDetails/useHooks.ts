@@ -1,19 +1,15 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import {
-  pendingCommentsByPost,
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+import {pendingCommentsByPost} from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import {isExternalIdInLatestPosts} from 'hooks/usePendingPosts';
+import usePendingPosts from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList, Keyboard} from 'react-native';
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
@@ -37,10 +33,9 @@ const useHooks = ({
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {handleNavigateToProfile} = useNavigateToProfile();
   const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
-  const setPendingComments = useSetRecoilState(
-    pendingPostsState(PendingPostEnum.COMMENT),
-  );
   const scrollViewRef = useRef<FlatList>(null);
+
+  const {resolveByExternalId} = usePendingPosts();
 
   const {
     data: originalPost,
@@ -106,23 +101,18 @@ const useHooks = ({
    */
   React.useEffect(() => {
     if (!postComments) return;
-    const txHashesToRemove: string[] = [];
-    pendingCommentsOfPost.forEach(x => {
-      const comment = isExternalIdInLatestPosts(
-        x.msg.value.externalId,
-        postComments.post,
-      );
-      if (comment) {
-        txHashesToRemove.push(x.msg.value.externalId);
-      }
-    });
-    setPendingComments(prev =>
-      prev.filter(x => !txHashesToRemove.includes(x.msg.value.externalId)),
+
+    const externalIds: string[] = postComments.post.map(
+      (x: PostItem) => x.external_id,
     );
+
+    externalIds.forEach(resolveByExternalId);
   }, [postComments]);
 
   const comments = useMemo(() => {
-    if (!postComments) return [];
+    if (!postComments) {
+      return [...pendingCommentsOfPost.map(x => x.postData).reverse()];
+    }
 
     return [
       ...postComments.post,

@@ -1,18 +1,13 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
-import {
-  pendingCommentsByPost,
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+import {pendingCommentsByPost} from '@recoil/pendingTx/pendingPosts';
 import sharedPostState from '@recoil/sharedPostState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import {isExternalIdInLatestPosts} from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
 import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
@@ -21,6 +16,7 @@ import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPo
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToCommentReplies';
+import usePendingPosts from 'hooks/usePendingPosts';
 
 const useHooks = ({
   postID,
@@ -37,6 +33,7 @@ const useHooks = ({
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {handleNavigateToProfile} = useNavigateToProfile();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
+  const {resolveByExternalId} = usePendingPosts();
 
   const scrollViewRef = useRef<FlatList>(null);
 
@@ -136,10 +133,6 @@ const useHooks = ({
     return postTips.tip_post;
   }, [postTips]);
 
-  const setPendingComments = useSetRecoilState(
-    pendingPostsState(PendingPostEnum.COMMENT),
-  );
-
   const pendingCommentsOfPost = useRecoilValue(
     pendingCommentsByPost(commentID),
   );
@@ -150,21 +143,7 @@ const useHooks = ({
   React.useEffect(() => {
     if (!commentReplies) return;
     const _comments = commentReplies.post_reference.map((x: any) => x.post);
-    const txHashesToRemove: string[] = [];
-    pendingCommentsOfPost.forEach(x => {
-      const comment = isExternalIdInLatestPosts(
-        x.msg.value.externalId,
-        _comments,
-      );
-
-      if (comment) {
-        txHashesToRemove.push(x.msg.value.externalId);
-      }
-    });
-
-    setPendingComments(prev =>
-      prev.filter(x => !txHashesToRemove.includes(x.msg.value.externalId)),
-    );
+    _comments.map((x: PostItem) => x.external_id).forEach(resolveByExternalId);
   }, [commentReplies]);
 
   const comments = useMemo(() => {
