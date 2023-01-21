@@ -127,8 +127,8 @@ const useHooks = () => {
     fetchNotificationDetails().catch(err => console.error(err));
   }, [fetchNotificationDetails]);
 
-  const notificationsData: (string | any)[] = useMemo(() => {
-    if (!notificationsWithProfile) return [];
+  const notificationsData: null | any[] = useMemo(() => {
+    if (!notificationsWithProfile || !data) return null;
     const sortedArray = _.orderBy(
       notificationsWithProfile,
       [obj => new Date(obj.timestamp)],

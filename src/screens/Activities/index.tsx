@@ -1,3 +1,4 @@
+import {AndroidColor} from '@notifee/react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -11,7 +12,7 @@ import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, View} from 'react-native';
+import {ActivityIndicator, Image, RefreshControl, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import NotificationTypesEnum from 'types/notificationTypes';
@@ -80,7 +81,7 @@ const Activities = () => {
   ] = useState(false);
 
   const stickyHeaderIndices = notificationsData
-    .map((item, index) => {
+    ?.map((item, index) => {
       if (typeof item === 'string') {
         return index;
       } else {
@@ -91,7 +92,7 @@ const Activities = () => {
 
   // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
-    if (!data && !notificationsLoading) {
+    if (data && data.notification.length === 0 && !notificationsLoading) {
       return (
         <View style={styles.emptyView}>
           <Image
@@ -137,10 +138,21 @@ const Activities = () => {
     }
   }, []);
 
+  const headerComponent = () => {
+    return (
+      <View
+        style={{
+          paddingHorizontal: theme.spacing.m,
+        }}>
+        <Typography.H3>{t('activities')}</Typography.H3>
+      </View>
+    );
+  };
+
   const footerComponent = useMemo(() => {
-    if (fetchingMore) {
+    if (fetchingMore && data.notification.length !== 0) {
       return (
-        <View style={{paddingHorizontal: theme.spacing.m}}>
+        <View style={{padding: theme.spacing.m}}>
           <NotificationContentLoader />
         </View>
       );
@@ -149,14 +161,7 @@ const Activities = () => {
     }
   }, [fetchingMore]);
 
-  if (
-    !data ||
-    data?.notification?.length === 0 ||
-    !notificationsData ||
-    notificationsData.length === 0 ||
-    notificationsLoading ||
-    !notificationsData
-  ) {
+  if (!data || notificationsLoading || !notificationsData) {
     return (
       <View style={styles.flexCenter}>
         <ActivityIndicator />
@@ -171,24 +176,24 @@ const Activities = () => {
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       style={styles.container}>
-      <View
-        style={{
-          backgroundColor: theme.colors.white,
-          zIndex: 2,
-          paddingHorizontal: theme.spacing.m,
-        }}>
-        <Typography.H3>{t('activities')}</Typography.H3>
-      </View>
       <FlashList
         keyExtractor={(item, index) =>
           typeof item === 'string'
             ? `sectionHeader${index}`
             : `row${item.timestamp}`
         }
-        refreshing={refetching}
-        onRefresh={refetch}
+        refreshControl={
+          <RefreshControl
+            tintColor={theme.colors.surfaceBlack}
+            colors={[AndroidColor.BLACK]}
+            enabled
+            onRefresh={refetch}
+            refreshing={refetching}
+          />
+        }
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyActivities}
+        ListHeaderComponent={headerComponent}
         data={notificationsData}
         renderItem={renderNotification}
         ListFooterComponent={footerComponent}
