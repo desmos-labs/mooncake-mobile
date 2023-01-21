@@ -169,12 +169,10 @@ const PostDetails = () => {
 
       return (
         <CommentItem
-          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
-          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
-          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={
-            !isPending ? item?.repliesCount?.aggregate?.count! : 0
-          }
+          tipped={item?.tipPresence?.aggregate?.count > 0}
+          liked={item?.reactionPresence?.aggregate?.count > 0}
+          commented={item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount?.aggregate?.count || 0}
           handlePressMore={event => {
             if (isPending) return;
             setAnchor({
@@ -185,7 +183,7 @@ const PostDetails = () => {
             setPopupMenuParams({
               postId: item.id,
               subspaceId: item.subspace_id,
-              authorAddress: item.author.address,
+              authorAddress: item.author_address,
             });
           }}
           handlePressComment={() => {
@@ -211,7 +209,12 @@ const PostDetails = () => {
             });
           }}
           handleLongPress={() => console.log('longPress')}
-          {...item}
+          text={item.text}
+          creation_date={item.creation_date}
+          isPending={isPending}
+          attachments={item.attachments}
+          reactions={item.reactions}
+          tips={item.tips}
           author={isPending ? profileData || ({} as any) : item.author}
         />
       );
