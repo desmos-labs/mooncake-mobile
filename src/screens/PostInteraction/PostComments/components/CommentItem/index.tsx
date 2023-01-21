@@ -15,7 +15,7 @@ import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import React from 'react';
+import React, {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -213,4 +213,4 @@ const CommentItem = ({
   );
 };
 
-export default CommentItem;
+export default memo(CommentItem);
