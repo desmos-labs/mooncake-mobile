@@ -10,7 +10,7 @@ import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -155,10 +155,6 @@ const Activities = () => {
       return null;
     }
   }, [fetchingMore]);
-
-  useEffect(() => {
-    console.log(notificationsData);
-  }, [notificationsData]);
 
   if (!data || !notificationsData) {
     return (
