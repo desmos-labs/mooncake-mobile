@@ -7,8 +7,8 @@ import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import usePendingPosts from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef} from 'react';
-import {FlatList, Keyboard} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {Keyboard} from 'react-native';
 import {useRecoilValue, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/PostDetails/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
@@ -33,7 +33,6 @@ const useHooks = ({
   const resetSharedPostState = useResetRecoilState(sharedPostState);
   const {handleNavigateToProfile} = useNavigateToProfile();
   const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
-  const scrollViewRef = useRef<FlatList>(null);
 
   const {resolveByExternalId} = usePendingPosts();
 
@@ -245,7 +244,6 @@ const useHooks = ({
     postCommentLoading: loading,
     handlePressReport,
     pageRefetch,
-    scrollViewRef,
   };
 };
 

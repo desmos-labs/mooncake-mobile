@@ -17,7 +17,6 @@ const useStyles = makeStyle(theme => ({
   },
   flatListContainer: {
     paddingHorizontal: theme.spacing.m,
-    flexGrow: 1,
   },
   followIcon: {
     zIndex: 1,

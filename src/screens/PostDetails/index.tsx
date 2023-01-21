@@ -30,15 +30,9 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  ListRenderItemInfo,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Dimensions, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
@@ -49,6 +43,7 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {FlashList} from '@shopify/flash-list';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -93,6 +88,8 @@ const PostDetails = () => {
   }>();
   const {activeAddress} = useActiveAccount();
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const scrollViewRef = useRef<any>(null);
+  const textInputRef = useRef<any>(null);
 
   const {
     profile,
@@ -114,7 +111,6 @@ const PostDetails = () => {
     handlePressReport,
     handleNavigateToProfile,
     pageRefetch,
-    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceID,
@@ -136,6 +132,20 @@ const PostDetails = () => {
     }, [post, params]),
   );
 
+  useEffect(() => {
+    if (textInputRef && textInputRef.current) {
+      if (params.focusCommentBox) {
+        setTimeout(() => {
+          keyboardFocusCommentBox();
+        }, 200);
+      }
+    }
+  }, [textInputRef]);
+
+  const keyboardFocusCommentBox = useCallback(() => {
+    textInputRef.current.focus();
+  }, [textInputRef]);
+
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
       return (
@@ -154,7 +164,7 @@ const PostDetails = () => {
   }, [post?.author?.profile_pic, handleNavigateToProfile]);
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<PostItem>) => {
+    ({item}: any) => {
       const {isPending} = item;
 
       return (
@@ -240,9 +250,7 @@ const PostDetails = () => {
           postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
-          handleCommentPress={() => {
-            console.log('hello world');
-          }}
+          handleCommentPress={keyboardFocusCommentBox}
           handleTipPress={() =>
             handlePressSendTips(post?.author?.address, post.id)
           }
@@ -328,7 +336,7 @@ const PostDetails = () => {
       edges={['top']}
       style={styles.root}
       topBar={CustomTopBar}>
-      <FlatList
+      <FlashList
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={postLoading}
@@ -336,16 +344,17 @@ const PostDetails = () => {
         ListHeaderComponent={headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}
+        estimatedItemSize={160}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[...comments]}
+        data={comments}
         ListEmptyComponent={ListEmptyComponent}
         keyboardDismissMode="on-drag"
       />
       <EnterCommentBottomBar
         loading={postCommentLoading}
         handlePostComment={handlePostComment}
-        focusTextInput={params.focusCommentBox}
+        textInputRef={textInputRef}
         profileImage={
           profileData?.profile_pic
             ? {uri: profileData?.profile_pic}
