@@ -84,14 +84,15 @@ const useHooks = () => {
               },
               fetchPolicy: 'no-cache',
             });
-            console.log(readNotifications);
+            const isRead =
+              readNotifications?.notification_read?.find(
+                (rN: any) => singleNot.id === rN.notification_id,
+              ) !== -1;
             return {
               ...singleNot,
               profile: profileData.profile[0],
               post: postData.posts[0],
-              read: readNotifications.notification_read.find(
-                (rN: any) => singleNot.id === rN.id,
-              ),
+              read: isRead,
             };
           }
           return {...singleNot, profile: profileData.profile[0]};
@@ -105,7 +106,7 @@ const useHooks = () => {
     } finally {
       setNotificationsDetailsLoading(false);
     }
-  }, [JSON.stringify(data)]);
+  }, [JSON.stringify(data), JSON.stringify(readNotifications)]);
 
   const refetch = useCallback(async () => {
     setRefetching(true);
@@ -121,7 +122,7 @@ const useHooks = () => {
       setFetchingMore(true);
       await readNotificationsFetchMore({
         variables: {
-          offset: readNotifications.notification_read.length,
+          offset: readNotifications?.notification_read?.length || 0,
         },
         updateQuery: (prev, {fetchMoreResult}) => {
           if (!fetchMoreResult) {

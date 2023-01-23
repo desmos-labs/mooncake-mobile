@@ -15,7 +15,7 @@ import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -36,6 +36,7 @@ type NavProps = CompositeScreenProps<
 >;
 
 export interface CompleteNotification {
+  id?: string;
   data: {
     /**
      * {NotificationsTypeEnum} Notification type
@@ -73,6 +74,7 @@ export interface CompleteNotification {
    * If a notification has been read
    */
   notificationRead: boolean;
+  onNavigationCallback?: () => void;
 }
 
 const Activities = () => {
@@ -126,7 +128,7 @@ const Activities = () => {
     return null;
   }, [notificationsLoading]);
 
-  const renderNotification = ({item}: string | any) => {
+  const renderNotification = useCallback(({item}: string | any) => {
     if (typeof item === 'string') {
       if (item === 'divider') {
         return (
@@ -143,16 +145,18 @@ const Activities = () => {
     } else {
       return (
         <NotificationComponent
+          id={item.id}
           profile={item.profile}
           post={item.post}
           timestamp={item.timestamp}
           navigation={navigation}
           data={item.data}
           notificationRead={item.read}
+          onNavigationCallback={() => console.log('test')}
         />
       );
     }
-  };
+  }, []);
 
   const footerComponent = useMemo(() => {
     if (fetchingMore && data.notification.length !== 0) {
