@@ -6,7 +6,7 @@ import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo, useRef} from 'react';
-import {FlatList, Keyboard, KeyboardEventName, Platform} from 'react-native';
+import {Keyboard, KeyboardEventName, Platform} from 'react-native';
 import {useRecoilValue, useResetRecoilState} from 'recoil';
 import {NavProps} from 'screens/CommentReplies/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
@@ -36,7 +36,7 @@ const useHooks = ({
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
   const {resolveByExternalId} = usePendingPosts();
 
-  const scrollViewRef = useRef<FlatList>(null);
+  const scrollViewRef = useRef<any>(null);
 
   React.useEffect(() => {
     resetSharedPostState();

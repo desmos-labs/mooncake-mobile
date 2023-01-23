@@ -19,12 +19,7 @@ import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItemInfo,
-  View,
-} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -34,6 +29,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
+import {FlashList} from '@shopify/flash-list';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -148,16 +144,14 @@ const CommentReplies = () => {
   );
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<PostItem>) => {
+    ({item}: any) => {
       const {isPending} = item;
       return (
         <CommentItem
-          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
-          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
-          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={
-            !isPending ? item?.repliesCount?.aggregate?.count! : 0
-          }
+          tipped={item?.tipPresence?.aggregate?.count > 0}
+          liked={item?.reactionPresence?.aggregate?.count > 0}
+          commented={item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount?.aggregate?.count || 0}
           isPending={isPending}
           disableInnerComment={true}
           handlePressMore={event => {
@@ -180,12 +174,17 @@ const CommentReplies = () => {
           handlePressTip={() =>
             !isPending && handlePressSendTips(item?.author?.address, item.id)
           }
-          {...item}
+          handleLongPress={() => console.log('longPress')}
+          text={item.text}
+          creation_date={item.creation_date}
+          attachments={item.attachments}
+          reactions={item.reactions}
+          tips={item.tips}
           author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
-    [commentsLoading, handleAddReaction, handlePressSendTips],
+    [handleAddReaction, handlePressSendTips],
   );
 
   const headerComponent = React.useCallback(() => {
@@ -252,12 +251,12 @@ const CommentReplies = () => {
       edges={['top']}
       style={styles.root}
       topBar={<TopBar style={styles.topBar} centerElement={MiddleElement} />}>
-      <FlatList
+      <FlashList
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={mainCommentLoading}
         onRefresh={pageRefetch}
-        keyExtractor={item => String(item.id)}
+        estimatedItemSize={167}
         ListHeaderComponent={headerComponent}
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
