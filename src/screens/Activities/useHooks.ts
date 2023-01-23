@@ -7,6 +7,7 @@ import client from 'services/graphql/client';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import GetReadNotifications from 'services/graphql/queries/GetReadNotifications';
 import NotificationTypesEnum from 'types/notificationTypes';
 
 const useHooks = () => {
@@ -24,6 +25,17 @@ const useHooks = () => {
     refetch: notificationsRefetch,
     fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
+    variables: {
+      limit: 10,
+      offset: 0,
+    },
+  });
+
+  const {
+    data: readNotifications,
+    refetch: readNotificationsRefetch,
+    fetchMore: readNotificationsFetchMore,
+  } = useQuery(GetReadNotifications, {
     variables: {
       limit: 10,
       offset: 0,
@@ -52,7 +64,7 @@ const useHooks = () => {
   };
 
   const fetchNotificationDetails = useCallback(async () => {
-    if (!data) return;
+    if (!data || !readNotifications) return;
     try {
       const results = await Promise.all(
         data.notification.map(async (singleNot: any) => {
@@ -72,10 +84,14 @@ const useHooks = () => {
               },
               fetchPolicy: 'no-cache',
             });
+            console.log(readNotifications);
             return {
               ...singleNot,
               profile: profileData.profile[0],
               post: postData.posts[0],
+              read: readNotifications.notification_read.find(
+                (rN: any) => singleNot.id === rN.id,
+              ),
             };
           }
           return {...singleNot, profile: profileData.profile[0]};
@@ -93,6 +109,7 @@ const useHooks = () => {
 
   const refetch = useCallback(async () => {
     setRefetching(true);
+    await readNotificationsRefetch();
     await notificationsRefetch().finally(() =>
       setTimeout(() => setRefetching(false), 500),
     );
@@ -102,6 +119,23 @@ const useHooks = () => {
     async (distanceFromEnd: number) => {
       if (distanceFromEnd < 0) return;
       setFetchingMore(true);
+      await readNotificationsFetchMore({
+        variables: {
+          offset: readNotifications.notification_read.length,
+        },
+        updateQuery: (prev, {fetchMoreResult}) => {
+          if (!fetchMoreResult) {
+            return prev;
+          }
+          return {
+            ...prev,
+            notification_read: [
+              ...prev.notification_read,
+              ...fetchMoreResult.notification_read,
+            ],
+          };
+        },
+      });
       await notificationsFetchMore({
         variables: {
           offset: data.notification.length,
@@ -128,7 +162,7 @@ const useHooks = () => {
   }, [fetchNotificationDetails]);
 
   const notificationsData: null | any[] = useMemo(() => {
-    if (!notificationsWithProfile || !data) return null;
+    if (!notificationsWithProfile || !data || !readNotifications) return null;
     const sortedArray = _.orderBy(
       notificationsWithProfile,
       [obj => new Date(obj.timestamp)],

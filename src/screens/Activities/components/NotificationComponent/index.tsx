@@ -27,6 +27,7 @@ const NotificationComponent = ({
   timestamp,
   relationship_creator,
   post,
+  notificationRead,
 }: CompleteNotification) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
@@ -300,7 +301,17 @@ const NotificationComponent = ({
     relationship_creator,
   ]);
 
-  return <View style={styles.container}>{content}</View>;
+  return (
+    <View
+      style={[
+        styles.container,
+        !notificationRead && {
+          backgroundColor: theme.colors.butterOrange05,
+        },
+      ]}>
+      {content}
+    </View>
+  );
 };
 
 export default NotificationComponent;

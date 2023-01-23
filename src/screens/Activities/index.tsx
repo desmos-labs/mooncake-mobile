@@ -69,6 +69,10 @@ export interface CompleteNotification {
    * Navigation object, useful to navigate to the correct screen
    */
   navigation: any;
+  /**
+   * If a notification has been read
+   */
+  notificationRead: boolean;
 }
 
 const Activities = () => {
@@ -144,6 +148,7 @@ const Activities = () => {
           timestamp={item.timestamp}
           navigation={navigation}
           data={item.data}
+          notificationRead={item.read}
         />
       );
     }

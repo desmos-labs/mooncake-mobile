@@ -8,6 +8,7 @@ const GetNotifications = gql`
       offset: $offset
       order_by: {timestamp: desc}
     ) {
+      id
       user_address
       data
       timestamp
