@@ -64,6 +64,7 @@ const useCreatePost = () => {
         onUploadProgress,
       }: CreatePostArgs) => {
         if (!activeAddress) return;
+        setLoading(true);
 
         const {success} = await checkAndUpdateGrants({
           grantsToRequest: [GrantEnums.MsgCreatePost],
@@ -74,7 +75,6 @@ const useCreatePost = () => {
           throw new Error('User did not grant MsgCreatePost Authorization');
         }
 
-        setLoading(true);
         try {
           // get the postText and any attachments from recoil state
           const _sharedPostState = await snapshot.getPromise(sharedPostState);
@@ -83,7 +83,6 @@ const useCreatePost = () => {
 
           // note: only Media attachments
           // only support 1 image attachment for now
-
           const attachmentUploadResult = postAttachments
             ? await uploadImageForPost({
                 mediaFile: postAttachments,
