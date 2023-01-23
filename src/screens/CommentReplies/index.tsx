@@ -33,6 +33,7 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -54,6 +55,10 @@ export type CommentRepliesParams = {
    * Subspace ID, the id of the subspace
    */
   subspaceId: number;
+  /**
+   * focus the comment box when navigating to this screen
+   */
+  focusCommentBox?: boolean;
 };
 
 const CommentReplies = () => {
@@ -75,6 +80,8 @@ const CommentReplies = () => {
   );
 
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+
+  const {textInputRef, focusTextInputRef} = useFocusTextInputOnNavigate();
 
   const {
     mainComment,
@@ -165,9 +172,7 @@ const CommentReplies = () => {
             });
             setMenuVisible(true);
           }}
-          handlePressComment={() => {
-            console.log('hello world');
-          }}
+          handlePressComment={() => {}}
           handleProfilePicPress={() =>
             handleNavigateToProfile(item?.author_address)
           }
@@ -204,9 +209,7 @@ const CommentReplies = () => {
             });
             setMenuVisible(true);
           }}
-          handlePressComment={() => {
-            console.log('hello world');
-          }}
+          handlePressComment={focusTextInputRef}
           handlePressLike={() => handleAddReaction(mainComment.id)}
           handleProfilePicPress={() =>
             handleNavigateToProfile(mainComment?.author?.address)
@@ -264,8 +267,8 @@ const CommentReplies = () => {
         keyboardDismissMode="on-drag"
       />
       <EnterCommentBottomBar
+        textInputRef={textInputRef}
         loading={commentReplyLoading}
-        focusTextInput={false}
         profileImage={
           profileData?.profile_pic
             ? {uri: profileData?.profile_pic}

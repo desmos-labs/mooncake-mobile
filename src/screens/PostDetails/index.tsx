@@ -30,7 +30,7 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Dimensions, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
@@ -44,6 +44,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import {FlashList} from '@shopify/flash-list';
+import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -64,7 +65,7 @@ export type PostDetailsParams = {
   /**
    * focus the comment box when navigating to this screen
    */
-  focusCommentBox: boolean;
+  focusCommentBox?: boolean;
 };
 
 const PostDetails = () => {
@@ -89,7 +90,8 @@ const PostDetails = () => {
   const {activeAddress} = useActiveAccount();
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
   const scrollViewRef = useRef<any>(null);
-  const textInputRef = useRef<any>(null);
+
+  const {textInputRef, focusTextInputRef} = useFocusTextInputOnNavigate();
 
   const {
     profile,
@@ -132,26 +134,6 @@ const PostDetails = () => {
     }, [post, params]),
   );
 
-  /**
-   * Open the comment text input if focusCommentBox is passed as nav param.
-   */
-  useEffect(() => {
-    if (textInputRef && textInputRef.current) {
-      if (params.focusCommentBox) {
-        setTimeout(() => {
-          keyboardFocusCommentBox();
-        }, 200);
-      }
-    }
-  }, [textInputRef]);
-
-  /**
-   * Main keyboard focus callback for use when user presses the comment button
-   */
-  const keyboardFocusCommentBox = useCallback(() => {
-    textInputRef.current.focus();
-  }, [textInputRef]);
-
   const Avatar = React.useMemo(() => {
     if (post?.author?.profile_pic) {
       return (
@@ -193,7 +175,12 @@ const PostDetails = () => {
             });
           }}
           handlePressComment={() => {
-            console.log('hello world');
+            handlePressSelectedComment({
+              postId: post.id,
+              commentId: item.id,
+              subspaceId: item.subspace_id,
+              focusCommentBox: true,
+            });
           }}
           handleProfilePicPress={() =>
             handleNavigateToProfile(item.author_address)
@@ -259,7 +246,7 @@ const PostDetails = () => {
           postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
-          handleCommentPress={keyboardFocusCommentBox}
+          handleCommentPress={focusTextInputRef}
           handleTipPress={() =>
             handlePressSendTips(post?.author?.address, post.id)
           }

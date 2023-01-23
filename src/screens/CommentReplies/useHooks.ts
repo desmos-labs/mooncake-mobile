@@ -51,7 +51,7 @@ const useHooks = ({
       () => {
         setTimeout(
           () => scrollViewRef?.current?.scrollToEnd({animated: true}),
-          100,
+          300,
         );
       },
     );

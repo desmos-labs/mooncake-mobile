@@ -18,6 +18,7 @@ import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPo
 import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
+import {CommentRepliesParams} from 'screens/CommentReplies';
 
 const useHooks = ({
   postID,
@@ -146,20 +147,8 @@ const useHooks = ({
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 
   const handlePressSelectedComment = React.useCallback(
-    ({
-      postId,
-      commentId,
-      subspaceId,
-    }: {
-      postId: number;
-      commentId: number;
-      subspaceId: number;
-    }) => {
-      navigate(ROUTES.COMMENT_REPLIES, {
-        postId,
-        commentId,
-        subspaceId,
-      });
+    (args: CommentRepliesParams) => {
+      navigate(ROUTES.COMMENT_REPLIES, args);
     },
     [],
   );
