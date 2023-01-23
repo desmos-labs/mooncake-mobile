@@ -132,6 +132,9 @@ const PostDetails = () => {
     }, [post, params]),
   );
 
+  /**
+   * Open the comment text input if focusCommentBox is passed as nav param.
+   */
   useEffect(() => {
     if (textInputRef && textInputRef.current) {
       if (params.focusCommentBox) {
@@ -142,6 +145,9 @@ const PostDetails = () => {
     }
   }, [textInputRef]);
 
+  /**
+   * Main keyboard focus callback for use when user presses the comment button
+   */
   const keyboardFocusCommentBox = useCallback(() => {
     textInputRef.current.focus();
   }, [textInputRef]);
@@ -344,7 +350,9 @@ const PostDetails = () => {
         scrollEnabled={true}
         refreshing={postLoading}
         onRefresh={pageRefetch}
-        ListHeaderComponent={headerComponent}
+        ListHeaderComponent={
+          postLoading || !post ? <ActivityIndicator /> : headerComponent
+        }
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}
         estimatedItemSize={160}
