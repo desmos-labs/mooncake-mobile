@@ -19,6 +19,7 @@ export const DefaultAppSettings: AppSettings = {
   currentChain: DesmosTestnet,
   newDiscPostNotification: true,
   newFollowPostNotification: true,
+  appActiveState: 'unknown',
 };
 
 /**

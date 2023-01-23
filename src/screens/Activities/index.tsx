@@ -1,12 +1,17 @@
-import {AndroidColor} from '@notifee/react-native';
+import notifee, {AndroidColor} from '@notifee/react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {CompositeScreenProps, useNavigation} from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {FlashList} from '@shopify/flash-list';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import Typography from 'components/Typography';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
@@ -155,6 +160,17 @@ const Activities = () => {
       return null;
     }
   }, [fetchingMore]);
+
+  const resetNotificationsCounter = async () => {
+    await notifee.setBadgeCount(0);
+    setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, 0);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetNotificationsCounter();
+    }, []),
+  );
 
   if (!data || !notificationsData) {
     return (

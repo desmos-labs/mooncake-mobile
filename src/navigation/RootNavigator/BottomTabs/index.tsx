@@ -1,7 +1,9 @@
+import notifee from '@notifee/react-native';
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import appSettingsState from '@recoil/settings';
 import sharedPostState from '@recoil/sharedPostState';
 import {
   bottomActivitiesIcon,
@@ -16,6 +18,7 @@ import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback} from 'react';
@@ -23,10 +26,11 @@ import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useToast} from 'react-native-toast-notifications';
-import {useResetRecoilState} from 'recoil';
+import {useRecoilValue, useResetRecoilState} from 'recoil';
 import Activities from 'screens/Activities';
 import Communities from 'screens/Communities';
 import Profile from 'screens/Profile';
+import PingAnimation from 'screens/Profile/components/PingAnimation';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {
@@ -76,7 +80,10 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   const theme = useTheme();
   const toast = useToast();
   const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const notificationsCount = getMMKV<number>(MMKVKEYS.NOTIFICATIONS_COUNT);
+  const {appActiveState} = useRecoilValue(appSettingsState);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
 
@@ -104,11 +111,24 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
     }
   }, [activeAddress, checkAndUpdateGrants]);
 
+  const renderOverlay = useCallback(
+    (routeName: string) => {
+      if (
+        routeName === ROUTES.ACTIVITIES &&
+        notificationsCount &&
+        notificationsCount > 0
+      ) {
+        return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
+      }
+    },
+    [notificationsCount, appActiveState],
+  );
+
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
       {state.routes.map((route, index) => {
         const isFocused = state.index === index;
-        const onPress = () => {
+        const onPress = async () => {
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
@@ -117,6 +137,10 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
 
           if (!isFocused && !event.defaultPrevented) {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            if (route.name === ROUTES.ACTIVITIES) {
+              await notifee.setBadgeCount(0);
+              setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, 0);
+            }
             // @ts-ignore
             navigation.navigate({name: route.name, merge: true});
           }
@@ -137,6 +161,8 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
         return (
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
+              overlayComponent={renderOverlay(route.name)}
+              overlayPosition={{left: 18, top: 2}}
               onPress={onPress}
               tintColor={
                 isFocused

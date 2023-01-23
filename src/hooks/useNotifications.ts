@@ -1,7 +1,9 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import appSettingsState from '@recoil/settings';
 import useFindPendingTx from 'hooks/useFindPendingTx';
 import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {
   createLocalNotification,
   createTransactionSnackbar,
@@ -10,6 +12,7 @@ import _ from 'lodash';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
+import {useSetRecoilState} from 'recoil';
 import NotificationTypesEnum from 'types/notificationTypes';
 
 const useNotifications = () => {
@@ -18,12 +21,23 @@ const useNotifications = () => {
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
   const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
-
+  const setAppSettings = useSetRecoilState(appSettingsState);
   const manageInitialNotifications = useCallback(async () => {
     const initialNotification = await notifee.getInitialNotification();
     if (initialNotification) {
+      // iOS Badges
+      const actualBadgeCount = await notifee.getBadgeCount();
+      await notifee.setBadgeCount(actualBadgeCount - 1);
+
+      // Global notifications management
+      const notificationsCount = getMMKV<number>(MMKVKEYS.NOTIFICATIONS_COUNT);
+      setMMKV(
+        MMKVKEYS.NOTIFICATIONS_COUNT,
+        notificationsCount ? notificationsCount - 1 : 0,
+      );
+
+      // Navigation to the correct screen based on notification
       const {notification} = initialNotification;
-      console.log('Received notification', notification);
       navigateToCorrectScreen({
         type: notification?.data?.type as NotificationTypesEnum,
         post_id: notification?.data?.post_id as string,
@@ -38,7 +52,15 @@ const useNotifications = () => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
+      setAppSettings(prev => ({
+        ...prev,
+        appActiveState: appState.current,
+      }));
       if (nextAppState === 'active') {
+        const notificationsCount = getMMKV<number>(
+          MMKVKEYS.NOTIFICATIONS_COUNT,
+        );
+        setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, notificationsCount || 0);
         manageInitialNotifications().catch(err => console.error(err));
       }
     });
