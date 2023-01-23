@@ -44,21 +44,19 @@ const NotificationComponent = ({
   const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
 
   const handleNavigateToNotification = async () => {
-    requestAnimationFrame(async () => {
-      await navigateToCorrectScreen({
-        type,
-        post_id,
-        comment_id,
-        reply_id,
-        subspace_id,
-      });
-      if (id) {
-        await PostNotificationRead(id);
-      }
-      if (onNavigationCallback) {
-        onNavigationCallback();
-      }
+    navigateToCorrectScreen({
+      type,
+      post_id,
+      comment_id,
+      reply_id,
+      subspace_id,
     });
+    if (id) {
+      await PostNotificationRead(id);
+    }
+    if (onNavigationCallback) {
+      onNavigationCallback();
+    }
   };
 
   useEffect(() => {
@@ -79,7 +77,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6>
@@ -115,7 +113,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented')}</Typography.Body6>
@@ -142,7 +140,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('commented reply')}</Typography.Body6>
@@ -169,7 +167,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 {profile.nickname.trimStart()}
                 <Typography.Body6> {t('followed you')}</Typography.Body6>
@@ -221,7 +219,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 @{profile.dtag.trimStart()}
                 <Typography.Body6> {t('claimed your invite')}</Typography.Body6>

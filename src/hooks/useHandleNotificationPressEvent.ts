@@ -12,7 +12,7 @@ const useHandleNotificationPressEvent = () => {
     useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
   const {profileData} = useActiveAccount();
   const navigateToCorrectScreen = useCallback(
-    async ({
+    ({
       type,
       post_id,
       comment_id,
