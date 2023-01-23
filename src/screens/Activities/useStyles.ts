@@ -27,6 +27,11 @@ const useStyles = makeStyle(theme => ({
     height: 1,
     marginVertical: theme.spacing.s,
   },
+  errorImage: {
+    width: 139,
+    height: 163.55,
+    resizeMode: 'cover',
+  },
 }));
 
 export default useStyles;

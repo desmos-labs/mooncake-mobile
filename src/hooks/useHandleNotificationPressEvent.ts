@@ -26,14 +26,12 @@ const useHandleNotificationPressEvent = () => {
       subspace_id?: string;
     }) => {
       if (type === NotificationTypesEnum.Comment && comment_id) {
-        console.log('navigate to comment');
         navigate(ROUTES.POST_DETAILS, {
           postId: parseInt(post_id!, 10),
           subspaceId: parseInt(subspace_id!, 10),
           focusCommentBox: false,
         });
       } else if (type === NotificationTypesEnum.Reply && reply_id) {
-        console.log('navigate to reply');
         navigate(ROUTES.COMMENT_REPLIES, {
           commentId: parseInt(post_id!, 10),
           subspaceId: parseInt(subspace_id!, 10),
@@ -70,7 +68,7 @@ const useHandleNotificationPressEvent = () => {
         Alert.alert('Unmapped notification handling');
       }
     },
-    [navigate, profileData?.address, profileData?.dtag, profileData?.nickname],
+    [profileData?.address, profileData?.dtag, profileData?.nickname],
   );
 
   return {

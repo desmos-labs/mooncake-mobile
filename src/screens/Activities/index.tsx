@@ -74,7 +74,6 @@ export interface CompleteNotification {
    * If a notification has been read
    */
   notificationRead: boolean;
-  onNavigationCallback?: () => void;
 }
 
 const Activities = () => {
@@ -112,14 +111,7 @@ const Activities = () => {
     if (data && data.notification.length === 0 && !notificationsLoading) {
       return (
         <View style={styles.emptyView}>
-          <Image
-            source={errorImage}
-            style={{
-              width: 139,
-              height: 163.55,
-              resizeMode: 'cover',
-            }}
-          />
+          <Image source={errorImage} style={styles.errorImage} />
           <Typography.Body5>{t('no activities')}</Typography.Body5>
         </View>
       );
@@ -152,7 +144,6 @@ const Activities = () => {
           navigation={navigation}
           data={item.data}
           notificationRead={item.read}
-          onNavigationCallback={() => console.log('test')}
         />
       );
     }
@@ -178,7 +169,7 @@ const Activities = () => {
   useFocusEffect(
     React.useCallback(() => {
       resetNotificationsCounter();
-    }, []),
+    }, [resetNotificationsCounter]),
   );
 
   if (!data || !notificationsData) {
@@ -204,9 +195,7 @@ const Activities = () => {
       </View>
       <FlashList
         keyExtractor={(item, index) =>
-          typeof item === 'string'
-            ? `sectionHeader${index}`
-            : `row${item.timestamp}`
+          typeof item === 'string' ? `sectionHeader${index}` : `row${item.id}`
         }
         refreshControl={
           <RefreshControl

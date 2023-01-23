@@ -14,8 +14,6 @@ const useHooks = () => {
   const [notificationsWithProfile, setNotificationsWithProfile] = useState<
     any[]
   >([]);
-  const [notificationsDetailsLoading, setNotificationsDetailsLoading] =
-    useState(true);
   const {t} = useTranslation('activities');
   const [refetching, setRefetching] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
@@ -103,8 +101,6 @@ const useHooks = () => {
       }
     } catch (e: any) {
       console.error(e);
-    } finally {
-      setNotificationsDetailsLoading(false);
     }
   }, [JSON.stringify(data), JSON.stringify(readNotifications)]);
 
@@ -214,7 +210,6 @@ const useHooks = () => {
     notificationsLoading,
     notificationsRefetch,
     notificationsFetchMore,
-    notificationsDetailsLoading,
     refetch,
     refetching,
     fetchMore,

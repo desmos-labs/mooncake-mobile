@@ -5,7 +5,7 @@ import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import React, {useEffect, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -30,7 +30,6 @@ const NotificationComponent = ({
   relationship_creator,
   post,
   notificationRead,
-  onNavigationCallback,
 }: CompleteNotification) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
@@ -43,7 +42,7 @@ const NotificationComponent = ({
   const {handleNavigateToProfile} = useNavigateToProfile();
   const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
 
-  const handleNavigateToNotification = async () => {
+  const handleNavigateToNotification = useCallback(async () => {
     navigateToCorrectScreen({
       type,
       post_id,
@@ -54,14 +53,7 @@ const NotificationComponent = ({
     if (id) {
       await PostNotificationRead(id);
     }
-    if (onNavigationCallback) {
-      onNavigationCallback();
-    }
-  };
-
-  useEffect(() => {
-    console.log(notificationRead);
-  }, [notificationRead]);
+  }, []);
 
   const content = useMemo(() => {
     switch (type) {
@@ -254,7 +246,6 @@ const NotificationComponent = ({
           </View>
         );
       default: {
-        console.log(type);
         return (
           <View>
             <Typography.Body6>Not mapped or old notification</Typography.Body6>
@@ -287,4 +278,4 @@ const NotificationComponent = ({
   );
 };
 
-export default NotificationComponent;
+export default memo(NotificationComponent);

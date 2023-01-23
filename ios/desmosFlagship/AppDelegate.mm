@@ -13,6 +13,11 @@
 #import <React/RCTDevLoadingView.h>
 #endif
 
+#ifdef FB_SONARKIT_ENABLED
+#import <FlipperKit/FlipperClient.h>
+#import <FlipperPerformancePlugin.h>
+#endif
+
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -65,6 +70,11 @@ static void ClearKeychainIfNecessary() {
 {
   ClearKeychainIfNecessary();
   [FIRApp configure];
+  
+  #ifdef FB_SONARKIT_ENABLED
+    FlipperClient *client = [FlipperClient sharedClient];
+    [client addPlugin:[FlipperPerformancePlugin new]];
+  #endif
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
