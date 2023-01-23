@@ -22,6 +22,7 @@ export const createLocalNotification = async (remoteMessage: any) => {
       sound: 'default',
       vibration: true,
       lights: true,
+      badge: true,
     });
     await notifee.displayNotification({
       title: remoteMessage.data?.notification_title,
