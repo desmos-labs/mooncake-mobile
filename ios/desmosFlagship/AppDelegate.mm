@@ -1,10 +1,8 @@
 #import "AppDelegate.h"
-#import "RNBootSplash.h"
-
 #import <Firebase.h>
+#import "RNBootSplash.h"
 #import "RNFBMessagingModule.h"
 #import <React/RCTBundleURLProvider.h>
-
 #import <React/RCTAppSetupUtils.h>
 
 #if RCT_DEV
@@ -53,9 +51,9 @@ static void ClearKeychainIfNecessary() {
   self.moduleName = @"Butter";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
-  self.initialProps = @{};
+  self.initialProps = appProperties;
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:self.window.rootViewController.view];
-  return [super application:application didFinishLaunchingWithOptions:appProperties];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
