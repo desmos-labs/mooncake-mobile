@@ -232,7 +232,7 @@ const NotificationComponent = ({
             />
             <TouchableOpacity
               style={styles.profileView}
-              onPress={() => handleNavigateToNotification()}>
+              onPress={handleNavigateToNotification}>
               <Typography.Subtitle3>
                 {t('you')}{' '}
                 <Typography.Body6>
@@ -257,7 +257,7 @@ const NotificationComponent = ({
     type,
     profile.address,
     formattedDate,
-    post.attachments,
+    post?.attachments,
     isFollowingAddress,
     handleNavigateToProfile,
     handleNavigateToNotification,

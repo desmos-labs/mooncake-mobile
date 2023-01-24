@@ -21,7 +21,7 @@ import {GrantEnums} from 'lib/desmos/msgtypes';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -111,18 +111,13 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
     }
   }, [activeAddress, checkAndUpdateGrants]);
 
-  const renderOverlay = useCallback(
-    (routeName: string) => {
-      if (
-        routeName === ROUTES.ACTIVITIES &&
-        notificationsCount &&
-        notificationsCount > 0
-      ) {
-        return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
-      }
-    },
-    [notificationsCount, appActiveState],
-  );
+  const overlayComponent = useMemo(() => {
+    if (notificationsCount && notificationsCount > 0) {
+      return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
+    }
+
+    return undefined; // or alternate "no ping" state
+  }, [notificationsCount, appActiveState]);
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
@@ -161,7 +156,9 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
         return (
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
-              overlayComponent={renderOverlay(route.name)}
+              overlayComponent={
+                route.name === ROUTES.ACTIVITIES && overlayComponent
+              }
               overlayPosition={{left: 18, top: 2}}
               onPress={onPress}
               tintColor={

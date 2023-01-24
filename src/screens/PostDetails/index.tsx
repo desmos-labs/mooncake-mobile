@@ -30,7 +30,7 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -123,10 +123,6 @@ const PostDetails = () => {
   const isFollowingAddress = useRecoilValue(
     isFollowingAddr(popupMenuParams?.authorAddress || ''),
   );
-
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
 
   const {top} = useSafeAreaInsets();
 

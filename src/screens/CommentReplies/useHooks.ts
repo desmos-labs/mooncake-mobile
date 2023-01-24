@@ -121,7 +121,6 @@ const useHooks = ({
 
   const mainComment = React.useMemo(() => {
     if (!originalComment) return undefined;
-    console.log(originalComment.posts[0].conversation);
     return originalComment.posts[0];
   }, [originalComment]);
 
