@@ -12,7 +12,7 @@ import {ToastProvider} from 'react-native-toast-notifications';
 import {RecoilRoot} from 'recoil';
 import client from 'services/graphql/client';
 
-const App = () => {
+function App(): JSX.Element {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={LightTheme}>
@@ -44,6 +44,6 @@ const App = () => {
       </PaperProvider>
     </SafeAreaProvider>
   );
-};
+}
 
 export default App;
