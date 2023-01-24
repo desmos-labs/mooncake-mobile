@@ -5,15 +5,15 @@ exports[`component: DTextInput renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "backgroundColor": "#FFFFFF",
           "borderRadius": 14,
@@ -28,9 +28,9 @@ exports[`component: DTextInput renders 1`] = `
     <TextInput
       placeholderTextColor="#9D9D9D"
       style={
-        Array [
+        [
           undefined,
-          Object {
+          {
             "color": "#25282D",
             "flex": 0.95,
             "flexGrow": 1,
@@ -49,7 +49,7 @@ exports[`component: DTextInput renders 1`] = `
     />
     <View
       style={
-        Object {
+        {
           "margin": 0,
           "padding": 0,
           "paddingRight": 8,
@@ -65,15 +65,15 @@ exports[`component: DTextInput renders error style 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "backgroundColor": "#FFFFFF",
           "borderRadius": 14,
@@ -89,9 +89,9 @@ exports[`component: DTextInput renders error style 1`] = `
       error={true}
       placeholderTextColor="#9D9D9D"
       style={
-        Array [
+        [
           undefined,
-          Object {
+          {
             "color": "#F359A8",
             "flex": 0.95,
             "flexGrow": 1,
@@ -110,7 +110,7 @@ exports[`component: DTextInput renders error style 1`] = `
     />
     <View
       style={
-        Object {
+        {
           "margin": 0,
           "padding": 0,
           "paddingRight": 8,
@@ -126,15 +126,15 @@ exports[`component: DTextInput renders numberOfLines style 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "backgroundColor": "#FFFFFF",
           "borderRadius": 14,
@@ -150,9 +150,9 @@ exports[`component: DTextInput renders numberOfLines style 1`] = `
       numberOfLines={1}
       placeholderTextColor="#9D9D9D"
       style={
-        Array [
+        [
           undefined,
-          Object {
+          {
             "color": "#25282D",
             "flex": 0.95,
             "flexGrow": 1,
@@ -171,7 +171,7 @@ exports[`component: DTextInput renders numberOfLines style 1`] = `
     />
     <View
       style={
-        Object {
+        {
           "margin": 0,
           "padding": 0,
           "paddingRight": 8,

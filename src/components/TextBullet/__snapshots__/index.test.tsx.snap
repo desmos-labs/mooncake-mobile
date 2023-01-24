@@ -5,21 +5,21 @@ exports[`component/TextBullet renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "marginVertical": 16,
       }
     }
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
         }
@@ -27,7 +27,7 @@ exports[`component/TextBullet renders 1`] = `
     >
       <View
         style={
-          Object {
+          {
             "backgroundColor": "#25282D",
             "borderRadius": 2,
             "height": 4,
@@ -38,11 +38,11 @@ exports[`component/TextBullet renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-Regular",
               "fontSize": 16,
               "fontStyle": "normal",
@@ -59,7 +59,7 @@ exports[`component/TextBullet renders 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
         }
@@ -67,7 +67,7 @@ exports[`component/TextBullet renders 1`] = `
     >
       <View
         style={
-          Object {
+          {
             "backgroundColor": "#25282D",
             "borderRadius": 2,
             "height": 4,
@@ -78,11 +78,11 @@ exports[`component/TextBullet renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-Regular",
               "fontSize": 16,
               "fontStyle": "normal",

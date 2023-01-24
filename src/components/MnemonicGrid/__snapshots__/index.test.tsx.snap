@@ -5,14 +5,14 @@ exports[`component: MnemonicGrid renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "display": "flex",
         "flexDirection": "column",
       }
@@ -20,43 +20,43 @@ exports[`component: MnemonicGrid renders 1`] = `
   >
     <RCTScrollView
       data={
-        Array [
-          Array [
+        [
+          [
             "drill",
             "rather",
             "remain",
           ],
-          Array [
+          [
             "skill",
             "online",
             "food",
           ],
-          Array [
+          [
             "pool",
             "prevent",
             "penalty",
           ],
-          Array [
+          [
             "cry",
             "cable",
             "title",
           ],
-          Array [
+          [
             "fragile",
             "flip",
             "remind",
           ],
-          Array [
+          [
             "famous",
             "dismiss",
             "island",
           ],
-          Array [
+          [
             "erase",
             "crash",
             "column",
           ],
-          Array [
+          [
             "service",
             "minute",
             "mushroom",
@@ -77,23 +77,41 @@ exports[`component: MnemonicGrid renders 1`] = `
       renderItem={[Function]}
       scrollEnabled={false}
       scrollEventThrottle={50}
-      stickyHeaderIndices={Array []}
-      viewabilityConfigCallbackPairs={Array []}
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
     >
       <View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -105,7 +123,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -121,11 +139,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -141,7 +159,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -154,6 +172,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -165,7 +200,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -181,11 +216,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -201,7 +236,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -214,6 +249,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -225,7 +277,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -241,11 +293,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -261,7 +313,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -276,18 +328,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -299,7 +369,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -315,11 +385,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -335,7 +405,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -348,6 +418,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -359,7 +446,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -375,11 +462,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -395,7 +482,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -408,6 +495,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -419,7 +523,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -435,11 +539,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -455,7 +559,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -470,18 +574,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -493,7 +615,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -509,11 +631,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -529,7 +651,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -542,6 +664,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -553,7 +692,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -569,11 +708,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -589,7 +728,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -602,6 +741,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -613,7 +769,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -629,11 +785,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -649,7 +805,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -664,18 +820,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -687,7 +861,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -703,11 +877,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -723,7 +897,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -736,6 +910,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -747,7 +938,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -763,11 +954,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -783,7 +974,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -796,6 +987,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -807,7 +1015,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -823,11 +1031,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -843,7 +1051,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -858,18 +1066,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -881,7 +1107,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -897,11 +1123,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -917,7 +1143,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -930,6 +1156,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -941,7 +1184,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -957,11 +1200,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -977,7 +1220,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -990,6 +1233,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1001,7 +1261,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1017,11 +1277,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1037,7 +1297,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1052,18 +1312,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1075,7 +1353,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1091,11 +1369,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1111,7 +1389,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1124,6 +1402,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1135,7 +1430,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1151,11 +1446,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1171,7 +1466,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1184,6 +1479,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1195,7 +1507,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1211,11 +1523,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1231,7 +1543,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1246,18 +1558,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1269,7 +1599,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1285,11 +1615,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1305,7 +1635,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1318,6 +1648,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1329,7 +1676,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1345,11 +1692,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1365,7 +1712,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1378,6 +1725,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1389,7 +1753,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1405,11 +1769,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1425,7 +1789,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1440,18 +1804,36 @@ exports[`component: MnemonicGrid renders 1`] = `
           </View>
         </View>
         <View
+          onFocusCapture={[Function]}
           onLayout={[Function]}
           style={null}
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
             }
           >
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1463,7 +1845,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1479,11 +1861,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1499,7 +1881,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1512,6 +1894,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1523,7 +1922,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1539,11 +1938,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1559,7 +1958,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1572,6 +1971,23 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
             </View>
             <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               accessible={true}
               collapsable={false}
               focusable={false}
@@ -1583,7 +1999,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1599,11 +2015,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1619,7 +2035,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
