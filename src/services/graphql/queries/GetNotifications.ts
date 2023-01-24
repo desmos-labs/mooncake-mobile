@@ -13,6 +13,9 @@ const GetNotifications = gql`
       data
       timestamp
       type
+      read_receipts {
+        read_time
+      }
     }
   }
 `;

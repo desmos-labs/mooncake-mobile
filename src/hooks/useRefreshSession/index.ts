@@ -35,7 +35,7 @@ const useRefreshSession = () => {
         throw new Error('No bearer token found');
       }
     } catch (err: any) {
-      console.error('REFRESH SESSION ERROR', err.toJSON());
+      console.error('REFRESH SESSION ERROR', err);
       replace(ROUTES.LOGIN);
     }
 

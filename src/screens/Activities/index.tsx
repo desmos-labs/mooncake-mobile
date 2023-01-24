@@ -36,20 +36,35 @@ type NavProps = CompositeScreenProps<
 >;
 
 export interface CompleteNotification {
+  /**
+   * Notification UUID
+   */
   id?: string;
+  /**
+   * data object, containing notification fields
+   */
   data: {
     /**
      * {NotificationsTypeEnum} Notification type
      */
     type: NotificationTypesEnum;
     /**
-     * Notification post id, could be an id of a comment, reply, or root post
+     * notification IDs
+     * if post, only post_id
+     * if comment/reply, only post_id and comment_id
+     * if post reaction, only post_id
+     * if comment reaction, only post_id and comment_id
+     * if reply reaction, post_id comment_id and reply_id
      */
     post_id?: string;
-    subspace_id?: string;
     comment_id?: string;
     reply_id?: string;
+    /**
+     * subspace id, should not be undefined/null
+     */
+    subspace_id?: string;
   };
+  read_receipts: any[];
   /**
    * Profile of the notification author
    */
@@ -70,10 +85,6 @@ export interface CompleteNotification {
    * Navigation object, useful to navigate to the correct screen
    */
   navigation: any;
-  /**
-   * If a notification has been read
-   */
-  notificationRead: boolean;
 }
 
 const Activities = () => {
@@ -106,7 +117,6 @@ const Activities = () => {
     })
     .filter(item => item !== null) as number[];
 
-  // TODO: refactor empty view when designer will create the new one
   const EmptyActivities = useMemo(() => {
     if (data && data.notification.length === 0 && !notificationsLoading) {
       return (
@@ -118,7 +128,7 @@ const Activities = () => {
     }
 
     return null;
-  }, [notificationsLoading]);
+  }, [data, notificationsLoading]);
 
   const renderNotification = useCallback(({item}: string | any) => {
     if (typeof item === 'string') {
@@ -143,7 +153,7 @@ const Activities = () => {
           timestamp={item.timestamp}
           navigation={navigation}
           data={item.data}
-          notificationRead={item.read}
+          read_receipts={item.read_receipts}
         />
       );
     }
@@ -159,12 +169,12 @@ const Activities = () => {
     } else {
       return null;
     }
-  }, [fetchingMore]);
+  }, [fetchingMore, data?.notification]);
 
-  const resetNotificationsCounter = async () => {
+  const resetNotificationsCounter = useCallback(async () => {
     await notifee.setBadgeCount(0);
     setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, 0);
-  };
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -195,7 +205,9 @@ const Activities = () => {
       </View>
       <FlashList
         keyExtractor={(item, index) =>
-          typeof item === 'string' ? `sectionHeader${index}` : `row${item.id}`
+          typeof item === 'string'
+            ? `sectionHeader${index}`
+            : `row${item.id}${item.timestamp}`
         }
         refreshControl={
           <RefreshControl
@@ -221,7 +233,7 @@ const Activities = () => {
         }}
         onEndReached={() => {
           if (!onEndReachedCalledDuringMomentum) {
-            fetchMore(0);
+            fetchMore();
             setOnEndReachedCalledDuringMomentum(true);
           }
         }}
