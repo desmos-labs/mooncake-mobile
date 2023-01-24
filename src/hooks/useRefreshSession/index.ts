@@ -38,6 +38,16 @@ const useRefreshSession = () => {
       console.error('REFRESH SESSION ERROR', err.toJSON());
       replace(ROUTES.LOGIN);
     }
+
+    // Notifications token refresh
+    try {
+      console.log('Obtaining notifications token');
+      const notificationsToken = await messaging().getToken();
+      await PostNotificationToken(notificationsToken.toString());
+      console.log('Posted notifications token');
+    } catch (err: any) {
+      console.error('NOTIFICATIONS TOKEN', err);
+    }
   }, []);
 
   return {
