@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useMemo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -55,71 +55,7 @@ const NotificationComponent = ({
       }
     }
   }, [read_receipts, navigateToCorrectScreen]);
-
-  const Avatar = useMemo(() => {
-    return (
-      <ImageButton
-        onPress={() => handleNavigateToProfile(profile.address)}
-        style={styles.avatar}
-        image={
-          profile?.profile_pic ? {uri: profile?.profile_pic} : defaultProfilePic
-        }
-      />
-    );
-  }, [handleNavigateToProfile, profile.address, profile?.profile_pic]);
-
-  const RightImage = useMemo(() => {
-    return (
-      post?.attachments.length > 0 && (
-        <FastImage
-          style={styles.postImage}
-          source={{uri: post.attachments[0].content.uri}}
-        />
-      )
-    );
-  }, [post.attachments]);
-
-  const FormattedDate = useMemo(() => {
-    return (
-      <Typography.Body7 style={{color: theme.colors.grey02}}>
-        {formattedDate}
-      </Typography.Body7>
-    );
-  }, [formattedDate]);
-
-  const FollowButton = useMemo(() => {
-    return isFollowingAddress ? (
-      <Button
-        onPress={() =>
-          followOrUnfollowUser({addrToFollow: relationship_creator!})
-        }
-        mode="outlined"
-        color={theme.colors.surfaceBlack}
-        style={styles.followButton}>
-        <Typography.Button3
-          style={{
-            alignSelf: 'center',
-          }}>
-          {t('followingAndFollowers:unfollow')}
-        </Typography.Button3>
-      </Button>
-    ) : (
-      <Button
-        onPress={() =>
-          followOrUnfollowUser({addrToFollow: relationship_creator!})
-        }
-        mode="contained"
-        color={theme.colors.butterOrange01}
-        style={styles.followButton}>
-        <Typography.Button3
-          style={{color: theme.colors.white, alignSelf: 'center'}}>
-          {t('followingAndFollowers:follow')}
-        </Typography.Button3>
-      </Button>
-    );
-  }, [followOrUnfollowUser, isFollowingAddress, relationship_creator]);
-
-  const bodyText = useMemo(() => {
+  const mapBodyText = () => {
     switch (type) {
       case NotificationTypesEnum.Reaction_Post:
         return t('liked your post');
@@ -138,9 +74,9 @@ const NotificationComponent = ({
       case NotificationTypesEnum.InviteUnlocked:
         return t('unlocked a new invite');
     }
-  }, [type]);
+  };
 
-  const content = useMemo(() => {
+  const RightComponent = useMemo(() => {
     switch (type) {
       case NotificationTypesEnum.Reaction_Post:
       case NotificationTypesEnum.Reaction_Comment:
@@ -148,100 +84,84 @@ const NotificationComponent = ({
       case NotificationTypesEnum.Comment:
       case NotificationTypesEnum.Reply: {
         return (
-          <>
-            {Avatar}
-            <TouchableOpacity
-              style={styles.profileView}
-              onPress={handleNavigateToNotification}>
-              <Typography.Subtitle3>
-                {profile.nickname.trimStart()}
-                <Typography.Body6> {bodyText}</Typography.Body6>
-              </Typography.Subtitle3>
-              {FormattedDate}
-            </TouchableOpacity>
-            {RightImage}
-          </>
+          post?.attachments.length > 0 && (
+            <FastImage
+              style={styles.postImage}
+              source={{uri: post.attachments[0].content.uri}}
+            />
+          )
         );
       }
       case NotificationTypesEnum.Follow:
         return (
-          <>
-            {Avatar}
-            <TouchableOpacity
-              style={styles.profileView}
-              onPress={handleNavigateToNotification}>
-              <Typography.Subtitle3>
-                {profile.nickname.trimStart()}
-                <Typography.Body6> {bodyText}</Typography.Body6>
-              </Typography.Subtitle3>
-              {FormattedDate}
-            </TouchableOpacity>
-            <View style={styles.buttonView}>{FollowButton}</View>
-          </>
-        );
-      case NotificationTypesEnum.InviteClaimed:
-        return (
-          <>
-            {Avatar}
-            <TouchableOpacity
-              style={styles.profileView}
-              onPress={handleNavigateToNotification}>
-              <Typography.Subtitle3>
-                @{profile.dtag.trimStart()}
-                <Typography.Body6> {t('claimed your invite')}</Typography.Body6>
-              </Typography.Subtitle3>
-              <Typography.Body7 style={{color: theme.colors.grey02}}>
-                {formattedDate}
-              </Typography.Body7>
-            </TouchableOpacity>
-          </>
-        );
-      case NotificationTypesEnum.InviteUnlocked:
-        return (
-          <>
-            {Avatar}
-            <TouchableOpacity
-              style={styles.profileView}
-              onPress={handleNavigateToNotification}>
-              <Typography.Subtitle3>
-                {t('you')} <Typography.Body6> {bodyText}</Typography.Body6>
-              </Typography.Subtitle3>
-              <Typography.Body7 style={{color: theme.colors.grey02}}>
-                {formattedDate}
-              </Typography.Body7>
-            </TouchableOpacity>
-          </>
-        );
-      default: {
-        return (
-          <View>
-            <Typography.Body6>Not mapped or old notification</Typography.Body6>
+          <View style={styles.buttonView}>
+            {isFollowingAddress ? (
+              <Button
+                onPress={() =>
+                  followOrUnfollowUser({addrToFollow: relationship_creator!})
+                }
+                mode="outlined"
+                color={theme.colors.surfaceBlack}
+                style={styles.followButton}>
+                <Typography.Button3
+                  style={{
+                    alignSelf: 'center',
+                  }}>
+                  {t('followingAndFollowers:unfollow')}
+                </Typography.Button3>
+              </Button>
+            ) : (
+              <Button
+                onPress={() =>
+                  followOrUnfollowUser({addrToFollow: relationship_creator!})
+                }
+                mode="contained"
+                color={theme.colors.butterOrange01}
+                style={styles.followButton}>
+                <Typography.Button3
+                  style={{color: theme.colors.white, alignSelf: 'center'}}>
+                  {t('followingAndFollowers:follow')}
+                </Typography.Button3>
+              </Button>
+            )}
           </View>
         );
-      }
+      default:
+        return undefined;
     }
-  }, [
-    type,
-    Avatar,
-    handleNavigateToNotification,
-    profile.nickname,
-    profile.dtag,
-    bodyText,
-    FormattedDate,
-    FollowButton,
-    formattedDate,
-    RightImage,
-  ]);
+  }, [followOrUnfollowUser, isFollowingAddress]);
 
   return (
     <View
       style={[
         styles.container,
-        read_receipts.length === 0 && {
+        read_receipts.length > 0 && {
           backgroundColor: theme.colors.butterOrange05,
         },
       ]}>
-      <View style={styles.flexRowView}>{content}</View>
+      <View style={styles.flexRowView}>
+        <ImageButton
+          onPress={() => handleNavigateToProfile(profile.address)}
+          style={styles.avatar}
+          image={
+            profile?.profile_pic
+              ? {uri: profile?.profile_pic}
+              : defaultProfilePic
+          }
+        />
+        <TouchableOpacity
+          style={styles.profileView}
+          onPress={handleNavigateToNotification}>
+          <Typography.Subtitle3>
+            {profile.nickname.trimStart()}
+            <Typography.Body6> {mapBodyText()}</Typography.Body6>
+          </Typography.Subtitle3>
+          <Typography.Body7 style={{color: theme.colors.grey02}}>
+            {formattedDate}
+          </Typography.Body7>
+        </TouchableOpacity>
+        {RightComponent}
+      </View>
     </View>
   );
 };
