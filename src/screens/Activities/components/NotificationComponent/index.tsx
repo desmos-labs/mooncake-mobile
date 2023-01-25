@@ -131,7 +131,7 @@ const NotificationComponent = ({
     <View
       style={[
         styles.container,
-        read_receipts.length > 0 && {
+        read_receipts.length === 0 && {
           backgroundColor: theme.colors.butterOrange05,
         },
       ]}>
