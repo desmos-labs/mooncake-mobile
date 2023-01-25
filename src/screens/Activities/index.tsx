@@ -63,16 +63,18 @@ export interface CompleteNotification {
      * subspace id, should not be undefined/null
      */
     subspace_id?: string;
+
+    /**
+     * If follow notification, the author of the relationship
+     */
+    relationship_creator?: string;
   };
   read_receipts: any[];
   /**
    * Profile of the notification author
    */
   profile?: any;
-  /**
-   * If follow notification, the author of the relationship
-   */
-  relationship_creator?: string;
+
   /**
    * Complete post object
    */
@@ -145,6 +147,7 @@ const Activities = () => {
         </View>
       );
     } else {
+      console.log(JSON.stringify(item));
       return (
         <NotificationComponent
           id={item.id}

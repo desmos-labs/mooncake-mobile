@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import React, {memo, useMemo, useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -20,10 +20,16 @@ import useStyles from './useStyles';
 
 const NotificationComponent = ({
   id,
-  data: {type, post_id, comment_id, reply_id, subspace_id},
+  data: {
+    type,
+    post_id,
+    comment_id,
+    reply_id,
+    subspace_id,
+    relationship_creator,
+  },
   profile,
   timestamp,
-  relationship_creator,
   post,
   read_receipts,
 }: CompleteNotification) => {
@@ -55,6 +61,7 @@ const NotificationComponent = ({
       }
     }
   }, [read_receipts, navigateToCorrectScreen]);
+
   const mapBodyText = () => {
     switch (type) {
       case NotificationTypesEnum.Reaction_Post:
@@ -76,7 +83,7 @@ const NotificationComponent = ({
     }
   };
 
-  const RightComponent = useMemo(() => {
+  const RenderRightComponent = () => {
     switch (type) {
       case NotificationTypesEnum.Reaction_Post:
       case NotificationTypesEnum.Reaction_Comment:
@@ -129,7 +136,7 @@ const NotificationComponent = ({
       default:
         return undefined;
     }
-  }, [followOrUnfollowUser, isFollowingAddress]);
+  };
 
   return (
     <View
@@ -160,7 +167,7 @@ const NotificationComponent = ({
             {formattedDate}
           </Typography.Body7>
         </TouchableOpacity>
-        {RightComponent}
+        {RenderRightComponent()}
       </View>
     </View>
   );
