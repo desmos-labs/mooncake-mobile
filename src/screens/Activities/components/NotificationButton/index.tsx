@@ -23,10 +23,7 @@ const NotificationButton = ({handleButtonPress, isFollowingAddress}: Props) => {
           mode="outlined"
           color={theme.colors.surfaceBlack}
           style={styles.followButton}>
-          <Typography.Button3
-            style={{
-              alignSelf: 'center',
-            }}>
+          <Typography.Button3 style={styles.alignCenter}>
             {t('followingAndFollowers:unfollow')}
           </Typography.Button3>
         </Button>
@@ -36,8 +33,7 @@ const NotificationButton = ({handleButtonPress, isFollowingAddress}: Props) => {
           mode="contained"
           color={theme.colors.butterOrange01}
           style={styles.followButton}>
-          <Typography.Button3
-            style={{color: theme.colors.white, alignSelf: 'center'}}>
+          <Typography.Button3 style={styles.followText}>
             {t('followingAndFollowers:follow')}
           </Typography.Button3>
         </Button>
