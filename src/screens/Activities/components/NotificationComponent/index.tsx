@@ -62,25 +62,15 @@ const NotificationComponent = ({
     }
   }, [read_receipts, navigateToCorrectScreen]);
 
-  const mapBodyText = () => {
-    switch (type) {
-      case NotificationTypesEnum.Reaction_Post:
-        return t('liked your post');
-      case NotificationTypesEnum.Reaction_Comment:
-        return t('liked comment');
-      case NotificationTypesEnum.Reaction_Reply:
-        return t('liked reply');
-      case NotificationTypesEnum.Comment:
-        return t('commented');
-      case NotificationTypesEnum.Reply:
-        return t('commented reply');
-      case NotificationTypesEnum.Follow:
-        return t('followed you');
-      case NotificationTypesEnum.InviteClaimed:
-        return t('claimed your invite');
-      case NotificationTypesEnum.InviteUnlocked:
-        return t('unlocked a new invite');
-    }
+  const bodyTextMap: {[index: string]: string} = {
+    [NotificationTypesEnum.Reaction_Post]: t('liked your post'),
+    [NotificationTypesEnum.Reaction_Comment]: t('liked comment'),
+    [NotificationTypesEnum.Reaction_Reply]: t('liked reply'),
+    [NotificationTypesEnum.Comment]: t('commented'),
+    [NotificationTypesEnum.Reply]: t('commented reply'),
+    [NotificationTypesEnum.Follow]: t('followed you'),
+    [NotificationTypesEnum.InviteClaimed]: t('claimed your invite'),
+    [NotificationTypesEnum.InviteUnlocked]: t('unlocked a new invite'),
   };
 
   const RenderRightComponent = () => {
@@ -161,7 +151,7 @@ const NotificationComponent = ({
           onPress={handleNavigateToNotification}>
           <Typography.Subtitle3>
             {profile.nickname.trimStart()}
-            <Typography.Body6> {mapBodyText()}</Typography.Body6>
+            <Typography.Body6> {bodyTextMap[type]}</Typography.Body6>
           </Typography.Subtitle3>
           <Typography.Body7 style={{color: theme.colors.grey02}}>
             {formattedDate}
