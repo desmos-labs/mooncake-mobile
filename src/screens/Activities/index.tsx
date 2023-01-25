@@ -10,12 +10,14 @@ import {FlashList} from '@shopify/flash-list';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
+import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
+import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -104,11 +106,6 @@ const Activities = () => {
     notificationsLoading,
   } = useHooks();
 
-  const [
-    onEndReachedCalledDuringMomentum,
-    setOnEndReachedCalledDuringMomentum,
-  ] = useState(false);
-
   const stickyHeaderIndices = notificationsData
     ?.map((item, index) => {
       if (typeof item === 'string') {
@@ -147,7 +144,6 @@ const Activities = () => {
         </View>
       );
     } else {
-      console.log(JSON.stringify(item));
       return (
         <NotificationComponent
           id={item.id}
@@ -163,16 +159,16 @@ const Activities = () => {
   }, []);
 
   const footerComponent = useMemo(() => {
-    if (fetchingMore && data.notification.length !== 0) {
+    if (fetchingMore) {
       return (
         <View style={{padding: theme.spacing.m}}>
-          <NotificationContentLoader />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
     } else {
       return null;
     }
-  }, [fetchingMore, data?.notification]);
+  }, [fetchingMore]);
 
   const resetNotificationsCounter = useCallback(async () => {
     await notifee.setBadgeCount(0);
@@ -184,14 +180,6 @@ const Activities = () => {
       resetNotificationsCounter();
     }, [resetNotificationsCounter]),
   );
-
-  if (!data || !notificationsData) {
-    return (
-      <View style={styles.flexCenter}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
-      </View>
-    );
-  }
 
   return (
     <DView
@@ -206,41 +194,46 @@ const Activities = () => {
         }}>
         <Typography.H3>{t('activities')}</Typography.H3>
       </View>
-      <FlashList
-        keyExtractor={(item, index) =>
-          typeof item === 'string'
-            ? `sectionHeader${index}`
-            : `row${item.id}${item.timestamp}`
-        }
-        refreshControl={
-          <RefreshControl
-            tintColor={theme.colors.surfaceBlack}
-            colors={[AndroidColor.BLACK]}
-            enabled
-            onRefresh={refetch}
-            refreshing={refetching}
-            progressViewOffset={Platform.OS === 'android' ? 80 : 0}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={EmptyActivities}
-        data={notificationsData}
-        renderItem={renderNotification}
-        ListFooterComponent={footerComponent}
-        onEndReachedThreshold={0.5}
-        estimatedItemSize={90}
-        stickyHeaderIndices={stickyHeaderIndices}
-        onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-        getItemType={item => {
-          return typeof item === 'string' ? 'sectionHeader' : 'row';
-        }}
-        onEndReached={() => {
-          if (!onEndReachedCalledDuringMomentum) {
-            fetchMore();
-            setOnEndReachedCalledDuringMomentum(true);
+      {!notificationsLoading &&
+      data?.notification.length > 0 &&
+      notificationsData &&
+      notificationsData.length > 0 ? (
+        <FlashList
+          keyExtractor={(item, index) =>
+            typeof item === 'string'
+              ? `sectionHeader${index}`
+              : `row${item.id}${item.timestamp}`
           }
-        }}
-      />
+          refreshControl={
+            <RefreshControl
+              tintColor={theme.colors.surfaceBlack}
+              colors={[AndroidColor.BLACK]}
+              enabled
+              onRefresh={refetch}
+              refreshing={refetching}
+              progressViewOffset={Platform.OS === 'android' ? 80 : 0}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={EmptyActivities}
+          data={notificationsData}
+          renderItem={renderNotification}
+          ListFooterComponent={footerComponent}
+          estimatedItemSize={90}
+          stickyHeaderIndices={stickyHeaderIndices}
+          onEndReachedThreshold={0.5}
+          getItemType={item => {
+            return typeof item === 'string' ? 'sectionHeader' : 'row';
+          }}
+          onEndReached={fetchMore}
+        />
+      ) : (
+        <View style={{margin: theme.spacing.m}}>
+          <TextRowContentLoader width="90" />
+          <Spacer paddingVertical={theme.spacing.s} />
+          <NotificationContentLoader />
+        </View>
+      )}
     </DView>
   );
 };

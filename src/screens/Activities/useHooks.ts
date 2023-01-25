@@ -23,7 +23,7 @@ const useHooks = () => {
     fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
     variables: {
-      limit: 10,
+      limit: 20,
       offset: 0,
     },
   });
