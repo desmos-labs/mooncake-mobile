@@ -17,7 +17,6 @@ import {GetPostTips} from 'services/graphql/queries/GetPostTips';
 import {GetPostReactions} from 'services/graphql/queries/GetReactions';
 import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToCommentReplies';
 import usePendingPosts from 'hooks/usePendingPosts';
-import _ from 'lodash';
 
 const useHooks = ({
   postID,
@@ -182,10 +181,7 @@ const useHooks = ({
     });
 
   const handleCommentReply = useCallback(
-    _.throttle(
-      () => createPost({conversationId: postID, referencedPostId: commentID}),
-      1500,
-    ),
+    () => createPost({conversationId: postID, referencedPostId: commentID}),
     [],
   );
 
