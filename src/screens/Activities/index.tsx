@@ -89,6 +89,10 @@ export interface CompleteNotification {
    * Navigation object, useful to navigate to the correct screen
    */
   navigation: any;
+  /**
+   * Data object of the query
+   */
+  completeDataGqlQuery: any;
 }
 
 const Activities = () => {
@@ -129,34 +133,38 @@ const Activities = () => {
     return null;
   }, [data, notificationsLoading]);
 
-  const renderNotification = useCallback(({item}: string | any) => {
-    if (typeof item === 'string') {
-      if (item === 'divider') {
+  const renderNotification = useCallback(
+    ({item}: string | any) => {
+      if (typeof item === 'string') {
+        if (item === 'divider') {
+          return (
+            <View style={styles.divider}>
+              <Divider />
+            </View>
+          );
+        }
         return (
-          <View style={styles.divider}>
-            <Divider />
+          <View style={styles.sectionHeader}>
+            <Typography.Button2>{item}</Typography.Button2>
           </View>
         );
+      } else {
+        return (
+          <NotificationComponent
+            id={item.id}
+            profile={item.profile}
+            post={item.post}
+            timestamp={item.timestamp}
+            navigation={navigation}
+            data={item.data}
+            read_receipts={item.read_receipts}
+            completeDataGqlQuery={data}
+          />
+        );
       }
-      return (
-        <View style={styles.sectionHeader}>
-          <Typography.Button2>{item}</Typography.Button2>
-        </View>
-      );
-    } else {
-      return (
-        <NotificationComponent
-          id={item.id}
-          profile={item.profile}
-          post={item.post}
-          timestamp={item.timestamp}
-          navigation={navigation}
-          data={item.data}
-          read_receipts={item.read_receipts}
-        />
-      );
-    }
-  }, []);
+    },
+    [data],
+  );
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
