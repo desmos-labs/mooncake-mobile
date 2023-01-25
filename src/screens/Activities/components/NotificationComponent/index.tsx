@@ -46,10 +46,15 @@ const NotificationComponent = ({
       reply_id,
       subspace_id,
     });
-    if (id) {
-      await PostNotificationRead(id);
+    if (id && read_receipts.length === 0) {
+      try {
+        const result = await PostNotificationRead(id);
+        console.log(result.data);
+      } catch (e) {
+        console.error('Mark notification read error', e);
+      }
     }
-  }, []);
+  }, [read_receipts, navigateToCorrectScreen]);
 
   const Avatar = useMemo(() => {
     return (

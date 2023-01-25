@@ -40,6 +40,8 @@ target 'desmosFlagship' do
   pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary"
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
 
+  $FirebaseSDKVersion = '10.3.0' # for Firebase
+
   target 'desmosFlagshipTests' do
     inherit! :complete
     # Pods for testing
