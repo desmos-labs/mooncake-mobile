@@ -54,8 +54,7 @@ const NotificationComponent = ({
     });
     if (id && read_receipts.length === 0) {
       try {
-        const result = await PostNotificationRead(id);
-        console.log(result.data);
+        await PostNotificationRead(id);
       } catch (e) {
         console.error('Mark notification read error', e);
       }

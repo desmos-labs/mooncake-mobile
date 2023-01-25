@@ -147,7 +147,6 @@ const Activities = () => {
         </View>
       );
     } else {
-      console.log(JSON.stringify(item));
       return (
         <NotificationComponent
           id={item.id}
