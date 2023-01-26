@@ -32,7 +32,7 @@ const useHooks = (address: string) => {
   } = useQuery(GetPastActions, {
     variables: {
       userAddress: address,
-      limit: 8,
+      limit: 20,
       offset: 0,
     },
   });

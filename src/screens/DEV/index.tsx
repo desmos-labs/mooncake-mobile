@@ -26,6 +26,7 @@ import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
   ROUTES.LOGIN,
   ROUTES.USER_PROFILE,

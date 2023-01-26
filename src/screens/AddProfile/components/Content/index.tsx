@@ -150,7 +150,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
         style={{marginHorizontal: -theme.spacing.m}}
         contentContainerStyle={{padding: theme.spacing.m, flexGrow: 1}}>
         {globalLoading ? (
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         ) : (
           fetchedAccounts.map((value: any) => {
             console.log(value);

@@ -79,7 +79,7 @@ const InvitesList = ({navigate}: Props) => {
     <View style={{flex: 1}}>
       {!filteredInvites && loading ? (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </SafeAreaView>
       ) : (
         <>

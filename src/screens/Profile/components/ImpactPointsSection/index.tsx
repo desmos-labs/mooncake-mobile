@@ -71,7 +71,7 @@ const ImpactPointsSection = ({
         </View>
       ) : (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       )}
     </View>

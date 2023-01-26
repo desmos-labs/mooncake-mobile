@@ -109,7 +109,9 @@ const ConnectAddressGeneral = () => {
       // eslint-disable-next-line react/no-unused-prop-types
       index: number;
     }) => {
-      if (!activeAddress) return <ActivityIndicator />;
+      if (!activeAddress) {
+        return <ActivityIndicator color={theme.colors.surfaceBlack} />;
+      }
       const handlePress = async () => {
         if (nextRouteOverride) {
           if (loadedProfileMap?.has(item.address)) {
@@ -157,7 +159,12 @@ const ConnectAddressGeneral = () => {
 
   const ListFooterComponent = React.useMemo(() => {
     if (loading) {
-      return <ActivityIndicator style={{width: '100%', marginVertical: 16}} />;
+      return (
+        <ActivityIndicator
+          style={{width: '100%', marginVertical: 16}}
+          color={theme.colors.surfaceBlack}
+        />
+      );
     } else return <View />;
   }, [loading]);
 

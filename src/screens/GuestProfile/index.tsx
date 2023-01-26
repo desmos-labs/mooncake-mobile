@@ -304,7 +304,7 @@ const GuestProfile = () => {
     ) {
       return (
         <View style={{alignSelf: 'flex-start'}}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
     }
@@ -370,7 +370,7 @@ const GuestProfile = () => {
   if (initialLoading) {
     return (
       <SafeAreaView style={styles.flexCenter}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </SafeAreaView>
     );
   }
@@ -437,7 +437,10 @@ const GuestProfile = () => {
                 style={styles.centerLeftSpacingM}
                 onPress={handleFollowingPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator size={21} />
+                  <ActivityIndicator
+                    size={21}
+                    color={theme.colors.surfaceBlack}
+                  />
                 ) : (
                   <Typography.Subtitle3>
                     {numRelationships?.numFollowing}
@@ -449,7 +452,10 @@ const GuestProfile = () => {
                 style={styles.centerLeftSpacingM}
                 onPress={handleFollowersPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator size={21} />
+                  <ActivityIndicator
+                    size={21}
+                    color={theme.colors.surfaceBlack}
+                  />
                 ) : (
                   <Typography.Subtitle3>
                     {numRelationships?.numFollowers}
@@ -485,7 +491,7 @@ const GuestProfile = () => {
 
           {isFollowing ? (
             <TouchableOpacity
-              style={styles.followButton}
+              style={styles.unfollowButton}
               onPress={() => handlePressFollow(address)}>
               <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
                 {t('following')}

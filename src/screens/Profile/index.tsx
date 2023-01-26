@@ -326,7 +326,7 @@ const Profile = () => {
     ) {
       return (
         <View style={{alignSelf: 'flex-start'}}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
     }
@@ -392,7 +392,7 @@ const Profile = () => {
   if (initialLoading) {
     return (
       <SafeAreaView style={styles.flexCenter}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </SafeAreaView>
     );
   }
@@ -464,7 +464,10 @@ const Profile = () => {
                 style={styles.centerLeftSpacingM}
                 onPress={handleFollowingPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator size={21} />
+                  <ActivityIndicator
+                    size={21}
+                    color={theme.colors.surfaceBlack}
+                  />
                 ) : (
                   <Typography.Subtitle3>
                     {numRelationships?.numFollowing}
@@ -476,7 +479,10 @@ const Profile = () => {
                 style={styles.centerLeftSpacingM}
                 onPress={handleFollowersPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator size={21} />
+                  <ActivityIndicator
+                    size={21}
+                    color={theme.colors.surfaceBlack}
+                  />
                 ) : (
                   <Typography.Subtitle3>
                     {numRelationships?.numFollowers}

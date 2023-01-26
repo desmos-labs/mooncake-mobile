@@ -98,7 +98,7 @@ const ConnectChainMethod = () => {
   if (!chainAccount) {
     return (
       <DView style={styles.container} topBar={<TopBar />}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </DView>
     );
   }

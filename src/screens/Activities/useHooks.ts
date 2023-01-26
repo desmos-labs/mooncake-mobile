@@ -1,5 +1,4 @@
 import {useQuery} from '@apollo/client';
-import EnvConfig from 'config/EnvConfig';
 import {differenceInCalendarDays, parseISO} from 'date-fns';
 import _ from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -14,8 +13,6 @@ const useHooks = () => {
   const [notificationsWithProfile, setNotificationsWithProfile] = useState<
     any[]
   >([]);
-  const [notificationsDetailsLoading, setNotificationsDetailsLoading] =
-    useState(true);
   const {t} = useTranslation('activities');
   const [refetching, setRefetching] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
@@ -26,7 +23,7 @@ const useHooks = () => {
     fetchMore: notificationsFetchMore,
   } = useQuery(GetNotifications, {
     variables: {
-      limit: 10,
+      limit: 20,
       offset: 0,
     },
   });
@@ -39,7 +36,9 @@ const useHooks = () => {
         return notification.data.relationship_creator;
       case NotificationTypesEnum.Reply:
         return notification.data.reply_author;
-      case NotificationTypesEnum.Reaction:
+      case NotificationTypesEnum.Reaction_Post:
+      case NotificationTypesEnum.Reaction_Comment:
+      case NotificationTypesEnum.Reaction_Reply:
         return notification.data.reaction_author;
       case NotificationTypesEnum.InviteClaimed:
         return notification.data.claimer_address;
@@ -67,7 +66,7 @@ const useHooks = () => {
               query: GetPostBySubspaceIDandPostID,
               variables: {
                 postID: singleNot.data.post_id,
-                subspaceID: EnvConfig.APP_SUBSPACE_ID,
+                subspaceID: singleNot.data.subspace_id,
               },
               fetchPolicy: 'no-cache',
             });
@@ -85,8 +84,6 @@ const useHooks = () => {
       }
     } catch (e: any) {
       console.error(e);
-    } finally {
-      setNotificationsDetailsLoading(false);
     }
   }, [JSON.stringify(data)]);
 
@@ -95,39 +92,32 @@ const useHooks = () => {
     await notificationsRefetch().finally(() =>
       setTimeout(() => setRefetching(false), 500),
     );
-  }, [notificationsRefetch, fetchNotificationDetails]);
+  }, [notificationsRefetch]);
 
-  const fetchMore = useCallback(
-    async (distanceFromEnd: number) => {
-      if (distanceFromEnd < 0) return;
-      setFetchingMore(true);
-      await notificationsFetchMore({
-        variables: {
-          offset: data.notification.length,
-        },
-        updateQuery: (prev, {fetchMoreResult}) => {
-          if (!fetchMoreResult) {
-            return prev;
-          }
-          return {
-            ...prev,
-            notification: [
-              ...prev.notification,
-              ...fetchMoreResult.notification,
-            ],
-          };
-        },
-      }).finally(() => setTimeout(() => setFetchingMore(false), 1000));
-    },
-    [data?.notification?.length, notificationsFetchMore],
-  );
+  const fetchMore = useCallback(async () => {
+    setFetchingMore(true);
+    await notificationsFetchMore({
+      variables: {
+        offset: data.notification.length,
+      },
+      updateQuery: (prev, {fetchMoreResult}) => {
+        if (!fetchMoreResult) {
+          return prev;
+        }
+        return {
+          ...prev,
+          notification: [...prev.notification, ...fetchMoreResult.notification],
+        };
+      },
+    }).finally(() => setTimeout(() => setFetchingMore(false), 1000));
+  }, [data?.notification?.length, notificationsFetchMore]);
 
   useEffect(() => {
-    fetchNotificationDetails();
+    fetchNotificationDetails().catch(err => console.error(err));
   }, [fetchNotificationDetails]);
 
-  const notificationsData: (string | any)[] = useMemo(() => {
-    if (!notificationsWithProfile) return [];
+  const notificationsData: null | any[] = useMemo(() => {
+    if (!notificationsWithProfile || !data) return null;
     const sortedArray = _.orderBy(
       notificationsWithProfile,
       [obj => new Date(obj.timestamp)],
@@ -170,7 +160,7 @@ const useHooks = () => {
     } else {
       return [];
     }
-  }, [notificationsWithProfile, t]);
+  }, [data, notificationsWithProfile]);
 
   return {
     data,
@@ -178,7 +168,6 @@ const useHooks = () => {
     notificationsLoading,
     notificationsRefetch,
     notificationsFetchMore,
-    notificationsDetailsLoading,
     refetch,
     refetching,
     fetchMore,

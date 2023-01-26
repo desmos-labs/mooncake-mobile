@@ -26,11 +26,16 @@ const useRefreshSession = () => {
         };
 
         await RefreshSession();
+
+        const notificationsToken = await messaging().getToken();
+        if (notificationsToken) {
+          await PostNotificationToken(notificationsToken);
+        }
       } else {
         throw new Error('No bearer token found');
       }
     } catch (err: any) {
-      console.error('BEARER TOKEN', err);
+      console.error('REFRESH SESSION ERROR', err);
       replace(ROUTES.LOGIN);
     }
 

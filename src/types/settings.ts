@@ -5,6 +5,7 @@
  * - auto: Set the color schema according to the system (Future release).
  */
 import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
+import {AppStateStatus} from 'react-native';
 
 export type AppTheme = 'light' | 'dark' | 'auto';
 
@@ -29,4 +30,5 @@ export type AppSettings = {
   currentChain: ChainInfo;
   newDiscPostNotification: boolean;
   newFollowPostNotification: boolean;
+  appActiveState: AppStateStatus;
 };

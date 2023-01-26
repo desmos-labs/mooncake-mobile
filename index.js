@@ -12,13 +12,14 @@ import App from './App';
 import {name as appName} from './app.json';
 import AppSilent from './AppSilent';
 
+// Notification creation for both iOS and Android
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  createLocalNotification(remoteMessage);
+  await createLocalNotification(remoteMessage);
 });
 
+// Fake app spawn if a notification is coming from FCM
 function HeadlessCheck({isHeadless}) {
   if (isHeadless) {
-    console.log('Headless');
     return <AppSilent />;
   }
 

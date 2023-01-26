@@ -179,7 +179,7 @@ const ConnectChainTxDetail = () => {
         {t('fee')}
       </Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
-        {feeString || <ActivityIndicator />}
+        {feeString || <ActivityIndicator color={theme.colors.surfaceBlack} />}
       </Typography.Body6>
 
       {/* Aug 10 2022: note/memo is hidden as user never gets to enter a memo */}
