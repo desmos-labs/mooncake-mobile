@@ -17,7 +17,6 @@ const useStyles = makeStyle(theme => ({
   flatListContainer: {
     paddingBottom: theme.spacing.l,
     paddingHorizontal: theme.spacing.m,
-    flexGrow: 1,
   },
   rightContainer: {flexDirection: 'row', alignItems: 'center'},
   divider: {

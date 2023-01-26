@@ -15,7 +15,7 @@ import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import {formatNumShorthand} from 'lib/FormatUtils';
-import React from 'react';
+import React, {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   GestureResponderEvent,
@@ -27,7 +27,11 @@ import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
 // note: props are not final
-interface Props extends PostItem {
+interface Props
+  extends Pick<
+    PostItem,
+    'author' | 'text' | 'creation_date' | 'isPending' | 'attachments'
+  > {
   disableInnerComment?: boolean;
 
   handlePressMore: (event: GestureResponderEvent) => void;
@@ -50,8 +54,6 @@ interface Props extends PostItem {
   reactions: {}[];
 
   tips: {}[];
-
-  creation_date: string;
 
   liked?: boolean;
 
@@ -213,4 +215,4 @@ const CommentItem = ({
   );
 };
 
-export default CommentItem;
+export default memo(CommentItem);

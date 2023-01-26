@@ -1,4 +1,4 @@
-import {atomFamily, selectorFamily} from 'recoil';
+import {atom, selector, selectorFamily} from 'recoil';
 import Long from 'long';
 import _ from 'lodash';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
@@ -11,27 +11,34 @@ export enum PendingPostEnum {
 /**
  * An atomFamily that holds pending posts.
  */
-export const pendingPostsState = atomFamily<PendingPost[], PendingPostEnum>({
-  key: 'pendingPosts',
-  default: type => {
-    if (type === PendingPostEnum.POST) {
-      return getMMKV(MMKVKEYS.PENDING_POSTS) || [];
-    } else if (type === PendingPostEnum.COMMENT) {
-      return getMMKV(MMKVKEYS.PENDING_COMMENTS) || [];
-    }
-    return [];
-  },
-  effects: type => [
+export const allPendingPostsState = atom<PendingPost[]>({
+  key: 'allPendingPosts',
+  default: getMMKV(MMKVKEYS.PENDING_POSTS) || [],
+  effects: [
     ({onSet}) => {
       onSet(newValue => {
-        if (type === PendingPostEnum.POST) {
-          setMMKV(MMKVKEYS.PENDING_POSTS, newValue);
-        } else if (type === PendingPostEnum.COMMENT) {
-          setMMKV(MMKVKEYS.PENDING_COMMENTS, newValue);
-        }
+        setMMKV(MMKVKEYS.PENDING_POSTS, newValue);
       });
     },
   ],
+});
+
+export const pendingPostsState = selector<PendingPost[]>({
+  key: 'pendingPosts',
+  get: ({get}) => {
+    const allPendingPosts = get(allPendingPostsState);
+
+    return allPendingPosts.filter(x => x.postType === PendingPostEnum.POST);
+  },
+});
+
+export const pendingCommentsState = selector<PendingPost[]>({
+  key: 'pendingComments',
+  get: ({get}) => {
+    const allPendingPosts = get(allPendingPostsState);
+
+    return allPendingPosts.filter(x => x.postType === PendingPostEnum.COMMENT);
+  },
 });
 
 /**
@@ -42,7 +49,7 @@ export const pendingCommentsByPost = selectorFamily<PendingPost[], number>({
   get:
     referencePostID =>
     ({get}) => {
-      const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
+      const pendingComments = get(pendingCommentsState);
 
       return pendingComments.filter(x => {
         const referencedPosts = _.get(x, 'msg.value.referencedPosts');

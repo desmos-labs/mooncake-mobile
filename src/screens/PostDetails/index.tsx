@@ -30,15 +30,9 @@ import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  ListRenderItemInfo,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Dimensions, View} from 'react-native';
 import {Divider, useTheme} from 'react-native-paper';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {verticalScale} from 'react-native-size-matters';
@@ -49,6 +43,8 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import {FlashList} from '@shopify/flash-list';
+import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -69,7 +65,7 @@ export type PostDetailsParams = {
   /**
    * focus the comment box when navigating to this screen
    */
-  focusCommentBox: boolean;
+  focusCommentBox?: boolean;
 };
 
 const PostDetails = () => {
@@ -93,6 +89,9 @@ const PostDetails = () => {
   }>();
   const {activeAddress} = useActiveAccount();
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const scrollViewRef = useRef<any>(null);
+
+  const {textInputRef, focusTextInputRef} = useFocusTextInputOnNavigate();
 
   const {
     profile,
@@ -114,7 +113,6 @@ const PostDetails = () => {
     handlePressReport,
     handleNavigateToProfile,
     pageRefetch,
-    scrollViewRef,
   } = useHooks({
     postID: params.postId,
     subspaceID: params.subspaceId,
@@ -159,17 +157,15 @@ const PostDetails = () => {
   ]);
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<PostItem>) => {
+    ({item}: any) => {
       const {isPending} = item;
 
       return (
         <CommentItem
-          tipped={!isPending && item?.tipPresence?.aggregate?.count > 0}
-          liked={!isPending && item?.reactionPresence?.aggregate?.count > 0}
-          commented={!isPending && item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={
-            !isPending ? item?.repliesCount?.aggregate?.count! : 0
-          }
+          tipped={item?.tipPresence?.aggregate?.count > 0}
+          liked={item?.reactionPresence?.aggregate?.count > 0}
+          commented={item?.commentPresence?.aggregate?.count > 0}
+          repliesCounter={item?.repliesCount?.aggregate?.count || 0}
           handlePressMore={event => {
             if (isPending) return;
             setAnchor({
@@ -180,11 +176,16 @@ const PostDetails = () => {
             setPopupMenuParams({
               postId: item.id,
               subspaceId: item.subspace_id,
-              authorAddress: item.author.address,
+              authorAddress: item.author_address,
             });
           }}
           handlePressComment={() => {
-            console.log('hello world');
+            handlePressSelectedComment({
+              postId: post.id,
+              commentId: item.id,
+              subspaceId: item.subspace_id,
+              focusCommentBox: true,
+            });
           }}
           handleProfilePicPress={() =>
             handleNavigateToProfile(item.author_address)
@@ -206,7 +207,12 @@ const PostDetails = () => {
             });
           }}
           handleLongPress={() => console.log('longPress')}
-          {...item}
+          text={item.text}
+          creation_date={item.creation_date}
+          isPending={isPending}
+          attachments={item.attachments}
+          reactions={item.reactions}
+          tips={item.tips}
           author={isPending ? profileData || ({} as any) : item.author}
         />
       );
@@ -245,9 +251,7 @@ const PostDetails = () => {
           postTipped={post?.tipPresence?.aggregate?.count > 0}
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
-          handleCommentPress={() => {
-            console.log('hello world');
-          }}
+          handleCommentPress={focusTextInputRef}
           handleTipPress={() =>
             handlePressSendTips(post?.author?.address, post.id)
           }
@@ -333,24 +337,27 @@ const PostDetails = () => {
       edges={['top']}
       style={styles.root}
       topBar={CustomTopBar}>
-      <FlatList
+      <FlashList
         ref={scrollViewRef}
         scrollEnabled={true}
         refreshing={postLoading}
         onRefresh={pageRefetch}
-        ListHeaderComponent={headerComponent}
+        ListHeaderComponent={
+          postLoading || !post ? <ActivityIndicator /> : headerComponent
+        }
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}
+        estimatedItemSize={160}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={[...comments]}
+        data={comments}
         ListEmptyComponent={ListEmptyComponent}
         keyboardDismissMode="on-drag"
       />
       <EnterCommentBottomBar
         loading={postCommentLoading}
         handlePostComment={handlePostComment}
-        focusTextInput={params.focusCommentBox}
+        textInputRef={textInputRef}
         profileImage={
           profileData?.profile_pic
             ? {uri: profileData?.profile_pic}

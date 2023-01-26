@@ -1,5 +1,4 @@
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
-import {clearTimeout} from '@testing-library/react-native/build/helpers/timers';
 import {expandCommentIcon} from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
@@ -11,7 +10,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -40,10 +39,6 @@ export type Props = {
    * Action to execute when the right icon is pressed
    */
   onIconPress: () => void;
-  /**
-   * Focus the text input when navigating to this screen
-   */
-  focusTextInput: boolean;
 
   /**
    * Callback to handle when the user submits a comment.
@@ -54,13 +49,18 @@ export type Props = {
    * Is an action being processed? (block out interaction buttons)
    */
   loading?: boolean;
+
+  /**
+   * A reference to the comment input box.
+   */
+  textInputRef: any;
 };
 
 const EnterCommentBottomBar: React.FC<Props> = ({
   profileImage,
   onIconPress,
-  focusTextInput,
   handlePostComment,
+  textInputRef,
   loading,
 }) => {
   const {t} = useTranslation('comment');
@@ -71,7 +71,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
     useRecoilState(postAttachmentsState);
   const resetCommentAttachment = useResetRecoilState(postAttachmentsState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
-  const textInputRef = useRef<any>();
 
   const dTextInputStyles = useDTextInputStyles({});
 
@@ -111,16 +110,6 @@ const EnterCommentBottomBar: React.FC<Props> = ({
       keyboardDidShowListener.remove();
     };
   }, []);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (focusTextInput) {
-      // It was too fast, so we need to slow it down to be able to render everything else before focussing this input
-      timeout = setTimeout(() => textInputRef?.current?.focus(), 200);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [focusTextInput]);
 
   const rightButtonComponent = useMemo(() => {
     return (

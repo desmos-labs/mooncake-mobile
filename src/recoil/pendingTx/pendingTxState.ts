@@ -1,8 +1,5 @@
 import {selector} from 'recoil';
-import {
-  PendingPostEnum,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+import {allPendingPostsState} from '@recoil/pendingTx/pendingPosts';
 
 /**
  * A selector that returns all pending transactions
@@ -10,10 +7,9 @@ import {
 const pendingTxState = selector<PendingTx[]>({
   key: 'pendingTx',
   get: ({get}) => {
-    const pendingPosts = get(pendingPostsState(PendingPostEnum.POST));
-    const pendingComments = get(pendingPostsState(PendingPostEnum.COMMENT));
+    const pendingPosts = get(allPendingPostsState);
 
-    return [...pendingPosts, ...pendingComments];
+    return pendingPosts;
   },
 });
 

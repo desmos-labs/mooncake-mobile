@@ -78,7 +78,6 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
         }
 
         return {
-          ...prev,
           post: [...prev.post, ...fetchMoreResult.post],
         };
       },
