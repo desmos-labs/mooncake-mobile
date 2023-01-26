@@ -1,5 +1,6 @@
 import notifee from '@notifee/react-native';
 import ToastConfig from 'config/ToastConfig';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
 
 export const createLocalNotification = async (remoteMessage: any) => {
@@ -7,25 +8,34 @@ export const createLocalNotification = async (remoteMessage: any) => {
     remoteMessage.data?.type !== 'transaction_success' ||
     remoteMessage.data?.type !== 'transaction_fail'
   ) {
+    const actualBadgeCount = await notifee.getBadgeCount();
+    const notificationsCount = getMMKV<number>(MMKVKEYS.NOTIFICATIONS_COUNT);
+    setMMKV(
+      MMKVKEYS.NOTIFICATIONS_COUNT,
+      notificationsCount ? notificationsCount + 1 : 1,
+    );
+    await notifee.setBadgeCount(actualBadgeCount + 1);
+
     const channelId = await notifee.createChannel({
       id: 'default',
       name: 'Default Channel',
       sound: 'default',
       vibration: true,
       lights: true,
+      badge: true,
     });
-
     await notifee.displayNotification({
       title: remoteMessage.data?.notification_title,
       body: remoteMessage.data?.notification_body,
       android: {
         channelId,
         smallIcon: 'ic_small_icon',
-        color: '#FEB027',
+        color: '#fcce28',
         pressAction: {
           id: 'default',
         },
       },
+      data: remoteMessage.data,
       ios: {
         interruptionLevel: 'active',
         foregroundPresentationOptions: {

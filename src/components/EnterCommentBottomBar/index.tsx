@@ -144,7 +144,10 @@ const EnterCommentBottomBar: React.FC<Props> = ({
           {profileImage ? (
             <FastImage source={profileImage} style={styles.profilePic} />
           ) : (
-            <ActivityIndicator style={styles.profilePic} />
+            <ActivityIndicator
+              color={theme.colors.surfaceBlack}
+              style={styles.profilePic}
+            />
           )}
           <View style={styles.textInputContainer}>
             {commentAttachment && (

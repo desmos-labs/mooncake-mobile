@@ -224,7 +224,7 @@ const Invites = () => {
               {t('points', {number: requiredPoints})}
             </Typography.Subtitle2>
           ) : (
-            <ActivityIndicator />
+            <ActivityIndicator color={theme.colors.surfaceBlack} />
           )}
           <Typography.Body5> {t('required')}</Typography.Body5>
           <ImageButton
@@ -244,7 +244,7 @@ const Invites = () => {
               })}
             </Typography.Body6>
           ) : (
-            <ActivityIndicator />
+            <ActivityIndicator color={theme.colors.surfaceBlack} />
           )}
         </View>
       </View>

@@ -7,7 +7,9 @@ enum NotificationTypesEnum {
   Mention = 'mention',
   Quote = 'quote',
   Follow = 'follow',
-  Reaction = 'reaction',
+  Reaction_Post = 'reaction_post',
+  Reaction_Comment = 'reaction_comment',
+  Reaction_Reply = 'reaction_reply',
   InviteClaimed = 'invite_claimed',
   InviteUnlocked = 'invite_unlocked',
 }

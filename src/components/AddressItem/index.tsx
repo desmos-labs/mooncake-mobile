@@ -63,7 +63,7 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
         <ActivityIndicator
           style={styles.alignRight}
           size="small"
-          color={theme.colors.butterOrange01}
+          color={theme.colors.surfaceBlack}
         />
       );
     } else if (balanceData) {

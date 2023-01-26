@@ -1,5 +1,6 @@
 import TopBar from 'components/TopBar';
 import React from 'react';
+import {useTheme} from 'react-native-paper';
 import ProfileItem from 'screens/SelectDtag/components/ProfileItem';
 import {useQuery} from '@apollo/client';
 import GetProfileSummaryForAddresses from 'services/graphql/queries/GetProfileSummaryForAddresses';
@@ -35,7 +36,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
 
 const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
-
+  const theme = useTheme();
   const {reset} = useNavigation<NavProps['navigation']>();
   const {setActiveAddress} = useActiveAccount();
 
@@ -112,7 +113,7 @@ const SelectDtag = () => {
   if (loading) {
     return (
       <DView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
       </DView>
     );
   }

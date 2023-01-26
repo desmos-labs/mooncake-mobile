@@ -61,7 +61,7 @@ export type PostDetailsParams = {
   /**
    * susbpace_id of the post
    */
-  subspaceID: number;
+  subspaceId: number;
   /**
    * focus the comment box when navigating to this screen
    */
@@ -115,7 +115,7 @@ const PostDetails = () => {
     pageRefetch,
   } = useHooks({
     postID: params.postId,
-    subspaceID: params.subspaceID,
+    subspaceID: params.subspaceId,
   });
 
   const isFollowingAddress = useRecoilValue(
@@ -123,6 +123,7 @@ const PostDetails = () => {
   );
 
   const {top} = useSafeAreaInsets();
+
   useFocusEffect(
     React.useCallback(() => {
       setPopupMenuParams({
@@ -131,7 +132,7 @@ const PostDetails = () => {
         authorAddress: post?.author?.address,
       });
       pageRefetch();
-    }, [post, params]),
+    }, [post.id, post.subspace_id, post?.author?.address, pageRefetch]),
   );
 
   const Avatar = React.useMemo(() => {
@@ -149,7 +150,11 @@ const PostDetails = () => {
         onPress={() => handleNavigateToProfile(post?.author?.address)}
       />
     );
-  }, [post?.author?.profile_pic, handleNavigateToProfile]);
+  }, [
+    post?.author?.profile_pic,
+    post?.author?.address,
+    handleNavigateToProfile,
+  ]);
 
   const renderItem = React.useCallback(
     ({item}: any) => {
@@ -323,7 +328,7 @@ const PostDetails = () => {
 
   return postLoading || !post ? (
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-      <ActivityIndicator />
+      <ActivityIndicator color={theme.colors.surfaceBlack} />
     </SafeAreaView>
   ) : (
     <DView

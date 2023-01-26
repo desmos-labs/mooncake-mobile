@@ -19,11 +19,9 @@ import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToComm
 import usePendingPosts from 'hooks/usePendingPosts';
 
 const useHooks = ({
-  postID,
   subspaceID,
   commentID,
 }: {
-  postID: number;
   subspaceID: number;
   commentID: number;
 }) => {
@@ -180,10 +178,12 @@ const useHooks = ({
       subspaceId,
     });
 
-  const handleCommentReply = useCallback(
-    () => createPost({conversationId: postID, referencedPostId: commentID}),
-    [],
-  );
+  const handleCommentReply = useCallback(async () => {
+    await createPost({
+      conversationId: mainComment.conversation.id,
+      referencedPostId: commentID,
+    });
+  }, [commentID, createPost, mainComment]);
 
   const handleAddReaction = (postId: number) =>
     addOrRemoveReaction({postId, stayOnCurrentScreen: true});

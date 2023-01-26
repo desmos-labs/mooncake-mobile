@@ -20,12 +20,13 @@ import {
 } from 'assets/images';
 import DView from 'components/DView';
 import OperationContentLoader from 'components/Loaders/OperationContentLoader';
+import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ActivityIndicator,
@@ -61,10 +62,7 @@ const Operations = () => {
     refetching,
     fetchingMore,
   } = useHooks(params.address);
-  const [
-    onEndReachedCalledDuringMomentum,
-    setOnEndReachedCalledDuringMomentum,
-  ] = useState(false);
+
   const titleMap: {[index: string]: string} = {
     [MsgCreatePostTypeUrl]: t('create comment post'),
     [MsgCreateRelationshipTypeUrl]: t('follow user'),
@@ -121,7 +119,11 @@ const Operations = () => {
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
-      return <OperationContentLoader />;
+      return (
+        <View style={{padding: theme.spacing.m}}>
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
+        </View>
+      );
     } else {
       return null;
     }
@@ -157,15 +159,7 @@ const Operations = () => {
           sections={operationsData}
           renderItem={renderTx}
           ListFooterComponent={footerComponent}
-          onMomentumScrollBegin={() =>
-            setOnEndReachedCalledDuringMomentum(false)
-          }
-          onEndReached={({distanceFromEnd}) => {
-            if (!onEndReachedCalledDuringMomentum) {
-              fetchMore(distanceFromEnd);
-              setOnEndReachedCalledDuringMomentum(true);
-            }
-          }}
+          onEndReached={({distanceFromEnd}) => fetchMore(distanceFromEnd)}
           onEndReachedThreshold={0.5}
           renderSectionHeader={({section: {section}}) => (
             <View style={styles.sectionHeader}>
@@ -174,7 +168,11 @@ const Operations = () => {
           )}
         />
       ) : (
-        <ActivityIndicator />
+        <View style={{marginVertical: theme.spacing.m}}>
+          <TextRowContentLoader width="120" />
+          <Spacer paddingVertical={theme.spacing.s} />
+          <OperationContentLoader />
+        </View>
       )}
     </DView>
   );

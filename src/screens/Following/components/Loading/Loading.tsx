@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {View} from 'react-native';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 /**
@@ -9,9 +9,10 @@ import useStyles from './useStyles';
  */
 const Loading: FC = () => {
   const styles = useStyles();
+  const theme = useTheme();
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator />
+      <ActivityIndicator color={theme.colors.surfaceBlack} />
     </View>
   );
 };

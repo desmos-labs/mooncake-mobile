@@ -40,10 +40,6 @@ export type NavProps = CompositeScreenProps<
 
 export type CommentRepliesParams = {
   /**
-   * Original post ID, the main root post
-   */
-  postId: number;
-  /**
    * Main comment ID, the one displayed on top of the screen, the id to use inside every query related to the main comment
    */
   commentId: number;
@@ -99,7 +95,6 @@ const CommentReplies = () => {
     handleNavigateToProfile,
     scrollViewRef,
   } = useHooks({
-    postID: params.postId,
     subspaceID: params.subspaceId,
     commentID: params.commentId,
   });
@@ -242,7 +237,7 @@ const CommentReplies = () => {
 
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-      <ActivityIndicator />
+      <ActivityIndicator color={theme.colors.surfaceBlack} />
     </SafeAreaView>
   ) : (
     <DView

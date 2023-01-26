@@ -1,4 +1,5 @@
 import {makeStyle} from 'config/theme';
+import {Dimensions} from 'react-native';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -11,21 +12,25 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
   },
   sectionHeader: {
-    flex: 1,
     backgroundColor: theme.colors.white,
-    paddingTop: theme.spacing.m,
+    paddingTop: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
     paddingBottom: theme.spacing.s,
   },
   emptyView: {
     paddingHorizontal: theme.spacing.m,
-    flex: 1,
+    height: Dimensions.get('window').height / 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   divider: {
     height: 1,
     marginVertical: theme.spacing.s,
+  },
+  errorImage: {
+    width: 139,
+    height: 163.55,
+    resizeMode: 'cover',
   },
 }));
 

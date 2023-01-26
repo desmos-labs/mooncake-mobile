@@ -106,7 +106,9 @@ const AddProfileSelectAddressGeneral = () => {
       // eslint-disable-next-line react/no-unused-prop-types
       index: number;
     }) => {
-      if (!activeAddress) return <ActivityIndicator />;
+      if (!activeAddress) {
+        return <ActivityIndicator color={theme.colors.surfaceBlack} />;
+      }
       const handlePress = async (wallet: ExternalAccount) => {
         const deserializedWallet = await LocalWallet.deserialize(
           wallet.signer as string,
@@ -155,7 +157,12 @@ const AddProfileSelectAddressGeneral = () => {
 
   const ListFooterComponent = React.useMemo(() => {
     if (loading) {
-      return <ActivityIndicator style={{width: '100%', marginVertical: 16}} />;
+      return (
+        <ActivityIndicator
+          style={{width: '100%', marginVertical: 16}}
+          color={theme.colors.surfaceBlack}
+        />
+      );
     } else return <View />;
   }, [loading]);
 

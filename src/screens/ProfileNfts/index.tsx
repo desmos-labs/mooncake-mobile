@@ -85,7 +85,7 @@ const ProfileNfts = () => {
           }
         />
       ) : (
-        <ActivityIndicator size="small" />
+        <ActivityIndicator size="small" color={theme.colors.surfaceBlack} />
       )}
     </DView>
   );

@@ -38,9 +38,6 @@ const POST_FIELDS = gql`
       author {
         address
       }
-      conversation {
-        id
-      }
     }
     transactions {
       hash

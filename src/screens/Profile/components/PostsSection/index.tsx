@@ -101,7 +101,7 @@ const PostsSection = ({
         />
       ) : (
         <View style={styles.activityIndicatorView}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       )}
       {posts.length !== 0 && !postsLoading && (
