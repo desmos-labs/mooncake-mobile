@@ -45,7 +45,7 @@
     "@shopify/flash-list": "^1.4.1",
     "@types/uuid": "^9.0.0",
     "asyncstorage-down": "^4.2.0",
-    "axios": "^0.27.2",
+    "axios": "^1.2.5",
     "big-integer": "^1.6.51",
     "check-password-strength": "^2.0.7",
     "cosmjs-types": "^0.5.1",
