@@ -1,11 +1,5 @@
 import notifee, {AndroidColor} from '@notifee/react-native';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import {useFocusEffect} from '@react-navigation/native';
 import {FlashList} from '@shopify/flash-list';
 import {errorImage} from 'assets/images';
 import DView from 'components/DView';
@@ -14,9 +8,6 @@ import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
-import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -31,11 +22,6 @@ import NotificationComponent from 'screens/Activities/components/NotificationCom
 import NotificationTypesEnum from 'types/notificationTypes';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-type NavProps = CompositeScreenProps<
-  BottomTabScreenProps<BottomTabsParamList, ROUTES.ACTIVITIES>,
-  StackScreenProps<RootNavigatorParamList>
->;
 
 export interface CompleteNotification {
   /**
@@ -85,21 +71,12 @@ export interface CompleteNotification {
    * Notification timestamp
    */
   timestamp: string;
-  /**
-   * Navigation object, useful to navigate to the correct screen
-   */
-  navigation: any;
-  /**
-   * Data object of the query
-   */
-  completeDataGqlQuery: any;
 }
 
 const Activities = () => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
-  const navigation = useNavigation<NavProps>();
   const {
     data,
     notificationsData,
@@ -133,38 +110,33 @@ const Activities = () => {
     return null;
   }, [data, notificationsLoading]);
 
-  const renderNotification = useCallback(
-    ({item}: string | any) => {
-      if (typeof item === 'string') {
-        if (item === 'divider') {
-          return (
-            <View style={styles.divider}>
-              <Divider />
-            </View>
-          );
-        }
+  const renderNotification = useCallback(({item}: string | any) => {
+    if (typeof item === 'string') {
+      if (item === 'divider') {
         return (
-          <View style={styles.sectionHeader}>
-            <Typography.Button2>{item}</Typography.Button2>
+          <View style={styles.divider}>
+            <Divider />
           </View>
         );
-      } else {
-        return (
-          <NotificationComponent
-            id={item.id}
-            profile={item.profile}
-            post={item.post}
-            timestamp={item.timestamp}
-            navigation={navigation}
-            data={item.data}
-            read_receipts={item.read_receipts}
-            completeDataGqlQuery={data}
-          />
-        );
       }
-    },
-    [data],
-  );
+      return (
+        <View style={styles.sectionHeader}>
+          <Typography.Button2>{item}</Typography.Button2>
+        </View>
+      );
+    } else {
+      return (
+        <NotificationComponent
+          id={item.id}
+          profile={item.profile}
+          post={item.post}
+          timestamp={item.timestamp}
+          data={item.data}
+          read_receipts={item.read_receipts}
+        />
+      );
+    }
+  }, []);
 
   const footerComponent = useMemo(() => {
     if (fetchingMore) {

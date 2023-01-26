@@ -1,6 +1,8 @@
 import {gql} from '@apollo/client';
+import NOTIFICATION_READ_FIELDS from 'services/graphql/queries/fragments/NotificationReadFields';
 
 const GetNotifications = gql`
+  ${NOTIFICATION_READ_FIELDS}
   query UserNotifications($limit: Int!, $offset: Int!) @api(name: butter) {
     notification(
       where: {_not: {data: {_contains: {type: "transaction_success"}}}}
@@ -13,9 +15,7 @@ const GetNotifications = gql`
       data
       timestamp
       type
-      read_receipts {
-        read_time
-      }
+      ...NotificationReadFields
     }
   }
 `;
