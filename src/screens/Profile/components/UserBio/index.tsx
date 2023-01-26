@@ -1,13 +1,14 @@
-import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import Animated from 'react-native-reanimated';
 import Typography from 'components/Typography';
+import * as React from 'react';
+import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import LinearGradient from 'react-native-linear-gradient';
-import {addAlphaToHex} from 'config/theme';
-import {useTheme} from 'react-native-paper';
-import useStyles from './useStyles';
-import useAnimations from './useAnimations';
+import {TouchableOpacity} from 'react-native';
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 type Props = {
   /**
@@ -17,62 +18,57 @@ type Props = {
 };
 
 const UserBio = ({content}: Props) => {
-  const styles = useStyles();
+  const [collapsed, setCollapsed] = useState(true);
+  const [maxLines, setMaxLines] = useState<number | undefined>(1);
+  const animationHeight = useSharedValue(16);
   const {t} = useTranslation('profile');
-  const theme = useTheme();
 
-  const {onLayout, animatedContainerStyle, expanded, setExpanded} =
-    useAnimations();
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      flex: 1,
+      maxHeight: animationHeight.value,
+    };
+  });
 
-  const showMoreLess = React.useMemo(() => content.length > 72, [content]);
+  const collapseView = () => {
+    animationHeight.value = withTiming(21, {duration: 200}, isFinished => {
+      if (isFinished) {
+        runOnJS(setMaxLines)(1);
+      }
+    });
+  };
+
+  const expandView = () => {
+    setMaxLines(undefined);
+    animationHeight.value = withTiming(500, {
+      duration: 200,
+    });
+  };
+
+  useEffect(() => {
+    if (collapsed) {
+      collapseView();
+    } else {
+      expandView();
+    }
+  }, [collapsed]);
 
   if (!content) {
     return (
-      <Typography.Caption1 style={{textAlign: 'left'}}>
+      <Typography.Body7 style={{textAlign: 'left'}}>
         {t('noBio')}
-      </Typography.Caption1>
+      </Typography.Body7>
     );
   }
 
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
-      onPress={() => {
-        if (showMoreLess) setExpanded(prev => !prev);
-      }}>
-      {/* dummy View with content so the maximum container height can be properly calculated */}
-      <View pointerEvents="none" onLayout={onLayout} style={styles.dummyBio}>
-        <Typography.Subtitle4>{content}</Typography.Subtitle4>
-      </View>
-
-      <Animated.View style={[animatedContainerStyle]}>
-        <Typography.Caption1 numberOfLines={expanded ? undefined : undefined}>
+      onPress={() => setCollapsed(prevState => !prevState)}
+      activeOpacity={0.8}>
+      <Animated.View style={animatedStyle}>
+        <Typography.Body7 numberOfLines={maxLines} ellipsizeMode="tail">
           {content}
-          {expanded && showMoreLess ? (
-            <Typography.Caption1 style={styles.moreText}>
-              {t('less')}
-            </Typography.Caption1>
-          ) : undefined}
-        </Typography.Caption1>
-        {/* Linear gradient effect so text for a more elegant truncate overlay */}
-        {!expanded && showMoreLess && (
-          <View style={styles.gradientContainer}>
-            <View style={styles.gradient}>
-              <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={StyleSheet.absoluteFillObject}
-                colors={[
-                  addAlphaToHex(theme.colors.white, 0.1),
-                  theme.colors.white,
-                ]}
-              />
-            </View>
-            <Typography.Caption1 style={styles.moreText}>
-              {t('more')}
-            </Typography.Caption1>
-          </View>
-        )}
+        </Typography.Body7>
       </Animated.View>
     </TouchableOpacity>
   );
