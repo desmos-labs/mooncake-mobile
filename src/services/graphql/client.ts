@@ -10,6 +10,7 @@ import {MultiAPILink} from '@habx/apollo-multi-endpoint-link';
 import EnvConfig from 'config/EnvConfig';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import {WebSocketLink} from '@apollo/client/link/ws';
+import NotificationMergePolicy from 'services/graphql/queries/typePolicies/notification';
 
 const multiApiLink = ApolloLink.from([
   new MultiAPILink({
@@ -28,6 +29,9 @@ const multiApiLink = ApolloLink.from([
 ]);
 
 const cache = new InMemoryCache({
+  typePolicies: {
+    ...NotificationMergePolicy,
+  },
   dataIdFromObject(object) {
     switch (object.__typename) {
       case 'post_attachment':
@@ -36,7 +40,6 @@ const cache = new InMemoryCache({
       case 'djuno_profile':
         // @ts-ignore
         return `djuno_profile:${object.address}`;
-
       case 'user_relationship':
         // @ts-ignore
         return `user_relationship:${object.content.counterparty_address}`;

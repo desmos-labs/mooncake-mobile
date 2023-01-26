@@ -1,4 +1,3 @@
-import {useApolloClient} from '@apollo/client';
 import {isFollowingAddr} from '@recoil/following';
 import {defaultProfilePic} from 'assets/images';
 import ImageButton from 'components/ImageButton';
@@ -16,7 +15,8 @@ import NotificationButton from 'screens/Activities/components/NotificationButton
 import NotificationImage from 'screens/Activities/components/NotificationImage';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import PostNotificationRead from 'services/axios/requests/PostNotificationRead';
-import GetNotifications from 'services/graphql/queries/GetNotifications';
+import client from 'services/graphql/client';
+import NotificationReadFields from 'services/graphql/queries/fragments/NotificationReadFields';
 import NotificationTypesEnum from 'types/notificationTypes';
 import useStyles from './useStyles';
 
@@ -45,7 +45,6 @@ const NotificationComponent = ({
   timestamp,
   post,
   read_receipts,
-  completeDataGqlQuery,
 }: CompleteNotification) => {
   const {t} = useTranslation('activities');
   const theme = useTheme();
@@ -57,7 +56,7 @@ const NotificationComponent = ({
   const {followOrUnfollowUser} = useFollowOrUnfollowUser();
   const {handleNavigateToProfile} = useNavigateToProfile();
   const {navigateToCorrectScreen} = useHandleNotificationPressEvent();
-  const client = useApolloClient();
+
   const handleNavigateToNotification = useCallback(async () => {
     navigateToCorrectScreen({
       type,
@@ -72,25 +71,16 @@ const NotificationComponent = ({
       try {
         const result = await PostNotificationRead(id);
         if (result) {
-          client.writeQuery({
-            query: GetNotifications,
+          client.writeFragment({
+            fragment: NotificationReadFields,
+            id: `notification:${id}`,
             data: {
-              notification: completeDataGqlQuery.notification.map(
-                (singleNot: any) => {
-                  if (singleNot.id === id) {
-                    return {
-                      ...singleNot,
-                      read_receipts: [
-                        {
-                          __typename: 'notification_read',
-                          read_time: Date.now(),
-                        },
-                      ],
-                    };
-                  }
-                  return singleNot;
+              read_receipts: [
+                {
+                  __typename: 'notification_read',
+                  read_time: Date.now(),
                 },
-              ),
+              ],
             },
           });
         }
@@ -98,7 +88,7 @@ const NotificationComponent = ({
         console.error('Mark notification read error', e);
       }
     }
-  }, [read_receipts, navigateToCorrectScreen, client, completeDataGqlQuery]);
+  }, [read_receipts, navigateToCorrectScreen]);
 
   const bodyTextMap: {[index: string]: string} = {
     [NotificationTypesEnum.Reaction_Post]: t('liked your post'),
