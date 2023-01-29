@@ -205,14 +205,15 @@
     "stream": "stream-browserify"
   },
   "browser": {
-    "crypto": "react-native-crypto",
-    "path": "path-browserify",
-    "fs": "react-native-level-fs",
-    "_stream_transform": "readable-stream/transform",
-    "_stream_readable": "readable-stream/readable",
-    "_stream_writable": "readable-stream/writable",
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_writable": "readable-stream/writable",
+    "crypto": "react-native-crypto",
+    "fs": "react-native-level-fs",
+    "path": "path-browserify",
     "stream": "stream-browserify"
-  }
+  },
+  "packageManager": "yarn@3.3.1"
 }
