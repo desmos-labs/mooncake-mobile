@@ -1,20 +1,26 @@
-name: Run linter and tests on merge
+name: Lint
+# Lint runs the linter over the entire repository.
+# This workflow is run on every pull request and push to main.
 on:
   pull_request:
+  push:
     branches:
-      - 'main'
+      - main
+
 jobs:
-  tests:
-    if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
+  Lint:
+    name: Lint code
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Install modules
-        run: yarn
-      - name: Run linter
-        run: yarn lint
-      - name: Run tests with coverage
-        run: yarn test --coverage
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Cache Yarn files 💾
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Install 🔨
+        run: yarn install --immutable
+
+      - name: Run lint ✅
+        run: yarn run lint
