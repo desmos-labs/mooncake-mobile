@@ -33,6 +33,9 @@ const useAddReaction = () => {
 
   return React.useCallback(
     async (postId: PostID, address: string) => {
+      // Add the reaction locally
+      addPostReaction(address, postId);
+
       // Check if the reaction exists on the server
       const {data} = await getReaction({
         variables: {
@@ -57,12 +60,9 @@ const useAddReaction = () => {
         };
 
         // Broadcast the transaction
-        // TODO: Handle if broadcastTx returns an error
+        // TODO: Handle if broadcastTx returns an error, deleting the added reaction
         await broadcastTx([messageAddReaction], {optimistic: true});
       }
-
-      // Add the reaction locally
-      addPostReaction(address, postId);
     },
     [config, getReaction, broadcastTx, addPostReaction],
   );
@@ -82,6 +82,9 @@ const useRemoveReaction = () => {
 
   return React.useCallback(
     async (postId: PostID, address: string) => {
+      // Remove the reaction locally
+      removePostReaction(address, postId);
+
       // Get the reaction id from the server
       const {data} = await getReaction({
         variables: {
@@ -106,12 +109,9 @@ const useRemoveReaction = () => {
         };
 
         // Broadcast the transaction
-        // TODO: Handle if the broadcast returns an error
+        // TODO: Handle if the broadcast returns an error, re-adding the removed reaction
         await broadcastTx([messageRemoveReaction], {optimistic: true});
       }
-
-      // Remove the reaction locally
-      removePostReaction(reactionId, postId);
     },
     [config, getReaction, broadcastTx, removePostReaction],
   );

@@ -50,6 +50,9 @@ const useFollowUser = () => {
 
   return React.useCallback(
     async (address: string, counterparty: string) => {
+      // Add the relationships locally
+      addFollowedUser(address, counterparty);
+
       const existsRemotely = await doesRelationshipExist(address, counterparty);
       if (!existsRemotely) {
         // If the relationship does not exist on the server, create it
@@ -63,12 +66,9 @@ const useFollowUser = () => {
         };
 
         // Broadcast the transaction
-        // TODO: Handle if the broadcastTx returns an error
+        // TODO: Handle if the broadcastTx returns an error, deleting the added relationship
         await broadcastTx([messageCreateRelationship], {optimistic: true});
       }
-
-      // Add the relationships locally
-      addFollowedUser(address, counterparty);
     },
     [doesRelationshipExist, broadcastTx, addFollowedUser],
   );
@@ -86,6 +86,9 @@ const useUnfollowUser = () => {
 
   return React.useCallback(
     async (address: string, counterparty: string) => {
+      // Delete the relationship locally
+      removeFollowedUser(address, counterparty);
+
       const existsRemotely = await doesRelationshipExist(address, counterparty);
       if (existsRemotely) {
         // If the relationship exists remotely, remote it from the server
@@ -99,12 +102,9 @@ const useUnfollowUser = () => {
         };
 
         // Broadcasts the transaction
-        // TODO: Handle if broadcastTx returns an error
+        // TODO: Handle if broadcastTx returns an error, re-adding the deleted relationship
         await broadcastTx([messageDeleteRelationship], {optimistic: true});
       }
-
-      // Delete the relationship locally
-      removeFollowedUser(address, counterparty);
     },
     [doesRelationshipExist, broadcastTx, removeFollowedUser],
   );
