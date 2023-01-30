@@ -159,9 +159,6 @@
   },
   "jest": {
     "preset": "react-native",
-    "moduleNameMapper": {
-      "axios": "axios/dist/node/axios.cjs"
-    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
