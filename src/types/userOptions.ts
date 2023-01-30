@@ -1,8 +1,8 @@
 /**
  * Type that represents the user preferred options
  */
-import DesmosProfile from 'types/desmosProfile';
+import Desmos from 'types/desmos';
 
 export type UserOptions = {
-  selectedProfile: DesmosProfile;
+  selectedProfile: Desmos;
 };
