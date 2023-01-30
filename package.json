@@ -42,10 +42,10 @@
     "@react-navigation/material-top-tabs": "^6.5.2",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
-    "@shopify/flash-list": "^1.4.0",
+    "@shopify/flash-list": "^1.4.1",
     "@types/uuid": "^9.0.0",
     "asyncstorage-down": "^4.2.0",
-    "axios": "^0.27.2",
+    "axios": "^1.2.5",
     "big-integer": "^1.6.51",
     "check-password-strength": "^2.0.7",
     "cosmjs-types": "^0.5.1",
@@ -89,7 +89,7 @@
     "react-native-reanimated": "^2.13.0",
     "react-native-redash": "^18.1.0",
     "react-native-safe-area-context": "^4.4.1",
-    "react-native-screens": "^3.13.1",
+    "react-native-screens": "^3.19.0",
     "react-native-shadow-2": "^7.0.6",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-size-matters": "^0.4.0",
@@ -159,6 +159,9 @@
   },
   "jest": {
     "preset": "react-native",
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
