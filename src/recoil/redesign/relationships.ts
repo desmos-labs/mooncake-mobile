@@ -2,7 +2,6 @@ import React from 'react';
 import {FollowedUser} from 'types/desmos';
 import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {useActiveAddress} from '@recoil/redesign/wallets';
 
 const followageState = atom<Record<string, FollowedUser[]>>({
   key: 'followageState',
@@ -19,7 +18,7 @@ const followageState = atom<Record<string, FollowedUser[]>>({
 /**
  * Hook that allows to easily know if a user is following another user having a given address.
  */
-const useHasFollowedUser = () => {
+export const useHasFollowedUser = () => {
   const followage = useRecoilValue(followageState);
   return React.useCallback(
     (user: string, address: string) => {
@@ -34,7 +33,7 @@ const useHasFollowedUser = () => {
 /**
  * Hook that allows to add a new followed user on behalf of the user having the provided address.
  */
-const useAddFollowedUser = () => {
+export const useAddFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
     (user: string, address: string) => {
@@ -59,7 +58,7 @@ const useAddFollowedUser = () => {
 /**
  * Hook that allows to remove a followed user on behalf of the user with the provided address.
  */
-const useRemoveFollowedUser = () => {
+export const useRemoveFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
     (user: string, address: string) => {
@@ -78,51 +77,5 @@ const useRemoveFollowedUser = () => {
       });
     },
     [setFollowage],
-  );
-};
-
-/**
- * Hook that allows to know whether the current application user is following another user or not.
- */
-export const useIsFollowing = () => {
-  const activeAddress = useActiveAddress();
-  const isFollowing = useHasFollowedUser();
-
-  return React.useCallback(
-    (address: string) => {
-      return activeAddress && isFollowing(activeAddress, address);
-    },
-    [activeAddress, isFollowing],
-  );
-};
-
-/**
- * Hook that allows to follow or unfollow a user on behalf of the current application user,
- * based on whether the user is already followed or not.
- */
-export const useFollowOrUnfollowUser = () => {
-  const activeAddress = useActiveAddress();
-
-  const isFollowing = useHasFollowedUser();
-  const followUser = useAddFollowedUser();
-  const unfollowUser = useRemoveFollowedUser();
-
-  return React.useCallback(
-    (address: string) => {
-      if (!activeAddress) {
-        return;
-      }
-
-      // Follow or unfollow the user based on whether they are already followed or not
-      switch (isFollowing(activeAddress, address)) {
-        case false:
-          followUser(activeAddress, address);
-          break;
-        case true:
-          unfollowUser(activeAddress, address);
-          break;
-      }
-    },
-    [activeAddress, isFollowing, followUser, unfollowUser],
   );
 };

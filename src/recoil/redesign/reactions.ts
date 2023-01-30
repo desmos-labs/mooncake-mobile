@@ -2,7 +2,6 @@ import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
 import {PostID, PostReaction} from 'types/desmos';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import React from 'react';
-import {useActiveAddress} from '@recoil/redesign/wallets';
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
@@ -23,7 +22,7 @@ const reactionsState = atom<Record<string, PostReaction[]>>({
 /**
  * Hook that allows to easily know if a reaction for a given post existing for a given user.
  */
-const useHasPostReaction = () => {
+export const useHasPostReaction = () => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
     (user: string, postId: PostID) => {
@@ -39,7 +38,7 @@ const useHasPostReaction = () => {
  * Hook that allows to add a new reaction on behalf of the user having a provided address,
  * to a post with a given id.
  */
-const useAddReaction = () => {
+export const useAddPostReaction = () => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
     (user: string, postId: PostID) => {
@@ -65,7 +64,7 @@ const useAddReaction = () => {
  * Hook that allows to remove a reaction on behalf of the user having the provided address,
  * from the post with the given id.
  */
-const useRemoveReaction = () => {
+export const useRemovePostReaction = () => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
     (user: string, postId: PostID) => {
@@ -85,50 +84,5 @@ const useRemoveReaction = () => {
       });
     },
     [setReactions],
-  );
-};
-
-/**
- * Hook that allows to easily know if the current application user has reacted to a post or not.
- */
-export const useHasReacted = () => {
-  const address = useActiveAddress();
-  const hasReaction = useHasPostReaction();
-  return React.useCallback(
-    (postId: PostID) => {
-      return address && hasReaction(address, postId);
-    },
-    [address, hasReaction],
-  );
-};
-
-/**
- * Hook that allows to easily add or remove a reaction on behalf of the current application user.
- * based on whether that reaction does or not already exist.
- */
-export const useAddOrRemoveReaction = () => {
-  const activeAddress = useActiveAddress();
-
-  const hasReaction = useHasPostReaction();
-  const addReaction = useAddReaction();
-  const removeReaction = useRemoveReaction();
-
-  return React.useCallback(
-    (postId: PostID) => {
-      if (!activeAddress) {
-        return;
-      }
-
-      // Add or remove the reaction based on whether it exists or not
-      switch (hasReaction(activeAddress, postId)) {
-        case false:
-          addReaction(activeAddress, postId);
-          break;
-        case true:
-          removeReaction(activeAddress, postId);
-          break;
-      }
-    },
-    [activeAddress, addReaction, removeReaction],
   );
 };
