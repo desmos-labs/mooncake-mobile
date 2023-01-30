@@ -9,6 +9,11 @@
 #import <React/RCTDevLoadingView.h>
 #endif
 
+#ifdef FB_SONARKIT_ENABLED
+#import <FlipperKit/FlipperClient.h>
+#import <FlipperPerformancePlugin.h>
+#endif
+
 /**
  Deletes all Keychain items accessible by this app if this is the first time the user launches the app
  */

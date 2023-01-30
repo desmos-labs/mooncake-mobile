@@ -20,7 +20,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'desmosFlagship' do
+target 'Butter' do
   config = use_native_modules!
   # CryptoUtils native module compat
   pod 'TrezorCrypto', :modular_headers => true
@@ -58,12 +58,13 @@ target 'desmosFlagship' do
 
   $FirebaseSDKVersion = '10.3.0' # for Firebase
 
-  target 'desmosFlagshipTests' do
+  target 'ButterTests' do
     inherit! :complete
     # Pods for testing
   end
 
   post_install do |installer|
+    flipper_post_install(installer)
     react_native_post_install(installer,
       # Set `mac_catalyst_enabled` to `true` in order to apply patches
       # necessary for Mac Catalyst builds
