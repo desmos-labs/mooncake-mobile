@@ -86,7 +86,7 @@
     "react-native-paper": "^4.12.5",
     "react-native-permissions": "^3.3.1",
     "react-native-randombytes": "^3.6.1",
-    "react-native-reanimated": "^2.13.0",
+    "react-native-reanimated": "2.14.2",
     "react-native-redash": "^18.1.0",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.19.0",
