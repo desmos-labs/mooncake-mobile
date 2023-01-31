@@ -5,7 +5,7 @@ exports[`component: MaterialButton renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -13,7 +13,7 @@ exports[`component: MaterialButton renders 1`] = `
   <View
     collapsable={false}
     style={
-      Object {
+      {
         "backgroundColor": "transparent",
         "borderColor": "#FEB027",
         "borderRadius": 14,
@@ -22,7 +22,7 @@ exports[`component: MaterialButton renders 1`] = `
         "elevation": 0,
         "minWidth": 64,
         "shadowColor": "#000000",
-        "shadowOffset": Object {
+        "shadowOffset": {
           "height": 0,
           "width": 0,
         },
@@ -34,7 +34,7 @@ exports[`component: MaterialButton renders 1`] = `
     <View
       accessibilityRole="button"
       accessibilityState={
-        Object {
+        {
           "disabled": true,
         }
       }
@@ -48,11 +48,11 @@ exports[`component: MaterialButton renders 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
+        [
+          {
             "overflow": "hidden",
           },
-          Object {
+          {
             "borderRadius": 14,
           },
         ]
@@ -60,14 +60,14 @@ exports[`component: MaterialButton renders 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "center",
             },
-            Array [
-              Object {
+            [
+              {
                 "height": 52,
               },
               undefined,
@@ -79,37 +79,37 @@ exports[`component: MaterialButton renders 1`] = `
           numberOfLines={1}
           selectable={false}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#000000",
                 "fontFamily": "System",
                 "fontWeight": "400",
               },
-              Object {
+              {
                 "textAlign": "left",
               },
-              Array [
-                Object {
+              [
+                {
                   "letterSpacing": 1,
                   "marginHorizontal": 16,
                   "marginVertical": 9,
                   "textAlign": "center",
                 },
                 undefined,
-                Object {
+                {
                   "textTransform": "uppercase",
                 },
-                Object {
+                {
                   "color": "#FEB027",
                   "fontFamily": "System",
                   "fontWeight": "500",
                 },
-                Object {
+                {
                   "fontFamily": "System",
                   "fontWeight": "500",
                 },
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#FEB027",
                     "fontFamily": "Poppins-SemiBold",
                     "fontSize": 16,
@@ -136,7 +136,7 @@ exports[`component: MaterialButton renders mode: backgroundComponent 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -153,15 +153,15 @@ exports[`component: MaterialButton renders mode: backgroundComponent 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "justifyContent": "center",
           },
@@ -178,15 +178,15 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignSelf": "stretch",
           "justifyContent": "center",
         },
@@ -197,7 +197,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
   >
     <RNCMaskedView
       style={
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -209,7 +209,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
       <View
         pointerEvents="none"
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -220,7 +220,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "backgroundColor": "transparent",
               "flex": 1,
@@ -230,7 +230,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "alignSelf": "stretch",
                 "borderColor": "black",
                 "borderRadius": 14,
@@ -243,7 +243,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
       </View>
       <BVLinearGradient
         colors={
-          Array [
+          [
             4294952795,
             4294935631,
             4294935631,
@@ -251,20 +251,20 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
           ]
         }
         endPoint={
-          Object {
+          {
             "x": 0.5,
             "y": 1,
           }
         }
         locations={null}
         startPoint={
-          Object {
+          {
             "x": 0.5,
             "y": 0,
           }
         }
         style={
-          Object {
+          {
             "flex": 1,
           }
         }
@@ -273,7 +273,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "transparent",
           "borderColor": "#FEB027",
           "borderRadius": 14,
@@ -282,7 +282,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
           "elevation": 0,
           "minWidth": 64,
           "shadowColor": "#000000",
-          "shadowOffset": Object {
+          "shadowOffset": {
             "height": 0,
             "width": 0,
           },
@@ -294,7 +294,7 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
       <View
         accessibilityRole="button"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
@@ -308,11 +308,11 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "overflow": "hidden",
             },
-            Object {
+            {
               "borderRadius": 14,
             },
           ]
@@ -320,14 +320,14 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
               },
-              Array [
-                Object {
+              [
+                {
                   "height": 52,
                 },
                 undefined,
@@ -339,37 +339,37 @@ exports[`component: MaterialButton renders mode: gradient 1`] = `
             numberOfLines={1}
             selectable={false}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#000000",
                   "fontFamily": "System",
                   "fontWeight": "400",
                 },
-                Object {
+                {
                   "textAlign": "left",
                 },
-                Array [
-                  Object {
+                [
+                  {
                     "letterSpacing": 1,
                     "marginHorizontal": 16,
                     "marginVertical": 9,
                     "textAlign": "center",
                   },
                   undefined,
-                  Object {
+                  {
                     "textTransform": "uppercase",
                   },
-                  Object {
+                  {
                     "color": "#FEB027",
                     "fontFamily": "System",
                     "fontWeight": "500",
                   },
-                  Object {
+                  {
                     "fontFamily": "System",
                     "fontWeight": "500",
                   },
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#FEB027",
                       "fontFamily": "Poppins-SemiBold",
                       "fontSize": 16,
@@ -397,15 +397,15 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "borderRadius": 14,
           "overflow": "hidden",
         },
@@ -416,34 +416,34 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
   >
     <BVLinearGradient
       colors={
-        Array [
+        [
           4294942482,
           4294498880,
         ]
       }
       endPoint={
-        Object {
+        {
           "x": 0.5,
           "y": 1,
         }
       }
       locations={null}
       startPoint={
-        Object {
+        {
           "x": 0.5,
           "y": 0,
         }
       }
       style={
-        Array [
-          Object {
+        [
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
             "right": 0,
             "top": 0,
           },
-          Object {
+          {
             "flex": 1,
           },
         ]
@@ -452,7 +452,7 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "transparent",
           "borderColor": "#FEB027",
           "borderRadius": 14,
@@ -461,7 +461,7 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
           "elevation": 0,
           "minWidth": 64,
           "shadowColor": "#000000",
-          "shadowOffset": Object {
+          "shadowOffset": {
             "height": 0,
             "width": 0,
           },
@@ -473,7 +473,7 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
       <View
         accessibilityRole="button"
         accessibilityState={
-          Object {
+          {
             "disabled": true,
           }
         }
@@ -487,11 +487,11 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "overflow": "hidden",
             },
-            Object {
+            {
               "borderRadius": 14,
             },
           ]
@@ -499,14 +499,14 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
               },
-              Array [
-                Object {
+              [
+                {
                   "height": 52,
                 },
                 undefined,
@@ -518,37 +518,37 @@ exports[`component: MaterialButton renders mode: gradientFilled 1`] = `
             numberOfLines={1}
             selectable={false}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#000000",
                   "fontFamily": "System",
                   "fontWeight": "400",
                 },
-                Object {
+                {
                   "textAlign": "left",
                 },
-                Array [
-                  Object {
+                [
+                  {
                     "letterSpacing": 1,
                     "marginHorizontal": 16,
                     "marginVertical": 9,
                     "textAlign": "center",
                   },
                   undefined,
-                  Object {
+                  {
                     "textTransform": "uppercase",
                   },
-                  Object {
+                  {
                     "color": "#FEB027",
                     "fontFamily": "System",
                     "fontWeight": "500",
                   },
-                  Object {
+                  {
                     "fontFamily": "System",
                     "fontWeight": "500",
                   },
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#FFFFFF",
                       "fontFamily": "Poppins-SemiBold",
                       "fontSize": 16,
@@ -576,7 +576,7 @@ exports[`component: MaterialButton renders mode: text 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -593,7 +593,7 @@ exports[`component: MaterialButton renders mode: text 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "alignSelf": "center",
         "borderColor": "#FEB027",
         "borderWidth": 0,
@@ -603,8 +603,8 @@ exports[`component: MaterialButton renders mode: text 1`] = `
   >
     <Text
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FEB027",
             "fontFamily": "Poppins-SemiBold",
             "fontSize": 16,

@@ -5,14 +5,14 @@ exports[`component: ItemSeparator renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "backgroundColor": "rgb(239,239,239)",
         "flexGrow": 1,
         "height": 1,

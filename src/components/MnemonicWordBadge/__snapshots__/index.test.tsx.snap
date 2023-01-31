@@ -5,7 +5,7 @@ exports[`component: MnemonicWordBard renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -22,7 +22,7 @@ exports[`component: MnemonicWordBard renders 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "backgroundColor": "#FFFFFF",
         "borderRadius": 8,
         "minWidth": 24,
@@ -34,11 +34,11 @@ exports[`component: MnemonicWordBard renders 1`] = `
   >
     <Text
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#25282D",
           },
-          Object {
+          {
             "fontFamily": "Poppins-Regular",
             "fontSize": 14,
             "fontStyle": "normal",
@@ -54,7 +54,7 @@ exports[`component: MnemonicWordBard renders 1`] = `
     </Text>
     <Text
       style={
-        Object {
+        {
           "color": "#000000",
           "fontSize": 8,
           "position": "absolute",

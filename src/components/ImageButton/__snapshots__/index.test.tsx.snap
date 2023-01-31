@@ -5,7 +5,7 @@ exports[`component: ImageButton renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -22,15 +22,15 @@ exports[`component: ImageButton renders 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "overflow": "hidden",
           },
           undefined,
@@ -42,12 +42,12 @@ exports[`component: ImageButton renders 1`] = `
         onFastImageError={[Function]}
         resizeMode="cover"
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/defaultProfilePic.png",
           }
         }
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",

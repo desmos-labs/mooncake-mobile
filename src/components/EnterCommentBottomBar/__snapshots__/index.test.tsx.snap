@@ -5,7 +5,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -13,7 +13,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
   <View
     onLayout={[Function]}
     style={
-      Object {
+      {
         "paddingBottom": 0,
       }
     }
@@ -24,8 +24,8 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
       <View
         pointerEvents="none"
         style={
-          Array [
-            Object {
+          [
+            {
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -33,7 +33,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               "top": 0,
             },
             undefined,
-            Object {
+            {
               "start": 0,
               "top": 0,
             },
@@ -46,17 +46,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height="100%"
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": -30,
                 "top": 0,
               },
-              Object {
+              {
                 "flex": 0,
                 "height": "100%",
                 "width": 31,
@@ -69,7 +69,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             <RNSVGDefs>
               <RNSVGLinearGradient
                 gradient={
-                  Array [
+                  [
                     0,
                     439563059,
                     1,
@@ -87,14 +87,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "start.0",
                 ]
               }
               height="100%"
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -110,17 +110,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height="100%"
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": "100%",
                 "top": 0,
               },
-              Object {
+              {
                 "flex": 0,
                 "height": "100%",
                 "width": 31,
@@ -133,7 +133,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             <RNSVGDefs>
               <RNSVGLinearGradient
                 gradient={
-                  Array [
+                  [
                     0,
                     439563059,
                     1,
@@ -151,14 +151,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "end.0",
                 ]
               }
               height="100%"
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -174,17 +174,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": 0,
                 "top": -30,
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": "100%",
@@ -197,7 +197,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             <RNSVGDefs>
               <RNSVGLinearGradient
                 gradient={
-                  Array [
+                  [
                     0,
                     439563059,
                     1,
@@ -215,14 +215,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "top.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -238,17 +238,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": 0,
                 "top": "100%",
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": "100%",
@@ -261,7 +261,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             <RNSVGDefs>
               <RNSVGLinearGradient
                 gradient={
-                  Array [
+                  [
                     0,
                     439563059,
                     1,
@@ -279,14 +279,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "bottom.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -302,17 +302,17 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": -30,
                 "top": -30,
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": 31,
@@ -329,7 +329,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 fx={30}
                 fy={30}
                 gradient={
-                  Array [
+                  [
                     0,
                     0,
                     0,
@@ -349,14 +349,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "topStart.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -372,22 +372,22 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": "100%",
                 "top": -30,
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateX": -0,
                   },
                 ],
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": 31,
@@ -398,7 +398,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
         >
           <RNSVGGroup
             matrix={
-              Array [
+              [
                 1,
                 0,
                 0,
@@ -415,7 +415,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 fx={0}
                 fy={30}
                 gradient={
-                  Array [
+                  [
                     0,
                     0,
                     0,
@@ -435,14 +435,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "topEnd.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -458,22 +458,22 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": -30,
                 "top": "100%",
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateY": -0,
                   },
                 ],
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": 31,
@@ -484,7 +484,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
         >
           <RNSVGGroup
             matrix={
-              Array [
+              [
                 1,
                 0,
                 0,
@@ -501,7 +501,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 fx={30}
                 fy={0}
                 gradient={
-                  Array [
+                  [
                     0,
                     0,
                     0,
@@ -521,14 +521,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "bottomStart.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -544,25 +544,25 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           focusable={false}
           height={31}
           style={
-            Array [
-              Object {
+            [
+              {
                 "backgroundColor": "transparent",
                 "borderWidth": 0,
               },
-              Object {
+              {
                 "position": "absolute",
                 "start": "100%",
                 "top": "100%",
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateX": -0,
                   },
-                  Object {
+                  {
                     "translateY": -0,
                   },
                 ],
               },
-              Object {
+              {
                 "flex": 0,
                 "height": 31,
                 "width": 31,
@@ -573,7 +573,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
         >
           <RNSVGGroup
             matrix={
-              Array [
+              [
                 1,
                 0,
                 0,
@@ -590,7 +590,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 fx={0}
                 fy={0}
                 gradient={
-                  Array [
+                  [
                     0,
                     0,
                     0,
@@ -610,14 +610,14 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             </RNSVGDefs>
             <RNSVGRect
               fill={
-                Array [
+                [
                   1,
                   "bottomEnd.0",
                 ]
               }
               height={30}
               propList={
-                Array [
+                [
                   "fill",
                 ]
               }
@@ -632,21 +632,21 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
         onLayout={[Function]}
         pointerEvents="box-none"
         style={
-          Array [
-            Object {
+          [
+            {
               "alignSelf": "flex-start",
               "borderBottomLeftRadius": 0,
               "borderBottomRightRadius": 0,
               "borderTopLeftRadius": 0,
               "borderTopRightRadius": 0,
             },
-            Object {
+            {
               "backgroundColor": "#FFFFFF",
               "paddingBottom": 0,
               "paddingHorizontal": 20,
               "paddingTop": 20,
             },
-            Object {
+            {
               "alignSelf": "stretch",
             },
           ]
@@ -654,7 +654,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "flexDirection": "row",
               "marginBottom": 8,
               "width": "100%",
@@ -663,11 +663,11 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "overflow": "hidden",
                 },
-                Object {
+                {
                   "alignSelf": "flex-start",
                   "borderRadius": 38,
                   "height": 38,
@@ -680,12 +680,12 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               defaultSource={null}
               resizeMode="cover"
               source={
-                Object {
+                {
                   "testUri": "../../../src/assets/images/defaultProfilePic.png",
                 }
               }
               style={
-                Object {
+                {
                   "bottom": 0,
                   "left": 0,
                   "position": "absolute",
@@ -697,7 +697,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           </View>
           <View
             style={
-              Object {
+              {
                 "borderColor": "#DDDDDD",
                 "borderRadius": 12,
                 "borderWidth": 1,
@@ -710,7 +710,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
           >
             <RCTScrollView
               contentContainerStyle={
-                Object {
+                {
                   "flexDirection": "row",
                   "maxHeight": 266.8,
                   "paddingRight": 24,
@@ -728,7 +728,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                   placeholder="Write a comment..."
                   placeholderTextColor="#878787"
                   style={
-                    Object {
+                    {
                       "color": "#25282D",
                       "flex": 1,
                       "flexGrow": 1,
@@ -752,7 +752,7 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
             <View
               pointerEvents="none"
               style={
-                Object {
+                {
                   "alignSelf": "flex-end",
                   "bottom": 12,
                   "opacity": 0,
@@ -773,18 +773,18 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
                 style={
-                  Object {
+                  {
                     "opacity": 1,
                   }
                 }
               >
                 <View
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "overflow": "hidden",
                       },
-                      Object {
+                      {
                         "bottom": 0,
                         "height": 24,
                         "width": 24,
@@ -797,12 +797,12 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
                     onFastImageError={[Function]}
                     resizeMode="cover"
                     source={
-                      Object {
+                      {
                         "testUri": "../../../src/assets/images/expandComment.png",
                       }
                     }
                     style={
-                      Object {
+                      {
                         "bottom": 0,
                         "left": 0,
                         "position": "absolute",

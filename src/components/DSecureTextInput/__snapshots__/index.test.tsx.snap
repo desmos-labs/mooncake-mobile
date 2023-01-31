@@ -5,15 +5,15 @@ exports[`component: DSecureTextInput renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "backgroundColor": "#FFFFFF",
           "borderRadius": 14,
@@ -21,8 +21,8 @@ exports[`component: DSecureTextInput renders 1`] = `
           "flexDirection": "row",
           "minHeight": 48,
         },
-        Array [
-          Object {
+        [
+          {
             "backgroundColor": "#FFFFFF",
           },
           undefined,
@@ -40,7 +40,7 @@ exports[`component: DSecureTextInput renders 1`] = `
           accessibilityLabel="undefined-hidden"
           color="#AFAFAF"
           icon={
-            Object {
+            {
               "testUri": "../../../src/assets/images/eyeOpen.png",
             }
           }
@@ -49,9 +49,9 @@ exports[`component: DSecureTextInput renders 1`] = `
       }
       secureTextEntry={true}
       style={
-        Array [
+        [
           undefined,
-          Object {
+          {
             "color": "#25282D",
             "flex": 0.95,
             "flexGrow": 1,
@@ -71,7 +71,7 @@ exports[`component: DSecureTextInput renders 1`] = `
     />
     <View
       style={
-        Object {
+        {
           "margin": 0,
           "padding": 0,
           "paddingRight": 8,
@@ -82,14 +82,14 @@ exports[`component: DSecureTextInput renders 1`] = `
         accessibilityLabel="undefined-hidden"
         accessibilityRole="button"
         accessibilityState={
-          Object {
+          {
             "disabled": false,
           }
         }
         accessible={true}
         focusable={true}
         hitSlop={
-          Object {
+          {
             "bottom": 6,
             "left": 6,
             "right": 6,
@@ -104,18 +104,18 @@ exports[`component: DSecureTextInput renders 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "overflow": "hidden",
             },
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "justifyContent": "center",
                 "margin": 6,
                 "overflow": "hidden",
               },
-              Object {
+              {
                 "borderRadius": 18,
                 "height": 36,
                 "width": 36,

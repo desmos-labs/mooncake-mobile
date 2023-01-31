@@ -5,7 +5,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -15,7 +15,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "bottom": 0,
         }
       }
@@ -32,7 +32,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "borderRadius": 12,
             "height": 100,
             "marginHorizontal": 16,
@@ -45,12 +45,12 @@ exports[`component: SelectedCommentImage renders 1`] = `
       >
         <Image
           source={
-            Object {
+            {
               "testUri": "../../../src/assets/images/desmosIcon.png",
             }
           }
           style={
-            Object {
+            {
               "bottom": 0,
               "left": 0,
               "position": "absolute",
@@ -62,7 +62,7 @@ exports[`component: SelectedCommentImage renders 1`] = `
         />
         <View
           style={
-            Object {
+            {
               "backgroundColor": "rgba(0,0,0,0.3)",
               "borderRadius": 8,
               "padding": 7.5,
@@ -74,12 +74,12 @@ exports[`component: SelectedCommentImage renders 1`] = `
         >
           <Image
             source={
-              Object {
+              {
                 "testUri": "../../../src/assets/images/whiteCross.png",
               }
             }
             style={
-              Object {
+              {
                 "height": 12,
                 "resizeMode": "contain",
                 "width": 12,
@@ -98,7 +98,7 @@ exports[`component: SelectedCommentImage renders nothing if source is undefined 
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -108,14 +108,14 @@ exports[`component: SelectedCommentImage renders nothing if source is undefined 
   >
     <View
       style={
-        Object {
+        {
           "bottom": 0,
         }
       }
     >
       <View
         style={
-          Object {
+          {
             "opacity": 0,
           }
         }

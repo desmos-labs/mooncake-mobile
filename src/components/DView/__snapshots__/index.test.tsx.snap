@@ -4,7 +4,7 @@ exports[`component: DView renders 1`] = `
 <RNCSafeAreaView
   accessible={true}
   edges={
-    Array [
+    [
       "bottom",
       "left",
       "right",
@@ -20,20 +20,20 @@ exports[`component: DView renders 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Array [
-      Object {
+    [
+      {
         "backgroundColor": "#f6f6f6",
         "flexDirection": "column",
         "flexGrow": 1,
       },
-      Object {},
+      {},
     ]
   }
 >
   <View
     animatedStyle={
-      Object {
-        "value": Object {},
+      {
+        "value": {},
       }
     }
     collapsable={false}
@@ -45,7 +45,7 @@ exports[`component: DView renders 1`] = `
       }
     }
     style={
-      Object {
+      {
         "backgroundColor": "transparent",
         "flex": 1,
         "flexDirection": "column",
@@ -65,7 +65,7 @@ exports[`component: DView renders background prop 1`] = `
 <RNCSafeAreaView
   accessible={true}
   edges={
-    Array [
+    [
       "bottom",
       "left",
       "right",
@@ -81,21 +81,21 @@ exports[`component: DView renders background prop 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Array [
-      Object {
+    [
+      {
         "backgroundColor": "#f6f6f6",
         "flexDirection": "column",
         "flexGrow": 1,
       },
-      Object {},
+      {},
     ]
   }
 >
   <View
     accessibilityIgnoresInvertColors={true}
     style={
-      Array [
-        Object {
+      [
+        {
           "height": 451.20588235294116,
           "position": "absolute",
           "resizeMode": "cover",
@@ -109,20 +109,20 @@ exports[`component: DView renders background prop 1`] = `
   >
     <Image
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/desmosIcon.png",
         }
       }
       style={
-        Array [
-          Object {
+        [
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
             "right": 0,
             "top": 0,
           },
-          Object {
+          {
             "height": 451.20588235294116,
             "width": "100%",
           },
@@ -133,8 +133,8 @@ exports[`component: DView renders background prop 1`] = `
   </View>
   <View
     animatedStyle={
-      Object {
-        "value": Object {},
+      {
+        "value": {},
       }
     }
     collapsable={false}
@@ -146,7 +146,7 @@ exports[`component: DView renders background prop 1`] = `
       }
     }
     style={
-      Object {
+      {
         "backgroundColor": "transparent",
         "flex": 1,
         "flexDirection": "column",

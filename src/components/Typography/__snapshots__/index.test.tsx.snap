@@ -5,18 +5,18 @@ exports[`component: Typography renders Body1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 24,
           "fontStyle": "normal",
@@ -38,18 +38,18 @@ exports[`component: Typography renders Body2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 22,
           "fontStyle": "normal",
@@ -71,18 +71,18 @@ exports[`component: Typography renders Body3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 20,
           "fontStyle": "normal",
@@ -104,18 +104,18 @@ exports[`component: Typography renders Body4 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 18,
           "fontStyle": "normal",
@@ -137,18 +137,18 @@ exports[`component: Typography renders Body5 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 16,
           "fontStyle": "normal",
@@ -170,18 +170,18 @@ exports[`component: Typography renders Body6 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 14,
           "fontStyle": "normal",
@@ -203,18 +203,18 @@ exports[`component: Typography renders Body7 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 12,
           "fontStyle": "normal",
@@ -235,18 +235,18 @@ exports[`component: Typography renders Button1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 16,
           "fontStyle": "normal",
@@ -268,18 +268,18 @@ exports[`component: Typography renders Button2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 14,
           "fontStyle": "normal",
@@ -301,18 +301,18 @@ exports[`component: Typography renders Button3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 12,
           "fontStyle": "normal",
@@ -334,18 +334,18 @@ exports[`component: Typography renders Caption1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 12,
           "fontStyle": "normal",
@@ -367,18 +367,18 @@ exports[`component: Typography renders Caption2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 10,
           "fontStyle": "normal",
@@ -400,18 +400,18 @@ exports[`component: Typography renders Caption3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 10,
           "fontStyle": "normal",
@@ -433,18 +433,18 @@ exports[`component: Typography renders Display1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 64,
           "fontWeight": "600",
@@ -464,18 +464,18 @@ exports[`component: Typography renders Display1 2`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 64,
           "fontWeight": "600",
@@ -495,18 +495,18 @@ exports[`component: Typography renders Display2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 54,
           "fontWeight": "600",
@@ -526,18 +526,18 @@ exports[`component: Typography renders Display3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 48,
           "fontWeight": "600",
@@ -556,18 +556,18 @@ exports[`component: Typography renders H1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 40,
           "fontStyle": "normal",
@@ -588,18 +588,18 @@ exports[`component: Typography renders H2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 32,
           "fontStyle": "normal",
@@ -621,18 +621,18 @@ exports[`component: Typography renders H3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 24,
           "fontStyle": "normal",
@@ -654,18 +654,18 @@ exports[`component: Typography renders H4 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 22,
           "fontStyle": "normal",
@@ -686,18 +686,18 @@ exports[`component: Typography renders H5 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 18,
           "fontStyle": "normal",
@@ -718,18 +718,18 @@ exports[`component: Typography renders Link1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 16,
           "fontStyle": "normal",
@@ -750,18 +750,18 @@ exports[`component: Typography renders Subtitle1 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-Regular",
           "fontSize": 18,
           "fontStyle": "normal",
@@ -783,18 +783,18 @@ exports[`component: Typography renders Subtitle2 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 16,
           "fontStyle": "normal",
@@ -816,18 +816,18 @@ exports[`component: Typography renders Subtitle3 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 14,
           "fontStyle": "normal",
@@ -849,18 +849,18 @@ exports[`component: Typography renders Subtitle4 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <Text
     style={
-      Array [
-        Object {
+      [
+        {
           "color": "#25282D",
         },
-        Object {
+        {
           "fontFamily": "Poppins-SemiBold",
           "fontSize": 12,
           "fontStyle": "normal",

@@ -5,14 +5,14 @@ exports[`component: MnemonicGrid renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "display": "flex",
         "flexDirection": "column",
       }
@@ -20,43 +20,43 @@ exports[`component: MnemonicGrid renders 1`] = `
   >
     <RCTScrollView
       data={
-        Array [
-          Array [
+        [
+          [
             "drill",
             "rather",
             "remain",
           ],
-          Array [
+          [
             "skill",
             "online",
             "food",
           ],
-          Array [
+          [
             "pool",
             "prevent",
             "penalty",
           ],
-          Array [
+          [
             "cry",
             "cable",
             "title",
           ],
-          Array [
+          [
             "fragile",
             "flip",
             "remind",
           ],
-          Array [
+          [
             "famous",
             "dismiss",
             "island",
           ],
-          Array [
+          [
             "erase",
             "crash",
             "column",
           ],
-          Array [
+          [
             "service",
             "minute",
             "mushroom",
@@ -77,8 +77,8 @@ exports[`component: MnemonicGrid renders 1`] = `
       renderItem={[Function]}
       scrollEnabled={false}
       scrollEventThrottle={50}
-      stickyHeaderIndices={Array []}
-      viewabilityConfigCallbackPairs={Array []}
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
     >
       <View>
         <View
@@ -87,7 +87,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -105,7 +105,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -121,11 +121,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -141,7 +141,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -165,7 +165,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -181,11 +181,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -201,7 +201,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -225,7 +225,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -241,11 +241,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -261,7 +261,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -281,7 +281,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -299,7 +299,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -315,11 +315,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -335,7 +335,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -359,7 +359,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -375,11 +375,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -395,7 +395,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -419,7 +419,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -435,11 +435,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -455,7 +455,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -475,7 +475,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -493,7 +493,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -509,11 +509,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -529,7 +529,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -553,7 +553,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -569,11 +569,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -589,7 +589,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -613,7 +613,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -629,11 +629,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -649,7 +649,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -669,7 +669,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -687,7 +687,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -703,11 +703,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -723,7 +723,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -747,7 +747,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -763,11 +763,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -783,7 +783,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -807,7 +807,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -823,11 +823,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -843,7 +843,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -863,7 +863,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -881,7 +881,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -897,11 +897,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -917,7 +917,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -941,7 +941,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -957,11 +957,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -977,7 +977,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1001,7 +1001,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1017,11 +1017,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1037,7 +1037,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1057,7 +1057,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -1075,7 +1075,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1091,11 +1091,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1111,7 +1111,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1135,7 +1135,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1151,11 +1151,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1171,7 +1171,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1195,7 +1195,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1211,11 +1211,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1231,7 +1231,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1251,7 +1251,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -1269,7 +1269,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1285,11 +1285,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1305,7 +1305,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1329,7 +1329,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1345,11 +1345,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1365,7 +1365,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1389,7 +1389,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1405,11 +1405,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1425,7 +1425,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1445,7 +1445,7 @@ exports[`component: MnemonicGrid renders 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "display": "flex",
                 "flexDirection": "row",
               }
@@ -1463,7 +1463,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1479,11 +1479,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1499,7 +1499,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1523,7 +1523,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1539,11 +1539,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1559,7 +1559,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",
@@ -1583,7 +1583,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
               style={
-                Object {
+                {
                   "backgroundColor": "#FFFFFF",
                   "borderRadius": 8,
                   "flexBasis": 0,
@@ -1599,11 +1599,11 @@ exports[`component: MnemonicGrid renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": "#25282D",
                     },
-                    Object {
+                    {
                       "fontFamily": "Poppins-Regular",
                       "fontSize": 14,
                       "fontStyle": "normal",
@@ -1619,7 +1619,7 @@ exports[`component: MnemonicGrid renders 1`] = `
               </Text>
               <Text
                 style={
-                  Object {
+                  {
                     "color": "#000000",
                     "fontSize": 8,
                     "position": "absolute",

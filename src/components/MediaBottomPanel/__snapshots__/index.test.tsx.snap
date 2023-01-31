@@ -5,7 +5,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -15,21 +15,21 @@ exports[`component: MediaBottomPanel renders 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "bottom": 0,
         }
       }
     >
       <RNCSafeAreaView
         edges={
-          Array [
+          [
             "bottom",
           ]
         }
         style={
-          Array [
+          [
             undefined,
-            Object {
+            {
               "alignItems": "center",
               "backgroundColor": "#FFFFFF",
               "flexDirection": "row",
@@ -40,7 +40,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 0.4,
               "flexDirection": "row",
@@ -51,7 +51,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
           <View
             accessibilityLabel="use image from gallery"
             accessibilityState={
-              Object {
+              {
                 "disabled": true,
               }
             }
@@ -59,7 +59,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             collapsable={false}
             focusable={true}
             hitSlop={
-              Object {
+              {
                 "bottom": 8,
                 "left": 8,
                 "right": 8,
@@ -74,18 +74,18 @@ exports[`component: MediaBottomPanel renders 1`] = `
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
             style={
-              Object {
+              {
                 "opacity": 0.3,
               }
             }
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "overflow": "hidden",
                   },
-                  Object {
+                  {
                     "height": 24,
                     "resizeMode": "contain",
                     "width": 24,
@@ -98,12 +98,12 @@ exports[`component: MediaBottomPanel renders 1`] = `
                 onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
-                  Object {
+                  {
                     "testUri": "../../../src/assets/images/galleryIcon.png",
                   }
                 }
                 style={
-                  Object {
+                  {
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -117,7 +117,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
           <View
             accessibilityLabel="use image from camera"
             accessibilityState={
-              Object {
+              {
                 "disabled": true,
               }
             }
@@ -125,7 +125,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             collapsable={false}
             focusable={true}
             hitSlop={
-              Object {
+              {
                 "bottom": 8,
                 "left": 8,
                 "right": 8,
@@ -140,18 +140,18 @@ exports[`component: MediaBottomPanel renders 1`] = `
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
             style={
-              Object {
+              {
                 "opacity": 0.3,
               }
             }
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "overflow": "hidden",
                   },
-                  Object {
+                  {
                     "height": 24,
                     "resizeMode": "contain",
                     "width": 24,
@@ -164,12 +164,12 @@ exports[`component: MediaBottomPanel renders 1`] = `
                 onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
-                  Object {
+                  {
                     "testUri": "../../../src/assets/images/cameraIcon.png",
                   }
                 }
                 style={
-                  Object {
+                  {
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -186,7 +186,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             collapsable={false}
             focusable={true}
             hitSlop={
-              Object {
+              {
                 "bottom": 8,
                 "left": 8,
                 "right": 8,
@@ -201,18 +201,18 @@ exports[`component: MediaBottomPanel renders 1`] = `
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
             style={
-              Object {
+              {
                 "opacity": 1,
               }
             }
           >
             <View
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "overflow": "hidden",
                   },
-                  Object {
+                  {
                     "height": 24,
                     "resizeMode": "contain",
                     "width": 24,
@@ -225,12 +225,12 @@ exports[`component: MediaBottomPanel renders 1`] = `
                 onFastImageError={[Function]}
                 resizeMode="cover"
                 source={
-                  Object {
+                  {
                     "testUri": "../../../src/assets/images/tagIcon.png",
                   }
                 }
                 style={
-                  Object {
+                  {
                     "bottom": 0,
                     "left": 0,
                     "position": "absolute",
@@ -244,7 +244,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 0.6,
               "flexDirection": "row",
@@ -253,7 +253,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
           }
         >
           <View
-            style={Object {}}
+            style={{}}
           >
             <RNSVGSvgView
               bbHeight={24}
@@ -261,12 +261,12 @@ exports[`component: MediaBottomPanel renders 1`] = `
               focusable={false}
               height={24}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "backgroundColor": "transparent",
                     "borderWidth": 0,
                   },
-                  Object {
+                  {
                     "flex": 0,
                     "height": 24,
                     "width": 24,
@@ -278,7 +278,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
               <RNSVGGroup>
                 <RNSVGGroup
                   matrix={
-                    Array [
+                    [
                       1,
                       0,
                       -0,
@@ -292,7 +292,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
                     d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
                     fill={0}
                     propList={
-                      Array [
+                      [
                         "fill",
                         "stroke",
                         "strokeWidth",
@@ -308,7 +308,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
             </RNSVGSvgView>
             <View
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "borderRadius": 10,
                   "height": 20,
@@ -323,12 +323,12 @@ exports[`component: MediaBottomPanel renders 1`] = `
             >
               <Text
                 style={
-                  Array [
-                    Array [
-                      Object {
+                  [
+                    [
+                      {
                         "color": "#25282D",
                       },
-                      Object {
+                      {
                         "fontFamily": "Poppins-SemiBold",
                         "fontSize": 12,
                         "fontStyle": "normal",
@@ -337,7 +337,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
                         "textAlign": "left",
                       },
                     ],
-                    Object {
+                    {
                       "color": "#AFAFAF",
                     },
                   ]

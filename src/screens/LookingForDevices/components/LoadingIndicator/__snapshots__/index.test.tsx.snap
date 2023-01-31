@@ -5,14 +5,14 @@ exports[`components: LoadingIndicator renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
         "justifyContent": "center",
@@ -21,13 +21,13 @@ exports[`components: LoadingIndicator renders 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "center",
           },
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -39,12 +39,12 @@ exports[`components: LoadingIndicator renders 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -55,12 +55,12 @@ exports[`components: LoadingIndicator renders 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -71,12 +71,12 @@ exports[`components: LoadingIndicator renders 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -87,12 +87,12 @@ exports[`components: LoadingIndicator renders 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -103,12 +103,12 @@ exports[`components: LoadingIndicator renders 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -121,7 +121,7 @@ exports[`components: LoadingIndicator renders 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -134,7 +134,7 @@ exports[`components: LoadingIndicator renders 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -147,7 +147,7 @@ exports[`components: LoadingIndicator renders 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -160,7 +160,7 @@ exports[`components: LoadingIndicator renders 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -173,7 +173,7 @@ exports[`components: LoadingIndicator renders 1`] = `
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -192,14 +192,14 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
         "justifyContent": "center",
@@ -208,13 +208,13 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "center",
           },
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -226,12 +226,12 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -242,12 +242,12 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "blue",
               "marginHorizontal": 4,
             },
-            Object {
+            {
               "backgroundColor": "gray",
               "borderRadius": 5,
               "height": 10,
@@ -260,7 +260,7 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,
@@ -273,7 +273,7 @@ exports[`components: LoadingIndicator stops animation if hideActiveDots is true 
     <View
       collapsable={false}
       style={
-        Object {
+        {
           "backgroundColor": "red",
           "borderRadius": 5,
           "height": 10,

@@ -5,7 +5,7 @@ exports[`component: ProfileHeaderButton renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -22,18 +22,18 @@ exports[`component: ProfileHeaderButton renders 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "overflow": "hidden",
           },
-          Object {
+          {
             "borderRadius": 36,
             "height": 36,
             "resizeMode": "cover",
@@ -46,12 +46,12 @@ exports[`component: ProfileHeaderButton renders 1`] = `
         defaultSource={null}
         resizeMode="cover"
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/defaultProfilePic.png",
           }
         }
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",

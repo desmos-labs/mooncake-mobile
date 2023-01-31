@@ -5,14 +5,14 @@ exports[`component: PasswordReqGroup renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "paddingBottom": 16,
         "paddingTop": 8,
       }
@@ -20,7 +20,7 @@ exports[`component: PasswordReqGroup renders 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "marginVertical": 4,
@@ -29,12 +29,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
     >
       <Image
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/validCheck.png",
           }
         }
         style={
-          Object {
+          {
             "height": 16,
             "marginRight": 4,
             "resizeMode": "contain",
@@ -44,12 +44,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-Regular",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -59,11 +59,11 @@ exports[`component: PasswordReqGroup renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Array [
-              Object {
+            [
+              {
                 "color": "#878787",
               },
-              Object {
+              {
                 "color": "#1EC490",
               },
             ],
@@ -75,7 +75,7 @@ exports[`component: PasswordReqGroup renders 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "marginVertical": 4,
@@ -84,12 +84,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
     >
       <Image
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/validCheck.png",
           }
         }
         style={
-          Object {
+          {
             "height": 16,
             "marginRight": 4,
             "resizeMode": "contain",
@@ -99,12 +99,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-Regular",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -114,11 +114,11 @@ exports[`component: PasswordReqGroup renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Array [
-              Object {
+            [
+              {
                 "color": "#878787",
               },
-              Object {
+              {
                 "color": "#1EC490",
               },
             ],
@@ -130,7 +130,7 @@ exports[`component: PasswordReqGroup renders 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "marginVertical": 4,
@@ -139,12 +139,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
     >
       <Image
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/validCheck.png",
           }
         }
         style={
-          Object {
+          {
             "height": 16,
             "marginRight": 4,
             "resizeMode": "contain",
@@ -154,12 +154,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-Regular",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -169,11 +169,11 @@ exports[`component: PasswordReqGroup renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Array [
-              Object {
+            [
+              {
                 "color": "#878787",
               },
-              Object {
+              {
                 "color": "#1EC490",
               },
             ],
@@ -185,7 +185,7 @@ exports[`component: PasswordReqGroup renders 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "marginVertical": 4,
@@ -194,12 +194,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
     >
       <Image
         source={
-          Object {
+          {
             "testUri": "../../../src/assets/images/check.png",
           }
         }
         style={
-          Object {
+          {
             "height": 16,
             "marginRight": 4,
             "resizeMode": "contain",
@@ -209,12 +209,12 @@ exports[`component: PasswordReqGroup renders 1`] = `
       />
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-Regular",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -224,8 +224,8 @@ exports[`component: PasswordReqGroup renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Array [
-              Object {
+            [
+              {
                 "color": "#878787",
               },
               false,
