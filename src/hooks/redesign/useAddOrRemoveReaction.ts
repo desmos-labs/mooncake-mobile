@@ -4,8 +4,9 @@ import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
+  useSetPostReactionStatus,
 } from '@recoil/redesign/reactions';
-import {PostID} from 'types/desmos';
+import {DataStatus, PostID} from 'types/desmos';
 import useBroadcastTx from 'hooks/redesign/useBroadcastTx';
 import {
   MsgAddReactionEncodeObject,
@@ -25,7 +26,9 @@ import useAppConfig from 'hooks/redesign/useAppConfig';
 const useAddReaction = () => {
   const config = useAppConfig();
   const broadcastTx = useBroadcastTx();
+
   const addPostReaction = useAddPostReaction();
+  const setPostReactionStatus = useSetPostReactionStatus();
   const removePostReaction = useRemovePostReaction();
 
   const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
@@ -60,6 +63,11 @@ const useAddReaction = () => {
           },
         };
 
+        // If the transaction is successful, set the reaction as synced with the chain
+        const onSuccess = () => {
+          setPostReactionStatus(address, postId, DataStatus.SYNCED);
+        };
+
         // If the transaction is canceled or errors, revert the addition of the reaction.
         const onCancelOrError = () => {
           removePostReaction(address, postId);
@@ -68,6 +76,7 @@ const useAddReaction = () => {
         // Broadcast the transaction
         await broadcastTx([messageAddReaction], {
           optimistic: true,
+          onSuccess,
           onCancel: onCancelOrError,
           onError: onCancelOrError,
         });
@@ -83,7 +92,8 @@ const useAddReaction = () => {
 const useRemoveReaction = () => {
   const config = useAppConfig();
   const broadcastTx = useBroadcastTx();
-  const addPostReaction = useAddPostReaction();
+
+  const setPostReactionStatus = useSetPostReactionStatus();
   const removePostReaction = useRemovePostReaction();
 
   const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
@@ -93,7 +103,7 @@ const useRemoveReaction = () => {
   return React.useCallback(
     async (postId: PostID, address: string) => {
       // Remove the reaction locally
-      removePostReaction(address, postId);
+      setPostReactionStatus(address, postId, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server
       const {data} = await getReaction({
@@ -118,14 +128,20 @@ const useRemoveReaction = () => {
           },
         };
 
+        // If the transaction is successful, remove the reaction from the local storage as well
+        const onSuccess = () => {
+          removePostReaction(address, postId);
+        };
+
         // If the transaction is canceled or errors, revert the removal of the reaction.
         const onCancelOrError = () => {
-          addPostReaction(address, postId);
+          setPostReactionStatus(address, postId, DataStatus.SYNCED);
         };
 
         // Broadcast the transaction
         await broadcastTx([messageRemoveReaction], {
           optimistic: true,
+          onSuccess,
           onCancel: onCancelOrError,
           onError: onCancelOrError,
         });

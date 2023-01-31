@@ -84,11 +84,33 @@ export interface ApplicationLink {
   readonly creationTime: Date;
 }
 
+/**
+ * Represents the different status that the data can have within the application.
+ */
+export enum DataStatus {
+  /**
+   * The data is synced with the chain.
+   */
+  SYNCED = 'SYNCED',
+  /**
+   * The data has been created only locally, but has yet to be synced with the chain.
+   */
+  CREATED_LOCALLY = 'CREATED_LOCALLY',
+  /**
+   * The data has been deleted only locally, but has yet to be synced with the chain.
+   */
+  DELETED_LOCALLY = 'DELETED_LOCALLY',
+}
+
 export interface FollowedUser {
   /**
    * Address of the followed user.
    */
   readonly address: string;
+  /**
+   * Identifies the status of this relationship user.
+   */
+  readonly status: DataStatus;
 }
 
 export type PostID = number;
@@ -98,4 +120,8 @@ export interface PostReaction {
    * Id of the post related to this reaction.
    */
   readonly postId: PostID;
+  /**
+   * Identifies the status of this reaction.
+   */
+  readonly status: DataStatus;
 }

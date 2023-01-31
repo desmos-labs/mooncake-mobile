@@ -4,7 +4,7 @@ import {PostID} from 'types/desmos';
 import {
   useAddPostReaction,
   useHasPostReaction,
-  useRemovePostReaction,
+  useSetPostReactionStatus,
 } from '@recoil/redesign/reactions';
 import useIsReactionOnServer from 'hooks/redesign/useIsReactionOnServer';
 
@@ -24,7 +24,7 @@ const useHasReacted = (postId: PostID) => {
 
   const hasPostReaction = useHasPostReaction();
   const addPostReaction = useAddPostReaction();
-  const removePostReaction = useRemovePostReaction();
+  const removePostReaction = useSetPostReactionStatus();
 
   // This is the value that is going to be used as source-of-truth.
   // It's always retrieved from the local cache, which is updated as soon

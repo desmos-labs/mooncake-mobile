@@ -29,7 +29,11 @@ const useReactionsCount = (postId: PostID) => {
     useIsReactionOnServer(postId);
 
   // Get the reactions count from the server
-  const {data, refetch: refetchCount} = useQuery(GetPostReactionsCount, {
+  const {
+    data,
+    loading,
+    refetch: refetchCount,
+  } = useQuery(GetPostReactionsCount, {
     variables: {
       postID: postId,
     },
@@ -66,6 +70,7 @@ const useReactionsCount = (postId: PostID) => {
 
   return {
     count: reactionsCount,
+    loading,
     refetch,
   };
 };
