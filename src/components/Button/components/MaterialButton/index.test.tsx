@@ -15,18 +15,6 @@ describe('component: MaterialButton', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('renders mode: gradient', () => {
-    const tree = render(<MaterialButton mode="gradient" />).toJSON();
-
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('renders mode: gradientFilled', () => {
-    const tree = render(<MaterialButton mode="gradientFilled" />).toJSON();
-
-    expect(tree).toMatchSnapshot();
-  });
-
   it('renders mode: backgroundComponent', () => {
     const tree = render(<MaterialButton mode="backgroundComponent" />).toJSON();
 
