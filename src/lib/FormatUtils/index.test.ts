@@ -1,4 +1,6 @@
 import {
+  formatFeeWithDenoms,
+  formatMsToHumanReadable,
   formatNumShorthand,
   mapPostFontSize,
   sanitizeMnemonic,
@@ -55,6 +57,60 @@ describe('utils: FormatUtils', () => {
     it('fontSize === 14 for numChars > 450 && numChars < 501', () => {
       expect(mapPostFontSize(451)).toBe(14);
       expect(mapPostFontSize(500)).toBe(14);
+    });
+  });
+
+  describe('formatMsToHumanReadable', () => {
+    it('formats to seconds (rounds up)', () => {
+      expect(formatMsToHumanReadable(1500, 'seconds')).toEqual(2);
+    });
+
+    it('formats to minutes (rounds up)', () => {
+      expect(formatMsToHumanReadable(60000 * 1.5, 'minutes')).toEqual(2);
+    });
+
+    it('formats to hours (rounds up)', () => {
+      expect(formatMsToHumanReadable(3600000 * 1.5, 'hours')).toEqual(2);
+    });
+
+    it('formats to days (rounds up)', () => {
+      expect(formatMsToHumanReadable(86400000 * 1.5, 'days')).toEqual(2);
+    });
+  });
+
+  describe('formatFeeWithDenoms', () => {
+    const mockArgs = {
+      amount: [
+        {
+          denom: 'daric',
+          amount: '1000',
+        },
+      ],
+      gas: '500',
+    };
+
+    it('formats with correct denoms', () => {
+      expect(formatFeeWithDenoms(mockArgs)).toEqual({
+        denom: 'daric',
+        formattedAmount: 0.001,
+        formattedString: '0.001 DARIC',
+      });
+    });
+
+    it('throws an error if no matchingDenoms are found', () => {
+      expect(() =>
+        formatFeeWithDenoms({
+          amount: [
+            {
+              denom: 'denom that does not exist',
+              amount: '1000',
+            },
+          ],
+          gas: '500',
+        }),
+      ).toThrow(
+        `No matching denoms found for denom: denom that does not exist`,
+      );
     });
   });
 });
