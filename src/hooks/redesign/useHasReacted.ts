@@ -38,10 +38,10 @@ const useHasReacted = (postId: PostID) => {
   const {isReactionPresent: isReactionOnServer, refetch} =
     useIsReactionOnServer(postId);
 
-  // The following callback is used to react to updates of the data returned
+  // The following effect is used to react to updates of the data returned
   // by the query. The idea is to cache the response inside the Recoil atom,
   // so that we can simply read that value later on
-  React.useCallback(() => {
+  React.useEffect(() => {
     const isCached = hasPostReaction(activeAddress, postId);
     if (isReactionOnServer && !isCached) {
       // If the reaction exists on the server but does not exist on the cache,

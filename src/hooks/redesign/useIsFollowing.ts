@@ -42,10 +42,10 @@ const useIsFollowing = (counterparty: string) => {
     },
   });
 
-  // The following callback is used to react to updates of the data returned
+  // The following effect is used to react to updates of the data returned
   // by the query. The idea is to cache the response inside the Recoil atom,
   // so that we can simply read that value later on
-  React.useCallback(() => {
+  React.useEffect(() => {
     if (!data) {
       return;
     }
