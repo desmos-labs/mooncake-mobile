@@ -171,6 +171,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
       <Spacer paddingVertical={4} />
       <View style={{marginHorizontal: 10}}>
         <Button
+          testID="ContinueToLanding"
           mode="contained"
           color="green"
           onPress={() => navigate(ROUTES.LANDING)}>

@@ -1,4 +1,3 @@
-import MaskedView from '@react-native-masked-view/masked-view';
 import React, {ElementType, ReactNode} from 'react';
 import {
   StyleProp,
@@ -8,7 +7,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {Button, useTheme} from 'react-native-paper';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import useStyles from './useStyles';
@@ -23,13 +21,7 @@ export type Props = {
    * - `gradientFilled` - button with a gradient filled background color
    * - `backgroundComponent` - button with a react component filled as background
    */
-  mode?:
-    | 'text'
-    | 'outlined'
-    | 'contained'
-    | 'gradient'
-    | 'gradientFilled'
-    | 'backgroundComponent';
+  mode?: 'text' | 'outlined' | 'contained' | 'backgroundComponent';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -65,10 +57,6 @@ export type Props = {
    */
   contentStyle?: StyleProp<ViewStyle>;
   /**
-   * Modify the container wrapping the gradient button. Has no effect for other modes.
-   */
-  containerStyle?: StyleProp<ViewStyle>;
-  /**
    * [mode: backgroundComponent]
    * Use this component to fill the button background.
    * Has no effect for other modes.
@@ -76,6 +64,7 @@ export type Props = {
   BackgroundComponent?: ElementType;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
+  testID?: string;
 };
 
 const MaterialButton: React.FC<Props> = props => {
@@ -90,9 +79,9 @@ const MaterialButton: React.FC<Props> = props => {
     accent,
     contentStyle,
     style,
-    containerStyle,
     BackgroundComponent,
     children,
+    testID,
   } = props;
   const theme = useTheme();
   const styles = useStyles(props);
@@ -103,6 +92,7 @@ const MaterialButton: React.FC<Props> = props => {
   if (mode === 'text') {
     return (
       <TouchableOpacity
+        testID={testID}
         disabled={disabled}
         style={[
           {alignSelf: 'center'},
@@ -116,78 +106,9 @@ const MaterialButton: React.FC<Props> = props => {
     );
   }
 
-  if (mode === 'gradient') {
-    return (
-      <View
-        style={[
-          styles.container,
-          containerStyle,
-          disabled && styles.disabledStyle,
-        ]}>
-        <MaskedView
-          style={styles.maskedView}
-          maskElement={
-            <View style={styles.maskingContainer}>
-              <View style={styles.masking} />
-            </View>
-          }>
-          <LinearGradient
-            style={styles.linearGradient}
-            colors={[
-              'rgba(255, 199, 91, 1)',
-              'rgba(255, 132, 79, 1)',
-              'rgba(255, 132, 79, 1)',
-              'rgba(255, 132, 79, 1)',
-            ]}
-          />
-        </MaskedView>
-        <Button
-          icon={icon}
-          color={color || accentColor}
-          onPress={onPress}
-          mode="outlined"
-          labelStyle={[styles.labelStyle, labelStyle]}
-          style={[styles.btnStyle, style]}
-          contentStyle={[styles.contentStyle, contentStyle]}
-          loading={loading}
-          disabled={disabled}>
-          {children}
-        </Button>
-      </View>
-    );
-  }
-
-  if (mode === 'gradientFilled') {
-    return (
-      <View
-        style={[
-          styles.gradientFilledContainer,
-          containerStyle,
-          disabled && styles.disabledStyle,
-        ]}>
-        <LinearGradient
-          style={[styles.maskedView, styles.linearGradient]}
-          colors={theme.colors.butterYellowGradient}
-        />
-        <Button
-          icon={icon}
-          color={color || accentColor}
-          onPress={onPress}
-          mode="outlined"
-          labelStyle={[styles.labelStyle, labelStyle]}
-          style={[styles.btnStyle, style]}
-          contentStyle={[styles.contentStyle, contentStyle]}
-          loading={loading}
-          disabled={disabled}>
-          {children}
-        </Button>
-      </View>
-    );
-  }
-
   if (mode === 'backgroundComponent') {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} testID={testID}>
         <View style={[styles.backgroundComponentButton, style]}>
           {!!BackgroundComponent && (
             <BackgroundComponent
@@ -204,6 +125,7 @@ const MaterialButton: React.FC<Props> = props => {
 
   return (
     <Button
+      testID={testID}
       icon={icon}
       color={color || accentColor}
       onPress={onPress}

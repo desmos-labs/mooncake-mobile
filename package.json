@@ -133,6 +133,7 @@
     "babel-loader": "9.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "detox": "^20.1.2",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-recommended": "^4.1.0",
