@@ -184,6 +184,9 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/assets/"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/e2e"
     ]
   },
   "lint-staged": {
