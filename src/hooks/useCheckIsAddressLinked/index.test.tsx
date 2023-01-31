@@ -2,7 +2,7 @@ import {renderHook, waitFor} from '@testing-library/react-native';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked/index';
 import {RecoilRoot} from 'recoil';
 import React from 'react';
-import {ChainLink} from 'types/link';
+import {ChainLink} from 'types/desmos';
 
 const mockActiveAddr = 'active-addr';
 

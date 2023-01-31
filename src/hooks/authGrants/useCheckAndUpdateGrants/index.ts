@@ -31,7 +31,7 @@ export interface CheckAndUpdateGrantsArgs {
 const useCheckAndUpdateGrants = () => {
   const {navigate, pop} = useNavigation<any>();
   const {getAuthzGrants} = useGetAuthzGrants();
-  const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
   /**
    * Convenience function to check if the user has enabled a grant for a given list
    * @param {GrantEnums[]} grantsToCheck - check if user has provided grants for these grants

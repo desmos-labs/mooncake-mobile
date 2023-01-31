@@ -4,7 +4,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import appSettingsState from '@recoil/settings';
-import sharedPostState from '@recoil/sharedPostState';
+import createPostState from '@recoil/screens/createPostState';
 import {
   bottomActivitiesIcon,
   bottomCommunitiesIcon,
@@ -79,7 +79,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   const {activeAddress} = useActiveAccount();
   const theme = useTheme();
   const toast = useToast();
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const resetSharedPostState = useResetRecoilState(createPostState);
   const notificationsCount = getMMKV<number>(MMKVKEYS.NOTIFICATIONS_COUNT);
   const {appActiveState} = useRecoilValue(appSettingsState);
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();

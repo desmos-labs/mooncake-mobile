@@ -1,57 +1,13 @@
-import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import {ImageSourcePropType} from 'react-native';
-import {HdPath} from './hdpath';
+import { ChainConfig } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import { ImageSourcePropType } from 'react-native';
+import { HdPath } from '@cosmjs/crypto';
+import { ChainInfo } from '@desmoslabs/desmjs';
 
-export enum ChainAccountType {
-  Local,
-  Ledger,
-}
-
-export type DenomUnit = {
-  denom: string;
-  exponent: number;
-};
-
-export interface ChainAccount {
-  /**
-   * Account type.
-   * Can be a local account or an
-   * account imported from an external device like Ledger.
-   */
-  type: ChainAccountType;
-  /**
-   * The bech32 address of this account.
-   */
-  address: string;
-  /**
-   * The derivation path used to generate this account.
-   */
-  hdPath: HdPath;
-  /**
-   * Base64 encoded public key.
-   */
-  pubKey: string;
-  /**
-   * Algorithm used to sign a transaction.
-   */
-  signAlgorithm: 'secp256k1' | 'ed25519' | 'sr25519';
-}
-
-export type ChainAsset = {
-  description: string;
-  denom_units: DenomUnit[];
-  base: string;
-  name: string;
-  display: string;
-  symbol: string;
-  coingecko_id: string;
-  type_asset?: string;
-};
 /**
- * Type that represents a chain that can be
- * linked to a desmos profile.
+ * Type that represents a chain that is supported within our wallet.
+ * It can be either a chain that can be linked or imported as the main wallet.
  */
-export type LinkableChain = {
+export type SupportedChain = {
   /**
    * Chain name.
    */
@@ -63,7 +19,7 @@ export type LinkableChain = {
   /**
    * HD path used to derive the keys.
    */
-  hdPath: HdPath;
+  masterHDPath: HdPath;
   /**
    * Chain icon.
    */
@@ -72,14 +28,8 @@ export type LinkableChain = {
    * Chain configurations.
    */
   chainConfig: ChainConfig;
-
   /**
-   * The chain's related assets
+   * Optional chain info(s) associated to this chain.
    */
-  assets?: ChainAsset[];
-
-  /**
-   * Ledger applications that the chain is compatible with.
-   */
-  ledgerApps: LedgerApp[];
+  chainInfo?: ChainInfo[];
 };

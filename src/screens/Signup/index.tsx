@@ -2,7 +2,7 @@ import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {profileParamsState} from '@recoil/profileParams';
-import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
+import signUpState, {signUpDTagState} from '@recoil/screens/signUpState';
 import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
@@ -47,7 +47,7 @@ const Signup = () => {
   const [dtagParams, setDtagParams] = React.useState<any>({});
   const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
   const setSignUpDTag = useSetRecoilState(signUpDTagState);
-  const resetSignUpInfo = useResetRecoilState(signUpInfoState);
+  const resetSignUpInfo = useResetRecoilState(signUpState);
   const [animatedPswChecksVisible, setAnimatedPswChecksVisible] =
     useState(false);
   const animatedOpacity = useSharedValue(0);

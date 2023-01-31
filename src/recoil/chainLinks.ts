@@ -1,65 +1,134 @@
-import {
-  selectorFamily,
-  useRecoilRefresher_UNSTABLE,
-  useRecoilValueLoadable,
-} from 'recoil';
-import {ChainLink} from 'types/link';
-import client from 'services/graphql/client';
-import GetChainLinks from 'services/graphql/queries/GetChainLinks';
+import React from 'react';
+import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
+import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {ChainLink} from 'types/desmos';
 
 /**
- * Format incoming chainlink data from the server into a format that is easier to parse by the app.
- * @param {any[]} chainLinks - An array of chainlink data from the server.
- * @returns {ChainLink[]} - An array formatted of ChainLink objects
+ * Recoil atom that holds all the chain links of all the profiles stored inside the application.
  */
-const formatChainLink = (chainLinks: any[]) =>
-  chainLinks.map(
-    link =>
-      ({
-        chainName: link.chain_config.name,
-        externalAddress: link.external_address,
-        userAddress: link.user_address,
-        creationTime: new Date(`${link.creation_time}Z`),
-      } as ChainLink),
-  );
-
-/**
- * Recoil atom for the user's chain links
- */
-const chainLinkState = selectorFamily<ChainLink[], string>({
-  key: 'chainLink',
-  get: (address: string) => async () => {
-    const {data} = await client.query({
-      query: GetChainLinks,
-      variables: {
-        address,
-      },
-      fetchPolicy: 'no-cache',
-    });
-
-    const {chain_link} = data;
-
-    return formatChainLink(chain_link);
-  },
+const chainLinksState = atom<Record<string, ChainLink[]>>({
+  key: 'chainLinksState',
+  default: getMMKV(MMKVKEYS.CHAIN_LINKS) || {},
+  effects: [
+    ({onSet}) => {
+      onSet(chainLinks => {
+        setMMKV(MMKVKEYS.CHAIN_LINKS, chainLinks);
+      });
+    },
+  ],
 });
 
-export const useChainLinks = (address: string) => {
-  const chainLinksSelector = useRecoilValueLoadable<ChainLink[]>(
-    chainLinkState(address),
+/**
+ * Hook that allows to easily get the currently stored chain links.
+ */
+export const useStoredChainLinks = () => useRecoilValue(chainLinksState);
+
+interface UniqueChainLinkInfo {
+  readonly chainName: string;
+  readonly externalAddress: string;
+}
+
+const getUniqueLinkInfo = (link: ChainLink) =>
+  ({
+    chainName: link.chainName,
+    externalAddress: link.externalAddress,
+  } as UniqueChainLinkInfo);
+
+const findLinkByUniqueInfo = (
+  chainLink: ChainLink[],
+  info: UniqueChainLinkInfo,
+) =>
+  chainLink.find(
+    link =>
+      link.chainName === info.chainName &&
+      link.externalAddress === info.externalAddress,
   );
 
-  const refetchChainLinks = useRecoilRefresher_UNSTABLE(
-    chainLinkState(address),
-  );
+const mergeChainLinks = (first: ChainLink[], second: ChainLink[]) => {
+  // Get the unique chain links data
+  const uniqueChainLinks: Set<string> = new Set();
+  first
+    .map(getUniqueLinkInfo)
+    .forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
+  second
+    .map(getUniqueLinkInfo)
+    .forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
 
-  const {state, contents} = chainLinksSelector;
-
-  return {
-    loading: state === 'loading',
-    chainLinks: state === 'hasValue' ? contents : [],
-    error: state === 'hasError' ? contents : undefined,
-    refetch: refetchChainLinks,
-  };
+  return Array.from(uniqueChainLinks)
+    .map(value => JSON.parse(value) as UniqueChainLinkInfo)
+    .map(
+      info =>
+        findLinkByUniqueInfo(second, info) || findLinkByUniqueInfo(first, info),
+    )
+    .filter(value => value)
+    .sort((a, b) => a!.chainName.localeCompare(b!.chainName)) as ChainLink[];
 };
 
-export default chainLinkState;
+/**
+ * Hook that allows storing a list of chain links associated with the same user inside the application state.
+ */
+export const useStoreUserChainLinks = () => {
+  const setChainLinks = useSetRecoilState(chainLinksState);
+  return React.useCallback(
+    (user: string, chainLinks: ChainLink[], merge?: boolean) => {
+      setChainLinks(currentChainLinks => {
+        const existingChainLinks = currentChainLinks[user] || [];
+        const newUserChainLinks = merge
+          ? mergeChainLinks(existingChainLinks, chainLinks)
+          : chainLinks;
+
+        const newChainLinks: Record<string, ChainLink[]> = {
+          ...currentChainLinks,
+        };
+        newChainLinks[user] = newUserChainLinks;
+        return newChainLinks;
+      });
+    },
+    [setChainLinks],
+  );
+};
+
+/**
+ * Hook that allows to delete a stored chain link.
+ */
+export const useDeleteChainLink = () => {
+  const setChainLinks = useSetRecoilState(chainLinksState);
+  return React.useCallback(
+    (chainLink: ChainLink) => {
+      setChainLinks(currentChainLinks => {
+        const userChinaLinks = currentChainLinks[chainLink.userAddress] || [];
+        const filteredUserChainLinks = userChinaLinks.filter(
+          link =>
+            link.chainName !== chainLink.chainName ||
+            link.externalAddress !== chainLink.externalAddress,
+        );
+
+        const newChainLinks: Record<string, ChainLink[]> = {
+          ...currentChainLinks,
+        };
+        newChainLinks[chainLink.userAddress] = filteredUserChainLinks;
+        return newChainLinks;
+      });
+    },
+    [setChainLinks],
+  );
+};
+
+/**
+ * Hook that allows to easily delete the chain links associated with the user having a given address.
+ */
+export const useDeleteChainLinks = () => {
+  const setChainLinks = useSetRecoilState(chainLinksState);
+  return React.useCallback(
+    (address: string) => {
+      setChainLinks(storedLinks => {
+        const newValue: Record<string, ChainLink[]> = {
+          ...storedLinks,
+        };
+        delete newValue[address];
+        return newValue;
+      });
+    },
+    [setChainLinks],
+  );
+};

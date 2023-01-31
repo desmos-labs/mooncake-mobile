@@ -35,7 +35,7 @@ const PostTips = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const [activeAddress] = useMMKVStorage<string | undefined>(
-    MMKVKEYS.ACTIVE_ACCOUNT_ADDR,
+    MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS,
   );
   const {tips, tipsLoading, tipsRefetch} = useHooks({
     postId,

@@ -1,12 +1,12 @@
 import React, {useRef} from 'react';
 import {
-  View,
   Image,
-  StatusBar,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {postBG, whiteCross} from 'assets/images';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -23,7 +23,10 @@ import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {
+  postAttachmentsState,
+  postTextState,
+} from '@recoil/screens/createPostState';
 import ImageButton from 'components/ImageButton';
 import {addAlphaToHex} from 'config/theme';
 import {mapPostFontSize} from 'lib/FormatUtils';

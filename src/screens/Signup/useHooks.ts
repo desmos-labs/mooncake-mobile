@@ -5,7 +5,7 @@ import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import inviteCodeState from '@recoil/inviteCodeState';
-import signUpInfoState from '@recoil/signUpInfoState';
+import signUpState from '@recoil/screens/signUpState';
 import signUpPasswordState from '@recoil/signUpPasswordState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {GenericMsgEnums} from 'lib/desmos/msgtypes';
@@ -33,7 +33,7 @@ const useHooks = () => {
   const {navigate, goBack, push} = useNavigation<NavProps['navigation']>();
   const {t} = useTranslation('passwordManipulation');
   const [inviteCode, setInviteCode] = useRecoilState(inviteCodeState);
-  const signUpInfo = useRecoilValue(signUpInfoState);
+  const signUpInfo = useRecoilValue(signUpState);
   const setSignUpPassword = useSetRecoilState(signUpPasswordState);
   const [loading, setLoading] = React.useState(false);
   const [addressToCheck, setAddressToCheck] = React.useState('');

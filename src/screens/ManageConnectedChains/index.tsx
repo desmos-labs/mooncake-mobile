@@ -12,7 +12,7 @@ import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {Snackbar, useTheme} from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
-import {ChainLink} from 'types/link';
+import {ChainLink} from 'types/desmos';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';

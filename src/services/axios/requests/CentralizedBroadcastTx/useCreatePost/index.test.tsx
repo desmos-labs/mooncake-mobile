@@ -1,7 +1,10 @@
 import {act, renderHook} from '@testing-library/react-native';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/index';
 import {RecoilRoot} from 'recoil';
-import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {
+  postAttachmentsState,
+  postTextState,
+} from '@recoil/screens/createPostState';
 import React from 'react';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {MsgCreatePost} from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';

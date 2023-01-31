@@ -1,4 +1,7 @@
-import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
+import {
+  postAttachmentsState,
+  postTextState,
+} from '@recoil/screens/createPostState';
 import {expandCommentIcon} from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';

@@ -14,7 +14,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {ChainLink} from 'types/link';
+import {ChainLink} from 'types/desmos';
 import LinkableChains from 'config/LinkableChains';
 import {MsgUnlinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useUnlockWallet from 'hooks/useUnlockWallet';

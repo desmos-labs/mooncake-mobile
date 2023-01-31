@@ -7,18 +7,18 @@ import ROUTES from 'navigation/routes';
 import {useMemo, useRef, useState} from 'react';
 import {ScrollView, TextInput} from 'react-native';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
-import signUpInfoState, {
+import signUpState, {
   signUpBioState,
   signUpCoverPicState,
   signUpNicknameState,
   signUpProfilePicState,
-} from '@recoil/signUpInfoState';
+} from '@recoil/screens/signUpState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import useValidationSchema from './useValidationSchema';
 
 function useHooks() {
-  const signUpInfo = useRecoilValue(signUpInfoState);
+  const signUpInfo = useRecoilValue(signUpState);
   const [coverPicture, setCoverPicture] = useRecoilState(signUpCoverPicState);
   const [profilePicture, setProfilePicture] = useRecoilState(
     signUpProfilePicState,

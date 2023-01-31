@@ -15,7 +15,7 @@ import {UploadEvent} from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilCallback, useResetRecoilState} from 'recoil';
-import sharedPostState from '@recoil/sharedPostState';
+import createPostState from '@recoil/screens/createPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
@@ -45,7 +45,7 @@ const useCreatePost = () => {
 
   const toast = useToast();
 
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const resetSharedPostState = useResetRecoilState(createPostState);
   const [loading, setLoading] = React.useState(false);
 
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
@@ -77,7 +77,7 @@ const useCreatePost = () => {
 
         try {
           // get the postText and any attachments from recoil state
-          const _sharedPostState = await snapshot.getPromise(sharedPostState);
+          const _sharedPostState = await snapshot.getPromise(createPostState);
 
           const {postAttachments, postText} = _sharedPostState;
 

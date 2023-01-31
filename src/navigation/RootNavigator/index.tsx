@@ -298,7 +298,7 @@ const RootNavigator = () => {
 
   const initialRouteName = React.useMemo(() => {
     if (__DEV__) return ROUTES.DEV_SCREEN;
-    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+    const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
 
     if (activeAddr) {
       return ROUTES.BOTTOM_TABS;

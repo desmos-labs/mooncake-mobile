@@ -1,5 +1,24 @@
 import {ApplicationLinkState} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 
+export interface PostsParams {
+  readonly maxTextLength: number;
+}
+
+export interface ProfileParams {
+  readonly bio: {
+    readonly maxLength: number;
+  };
+  readonly dTag: {
+    readonly regEx: string;
+    readonly maxLength: number;
+    readonly minLength: number;
+  };
+  readonly nickname: {
+    readonly maxLength: number;
+    readonly minLength: number;
+  };
+}
+
 export interface DesmosProfile {
   /**
    * The user's address

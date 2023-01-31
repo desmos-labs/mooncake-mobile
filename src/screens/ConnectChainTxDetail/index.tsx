@@ -54,7 +54,7 @@ const ConnectChainTxDetail = () => {
 
   const {selectedChain} = useRecoilValue(connectChainState);
 
-  const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDR);
+  const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
 
   const styles = useStyles();
   const theme = useTheme();

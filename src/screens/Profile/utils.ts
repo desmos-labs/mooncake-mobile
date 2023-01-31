@@ -2,7 +2,7 @@ import {ImageSourcePropType} from 'react-native';
 import LinkableChains from 'config/LinkableChains';
 import {defaultProfilePic, twitterIcon} from 'assets/images';
 import {Source} from 'react-native-fast-image';
-import {ChainLink} from 'types/link';
+import {ChainLink} from 'types/desmos';
 
 export const mapConnectedChainImages = (
   connectedChains: ChainLink[],

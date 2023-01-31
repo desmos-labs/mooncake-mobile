@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import {pendingCommentsByPost} from '@recoil/pendingTx/pendingPosts';
-import sharedPostState from '@recoil/sharedPostState';
+import createPostState from '@recoil/screens/createPostState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import ROUTES from 'navigation/routes';
@@ -27,7 +27,7 @@ const useHooks = ({
 }) => {
   const {activeAddress} = useActiveAccount();
   const {createPost, loading} = useCreatePost();
-  const resetSharedPostState = useResetRecoilState(sharedPostState);
+  const resetSharedPostState = useResetRecoilState(createPostState);
   const {navigate} = useNavigation<NavProps['navigation']>();
   const {handleNavigateToProfile} = useNavigateToProfile();
   const {addOrRemoveReaction} = useAddOrRemoveReaction();
