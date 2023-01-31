@@ -1,13 +1,12 @@
 import React, {useMemo} from 'react';
 import {useActiveAddress} from '@recoil/redesign/wallets';
 import {PostID} from 'types/desmos';
-import {useQuery} from '@apollo/client';
-import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
 import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
 } from '@recoil/redesign/reactions';
+import useIsReactionOnServer from 'hooks/redesign/useIsReactionOnServer';
 
 /**
  * Hook that allows to know if the current user has reacted to a given post or not.
@@ -35,38 +34,28 @@ const useHasReacted = (postId: PostID) => {
     [hasPostReaction, activeAddress, postId],
   );
 
-  const {data, refetch} = useQuery(GetPostReactionForAddress, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      postID: postId,
-      userAddress: activeAddress,
-    },
-  });
+  // Perform a server query to know if the reaction is stored remotely or not
+  const {isReactionPresent: isReactionOnServer, refetch} =
+    useIsReactionOnServer(postId);
 
   // The following callback is used to react to updates of the data returned
   // by the query. The idea is to cache the response inside the Recoil atom,
   // so that we can simply read that value later on
   React.useCallback(() => {
-    if (!data) {
-      return;
-    }
-
-    const reactions = data.reactions as any[];
     const isCached = hasPostReaction(activeAddress, postId);
-
-    if (reactions.length > 0 && !isCached) {
+    if (isReactionOnServer && !isCached) {
       // If the reaction exists on the server but does not exist on the cache,
       // add it to the cache
       addPostReaction(activeAddress, postId);
     }
 
-    if (reactions.length === 0 && isCached) {
+    if (!isReactionOnServer && isCached) {
       // If the reaction does not exist on the server but exists on the cache,
       // delete it from the cache
       removePostReaction(activeAddress, postId);
     }
   }, [
-    data,
+    isReactionOnServer,
     activeAddress,
     hasPostReaction,
     addPostReaction,
