@@ -26,6 +26,7 @@ const useAddReaction = () => {
   const config = useAppConfig();
   const broadcastTx = useBroadcastTx();
   const addPostReaction = useAddPostReaction();
+  const removePostReaction = useRemovePostReaction();
 
   const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
     fetchPolicy: 'network-only',
@@ -59,9 +60,17 @@ const useAddReaction = () => {
           },
         };
 
+        // If the transaction is canceled or errors, revert the addition of the reaction.
+        const onCancelOrError = () => {
+          removePostReaction(address, postId);
+        };
+
         // Broadcast the transaction
-        // TODO: Handle if broadcastTx returns an error, deleting the added reaction
-        await broadcastTx([messageAddReaction], {optimistic: true});
+        await broadcastTx([messageAddReaction], {
+          optimistic: true,
+          onCancel: onCancelOrError,
+          onError: onCancelOrError,
+        });
       }
     },
     [config, getReaction, broadcastTx, addPostReaction],
@@ -74,6 +83,7 @@ const useAddReaction = () => {
 const useRemoveReaction = () => {
   const config = useAppConfig();
   const broadcastTx = useBroadcastTx();
+  const addPostReaction = useAddPostReaction();
   const removePostReaction = useRemovePostReaction();
 
   const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
@@ -108,9 +118,17 @@ const useRemoveReaction = () => {
           },
         };
 
+        // If the transaction is canceled or errors, revert the removal of the reaction.
+        const onCancelOrError = () => {
+          addPostReaction(address, postId);
+        };
+
         // Broadcast the transaction
-        // TODO: Handle if the broadcast returns an error, re-adding the removed reaction
-        await broadcastTx([messageRemoveReaction], {optimistic: true});
+        await broadcastTx([messageRemoveReaction], {
+          optimistic: true,
+          onCancel: onCancelOrError,
+          onError: onCancelOrError,
+        });
       }
     },
     [config, getReaction, broadcastTx, removePostReaction],

@@ -1,6 +1,5 @@
 import React from 'react';
 import {EncodeObject} from '@cosmjs/proto-signing';
-import {ok, Result} from 'neverthrow';
 
 export interface BroadcastOptions {
   /**
@@ -11,6 +10,18 @@ export interface BroadcastOptions {
    * Memo to be used when broadcasting the transaction.
    */
   readonly memo?: string;
+  /**
+   * Callback that is used when the transaction broadcast is successful.
+   */
+  readonly onSuccess?: (result: BroadcastResult) => void;
+  /**
+   * Callback used when the transaction broadcast is canceled by the user.
+   */
+  readonly onCancel?: () => void;
+  /**
+   * Callback used when the transaction broadcast fails for any reason.
+   */
+  readonly onError?: (error: Error) => void;
 }
 
 export interface BroadcastResult {
@@ -32,12 +43,8 @@ const useBroadcastTx = () => {
   // TODO: Create useUnlockWallet hook to unlock the wallet, if needed
 
   return React.useCallback(
-    async (
-      msgs: EncodeObject[],
-      options?: BroadcastOptions,
-    ): Promise<Result<BroadcastResult, Error>> => {
+    async (msgs: EncodeObject[], options?: BroadcastOptions) => {
       console.log('Implement useBroadcastTx', msgs, options);
-      return ok({txHash: ''} as BroadcastResult);
     },
     [],
   );

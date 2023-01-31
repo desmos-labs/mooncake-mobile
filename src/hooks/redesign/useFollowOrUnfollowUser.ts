@@ -45,6 +45,7 @@ const useFollowUser = () => {
   const appConfig = useAppConfig();
   const broadcastTx = useBroadcastTx();
   const addFollowedUser = useAddFollowedUser();
+  const removeFollowedUser = useRemoveFollowedUser();
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
 
@@ -65,9 +66,17 @@ const useFollowUser = () => {
           },
         };
 
+        // If the transaction is canceled or errors, remove the added relationship
+        const onCancelOrError = () => {
+          removeFollowedUser(address, counterparty);
+        };
+
         // Broadcast the transaction
-        // TODO: Handle if the broadcastTx returns an error, deleting the added relationship
-        await broadcastTx([messageCreateRelationship], {optimistic: true});
+        await broadcastTx([messageCreateRelationship], {
+          optimistic: true,
+          onCancel: onCancelOrError,
+          onError: onCancelOrError,
+        });
       }
     },
     [doesRelationshipExist, broadcastTx, addFollowedUser],
@@ -80,6 +89,7 @@ const useFollowUser = () => {
 const useUnfollowUser = () => {
   const appConfig = useAppConfig();
   const broadcastTx = useBroadcastTx();
+  const addFollowedUser = useAddFollowedUser();
   const removeFollowedUser = useRemoveFollowedUser();
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
@@ -101,9 +111,17 @@ const useUnfollowUser = () => {
           },
         };
 
+        // If the transaction is canceled or errors, re-add the removed relationship
+        const onCancelOrError = () => {
+          addFollowedUser(address, counterparty);
+        };
+
         // Broadcasts the transaction
-        // TODO: Handle if broadcastTx returns an error, re-adding the deleted relationship
-        await broadcastTx([messageDeleteRelationship], {optimistic: true});
+        await broadcastTx([messageDeleteRelationship], {
+          optimistic: true,
+          onCancel: onCancelOrError,
+          onError: onCancelOrError,
+        });
       }
     },
     [doesRelationshipExist, broadcastTx, removeFollowedUser],
