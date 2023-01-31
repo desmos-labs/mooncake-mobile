@@ -4,6 +4,7 @@ import {
   useAddFollowedUser,
   useHasFollowedUser,
   useRemoveFollowedUser,
+  useSetFollowedUserStatus,
 } from '@recoil/redesign/relationships';
 import {useLazyQuery} from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
@@ -15,6 +16,7 @@ import {
 } from '@desmoslabs/desmjs';
 import useAppConfig from 'hooks/redesign/useAppConfig';
 import {useActiveAddress} from '@recoil/redesign/wallets';
+import {DataStatus} from 'types/desmos';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
@@ -44,7 +46,9 @@ const useDoesRelationshipExistRemotely = () => {
 const useFollowUser = () => {
   const appConfig = useAppConfig();
   const broadcastTx = useBroadcastTx();
+
   const addFollowedUser = useAddFollowedUser();
+  const setFollowedUserStatus = useSetFollowedUserStatus();
   const removeFollowedUser = useRemoveFollowedUser();
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
@@ -66,6 +70,11 @@ const useFollowUser = () => {
           },
         };
 
+        // If the transaction succeeds, set it as synced.
+        const onSuccess = () => {
+          setFollowedUserStatus(address, counterparty, DataStatus.SYNCED);
+        };
+
         // If the transaction is canceled or errors, remove the added relationship
         const onCancelOrError = () => {
           removeFollowedUser(address, counterparty);
@@ -74,6 +83,7 @@ const useFollowUser = () => {
         // Broadcast the transaction
         await broadcastTx([messageCreateRelationship], {
           optimistic: true,
+          onSuccess,
           onCancel: onCancelOrError,
           onError: onCancelOrError,
         });
@@ -89,7 +99,8 @@ const useFollowUser = () => {
 const useUnfollowUser = () => {
   const appConfig = useAppConfig();
   const broadcastTx = useBroadcastTx();
-  const addFollowedUser = useAddFollowedUser();
+
+  const setFollowedUserStatus = useSetFollowedUserStatus();
   const removeFollowedUser = useRemoveFollowedUser();
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
@@ -97,7 +108,7 @@ const useUnfollowUser = () => {
   return React.useCallback(
     async (address: string, counterparty: string) => {
       // Delete the relationship locally
-      removeFollowedUser(address, counterparty);
+      setFollowedUserStatus(address, counterparty, DataStatus.DELETED_LOCALLY);
 
       const existsRemotely = await doesRelationshipExist(address, counterparty);
       if (existsRemotely) {
@@ -111,14 +122,20 @@ const useUnfollowUser = () => {
           },
         };
 
+        // If the transaction succeeds, delete the relationship locally as well
+        const onSuccess = () => {
+          removeFollowedUser(address, counterparty);
+        };
+
         // If the transaction is canceled or errors, re-add the removed relationship
         const onCancelOrError = () => {
-          addFollowedUser(address, counterparty);
+          setFollowedUserStatus(address, counterparty, DataStatus.SYNCED);
         };
 
         // Broadcasts the transaction
         await broadcastTx([messageDeleteRelationship], {
           optimistic: true,
+          onSuccess,
           onCancel: onCancelOrError,
           onError: onCancelOrError,
         });
