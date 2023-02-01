@@ -5,6 +5,7 @@ import {
 } from 'lib/EncryptionUtils';
 import {
   defaultSecureStorageOptions,
+  deleteBiometricData,
   deleteLocalWallet,
   deleteMnemonic,
   deletePasswordWithBiometrics,
@@ -18,6 +19,7 @@ import {
   saveNewAccount,
   savePasswordWithBiometrics,
   SECURE_STORAGE_KEYS,
+  setBiometricData,
 } from 'lib/SecureStorage';
 import {
   getAllGenericPasswordServices,
@@ -294,6 +296,94 @@ describe('lib/SecureStorage', () => {
       expect(getGenericPassword).toHaveBeenCalledWith({
         service: `${mockAddress}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
         ...defaultSecureStorageOptions,
+      });
+    });
+  });
+
+  describe('setBiometricData', () => {
+    it('sets a new biometric password for all saved accounts', async () => {
+      const mockAccount: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: 'i-am-an-address',
+        hdPath: {} as any,
+        pubKey: 'i-am-a-pubKey',
+        signAlgorithm: 'secp256k1',
+      };
+      const mockExistingAccounts = [mockAccount];
+
+      const mockEncryptedAccountData = {
+        cipher: 'i-am-a-cipher',
+        iv: 'i-am-a-iv',
+      };
+
+      const mockOldPassword = 'password123';
+      const mockNewPassword = 'newBetterPassword!@#!@#!@#@!';
+
+      (getGenericPassword as jest.Mock)
+        .mockResolvedValueOnce({
+          password: JSON.stringify(mockExistingAccounts),
+        })
+        .mockResolvedValueOnce({
+          password: JSON.stringify(mockEncryptedAccountData),
+        });
+
+      // resolves to a dummy account, does not exist on testnet
+      (decryptData as jest.Mock).mockResolvedValueOnce(
+        JSON.stringify({
+          version: 3,
+          privateKey: 'MSMDf8XfmUuihLd0JNcHeZRKVDjMBC9Npiq5Sosuge8=',
+          publicKey: 'A/QWvoXZiY0HnndebPYwPyMkhFr5K0c+3Q3sO2Sp0Gyc',
+          prefix: 'desmos',
+        }),
+      );
+
+      await setBiometricData(mockOldPassword, mockNewPassword);
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        '"mockDerivedSecurePassword"',
+        {
+          service:
+            'desmos13uxapntgsrv7u3nel9zc2jrg2gdjqwpv345xwy_WALLET_PASSWORD',
+          ...defaultSecureStorageOptions,
+        },
+      );
+      expect(deriveSecurePassword).toHaveBeenCalledWith(mockNewPassword);
+    });
+  });
+
+  describe('deleteBiometricData', () => {
+    it('deletes the secure password associated with the given address', async () => {
+      const mockAccount: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: 'i-am-an-address',
+        hdPath: {} as any,
+        pubKey: 'i-am-a-pubKey',
+        signAlgorithm: 'secp256k1',
+      };
+
+      const mockAccount2: ChainAccount = {
+        type: ChainAccountType.Local,
+        address: 'i-am-another-address',
+        hdPath: {} as any,
+        pubKey: 'i-am-a-pubKey',
+        signAlgorithm: 'secp256k1',
+      };
+
+      const mockExistingAccounts = [mockAccount, mockAccount2];
+
+      (getGenericPassword as jest.Mock).mockResolvedValueOnce({
+        password: JSON.stringify(mockExistingAccounts),
+      });
+
+      await deleteBiometricData();
+
+      expect(resetGenericPassword).toHaveBeenNthCalledWith(1, {
+        service: `${mockAccount.address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+      });
+
+      expect(resetGenericPassword).toHaveBeenNthCalledWith(2, {
+        service: `${mockAccount2.address}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
       });
     });
   });
