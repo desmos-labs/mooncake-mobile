@@ -1,16 +1,16 @@
 /**
  * File for all formatting related utils
  */
-import {HdPath} from 'types/hdpath';
-import {Slip10RawIndex} from '@cosmjs/crypto';
-import {StdFee} from '@cosmjs/amino';
+import { HdPath } from 'types/hdpath';
+import { Slip10RawIndex } from '@cosmjs/crypto';
+import { StdFee } from '@cosmjs/amino';
 import LinkableChains from 'config/LinkableChains';
 import _ from 'lodash';
 
 /**
  * Very naive way to format interactionCount into something like 5000 > 5k
  */
-// eslint-disable-next-line import/prefer-default-export
+
 export const formatNumShorthand = (value: number): string => {
   if (value < 1000) {
     return value.toString(10);
@@ -41,8 +41,7 @@ export const toCosmjsHdPath = (hdPath: HdPath) => {
 /**
  * Removes all non number characters from a string
  */
-export const removeNonNumbers = (value: string) =>
-  value.replace(/[^0-9.]/g, '');
+export const removeNonNumbers = (value: string) => value.replace(/[^0-9.]/g, '');
 
 /**
  * Format an estimated fee from its base denoms.
@@ -50,28 +49,27 @@ export const removeNonNumbers = (value: string) =>
  * @param fee The estimated fee, preferably one of the outputs computeTxFees
  */
 export const formatFeeWithDenoms = (fee: StdFee) => {
-  const {amount} = fee;
+  const { amount } = fee;
 
   const [_fee] = amount;
 
-  const {amount: feeAmount, denom} = _fee;
+  const { amount: feeAmount, denom } = _fee;
 
   // Find matching denom data based on stored ChainAsset data and the denom
   // from fee estimation
   const flattenedChainAssets = _.flatten(LinkableChains.map(x => x.assets));
-  const flattenedDenomUnits = _.flatten(
-    flattenedChainAssets.map(x => x && x.denom_units),
-  );
+  const flattenedDenomUnits = _.flatten(flattenedChainAssets.map(x => x && x.denom_units));
 
   // This relies on chains using a u-prefix for their base denoms, otherwise
   // special handling will need to be added
-  const matchingDenoms: {denom: string; exponent: number} | undefined =
-    flattenedDenomUnits.find(x => x && x.denom === denom.replace('u', ''));
+  const matchingDenoms: { denom: string; exponent: number } | undefined = flattenedDenomUnits.find(
+    x => x && x.denom === denom.replace('u', ''),
+  );
 
   if (!matchingDenoms) {
     throw new Error(`No matching denoms found for denom: ${denom}`);
   }
-  const {exponent, denom: matchingDenom} = matchingDenoms;
+  const { exponent, denom: matchingDenom } = matchingDenoms;
 
   const formattedAmount = parseFloat(feeAmount) / 10 ** exponent;
 
@@ -97,7 +95,7 @@ export const mapPostFontSize = (numChars: number) => {
   return fontSize;
 };
 
-const msUnitMap: {[index: string]: number} = {
+const msUnitMap: { [index: string]: number } = {
   seconds: 1000,
   minutes: 60000,
   hours: 3600000,
@@ -113,3 +111,10 @@ export const formatMsToHumanReadable = (
 ) => {
   return Number((ms / msUnitMap[unit]).toFixed(0));
 };
+
+/**
+ * Converts a [Slip10RawIndex] to it's base number representation.
+ * @param index - The index to convert.
+ */
+export const slip10IndexToBaseNumber = (index: Slip10RawIndex): number =>
+  index.isHardened() ? index.toNumber() - 2 ** 31 : index.toNumber();
