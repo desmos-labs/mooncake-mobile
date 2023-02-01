@@ -192,7 +192,9 @@ const ConnectChainTxDetail = () => {
 
       <View style={styles.buttonContainer}>
         <Button
-          color={theme.colors.surfaceBlack}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           disabled={!chainAccount || !message || !fee}
           mode="contained"
           onPress={handlePressNext}>

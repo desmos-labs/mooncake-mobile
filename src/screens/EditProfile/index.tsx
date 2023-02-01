@@ -179,9 +179,11 @@ const EditProfile = () => {
               <View style={{padding: theme.spacing.m}}>
                 <Button
                   disabled={!values.dTag}
-                  color={theme.colors.surfaceBlack}
+                  size={44}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
                   mode="contained"
-                  onPress={handleSubmit}>
+                  onPress={() => handleSubmit()}>
                   {t('common:confirm')}
                 </Button>
               </View>
