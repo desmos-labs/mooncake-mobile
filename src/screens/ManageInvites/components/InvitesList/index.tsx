@@ -46,7 +46,9 @@ const InvitesList = ({navigate}: Props) => {
         <Spacer paddingVertical={theme.spacing.l} />
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={() => navigate(ROUTES.INVITES)}>
           {t('invite friends now')}
         </Button>
@@ -68,8 +70,10 @@ const InvitesList = ({navigate}: Props) => {
       <Button
         onPress={() => navigate(ROUTES.INVITES)}
         mode="contained"
-        color={theme.colors.surfaceBlack}
-        style={{marginHorizontal: theme.spacing.m}}>
+        size={44}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}
+        additionalStyle={{marginHorizontal: theme.spacing.m}}>
         {t('invite more')}
       </Button>
     );

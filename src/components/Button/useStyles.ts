@@ -23,16 +23,16 @@ const useStyles = makeStyle(theme => {
       opacity: 0.5,
     },
     h56: {
-      paddingVertical: theme.spacing.l,
+      paddingVertical: 16,
     },
     h44: {
-      paddingVertical: theme.spacing.m,
+      paddingVertical: 12,
     },
     h32: {
-      paddingVertical: theme.spacing.s,
+      paddingVertical: 5,
     },
     h26: {
-      paddingVertical: theme.spacing.xs,
+      paddingVertical: 2,
     },
   };
 });

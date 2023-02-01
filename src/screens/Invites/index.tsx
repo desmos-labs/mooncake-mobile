@@ -139,7 +139,6 @@ const Invites = () => {
       setGenerationLoading(true);
       const response = await GenerateInvite();
       if (response.link) {
-        console.log(response);
         setInviteLink(response.link);
         setInviteGenerated(true);
       }
@@ -168,7 +167,9 @@ const Invites = () => {
         </View>
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
           onPress={onShare}>
           {t('share')}
         </Button>
@@ -209,9 +210,10 @@ const Invites = () => {
               butterConfig?.invites?.required_impact_points?.length
           }
           onPress={generateInvite}
-          loading={generationLoading}
-          color={theme.colors.surfaceBlack}
-          style={{marginHorizontal: theme.spacing.m}}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
+          additionalStyle={{marginHorizontal: theme.spacing.m}}
           mode="contained">
           {t('generate invite')}
         </Button>
