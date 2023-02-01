@@ -20,10 +20,8 @@ export interface ButtonProps
    * - `contained` - button with a background color and elevation shadow (high emphasis)
    */
   mode: 'text' | 'outlined' | 'contained';
-  /** Defined Figma sized
-   * - `text` - flat button without background or outline (low emphasis)
-   * - `outlined` - button with an outline (medium emphasis)
-   * - `contained` - button with a background color and elevation shadow (high emphasis)
+  /**
+   * Defined Figma sized
    */
   size: 26 | 32 | 44 | 56;
   /**
@@ -42,6 +40,9 @@ export interface ButtonProps
    * Use subtitle2 instead of button2 as text component
    */
   useSubtitle?: boolean;
+  /**
+   * Display a loading component (be sure to increment the width dinamically inside small buttons)
+   */
   loading?: boolean;
 }
 
