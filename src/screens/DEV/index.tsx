@@ -22,7 +22,8 @@ import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
-  ROUTES.ACTIVITIES,
+  ROUTES.MNEMONIC_INPUT,
+  /* ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
   ROUTES.LOGIN,
   ROUTES.USER_PROFILE,
@@ -54,7 +55,7 @@ const routesToRender = [
   ROUTES.REPORT_POST,
   ROUTES.FOLLOWING_AND_FOLLOWERS,
   ROUTES.NO_DTAG_FOUND,
-  ROUTES.ADD_PROFILE,
+  ROUTES.ADD_PROFILE, */
 ];
 
 const styles: {[styleName: string]: ViewStyle | TextStyle} = {

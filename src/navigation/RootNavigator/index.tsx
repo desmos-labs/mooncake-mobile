@@ -3,6 +3,10 @@ import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import DevScreen from 'screens/DEV';
+import MnemonicInput, {
+  MNEMONIC_INPUT_MODE,
+  MnemonicInputParams,
+} from 'screens/MnemonicInput';
 
 export type RootNavigatorParamList = {
   /*
@@ -23,7 +27,9 @@ export type RootNavigatorParamList = {
   [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
+  */
   [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
+  /*
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SELECT_DTAG]: SelectDtagParamList;
@@ -220,6 +226,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
+      */}
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -227,6 +234,7 @@ const RootNavigator = () => {
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
+      {/*
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
