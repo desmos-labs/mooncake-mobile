@@ -4,7 +4,7 @@
  * - dark: Dark color schema (Future release).
  * - auto: Set the color schema according to the system (Future release).
  */
-import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
+import { ChainInfo } from '@desmoslabs/desmjs/build/types/chains';
 
 export type AppTheme = 'light' | 'dark' | 'auto';
 
@@ -20,3 +20,18 @@ export type AppSettings = {
   newDiscPostNotification: boolean;
   newFollowPostNotification: boolean;
 };
+
+/**
+ * Enum that represents the supported biometrics
+ * authorizations types.
+ */
+export enum BiometricAuthorizations {
+  /**
+   * Use biometrics to unlock the application at the first open.
+   */
+  Login = 'BiometricsLogin',
+  /**
+   * Use biometrics to unlock the user wallet.
+   */
+  UnlockWallet = 'BiometricsUnlockWallet',
+}
