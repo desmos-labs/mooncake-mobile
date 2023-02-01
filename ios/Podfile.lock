@@ -562,7 +562,7 @@ PODS:
     - React-perflogger (= 0.71.1)
   - RNBluetoothStateManager (1.3.4):
     - React-Core
-  - RNBootSplash (4.4.1):
+  - RNBootSplash (4.4.2):
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
@@ -1027,7 +1027,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
   RNBluetoothStateManager: ae6a26260cbdf1827b58bd3bcc563527d61e6488
-  RNBootSplash: 4f968c1e098c7ec97939ace039f735e3d335bd4b
+  RNBootSplash: b2014890e22f0b4895ed07ff4aebd52b63ade449
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
