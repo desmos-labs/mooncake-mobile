@@ -51,6 +51,7 @@ const Landing = () => {
       </Text>
       <View style={{alignSelf: 'stretch'}}>
         <Button
+          testID="landingSignup"
           mode="contained"
           style={{backgroundColor: theme.colors.white}}
           labelStyle={{color: theme.colors.surfaceBlack}}
@@ -60,6 +61,7 @@ const Landing = () => {
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
+            testID="landingImport"
             style={{borderColor: theme.colors.white}}
             labelStyle={{color: theme.colors.white}}
             mode="outlined"
@@ -74,6 +76,7 @@ const Landing = () => {
       </View>
 
       <TouchableOpacity
+        testID="landingConnectLedger"
         style={styles.connectLedgerButton}
         onPress={handlePressConnectLedger}>
         <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
