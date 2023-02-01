@@ -206,12 +206,12 @@ const Grants: React.FC<NavProps> = props => {
             <Button
               loading={loading}
               mode="contained"
-              color={theme.colors.surfaceBlack}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
               onPress={grantAllPermissions}
-              style={{justifyContent: 'flex-end'}}>
-              <Typography.Button2 style={{color: theme.colors.white}}>
-                {t('grant all permissions')}
-              </Typography.Button2>
+              additionalStyle={{justifyContent: 'flex-end'}}>
+              {t('grant all permissions')}
             </Button>
           </View>
         )}

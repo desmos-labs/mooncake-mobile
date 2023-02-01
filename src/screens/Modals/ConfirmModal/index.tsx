@@ -155,12 +155,10 @@ const ConfirmModal = () => {
             </Button>
           )}
           {secondaryButtonLabel && (
-            <Spacer paddingTop={theme.spacing.xl}>
+            <Spacer paddingTop={theme.spacing.m}>
               <Button
                 size={44}
                 additionalStyle={styles.secondaryButton}
-                textColor={theme.colors.white}
-                backgroundColor={theme.colors.surfaceBlack}
                 mode={secondaryButtonMode as any}
                 onPress={onPressSecondary}>
                 {secondaryButtonLabel}

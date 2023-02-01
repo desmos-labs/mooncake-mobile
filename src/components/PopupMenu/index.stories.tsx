@@ -1,9 +1,9 @@
 import {storiesOf} from '@storybook/react-native';
-import {moreIcon} from 'assets/images';
 import Button from 'components/Button';
 import React from 'react';
 import {View} from 'react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
+import {iconCrossBlack} from 'assets/images';
 import PopupMenu from './index';
 
 const RenderComponent = () => {
@@ -14,7 +14,7 @@ const RenderComponent = () => {
 
   return (
     <View>
-      <Button mode="text" onPress={openMenu}>
+      <Button size={26} mode="text" onPress={openMenu}>
         open menu
       </Button>
       <PopupMenu
@@ -22,9 +22,21 @@ const RenderComponent = () => {
         visible={menuOpen}
         closeMenu={closeMenu}
         menuItems={[
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+          {
+            label: 'test1',
+            onPress: () => console.log('test'),
+            icon: iconCrossBlack,
+          },
+          {
+            label: 'test1',
+            onPress: () => console.log('test'),
+            icon: iconCrossBlack,
+          },
+          {
+            label: 'test1',
+            onPress: () => console.log('test'),
+            icon: iconCrossBlack,
+          },
         ]}
       />
     </View>

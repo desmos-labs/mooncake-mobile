@@ -12,11 +12,8 @@ const useStyles = makeStyleWithProps(
   ) => {
     return {
       postButton: {
-        height: 30,
-        width: 70,
-        justifyContent: 'center',
+        width: 71,
         marginLeft: 12,
-        backgroundColor: theme.colors.primary,
       },
       shadow: {
         backgroundColor: theme.colors.white,

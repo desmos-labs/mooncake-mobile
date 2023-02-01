@@ -162,21 +162,17 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
-                color={theme.colors.surfaceBlack}
+                textColor={theme.colors.white}
+                backgroundColor={theme.colors.surfaceBlack}
                 loading={loading}
+                size={44}
                 mode="contained"
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                style={styles.button}
-                containerStyle={
-                  !values.password ||
-                  _.flatten(Object.values(errors)).length > 0
-                    ? styles.disabled
-                    : null
-                }>
+                additionalStyle={styles.button}>
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:next')}
                 </Typography.Button1>

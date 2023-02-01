@@ -138,7 +138,9 @@ const ActionAuthorization = () => {
 
             <Button
               mode="contained"
-              style={{backgroundColor: theme.colors.surfaceBlack}}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
               onPress={handleApprove}
               loading={loading}>
               {t('common:confirm')}
@@ -149,8 +151,7 @@ const ActionAuthorization = () => {
               paddingBottom={theme.spacing.m}>
               <Button
                 mode="outlined"
-                style={{borderColor: theme.colors.surfaceBlack}}
-                labelStyle={{color: theme.colors.surfaceBlack}}
+                size={44}
                 disabled={loading}
                 onPress={handleCancel}>
                 {t('common:refuse')}
@@ -190,14 +191,17 @@ const ActionAuthorization = () => {
             />
           </Typography.Body5>
           <Button
-            style={styles.primaryButton}
+            size={44}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            additionalStyle={styles.primaryButton}
             mode="contained"
             onPress={handleApprove}>
             {detailsModal?.buttonLabel}
           </Button>
           <Button
-            containerStyle={styles.secondaryButton}
-            color={theme.colors.surfaceBlack}
+            additionalStyle={styles.secondaryButton}
+            size={44}
             mode="text"
             onPress={handleCancel}>
             {t('commmon:cancel')}
