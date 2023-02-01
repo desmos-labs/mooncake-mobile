@@ -161,7 +161,7 @@ describe('lib/SecureStorage', () => {
 
   // TODO: write test for retrieving with biometrics
   describe('getLocalWallet', () => {
-    it('returns deserialized localWallet by key', async () => {
+    it('[biometrics] returns deserialized localWallet by key', async () => {
       (getGenericPassword as jest.Mock).mockResolvedValue({password: '[]'});
       (decryptData as jest.Mock).mockReturnValue(
         JSON.stringify({
@@ -178,6 +178,30 @@ describe('lib/SecureStorage', () => {
 
       // expect a derived secure password from the user's entered password
       expect(deriveSecurePassword).toHaveBeenCalledWith('123');
+
+      // expect the wallet data to be deserialized
+      expect(deserializeSpy).toHaveBeenCalledWith(
+        '{"version":3,"privateKey":"BvgXa2OYRQyhWcfRVhnA8OZ1fLERoaFs+ZzmUlDMsKY=","publicKey":"AyjdXn3Ddz1xXE85rNichgHvEYBg9O4scWQLeEq7z2BA","prefix":"desmos"}',
+      );
+    });
+
+    it('returns deserialized localWallet by key', async () => {
+      (getGenericPassword as jest.Mock).mockResolvedValue({password: '[]'});
+      (decryptData as jest.Mock).mockReturnValue(
+        JSON.stringify({
+          version: 3,
+          privateKey: 'BvgXa2OYRQyhWcfRVhnA8OZ1fLERoaFs+ZzmUlDMsKY=',
+          publicKey: 'AyjdXn3Ddz1xXE85rNichgHvEYBg9O4scWQLeEq7z2BA',
+          prefix: 'desmos',
+        }),
+      );
+
+      const deserializeSpy = jest.spyOn(LocalWallet, 'deserialize');
+
+      await getLocalWallet('mockAddress', '123', true);
+
+      // should not be called if using biometrics
+      expect(deriveSecurePassword).toHaveBeenCalledTimes(0);
 
       // expect the wallet data to be deserialized
       expect(deserializeSpy).toHaveBeenCalledWith(
@@ -202,7 +226,7 @@ describe('lib/SecureStorage', () => {
 
   // TODO: write tests for biometrics
   describe('getMnemonic', () => {
-    it('retrieves a stored mnemonic from secure storage', async () => {
+    it('[biometrics] retrieves a stored mnemonic from secure storage', async () => {
       (deriveSecurePassword as jest.Mock).mockReturnValue(
         'mockDerivedSecurePassword',
       );
@@ -213,11 +237,32 @@ describe('lib/SecureStorage', () => {
 
       await getMnemonic('mockAddress', 'mockPassword');
 
+      // expect to be called if using biometrics
       expect(deriveSecurePassword).toHaveBeenCalledWith('mockPassword');
 
       expect(decryptData).toHaveBeenCalledWith(
         {value: 'mockStoredMnemonic'},
         'mockDerivedSecurePassword',
+      );
+    });
+
+    it('retrieves a stored mnemonic from secure storage', async () => {
+      (deriveSecurePassword as jest.Mock).mockReturnValue(
+        'mockDerivedSecurePassword',
+      );
+
+      (getGenericPassword as jest.Mock).mockResolvedValue({
+        password: JSON.stringify({value: 'mockStoredMnemonic'}),
+      });
+
+      await getMnemonic('mockAddress', 'mockPassword', true);
+
+      // should not be called if using biometrics
+      expect(deriveSecurePassword).toHaveBeenCalledTimes(0);
+
+      expect(decryptData).toHaveBeenCalledWith(
+        {value: 'mockStoredMnemonic'},
+        'mockPassword',
       );
     });
   });
