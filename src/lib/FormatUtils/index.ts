@@ -39,10 +39,12 @@ export const toCosmjsHdPath = (hdPath: HdPath) => {
 };
 
 /**
- * Removes all non number characters from a string
+ * Removes all non number characters from a string.
+ * This will also remove decimal points, however this function is meant for
+ * use in sanitizing user-specified HDpaths. DO NOT use this for any inputs that
+ * require number precision.
  */
-export const removeNonNumbers = (value: string) =>
-  value.replace(/[^0-9.]/g, '');
+export const removeNonNumbers = (value: string) => value.replace(/[^0-9]/g, '');
 
 /**
  * Format an estimated fee from its base denoms.
