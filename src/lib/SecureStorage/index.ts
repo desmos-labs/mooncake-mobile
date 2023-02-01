@@ -19,7 +19,7 @@ import {
 } from 'react-native-keychain';
 import {ChainAccount} from 'types/chains';
 
-const defaultOptions: Options = {
+export const defaultSecureStorageOptions: Options = {
   authenticationPrompt: {
     title: 'Biometric Authentication',
   },
@@ -57,7 +57,8 @@ async function getItem<T>(
   key: string,
   options?: StoreOptions | undefined,
 ): Promise<T | undefined> {
-  const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
+  const moreOptions =
+    options?.biometrics === true ? {...defaultSecureStorageOptions} : null;
   const value = await getGenericPassword({
     service: key,
     ...moreOptions,
@@ -80,7 +81,8 @@ async function setItem(
   value: any,
   options?: StoreOptions | undefined,
 ): Promise<false | Result> {
-  const moreOptions = options?.biometrics === true ? {...defaultOptions} : null;
+  const moreOptions =
+    options?.biometrics === true ? {...defaultSecureStorageOptions} : null;
 
   return setGenericPassword('secureValue', JSON.stringify(value), {
     service: key,

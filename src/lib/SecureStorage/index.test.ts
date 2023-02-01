@@ -4,15 +4,20 @@ import {
   encryptData,
 } from 'lib/EncryptionUtils';
 import {
+  defaultSecureStorageOptions,
   deleteLocalWallet,
   deleteMnemonic,
+  deletePasswordWithBiometrics,
   getAccounts,
   getLocalWallet,
   getMnemonic,
+  getPasswordWithBiometrics,
   resetSecureStorage,
   saveLocalWallet,
   saveMnemonic,
   saveNewAccount,
+  savePasswordWithBiometrics,
+  SECURE_STORAGE_KEYS,
 } from 'lib/SecureStorage';
 import {
   getAllGenericPasswordServices,
@@ -239,6 +244,56 @@ describe('lib/SecureStorage', () => {
 
       expect(resetGenericPassword).toHaveBeenCalledWith({
         service: 'mockAddress_MNEMONIC',
+      });
+    });
+  });
+
+  describe('deletePasswordWithBiometrics', () => {
+    it('deletes the password associated with the specified address', async () => {
+      const mockAddress = 'i-am-an-address';
+      await deletePasswordWithBiometrics(mockAddress);
+      expect(resetGenericPassword).toHaveBeenCalledWith({
+        service: `${mockAddress}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+      });
+    });
+  });
+
+  describe('savePasswordWithBiometrics', () => {
+    it('derives a secure password and saves it in secure storage', async () => {
+      const mockArgs = {
+        _wallet: {
+          bech32Address: 'i-am-an-address',
+        },
+        password: 'i-am-a-password',
+      };
+
+      await savePasswordWithBiometrics(
+        mockArgs._wallet as any,
+        mockArgs.password,
+      );
+
+      expect(setGenericPassword).toHaveBeenCalledWith(
+        'secureValue',
+        '"mockDerivedSecurePassword"',
+        {
+          accessControl: 'PASSCODE',
+          accessible: 0,
+          authenticationPrompt: {title: 'Biometric Authentication'},
+          service: 'i-am-an-address_WALLET_PASSWORD',
+        },
+      );
+    });
+  });
+
+  describe('getPasswordWithBiometrics', () => {
+    it('retrieves the password associated with the given address', async () => {
+      const mockAddress = 'i-am-an-address';
+
+      await getPasswordWithBiometrics(mockAddress);
+
+      expect(getGenericPassword).toHaveBeenCalledWith({
+        service: `${mockAddress}${SECURE_STORAGE_KEYS.WALLET_PASSWORD_SUFFIX}`,
+        ...defaultSecureStorageOptions,
       });
     });
   });
