@@ -114,10 +114,12 @@ const CheckMnemonic = (props: Props): JSX.Element => {
           <Typography.Caption1 style={styles.errorParagraph}>
             {errorMessage}
           </Typography.Caption1>
-          <Button mode="text" onPress={() => onWordClearAll()}>
-            <Typography.Subtitle4 style={{color: theme.colors.butterOrange01}}>
-              {t('clear all')}
-            </Typography.Subtitle4>
+          <Button
+            mode="text"
+            size={26}
+            textColor={theme.colors.butterOrange01}
+            onPress={() => onWordClearAll()}>
+            {t('clear all')}
           </Button>
         </View>
       ) : null}
@@ -132,7 +134,12 @@ const CheckMnemonic = (props: Props): JSX.Element => {
           />
         ))}
       </View>
-      <Button mode="gradientFilled" onPress={onCheckPressed}>
+      <Button
+        mode="contained"
+        size={44}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}
+        onPress={onCheckPressed}>
         {t('confirm')}
       </Button>
       {/*      {__DEV__ && (

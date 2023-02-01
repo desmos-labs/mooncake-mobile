@@ -39,25 +39,31 @@ const AndroidButton = ({
           sizeMap[size],
           {backgroundColor},
           additionalStyle,
-          disabled ?? styles.disabled,
+          disabled ? styles.disabled : {},
         ]}
         {...rest}>
-        {useSubtitle ? (
-          <Typography.Subtitle2
-            numberOfLines={1}
-            style={{color: textColor || theme.colors.surfaceBlack}}>
-            {children}
-          </Typography.Subtitle2>
-        ) : (
-          <Typography.Button2
-            numberOfLines={1}
-            style={{color: textColor || theme.colors.surfaceBlack}}>
-            {children}
-          </Typography.Button2>
-        )}
-        {loading ? (
-          <ActivityIndicator size="small" color={theme.colors.surfaceBlack} />
-        ) : null}
+        <View style={{flexDirection: 'row'}}>
+          {useSubtitle ? (
+            <Typography.Subtitle2
+              numberOfLines={1}
+              style={{color: textColor || theme.colors.surfaceBlack}}>
+              {children}
+            </Typography.Subtitle2>
+          ) : (
+            <Typography.Button2
+              numberOfLines={1}
+              style={{color: textColor || theme.colors.surfaceBlack}}>
+              {children}
+            </Typography.Button2>
+          )}
+          {loading ? (
+            <ActivityIndicator
+              size="small"
+              color={textColor}
+              style={{marginLeft: theme.spacing.m}}
+            />
+          ) : null}
+        </View>
       </Pressable>
     </View>
   );

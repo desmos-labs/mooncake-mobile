@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
-import {ActivityIndicator, Platform, TextInput, View} from 'react-native';
+import {ActivityIndicator, TextInput, View} from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
 import {useTranslation} from 'react-i18next';
@@ -84,14 +84,14 @@ const EnterComment = () => {
   const TopBarRightElement = React.useMemo(() => {
     return (
       <Button
+        size={32}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.butterOrange01}
         loading={loading}
         mode="contained"
         onPress={handlePress}
-        contentStyle={Platform.OS === 'android' && {height: '100%', width: 64}}
-        style={styles.postButton}>
-        <Typography.Button3 style={styles.postButtonText}>
-          {t('post')}
-        </Typography.Button3>
+        additionalStyle={{width: !loading ? 58 : 90}}>
+        {t('post')}
       </Button>
     );
   }, [commentAttachment, handlePress, loading]);

@@ -104,12 +104,12 @@ const AddProfileSelectAddressAdvanced = () => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
+          size={26}
+          textColor={theme.colors.butterOrange01}
           onPress={async () => {
             navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic});
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          {t('general')}
         </Button>
       </View>
     );
@@ -258,7 +258,9 @@ const AddProfileSelectAddressAdvanced = () => {
                 </Spacer>
 
                 <Button
-                  color={theme.colors.surfaceBlack}
+                  size={44}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
                   mode="contained"
                   loading={loading || !generatedAccount}
                   disabled={invalidField || isProfileAlreadyAdded}

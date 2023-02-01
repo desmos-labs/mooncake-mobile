@@ -10,9 +10,6 @@ const useStyles = makeStyle(theme => ({
   textStyle: {
     color: theme.colors.surfaceBlack,
   },
-  modeButtonText: {
-    color: theme.colors.primary,
-  },
   topBarButtonContainer: {
     flex: 1,
     justifyContent: 'center',

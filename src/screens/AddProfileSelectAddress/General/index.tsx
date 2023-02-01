@@ -82,15 +82,15 @@ const AddProfileSelectAddressGeneral = () => {
     return (
       <View style={styles.topBarButtonContainer}>
         <Button
+          size={26}
           mode="text"
+          textColor={theme.colors.butterOrange01}
           onPress={async () => {
             navigation.navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED, {
               mnemonic,
             });
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('advanced')}
-          </Typography.Button2>
+          {t('advanced')}
         </Button>
       </View>
     );

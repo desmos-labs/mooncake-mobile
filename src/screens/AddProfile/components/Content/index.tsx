@@ -138,7 +138,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
         <Typography.Body6>
           Searches the first {fetchLimit} accounts
         </Typography.Body6>
-        <Button mode="text">
+        <Button size={26} mode="text">
           <Typography.Button2
             style={{color: theme.colors.butterOrange01}}
             onPress={generateMoreAccountsAndFetchProfiles}>
@@ -171,20 +171,22 @@ const Content = ({mnemonic, password}: ContentProps) => {
       <View>
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={createNewAccount}>
           {t('confirm')}
         </Button>
         <Button
+          size={44}
           onPress={() =>
             navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {
               mnemonic,
               password,
             })
           }
-          style={{paddingVertical: theme.spacing.m}}
-          mode="text"
-          color={theme.colors.surfaceBlack}>
+          additionalStyle={{paddingVertical: theme.spacing.m}}
+          mode="text">
           create desmos profile
         </Button>
       </View>
