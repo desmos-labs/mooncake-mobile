@@ -171,15 +171,19 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
       <Spacer paddingVertical={4} />
       <View style={{marginHorizontal: 10}}>
         <Button
+          backgroundColor="green"
+          textColor="white"
           mode="contained"
-          color="green"
+          size={44}
           onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
         <Button
+          backgroundColor="orange"
+          textColor="white"
           mode="contained"
-          color="red"
+          size={44}
           onPress={() =>
             navigate(ROUTES.BOTTOM_TABS, {
               screen: ROUTES.HOME_TABS,
@@ -198,18 +202,19 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         <Spacer paddingVertical={8} />
         <View style={{flexDirection: 'row'}}>
           <View style={{flexDirection: 'column', flex: 0.5}}>
-            <Button mode="contained" onPress={showToast}>
+            <Button onPress={showToast} mode="outlined" size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button mode="contained" onPress={redeemAnInvite}>
+            <Button onPress={redeemAnInvite} mode="outlined" size={32}>
               Accept invite
             </Button>
           </View>
           <Spacer paddingHorizontal={4} />
           <View style={{flexDirection: 'column', flex: 0.5}}>
             <Button
-              mode="contained"
+              mode="outlined"
+              size={32}
               onPress={() => {
                 Alert.alert(
                   'Are you sure?',
@@ -231,7 +236,8 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
             </Button>
             <Spacer paddingVertical={4} />
             <Button
-              mode="contained"
+              mode="outlined"
+              size={32}
               onPress={() => {
                 Alert.alert(
                   'Are you sure?',
