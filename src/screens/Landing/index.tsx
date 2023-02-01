@@ -49,6 +49,7 @@ const Landing = () => {
       <Text style={styles.subtitle} allowFontScaling>
         {t('header')}
       </Text>
+      <Spacer paddingTop={theme.spacing.m} />
       <View style={{alignSelf: 'stretch'}}>
         <Button
           mode="contained"
