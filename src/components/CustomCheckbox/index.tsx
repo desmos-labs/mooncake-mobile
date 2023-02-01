@@ -80,7 +80,7 @@ const useStyles = makeStyle(theme => ({
     width: 24,
   },
   errorTint: {
-    tintColor: theme.colors.surfaceBlack,
+    tintColor: theme.colors.error,
   },
   checkedTint: {
     tintColor: theme.colors.accentGreen01,
