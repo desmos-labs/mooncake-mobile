@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* desmosFlagshipTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* desmosFlagshipTests.m */; };
+		00E356F31AD99517003FC87E /* ButterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ButterTests.m */; };
 		0C940232A54546589983E757 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2D327619F544AA78FC55E2F /* Poppins-BlackItalic.ttf */; };
 		0FEC41315621458F81AFCC20 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 104995B1B52E4D48A654B52A /* Poppins-BoldItalic.ttf */; };
 		11683A7E879A42CCB817F2E3 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD61A9BD8E03428E84B21F39 /* Poppins-Regular.ttf */; };
@@ -19,8 +19,8 @@
 		22536F68B29546F780893B06 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 101AFE5F356D4CD39F4F8CAB /* Poppins-MediumItalic.ttf */; };
 		318AE59F0D93438D9B9741CB /* desmos.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0739484DFD0546F69FD8B966 /* desmos.ttf */; };
 		3467656104D44DEE9A7A16A0 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4A592062D494F4C96E236AB /* Poppins-ExtraLightItalic.ttf */; };
-		37210FB48BB63A588ED11F79 /* libPods-desmosFlagship.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF81F7511AF88BA8E16CA624 /* libPods-desmosFlagship.a */; };
-		4D2E1E25272814F19279ED81 /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277CDE74197701D6DBD233A4 /* libPods-desmosFlagship-desmosFlagshipTests.a */; };
+		37210FB48BB63A588ED11F79 /* libPods-Butter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF81F7511AF88BA8E16CA624 /* libPods-Butter.a */; };
+		4D2E1E25272814F19279ED81 /* libPods-Butter-ButterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277CDE74197701D6DBD233A4 /* libPods-Butter-ButterTests.a */; };
 		600923F5200042B58AB6D901 /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E55071F4561E487E8CDE7ED7 /* Poppins-LightItalic.ttf */; };
 		61D2D9094E44458A8648C2BC /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CF5145EDC344869B2980391 /* Poppins-Light.ttf */; };
 		71611866BA564636AC7EAE6D /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C24A273F5EFF4EE28DF44B89 /* Poppins-Medium.ttf */; };
@@ -44,35 +44,35 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = desmosFlagship;
+			remoteInfo = Butter;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* desmosFlagshipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = desmosFlagshipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* ButterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ButterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* desmosFlagshipTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = desmosFlagshipTests.m; sourceTree = "<group>"; };
-		0543CDA673E52E41681B68AD /* Pods-desmosFlagship.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.debug.xcconfig"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* ButterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButterTests.m; sourceTree = "<group>"; };
+		0543CDA673E52E41681B68AD /* Pods-Butter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Butter.debug.xcconfig"; path = "Target Support Files/Pods-Butter/Pods-Butter.debug.xcconfig"; sourceTree = "<group>"; };
 		0739484DFD0546F69FD8B966 /* desmos.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = desmos.ttf; path = ../src/assets/fonts/desmos.ttf; sourceTree = "<group>"; };
 		101AFE5F356D4CD39F4F8CAB /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../src/assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
 		104995B1B52E4D48A654B52A /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* desmosFlagship.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = desmosFlagship.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = desmosFlagship/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = desmosFlagship/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = desmosFlagship/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = desmosFlagship/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = desmosFlagship/main.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Butter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Butter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Butter/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Butter/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Butter/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Butter/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Butter/main.m; sourceTree = "<group>"; };
 		180CFE5A7CAC48AC9CFD101A /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		21B82E501D764B3883E3B0DF /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		277CDE74197701D6DBD233A4 /* libPods-desmosFlagship-desmosFlagshipTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship-desmosFlagshipTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		277CDE74197701D6DBD233A4 /* libPods-Butter-ButterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Butter-ButterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27F515919BBB4E91A0374EB0 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		2CF5145EDC344869B2980391 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
 		2FD2A9566A5448C89182D510 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
-		4D5D7F837788F1E29644FEC3 /* Pods-desmosFlagship.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship.release.xcconfig"; sourceTree = "<group>"; };
+		4D5D7F837788F1E29644FEC3 /* Pods-Butter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Butter.release.xcconfig"; path = "Target Support Files/Pods-Butter/Pods-Butter.release.xcconfig"; sourceTree = "<group>"; };
 		6409401F0DA542718EF081E9 /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		6552104BB2ED423EA2F0E67E /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		69B182EB5875409AB43795DE /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
-		7A38CB9328922EAA00DA2465 /* desmosFlagship-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "desmosFlagship-Bridging-Header.h"; sourceTree = "<group>"; };
+		7A38CB9328922EAA00DA2465 /* Butter-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Butter-Bridging-Header.h"; sourceTree = "<group>"; };
 		7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCTCryptoUtils.swift; sourceTree = "<group>"; };
 		7A38CB9628922F4500DA2465 /* RCTCryptoUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTCryptoUtils.m; sourceTree = "<group>"; };
 		98355F2B15D8489FAF2BFDE8 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
@@ -80,9 +80,9 @@
 		A4A592062D494F4C96E236AB /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		AD61A9BD8E03428E84B21F39 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		B5B3188922324AD4B373B161 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
-		B8721E8679B52441E1BBE066 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B8721E8679B52441E1BBE066 /* Pods-Butter-ButterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Butter-ButterTests.debug.xcconfig"; path = "Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C24A273F5EFF4EE28DF44B89 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
-		D20F82772902BDE400BC283A /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = desmosFlagship/BootSplash.storyboard; sourceTree = "<group>"; };
+		D20F82772902BDE400BC283A /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Butter/BootSplash.storyboard; sourceTree = "<group>"; };
 		D219985E286B0B83003AD3D3 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		D219985F286B0B83003AD3D3 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		D2199860286B0B83003AD3D3 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -100,13 +100,13 @@
 		D219986C286B0B83003AD3D3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		D219986D286B0B83003AD3D3 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		D2CE229028D862A700F7A232 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		D2CE229228D870C400F7A232 /* desmosFlagshipDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = desmosFlagshipDebug.entitlements; path = desmosFlagship/desmosFlagshipDebug.entitlements; sourceTree = "<group>"; };
-		D2CE229328D870E600F7A232 /* desmosFlagship.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = desmosFlagship.entitlements; path = desmosFlagship/desmosFlagship.entitlements; sourceTree = "<group>"; };
+		D2CE229228D870C400F7A232 /* ButterDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ButterDebug.entitlements; path = Butter/ButterDebug.entitlements; sourceTree = "<group>"; };
+		D2CE229328D870E600F7A232 /* Butter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Butter.entitlements; path = Butter/Butter.entitlements; sourceTree = "<group>"; };
 		D2D327619F544AA78FC55E2F /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		E55071F4561E487E8CDE7ED7 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		ED7442F0A0744031216DB048 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; path = "Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig"; sourceTree = "<group>"; };
-		FF81F7511AF88BA8E16CA624 /* libPods-desmosFlagship.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-desmosFlagship.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED7442F0A0744031216DB048 /* Pods-Butter-ButterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Butter-ButterTests.release.xcconfig"; path = "Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests.release.xcconfig"; sourceTree = "<group>"; };
+		FF81F7511AF88BA8E16CA624 /* libPods-Butter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Butter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D2E1E25272814F19279ED81 /* libPods-desmosFlagship-desmosFlagshipTests.a in Frameworks */,
+				4D2E1E25272814F19279ED81 /* libPods-Butter-ButterTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,20 +122,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37210FB48BB63A588ED11F79 /* libPods-desmosFlagship.a in Frameworks */,
+				37210FB48BB63A588ED11F79 /* libPods-Butter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* desmosFlagshipTests */ = {
+		00E356EF1AD99517003FC87E /* ButterTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* desmosFlagshipTests.m */,
+				00E356F21AD99517003FC87E /* ButterTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = desmosFlagshipTests;
+			path = ButterTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -146,11 +146,11 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* desmosFlagship */ = {
+		13B07FAE1A68108700A75B9A /* Butter */ = {
 			isa = PBXGroup;
 			children = (
-				D2CE229328D870E600F7A232 /* desmosFlagship.entitlements */,
-				D2CE229228D870C400F7A232 /* desmosFlagshipDebug.entitlements */,
+				D2CE229328D870E600F7A232 /* Butter.entitlements */,
+				D2CE229228D870C400F7A232 /* ButterDebug.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -158,18 +158,18 @@
 				D20F82772902BDE400BC283A /* BootSplash.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				7A38CB9428922EAA00DA2465 /* RCTCryptoUtils.swift */,
-				7A38CB9328922EAA00DA2465 /* desmosFlagship-Bridging-Header.h */,
+				7A38CB9328922EAA00DA2465 /* Butter-Bridging-Header.h */,
 				7A38CB9628922F4500DA2465 /* RCTCryptoUtils.m */,
 			);
-			name = desmosFlagship;
+			name = Butter;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				FF81F7511AF88BA8E16CA624 /* libPods-desmosFlagship.a */,
-				277CDE74197701D6DBD233A4 /* libPods-desmosFlagship-desmosFlagshipTests.a */,
+				FF81F7511AF88BA8E16CA624 /* libPods-Butter.a */,
+				277CDE74197701D6DBD233A4 /* libPods-Butter-ButterTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -227,9 +227,9 @@
 			isa = PBXGroup;
 			children = (
 				D2CE229028D862A700F7A232 /* GoogleService-Info.plist */,
-				13B07FAE1A68108700A75B9A /* desmosFlagship */,
+				13B07FAE1A68108700A75B9A /* Butter */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* desmosFlagshipTests */,
+				00E356EF1AD99517003FC87E /* ButterTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -243,8 +243,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* desmosFlagship.app */,
-				00E356EE1AD99517003FC87E /* desmosFlagshipTests.xctest */,
+				13B07F961A680F5B00A75B9A /* Butter.app */,
+				00E356EE1AD99517003FC87E /* ButterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -252,10 +252,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0543CDA673E52E41681B68AD /* Pods-desmosFlagship.debug.xcconfig */,
-				4D5D7F837788F1E29644FEC3 /* Pods-desmosFlagship.release.xcconfig */,
-				B8721E8679B52441E1BBE066 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */,
-				ED7442F0A0744031216DB048 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */,
+				0543CDA673E52E41681B68AD /* Pods-Butter.debug.xcconfig */,
+				4D5D7F837788F1E29644FEC3 /* Pods-Butter.release.xcconfig */,
+				B8721E8679B52441E1BBE066 /* Pods-Butter-ButterTests.debug.xcconfig */,
+				ED7442F0A0744031216DB048 /* Pods-Butter-ButterTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -263,9 +263,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* desmosFlagshipTests */ = {
+		00E356ED1AD99517003FC87E /* ButterTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "desmosFlagshipTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ButterTests" */;
 			buildPhases = (
 				0CA5FB184AB862AB29E6BC84 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -279,14 +279,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = desmosFlagshipTests;
-			productName = desmosFlagshipTests;
-			productReference = 00E356EE1AD99517003FC87E /* desmosFlagshipTests.xctest */;
+			name = ButterTests;
+			productName = ButterTests;
+			productReference = 00E356EE1AD99517003FC87E /* ButterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* desmosFlagship */ = {
+		13B07F861A680F5B00A75B9A /* Butter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "desmosFlagship" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Butter" */;
 			buildPhases = (
 				C0C46C0BE4D0B4A7D1FFF45B /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -302,9 +302,9 @@
 			);
 			dependencies = (
 			);
-			name = desmosFlagship;
-			productName = desmosFlagship;
-			productReference = 13B07F961A680F5B00A75B9A /* desmosFlagship.app */;
+			name = Butter;
+			productName = Butter;
+			productReference = 13B07F961A680F5B00A75B9A /* Butter.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -324,7 +324,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "desmosFlagship" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Butter" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -337,8 +337,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* desmosFlagship */,
-				00E356ED1AD99517003FC87E /* desmosFlagshipTests */,
+				13B07F861A680F5B00A75B9A /* Butter */,
+				00E356ED1AD99517003FC87E /* ButterTests */,
 			);
 		};
 /* End PBXProject section */
@@ -414,7 +414,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-desmosFlagship-desmosFlagshipTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Butter-ButterTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -427,15 +427,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9A96EBA71FAADD485C701B40 /* [CP-User] [RNFB] Core Configuration */ = {
@@ -457,15 +457,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship-desmosFlagshipTests/Pods-desmosFlagship-desmosFlagshipTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Butter-ButterTests/Pods-Butter-ButterTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C0C46C0BE4D0B4A7D1FFF45B /* [CP] Check Pods Manifest.lock */ = {
@@ -483,7 +483,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-desmosFlagship-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Butter-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -496,15 +496,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FADC4585293B93FDB4F589A3 /* [CP] Embed Pods Frameworks */ = {
@@ -513,15 +513,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desmosFlagship/Pods-desmosFlagship-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Butter/Pods-Butter-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -550,7 +550,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* desmosFlagshipTests.m in Sources */,
+				00E356F31AD99517003FC87E /* ButterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,7 +570,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* desmosFlagship */;
+			target = 13B07F861A680F5B00A75B9A /* Butter */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -578,7 +578,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8721E8679B52441E1BBE066 /* Pods-desmosFlagship-desmosFlagshipTests.debug.xcconfig */;
+			baseConfigurationReference = B8721E8679B52441E1BBE066 /* Pods-Butter-ButterTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -586,7 +586,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = desmosFlagshipTests/Info.plist;
+				INFOPLIST_FILE = ButterTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -600,18 +600,18 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/desmosFlagship.app/desmosFlagship";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Butter.app/Butter";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ED7442F0A0744031216DB048 /* Pods-desmosFlagship-desmosFlagshipTests.release.xcconfig */;
+			baseConfigurationReference = ED7442F0A0744031216DB048 /* Pods-Butter-ButterTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = desmosFlagshipTests/Info.plist;
+				INFOPLIST_FILE = ButterTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -625,24 +625,25 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/desmosFlagship.app/desmosFlagship";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Butter.app/Butter";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0543CDA673E52E41681B68AD /* Pods-desmosFlagship.debug.xcconfig */;
+			baseConfigurationReference = 0543CDA673E52E41681B68AD /* Pods-Butter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagshipDebug.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Butter/ButterDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.0.1;
 				DEVELOPMENT_TEAM = S7CFLM85H9;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = desmosFlagship/Info.plist;
+				INFOPLIST_FILE = Butter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Butter;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -654,9 +655,9 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
-				PRODUCT_NAME = desmosFlagship;
+				PRODUCT_NAME = Butter;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Butter-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -665,17 +666,18 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D5D7F837788F1E29644FEC3 /* Pods-desmosFlagship.release.xcconfig */;
+			baseConfigurationReference = 4D5D7F837788F1E29644FEC3 /* Pods-Butter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = desmosFlagship/desmosFlagship.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Butter/Butter.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.0.1;
 				DEVELOPMENT_TEAM = S7CFLM85H9;
-				INFOPLIST_FILE = desmosFlagship/Info.plist;
+				INFOPLIST_FILE = Butter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Butter;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -687,9 +689,9 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
-				PRODUCT_NAME = desmosFlagship;
+				PRODUCT_NAME = Butter;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "desmosFlagship-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Butter-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -835,7 +837,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "desmosFlagshipTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ButterTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -844,7 +846,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "desmosFlagship" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Butter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -853,7 +855,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "desmosFlagship" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Butter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

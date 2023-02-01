@@ -46,7 +46,7 @@ const PostActionButtonsBar = ({
           />
           <Typography.Subtitle3
             numberOfLines={1}
-            style={[styles.text, postLiked && styles.orangeIconAndText]}>
+            style={[styles.text, postLiked && styles.orangeText]}>
             {t('like')}
           </Typography.Subtitle3>
         </TouchableOpacity>
@@ -57,7 +57,7 @@ const PostActionButtonsBar = ({
           />
           <Typography.Subtitle3
             numberOfLines={1}
-            style={[styles.text, postCommented && styles.orangeIconAndText]}>
+            style={[styles.text, postCommented && styles.orangeText]}>
             {t('comment')}
           </Typography.Subtitle3>
         </TouchableOpacity>
@@ -68,7 +68,7 @@ const PostActionButtonsBar = ({
           />
           <Typography.Subtitle3
             numberOfLines={1}
-            style={[styles.text, postTipped && styles.orangeIconAndText]}>
+            style={[styles.text, postTipped && styles.orangeText]}>
             {t('tip')}
           </Typography.Subtitle3>
         </TouchableOpacity>

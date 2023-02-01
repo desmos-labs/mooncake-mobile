@@ -2,6 +2,15 @@
 
 exports[`component: DView renders 1`] = `
 <RNCSafeAreaView
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
   accessible={true}
   edges={
     [
@@ -63,6 +72,15 @@ exports[`component: DView renders 1`] = `
 
 exports[`component: DView renders background prop 1`] = `
 <RNCSafeAreaView
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
   accessible={true}
   edges={
     [

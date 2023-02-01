@@ -86,6 +86,14 @@ exports[`component: DSecureTextInput renders 1`] = `
             "disabled": false,
           }
         }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         accessible={true}
         focusable={true}
         hitSlop={
