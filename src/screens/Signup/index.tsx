@@ -1,8 +1,5 @@
-import {useLazyQuery} from '@apollo/client';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {profileParamsState} from '@recoil/profileParams';
-import signUpState, {signUpDTagState} from '@recoil/screens/signUpState';
 import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
@@ -20,7 +17,7 @@ import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
 import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
@@ -30,10 +27,22 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil';
-import GetDTagAvailability from 'services/graphql/queries/GetDTagAvailability';
-import * as Yup from 'yup';
-import useHooks from './useHooks';
+import {
+  SaveProfileStatus,
+  SignUpStatus,
+  useCheckDTagAvailability,
+  useHandlePressPrivacyPolicy,
+  useHandlePressTOS,
+  useInitialFormValues,
+  useOpenInfoModal,
+  useSubmitForm,
+  useValidateForm,
+  useValidationSchema,
+} from 'screens/Signup/hooks';
+import {
+  useResetSignUpState,
+  useSetSignUpValue,
+} from '@recoil/screens/signUpState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
@@ -43,11 +52,20 @@ const Signup = () => {
   const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
+
+  // Form validation
+  const validationSchema = useValidationSchema();
+  const validateForm = useValidateForm();
+  const checkDTagAvailability = useCheckDTagAvailability();
   const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
-  const [dtagParams, setDtagParams] = React.useState<any>({});
-  const [getDTagAvailability] = useLazyQuery(GetDTagAvailability);
-  const setSignUpDTag = useSetRecoilState(signUpDTagState);
-  const resetSignUpInfo = useResetRecoilState(signUpState);
+
+  // Form state
+  const initialFormValues = useInitialFormValues();
+  const setSignUpDTag = useSetSignUpValue('dTag');
+  const resetSignUpInfo = useResetSignUpState();
+  const openInfoModal = useOpenInfoModal();
+
+  // Animations
   const [animatedPswChecksVisible, setAnimatedPswChecksVisible] =
     useState(false);
   const animatedOpacity = useSharedValue(0);
@@ -57,82 +75,40 @@ const Signup = () => {
     };
   });
 
-  // reset recoil state on entry
+  // Actions
+  const handlePressPrivacyPolicy = useHandlePressPrivacyPolicy();
+  const handlePressTOS = useHandlePressTOS();
+  const {handleFormSubmit, signUpStatus, saveProfileStatus} = useSubmitForm();
+
+  // Check if either the signup or profile saving flows are not completed.
+  // TODO: Probably this indication can be improved with a more explicit UI that tells the steps being done
+  const loading = useMemo(
+    () =>
+      signUpStatus !== SignUpStatus.DONE &&
+      saveProfileStatus !== SaveProfileStatus.DONE,
+    [signUpStatus, saveProfileStatus],
+  );
+
+  // Reset recoil state on entry
   React.useEffect(() => {
     resetSignUpInfo();
   }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);
-  const {
-    handlePressPP,
-    handlePressTOS,
-    handleFormSubmit,
-    openInfoModal,
-    validateForm,
-    initialFormValues,
-    loading,
-    setInviteCode,
-  } = useHooks();
-
-  const profileParams = useRecoilValue(profileParamsState);
-
-  useEffect(() => {
-    setDtagParams(profileParams.dtag);
-  }, []);
 
   /**
-   * Check with a query if the dTag is available
+   * Function to check if the input DTag is available.
    */
-  const checkAvailability = useCallback(async (newDtag: string) => {
-    const result = await getDTagAvailability({variables: {dTag: newDtag}});
-    if (result.data.profile.length !== 0) {
-      setAvailableDTag(false);
-      return;
-    }
-    setAvailableDTag(true);
-  }, []);
-
-  const validationSchema = useMemo(() => {
-    return Yup.object().shape({
-      /*      newPassword: Yup.string()
-        .min(
-          MIN_PW_LENGTH - 1,
-          t('error:minChar', {
-            numChar: MIN_PW_LENGTH,
-          }),
-        )
-        .required(t('error:required'))
-        .test('at least one lowercase', '', validateMin1Lowercase)
-        .test('at least one uppercase', '', validateMin1Uppercase)
-        .test('at least one special', '', validateMin1SpecialChar), */
-      inviteCode: Yup.string().required(t('error:required')),
-      dTag: Yup.string()
-        .required(t('error:required'))
-        .min(
-          dtagParams.min_length,
-          t('error:minChar', {
-            numChar: dtagParams.min_length,
-          }),
-        )
-        .max(
-          dtagParams.max_length,
-          t('error:maxChar', {
-            numChar: dtagParams.max_length,
-          }),
-        )
-        .test(
-          'respect reg_ex',
-          t('Only _ is allowed as special character'),
-          value => {
-            return new RegExp(dtagParams.reg_ex, 'g').test(value as string);
-          },
-        ),
-    });
-  }, [dtagParams]);
+  const checkAvailability = useCallback(
+    async (newDTag: string) => {
+      const isAvailable = await checkDTagAvailability(newDTag);
+      setAvailableDTag(isAvailable);
+    },
+    [checkDTagAvailability],
+  );
 
   const mapPwStyle = useCallback((password: string) => {
     const {value} = passwordStrength(password);
-
     switch (value) {
       case 'Medium':
         return styles.mediumPw;
@@ -204,7 +180,6 @@ const Signup = () => {
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter dtag')}
-                      // error={!!errors.dTag || !availableDTag}
                     />
                     {errors.dTag && (
                       <Typography.Caption1 style={styles.errorText}>
@@ -276,7 +251,6 @@ const Signup = () => {
                       value={values.inviteCode}
                       onChangeText={(value: string) => {
                         setFieldValue('inviteCode', value, true);
-                        setInviteCode(value);
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:invite code')}
@@ -307,7 +281,7 @@ const Signup = () => {
                           }
                         />,
                         <Typography.Body6
-                          onPress={handlePressPP}
+                          onPress={handlePressPrivacyPolicy}
                           style={
                             values.consent
                               ? styles.touchableTextChecked

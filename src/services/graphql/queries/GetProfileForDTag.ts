@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 
-const GetDTagAvailability = gql`
+const GetProfileForDTag = gql`
   query DTagAvailability($dTag: String) @api(name: desmos) {
     profile(where: {dtag: {_ilike: $dTag}}) {
       dtag
@@ -8,4 +8,4 @@ const GetDTagAvailability = gql`
   }
 `;
 
-export default GetDTagAvailability;
+export default GetProfileForDTag;

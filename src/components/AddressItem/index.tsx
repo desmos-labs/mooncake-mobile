@@ -8,7 +8,7 @@ import React, {useEffect, useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {ActivityIndicator, useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
-import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import getAccountBalance from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
 import {useTranslation} from 'react-i18next';
 import useStyles from './useStyles';
 

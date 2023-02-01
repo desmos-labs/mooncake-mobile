@@ -3,7 +3,7 @@ import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
 import {UploadAssetType} from 'services/axios/requests/UploadMedia';
 
 export interface SignUpState {
-  readonly dtag: string;
+  readonly dTag: string;
   readonly nickname: string;
   readonly bio: string;
   readonly coverPicture: UploadAssetType | undefined;
@@ -14,7 +14,7 @@ export interface SignUpState {
  * Default state of the SignUp screen.
  */
 const DefaultSignUpState: SignUpState = {
-  dtag: '',
+  dTag: '',
   nickname: '',
   bio: '',
   coverPicture: undefined,

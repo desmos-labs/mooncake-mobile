@@ -4,27 +4,27 @@ type Response = {
   token: string;
 };
 
-type Params = {
+export interface LoginParams {
   /**
    * Address of the user logging in
    */
-  address: string;
+  readonly address: string;
 
   /**
    * Hex-encoded bytes of the public key associated to the private key used to sign the transaction
    */
-  pubkeyBytes: string;
+  readonly pubkeyBytes: string;
 
   /**
    * Hex-encoded bytes of the signed transaction
    */
-  signedBytes: string;
+  readonly signedBytes: string;
 
   /**
    * Hex-encoded result of the signature
    */
-  signatureBytes: string;
-};
+  readonly signatureBytes: string;
+}
 
 /**
  * Login and retrieve a token
@@ -34,7 +34,7 @@ const Login = async ({
   pubkeyBytes,
   signedBytes,
   signatureBytes,
-}: Params): Promise<Response> => {
+}: LoginParams): Promise<Response> => {
   const _response = await axiosInstance.post('/login', {
     desmos_address: address,
     pubkey_bytes: pubkeyBytes,

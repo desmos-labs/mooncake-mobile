@@ -5,7 +5,7 @@ import {parseISO} from 'date-fns';
 import {formatInTimeZone} from 'date-fns-tz';
 import {useCallback, useMemo, useState} from 'react';
 import {useRecoilValue} from 'recoil';
-import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import GetAccountBalanceAndTokenPrice from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
 import GetPastActions from 'services/graphql/queries/GetPastActions';
 
 const useHooks = (address: string) => {
@@ -13,7 +13,7 @@ const useHooks = (address: string) => {
   const [refetching, setRefetching] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
   const {data: balanceData, loading: balanceLoading} = useQuery(
-    GetAccountBalance,
+    GetAccountBalanceAndTokenPrice,
     {
       variables: {
         address,

@@ -14,7 +14,7 @@ import ROUTES from 'navigation/routes';
 import {useTranslation} from 'react-i18next';
 import {useRecoilState} from 'recoil';
 import useSendTip from 'services/axios/requests/CentralizedBroadcastTx/useSendTip';
-import getAccountBalance from 'services/graphql/queries/GetAccountBalance';
+import getAccountBalance from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
 import _ from 'lodash';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
