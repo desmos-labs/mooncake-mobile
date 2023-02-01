@@ -17,6 +17,7 @@ const IOSButton = ({
   textColor,
   children,
   additionalStyle,
+  disabled,
   useSubtitle,
   sizeMap,
   styleMap,
@@ -26,12 +27,14 @@ const IOSButton = ({
 }: Props) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[
         styles.button,
         styleMap[mode],
         sizeMap[size],
         {backgroundColor},
         additionalStyle,
+        disabled ? styles.disabled : {},
       ]}
       {...rest}>
       {useSubtitle ? (

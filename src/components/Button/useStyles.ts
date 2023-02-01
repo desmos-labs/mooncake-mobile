@@ -18,7 +18,8 @@ const useStyles = makeStyle(theme => {
       borderColor: theme.colors.surfaceBlack,
       borderWidth: 1,
     },
-    disabledStyle: {
+    disabled: {
+      backgroundColor: theme.colors.iconGrey,
       opacity: 0.5,
     },
     h56: {

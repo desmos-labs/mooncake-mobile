@@ -15,6 +15,7 @@ const AndroidButton = ({
   size,
   backgroundColor,
   textColor,
+  disabled,
   children,
   additionalStyle,
   useSubtitle,
@@ -37,6 +38,7 @@ const AndroidButton = ({
           sizeMap[size],
           {backgroundColor},
           additionalStyle,
+          disabled ?? styles.disabled,
         ]}
         {...rest}>
         {useSubtitle ? (

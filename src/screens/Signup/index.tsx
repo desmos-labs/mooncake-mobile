@@ -17,7 +17,6 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {Formik} from 'formik';
 import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
-import _ from 'lodash';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -332,16 +331,9 @@ const Signup = () => {
                   <Button
                     onPress={() => handleSubmit()}
                     backgroundColor={theme.colors.surfaceBlack}
-                    size={32}
+                    size={44}
                     textColor={theme.colors.white}
-                    disabled={
-                      !values.dTag ||
-                      !values.newPassword ||
-                      !values.consent ||
-                      !values.inviteCode ||
-                      !availableDTag ||
-                      _.flatten(Object.values(errors)).length > 0
-                    }
+                    disabled={true}
                     mode="contained">
                     {t('common:next')}
                   </Button>
