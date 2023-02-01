@@ -15,7 +15,7 @@ export interface EncryptedData {
 export const deriveSecurePassword = async (
   password: string,
 ): Promise<string> => {
-  return Aes.pbkdf2(password, password, 100000, 256);
+  return Aes.pbkdf2(password, password, 100100, 256);
 };
 
 /**
