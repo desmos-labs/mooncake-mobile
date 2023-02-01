@@ -147,16 +147,16 @@ const Onboarding = () => {
               <Button
                 onPress={() => navigateToCorrectScreen()}
                 mode="text"
-                style={{
+                size={26}
+                additionalStyle={{
                   right: 0,
                   marginLeft: 'auto',
                   marginVertical: theme.spacing.s,
-                }}
-                color={theme.colors.surfaceBlack}>
-                <Typography.Button2>{t('skip')}</Typography.Button2>
+                }}>
+                {t('skip')}
               </Button>
             ) : (
-              <View style={{height: 37}} />
+              <View style={{height: 45}} />
             )
           }
         />
@@ -180,7 +180,9 @@ const Onboarding = () => {
         <View style={{marginHorizontal: theme.spacing.m}}>
           <Button
             mode="contained"
-            color={theme.colors.surfaceBlack}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            size={44}
             onPress={() => navigateToCorrectScreen()}>
             {t('join butter')}
           </Button>

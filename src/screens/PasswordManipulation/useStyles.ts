@@ -41,6 +41,10 @@ const useStyles = makeStyle(theme => ({
   strongPw: {
     color: theme.colors.accentGreen01,
   },
+  loadingView: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.m,
+  },
 }));
 
 export default useStyles;

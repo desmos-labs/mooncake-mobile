@@ -17,6 +17,7 @@ const IOSButton = ({
   textColor,
   children,
   additionalStyle,
+  useSubtitle,
   sizeMap,
   styleMap,
   styles,
@@ -33,11 +34,19 @@ const IOSButton = ({
         additionalStyle,
       ]}
       {...rest}>
-      <Typography.Button2
-        numberOfLines={1}
-        style={{color: textColor || theme.colors.surfaceBlack}}>
-        {children}
-      </Typography.Button2>
+      {useSubtitle ? (
+        <Typography.Subtitle2
+          numberOfLines={1}
+          style={{color: textColor || theme.colors.surfaceBlack}}>
+          {children}
+        </Typography.Subtitle2>
+      ) : (
+        <Typography.Button2
+          numberOfLines={1}
+          style={{color: textColor || theme.colors.surfaceBlack}}>
+          {children}
+        </Typography.Button2>
+      )}
     </TouchableOpacity>
   );
 };

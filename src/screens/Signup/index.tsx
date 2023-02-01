@@ -22,7 +22,13 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Animated, {
   interpolate,
@@ -213,13 +219,13 @@ const Signup = () => {
                     )}
                     <Button
                       mode="text"
-                      style={styles.completeProfileButton}
+                      additionalStyle={styles.completeProfileButton}
+                      textColor={theme.colors.butterOrange01}
+                      size={26}
                       onPress={() => {
                         navigate(ROUTES.CREATE_DESMOS_PROFILE);
                       }}>
-                      <Typography.Body6 style={styles.completeProfileButton}>
-                        {t('signup:completeProfile')}
-                      </Typography.Body6>
+                      {t('signup:completeProfile')}
                     </Button>
 
                     <Typography.Caption1 style={styles.errorTextDtag}>
@@ -318,21 +324,28 @@ const Signup = () => {
                     />
                   </Typography.Body6>
                 </View>
-                <Button
-                  onPress={handleSubmit}
-                  loading={loading}
-                  color={theme.colors.surfaceBlack}
-                  disabled={
-                    !values.dTag ||
-                    !values.newPassword ||
-                    !values.consent ||
-                    !values.inviteCode ||
-                    !availableDTag ||
-                    _.flatten(Object.values(errors)).length > 0
-                  }
-                  mode="contained">
-                  {t('common:next')}
-                </Button>
+                {loading ? (
+                  <View style={styles.loadingView}>
+                    <ActivityIndicator color={theme.colors.surfaceBlack} />
+                  </View>
+                ) : (
+                  <Button
+                    onPress={() => handleSubmit()}
+                    backgroundColor={theme.colors.surfaceBlack}
+                    size={32}
+                    textColor={theme.colors.white}
+                    disabled={
+                      !values.dTag ||
+                      !values.newPassword ||
+                      !values.consent ||
+                      !values.inviteCode ||
+                      !availableDTag ||
+                      _.flatten(Object.values(errors)).length > 0
+                    }
+                    mode="contained">
+                    {t('common:next')}
+                  </Button>
+                )}
               </>
             </>
           );

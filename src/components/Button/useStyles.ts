@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => {
       overflow: 'hidden',
       borderRadius: theme.roundness,
     },
-    text: {flex: 1, backgroundColor: 'transparent'},
+    text: {backgroundColor: 'transparent'},
     contained: {backgroundColor: theme.colors.white},
     outlined: {
       backgroundColor: 'transparent',

@@ -17,6 +17,7 @@ const AndroidButton = ({
   textColor,
   children,
   additionalStyle,
+  useSubtitle,
   sizeMap,
   styleMap,
   styles,
@@ -27,7 +28,7 @@ const AndroidButton = ({
     <View style={styles.pressableView}>
       <Pressable
         android_ripple={{
-          color: theme.colors.butterOrange01,
+          color: theme.colors.white,
           foreground: true,
         }}
         style={[
@@ -38,11 +39,19 @@ const AndroidButton = ({
           additionalStyle,
         ]}
         {...rest}>
-        <Typography.Button2
-          numberOfLines={1}
-          style={{color: textColor || theme.colors.surfaceBlack}}>
-          {children}
-        </Typography.Button2>
+        {useSubtitle ? (
+          <Typography.Subtitle2
+            numberOfLines={1}
+            style={{color: textColor || theme.colors.surfaceBlack}}>
+            {children}
+          </Typography.Subtitle2>
+        ) : (
+          <Typography.Button2
+            numberOfLines={1}
+            style={{color: textColor || theme.colors.surfaceBlack}}>
+            {children}
+          </Typography.Button2>
+        )}
       </Pressable>
     </View>
   );

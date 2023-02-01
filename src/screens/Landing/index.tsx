@@ -52,17 +52,19 @@ const Landing = () => {
       <View style={{alignSelf: 'stretch'}}>
         <Button
           mode="contained"
-          style={{backgroundColor: theme.colors.white}}
-          labelStyle={{color: theme.colors.surfaceBlack}}
+          size={44}
+          useSubtitle={true}
+          backgroundColor={theme.colors.white}
           onPress={() => navigate(ROUTES.SIGNUP)}>
           {t('signUp')}
         </Button>
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
-            style={{borderColor: theme.colors.white}}
-            labelStyle={{color: theme.colors.white}}
-            mode="outlined"
+            mode="contained"
+            size={44}
+            useSubtitle={true}
+            backgroundColor={theme.colors.white}
             onPress={() =>
               navigate(ROUTES.MNEMONIC_INPUT, {
                 mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -77,7 +79,6 @@ const Landing = () => {
         style={styles.connectLedgerButton}
         onPress={handlePressConnectLedger}>
         <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
-
         <Typography.Button1 style={{color: theme.colors.white}}>
           {t('connectLedger')}
         </Typography.Button1>

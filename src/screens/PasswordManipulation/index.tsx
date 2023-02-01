@@ -17,7 +17,13 @@ import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, {useRef} from 'react';
 import {useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
 import useHooks from './useHooks';
@@ -166,22 +172,27 @@ const PasswordManipulation = () => {
                     )}
                   </View>
                 </ScrollView>
-                <View style={{marginTop: 8}}>
-                  <Button
-                    loading={loading}
-                    color={theme.colors.surfaceBlack}
-                    onPress={handleSubmit}
-                    disabled={
-                      loading ||
-                      values.confirmPassword.length === 0 ||
-                      values.newPassword.length === 0 ||
-                      _.flatten(Object.values(errors)).length > 0
-                    }
-                    mode="contained">
-                    <Typography.Button2 style={styles.confirmButtonText}>
+                <View style={{justifyContent: 'flex-end'}}>
+                  {loading ? (
+                    <View style={styles.loadingView}>
+                      <ActivityIndicator color={theme.colors.surfaceBlack} />
+                    </View>
+                  ) : (
+                    <Button
+                      size={44}
+                      backgroundColor={theme.colors.surfaceBlack}
+                      textColor={theme.colors.white}
+                      onPress={() => handleSubmit()}
+                      disabled={
+                        loading ||
+                        values.confirmPassword.length === 0 ||
+                        values.newPassword.length === 0 ||
+                        _.flatten(Object.values(errors)).length > 0
+                      }
+                      mode="contained">
                       {t(buttonLabel)}
-                    </Typography.Button2>
-                  </Button>
+                    </Button>
+                  )}
                 </View>
               </>
             );

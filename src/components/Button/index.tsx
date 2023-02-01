@@ -29,9 +29,19 @@ export interface ButtonProps
   /**
    * Additional style
    */
-  backgroundColor?: string;
-  textColor?: string;
   additionalStyle?: StyleProp<ViewStyle>;
+  /**
+   * Background color, default white
+   */
+  backgroundColor?: string;
+  /**
+   * Text color, default surfaceBlack
+   */
+  textColor?: string;
+  /**
+   * Use subtitle2 instead of button2 as text component
+   */
+  useSubtitle?: boolean;
 }
 
 /**
@@ -41,6 +51,7 @@ export interface ButtonProps
 const Button = ({children, ...rest}: ButtonProps) => {
   const styles = useStyles();
   const theme = useTheme();
+
   const styleMap: {[index: string]: any} = {
     text: styles.text,
     contained: styles.contained,

@@ -140,6 +140,8 @@ const MnemonicInput = () => {
               <View style={{backgroundColor: theme.colors.background}}>
                 {__DEV__ && (
                   <Button
+                    mode="text"
+                    size={32}
                     onPress={() =>
                       setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)
                     }>
@@ -147,10 +149,11 @@ const MnemonicInput = () => {
                   </Button>
                 )}
                 <Button
-                  color={theme.colors.surfaceBlack}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  textColor={theme.colors.white}
                   mode="contained"
-                  labelStyle={styles.labelStyle}
-                  onPress={handleSubmit}>
+                  size={44}
+                  onPress={() => handleSubmit()}>
                   {t(buttonText)}
                 </Button>
               </View>
