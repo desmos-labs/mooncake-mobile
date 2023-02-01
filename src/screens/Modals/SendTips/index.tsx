@@ -9,13 +9,14 @@ import _ from 'lodash';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   View,
 } from 'react-native';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import useHooks, {TIP_AMOUNTS} from './useHooks';
 import useStyles from './useStyles';
 
@@ -76,7 +77,18 @@ const SendTips = () => {
                             ? 'contained'
                             : 'outlined'
                         }
-                        style={[
+                        backgroundColor={
+                          values.amount === String(value)
+                            ? theme.colors.butterOrange01
+                            : theme.colors.white
+                        }
+                        textColor={
+                          values.amount === String(value)
+                            ? theme.colors.white
+                            : theme.colors.black
+                        }
+                        size={32}
+                        additionalStyle={[
                           {
                             minWidth: 106,
                           },
@@ -88,39 +100,10 @@ const SendTips = () => {
                                 borderColor: theme.colors.surfaceBlack,
                               },
                         ]}
-                        contentStyle={[
-                          {height: 42},
-                          shouldDisableTipButton[String(value)]
-                            ? {
-                                backgroundColor: theme.colors.tabIconGrey,
-                              }
-                            : {
-                                backgroundColor:
-                                  values.amount === String(value)
-                                    ? theme.colors.primary
-                                    : 'white',
-                              },
-                        ]}
                         onPress={() => {
                           setFieldValue('amount', String(value), true);
                         }}>
-                        <Typography.Subtitle3
-                          style={
-                            shouldDisableTipButton[String(value)]
-                              ? {
-                                  color: theme.colors.white,
-                                  textTransform: 'uppercase',
-                                }
-                              : {
-                                  color:
-                                    values.amount === String(value)
-                                      ? theme.colors.white
-                                      : theme.colors.surfaceBlack,
-                                  textTransform: 'uppercase',
-                                }
-                          }>
-                          {value} DSM
-                        </Typography.Subtitle3>
+                        {value} DSM
                       </Button>
                     );
                   })}
@@ -193,17 +176,24 @@ const SendTips = () => {
                   placeholder={t('message')}
                 />
                 <Spacer paddingVertical={30}>
-                  <Button
-                    loading={sendTipLoading}
-                    mode="contained"
-                    color={theme.colors.surfaceBlack}
-                    onPress={handleSubmit}
-                    disabled={
-                      values.amount === '' ||
-                      _.flatten(Object.values(errors)).length > 0
-                    }>
-                    {t('common:confirm')}
-                  </Button>
+                  {sendTipLoading ? (
+                    <View style={styles.loadingView}>
+                      <ActivityIndicator color={theme.colors.surfaceBlack} />
+                    </View>
+                  ) : (
+                    <Button
+                      mode="contained"
+                      size={44}
+                      textColor={theme.colors.white}
+                      backgroundColor={theme.colors.surfaceBlack}
+                      onPress={() => handleSubmit()}
+                      disabled={
+                        values.amount === '' ||
+                        _.flatten(Object.values(errors)).length > 0
+                      }>
+                      {t('common:confirm')}
+                    </Button>
+                  )}
                 </Spacer>
               </ScrollView>
             );

@@ -74,7 +74,9 @@ const ImpactPointsModal = () => {
       <Spacer paddingVertical={theme.spacing.xl}>
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
           onPress={goBack}>
           {t('got it')}
         </Button>

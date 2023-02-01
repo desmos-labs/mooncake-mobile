@@ -66,7 +66,9 @@ const BottomModal = () => {
 
             <Spacer paddingVertical={40}>
               <Button
-                color={theme.colors.surfaceBlack}
+                backgroundColor={theme.colors.surfaceBlack}
+                textColor={theme.colors.white}
+                size={44}
                 mode="contained"
                 onPress={onPressButton}>
                 {primaryButtonLabel}

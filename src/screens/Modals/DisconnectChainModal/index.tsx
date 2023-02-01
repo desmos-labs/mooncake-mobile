@@ -19,6 +19,7 @@ import LinkableChains from 'config/LinkableChains';
 import {MsgUnlinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<
@@ -32,7 +33,7 @@ export type DisconnectChainParams = {
 
 const DisconnectChainModal = () => {
   const styles = useStyles();
-
+  const theme = useTheme();
   const {goBack, navigate} = useNavigation<NavProps['navigation']>();
 
   const {
@@ -133,16 +134,19 @@ const DisconnectChainModal = () => {
         </Typography.Button2>
 
         <Button
+          size={44}
           style={styles.confirmButton}
           mode="contained"
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
           onPress={handlePressYes}>
           {t('common:yes')}
         </Button>
 
         <Button
           mode="outlined"
+          size={44}
           style={styles.cancelButton}
-          labelStyle={styles.cancelText}
           onPress={goBack}>
           {t('common:no')}
         </Button>

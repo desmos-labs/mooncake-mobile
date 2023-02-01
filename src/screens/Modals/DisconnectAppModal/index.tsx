@@ -50,17 +50,15 @@ const DisconnectAppModal = () => {
         </Typography.Body5>
 
         <Button
-          style={styles.confirmButton}
+          size={44}
+          additionalStyle={styles.confirmButton}
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={onConfirmDisconnection}>
           {t('common:yes')}
         </Button>
 
-        <Button
-          mode="outlined"
-          style={{borderColor: theme.colors.surfaceBlack}}
-          onPress={goBack}>
+        <Button size={44} mode="outlined" onPress={goBack}>
           <Typography.Button1>{t('common:no')}</Typography.Button1>
         </Button>
       </View>

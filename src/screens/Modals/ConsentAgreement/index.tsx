@@ -1,5 +1,4 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
@@ -9,6 +8,8 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {useTheme} from 'react-native-paper';
+import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
 
@@ -24,7 +25,7 @@ type NavProps = StackScreenProps<
 const ConsentAgreement = () => {
   const {t} = useTranslation('consentAgreement');
   const styles = useStyles();
-
+  const theme = useTheme();
   const {
     params: {onConsentAgree},
   } = useRoute<NavProps['route']>();
@@ -46,32 +47,26 @@ const ConsentAgreement = () => {
   }, []);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={goBack}
-      style={styles.container}>
-      {/* dummy touchable opacity to prevent modal from getting dismissed if non-button */}
-      {/* parts of the modal content are pressed */}
-      <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
-        <View style={styles.tabIcon} />
-        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-        <Typography.Body5>{t('description')}</Typography.Body5>
+    <BottomUpModalWrapper goBack={goBack}>
+      <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+      <Typography.Body5>{t('description')}</Typography.Body5>
 
-        <Spacer paddingTop={40}>
-          <ConsentButtonGroup
-            handlePressTOS={handlePressTOS}
-            handlePressPP={handlePressPP}
-          />
-        </Spacer>
+      <Spacer paddingVertical={40}>
+        <ConsentButtonGroup
+          handlePressTOS={handlePressTOS}
+          handlePressPP={handlePressPP}
+        />
+      </Spacer>
 
-        <Button
-          mode="contained"
-          style={styles.confirmButton}
-          onPress={handlePressContinue}>
-          {t('common:continue')}
-        </Button>
-      </TouchableOpacity>
-    </TouchableOpacity>
+      <Button
+        size={44}
+        backgroundColor={theme.colors.surfaceBlack}
+        textColor={theme.colors.white}
+        mode="contained"
+        onPress={handlePressContinue}>
+        {t('common:continue')}
+      </Button>
+    </BottomUpModalWrapper>
   );
 };
 

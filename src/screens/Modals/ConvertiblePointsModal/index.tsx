@@ -35,7 +35,9 @@ const ConvertiblePointsModal = () => {
       <Spacer paddingVertical={theme.spacing.xl}>
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={goBack}>
           {t('got it')}
         </Button>

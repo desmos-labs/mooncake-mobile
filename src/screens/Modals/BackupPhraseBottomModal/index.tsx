@@ -39,11 +39,11 @@ const BackupPhraseBottomModal = () => {
         </Spacer>
         <Button
           mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={44}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
           onPress={goBack}>
-          <Typography.Button2 style={{color: theme.colors.white}}>
-            {t('understand')}
-          </Typography.Button2>
+          {t('understand')}
         </Button>
         <Spacer paddingVertical={theme.spacing.s} />
       </TouchableOpacity>
