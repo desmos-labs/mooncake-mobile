@@ -21,7 +21,7 @@ const useStyles = makeStyle(theme => {
     },
     followLabel: {
       margin: 0,
-      pading: 0,
+      padding: 0,
       minWidth: '100%',
       textAlign: 'center',
       /* Neutral Color/white */
