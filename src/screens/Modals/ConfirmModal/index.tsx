@@ -146,6 +146,8 @@ const ConfirmModal = () => {
           {primaryButtonLabel && (
             <Button
               size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
               additionalStyle={styles.primaryButton}
               mode={primaryButtonMode}
               onPress={onPressPrimaryButton}>
@@ -157,6 +159,7 @@ const ConfirmModal = () => {
               <Button
                 size={44}
                 additionalStyle={styles.secondaryButton}
+                textColor={theme.colors.white}
                 backgroundColor={theme.colors.surfaceBlack}
                 mode={secondaryButtonMode as any}
                 onPress={onPressSecondary}>

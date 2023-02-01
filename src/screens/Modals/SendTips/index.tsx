@@ -87,7 +87,7 @@ const SendTips = () => {
                             ? theme.colors.white
                             : theme.colors.black
                         }
-                        size={32}
+                        size={44}
                         additionalStyle={[
                           {
                             minWidth: 106,

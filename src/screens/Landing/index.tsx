@@ -52,7 +52,7 @@ const Landing = () => {
       <View style={{alignSelf: 'stretch'}}>
         <Button
           mode="contained"
-          size={44}
+          size={56}
           useSubtitle={true}
           backgroundColor={theme.colors.white}
           onPress={() => navigate(ROUTES.SIGNUP)}>
@@ -62,7 +62,7 @@ const Landing = () => {
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
             mode="contained"
-            size={44}
+            size={56}
             useSubtitle={true}
             backgroundColor={theme.colors.white}
             onPress={() =>

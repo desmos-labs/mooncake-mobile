@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 import {ButtonProps} from 'components/Button';
 import Typography from 'components/Typography';
 
@@ -15,9 +15,10 @@ const AndroidButton = ({
   size,
   backgroundColor,
   textColor,
-  disabled,
   children,
   additionalStyle,
+  disabled,
+  loading,
   useSubtitle,
   sizeMap,
   styleMap,
@@ -54,6 +55,9 @@ const AndroidButton = ({
             {children}
           </Typography.Button2>
         )}
+        {loading ? (
+          <ActivityIndicator size="small" color={theme.colors.surfaceBlack} />
+        ) : null}
       </Pressable>
     </View>
   );

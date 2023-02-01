@@ -4,7 +4,7 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import React, {useMemo} from 'react';
-import {FlatList, ListRenderItemInfo} from 'react-native';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import NoTweets from 'screens/SelectTweet/components/NoConnections';
 import TweetComponent from 'screens/SelectTweet/components/TweetComponent';
@@ -50,14 +50,12 @@ const SelectTweet = () => {
         <NoTweets />
         <Spacer paddingVertical={12} />
         <Button
-          color={theme.colors.surfaceBlack}
           mode="outlined"
+          size={44}
           onPress={openTwitterApp}
           style={{
             alignSelf: 'center',
-            borderColor: theme.colors.surfaceBlack,
             width: 140,
-            height: 42,
             justifyContent: 'center',
           }}>
           {t('tweet now')}
@@ -88,16 +86,18 @@ const SelectTweet = () => {
           contentContainerStyle={styles.flatlistContainer}
         />
         {tweets.length > 0 && (
-          <Button
-            disabled={!selectedTweetId}
-            mode="contained"
-            color={theme.colors.surfaceBlack}
-            onPress={handleConnectTweet}
-            style={styles.button}>
-            <Typography.Button2 style={{color: theme.colors.white}}>
+          <View style={{marginTop: theme.spacing.m}}>
+            <Button
+              disabled={!selectedTweetId}
+              mode="contained"
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
+              onPress={handleConnectTweet}
+              additionalStyle={styles.button}>
               {t('common:next')}
-            </Typography.Button2>
-          </Button>
+            </Button>
+          </View>
         )}
       </>
     </DView>

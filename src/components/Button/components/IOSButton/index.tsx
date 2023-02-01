@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
 import {ButtonProps} from 'components/Button';
 import Typography from 'components/Typography';
 
@@ -18,6 +18,7 @@ const IOSButton = ({
   children,
   additionalStyle,
   disabled,
+  loading,
   useSubtitle,
   sizeMap,
   styleMap,
@@ -37,19 +38,28 @@ const IOSButton = ({
         disabled ? styles.disabled : {},
       ]}
       {...rest}>
-      {useSubtitle ? (
-        <Typography.Subtitle2
-          numberOfLines={1}
-          style={{color: textColor || theme.colors.surfaceBlack}}>
-          {children}
-        </Typography.Subtitle2>
-      ) : (
-        <Typography.Button2
-          numberOfLines={1}
-          style={{color: textColor || theme.colors.surfaceBlack}}>
-          {children}
-        </Typography.Button2>
-      )}
+      <View style={{flexDirection: 'row'}}>
+        {useSubtitle ? (
+          <Typography.Subtitle2
+            numberOfLines={1}
+            style={{color: textColor || theme.colors.surfaceBlack}}>
+            {children}
+          </Typography.Subtitle2>
+        ) : (
+          <Typography.Button2
+            numberOfLines={1}
+            style={{color: textColor || theme.colors.surfaceBlack}}>
+            {children}
+          </Typography.Button2>
+        )}
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={textColor}
+            style={{marginLeft: theme.spacing.m}}
+          />
+        ) : null}
+      </View>
     </TouchableOpacity>
   );
 };

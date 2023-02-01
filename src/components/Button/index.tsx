@@ -42,6 +42,7 @@ export interface ButtonProps
    * Use subtitle2 instead of button2 as text component
    */
   useSubtitle?: boolean;
+  loading?: boolean;
 }
 
 /**

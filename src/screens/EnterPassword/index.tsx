@@ -253,7 +253,8 @@ const EnterPassword = () => {
               style={styles.buttonGroup}>
               <Button
                 loading={loading}
-                color={
+                size={44}
+                backgroundColor={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                     ? theme.colors.lightGrey02
@@ -263,7 +264,7 @@ const EnterPassword = () => {
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                onPress={handleSubmit}
+                onPress={() => handleSubmit()}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {buttonLabelOverride || t('common:next')}
