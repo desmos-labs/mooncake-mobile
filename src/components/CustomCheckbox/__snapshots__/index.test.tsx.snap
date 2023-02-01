@@ -5,13 +5,30 @@ exports[`component: CustomCheckbox renders checked 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     accessibilityLabel="custom-checkbox"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -23,26 +40,26 @@ exports[`component: CustomCheckbox renders checked 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <Image
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkbox.png",
         }
       }
       style={
-        Array [
-          Object {
+        [
+          {
             "height": 24,
             "resizeMode": "contain",
             "width": 24,
           },
           undefined,
-          Object {
+          {
             "tintColor": "#1EC490",
           },
         ]
@@ -50,11 +67,11 @@ exports[`component: CustomCheckbox renders checked 1`] = `
     />
     <Image
       animatedStyle={
-        Object {
-          "value": Object {
+        {
+          "value": {
             "opacity": 1,
-            "transform": Array [
-              Object {
+            "transform": [
+              {
                 "scale": 1,
               },
             ],
@@ -63,12 +80,12 @@ exports[`component: CustomCheckbox renders checked 1`] = `
       }
       collapsable={false}
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkboxChecked.png",
         }
       }
       style={
-        Object {
+        {
           "bottom": 0,
           "height": 24,
           "left": 0,
@@ -77,8 +94,8 @@ exports[`component: CustomCheckbox renders checked 1`] = `
           "resizeMode": "contain",
           "right": 0,
           "top": 0,
-          "transform": Array [
-            Object {
+          "transform": [
+            {
               "scale": 1,
             },
           ],
@@ -96,13 +113,30 @@ exports[`component: CustomCheckbox renders error 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     accessibilityLabel="custom-checkbox"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -114,28 +148,28 @@ exports[`component: CustomCheckbox renders error 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <Image
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkbox.png",
         }
       }
       style={
-        Array [
-          Object {
+        [
+          {
             "height": 24,
             "resizeMode": "contain",
             "width": 24,
           },
-          Object {
+          {
             "tintColor": "#25282D",
           },
-          Object {
+          {
             "tintColor": "#1EC490",
           },
         ]
@@ -143,11 +177,11 @@ exports[`component: CustomCheckbox renders error 1`] = `
     />
     <Image
       animatedStyle={
-        Object {
-          "value": Object {
+        {
+          "value": {
             "opacity": 1,
-            "transform": Array [
-              Object {
+            "transform": [
+              {
                 "scale": 1,
               },
             ],
@@ -156,12 +190,12 @@ exports[`component: CustomCheckbox renders error 1`] = `
       }
       collapsable={false}
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkboxChecked.png",
         }
       }
       style={
-        Object {
+        {
           "bottom": 0,
           "height": 24,
           "left": 0,
@@ -170,8 +204,8 @@ exports[`component: CustomCheckbox renders error 1`] = `
           "resizeMode": "contain",
           "right": 0,
           "top": 0,
-          "transform": Array [
-            Object {
+          "transform": [
+            {
               "scale": 1,
             },
           ],
@@ -189,13 +223,30 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     accessibilityLabel="custom-checkbox"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -207,20 +258,20 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "opacity": 1,
       }
     }
   >
     <Image
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkbox.png",
         }
       }
       style={
-        Array [
-          Object {
+        [
+          {
             "height": 24,
             "resizeMode": "contain",
             "width": 24,
@@ -232,11 +283,11 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
     />
     <Image
       animatedStyle={
-        Object {
-          "value": Object {
+        {
+          "value": {
             "opacity": 0,
-            "transform": Array [
-              Object {
+            "transform": [
+              {
                 "scale": 0.7,
               },
             ],
@@ -245,12 +296,12 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
       }
       collapsable={false}
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/checkboxChecked.png",
         }
       }
       style={
-        Object {
+        {
           "bottom": 0,
           "height": 24,
           "left": 0,
@@ -259,8 +310,8 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
           "resizeMode": "contain",
           "right": 0,
           "top": 0,
-          "transform": Array [
-            Object {
+          "transform": [
+            {
               "scale": 0.7,
             },
           ],

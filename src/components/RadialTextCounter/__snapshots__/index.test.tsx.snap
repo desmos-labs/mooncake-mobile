@@ -5,13 +5,13 @@ exports[`component: RadialTextCounter changes color if character count nears max
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
-    style={Object {}}
+    style={{}}
   >
     <RNSVGSvgView
       bbHeight={24}
@@ -19,12 +19,12 @@ exports[`component: RadialTextCounter changes color if character count nears max
       focusable={false}
       height={24}
       style={
-        Array [
-          Object {
+        [
+          {
             "backgroundColor": "transparent",
             "borderWidth": 0,
           },
-          Object {
+          {
             "flex": 0,
             "height": 24,
             "width": 24,
@@ -36,7 +36,7 @@ exports[`component: RadialTextCounter changes color if character count nears max
       <RNSVGGroup>
         <RNSVGGroup
           matrix={
-            Array [
+            [
               1,
               0,
               -0,
@@ -50,7 +50,7 @@ exports[`component: RadialTextCounter changes color if character count nears max
             d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
             fill={0}
             propList={
-              Array [
+              [
                 "fill",
                 "stroke",
                 "strokeWidth",
@@ -66,7 +66,7 @@ exports[`component: RadialTextCounter changes color if character count nears max
     </RNSVGSvgView>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "borderRadius": 10,
           "height": 20,
@@ -81,12 +81,12 @@ exports[`component: RadialTextCounter changes color if character count nears max
     >
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-SemiBold",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -95,7 +95,7 @@ exports[`component: RadialTextCounter changes color if character count nears max
                 "textAlign": "left",
               },
             ],
-            Object {
+            {
               "color": "#F359A8",
             },
           ]
@@ -113,13 +113,13 @@ exports[`component: RadialTextCounter renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
-    style={Object {}}
+    style={{}}
   >
     <RNSVGSvgView
       bbHeight={24}
@@ -127,12 +127,12 @@ exports[`component: RadialTextCounter renders 1`] = `
       focusable={false}
       height={24}
       style={
-        Array [
-          Object {
+        [
+          {
             "backgroundColor": "transparent",
             "borderWidth": 0,
           },
-          Object {
+          {
             "flex": 0,
             "height": 24,
             "width": 24,
@@ -144,7 +144,7 @@ exports[`component: RadialTextCounter renders 1`] = `
       <RNSVGGroup>
         <RNSVGGroup
           matrix={
-            Array [
+            [
               1,
               0,
               -0,
@@ -158,7 +158,7 @@ exports[`component: RadialTextCounter renders 1`] = `
             d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
             fill={0}
             propList={
-              Array [
+              [
                 "fill",
                 "stroke",
                 "strokeWidth",
@@ -174,7 +174,7 @@ exports[`component: RadialTextCounter renders 1`] = `
     </RNSVGSvgView>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "borderRadius": 10,
           "height": 20,
@@ -189,12 +189,12 @@ exports[`component: RadialTextCounter renders 1`] = `
     >
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-SemiBold",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -203,7 +203,7 @@ exports[`component: RadialTextCounter renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Object {
+            {
               "color": "#AFAFAF",
             },
           ]

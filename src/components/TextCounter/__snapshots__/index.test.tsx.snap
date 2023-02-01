@@ -5,14 +5,14 @@ exports[`component: TextCounter renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignSelf": "flex-end",
         "flexDirection": "row",
         "marginTop": 4,
@@ -21,12 +21,12 @@ exports[`component: TextCounter renders 1`] = `
   >
     <Text
       style={
-        Array [
-          Array [
-            Object {
+        [
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-Regular",
               "fontSize": 12,
               "fontStyle": "normal",
@@ -35,7 +35,7 @@ exports[`component: TextCounter renders 1`] = `
               "textAlign": "left",
             },
           ],
-          Object {
+          {
             "color": "#878787",
           },
         ]
@@ -52,14 +52,14 @@ exports[`component: TextCounter renders maxChar reached 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignSelf": "flex-end",
         "flexDirection": "row",
         "marginTop": 4,
@@ -68,12 +68,12 @@ exports[`component: TextCounter renders maxChar reached 1`] = `
   >
     <Text
       style={
-        Array [
-          Array [
-            Object {
+        [
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-Regular",
               "fontSize": 12,
               "fontStyle": "normal",
@@ -82,7 +82,7 @@ exports[`component: TextCounter renders maxChar reached 1`] = `
               "textAlign": "left",
             },
           ],
-          Object {
+          {
             "color": "#FD565F",
           },
         ]

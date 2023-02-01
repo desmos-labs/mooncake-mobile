@@ -22,7 +22,7 @@ export enum MMKVKEYS {
 }
 
 const MMKVStorage = new MMKV({
-  id: EnvConfig.MMKV_ID,
+  id: EnvConfig.MMKV_ID || 'butter',
 });
 
 /**

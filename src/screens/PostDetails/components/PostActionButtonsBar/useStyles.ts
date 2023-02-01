@@ -37,8 +37,8 @@ const useStyles = makeStyle(theme => ({
   },
   orangeIconAndText: {
     tintColor: theme.colors.butterOrange01,
-    color: theme.colors.butterOrange01,
   },
+  orangeText: {color: theme.colors.butterOrange01},
 }));
 
 export default useStyles;

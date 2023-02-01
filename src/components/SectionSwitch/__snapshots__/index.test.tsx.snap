@@ -5,14 +5,14 @@ exports[`component: SectionSwitch renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -22,12 +22,12 @@ exports[`component: SectionSwitch renders 1`] = `
   >
     <Text
       style={
-        Array [
-          Array [
-            Object {
+        [
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-SemiBold",
               "fontSize": 16,
               "fontStyle": "normal",
@@ -37,8 +37,8 @@ exports[`component: SectionSwitch renders 1`] = `
               "textAlign": "left",
             },
           ],
-          Array [
-            Object {
+          [
+            {
               "flex": 1,
             },
             null,
@@ -55,7 +55,7 @@ exports[`component: SectionSwitch renders 1`] = `
       onStartShouldSetResponder={[Function]}
       onTintColor="#FEB027"
       style={
-        Object {
+        {
           "height": 31,
           "width": 51,
         }
@@ -72,14 +72,14 @@ exports[`component: SectionSwitch renders disabled 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
@@ -89,12 +89,12 @@ exports[`component: SectionSwitch renders disabled 1`] = `
   >
     <Text
       style={
-        Array [
-          Array [
-            Object {
+        [
+          [
+            {
               "color": "#25282D",
             },
-            Object {
+            {
               "fontFamily": "Poppins-SemiBold",
               "fontSize": 16,
               "fontStyle": "normal",
@@ -104,11 +104,11 @@ exports[`component: SectionSwitch renders disabled 1`] = `
               "textAlign": "left",
             },
           ],
-          Array [
-            Object {
+          [
+            {
               "flex": 1,
             },
-            Object {
+            {
               "opacity": 0.3,
             },
           ],
@@ -125,7 +125,7 @@ exports[`component: SectionSwitch renders disabled 1`] = `
       onStartShouldSetResponder={[Function]}
       onTintColor="#FEB027"
       style={
-        Object {
+        {
           "height": 31,
           "width": 51,
         }

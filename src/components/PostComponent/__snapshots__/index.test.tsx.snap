@@ -5,7 +5,7 @@ exports[`component: PostComponent renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -13,7 +13,7 @@ exports[`component: PostComponent renders 1`] = `
   <View
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "alignItems": "center",
         "justifyContent": "center",
       }
@@ -21,7 +21,7 @@ exports[`component: PostComponent renders 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "backgroundColor": "#FEB027",
           "height": 630,
@@ -33,12 +33,12 @@ exports[`component: PostComponent renders 1`] = `
     >
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-SemiBold",
                 "fontSize": 32,
                 "fontStyle": "normal",
@@ -48,7 +48,7 @@ exports[`component: PostComponent renders 1`] = `
                 "textAlign": "left",
               },
             ],
-            Object {
+            {
               "color": "#FFFFFF",
               "fontSize": 32,
             },
@@ -67,7 +67,7 @@ exports[`component: PostComponent renders image posts 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -75,7 +75,7 @@ exports[`component: PostComponent renders image posts 1`] = `
   <View
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "alignItems": "center",
         "justifyContent": "center",
       }
@@ -83,7 +83,7 @@ exports[`component: PostComponent renders image posts 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "flex": 1,
         }
       }
@@ -97,7 +97,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
@@ -105,7 +105,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
   <View
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "alignItems": "center",
         "justifyContent": "center",
       }
@@ -114,12 +114,12 @@ exports[`component: PostComponent renders textImage posts 1`] = `
     <View>
       <Text
         style={
-          Array [
-            Array [
-              Object {
+          [
+            [
+              {
                 "color": "#25282D",
               },
-              Object {
+              {
                 "fontFamily": "Poppins-Regular",
                 "fontSize": 12,
                 "fontStyle": "normal",
@@ -128,7 +128,7 @@ exports[`component: PostComponent renders textImage posts 1`] = `
                 "textAlign": "left",
               },
             ],
-            Object {
+            {
               "margin": 16,
             },
           ]

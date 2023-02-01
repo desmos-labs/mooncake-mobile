@@ -5,7 +5,7 @@ exports[`component: PopupMenu renders 1`] = `
   collapsable={false}
   pointerEvents="box-none"
   style={
-    Object {
+    {
       "flex": 1,
     }
   }
