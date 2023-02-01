@@ -45,34 +45,42 @@ exports[`component: Button renders button contained mode color white size 32 1`]
         "borderRadius": 14,
         "justifyContent": "center",
         "opacity": 1,
-        "paddingVertical": 8,
+        "paddingVertical": 5,
       }
     }
   >
-    <Text
-      numberOfLines={1}
+    <View
       style={
-        [
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
           [
+            [
+              {
+                "color": "#25282D",
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 14,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.015,
+                "lineHeight": 21,
+                "textAlign": "left",
+              },
+            ],
             {
               "color": "#25282D",
             },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 14,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.015,
-              "lineHeight": 21,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "color": "#25282D",
-          },
-        ]
-      }
-    />
+          ]
+        }
+      />
+    </View>
   </View>
 </View>
 `;
@@ -124,34 +132,42 @@ exports[`component: Button renders button outlined mode color white size 44 1`] 
         "borderWidth": 1,
         "justifyContent": "center",
         "opacity": 1,
-        "paddingVertical": 16,
+        "paddingVertical": 12,
       }
     }
   >
-    <Text
-      numberOfLines={1}
+    <View
       style={
-        [
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
           [
+            [
+              {
+                "color": "#25282D",
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 14,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.015,
+                "lineHeight": 21,
+                "textAlign": "left",
+              },
+            ],
             {
               "color": "#25282D",
             },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 14,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.015,
-              "lineHeight": 21,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "color": "#25282D",
-          },
-        ]
-      }
-    />
+          ]
+        }
+      />
+    </View>
   </View>
 </View>
 `;
@@ -201,34 +217,42 @@ exports[`component: Button renders button text contained color white size 56 1`]
         "borderRadius": 14,
         "justifyContent": "center",
         "opacity": 1,
-        "paddingVertical": 24,
+        "paddingVertical": 16,
       }
     }
   >
-    <Text
-      numberOfLines={1}
+    <View
       style={
-        [
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
           [
+            [
+              {
+                "color": "#25282D",
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 14,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.015,
+                "lineHeight": 21,
+                "textAlign": "left",
+              },
+            ],
             {
               "color": "#25282D",
             },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 14,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.015,
-              "lineHeight": 21,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "color": "#25282D",
-          },
-        ]
-      }
-    />
+          ]
+        }
+      />
+    </View>
   </View>
 </View>
 `;
@@ -276,37 +300,44 @@ exports[`component: Button renders button text mode color white size 26 1`] = `
         "alignItems": "center",
         "backgroundColor": "white",
         "borderRadius": 14,
-        "flex": 1,
         "justifyContent": "center",
         "opacity": 1,
-        "paddingVertical": 4,
+        "paddingVertical": 2,
       }
     }
   >
-    <Text
-      numberOfLines={1}
+    <View
       style={
-        [
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
           [
+            [
+              {
+                "color": "#25282D",
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 14,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.015,
+                "lineHeight": 21,
+                "textAlign": "left",
+              },
+            ],
             {
               "color": "#25282D",
             },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 14,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.015,
-              "lineHeight": 21,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "color": "#25282D",
-          },
-        ]
-      }
-    />
+          ]
+        }
+      />
+    </View>
   </View>
 </View>
 `;
@@ -354,37 +385,44 @@ exports[`component: Button renders button text mode color white size 56 1`] = `
         "alignItems": "center",
         "backgroundColor": "white",
         "borderRadius": 14,
-        "flex": 1,
         "justifyContent": "center",
         "opacity": 1,
-        "paddingVertical": 24,
+        "paddingVertical": 16,
       }
     }
   >
-    <Text
-      numberOfLines={1}
+    <View
       style={
-        [
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
           [
+            [
+              {
+                "color": "#25282D",
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 14,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.015,
+                "lineHeight": 21,
+                "textAlign": "left",
+              },
+            ],
             {
               "color": "#25282D",
             },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 14,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.015,
-              "lineHeight": 21,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "color": "#25282D",
-          },
-        ]
-      }
-    />
+          ]
+        }
+      />
+    </View>
   </View>
 </View>
 `;

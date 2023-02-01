@@ -31,181 +31,80 @@ exports[`component: FollowButton renders follow version 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
+      "backgroundColor": undefined,
+      "borderRadius": 12,
+      "height": 32,
+      "justifyContent": "center",
       "opacity": 1,
+      "padding": 0,
+      "width": 83,
     }
   }
 >
   <View
-    collapsable={false}
     style={
       {
-        "backgroundColor": undefined,
-        "borderColor": undefined,
-        "borderRadius": 12,
-        "borderStyle": "solid",
-        "borderWidth": 1,
-        "elevation": 0,
-        "height": 32,
-        "justifyContent": "center",
-        "minWidth": 64,
-        "padding": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-        "width": 83,
+        "flexDirection": "row",
       }
     }
   >
-    <View
-      accessibilityRole="button"
-      accessibilityState={
-        {
-          "disabled": true,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      focusable={false}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    <Text
+      numberOfLines={1}
       style={
         [
+          [
+            {
+              "color": undefined,
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
           {
-            "overflow": "hidden",
-          },
-          {
-            "borderRadius": 12,
+            "color": undefined,
           },
         ]
       }
     >
-      <View
+      <Text
         style={
           [
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-            },
             [
               {
-                "height": 52,
+                "color": undefined,
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.04,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            [
+              {
+                "color": undefined,
+                "margin": 0,
+                "minWidth": "100%",
+                "pading": 0,
+                "textAlign": "center",
               },
               undefined,
             ],
           ]
         }
       >
-        <Text
-          numberOfLines={1}
-          selectable={false}
-          style={
-            [
-              {
-                "color": "#000000",
-                "fontFamily": "System",
-                "fontWeight": "400",
-              },
-              {
-                "textAlign": "left",
-              },
-              [
-                {
-                  "letterSpacing": 1,
-                  "marginHorizontal": 16,
-                  "marginVertical": 9,
-                  "textAlign": "center",
-                },
-                undefined,
-                {
-                  "textTransform": "uppercase",
-                },
-                {
-                  "color": "#6200ee",
-                  "fontFamily": "System",
-                  "fontWeight": "500",
-                },
-                {
-                  "fontFamily": "System",
-                  "fontWeight": "500",
-                },
-                [
-                  {
-                    "color": undefined,
-                    "fontFamily": "Poppins-SemiBold",
-                    "fontSize": 16,
-                    "fontStyle": "normal",
-                    "fontWeight": "600",
-                    "letterSpacing": 0.015,
-                    "lineHeight": 21,
-                    "textTransform": "capitalize",
-                  },
-                  [
-                    {
-                      "color": undefined,
-                      "margin": 0,
-                      "minWidth": "100%",
-                      "pading": 0,
-                      "textAlign": "center",
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-            ]
-          }
-        >
-          <Text
-            style={
-              [
-                [
-                  {
-                    "color": undefined,
-                  },
-                  {
-                    "fontFamily": "Poppins-SemiBold",
-                    "fontSize": 12,
-                    "fontStyle": "normal",
-                    "fontWeight": "600",
-                    "letterSpacing": 0.04,
-                    "lineHeight": 16,
-                    "textAlign": "left",
-                  },
-                ],
-                [
-                  {
-                    "color": undefined,
-                    "margin": 0,
-                    "minWidth": "100%",
-                    "pading": 0,
-                    "textAlign": "center",
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            Follow
-          </Text>
-        </Text>
-      </View>
-    </View>
+        Follow
+      </Text>
+    </Text>
   </View>
 </View>
 `;
@@ -241,181 +140,81 @@ exports[`component: FollowButton renders unfollow version 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
+      "backgroundColor": undefined,
+      "borderColor": undefined,
+      "borderRadius": 12,
+      "height": 32,
+      "justifyContent": "center",
       "opacity": 1,
+      "padding": 0,
+      "width": 82,
     }
   }
 >
   <View
-    collapsable={false}
     style={
       {
-        "backgroundColor": undefined,
-        "borderColor": undefined,
-        "borderRadius": 12,
-        "borderStyle": "solid",
-        "borderWidth": 1,
-        "elevation": 0,
-        "height": 32,
-        "justifyContent": "center",
-        "minWidth": 64,
-        "padding": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-        "width": 82,
+        "flexDirection": "row",
       }
     }
   >
-    <View
-      accessibilityRole="button"
-      accessibilityState={
-        {
-          "disabled": true,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      focusable={false}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    <Text
+      numberOfLines={1}
       style={
         [
+          [
+            {
+              "color": undefined,
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
           {
-            "overflow": "hidden",
-          },
-          {
-            "borderRadius": 12,
+            "color": undefined,
           },
         ]
       }
     >
-      <View
+      <Text
         style={
           [
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-            },
             [
               {
-                "height": 52,
+                "color": undefined,
+              },
+              {
+                "fontFamily": "Poppins-SemiBold",
+                "fontSize": 12,
+                "fontStyle": "normal",
+                "fontWeight": "600",
+                "letterSpacing": 0.04,
+                "lineHeight": 16,
+                "textAlign": "left",
+              },
+            ],
+            [
+              {
+                "color": undefined,
+                "margin": 0,
+                "minWidth": "100%",
+                "padding": 0,
+                "textAlign": "center",
               },
               undefined,
             ],
           ]
         }
       >
-        <Text
-          numberOfLines={1}
-          selectable={false}
-          style={
-            [
-              {
-                "color": "#000000",
-                "fontFamily": "System",
-                "fontWeight": "400",
-              },
-              {
-                "textAlign": "left",
-              },
-              [
-                {
-                  "letterSpacing": 1,
-                  "marginHorizontal": 16,
-                  "marginVertical": 9,
-                  "textAlign": "center",
-                },
-                undefined,
-                {
-                  "textTransform": "uppercase",
-                },
-                {
-                  "color": "#6200ee",
-                  "fontFamily": "System",
-                  "fontWeight": "500",
-                },
-                {
-                  "fontFamily": "System",
-                  "fontWeight": "500",
-                },
-                [
-                  {
-                    "color": undefined,
-                    "fontFamily": "Poppins-SemiBold",
-                    "fontSize": 16,
-                    "fontStyle": "normal",
-                    "fontWeight": "600",
-                    "letterSpacing": 0.015,
-                    "lineHeight": 21,
-                    "textTransform": "capitalize",
-                  },
-                  [
-                    {
-                      "color": undefined,
-                      "margin": 0,
-                      "minWidth": "100%",
-                      "padding": 0,
-                      "textAlign": "center",
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-            ]
-          }
-        >
-          <Text
-            style={
-              [
-                [
-                  {
-                    "color": undefined,
-                  },
-                  {
-                    "fontFamily": "Poppins-SemiBold",
-                    "fontSize": 12,
-                    "fontStyle": "normal",
-                    "fontWeight": "600",
-                    "letterSpacing": 0.04,
-                    "lineHeight": 16,
-                    "textAlign": "left",
-                  },
-                ],
-                [
-                  {
-                    "color": undefined,
-                    "margin": 0,
-                    "minWidth": "100%",
-                    "padding": 0,
-                    "textAlign": "center",
-                  },
-                  undefined,
-                ],
-              ]
-            }
-          >
-            Unfollow
-          </Text>
-        </Text>
-      </View>
-    </View>
+        Unfollow
+      </Text>
+    </Text>
   </View>
 </View>
 `;
