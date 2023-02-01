@@ -1342,13 +1342,13 @@
   resolved "https://registry.yarnpkg.com/@cosmjs/utils/-/utils-0.29.5.tgz#3fed1b3528ae8c5f1eb5d29b68755bebfd3294ee"
   integrity sha512-m7h+RXDUxOzEOGt4P+3OVPX7PuakZT3GBmaM/Y2u+abN3xZkziykD/NvedYFvvCCdQo714XcGl33bwifS9FZPQ==
 
-"@desmoslabs/desmjs-types@4.7.2":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs-types/-/desmjs-types-4.7.2.tgz#42f3b24172d36e65c197814eee039c7e4e9d9e9e"
-  integrity sha512-Jakx2nEqDZKVwEk9PS7qHY0Nl+1GVggaVFvxLfwKG/OgdKt3d07pzXv7+KzCoAVE44gB+Nx1sVTPVxgmxI5wQQ==
+"@desmoslabs/desmjs-types@^4.7.6":
+  version "4.7.6"
+  resolved "https://registry.npmjs.org/@desmoslabs/desmjs-types/-/desmjs-types-4.7.6.tgz#b1d04293a3e7072eeb8e57c113778b6e386cf151"
+  integrity sha512-ogWGkAVgOr2/uLGVqWSqszurUgFK3gIJSVx862Wsk3F/Oz2hAE9G78eJ5k9ynbRM99r6cbZcjJX5mPLKEEeL1Q==
   dependencies:
     long "^4.0.0"
-    protobufjs "^7.1.2"
+    protobufjs "^7.2.0"
 
 "@desmoslabs/desmjs-types@workspace:packages/types":
   version "4.7.3"
@@ -1358,10 +1358,10 @@
     long "^4.0.0"
     protobufjs "^7.1.2"
 
-"@desmoslabs/desmjs@4.7.2":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.7.2.tgz#1d6b4f8ffe0d6efc967090f5910168c026e7ec48"
-  integrity sha512-5/4UBfVL1unJJDvyyAwYTCXufTniOZWdU8EZCQ+PuYLnSJfVnFsSehZkEypsFvOvVM0F9AGhipt61tAUcu4spA==
+"@desmoslabs/desmjs@^4.7.6":
+  version "4.7.6"
+  resolved "https://registry.npmjs.org/@desmoslabs/desmjs/-/desmjs-4.7.6.tgz#741b41df9c41cc582cb36b61303d74c466722abc"
+  integrity sha512-EWMtia5rVhP2E3qoHfxCBuppBJynfq4y7E7v3zlKD/GNZr0kXvAXoTiukt7j3WQnB3uTP9QWGl3yzEqlYSK1EQ==
   dependencies:
     "@cosmjs/amino" "^0.29.5"
     "@cosmjs/cosmwasm-stargate" "^0.29.5"
@@ -9745,6 +9745,24 @@ protobufjs@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.1.2.tgz#a0cf6aeaf82f5625bffcf5a38b7cd2a7de05890c"
   integrity sha512-4ZPTPkXCdel3+L81yw3dG6+Kq3umdWKh7Dc7GW/CpNk4SX3hK58iPCWeCyhVTDrbkNeKrYNZ7EojM5WDaEWTLQ==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/node" ">=13.7.0"
+    long "^5.0.0"
+
+protobufjs@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-7.2.0.tgz#ca6b1ceb9a9efe21186ba96178089ec563011a5e"
+  integrity sha512-hYCqTDuII4iJ4stZqiuGCSU8xxWl5JeXYpwARGtn/tWcKCAro6h3WQz+xpsNbXW0UYqpmTQFEyFWO0G0Kjt64g==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
