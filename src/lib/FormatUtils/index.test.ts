@@ -3,6 +3,7 @@ import {
   formatMsToHumanReadable,
   formatNumShorthand,
   mapPostFontSize,
+  removeNonNumbers,
   sanitizeMnemonic,
 } from 'lib/FormatUtils/index';
 
@@ -111,6 +112,15 @@ describe('utils: FormatUtils', () => {
       ).toThrow(
         `No matching denoms found for denom: denom that does not exist`,
       );
+    });
+  });
+
+  describe('removeNonNumbers', () => {
+    it('removes all non number characters from a given string', () => {
+      const allAscii =
+        ' !"#$%&\'()*+,-./0123456789.:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+
+      expect(removeNonNumbers(allAscii)).toEqual('0123456789');
     });
   });
 });
