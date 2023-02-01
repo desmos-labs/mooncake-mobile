@@ -1,140 +1,11 @@
-import {NavigatorScreenParams} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {
-  BottomSheetAndroid,
-  ModalPresentationIOS,
-} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
-import EnvConfig from 'config/EnvConfig';
-import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
-import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
-import useInitializeAppData from 'hooks/useInitializeAppData';
-import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import AuthorizeWalletStack, {
-  AuthorizeWalletParamList,
-} from 'navigation/RootNavigator/AuthorizeWalletStack';
-import BottomTabs, {
-  BottomTabsParamList,
-} from 'navigation/RootNavigator/BottomTabs';
-import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
-import PostInteractionTabs, {
-  PostInteractionTabsParamList,
-} from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Dimensions, Platform, TextStyle, ViewStyle} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import ActionAuthorization, {
-  ActionAuthorizationParams,
-} from 'screens/ActionAuthorization';
-import Activities from 'screens/Activities';
-import AddProfile, {AddProfileParams} from 'screens/AddProfile';
-import AddProfileSelectAddressAdvanced, {
-  AddProfileSelectAddressAdvancedParams,
-} from 'screens/AddProfileSelectAddress/Advanced';
-import AddProfileSelectAddressGeneral, {
-  AddProfileSelectAddressGeneralParams,
-} from 'screens/AddProfileSelectAddress/General';
-import GenerateAccount, {BroadcastTxParams} from 'screens/BroadcastTx';
-import CheckMnemonic, {CheckMnemonicParams} from 'screens/CheckMnemonic';
-import CommentReplies, {CommentRepliesParams} from 'screens/CommentReplies';
-import Community from 'screens/Community';
-import ConfirmAddress, {ConfirmAddressParams} from 'screens/ConfirmAddress';
-import ConnectAddressAdvanced, {
-  ConnectAddressAdvancedParams,
-} from 'screens/ConnectAddress/Advanced';
-import ConnectAddressGeneral, {
-  ConnectAddressGeneralParams,
-} from 'screens/ConnectAddress/General';
-import ConnectApp from 'screens/ConnectApp';
-import {ConnectAppParams} from 'screens/ConnectApp/useHooks';
-import ConnectChainMethod from 'screens/ConnectChainMethod';
-import ConnectChainTxDetail, {
-  ConnectChainTxDetailParams,
-} from 'screens/ConnectChainTxDetail';
-import ConnectToLedger, {ConnectToLedgerParams} from 'screens/ConnectToLedger';
-import CreateDesmosProfile from 'screens/CreateDesmosProfile';
-import CreateTextPost from 'screens/CreateTextPost';
 import DevScreen from 'screens/DEV';
-import EditProfile from 'screens/EditProfile';
-import EnterComment, {EnterCommentParams} from 'screens/EnterComment';
-import {FollowingParams} from 'screens/Following';
-import FollowingAndFollowers, {
-  FollowingAndFollowersParams,
-} from 'screens/FollowingAndFollowers';
-import FullscreenStatusScreen, {
-  FullscreenStatusScreenParams,
-} from 'screens/FullscreenStatusScreen';
-import Grants from 'screens/Grants';
-import GrantsDetails, {GrantsDetailsParams} from 'screens/GrantsDetails';
-import GuestProfile, {GuestProfileParams} from 'screens/GuestProfile';
-import Invites from 'screens/Invites';
-import Landing from 'screens/Landing';
-import Login, {LoginParams} from 'screens/Login';
-import LookingForDevices from 'screens/LookingForDevices';
-import ManageBiometrics from 'screens/ManageBiometrics';
-import ManageConnectedApps from 'screens/ManageConnectedApps';
-import ManageConnectedChains from 'screens/ManageConnectedChains';
-import ManageInvites from 'screens/ManageInvites';
-import MnemonicInput, {
-  MNEMONIC_INPUT_MODE,
-  MnemonicInputParams,
-} from 'screens/MnemonicInput';
-import AddProfileModal, {
-  AddProfileModalParams,
-} from 'screens/Modals/AddProfileModal';
-import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
-import BottomModal, {BottomModalParams} from 'screens/Modals/BottomModal';
-import ConfirmModal, {ConfirmModalParams} from 'screens/Modals/ConfirmModal';
-import ConsentAgreement, {
-  ConsentAgreementParams,
-} from 'screens/Modals/ConsentAgreement';
-import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
-import DisconnectAppModal, {
-  DisconnectAppParams,
-} from 'screens/Modals/DisconnectAppModal';
-import DisconnectChainModal, {
-  DisconnectChainParams,
-} from 'screens/Modals/DisconnectChainModal';
-import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
-import ReportPost, {ReportPostParams} from 'screens/Modals/ReportPost';
-import SendTips, {SendTipsParams} from 'screens/Modals/SendTips';
-import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
-import NftDetails, {NftDetailsParams} from 'screens/NftDetails';
-import NoDtagFound from 'screens/NoDtagFound';
-import Onboarding, {OnboardingParams} from 'screens/Onboarding';
-import ChangePassword, {
-  PASSWORD_MANIPULATION_MODE,
-  PasswordManipulationParams,
-} from 'screens/PasswordManipulation';
-import PostDetails, {PostDetailsParams} from 'screens/PostDetails';
-import PostTypeSelection from 'screens/PostTypeSelection';
-import ManageConnectionsModal, {
-  ManageConnectionsModalParams,
-} from 'screens/Profile/components/ManageConnectionsModal';
-import Operations, {
-  OperationsParams,
-} from 'screens/Profile/components/Operations';
-import ProfileNfts from 'screens/ProfileNfts';
-import ProfilePosts, {ProfilePostsTabsParams} from 'screens/ProfilePosts';
-import {PostsTabParams} from 'screens/ProfilePosts/PostsTab';
-import Profiles from 'screens/Profiles';
-import RevealRecoveryPhrase from 'screens/RevealRecoveryPhrase';
-import SelectChainConnection from 'screens/SelectChainConnection';
-import SelectDtag, {SelectDtagParamList} from 'screens/SelectDtag';
-import SelectLedgerApp from 'screens/SelectLedgerApp';
-import SelectTweet, {SelectTweetParams} from 'screens/SelectTweet';
-import Settings from 'screens/Settings';
-import ShowRecoveryPhrase, {
-  ShowSecretPhraseParams,
-} from 'screens/ShowRecoveryPhrase';
-import Signup from 'screens/Signup';
-import SignupResult from 'screens/SignupResult';
-import WelcomeBack from 'screens/WelcomeBack';
-import WelcomePage from 'screens/WelcomePage';
 
 export type RootNavigatorParamList = {
+  /*
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
@@ -192,20 +63,20 @@ export type RootNavigatorParamList = {
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
-
+  */
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
-
-  /* Following and followers route. */
+  /*
+  // Following and followers route.
   [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
 
-  /* Following tab route. */
+  // Following tab route.
   [ROUTES.FOLLOWING]: FollowingParams;
 
-  /* Followers tab route. */
+  // Followers tab route.
   [ROUTES.FOLLOWERS]: FollowingParams;
 
-  /* Counters Params */
+  // Counters Params
   // marked for deletion (unused/belongs under ROUTES.POST_INTERACTION
   // [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
   // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
@@ -226,7 +97,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
   [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
 
-  /* Apps and Twitter */
+  // Apps and Twitter
   [ROUTES.CONNECT_APP]: ConnectAppParams;
   [ROUTES.SELECT_TWEET]: SelectTweetParams;
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
@@ -250,12 +121,13 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.OPERATIONS]: OperationsParams;
+  */
 };
 
-const NativeTransition = Platform.select({
+/* const NativeTransition = Platform.select({
   ios: ModalPresentationIOS,
   default: BottomSheetAndroid,
-});
+}); */
 
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
@@ -263,25 +135,24 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 // they will be organized properly once the final design is ready
 const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
-  useInitializeAppData();
-  useInitializeNotifications();
-  useInitializeDynamicLinks();
+  // useInitializeAppData();
+  // useNotifications();
+  // useDynamicLinks();
   // End initialization
-
   // Start subscriptions
-  useSubscriptions();
+  // useSubscriptions();
 
-  const {t} = useTranslation();
-  const theme = useTheme();
+  // const {t} = useTranslation();
+  // const theme = useTheme();
 
   /**
    * This need to be removed
    */
   /* To allow going back to previous screen via swipe left. */
-  const {height, width} = Dimensions.get('window');
-  const gestureResponseDistance = Math.max(height, width);
+  // const {height, width} = Dimensions.get('window');
+  // const gestureResponseDistance = Math.max(height, width);
 
-  const styles: {[key: string]: ViewStyle | TextStyle} = {
+  /* const styles: {[key: string]: ViewStyle | TextStyle} = {
     followingAndFollowers: {
       backgroundColor: theme.colors.white,
     },
@@ -291,7 +162,7 @@ const RootNavigator = () => {
     statusScreen: {
       backgroundColor: 'rgb(175,175,175)',
     },
-  };
+  }; */
 
   /**
    * End
@@ -316,6 +187,7 @@ const RootNavigator = () => {
       {__DEV__ && (
         <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
       )}
+      {/*
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
 
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
@@ -328,8 +200,8 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
       <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
 
-      {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
-      {/* navigates away once the tx is finished broadcasting */}
+      {/* Perhaps turn this into a more general "BroadcastTx" screen that
+      {/* navigates away once the tx is finished broadcasting
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
 
       <Stack.Screen
@@ -488,7 +360,7 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} />
 
-      {/* modals */}
+      {/* modals
       <Stack.Group
         screenOptions={{
           cardStyle: {
@@ -579,7 +451,7 @@ const RootNavigator = () => {
         />
       </Stack.Group>
 
-      {/* modals end */}
+      {/* modals end
 
       <Stack.Screen
         name={ROUTES.AUTHORIZE_WALLET}
@@ -615,6 +487,7 @@ const RootNavigator = () => {
         name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED}
         component={AddProfileSelectAddressAdvanced}
       />
+      */}
     </Stack.Navigator>
   );
 };

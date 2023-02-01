@@ -28,6 +28,7 @@ module.exports = {
           contexts: './src/contexts',
           hooks: './src/hooks',
           lib: './src/lib',
+          native: './src/native',
           navigation: './src/navigation',
           screens: './src/screens',
           services: './src/services',

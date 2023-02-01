@@ -44,6 +44,12 @@
       "navigation/*": [
         "./navigation/*"
       ],
+      "native": [
+        "./native"
+      ],
+      "native/*": [
+        "./native/*"
+      ],
       "screens": [
         "./screens"
       ],

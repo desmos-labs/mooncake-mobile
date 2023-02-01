@@ -7,7 +7,7 @@ import {
   StdSignDoc,
 } from '@cosmjs/amino';
 import {Secp256k1, sha256} from '@cosmjs/crypto';
-import {toBech32, fromBase64, fromHex, toBase64} from '@cosmjs/encoding';
+import {fromBase64, fromHex, toBase64, toBech32} from '@cosmjs/encoding';
 import {
   AccountData,
   DirectSignResponse,
@@ -16,7 +16,7 @@ import {
 } from '@cosmjs/proto-signing';
 import * as bip39 from 'bip39';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-import {CryptoUtils} from 'types/cryptoUtils';
+import {CryptoUtils} from 'native/CryptoUtils';
 import {DesmosHdPath, HdPath} from 'types/hdpath';
 
 export interface LocalWalletOptions {

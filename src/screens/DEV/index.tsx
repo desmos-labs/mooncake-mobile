@@ -1,11 +1,8 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import {mnemonicState, signerState} from '@recoil/connectChainState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ToastConfig from 'config/ToastConfig';
-import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
-import useActiveAccount from 'hooks/useActiveAccount';
 import {clearMMKV} from 'lib/MMKVStorage';
 import {resetSecureStorage} from 'lib/SecureStorage';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -21,7 +18,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
-import {useResetRecoilState} from 'recoil';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
@@ -74,15 +70,14 @@ type DevScreenProps = StackScreenProps<
 
 const DevScreen: FC<DevScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
-  const {revokeGrants} = useAddOrUpdateGrants();
   const toast = useToast();
   /*  const a = [1, 2];
   const b = [1, 2, 3];
 
   console.log(_.includes(b, a)); */
 
-  const resetSigner = useResetRecoilState(signerState);
-  const resetMnemonic = useResetRecoilState(mnemonicState);
+  // const resetSigner = useResetRecoilState(signerState);
+  // const resetMnemonic = useResetRecoilState(mnemonicState);
 
   const showToast = () => {
     toast.show('I am a toast', {
@@ -122,7 +117,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
     });
   }, []);
 
-  const {activeAddress} = useActiveAccount();
+  // const {activeAddress} = useActiveAccount();
 
   const renderItem = ({item}: any) => {
     return (
@@ -134,13 +129,13 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
                 headerTitle: '@Raffaello',
                 initialTabRouteName: ROUTES.FOLLOWING,
                 subspaceID: 5,
-                userAddress: activeAddress,
+                userAddress: '',
                 username: '@Raffaello',
               });
               break;
             case ROUTES.ADD_PROFILE:
-              resetSigner();
-              resetMnemonic();
+              // resetSigner();
+              // resetMnemonic();
               navigate(item);
               break;
             default:
@@ -218,7 +213,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
                     {
                       text: 'Yes',
                       onPress: async () => {
-                        await revokeGrants();
+                        // await revokeGrants();
                       },
                     },
                     {
