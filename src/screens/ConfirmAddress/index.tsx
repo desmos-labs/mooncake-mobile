@@ -44,12 +44,17 @@ const ConfirmAddress = () => {
         <Typography.Body5 style={styles.textStyle}>{address}</Typography.Body5>
       </View>
 
-      <Button mode="gradientFilled" onPress={() => {}}>
+      <Button
+        size={44}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}
+        mode="contained"
+        onPress={() => {}}>
         {t('yesContinue')}
       </Button>
 
       <Spacer paddingTop={theme.spacing.l}>
-        <Button mode="outlined" onPress={() => {}}>
+        <Button size={44} mode="outlined" onPress={() => {}}>
           {t('noChangeIt')}
         </Button>
       </Spacer>

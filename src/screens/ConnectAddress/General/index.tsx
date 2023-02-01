@@ -84,6 +84,8 @@ const ConnectAddressGeneral = () => {
     return (
       <View style={styles.topBarButtonContainer}>
         <Button
+          size={26}
+          textColor={theme.colors.butterOrange01}
           mode="text"
           onPress={async () => {
             if (ledgerTransport) {
@@ -91,9 +93,7 @@ const ConnectAddressGeneral = () => {
             }
             navigation.navigate(ROUTES.CONNECT_ADDRESS_ADVANCED, route.params);
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('advanced')}
-          </Typography.Button2>
+          {t('advanced')}
         </Button>
       </View>
     );

@@ -102,6 +102,8 @@ const ConnectAddressAdvanced = () => {
       <View style={styles.topBarButtonContainer}>
         <Button
           mode="text"
+          size={26}
+          textColor={theme.colors.butterOrange01}
           onPress={async () => {
             if (ledgerTransport) {
               await (ledgerTransport as BluetoothTransport).close();
@@ -109,9 +111,7 @@ const ConnectAddressAdvanced = () => {
 
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          {t('general')}
         </Button>
       </View>
     );
@@ -256,7 +256,9 @@ const ConnectAddressAdvanced = () => {
                 </Spacer>
 
                 <Button
-                  color={theme.colors.surfaceBlack}
+                  size={44}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
                   mode="contained"
                   loading={loading || !generatedAccount}
                   disabled={invalidField || isAddressLinked}
