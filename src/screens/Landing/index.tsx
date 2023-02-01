@@ -54,7 +54,7 @@ const Landing = () => {
           mode="contained"
           size={56}
           useSubtitle={true}
-          backgroundColor={theme.colors.white}
+          backgroundColor="rgba(255, 255, 255, 0.7)"
           onPress={() => navigate(ROUTES.SIGNUP)}>
           {t('signUp')}
         </Button>
@@ -64,7 +64,7 @@ const Landing = () => {
             mode="contained"
             size={56}
             useSubtitle={true}
-            backgroundColor={theme.colors.white}
+            backgroundColor="rgba(255, 255, 255, 0.7)"
             onPress={() =>
               navigate(ROUTES.MNEMONIC_INPUT, {
                 mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
