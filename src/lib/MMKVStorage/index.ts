@@ -3,6 +3,7 @@ import EnvConfig from 'config/EnvConfig';
 
 export enum MMKVKEYS {
   // Application data
+  APP_STATE = 'APP_STATE',
   APP_SETTINGS = 'APP_SETTINGS',
   BUTTER_CONFIG = 'BUTTER_CONFIG',
   DESMOS_CONFIG = 'DESMOS_CONFIG',
@@ -23,9 +24,6 @@ export enum MMKVKEYS {
 
   // Transactions data
   PENDING_TRANSACTIONS = 'PENDING_TRANSACTIONS',
-
-  // Notifications data
-  NOTIFICATIONS_COUNT = 'NOTIFICATIONS_COUNT',
 
   // REST APIs
   REST_AUTH_TOKEN = 'REST_AUTH_TOKEN',

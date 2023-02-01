@@ -5,16 +5,21 @@ import {gql} from '@apollo/client';
  */
 const GetSubspaceConfig = gql`
   query GetSubspaceConfig($subspaceID: bigint!) @api(name: butter) {
-    subspace_report_reason(where: {subspace_id: {_eq: $subspaceID}}) {
+    report_reasons: subspace_report_reason(
+      where: {subspace_id: {_eq: $subspaceID}}
+    ) {
       id
       title
+      description
     }
-    subspace_registered_reaction(where: {subspace_id: {_eq: $subspaceID}}) {
+    registered_reactions: subspace_registered_reaction(
+      where: {subspace_id: {_eq: $subspaceID}}
+    ) {
       id
       display_value
       shorthand_code
     }
-    contract(
+    tips_contract: contract(
       where: {
         type: {_ilike: "tips"}
         config: {_contains: {subspace_id: $subspaceID}}

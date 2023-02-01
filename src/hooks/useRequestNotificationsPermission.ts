@@ -1,10 +1,14 @@
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
-import appSettingsState from '@recoil/settings';
+import {useSetSetting} from '@recoil/settings';
 import {useCallback, useEffect} from 'react';
-import {useRecoilState} from 'recoil';
 
+/**
+ * Hook that allows to ask the user permission to access the device notifications.
+ * Once the permission is given, it is stored within the application settings so that
+ * it can be later disabled by the user.
+ */
 const useRequestNotificationsPermission = () => {
-  const [settings, setSettings] = useRecoilState(appSettingsState);
+  const setNotificationPermission = useSetSetting('notificationsPermission');
 
   const requestUserPermission = useCallback(async () => {
     try {
@@ -15,13 +19,17 @@ const useRequestNotificationsPermission = () => {
         carPlay: true,
       });
 
-      if (notifeeAuth.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
-        setSettings({...settings, notificationsPermission: true});
+      switch (notifeeAuth.authorizationStatus) {
+        case AuthorizationStatus.AUTHORIZED:
+          setNotificationPermission(true);
+          break;
+        default:
+          setNotificationPermission(false);
       }
     } catch (e) {
       console.error(e);
     }
-  }, [settings]);
+  }, [setNotificationPermission]);
 
   useEffect(() => {
     requestUserPermission().then(() => console.log('Permissions requested'));

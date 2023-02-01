@@ -5,7 +5,6 @@
  * - auto: Set the color schema according to the system (Future release).
  */
 import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
-import {AppStateStatus} from 'react-native';
 
 export type AppTheme = 'light' | 'dark' | 'auto';
 
@@ -14,21 +13,10 @@ export type AppTheme = 'light' | 'dark' | 'auto';
  */
 export type AppSettings = {
   theme: AppTheme;
-
-  // use MMKV to control these as they need to be persisted across
-  // app sessions
   biometrics: boolean;
   notifications: boolean;
   notificationsPermission: boolean;
-
-  // Has app data been initialized yet?
-  dataInitialized: boolean;
-  currentTimezone: string;
-  registeredReactions: any[];
-  registeredReports: any[];
-  contractsConfig: any[];
   currentChain: ChainInfo;
   newDiscPostNotification: boolean;
   newFollowPostNotification: boolean;
-  appActiveState: AppStateStatus;
 };

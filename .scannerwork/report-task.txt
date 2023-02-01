@@ -1,0 +1,6 @@
+projectKey=Butter
+serverUrl=http://localhost:9000
+serverVersion=9.8.0.63668
+dashboardUrl=http://localhost:9000/dashboard?id=Butter
+ceTaskId=AYWhTsIqV520bDP_untx
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYWhTsIqV520bDP_untx

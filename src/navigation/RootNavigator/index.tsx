@@ -6,9 +6,9 @@ import {
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 import EnvConfig from 'config/EnvConfig';
 import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
-import useDynamicLinks from 'hooks/useDynamicLinks';
+import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import useNotifications from 'hooks/useNotifications';
+import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
 import AuthorizeWalletStack, {
   AuthorizeWalletParamList,
@@ -264,9 +264,10 @@ const Stack = createStackNavigator<RootNavigatorParamList>();
 const RootNavigator = () => {
   // Initialization. Move to Landing page once ready.
   useInitializeAppData();
-  useNotifications();
-  useDynamicLinks();
+  useInitializeNotifications();
+  useInitializeDynamicLinks();
   // End initialization
+
   // Start subscriptions
   useSubscriptions();
 
@@ -554,6 +555,10 @@ const RootNavigator = () => {
               chainName: 'Cosmos Hub',
               creationTime: new Date(),
               externalAddress: 'externalAddress',
+              proof: {
+                plainText: 'proof_plain_test',
+                signature: 'proof_signature',
+              },
             },
           }}
         />

@@ -1,79 +1,87 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import useActiveAccount from 'hooks/useActiveAccount';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useCallback} from 'react';
 import {Alert} from 'react-native';
-import NotificationTypesEnum from 'types/notificationTypes';
+import {NotificationData, NotificationType} from 'types/notifications';
+import {useActiveProfile} from '@recoil/profiles';
 
+/**
+ * Hook that allows handling the navigation to the proper screen when the user
+ * clicks on a notification that is received from the server.
+ */
 const useHandleNotificationPressEvent = () => {
   const {navigate} =
     useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
-  const {profileData} = useActiveAccount();
-  const navigateToCorrectScreen = useCallback(
-    ({
-      type,
-      post_id,
-      comment_id,
-      reply_id,
-      subspace_id,
-    }: {
-      type: NotificationTypesEnum;
-      post_id?: string;
-      comment_id?: string;
-      reply_id?: string;
-      subspace_id?: string;
-    }) => {
-      if (type === NotificationTypesEnum.Comment && comment_id) {
-        navigate(ROUTES.POST_DETAILS, {
-          postId: parseInt(post_id!, 10),
-          subspaceId: parseInt(subspace_id!, 10),
-          focusCommentBox: false,
-        });
-      } else if (type === NotificationTypesEnum.Reply && reply_id) {
-        navigate(ROUTES.COMMENT_REPLIES, {
-          commentId: parseInt(post_id!, 10),
-          subspaceId: parseInt(subspace_id!, 10),
-        });
-      } else if (type === NotificationTypesEnum.Reaction_Post && post_id) {
-        navigate(ROUTES.POST_DETAILS, {
-          subspaceId: parseInt(subspace_id!, 10),
-          postId: parseInt(post_id!, 10),
-          focusCommentBox: false,
-        });
-      } else if (
-        type === NotificationTypesEnum.Reaction_Comment ||
-        type === NotificationTypesEnum.Reaction_Reply
-      ) {
-        navigate(ROUTES.COMMENT_REPLIES, {
-          commentId: parseInt(comment_id!, 10),
-          subspaceId: parseInt(subspace_id!, 10),
-        });
-      } else if (type === NotificationTypesEnum.Follow) {
-        navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-          screen: ROUTES.FOLLOWING,
-          params: {
-            subspaceID: parseInt(subspace_id!, 10),
-            userAddress: profileData?.address!,
-            headerTitle:
-              profileData?.nickname.trim() || `@${profileData?.dtag}`,
-          },
-        });
-      } else if (type === NotificationTypesEnum.InviteClaimed) {
-        navigate(ROUTES.MANAGE_INVITES);
-      } else if (type === NotificationTypesEnum.InviteUnlocked) {
-        navigate(ROUTES.INVITES);
-      } else {
-        Alert.alert('Unmapped notification handling');
+
+  const profile = useActiveProfile();
+  if (!profile) {
+    throw new Error('Using the application without a profile');
+  }
+
+  // Return a callback that allows to navigate to the proper screen
+  // given a ReceivedNotificationData instance that is retrieved from
+  // the server
+  return useCallback(
+    (data: NotificationData | undefined) => {
+      switch (data?.type) {
+        case NotificationType.Comment:
+          navigate(ROUTES.POST_DETAILS, {
+            postId: data.postId,
+            subspaceId: data.subspaceId,
+            focusCommentBox: false,
+          });
+          break;
+
+        case NotificationType.Reply:
+          navigate(ROUTES.COMMENT_REPLIES, {
+            commentId: data.commentId,
+            subspaceId: data.subspaceId,
+          });
+          break;
+
+        case NotificationType.ReactionPost:
+          navigate(ROUTES.POST_DETAILS, {
+            subspaceId: data.subspaceId,
+            postId: data.postId,
+            focusCommentBox: false,
+          });
+          break;
+
+        case NotificationType.ReactionComment:
+        case NotificationType.ReactionReply:
+          navigate(ROUTES.COMMENT_REPLIES, {
+            commentId: data.commentId,
+            subspaceId: data.subspaceId,
+          });
+          break;
+
+        case NotificationType.Follow:
+          navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+            screen: ROUTES.FOLLOWING,
+            params: {
+              subspaceID: data.subspaceId,
+              userAddress: profile.address,
+              headerTitle: profile.nickname?.trim() || `@${profile.dtag}`,
+            },
+          });
+          break;
+
+        case NotificationType.InviteClaimed:
+          navigate(ROUTES.MANAGE_INVITES);
+          break;
+
+        case NotificationType.InviteUnlocked:
+          navigate(ROUTES.INVITES);
+          break;
+
+        default:
+          Alert.alert('Unmapped notification handling');
       }
     },
-    [profileData?.address, profileData?.dtag, profileData?.nickname],
+    [profile],
   );
-
-  return {
-    navigateToCorrectScreen,
-  };
 };
 
 export default useHandleNotificationPressEvent;

@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 
-const GetConfig = gql`
+const GetButterConfig = gql`
   query Config @api(name: butter) {
     config {
       desmos_address
@@ -15,4 +15,4 @@ const GetConfig = gql`
   }
 `;
 
-export default GetConfig;
+export default GetButterConfig;

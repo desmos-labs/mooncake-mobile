@@ -26,4 +26,4 @@ export const useSetButterConfig = () => useSetRecoilState(butterConfigState);
 /**
  * A hook that exposes the current Butter config state.
  */
-export const useButterConfig = () => useRecoilValue(butterConfigState);
+export const useStoredButterConfig = () => useRecoilValue(butterConfigState);

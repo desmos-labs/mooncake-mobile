@@ -1,9 +1,49 @@
 import {ApplicationLinkState} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 
+/**
+ * Represents a reaction that is registered on the subspace and can be used.
+ */
+export interface RegisteredReaction {
+  readonly id: number;
+  readonly shortHandCode: string;
+  readonly displayValue: string;
+}
+
+/**
+ * Reporting reason that is registered within a subspace and can be used when reporting a post or user.
+ */
+export interface ReportReason {
+  readonly id: number;
+  readonly title: string;
+  readonly description: string;
+}
+
+/**
+ * Parameters related to the subspace currently used by the application.
+ */
+export interface SubspaceParams {
+  readonly registeredReactions: RegisteredReaction[];
+  readonly reportReasons: ReportReason[];
+  /**
+   * Configuration of the smart contract allowing to tip another user.
+   */
+  readonly tipsContractConfig: {
+    readonly serviceFeePercentage: number;
+  };
+}
+
+/**
+ * On-chain parameters related to the posts' module.
+ * These data should be considered when creating or editing a post.
+ */
 export interface PostsParams {
   readonly maxTextLength: number;
 }
 
+/**
+ * On-chain parameters related to the profiles' module.
+ * These data should be considered when creating or updating a profile.
+ */
 export interface ProfileParams {
   readonly bio: {
     readonly maxLength: number;

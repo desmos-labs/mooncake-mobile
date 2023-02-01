@@ -36,8 +36,10 @@ export const deleteAuthToken = () => {
 const invalidAuthMsgs = ['Wrong Authorization header value', 'Invalid token'];
 
 type NavProps = StackScreenProps<RootNavigatorParamList, any>;
-// A hook that augments the interceptors of the axiosInstance with react hook
-// functionality
+
+/**
+ * A hook that augments the interceptors of the axiosInstance with react hook functionality.
+ */
 export const useInitializeAxios = () => {
   const {navigate} = useNavigation<NavProps['navigation']>();
 

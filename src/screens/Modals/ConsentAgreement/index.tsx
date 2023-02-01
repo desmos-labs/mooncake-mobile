@@ -8,11 +8,14 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import {useSetAppStateValue} from '@recoil/appState';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
 
 export type ConsentAgreementParams = {
+  /**
+   * Callback that is used after the user presses the button to give the consent.
+   */
   onConsentAgree: () => void;
 };
 
@@ -21,28 +24,32 @@ type NavProps = StackScreenProps<
   ROUTES.CONSENT_AGREEMENT
 >;
 
+/**
+ * Screen allowing to accept the Terms of Use and Privacy policies of Butter.
+ */
 const ConsentAgreement = () => {
   const {t} = useTranslation('consentAgreement');
   const styles = useStyles();
 
-  const {
-    params: {onConsentAgree},
-  } = useRoute<NavProps['route']>();
+  const {params} = useRoute<NavProps['route']>();
   const {goBack} = useNavigation<NavProps['navigation']>();
 
+  const setConsentGiven = useSetAppStateValue('consentGiven');
+
   const handlePressTOS = React.useCallback(() => {
-    // implementation
+    console.warn('Implement handle press TOS');
   }, []);
 
-  const handlePressPP = React.useCallback(() => {
-    // implementation
+  const handlePressPrivacyPolicy = React.useCallback(() => {
+    console.warn('Implement handle press Privacy Policy');
   }, []);
 
   const handlePressContinue = React.useCallback(() => {
-    // Looking for device screen will show this consent screen if consent is not
-    // already given, so we can just go back once the user accepts
-    onConsentAgree();
-    setMMKV(MMKVKEYS.CONSENT_GIVEN, true);
+    // Set the consent given within the application state
+    setConsentGiven(true);
+
+    // Call the callback, if provided
+    params?.onConsentAgree();
   }, []);
 
   return (
@@ -60,7 +67,7 @@ const ConsentAgreement = () => {
         <Spacer paddingTop={40}>
           <ConsentButtonGroup
             handlePressTOS={handlePressTOS}
-            handlePressPP={handlePressPP}
+            handlePressPP={handlePressPrivacyPolicy}
           />
         </Spacer>
 

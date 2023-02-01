@@ -33,6 +33,29 @@ export const useGetPendingTransactions = () => {
 };
 
 /**
+ * Hook that allows to get the pending transaction having a specified hash, if it exists.
+ */
+export const useGetPendingTransaction = () => {
+  const transactions = useRecoilValue(pendingTransactionsState);
+  return React.useCallback(
+    (txHash: string): PendingTransaction | undefined => {
+      // Find the entry containing the transaction with the given hash
+      const entry = Object.entries(transactions).find(
+        ([, txs]) => txs.find(tx => tx.hash === txHash) !== undefined,
+      );
+      if (!entry) {
+        return undefined;
+      }
+
+      // Find the pending transaction
+      const [, txs] = entry;
+      return txs.find(tx => tx.hash === txHash);
+    },
+    [transactions],
+  );
+};
+
+/**
  * Hook that allows to store a pending transaction inside the current list of pending transactions for the given user.
  */
 export const useStorePendingTransaction = () => {

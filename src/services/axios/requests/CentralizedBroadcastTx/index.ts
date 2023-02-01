@@ -43,6 +43,7 @@ const CentralizedBroadcastTx = async ({
   return _response.data;
 };
 
+// TODO: Review this and move it into a hook
 export const encodeAndBroadcastTx = async ({
   msgs,
   memo,

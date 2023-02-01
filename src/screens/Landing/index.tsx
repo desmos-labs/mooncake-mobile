@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {butterflyLandingIcon, landingBG, ledgerLIcon} from 'assets/images';
 import Button from 'components/Button';
@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {Image, TouchableOpacity, View} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {MNEMONIC_INPUT_MODE} from 'screens/MnemonicInput';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import {useAppStateValue} from '@recoil/appState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -23,19 +23,38 @@ const Landing = () => {
   const {t} = useTranslation('landing');
   const {navigate, replace} = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
-  const [consentGiven] = useMMKVStorage<Boolean>(MMKVKEYS.CONSENT_GIVEN);
 
+  // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
+  const consentGiven = useAppStateValue('consentGiven');
+
+  // Ask the user the permission to access the device notification
   useRequestNotificationsPermission();
 
-  const handlePressConnectLedger = React.useCallback(() => {
-    if (!consentGiven) {
-      navigate(ROUTES.CONSENT_AGREEMENT, {
-        onConsentAgree: () => replace(ROUTES.LOOKING_FOR_DEVICES),
-      });
-    } else {
-      navigate(ROUTES.LOOKING_FOR_DEVICES);
-    }
-  }, [consentGiven]);
+  /**
+   * Hook that returns a function that, given a route (and its parameters):
+   * 1. Checks if the consent to the ToS and Privacy is given
+   * 2. Performs the following action
+   *    a. if the consent, navigates to that route
+   *    b. if the consent is not given, sends the user to the page to accept the consent.
+   *       Once it is given, navigates to the provided page.
+   */
+  const useHandlePressImportType = <
+    RouteName extends keyof RootNavigatorParamList,
+  >(
+    route: RouteName,
+    params?: ParamListBase[RouteName],
+  ) => {
+    return React.useCallback(() => {
+      const goToPage = () => navigate<any>(route, params);
+      if (!consentGiven) {
+        navigate(ROUTES.CONSENT_AGREEMENT, {
+          onConsentAgree: () => replace<any>(route, params),
+        });
+      } else {
+        goToPage();
+      }
+    }, [consentGiven, navigate]);
+  };
 
   return (
     <DView
@@ -54,7 +73,7 @@ const Landing = () => {
           mode="contained"
           style={{backgroundColor: theme.colors.white}}
           labelStyle={{color: theme.colors.surfaceBlack}}
-          onPress={() => navigate(ROUTES.SIGNUP)}>
+          onPress={useHandlePressImportType(ROUTES.SIGNUP)}>
           {t('signUp')}
         </Button>
 
@@ -63,11 +82,9 @@ const Landing = () => {
             style={{borderColor: theme.colors.white}}
             labelStyle={{color: theme.colors.white}}
             mode="outlined"
-            onPress={() =>
-              navigate(ROUTES.MNEMONIC_INPUT, {
-                mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
-              })
-            }>
+            onPress={useHandlePressImportType(ROUTES.MNEMONIC_INPUT, {
+              mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
+            })}>
             {t('importMnemonic')}
           </Button>
         </Spacer>
@@ -75,7 +92,7 @@ const Landing = () => {
 
       <TouchableOpacity
         style={styles.connectLedgerButton}
-        onPress={handlePressConnectLedger}>
+        onPress={useHandlePressImportType(ROUTES.LOOKING_FOR_DEVICES)}>
         <Image source={ledgerLIcon} style={styles.connectLedgerImage} />
 
         <Typography.Button1 style={{color: theme.colors.white}}>

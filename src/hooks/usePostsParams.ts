@@ -7,7 +7,7 @@ import GetPostsParams from 'services/graphql/queries/GetPostsParams';
 /**
  * Hook that allows to get the Desmos profiles params.
  */
-const useProfileParams = () => {
+const usePostsParams = () => {
   const postsParams = useDesmosParam('posts');
   const setPostsParams = useSetDesmosParam('posts');
 
@@ -28,4 +28,4 @@ const useProfileParams = () => {
   };
 };
 
-export default useProfileParams;
+export default usePostsParams;

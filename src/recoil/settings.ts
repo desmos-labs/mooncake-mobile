@@ -3,6 +3,8 @@ import {DesmosTestnet} from '@desmoslabs/desmjs/build/types/chains';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
 import {AppSettings} from 'types/settings';
+import EnvConfig from 'config/EnvConfig';
+import {DesmosMainnet} from '@desmoslabs/desmjs';
 
 /**
  * Default application settings
@@ -12,15 +14,9 @@ export const DefaultAppSettings: AppSettings = {
   biometrics: false,
   notifications: false,
   notificationsPermission: false,
-  dataInitialized: false,
-  currentTimezone: '',
-  registeredReactions: [],
-  registeredReports: [],
-  contractsConfig: [],
-  currentChain: DesmosTestnet,
+  currentChain: EnvConfig.CHAIN === 'mainnet' ? DesmosMainnet : DesmosTestnet,
   newDiscPostNotification: true,
   newFollowPostNotification: true,
-  appActiveState: 'unknown',
 };
 
 /**
