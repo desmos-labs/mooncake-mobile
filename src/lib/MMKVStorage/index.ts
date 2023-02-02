@@ -33,12 +33,7 @@ export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
   const mmkvValue = MMKVStorage.getString(key);
 
   if (!mmkvValue) return undefined;
-  try {
-    return JSON.parse(mmkvValue);
-  } catch (err: any) {
-    console.log(err);
-    throw new Error(err.message);
-  }
+  return JSON.parse(mmkvValue);
 };
 
 /**
