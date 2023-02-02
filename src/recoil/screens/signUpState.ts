@@ -30,6 +30,15 @@ const signUpState = atom({
 });
 
 /**
+ * Hook that allows to get the entire sign up state values.
+ *
+ * <b>Note</b>
+ * This hook will be refreshed each time an individual signup value is updated.
+ * Make sure you use it only when strictly necessary.
+ */
+export const useSignUpState = () => useRecoilValue(signUpState);
+
+/**
  * Recoil that allows to select a single {@link SignUpState} value.
  */
 const signUpStateValue = selectorFamily({

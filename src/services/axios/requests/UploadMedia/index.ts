@@ -1,6 +1,7 @@
 import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
 import {Asset} from 'react-native-image-picker';
+import {AxiosProgressEvent} from 'axios/index';
 
 export type UploadEvent = {
   /**
@@ -35,7 +36,7 @@ export type UploadMediaParams = {
    * Optional callback to listen to the file upload progress.
    * @params event - The progress update event from axios.
    */
-  onUploadProgress?: (event: UploadEvent) => void;
+  onUploadProgress?: (event: AxiosProgressEvent) => void;
 };
 
 type Response = {

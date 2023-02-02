@@ -5,7 +5,6 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert} from 'react-native';
 import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
 import useProfileParams from 'hooks/useProfileParams';
 import * as Yup from 'yup';
@@ -13,9 +12,13 @@ import useGenerateRandomAccount from 'hooks/useGenerateRandomAccount';
 import {useAppStateValue} from '@recoil/appState';
 import usePerformLogin from 'hooks/usePerformLogin';
 import useAcceptInvite from 'hooks/useAcceptInvite';
+import {err, ok, Result} from 'neverthrow';
+import {AccountWithWallet} from 'types/account';
+import useSaveProfile from 'hooks/useSaveProfile';
+import {useSignUpState} from '@recoil/screens/signUpState';
+import useSaveAccount from 'hooks/useSaveAccount';
 
 interface FormValues {
-  readonly dTag: string;
   readonly newPassword: string;
   readonly inviteCode: string;
   readonly consent: boolean;
@@ -24,9 +27,8 @@ interface FormValues {
 /**
  * Hook that exports the initial form values.
  */
-export const useInitialFormValues = () => {
+export const useInitialFormValues = (): FormValues => {
   return {
-    dTag: '',
     newPassword: '',
     inviteCode: '',
     consent: false,
@@ -137,6 +139,9 @@ export const useOpenInfoModal = () => {
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
+/**
+ * Enum that represents all the possible statuses of the signup process.
+ */
 export enum SignUpStatus {
   UNDEFINED,
   CREATING_WALLET,
@@ -145,154 +150,106 @@ export enum SignUpStatus {
   DONE,
 }
 
+export interface SignUpSuccess {
+  account: AccountWithWallet;
+}
+
 /**
- * Hook that allows to create the profile of the user.
+ * Hook that allows to perform the signup of the user. This means:
+ * 1. generating a random mnemonic wallet
+ * 2. performing the login inside the centralized APIs;
+ * 3. accepting the invitation to get some initial tokens.
  */
 const usePerformSignUp = () => {
   const [status, setStatus] = useState<SignUpStatus>(SignUpStatus.UNDEFINED);
-  const [error, setError] = useState<string | undefined>();
 
   const generateRandomAccount = useGenerateRandomAccount();
   const appInviteCode = useAppStateValue('inviteCode');
   const performLogin = usePerformLogin();
   const acceptInvite = useAcceptInvite();
+  const saveAccount = useSaveAccount();
 
-  const handleError = (e: string) => {
-    setError(e);
-    setStatus(SignUpStatus.DONE);
-    Alert.alert('Error', e);
-  };
-
-  const performSignUp = React.useCallback(async (values: FormValues) => {
-    try {
-      // Get and check the invite code
-      const inviteCode = appInviteCode ?? values.inviteCode;
-      if (!inviteCode) {
-        Alert.alert('Error', 'Your invite code is invalid');
-        return;
-      }
-
-      console.log('Creating account with invite code:', inviteCode);
-
-      // Create a random wallet
-      setStatus(SignUpStatus.CREATING_WALLET);
-      const account = await generateRandomAccount();
-
-      // Perform the login
-      setStatus(SignUpStatus.CREATING_ACCOUNT);
-      const token = await performLogin(account);
-      if (!token) {
-        handleError('Cannot get token from APIs');
-        return;
-      }
-
-      console.log('Performed login. Retrieved token:', token);
-
-      // Accept the invitation
-      await acceptInvite({
-        invitee: account.account.address,
-        inviteCode,
-        onSuccess: () => {
+  const performSignUp = React.useCallback(
+    async (values: FormValues): Promise<Result<SignUpSuccess, Error>> => {
+      try {
+        // Get and check the invite code
+        const inviteCode = appInviteCode ?? values.inviteCode;
+        if (!inviteCode) {
           setStatus(SignUpStatus.DONE);
-        },
-        onTimeout: () => {
-          handleError('Request timeout');
-        },
-        onError: (e: Error) => {
-          handleError(e.message);
-        },
-      });
-    } catch (e: any) {
-      handleError(e.toString());
-    }
-  }, []);
+          return err(new Error('Your invite code is invalid'));
+        }
+
+        console.log('Creating account with invite code:', inviteCode);
+
+        // Create a random wallet
+        setStatus(SignUpStatus.CREATING_WALLET);
+        const account = await generateRandomAccount();
+
+        // Perform the login
+        setStatus(SignUpStatus.CREATING_ACCOUNT);
+        const token = await performLogin(account);
+        if (!token) {
+          setStatus(SignUpStatus.DONE);
+          return err(new Error('Cannot get token from APIs'));
+        }
+
+        console.log('Login successful. Token:', token);
+
+        // Accept the invitation
+        setStatus(SignUpStatus.ACCEPTING_INVITE);
+        const result = await acceptInvite(account.account.address, inviteCode);
+        if (result.isErr()) {
+          setStatus(SignUpStatus.DONE);
+          return err(result.error);
+        }
+
+        // Save the account locally
+        await saveAccount(account);
+
+        // Return
+        setStatus(SignUpStatus.DONE);
+        return ok({account} as SignUpSuccess);
+      } catch (e: any) {
+        setStatus(SignUpStatus.DONE);
+        return err(new Error(e.toString()));
+      }
+    },
+    [],
+  );
 
   return {
     performSignUp,
     status,
-    error,
   };
 };
 
-// TODO: Move this inside another hook
-export enum SaveProfileStatus {
-  UNKNOWN,
-  UPLOADING_DATA,
-  DONE,
-}
-
-// TODO: Implement this
-const useSaveProfile = () => {
-  const [status, setStatus] = useState<SaveProfileStatus>(
-    SaveProfileStatus.UNKNOWN,
-  );
-
-  const saveProfile = React.useCallback(async () => {
-    // const {wallet, address, password, dTag} = signupValues;
-    // const {nickname, coverPicture, profilePicture, bio} = signUpInfo;
-    //
-    // const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-    //   profilePicture && UploadMedia({mediaFile: profilePicture}),
-    //   coverPicture && UploadMedia({mediaFile: coverPicture}),
-    // ]);
-    //
-    // const profilePictureUrl = _.get(uploadProfilePicResult, 'url');
-    // const coverPictureUrl = _.get(uploadCoverPicResult, 'url');
-    //
-    // // Save new wallet as last selected wallet
-    // // Build save profile message
-    // const saveProfileMessage: MsgSaveProfileEncodeObject = {
-    //   typeUrl: GenericMsgEnums.MsgSaveProfile,
-    //   value: {
-    //     creator: address,
-    //     dtag: dTag,
-    //     nickname: nickname || '[do-not-modify]',
-    //     bio: bio || '[do-not-modify]',
-    //     profilePicture: profilePictureUrl || '[do-not-modify]',
-    //     coverPicture: coverPictureUrl || '[do-not-modify]',
-    //   },
-    // };
-    // stopPolling();
-    // const messages = [saveProfileMessage];
-    // setLoading(false);
-    // setSignUpPassword(password);
-    //
-    // navigate(ROUTES.BROADCAST_TX, {
-    //   title: t('broadcastTx:signUp') as string,
-    //   messages,
-    //   offlineSigner: wallet,
-    //   successAction: () => {
-    //     push(ROUTES.SIGNUP_RESULT);
-    //   },
-    //   failureAction: () => {
-    //     goBack();
-    //   },
-    // });
-  }, []);
-
-  return {
-    saveProfile,
-    status,
-  };
+/**
+ * Given a {@link string} value, returns either the value (if not empty),
+ * or <code>undefined</code> if it's empty.
+ */
+export const omitEmptyValue = (value: string): string | undefined => {
+  return value.trim().length > 0 ? value : undefined;
 };
 
+/**
+ * Hook that allows to submit the form and properly sign up the user.
+ */
 export const useSubmitForm = () => {
-  const {performSignUp, status: signUpStatus, error} = usePerformSignUp();
+  const {performSignUp, status: signUpStatus} = usePerformSignUp();
   const {saveProfile, status: saveProfileStatus} = useSaveProfile();
 
-  // Handles the submission of the form by starting the signup.
-  // Once the sign up is completed, the below effect will start the saving of the profile.
-  const handleFormSubmit = async (values: FormValues) => {
-    await performSignUp(values);
-  };
+  const signUpState = useSignUpState();
 
-  // Check the signup status and react to that by starting the
-  // profile saving flow if it's successful.
-  React.useEffect(() => {
-    if (signUpStatus === SignUpStatus.DONE && !error) {
-      saveProfile();
+  // Handles the submission of the form by first signing up the user, and then saving their profile.
+  const handleFormSubmit = async (values: FormValues) => {
+    // Signup the user inside the APIs
+    const signUpResult = await performSignUp(values);
+    if (signUpResult.isErr()) {
+      // TODO: Show the error here, maybe in a modal
     }
-  }, [signUpStatus, error]);
+
+    // Navigate to the screen allowing to save the profile
+  };
 
   return {
     handleFormSubmit,

@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -8,7 +7,6 @@ import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
-import ImageButton from 'components/ImageButton';
 import PasswordReqGroup from 'components/PasswordReqGroup';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -27,43 +25,34 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {useResetSignUpState} from '@recoil/screens/signUpState';
+import {SaveProfileStatus} from 'hooks/useSaveProfile';
 import {
-  SaveProfileStatus,
   SignUpStatus,
-  useCheckDTagAvailability,
   useHandlePressPrivacyPolicy,
   useHandlePressTOS,
   useInitialFormValues,
-  useOpenInfoModal,
   useSubmitForm,
   useValidateForm,
   useValidationSchema,
-} from 'screens/Signup/hooks';
-import {
-  useResetSignUpState,
-  useSetSignUpValue,
-} from '@recoil/screens/signUpState';
+} from './hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const {goBack} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
 
   // Form validation
   const validationSchema = useValidationSchema();
   const validateForm = useValidateForm();
-  const checkDTagAvailability = useCheckDTagAvailability();
-  const [availableDTag, setAvailableDTag] = React.useState<boolean>(true);
 
   // Form state
   const initialFormValues = useInitialFormValues();
-  const setSignUpDTag = useSetSignUpValue('dTag');
   const resetSignUpInfo = useResetSignUpState();
-  const openInfoModal = useOpenInfoModal();
 
   // Animations
   const [animatedPswChecksVisible, setAnimatedPswChecksVisible] =
@@ -84,8 +73,10 @@ const Signup = () => {
   // TODO: Probably this indication can be improved with a more explicit UI that tells the steps being done
   const loading = useMemo(
     () =>
-      signUpStatus !== SignUpStatus.DONE &&
-      saveProfileStatus !== SaveProfileStatus.DONE,
+      (signUpStatus !== SignUpStatus.UNDEFINED &&
+        signUpStatus !== SignUpStatus.DONE) ||
+      (saveProfileStatus !== SaveProfileStatus.UNDEFINED &&
+        saveProfileStatus !== SaveProfileStatus.DONE),
     [signUpStatus, saveProfileStatus],
   );
 
@@ -95,17 +86,6 @@ const Signup = () => {
   }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);
-
-  /**
-   * Function to check if the input DTag is available.
-   */
-  const checkAvailability = useCallback(
-    async (newDTag: string) => {
-      const isAvailable = await checkDTagAvailability(newDTag);
-      setAvailableDTag(isAvailable);
-    },
-    [checkDTagAvailability],
-  );
 
   const mapPwStyle = useCallback((password: string) => {
     const {value} = passwordStrength(password);
@@ -160,47 +140,6 @@ const Signup = () => {
                 style={styles.buttonGroup}>
                 <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag">
                   <View style={styles.formContainer}>
-                    <View style={styles.dTagRowContainer}>
-                      <Typography.Subtitle2>
-                        {t('signup:profile dtag')}
-                      </Typography.Subtitle2>
-                      <ImageButton
-                        style={styles.iconButton}
-                        image={infoIcon}
-                        onPress={openInfoModal}
-                      />
-                    </View>
-
-                    <DTextInput
-                      value={values.dTag}
-                      onChangeText={(value: string) => {
-                        checkAvailability(value);
-                        setFieldValue('dTag', value, true);
-                        setSignUpDTag(value);
-                      }}
-                      style={styles.inputLabel}
-                      placeholder={t('signup:enter dtag')}
-                    />
-                    {errors.dTag && (
-                      <Typography.Caption1 style={styles.errorText}>
-                        {errors.dTag}
-                      </Typography.Caption1>
-                    )}
-                    <Button
-                      mode="text"
-                      style={styles.completeProfileButton}
-                      onPress={() => {
-                        navigate(ROUTES.CREATE_DESMOS_PROFILE);
-                      }}>
-                      <Typography.Body6 style={styles.completeProfileButton}>
-                        {t('signup:completeProfile')}
-                      </Typography.Body6>
-                    </Button>
-
-                    <Typography.Caption1 style={styles.errorTextDtag}>
-                      {availableDTag ? '' : t('signup:dtag taken')}
-                    </Typography.Caption1>
-
                     <View style={styles.labelGroup}>
                       <Typography.Subtitle2>
                         {t('signup:password')}
@@ -224,7 +163,6 @@ const Signup = () => {
                       }}
                       style={styles.inputLabel}
                       placeholder={t('signup:enter password')}
-                      // error={!!errors.newPassword}
                     />
 
                     {errors.newPassword && (
@@ -297,11 +235,9 @@ const Signup = () => {
                   loading={loading}
                   color={theme.colors.surfaceBlack}
                   disabled={
-                    !values.dTag ||
                     !values.newPassword ||
                     !values.consent ||
                     !values.inviteCode ||
-                    !availableDTag ||
                     _.flatten(Object.values(errors)).length > 0
                   }
                   mode="contained">

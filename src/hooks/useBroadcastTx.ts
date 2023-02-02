@@ -29,15 +29,15 @@ export interface BroadcastResult {
 }
 
 /**
- * Hook that allows to broadcast a transaction.
+ * Hook that allows to broadcast a transaction by going through the various UI based on the user's wallet type.
  *
  * If the user is using a wallet that has granted the centralized APIs the permission to sign on their behalf,
  * then the transaction will be broadcast using those APIs without requiring the user to manually authenticate
  * anything.
  *
  * If the user is using a wallet that has <b>not</b> granted the permission to sign on their behalf,
- * then they should be taken to the transaction authentication flow where they will have to manually confirm the
- * transaction.
+ * then they will be taken to the transaction authentication flow where they will have to manually confirm the
+ * transaction. This flow will vary based on the wallet type the user is using (mnemonic, Ledger, Web3Auth, etc).
  */
 const useBroadcastTx = () => {
   // TODO: Create useUnlockWallet hook to unlock the wallet, if needed
