@@ -11,19 +11,35 @@ import AndroidButton from 'components/Button/components/AndroidButton';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 
+export enum ButtonMode {
+  CONTAINED = 'contained',
+  OUTLINED = 'outlined',
+  TEXT = 'text',
+}
+
+export enum ButtonSize {
+  XS = 26,
+  S = 32,
+  M = 44,
+  L = 56,
+}
+
 export interface ButtonProps
   extends TouchableOpacityProps,
     Pick<PressableProps, 'android_ripple'> {
   /** Defined Figma modes
-   * - `text` - flat button without background or outline (low emphasis)
-   * - `outlined` - button with an outline (medium emphasis)
-   * - `contained` - button with a background color and elevation shadow (high emphasis)
+   *  CONTAINED = 'contained',
+   *  OUTLINED = 'outlined',
+   *  TEXT = 'text',
    */
-  mode: 'text' | 'outlined' | 'contained';
-  /**
-   * Defined Figma sized
+  mode: ButtonMode;
+  /** Defined Figma sized
+   *   XS = 26,
+   *   S = 32,
+   *   M = 44,
+   *   L = 56,
    */
-  size: 26 | 32 | 44 | 56;
+  size: ButtonSize;
   /**
    * Additional style
    */
@@ -55,16 +71,16 @@ const Button = ({children, ...rest}: ButtonProps) => {
   const theme = useTheme();
 
   const styleMap: {[index: string]: any} = {
-    text: styles.text,
-    contained: styles.contained,
-    outlined: styles.outlined,
+    [ButtonMode.TEXT]: styles.text,
+    [ButtonMode.CONTAINED]: styles.contained,
+    [ButtonMode.OUTLINED]: styles.outlined,
   };
 
   const sizeMap: {[index: string]: any} = {
-    26: styles.h26,
-    32: styles.h32,
-    44: styles.h44,
-    56: styles.h56,
+    [ButtonSize.XS]: styles.h26,
+    [ButtonSize.S]: styles.h32,
+    [ButtonSize.M]: styles.h44,
+    [ButtonSize.L]: styles.h56,
   };
 
   if (Platform.OS === 'ios') {

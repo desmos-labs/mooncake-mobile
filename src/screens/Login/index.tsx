@@ -230,15 +230,15 @@ const Login = () => {
 
           <Spacer paddingTop={theme.spacing.m}>
             <Button
-              color={theme.colors.white}
+              size={56}
+              textColor="white"
+              backgroundColor="transparent"
               disabled={loading || !password}
               loading={loading}
-              style={{borderColor: theme.colors.white}}
               onPress={handleSubmit}
+              additionalStyle={{borderColor: theme.colors.white}}
               mode="outlined">
-              <Typography.Button2 style={{color: theme.colors.white}}>
-                {t('common:confirm')}
-              </Typography.Button2>
+              {t('common:confirm')}
             </Button>
           </Spacer>
         </View>
