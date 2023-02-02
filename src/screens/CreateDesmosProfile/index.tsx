@@ -79,8 +79,6 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     setLoading,
     profilePicture,
     coverPicture,
-    accountCreation,
-    createLedgerAccount,
   );
 
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});

@@ -3,7 +3,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {lookingForDevicesAnimation} from 'assets/animations';
 import {iconCrossBlack, noLedgerFound} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
@@ -116,8 +116,11 @@ const LookingForDevices = () => {
           </Typography.Body6>
 
           <Button
-            mode="gradientFilled"
-            containerStyle={styles.retryButton}
+            size={ButtonSize.M}
+            mode={ButtonMode.CONTAINED}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            additionalStyle={styles.retryButton}
             onPress={handlePressEnableBT}>
             {t('enableBT')}
           </Button>
@@ -153,9 +156,11 @@ const LookingForDevices = () => {
           </Typography.Body6>
 
           <Button
-            color={theme.colors.surfaceBlack}
+            size={ButtonSize.M}
             mode={ButtonMode.CONTAINED}
-            style={styles.retryButton}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            additionalStyle={styles.retryButton}
             onPress={onPressRetry}>
             {t('common:retry')}
           </Button>
