@@ -16,8 +16,8 @@
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
     "deploy:iosInternal": "fastlane ios closed_beta",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
-    "detox:build-ios-release": "detox build -c ios.sim.release",
-    "detox:test-ios-release": "detox test -c ios.sim.release"
+    "detox:build-ios": "detox build -c ios.sim.release",
+    "detox:test-ios": "detox test -c ios.sim.release"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
