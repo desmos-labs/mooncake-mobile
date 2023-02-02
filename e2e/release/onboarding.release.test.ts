@@ -1,14 +1,9 @@
 import {by, device, element, expect} from 'detox';
+import launchAppConfig from '../config';
 
 describe('App first launch should display welcome screen.', () => {
   beforeEach(async () => {
-    await device.launchApp({
-      permissions: {
-        notifications: 'YES',
-        faceid: 'YES',
-      },
-      newInstance: true,
-    });
+    await device.launchApp(launchAppConfig);
   });
 
   it('Welcome screen should be shown', async () => {

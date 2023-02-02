@@ -1,14 +1,9 @@
 import {by, device, element, expect} from 'detox';
+import launchAppConfig from '../config';
 
 describe('Debug to Landing Test', () => {
   beforeEach(async () => {
-    await device.launchApp({
-      permissions: {
-        notifications: 'YES',
-        faceid: 'YES',
-      },
-      newInstance: true,
-    });
+    await device.launchApp(launchAppConfig);
   });
 
   it('should tap on continue to landing button and expect some text and three buttons to be visible', async () => {
