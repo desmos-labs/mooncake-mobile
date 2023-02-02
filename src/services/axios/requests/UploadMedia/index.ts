@@ -2,6 +2,7 @@ import axiosInstance from 'services/axios';
 import {Platform} from 'react-native';
 import {Asset} from 'react-native-image-picker';
 import {AxiosProgressEvent} from 'axios/index';
+import {err, ok, Result} from 'neverthrow';
 
 export type UploadEvent = {
   /**
@@ -52,12 +53,22 @@ type Response = {
 };
 
 /**
- * Upload images to web3 storage.
+ * Represents the result returned after a successful image upload.
  */
-const UploadMedia = async ({
-  mediaFile,
-  onUploadProgress,
-}: UploadMediaParams) => {
+export interface UploadMediaSuccess {
+  /**
+   * URL that should be used to view the image.
+   */
+  readonly url: string;
+}
+
+/**
+ * Upload images to centralized storage.
+ */
+export const UploadMedia = async (
+  params: UploadMediaParams,
+): Promise<Result<UploadMediaSuccess, Error>> => {
+  const {mediaFile, onUploadProgress} = params;
   const {fileName, type, uri} = mediaFile;
 
   const formData = new FormData();
@@ -67,19 +78,24 @@ const UploadMedia = async ({
     uri: Platform.OS === 'android' ? uri : uri!.replace('file://', ''),
   });
 
-  const _response = await axiosInstance.post<Response>('/media', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    onUploadProgress,
-    timeout: 15000,
-    timeoutErrorMessage: 'Image upload timedout',
-  });
+  try {
+    const response = await axiosInstance.post<Response>('/media', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress,
+      timeout: 15000,
+      timeoutErrorMessage: 'Image upload timeout',
+    });
 
-  return {
-    cid: _response?.data?.cid,
-    url: _response?.data?.url,
-  };
+    // Return a valid result
+    return ok({
+      url: response?.data?.url,
+    } as UploadMediaSuccess);
+  } catch (e: any) {
+    if (e.response.status === 413) {
+      return err(new Error('Image size is too big'));
+    }
+    return err(new Error(e.toString()));
+  }
 };
-
-export default UploadMedia;

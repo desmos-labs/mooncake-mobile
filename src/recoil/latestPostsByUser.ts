@@ -1,48 +1,43 @@
-import {useCallback} from 'react';
-import {atom, useSetRecoilState} from 'recoil';
-import {useLazyQuery} from '@apollo/client';
-import GetLastPostsByAddress from 'services/graphql/queries/GetLastPostsByAddress';
-import EnvConfig from 'config/EnvConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
+import React from 'react';
+import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
+import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 
-import {useSyncPendingPosts} from 'hooks/usePendingPosts';
-
-export const latestPostsByUserState = atom<PostItem[]>({
-  key: 'latestPosts',
-  default: [],
+const latestPostsState = atom<Record<string, PostItem[]>>({
+  key: 'latestPostsState',
+  default: {},
+  effects: [
+    ({onSet}) => {
+      onSet(posts => {
+        setMMKV(MMKVKEYS.LATEST_POSTS, posts);
+      });
+    },
+  ],
 });
 
 /**
- * Get the last 5 posts from the current user's active address
+ * Hook that allows to store the latest posts for the user having a given address.
  */
-export const useGetLatestPostsByActiveAddress = () => {
-  const {activeAddress} = useActiveAccount();
-  const setLatestPostsByUser = useSetRecoilState(latestPostsByUserState);
-
-  useSyncPendingPosts();
-
-  const [, {refetch}] = useLazyQuery(GetLastPostsByAddress, {
-    variables: {
-      limit: 5,
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      user: activeAddress,
-      reaction: {
-        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-        registered_reaction_id: 9,
-      },
+export const useStoreLatestPostsByUser = () => {
+  const setLatestPosts = useSetRecoilState(latestPostsState);
+  return React.useCallback(
+    (user: string, posts: PostItem[]) => {
+      setLatestPosts(currentPosts => {
+        const newPosts: Record<string, PostItem[]> = {
+          ...currentPosts,
+        };
+        newPosts[user] = posts;
+        return newPosts;
+      });
     },
-  });
+    [setLatestPosts],
+  );
+};
 
-  const getLatestPostsByActiveAddress = useCallback(async () => {
-    const {data} = await refetch({
-      user: activeAddress,
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
-    });
-    const {post} = data;
-    setLatestPostsByUser(post);
-  }, [refetch, activeAddress]);
-
-  return {
-    getLatestPostsByActiveAddress,
-  };
+/**
+ * Hook that allows to get the latest posts for the user having the given address.
+ * @param user {string} - Address of the user for which to get the latest posts.
+ */
+export const useStoredLatestPostsByUser = (user: string) => {
+  const latestPosts = useRecoilValue(latestPostsState);
+  return latestPosts[user];
 };

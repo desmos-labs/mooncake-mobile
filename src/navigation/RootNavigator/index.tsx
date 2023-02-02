@@ -8,17 +8,21 @@ import MnemonicInput, {
   MnemonicInputParams,
 } from 'screens/MnemonicInput';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import useSubscriptions from 'hooks/subscriptions/useSubscriptions';
 import {useTranslation} from 'react-i18next';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
 import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
 import Signup from 'screens/Signup';
 import Landing from 'screens/Landing';
-import CreateDesmosProfile from 'screens/CreateDesmosProfile';
-import MnemonicInput, { MNEMONIC_INPUT_MODE, MnemonicInputParams } from 'screens/MnemonicInput';
+import SaveProfile, {SaveProfileParams} from 'screens/SaveProfile';
+import SignupResult from 'screens/SignupResult';
+import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
+import BottomTabs, {
+  BottomTabsParamList,
+} from 'navigation/RootNavigator/BottomTabs';
+import {NavigatorScreenParams} from '@react-navigation/native';
+import Onboarding, {OnboardingParams} from 'screens/Onboarding';
 import SelectAccount, { SelectAccountParamList } from 'screens/SelectAccount';
-import Landing from 'screens/Landing';
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
@@ -36,6 +40,9 @@ export type RootNavigatorParamList = {
   // [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   // [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
+  [ROUTES.SIGNUP]: undefined;
+  [ROUTES.SIGNUP_RESULT]: undefined;
+  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   [ROUTES.SIGNUP]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
@@ -62,7 +69,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
   // [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  [ROUTES.CREATE_DESMOS_PROFILE]: undefined;
   // [ROUTES.WELCOME_BACK]: undefined;
   // [ROUTES.SELECT_LEDGER_APP]: undefined;
   // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
@@ -80,7 +86,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
   // [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
-  // [ROUTES.EDIT_PROFILE]: undefined;
+  [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
   [ROUTES.MANAGE_BIOMETRICS]: undefined;
 
   // Nested navigators
@@ -90,7 +96,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
 
   // Bottom tabs
-  // [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
+  [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
 
   // only for dev
   [ROUTES.DEV_SCREEN]: undefined;
@@ -143,7 +149,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // Onboarding
-  // [ROUTES.ONBOARDING]: OnboardingParams;
+  [ROUTES.ONBOARDING]: OnboardingParams;
 
   // New profile
   // [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
@@ -165,9 +171,6 @@ const RootNavigator = () => {
   useInitializeAppData();
   useInitializeNotifications();
   useInitializeDynamicLinks();
-
-  // Start subscriptions
-  useSubscriptions();
 
   const {t} = useTranslation();
   // const theme = useTheme();
@@ -217,10 +220,6 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
 
-      <Stack.Screen
-        name={ROUTES.CREATE_DESMOS_PROFILE}
-        component={CreateDesmosProfile}
-      />
       {/* <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} /> */}
       {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
       <Stack.Screen name={ROUTES.SELECT_ACCOUNT} component={SelectAccount} />
@@ -244,7 +243,7 @@ const RootNavigator = () => {
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      {/* <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} /> */}
+      <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
       <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
       <Stack.Screen
@@ -256,7 +255,7 @@ const RootNavigator = () => {
        />
       {/* <Stack.Screen name={ROUTES.SETTINGS} component={Settings} /> */}
       {/* <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} /> */}
-      {/* <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} /> */}
+      <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       {/* <Stack.Screen */}
       {/*  initialParams={{ */}
       {/*    postId: 1, */}
@@ -367,7 +366,7 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} /> */}
 
-      {/* <Stack.Screen name={ROUTES.EDIT_PROFILE} component={EditProfile} /> */}
+      <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
 
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
 
@@ -379,11 +378,11 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} /> */}
 
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.ONBOARDING} */}
-      {/*  component={Onboarding} */}
-      {/*  initialParams={{invited: false}} */}
-      {/* /> */}
+      <Stack.Screen
+        name={ROUTES.ONBOARDING}
+        component={Onboarding}
+        initialParams={{invited: false}}
+      />
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
 
@@ -432,10 +431,10 @@ const RootNavigator = () => {
       {/*    component={AddProfileModal} */}
       {/*  /> */}
 
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} */}
-      {/*    component={BackupPhraseBottomModal} */}
-      {/*  /> */}
+      <Stack.Screen
+        name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
+        component={BackupPhraseBottomModal}
+      />
       <Stack.Screen
         initialParams={{
           title: t('signup:profile dtag'),

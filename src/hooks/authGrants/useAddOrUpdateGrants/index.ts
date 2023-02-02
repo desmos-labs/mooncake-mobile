@@ -1,7 +1,6 @@
 import {OfflineSigner} from '@cosmjs/proto-signing';
 import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
 import {useNavigation} from '@react-navigation/native';
-import {useButterConfig} from '@recoil/butterConfigState';
 import {authorizationImage} from 'assets/images';
 import {
   buildGrantAllowanceEncode,
@@ -9,36 +8,24 @@ import {
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import useBroadcastMessages from 'hooks/broadcastTx/useBroadcastMessages';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import {GrantEnums} from 'lib/desmos/msgtypes';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
-
-/**
- * MVP msg authorizations
- * post
- * add reaction
- * remove reaction
- * follow user
- * unfollow user
- * report content
- */
+import {useActiveAccount} from '@recoil/accounts';
+import useButterConfig from 'hooks/useButterConfig';
 
 /**
  * Add or update a user's grant authorizations on chain.
  * @deprecated Use useCheckAndUpdateGrants for a better all-in-one solution for requesting grants
  */
 const useAddOrUpdateGrants = () => {
-  const {butterConfig} = useButterConfig();
-  const {chainAccount, loading} = useActiveAccount();
-  const unlockWallet = useUnlockWallet();
-  const broadcastMessages = useBroadcastMessages();
-  const {getAuthzGrants} = useGetAuthzGrants();
+  const account = useActiveAccount();
+  const {config: butterConfig} = useButterConfig();
+
+  const getAuthzGrants = useGetAuthzGrants();
   const {navigate} = useNavigation<any>();
   const {t} = useTranslation();
 
@@ -47,13 +34,13 @@ const useAddOrUpdateGrants = () => {
    */
   const revokeGrants = React.useCallback(
     async (selectedGrants?: GrantEnums[]) => {
-      if (!chainAccount) throw new Error('No active chain account found.');
-      if (!butterConfig?.desmos_address) {
+      if (!account) throw new Error('No active chain account found.');
+      if (!butterConfig?.desmosAddress) {
         throw new Error('No granteeAddress found.');
       }
 
-      const grantee = butterConfig?.desmos_address;
-      const granter = chainAccount.address;
+      const grantee = butterConfig?.desmosAddress;
+      const granter = account.address;
 
       const grantsData = await getAuthzGrants();
 
@@ -191,9 +178,6 @@ const useAddOrUpdateGrants = () => {
   );
 
   return {
-    // expose the async loading of ChainAccounts so it can be used
-    // to block/disable input before the data is fully loaded¬
-    accountsLoading: loading,
     addOrUpdateGrants,
     revokeGrants,
   };

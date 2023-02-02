@@ -45,7 +45,7 @@ export const useGetAuthzGrants = () => {
 
   const {butterConfig} = useButterConfig();
 
-  const getAuthzGrants = React.useCallback(async (): Promise<{
+  return React.useCallback(async (): Promise<{
     has_fee_grant: boolean;
     grants: {
       msg_type: GrantEnums;
@@ -97,8 +97,4 @@ export const useGetAuthzGrants = () => {
       grants: formattedGrants,
     };
   }, [activeAddress, JSON.stringify(butterConfig)]);
-
-  return {
-    getAuthzGrants,
-  };
 };

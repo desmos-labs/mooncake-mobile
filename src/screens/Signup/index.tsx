@@ -26,7 +26,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {useResetSignUpState} from '@recoil/screens/signUpState';
-import {SaveProfileStatus} from 'hooks/useSaveProfile';
+import {useToast} from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import {
   SignUpStatus,
   useHandlePressPrivacyPolicy,
@@ -40,11 +41,16 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
+/**
+ * Screen that allows a user to sign up for a new account by inserting a password and an invitation code.
+ * @constructor
+ */
 const Signup = () => {
   const {t} = useTranslation('passwordManipulation');
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
+  const toast = useToast();
 
   // Form validation
   const validationSchema = useValidationSchema();
@@ -67,17 +73,33 @@ const Signup = () => {
   // Actions
   const handlePressPrivacyPolicy = useHandlePressPrivacyPolicy();
   const handlePressTOS = useHandlePressTOS();
-  const {handleFormSubmit, signUpStatus, saveProfileStatus} = useSubmitForm();
 
-  // Check if either the signup or profile saving flows are not completed.
+  // Callback that is used when the signup completes properly
+  const onSuccess = useCallback(() => {
+    navigate(ROUTES.SIGNUP_RESULT);
+  }, []);
+
+  // Callback that is used when the signup procedure raises any error
+  const onError = useCallback(
+    (error: Error) => {
+      // TODO: Show the error here, maybe in a modal
+      toast.show(error.message, {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
+    },
+    [toast],
+  );
+
+  // Hook that is used in order to submit the form
+  const {handleFormSubmit, signUpStatus} = useSubmitForm(onSuccess, onError);
+
+  // Check if the sign up flow is completed
   // TODO: Probably this indication can be improved with a more explicit UI that tells the steps being done
   const loading = useMemo(
     () =>
-      (signUpStatus !== SignUpStatus.UNDEFINED &&
-        signUpStatus !== SignUpStatus.DONE) ||
-      (saveProfileStatus !== SaveProfileStatus.UNDEFINED &&
-        saveProfileStatus !== SaveProfileStatus.DONE),
-    [signUpStatus, saveProfileStatus],
+      signUpStatus !== SignUpStatus.UNDEFINED &&
+      signUpStatus !== SignUpStatus.DONE,
+    [signUpStatus],
   );
 
   // Reset recoil state on entry

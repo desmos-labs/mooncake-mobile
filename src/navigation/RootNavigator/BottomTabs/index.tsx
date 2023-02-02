@@ -3,8 +3,6 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import appSettingsState from '@recoil/settings';
-import createPostState from '@recoil/screens/createPostState';
 import {
   bottomActivitiesIcon,
   bottomCommunitiesIcon,
@@ -16,9 +14,7 @@ import ImageButton from 'components/ImageButton';
 import LoadingOverlay from 'components/LoadingOverlay';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import useActiveAccount from 'hooks/useActiveAccount';
 import {GrantEnums} from 'lib/desmos/msgtypes';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useMemo} from 'react';
@@ -26,11 +22,13 @@ import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useToast} from 'react-native-toast-notifications';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
 import Activities from 'screens/Activities';
 import Communities from 'screens/Communities';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
+import {useAppStateValue, useSetAppStateValue} from '@recoil/appState';
+import {useResetCreatePostState} from '@recoil/screens/createPostState';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {
@@ -39,13 +37,9 @@ export interface Props extends BottomTabBarProps {
 
 export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParamList;
-
   [ROUTES.COMMUNITIES]: undefined;
-
   [ROUTES.ACTIVITIES]: undefined;
-
   [ROUTES.CREATE_BUTTON]: undefined;
-
   [ROUTES.USER_PROFILE]: undefined;
 };
 
@@ -76,18 +70,25 @@ const getCorrectImage = (routeName: string) => {
 const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   const styles = useStyles();
   const {navigate} = navigation;
-  const {activeAddress} = useActiveAccount();
   const theme = useTheme();
   const toast = useToast();
-  const resetSharedPostState = useResetRecoilState(createPostState);
-  const notificationsCount = getMMKV<number>(MMKVKEYS.NOTIFICATIONS_COUNT);
-  const {appActiveState} = useRecoilValue(appSettingsState);
+
+  // Useful application state values
+  const activeAddress = useActiveAccountAddress();
+  const notificationsCount = useAppStateValue('notificationsCount');
+  const setNotificationsCount = useSetAppStateValue('notificationsCount');
+  const appActiveState = useAppStateValue('appActiveState');
+
+  // Allows to reset the post creation state to delete any draft when needed
+  const resetCreatePostState = useResetCreatePostState();
+
+  // Allows to check and update the grants if necessary
   const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
 
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
 
-    resetSharedPostState();
+    resetCreatePostState();
     setLoading(true);
 
     try {
@@ -115,7 +116,6 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
     if (notificationsCount && notificationsCount > 0) {
       return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
     }
-
     return undefined; // or alternate "no ping" state
   }, [notificationsCount, appActiveState]);
 
@@ -134,7 +134,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
             if (route.name === ROUTES.ACTIVITIES) {
               await notifee.setBadgeCount(0);
-              setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, 0);
+              setNotificationsCount(0);
             }
             // @ts-ignore
             navigation.navigate({name: route.name, merge: true});
@@ -176,6 +176,10 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   );
 };
 
+/**
+ * Navigator that allows to switch between different pages using a bottom tab bar.
+ * @constructor
+ */
 const BottomTabsNavigator = () => {
   const [loading, setLoading] = React.useState(false);
   const theme = useTheme();

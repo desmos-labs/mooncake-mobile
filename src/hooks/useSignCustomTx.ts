@@ -2,7 +2,6 @@ import {StdFee} from '@cosmjs/amino';
 import {EncodeObject, OfflineSigner} from '@cosmjs/proto-signing';
 import {GasPrice} from '@cosmjs/stargate';
 import {DesmosClient, OfflineSignerAdapter} from '@desmoslabs/desmjs';
-import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
 import {useCallback} from 'react';
 import {useRecoilState} from 'recoil';

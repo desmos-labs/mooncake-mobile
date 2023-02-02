@@ -1,4 +1,4 @@
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import {useMemo} from 'react';
 import {useQuery} from '@apollo/client';
 import GetFollowageCount from 'services/graphql/queries/GetFollowageCount';
@@ -11,7 +11,7 @@ import {useGetFollowageDifference} from '@recoil/relationships';
  * If this is `undefined`, the current application's user address will be used instead.
  */
 const useFollowageCount = (address: string | undefined) => {
-  const activeAddress = useActiveAddress();
+  const activeAddress = useActiveAccountAddress();
   const userAddress: string | undefined = useMemo(
     () => address ?? userAddress,
     [address, activeAddress],

@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
-import UploadMedia, {ImageMedia} from 'services/axios/requests/UploadMedia';
+import {ImageMedia, UploadMedia} from 'services/axios/requests/UploadMedia';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {AccountWithWallet} from 'types/account';
-import useSignAndBroadcastTx from 'hooks/useSignAndBroadcastTx';
+import useSignAndBroadcastTx, {
+  SignAndBroadcastSuccess,
+} from 'hooks/useSignAndBroadcastTx';
 import {
   DoNotModify,
   MsgSaveProfileEncodeObject,
   MsgSaveProfileTypeUrl,
 } from '@desmoslabs/desmjs';
+import {err, Result} from 'neverthrow';
 
 /**
  * Params used to save the profile.
@@ -15,7 +18,7 @@ import {
  * with the <code>[do-not-modify]</code> value when building the message
  * to save the profile on-chain.
  */
-export interface SaveProfileParams {
+export interface SaveProfileRequest {
   readonly dTag?: string;
   readonly nickname?: string;
   readonly bio?: string;
@@ -52,18 +55,30 @@ const useSaveProfile = () => {
 
   const saveProfile = React.useCallback(
     async (
-      params: SaveProfileParams,
+      params: SaveProfileRequest,
       providedAccount: AccountWithWallet | undefined,
-    ) => {
+    ): Promise<Result<SignAndBroadcastSuccess, Error>> => {
       const account = providedAccount ?? (await unlockWallet());
 
       // Upload the profile and cover pictures
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
       const {coverPicture, profilePicture} = params;
+
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
         profilePicture && UploadMedia({mediaFile: profilePicture}),
         coverPicture && UploadMedia({mediaFile: coverPicture}),
       ]);
+
+      if (uploadProfilePicResult?.isErr()) {
+        return err(uploadProfilePicResult.error);
+      }
+
+      if (uploadCoverPicResult?.isErr()) {
+        return err(uploadCoverPicResult.error);
+      }
+
+      const profilePicUrl = uploadProfilePicResult?.unwrapOr(undefined)?.url;
+      const coverPicUrl = uploadCoverPicResult?.unwrapOr(undefined)?.url;
 
       // Build the message to save the profile on-chain
       const {dTag, nickname, bio} = params;
@@ -74,8 +89,8 @@ const useSaveProfile = () => {
           dtag: replaceUndefined(dTag),
           nickname: replaceUndefined(nickname),
           bio: replaceUndefined(bio),
-          profilePicture: replaceUndefined(uploadProfilePicResult?.url),
-          coverPicture: replaceUndefined(uploadCoverPicResult?.url),
+          profilePicture: replaceUndefined(profilePicUrl),
+          coverPicture: replaceUndefined(coverPicUrl),
         },
       };
 
@@ -84,6 +99,9 @@ const useSaveProfile = () => {
       const result = await signAndBroadcastTx(account, [msgSaveProfile], {
         useOptimisticAPIs: false,
       });
+      if (result.isErr()) {
+        return err(result.error);
+      }
 
       // Return the result
       setStatus(SaveProfileStatus.DONE);

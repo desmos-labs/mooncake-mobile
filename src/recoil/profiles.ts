@@ -7,7 +7,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {activeAddressState} from '@recoil/wallets';
+import {activeAccountAddressState} from '@recoil/wallets';
 import {DesmosProfile} from 'types/desmos';
 
 /**
@@ -88,7 +88,7 @@ const activeProfileState = selector<DesmosProfile | undefined>({
   key: 'activeProfileState',
   get: ({get}) => {
     const profiles = get(profilesState);
-    const selectedAccountAddress = get(activeAddressState);
+    const selectedAccountAddress = get(activeAccountAddressState);
     return selectedAccountAddress && profiles
       ? profiles[selectedAccountAddress]
       : undefined;

@@ -15,7 +15,7 @@ import {
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
 import useAppConfig from 'hooks/useAppConfig';
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import {DataStatus} from 'types/desmos';
 
 /**
@@ -150,7 +150,7 @@ const useUnfollowUser = () => {
  * based on whether the user is already followed or not.
  */
 const useFollowOrUnfollowUser = () => {
-  const activeAddress = useActiveAddress();
+  const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error('Trying to follow or unfollow a user, without active user');
   }

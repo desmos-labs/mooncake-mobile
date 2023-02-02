@@ -26,15 +26,16 @@ export enum SignAndBroadcastErrorType {
 /**
  * Represents the fact taht the sign and broadcast has timed out.
  */
-interface SignAndBroadcastTimeout {
+interface SignAndBroadcastTimeout extends Error {
   readonly type: SignAndBroadcastErrorType.TIMEOUT;
 }
 
 /**
  * Represents a generic error during the sign and broadcast of the transaction.
  */
-interface SignAndBroadcastTxError {
+interface SignAndBroadcastTxError extends Error {
   readonly type: SignAndBroadcastErrorType.TX_ERROR;
+  readonly error: string;
 }
 
 export interface SignAndBroadcastOptions {

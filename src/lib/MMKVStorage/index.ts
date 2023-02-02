@@ -16,10 +16,8 @@ export enum MMKVKEYS {
   CHAIN_LINKS = 'CHAIN_LINKS',
   FOLLOWAGE = 'FOLLOWAGE',
 
-  // Invite data
-  INVITE_CODE = 'INVITE_CODE',
-
   // Posts data
+  LATEST_POSTS = 'LATEST_POSTS',
   POST_REACTIONS = 'POST_REACTIONS',
 
   // Transactions data

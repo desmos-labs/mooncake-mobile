@@ -2,7 +2,7 @@ import {PostID} from 'types/desmos';
 import {useQuery} from '@apollo/client';
 import GetPostReactionsCount from 'services/graphql/queries/GetPostReactionsCount';
 import {useHasPostReaction} from '@recoil/reactions';
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import useIsReactionOnServer from 'hooks/useIsReactionOnServer';
 import {useMemo} from 'react';
 
@@ -10,7 +10,7 @@ import {useMemo} from 'react';
  * Hook that allows to get the count of reactions of a given post.
  */
 const useReactionsCount = (postId: PostID) => {
-  const address = useActiveAddress();
+  const address = useActiveAccountAddress();
   if (!address) {
     throw new Error(
       "Trying to get a post's reactions count, without an active address",

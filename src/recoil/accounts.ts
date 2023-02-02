@@ -10,6 +10,7 @@ import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
 import {Account} from 'types/account';
 import {deserializeAccounts} from 'lib/AccountUtils/deserialize';
 import {serializeAccounts} from 'lib/AccountUtils/serialize';
+import {useActiveAccountAddress} from '@recoil/wallets';
 
 /**
  * An atom that holds all the accounts stored in the application.
@@ -118,3 +119,17 @@ const accountsAddressesAppState = selector<string[]>({
  */
 export const useStoredAccountsAddresses = () =>
   useRecoilValue(accountsAddressesAppState);
+
+/**
+ * Hook that allows to get the currently active account of the user.
+ */
+export const useActiveAccount = (): Account | undefined => {
+  const activeAddress = useActiveAccountAddress();
+  const accounts = useRecoilValue(accountsAppState);
+  return React.useMemo(() => {
+    if (!activeAddress) {
+      return undefined;
+    }
+    return accounts[activeAddress];
+  }, [activeAddress, accounts]);
+};

@@ -518,7 +518,7 @@ const Profile = () => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
               style={styles.editButton}
-              onPress={() => navigate(ROUTES.EDIT_PROFILE)}>
+              onPress={() => navigate(ROUTES.SAVE_PROFILE)}>
               <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
             </TouchableOpacity>
             <TouchableOpacity

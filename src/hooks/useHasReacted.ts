@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import {PostID} from 'types/desmos';
 import {
   useAddPostReaction,
@@ -15,7 +15,7 @@ import useIsReactionOnServer from 'hooks/useIsReactionOnServer';
  * to optimize later calls.
  */
 const useHasReacted = (postId: PostID) => {
-  const activeAddress = useActiveAddress();
+  const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error(
       'Trying to know if the user has reacted to a post, without active user',

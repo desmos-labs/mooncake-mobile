@@ -12,7 +12,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import useSignCustomTx from 'hooks/broadcastTx/useSignCustomTx';
+import useSignCustomTx from 'hooks/useSignCustomTx';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';

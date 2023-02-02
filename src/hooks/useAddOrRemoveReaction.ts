@@ -1,5 +1,5 @@
 import React from 'react';
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import {
   useAddPostReaction,
   useHasPostReaction,
@@ -155,7 +155,7 @@ const useRemoveReaction = () => {
  * Hook that allows to add or remove a reaction to a post having a given id.
  */
 const useAddOrRemoveReaction = () => {
-  const activeAddress = useActiveAddress();
+  const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error(
       'Trying to know add or remove a reaction, without active user',

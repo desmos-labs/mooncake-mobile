@@ -3,12 +3,12 @@ import dynamicLinks, {
 } from '@react-native-firebase/dynamic-links';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import useActiveAccount from 'hooks/useActiveAccount';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useEffect} from 'react';
 import {Alert} from 'react-native';
 import {useSetAppStateValue} from '@recoil/appState';
+import {useActiveAccountAddress} from '@recoil/wallets';
 
 /**
  * Hook that allows to properly set up the Firebase Dynamic Links usage.
@@ -17,7 +17,7 @@ const useInitializeDynamicLinks = () => {
   const {navigate} =
     useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
 
-  const {activeAddress} = useActiveAccount();
+  const activeAddress = useActiveAccountAddress();
   const setInviteCode = useSetAppStateValue('inviteCode');
 
   const handleDynamicLink = (

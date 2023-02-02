@@ -1,11 +1,8 @@
-import {useLazyQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
 import useProfileParams from 'hooks/useProfileParams';
 import * as Yup from 'yup';
 import useGenerateRandomAccount from 'hooks/useGenerateRandomAccount';
@@ -14,9 +11,8 @@ import usePerformLogin from 'hooks/usePerformLogin';
 import useAcceptInvite from 'hooks/useAcceptInvite';
 import {err, ok, Result} from 'neverthrow';
 import {AccountWithWallet} from 'types/account';
-import useSaveProfile from 'hooks/useSaveProfile';
-import {useSignUpState} from '@recoil/screens/signUpState';
 import useSaveAccount from 'hooks/useSaveAccount';
+import {useNavigation} from '@react-navigation/native';
 
 interface FormValues {
   readonly newPassword: string;
@@ -36,20 +32,6 @@ export const useInitialFormValues = (): FormValues => {
 };
 
 /**
- * Hook that allows to check whether the given DTag is available or not.
- */
-export const useCheckDTagAvailability = () => {
-  const [getDTagAvailability] = useLazyQuery(GetProfileForDTag);
-  return React.useCallback(
-    async (inputDTag: string) => {
-      const {data} = await getDTagAvailability({variables: {dTag: inputDTag}});
-      return (data?.profile?.length ?? 0) === 0;
-    },
-    [getDTagAvailability()],
-  );
-};
-
-/**
  * Hook that returns the validation schema to be used when validating the sign up form.
  */
 export const useValidationSchema = () => {
@@ -58,29 +40,6 @@ export const useValidationSchema = () => {
   return React.useMemo(() => {
     return Yup.object().shape({
       inviteCode: Yup.string().required(t('error:required')),
-      dTag: Yup.string()
-        .required(t('error:required'))
-        .min(
-          profileParams.dTag.minLength,
-          t('error:minChar', {
-            numChar: profileParams.dTag.minLength,
-          }),
-        )
-        .max(
-          profileParams.dTag.maxLength,
-          t('error:maxChar', {
-            numChar: profileParams.dTag.maxLength,
-          }),
-        )
-        .test(
-          'respect reg_ex',
-          t('Only _ is allowed as special character'),
-          value => {
-            return new RegExp(profileParams.dTag.regEx, 'g').test(
-              value as string,
-            );
-          },
-        ),
     });
   }, [profileParams]);
 };
@@ -119,21 +78,6 @@ export const useHandlePressPrivacyPolicy = () => {
 export const useHandlePressTOS = () => {
   return React.useCallback(() => {
     // go to Terms of Service page
-  }, []);
-};
-
-/**
- * Hook that allows to open the modal to tell the user what is a DTag and how is it used.
- */
-export const useOpenInfoModal = () => {
-  const {t} = useTranslation('passwordManipulation');
-  const {navigate} = useNavigation<NavProps['navigation']>();
-
-  return React.useCallback(() => {
-    navigate(ROUTES.TEXTONLY_MODAL, {
-      title: t('signup:profile dtag'),
-      body: t('signup:dtag info'),
-    });
   }, []);
 };
 
@@ -224,36 +168,35 @@ const usePerformSignUp = () => {
 };
 
 /**
- * Given a {@link string} value, returns either the value (if not empty),
- * or <code>undefined</code> if it's empty.
- */
-export const omitEmptyValue = (value: string): string | undefined => {
-  return value.trim().length > 0 ? value : undefined;
-};
-
-/**
  * Hook that allows to submit the form and properly sign up the user.
+ * @param onSuccess - Function that is called when the profile has been saved successfully
+ * @param onError - Function that is called if an error is raised.
  */
-export const useSubmitForm = () => {
+export const useSubmitForm = (
+  onSuccess: () => void,
+  onError: (error: Error) => void,
+) => {
+  const {navigate} = useNavigation<NavProps['navigation']>();
   const {performSignUp, status: signUpStatus} = usePerformSignUp();
-  const {saveProfile, status: saveProfileStatus} = useSaveProfile();
-
-  const signUpState = useSignUpState();
 
   // Handles the submission of the form by first signing up the user, and then saving their profile.
   const handleFormSubmit = async (values: FormValues) => {
     // Signup the user inside the APIs
     const signUpResult = await performSignUp(values);
     if (signUpResult.isErr()) {
-      // TODO: Show the error here, maybe in a modal
+      onError(signUpResult.error);
+      return;
     }
 
     // Navigate to the screen allowing to save the profile
+    navigate(ROUTES.SAVE_PROFILE, {
+      account: signUpResult.value.account,
+      onSuccess,
+    });
   };
 
   return {
     handleFormSubmit,
     signUpStatus,
-    saveProfileStatus,
   };
 };

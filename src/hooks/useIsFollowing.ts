@@ -1,4 +1,4 @@
-import {useActiveAddress} from '@recoil/wallets';
+import {useActiveAccountAddress} from '@recoil/wallets';
 import {useQuery} from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
@@ -15,7 +15,7 @@ import React, {useMemo} from 'react';
  * to optimize later calls.
  */
 const useIsFollowing = (counterparty: string) => {
-  const activeAddress = useActiveAddress();
+  const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error(
       'Trying to know if the user is following another user, without an active account',

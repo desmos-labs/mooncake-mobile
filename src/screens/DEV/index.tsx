@@ -13,7 +13,42 @@ import { useToast } from 'react-native-toast-notifications';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 
 // Add the ROUTE enum of the screens that should be rendered here
-const routesToRender = [ROUTES.MNEMONIC_INPUT, ROUTES.LANDING];
+const routesToRender = [
+  ROUTES.MNEMONIC_INPUT,
+  // ROUTES.ACTIVITIES,
+  // ROUTES.ONBOARDING,
+  // ROUTES.LOGIN,
+  // ROUTES.USER_PROFILE,
+  // ROUTES.SIGNUP_RESULT,
+  // ROUTES.CONFIRM_MODAL,
+  // ROUTES.SIGNUP,
+  // ROUTES.ACTION_AUTHORIZATION,
+  // ROUTES.CREATE_TEXT_POST,
+  // ROUTES.SELECT_POST_TYPE,
+  // ROUTES.ENTER_COMMENT,
+  // ROUTES.ACTION_AUTHORIZATION,
+  // ROUTES.HOME_TABS,
+  // ROUTES.CONNECT_CHAIN_TX_DETAIL,
+  // ROUTES.SELECT_CHAIN,
+  // ROUTES.CONSENT_AGREEMENT,
+  // ROUTES.SEND_TIPS,
+  // ROUTES.LOOKING_FOR_DEVICES,
+  // ROUTES.NO_DTAG_FOUND,
+  // ROUTES.CONNECT_TO_LEDGER,
+  // ROUTES.SAVE_PROFILE,
+  ROUTES.LANDING,
+  // ROUTES.WELCOME_BACK,
+  // ROUTES.CONNECT_ADDRESS_GENERAL,
+  // ROUTES.CONNECT_ADDRESS_ADVANCED,
+  // ROUTES.CONFIRM_ADDRESS,
+  // ROUTES.CONNECT_CHAIN_METHOD,
+  // ROUTES.DISCONNECT_CHAIN_MODAL,
+  // ROUTES.POST_DETAILS,
+  // ROUTES.REPORT_POST,
+  // ROUTES.FOLLOWING_AND_FOLLOWERS,
+  // ROUTES.NO_DTAG_FOUND,
+  // ROUTES.ADD_PROFILE,
+];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {
   button: { padding: 18, borderWidth: 1, borderColor: 'grey', borderRadius: 12 },

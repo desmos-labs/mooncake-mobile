@@ -6,8 +6,8 @@ import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
  * This should be used as the unique reference across the entire application to determine
  * whether the user is logged in or not.
  */
-export const activeAddressState = atom<string | undefined>({
-  key: 'activeAddress',
+export const activeAccountAddressState = atom<string | undefined>({
+  key: 'activeAccountAddressState',
   default: getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS),
   effects: [
     ({onSet}) => {
@@ -18,6 +18,8 @@ export const activeAddressState = atom<string | undefined>({
   ],
 });
 
-export const useActiveAddress = () => useRecoilValue(activeAddressState);
+export const useActiveAccountAddress = () =>
+  useRecoilValue(activeAccountAddressState);
 
-export const useSetActiveAddress = () => useSetRecoilState(activeAddressState);
+export const useSetActiveAccountAddress = () =>
+  useSetRecoilState(activeAccountAddressState);
