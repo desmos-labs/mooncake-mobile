@@ -77,4 +77,4 @@ contents.xcworkspacedata
 .metro-health-check*
 
 # Mocks
-/e2e/__mocks__/detox-mock-config.ts
+/e2e/__mocks__/detox.env.ts

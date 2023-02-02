@@ -2,12 +2,12 @@ import {by, device, element, expect} from 'detox';
 import {
   DETOX_DEV_ACCOUNT_NICKNAME,
   DETOX_DEV_MNEMONIC,
-} from '../__mocks__/detox-mock-config';
+} from '../__mocks__/detox.env';
 import launchAppConfig from '../config';
 
 describe('Login flow', () => {
   it('Goes through the login flow, inserting a mnemonic and a password', async () => {
-    // Clean the up reinstalling it
+    // Clean the app reinstalling it
     await device.uninstallApp();
     await device.installApp();
     await device.launchApp(launchAppConfig);
