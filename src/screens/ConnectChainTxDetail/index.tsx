@@ -5,7 +5,7 @@ import Typography from 'components/Typography';
 import {useTranslation} from 'react-i18next';
 import {ActivityIndicator, Image, View} from 'react-native';
 import {connectIcon, desmosIcon, errorImage, modalSuccess} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -196,7 +196,7 @@ const ConnectChainTxDetail = () => {
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
           disabled={!chainAccount || !message || !fee}
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           onPress={handlePressNext}>
           {t('common:next')}
         </Button>

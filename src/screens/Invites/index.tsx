@@ -13,7 +13,7 @@ import {
   invitesBanner,
   inviteUserIcon,
 } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
@@ -166,7 +166,7 @@ const Invites = () => {
           </TouchableOpacity>
         </View>
         <Button
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           backgroundColor={theme.colors.surfaceBlack}
           textColor={theme.colors.white}
@@ -214,7 +214,7 @@ const Invites = () => {
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
           additionalStyle={{marginHorizontal: theme.spacing.m}}
-          mode="contained">
+          mode={ButtonMode.CONTAINED}>
           {t('generate invite')}
         </Button>
       )}

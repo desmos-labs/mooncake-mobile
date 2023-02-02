@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -73,7 +73,7 @@ const ImpactPointsModal = () => {
       </View>
       <Spacer paddingVertical={theme.spacing.xl}>
         <Button
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           backgroundColor={theme.colors.surfaceBlack}
           textColor={theme.colors.white}

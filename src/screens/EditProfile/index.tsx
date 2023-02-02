@@ -4,7 +4,7 @@ import {
   defaultBanner,
   defaultProfilePic,
 } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -182,7 +182,7 @@ const EditProfile = () => {
                   size={44}
                   textColor={theme.colors.white}
                   backgroundColor={theme.colors.surfaceBlack}
-                  mode="contained"
+                  mode={ButtonMode.CONTAINED}
                   onPress={() => handleSubmit()}>
                   {t('common:confirm')}
                 </Button>

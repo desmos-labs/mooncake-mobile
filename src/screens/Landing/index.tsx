@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {butterflyLandingIcon, landingBG, ledgerLIcon} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -52,8 +52,8 @@ const Landing = () => {
       <Spacer paddingTop={theme.spacing.m} />
       <View style={{alignSelf: 'stretch'}}>
         <Button
-          mode="contained"
-          size={56}
+          mode={ButtonMode.CONTAINED}
+          size={ButtonSize.L}
           useSubtitle={true}
           backgroundColor="rgba(255, 255, 255, 0.7)"
           onPress={() => navigate(ROUTES.SIGNUP)}>
@@ -62,8 +62,8 @@ const Landing = () => {
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
-            mode="contained"
-            size={56}
+            mode={ButtonMode.CONTAINED}
+            size={ButtonSize.L}
             useSubtitle={true}
             backgroundColor="rgba(255, 255, 255, 0.7)"
             onPress={() =>

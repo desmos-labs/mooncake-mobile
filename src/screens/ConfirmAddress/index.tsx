@@ -7,7 +7,7 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {useRoute} from '@react-navigation/native';
 import {View} from 'react-native';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
@@ -48,13 +48,13 @@ const ConfirmAddress = () => {
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         onPress={() => {}}>
         {t('yesContinue')}
       </Button>
 
       <Spacer paddingTop={theme.spacing.l}>
-        <Button size={44} mode="outlined" onPress={() => {}}>
+        <Button size={44} mode={ButtonMode.OUTLINED} onPress={() => {}}>
           {t('noChangeIt')}
         </Button>
       </Spacer>

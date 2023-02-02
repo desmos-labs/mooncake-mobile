@@ -154,7 +154,7 @@ const LookingForDevices = () => {
 
           <Button
             color={theme.colors.surfaceBlack}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             style={styles.retryButton}
             onPress={onPressRetry}>
             {t('common:retry')}

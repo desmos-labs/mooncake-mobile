@@ -1,5 +1,5 @@
 import {emptyInvitesImage} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -45,7 +45,7 @@ const InvitesList = ({navigate}: Props) => {
 
         <Spacer paddingVertical={theme.spacing.l} />
         <Button
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
@@ -69,7 +69,7 @@ const InvitesList = ({navigate}: Props) => {
     ) : (
       <Button
         onPress={() => navigate(ROUTES.INVITES)}
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}

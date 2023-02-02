@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {modalSuccess} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -42,8 +42,10 @@ const SignupResult = () => {
         </View>
         <Spacer paddingTop={60} />
         <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
+          size={ButtonSize.M}
+          mode={ButtonMode.CONTAINED}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={() =>
             reset({
               index: 0,
@@ -60,15 +62,15 @@ const SignupResult = () => {
         </Button>
         <Spacer paddingTop={theme.spacing.m} />
         <Button
-          mode="outlined"
-          color={theme.colors.surfaceBlack}
+          size={ButtonSize.M}
+          mode={ButtonMode.OUTLINED}
           onPress={() => console.log('test')}>
           <Typography.Button2>{t('backup phrase')}</Typography.Button2>
         </Button>
         <Spacer paddingTop={theme.spacing.m} />
         <Button
-          mode="text"
-          color={theme.colors.surfaceBlack}
+          size={ButtonSize.M}
+          mode={ButtonMode.TEXT}
           onPress={() => navigate(ROUTES.BACKUP_PHRASE_BOTTOM_MODAL)}>
           <Typography.Subtitle4>{t('why backup')}</Typography.Subtitle4>
         </Button>

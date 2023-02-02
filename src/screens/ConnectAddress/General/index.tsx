@@ -11,7 +11,7 @@ import {
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
 import AddressItem from 'components/AddressItem';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -86,7 +86,7 @@ const ConnectAddressGeneral = () => {
         <Button
           size={26}
           textColor={theme.colors.butterOrange01}
-          mode="text"
+          mode={ButtonMode.TEXT}
           onPress={async () => {
             if (ledgerTransport) {
               await (ledgerTransport as BluetoothTransport).close();

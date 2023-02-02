@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
@@ -137,7 +137,7 @@ const ActionAuthorization = () => {
             {/* <Image source={authorizationImage} style={styles.imageStyle} /> */}
 
             <Button
-              mode="contained"
+              mode={ButtonMode.CONTAINED}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
@@ -150,7 +150,7 @@ const ActionAuthorization = () => {
               paddingTop={theme.spacing.l}
               paddingBottom={theme.spacing.m}>
               <Button
-                mode="outlined"
+                mode={ButtonMode.OUTLINED}
                 size={44}
                 disabled={loading}
                 onPress={handleCancel}>
@@ -195,14 +195,14 @@ const ActionAuthorization = () => {
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
             additionalStyle={styles.primaryButton}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             onPress={handleApprove}>
             {detailsModal?.buttonLabel}
           </Button>
           <Button
             additionalStyle={styles.secondaryButton}
             size={44}
-            mode="text"
+            mode={ButtonMode.TEXT}
             onPress={handleCancel}>
             {t('commmon:cancel')}
           </Button>

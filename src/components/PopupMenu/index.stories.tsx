@@ -14,7 +14,7 @@ const RenderComponent = () => {
 
   return (
     <View>
-      <Button size={26} mode="text" onPress={openMenu}>
+      <Button size={26} mode={ButtonMode.TEXT} onPress={openMenu}>
         open menu
       </Button>
       <PopupMenu

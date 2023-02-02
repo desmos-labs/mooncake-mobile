@@ -7,7 +7,7 @@ import {
   onboarding3,
   onboarding4,
 } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -146,7 +146,7 @@ const Onboarding = () => {
             selected !== 3 ? (
               <Button
                 onPress={() => navigateToCorrectScreen()}
-                mode="text"
+                mode={ButtonMode.TEXT}
                 size={26}
                 additionalStyle={{
                   right: 0,
@@ -179,7 +179,7 @@ const Onboarding = () => {
       {selected === 3 ? (
         <View style={{marginHorizontal: theme.spacing.m}}>
           <Button
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             size={44}

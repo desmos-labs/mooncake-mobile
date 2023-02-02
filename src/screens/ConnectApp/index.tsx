@@ -1,5 +1,5 @@
 import {checkBlackIcon, twitterIcon} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -84,7 +84,7 @@ const ConnectApp = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <Button
               disabled={!twitterUsername}
-              mode="contained"
+              mode={ButtonMode.CONTAINED}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
@@ -135,7 +135,7 @@ const ConnectApp = () => {
           )}
           <Button
             disabled={!twitterUsername}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             size={44}
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
@@ -147,7 +147,7 @@ const ConnectApp = () => {
           {!twitted && (
             <Button
               disabled={!twitterUsername}
-              mode="outlined"
+              mode={ButtonMode.OUTLINED}
               size={44}
               onPress={handleSelectTweet}
               additionalStyle={[styles.button]}>

@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -50,7 +50,7 @@ const SelectTweet = () => {
         <NoTweets />
         <Spacer paddingVertical={12} />
         <Button
-          mode="outlined"
+          mode={ButtonMode.OUTLINED}
           size={44}
           onPress={openTwitterApp}
           style={{
@@ -89,7 +89,7 @@ const SelectTweet = () => {
           <View style={{marginTop: theme.spacing.m}}>
             <Button
               disabled={!selectedTweetId}
-              mode="contained"
+              mode={ButtonMode.CONTAINED}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}

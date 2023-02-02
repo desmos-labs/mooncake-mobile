@@ -10,7 +10,7 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
@@ -101,7 +101,7 @@ const ConnectAddressAdvanced = () => {
     return (
       <View style={styles.topBarButtonContainer}>
         <Button
-          mode="text"
+          mode={ButtonMode.TEXT}
           size={26}
           textColor={theme.colors.butterOrange01}
           onPress={async () => {
@@ -259,7 +259,7 @@ const ConnectAddressAdvanced = () => {
                   size={44}
                   textColor={theme.colors.white}
                   backgroundColor={theme.colors.surfaceBlack}
-                  mode="contained"
+                  mode={ButtonMode.CONTAINED}
                   loading={loading || !generatedAccount}
                   disabled={invalidField || isAddressLinked}
                   onPress={handleSubmit}>

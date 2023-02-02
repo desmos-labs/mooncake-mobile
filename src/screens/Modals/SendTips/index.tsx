@@ -1,6 +1,6 @@
 import {infoIcon} from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -74,8 +74,8 @@ const SendTips = () => {
                         }
                         mode={
                           values.amount === String(value)
-                            ? 'contained'
-                            : 'outlined'
+                            ? ButtonMode.CONTAINED
+                            : ButtonMode.OUTLINED
                         }
                         backgroundColor={
                           values.amount === String(value)
@@ -182,7 +182,7 @@ const SendTips = () => {
                     </View>
                   ) : (
                     <Button
-                      mode="contained"
+                      mode={ButtonMode.CONTAINED}
                       size={44}
                       textColor={theme.colors.white}
                       backgroundColor={theme.colors.surfaceBlack}

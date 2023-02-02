@@ -1,5 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import MnemonicWordBadge from 'components/MnemonicWordBadge';
 import TopBar from 'components/TopBar';
@@ -115,7 +115,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
             {errorMessage}
           </Typography.Caption1>
           <Button
-            mode="text"
+            mode={ButtonMode.TEXT}
             size={26}
             textColor={theme.colors.butterOrange01}
             onPress={() => onWordClearAll()}>
@@ -135,7 +135,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
         ))}
       </View>
       <Button
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
@@ -148,7 +148,7 @@ const CheckMnemonic = (props: Props): JSX.Element => {
             setAvailableWords([]);
             setSelectedWords(mnemonic.split(' '));
           }}
-          mode="contained">
+          mode={ButtonMode.CONTAINED}>
           (DBG) Auto sort
         </Button>
       )} */}

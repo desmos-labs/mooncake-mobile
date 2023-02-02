@@ -1,6 +1,6 @@
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import {expandCommentIcon} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
@@ -113,7 +113,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const rightButtonComponent = useMemo(() => {
     return (
       <Button
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         size={32}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}

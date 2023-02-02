@@ -6,7 +6,7 @@ import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useLoadProfiles} from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import AddressItem from 'components/AddressItem';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -83,7 +83,7 @@ const AddProfileSelectAddressGeneral = () => {
       <View style={styles.topBarButtonContainer}>
         <Button
           size={26}
-          mode="text"
+          mode={ButtonMode.TEXT}
           textColor={theme.colors.butterOrange01}
           onPress={async () => {
             navigation.navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED, {

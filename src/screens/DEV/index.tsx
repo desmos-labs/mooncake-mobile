@@ -1,6 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {mnemonicState, signerState} from '@recoil/connectChainState';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ToastConfig from 'config/ToastConfig';
@@ -173,7 +173,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         <Button
           backgroundColor="green"
           textColor="white"
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
@@ -182,7 +182,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         <Button
           backgroundColor="orange"
           textColor="white"
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() =>
             navigate(ROUTES.BOTTOM_TABS, {
@@ -202,18 +202,21 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
         <Spacer paddingVertical={8} />
         <View style={{flexDirection: 'row'}}>
           <View style={{flexDirection: 'column', flex: 0.5}}>
-            <Button onPress={showToast} mode="outlined" size={32}>
+            <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button onPress={redeemAnInvite} mode="outlined" size={32}>
+            <Button
+              onPress={redeemAnInvite}
+              mode={ButtonMode.OUTLINED}
+              size={32}>
               Accept invite
             </Button>
           </View>
           <Spacer paddingHorizontal={4} />
           <View style={{flexDirection: 'column', flex: 0.5}}>
             <Button
-              mode="outlined"
+              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert(
@@ -236,7 +239,7 @@ const DevScreen: FC<DevScreenProps> = ({navigation}) => {
             </Button>
             <Spacer paddingVertical={4} />
             <Button
-              mode="outlined"
+              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert(

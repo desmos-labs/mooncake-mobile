@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import {useTranslation} from 'react-i18next';
 import {cameraIcon, defaultProfilePic} from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
@@ -88,7 +88,7 @@ const BottomBar = ({
         size={32}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         additionalStyle={{width: 58}}
         onPress={handlePressPost}>
         {t('postInteraction:post')}

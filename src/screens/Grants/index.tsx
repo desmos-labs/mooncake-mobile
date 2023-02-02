@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {authorizationImage} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -205,7 +205,7 @@ const Grants: React.FC<NavProps> = props => {
             <Spacer paddingTop={theme.spacing.s} />
             <Button
               loading={loading}
-              mode="contained"
+              mode={ButtonMode.CONTAINED}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}

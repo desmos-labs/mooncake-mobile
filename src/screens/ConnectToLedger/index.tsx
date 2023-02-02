@@ -240,7 +240,7 @@ const ConnectToLedger = () => {
 
           <Button
             color={theme.colors.surfaceBlack}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             onPress={retry}
             disabled={connecting}
             loading={connecting}>
@@ -275,7 +275,7 @@ const ConnectToLedger = () => {
 
             {instructionsIndex % 2 !== 0 && (
               <Button
-                mode="text"
+                mode={ButtonMode.TEXT}
                 style={styles.howToDLText}
                 onPress={handlePressHowToDL}>
                 <Typography.Button1

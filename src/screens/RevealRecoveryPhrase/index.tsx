@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -166,7 +166,7 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
                 backgroundColor={theme.colors.surfaceBlack}
                 loading={loading}
                 size={44}
-                mode="contained"
+                mode={ButtonMode.CONTAINED}
                 onPress={() => handleSubmit()}
                 disabled={
                   !values.password ||

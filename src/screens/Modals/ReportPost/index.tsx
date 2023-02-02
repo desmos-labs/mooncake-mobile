@@ -2,7 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import CustomRadioGroup from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -107,7 +107,7 @@ const ReportPost = () => {
               size={44}
               backgroundColor={theme.colors.surfaceBlack}
               textColor={theme.colors.white}
-              mode="contained"
+              mode={ButtonMode.CONTAINED}
               onPress={onSubmit}>
               {t('submit')}
             </Button>

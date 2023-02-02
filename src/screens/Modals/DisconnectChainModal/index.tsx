@@ -9,7 +9,7 @@ import {
   errorImage,
   modalSuccess,
 } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -136,7 +136,7 @@ const DisconnectChainModal = () => {
         <Button
           size={44}
           style={styles.confirmButton}
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           backgroundColor={theme.colors.surfaceBlack}
           textColor={theme.colors.white}
           onPress={handlePressYes}>
@@ -144,7 +144,7 @@ const DisconnectChainModal = () => {
         </Button>
 
         <Button
-          mode="outlined"
+          mode={ButtonMode.OUTLINED}
           size={44}
           style={styles.cancelButton}
           onPress={goBack}>

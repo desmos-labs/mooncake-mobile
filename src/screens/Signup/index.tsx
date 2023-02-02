@@ -6,7 +6,7 @@ import signUpInfoState, {signUpDTagState} from '@recoil/signUpInfoState';
 import {infoIcon} from 'assets/images';
 import {passwordStrength} from 'check-password-strength';
 import BackButton from 'components/BackButton';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
@@ -217,7 +217,7 @@ const Signup = () => {
                       </Typography.Caption1>
                     )}
                     <Button
-                      mode="text"
+                      mode={ButtonMode.TEXT}
                       additionalStyle={styles.completeProfileButton}
                       textColor={theme.colors.butterOrange01}
                       size={26}
@@ -334,7 +334,7 @@ const Signup = () => {
                     size={44}
                     textColor={theme.colors.white}
                     disabled={true}
-                    mode="contained">
+                    mode={ButtonMode.CONTAINED}>
                     {t('common:next')}
                   </Button>
                 )}

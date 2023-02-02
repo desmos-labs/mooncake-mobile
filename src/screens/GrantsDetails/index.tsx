@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {authorizationImage} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -233,7 +233,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
         permissionsGiven ? (
           <Button
             loading={loading}
-            mode="outlined"
+            mode={ButtonMode.OUTLINED}
             size={44}
             onPress={onPressRevoke}>
             {t('revoke permission')}
@@ -241,7 +241,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
         ) : (
           <Button
             loading={loading}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             size={44}
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}

@@ -3,7 +3,7 @@ import React from 'react';
 import DView from 'components/DView';
 import {ActivityIndicator, TextInput, View} from 'react-native';
 import TopBar from 'components/TopBar';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import {useTranslation} from 'react-i18next';
 import useActiveAccount from 'hooks/useActiveAccount';
 import {defaultProfilePic} from 'assets/images';
@@ -88,7 +88,7 @@ const EnterComment = () => {
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
         loading={loading}
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
         onPress={handlePress}
         additionalStyle={{width: !loading ? 58 : 90}}>
         {t('post')}

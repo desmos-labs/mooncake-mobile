@@ -3,7 +3,7 @@ import {toBase64} from '@cosmjs/encoding';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Typography from 'components/Typography';
 import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import LocalWallet from 'lib/LocalWallet';
@@ -138,7 +138,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
         <Typography.Body6>
           Searches the first {fetchLimit} accounts
         </Typography.Body6>
-        <Button size={26} mode="text">
+        <Button size={26} mode={ButtonMode.TEXT}>
           <Typography.Button2
             style={{color: theme.colors.butterOrange01}}
             onPress={generateMoreAccountsAndFetchProfiles}>
@@ -170,7 +170,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
       </ScrollView>
       <View>
         <Button
-          mode="contained"
+          mode={ButtonMode.CONTAINED}
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
@@ -186,7 +186,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
             })
           }
           additionalStyle={{paddingVertical: theme.spacing.m}}
-          mode="text">
+          mode={ButtonMode.TEXT}>
           create desmos profile
         </Button>
       </View>

@@ -2,7 +2,7 @@ import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {passwordStrength} from 'check-password-strength';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
@@ -103,7 +103,7 @@ const PasswordManipulation = () => {
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{flex: 1, backgroundColor: 'transparent'}}>
+        style={{flex: 1}}>
         <Formik
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
@@ -111,89 +111,88 @@ const PasswordManipulation = () => {
           {({handleSubmit, values, errors, setFieldValue}) => {
             return (
               <>
-                <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag">
-                  <View style={styles.formContainer}>
-                    <View style={styles.labelGroup}>
-                      <Typography.Subtitle2>
-                        {t(pwInputLabel)}
-                      </Typography.Subtitle2>
-
-                      {values.newPassword.length >= MIN_PW_LENGTH && (
-                        <Typography.Subtitle4
-                          style={mapPwStyle(values.newPassword)}>
-                          {t(passwordStrength(values.newPassword).value)}
-                        </Typography.Subtitle4>
-                      )}
-                    </View>
-
-                    <DSecureTextInput
-                      value={values.newPassword}
-                      onChangeText={(value: string) =>
-                        setFieldValue('newPassword', value, true)
-                      }
-                      style={styles.inputLabel}
-                      placeholder={t('newPw')}
-                      // error={!!errors.newPassword}
-                    />
-
-                    {errors.newPassword && (
-                      <Typography.Caption1 style={styles.errorText}>
-                        {errors.newPassword}
-                      </Typography.Caption1>
-                    )}
-
-                    <PasswordReqGroup passwordToCheck={values.newPassword} />
-
-                    <Typography.Subtitle2 style={styles.inputLabel}>
-                      {t('confirmPw')}
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardDismissMode="on-drag"
+                  style={{flex: 1}}>
+                  <View style={styles.labelGroup}>
+                    <Typography.Subtitle2>
+                      {t(pwInputLabel)}
                     </Typography.Subtitle2>
-                    <DSecureTextInput
-                      onOuterFocus={() =>
-                        setTimeout(
-                          () =>
-                            scrollViewRef.current?.scrollToEnd({
-                              animated: true,
-                            }),
-                          300,
-                        )
-                      }
-                      placeholder={t('pw')}
-                      value={values.confirmPassword}
-                      style={styles.inputLabel}
-                      onChangeText={(value: string) =>
-                        setFieldValue('confirmPassword', value, true)
-                      }
-                      // error={!!errors.confirmPassword}
-                    />
-                    {errors.confirmPassword && (
-                      <Typography.Caption1 style={styles.errorText}>
-                        {errors.confirmPassword}
-                      </Typography.Caption1>
+
+                    {values.newPassword.length >= MIN_PW_LENGTH && (
+                      <Typography.Subtitle4
+                        style={mapPwStyle(values.newPassword)}>
+                        {t(passwordStrength(values.newPassword).value)}
+                      </Typography.Subtitle4>
                     )}
                   </View>
-                </ScrollView>
-                <View style={{justifyContent: 'flex-end'}}>
-                  {loading ? (
-                    <View style={styles.loadingView}>
-                      <ActivityIndicator color={theme.colors.surfaceBlack} />
-                    </View>
-                  ) : (
-                    <Button
-                      size={44}
-                      backgroundColor={theme.colors.surfaceBlack}
-                      textColor={theme.colors.white}
-                      onPress={() => handleSubmit()}
-                      disabled={
-                        loading ||
-                        values.confirmPassword.length === 0 ||
-                        values.newPassword.length === 0 ||
-                        _.flatten(Object.values(errors)).length > 0
-                      }
-                      mode="contained">
-                      {t(buttonLabel)}
-                    </Button>
+
+                  <DSecureTextInput
+                    value={values.newPassword}
+                    onChangeText={(value: string) =>
+                      setFieldValue('newPassword', value, true)
+                    }
+                    style={styles.inputLabel}
+                    placeholder={t('newPw')}
+                    // error={!!errors.newPassword}
+                  />
+
+                  {errors.newPassword && (
+                    <Typography.Caption1 style={styles.errorText}>
+                      {errors.newPassword}
+                    </Typography.Caption1>
                   )}
-                </View>
+
+                  <PasswordReqGroup passwordToCheck={values.newPassword} />
+
+                  <Typography.Subtitle2 style={styles.inputLabel}>
+                    {t('confirmPw')}
+                  </Typography.Subtitle2>
+                  <DSecureTextInput
+                    onOuterFocus={() =>
+                      setTimeout(
+                        () =>
+                          scrollViewRef.current?.scrollToEnd({
+                            animated: true,
+                          }),
+                        300,
+                      )
+                    }
+                    placeholder={t('pw')}
+                    value={values.confirmPassword}
+                    style={styles.inputLabel}
+                    onChangeText={(value: string) =>
+                      setFieldValue('confirmPassword', value, true)
+                    }
+                    // error={!!errors.confirmPassword}
+                  />
+                  {errors.confirmPassword && (
+                    <Typography.Caption1 style={styles.errorText}>
+                      {errors.confirmPassword}
+                    </Typography.Caption1>
+                  )}
+                </ScrollView>
+                {loading ? (
+                  <View style={styles.loadingView}>
+                    <ActivityIndicator color={theme.colors.surfaceBlack} />
+                  </View>
+                ) : (
+                  <Button
+                    size={44}
+                    backgroundColor={theme.colors.surfaceBlack}
+                    textColor={theme.colors.white}
+                    onPress={() => handleSubmit()}
+                    disabled={
+                      loading ||
+                      values.confirmPassword.length === 0 ||
+                      values.newPassword.length === 0 ||
+                      _.flatten(Object.values(errors)).length > 0
+                    }
+                    mode={ButtonMode.CONTAINED}>
+                    {t(buttonLabel)}
+                  </Button>
+                )}
               </>
             );
           }}

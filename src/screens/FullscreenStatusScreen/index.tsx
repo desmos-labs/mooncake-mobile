@@ -1,6 +1,6 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {modalSuccess} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -79,17 +79,19 @@ const FullscreenStatusScreen = () => {
         />
         <Typography.Body6 style={styles.subtitle}>{subtitle}</Typography.Body6>
         <Button
-          style={styles.button}
-          color={theme.colors.surfaceBlack}
-          mode="contained"
+          size={ButtonSize.M}
+          additionalStyle={styles.button}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
+          mode={ButtonMode.CONTAINED}
           onPress={handleButtonPress}>
           {buttonLabel}
         </Button>
         {!!secondaryButtonLabel && (
           <Button
-            style={styles.button}
-            color={theme.colors.surfaceBlack}
-            mode="outlined"
+            size={ButtonSize.M}
+            additionalStyle={styles.button}
+            mode={ButtonMode.OUTLINED}
             onPress={handleSecondaryButtonPress}>
             <Typography.Button2>{secondaryButtonLabel}</Typography.Button2>
           </Button>
