@@ -10,12 +10,13 @@ type Props = React.ComponentProps<typeof MaterialButton>;
  * @param onPress The function to when the button is clicked
  * @param rest Every other param of the MaterialButton
  */
-const Button: React.FC<Props> = ({onPress, ...rest}: Props) => {
+const Button: React.FC<Props> = ({onPress, testID, ...rest}: Props) => {
   if (Platform.OS === 'ios') {
     return rest.mode === 'text' ? (
       <MaterialButton onPress={onPress} {...rest} />
     ) : (
       <TouchableOpacity
+        testID={testID}
         disabled={rest.disabled || rest.loading}
         onPress={onPress}>
         <MaterialButton {...rest} />
