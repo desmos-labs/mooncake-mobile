@@ -165,6 +165,7 @@ const Onboarding = () => {
       backgroundImage={bgonboarding}
       backgroundColor={theme.colors.background}>
       <AnimatedPagerView
+        testID="onboardingPagerView"
         ref={ref}
         style={{flex: 1}}
         initialPage={0}

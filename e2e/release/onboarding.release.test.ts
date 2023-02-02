@@ -21,4 +21,16 @@ describe('App first launch should display welcome screen.', () => {
       element(by.text('Import Secret Recovery Phrase')),
     ).toBeVisible();
   });
+
+  it('Goes to landing page if reached the last tab and Join Butter button is pressed', async () => {
+    await device.reloadReactNative();
+    await expect(element(by.text('Welcome to Butter'))).toBeVisible();
+    await element(by.id('onboardingPagerView')).swipe('left');
+    await expect(element(by.text('Privacy First'))).toBeVisible();
+    await element(by.id('onboardingPagerView')).swipe('left');
+    await expect(element(by.text('Free Speech'))).toBeVisible();
+    await element(by.id('onboardingPagerView')).swipe('left');
+    await expect(element(by.text('Earn Rewards'))).toBeVisible();
+    await element(by.text('Join Butter')).tap();
+  });
 });
