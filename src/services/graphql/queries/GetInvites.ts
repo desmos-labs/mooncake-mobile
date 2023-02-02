@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetInvites = gql`
   query Invites @api(name: butter) {

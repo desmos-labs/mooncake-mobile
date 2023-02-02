@@ -1,18 +1,18 @@
-import {BlurView} from '@react-native-community/blur';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {profileBack} from 'assets/images';
+import { BlurView } from '@react-native-community/blur';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { profileBack } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {createImageProgress} from 'react-native-image-progress';
-import {useTheme} from 'react-native-paper';
+import { createImageProgress } from 'react-native-image-progress';
+import { useTheme } from 'react-native-paper';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -20,7 +20,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import PropertiesSection from 'screens/NftDetails/components/PropertiesSection';
 import useStyles from './useStyles';
 
@@ -33,9 +33,9 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.NFT_DETAILS>;
 const NftDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
   const {
-    params: {nftData},
+    params: { nftData },
   } = useRoute<NavProps['route']>();
   const Image = createImageProgress(FastImage);
 
@@ -48,7 +48,7 @@ const NftDetails = () => {
       [1, 0],
       Extrapolation.CLAMP,
     );
-    return {opacity: interpolatedOpacity};
+    return { opacity: interpolatedOpacity };
   });
 
   // Calculate the percentage of scroll and set it to shared value (30% OF THE SCREEN MAX)
@@ -57,14 +57,11 @@ const NftDetails = () => {
   });
 
   return (
-    <SafeAreaView style={{backgroundColor: theme.colors.white, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: theme.colors.white, flex: 1 }}>
       <>
         <Animated.View style={animatedOpacityStyle}>
           <View style={styles.imageAbsolute}>
-            <Image
-              source={{uri: nftData.image}}
-              imageStyle={styles.backgroundImage}
-            />
+            <Image source={{ uri: nftData.image }} imageStyle={styles.backgroundImage} />
           </View>
         </Animated.View>
         <BlurView
@@ -77,12 +74,8 @@ const NftDetails = () => {
           reducedTransparencyFallbackColor="white"
         />
       </>
-      <View style={{flex: 1, marginTop: theme.spacing.s}}>
-        <ImageButton
-          image={profileBack}
-          style={styles.backImage}
-          onPress={goBack}
-        />
+      <View style={{ flex: 1, marginTop: theme.spacing.s }}>
+        <ImageButton image={profileBack} style={styles.backImage} onPress={goBack} />
         <Animated.ScrollView
           style={styles.container}
           onScroll={scrollHandler}
@@ -95,7 +88,7 @@ const NftDetails = () => {
               distance: 10,
             }}>
             <Image
-              source={{uri: nftData.image}}
+              source={{ uri: nftData.image }}
               style={{
                 width: '100%',
                 height: 332,
@@ -103,10 +96,8 @@ const NftDetails = () => {
               imageStyle={styles.nftImage}
             />
           </DropShadowWrapper>
-          <View style={{margin: theme.spacing.m, flex: 1}}>
-            <Spacer
-              paddingTop={theme.spacing.m}
-              paddingBottom={theme.spacing.l}>
+          <View style={{ margin: theme.spacing.m, flex: 1 }}>
+            <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.l}>
               <Typography.H5>
                 {nftData.name}
                 {' #'}

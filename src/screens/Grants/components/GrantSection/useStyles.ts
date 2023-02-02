@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -15,12 +15,12 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.s,
     color: theme.colors.midGrey,
   },
-  icon: {width: 16, height: 16, marginLeft: theme.spacing.s},
+  icon: { width: 16, height: 16, marginLeft: theme.spacing.s },
   titleView: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  arrowIcon: {right: 0, marginLeft: 'auto'},
+  arrowIcon: { right: 0, marginLeft: 'auto' },
 }));
 
 export default useStyles;

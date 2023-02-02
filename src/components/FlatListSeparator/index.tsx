@@ -1,6 +1,6 @@
 import React from 'react';
-import {useTheme} from 'react-native-paper';
-import {View} from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { View } from 'react-native';
 
 /**
  * A simple line for use as a separator in FlatLists

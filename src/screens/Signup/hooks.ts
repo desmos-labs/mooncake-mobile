@@ -1,18 +1,18 @@
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useProfileParams from 'hooks/useProfileParams';
 import * as Yup from 'yup';
 import useGenerateRandomAccount from 'hooks/useGenerateRandomAccount';
-import {useAppStateValue} from '@recoil/appState';
+import { useAppStateValue } from '@recoil/appState';
 import usePerformLogin from 'hooks/usePerformLogin';
 import useAcceptInvite from 'hooks/useAcceptInvite';
-import {err, ok, Result} from 'neverthrow';
-import {AccountWithWallet} from 'types/account';
+import { err, ok, Result } from 'neverthrow';
+import { AccountWithWallet } from 'types/account';
 import useSaveAccount from 'hooks/useSaveAccount';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 interface FormValues {
   readonly newPassword: string;
@@ -35,8 +35,8 @@ export const useInitialFormValues = (): FormValues => {
  * Hook that returns the validation schema to be used when validating the sign up form.
  */
 export const useValidationSchema = () => {
-  const {t} = useTranslation('passwordManipulation');
-  const {params: profileParams} = useProfileParams();
+  const { t } = useTranslation('passwordManipulation');
+  const { params: profileParams } = useProfileParams();
   return React.useMemo(() => {
     return Yup.object().shape({
       inviteCode: Yup.string().required(t('error:required')),
@@ -48,7 +48,7 @@ export const useValidationSchema = () => {
  * Hook that should be used in order to validate the form.
  */
 export const useValidateForm = () => {
-  const {t} = useTranslation('passwordManipulation');
+  const { t } = useTranslation('passwordManipulation');
   return React.useCallback(
     (values: FormValues) => {
       const errors: any = {};
@@ -152,7 +152,7 @@ const usePerformSignUp = () => {
 
         // Return
         setStatus(SignUpStatus.DONE);
-        return ok({account} as SignUpSuccess);
+        return ok({ account } as SignUpSuccess);
       } catch (e: any) {
         setStatus(SignUpStatus.DONE);
         return err(new Error(e.toString()));
@@ -172,12 +172,9 @@ const usePerformSignUp = () => {
  * @param onSuccess - Function that is called when the profile has been saved successfully
  * @param onError - Function that is called if an error is raised.
  */
-export const useSubmitForm = (
-  onSuccess: () => void,
-  onError: (error: Error) => void,
-) => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const {performSignUp, status: signUpStatus} = usePerformSignUp();
+export const useSubmitForm = (onSuccess: () => void, onError: (error: Error) => void) => {
+  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { performSignUp, status: signUpStatus } = usePerformSignUp();
 
   // Handles the submission of the form by first signing up the user, and then saving their profile.
   const handleFormSubmit = async (values: FormValues) => {

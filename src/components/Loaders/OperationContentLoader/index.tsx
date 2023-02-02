@@ -1,7 +1,7 @@
-import React, {memo} from 'react';
-import ContentLoader, {Circle, Rect} from 'react-content-loader/native';
-import {Dimensions} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { memo } from 'react';
+import ContentLoader, { Circle, Rect } from 'react-content-loader/native';
+import { Dimensions } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 const OperationContentLoader = () => {
   const theme = useTheme();

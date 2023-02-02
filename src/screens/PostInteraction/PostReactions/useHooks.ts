@@ -1,14 +1,8 @@
-import {useQuery} from '@apollo/client';
-import {useMemo} from 'react';
-import {GetPostReactions} from 'services/graphql/queries/GetReactions';
+import { useQuery } from '@apollo/client';
+import { useMemo } from 'react';
+import { GetPostReactions } from 'services/graphql/queries/GetReactions';
 
-const useHooks = ({
-  postId,
-  subspaceId,
-}: {
-  postId: number;
-  subspaceId: number;
-}) => {
+const useHooks = ({ postId, subspaceId }: { postId: number; subspaceId: number }) => {
   const {
     data: postReactions,
     loading: reactionsLoading,

@@ -1,12 +1,12 @@
-import React, {useCallback, useState} from 'react';
-import {useRecoilValue} from 'recoil';
-import {useQuery} from '@apollo/client';
+import React, { useCallback, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useQuery } from '@apollo/client';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import _ from 'lodash';
-import {followedAddressesState} from '@recoil/following';
+import { followedAddressesState } from '@recoil/following';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {POST_TYPE, usePostsFamily} from '@recoil/posts';
+import { POST_TYPE, usePostsFamily } from '@recoil/posts';
 import EnvConfig from 'config/EnvConfig';
 
 /**
@@ -15,9 +15,9 @@ import EnvConfig from 'config/EnvConfig';
 const POSTS_PER_FETCH = 10;
 
 // Get posts up to a given timestamp
-const useGetPosts = ({type}: {type: POST_TYPE}) => {
-  const {posts, setPosts} = usePostsFamily(type);
-  const {activeAddress} = useActiveAccount();
+const useGetPosts = ({ type }: { type: POST_TYPE }) => {
+  const { posts, setPosts } = usePostsFamily(type);
+  const { activeAddress } = useActiveAccount();
   const followingAddrs = useRecoilValue(followedAddressesState);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refetching, setRefetching] = useState(false);
@@ -56,11 +56,11 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
   }, [followingAddrs, activeAddress]);
 
   const onCompletedCallback = useCallback((data: any) => {
-    const {post} = data;
+    const { post } = data;
     setPosts(() => _.uniqBy([...post], 'id'));
   }, []);
 
-  const {refetch, loading, fetchMore} = useQuery(queryVars.query, {
+  const { refetch, loading, fetchMore } = useQuery(queryVars.query, {
     variables: queryVars.variables,
 
     onCompleted: onCompletedCallback,
@@ -72,7 +72,7 @@ const useGetPosts = ({type}: {type: POST_TYPE}) => {
       variables: {
         offset: posts.length,
       },
-      updateQuery: (prev, {fetchMoreResult}) => {
+      updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) {
           return prev;
         }

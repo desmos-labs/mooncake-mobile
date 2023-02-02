@@ -1,13 +1,13 @@
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
   CompositeScreenProps,
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
-import {isFollowingAddr} from '@recoil/following';
+import { isFollowingAddr } from '@recoil/following';
 import {
   defaultProfilePic,
   followBlackIcon,
@@ -27,23 +27,23 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Dimensions, View} from 'react-native';
-import {Divider, useTheme} from 'react-native-paper';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {verticalScale} from 'react-native-size-matters';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import React, { useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Dimensions, View } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { verticalScale } from 'react-native-size-matters';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
-import {FlashList} from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -71,9 +71,9 @@ export type PostDetailsParams = {
 const PostDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('postDetails');
-  const {params} = useRoute<NavProps['route']>();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('postDetails');
+  const { params } = useRoute<NavProps['route']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
   const [profileData] = useRecoilState(activeProfileState);
   const [menuVisible, setMenuVisible] = useState(false);
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
@@ -81,17 +81,17 @@ const PostDetails = () => {
     x: number;
     y: number;
   }>();
-  const [anchor, setAnchor] = useState<{x: number; y: number}>();
+  const [anchor, setAnchor] = useState<{ x: number; y: number }>();
   const [popupMenuParams, setPopupMenuParams] = useState<{
     postId: number;
     subspaceId: number;
     authorAddress: string;
   }>();
-  const {activeAddress} = useActiveAccount();
-  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const { activeAddress } = useActiveAccount();
+  const { followOrUnfollowUser } = useFollowOrUnfollowUser();
   const scrollViewRef = useRef<any>(null);
 
-  const {textInputRef, focusTextInputRef} = useFocusTextInputOnNavigate();
+  const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   const {
     profile,
@@ -118,11 +118,9 @@ const PostDetails = () => {
     subspaceID: params.subspaceId,
   });
 
-  const isFollowingAddress = useRecoilValue(
-    isFollowingAddr(popupMenuParams?.authorAddress || ''),
-  );
+  const isFollowingAddress = useRecoilValue(isFollowingAddr(popupMenuParams?.authorAddress || ''));
 
-  const {top} = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -139,7 +137,7 @@ const PostDetails = () => {
     if (post?.author?.profile_pic) {
       return (
         <ProfileHeaderButton
-          imageSrc={{uri: post?.author.profile_pic}}
+          imageSrc={{ uri: post?.author.profile_pic }}
           onPress={() => handleNavigateToProfile(post?.author?.address)}
         />
       );
@@ -150,15 +148,11 @@ const PostDetails = () => {
         onPress={() => handleNavigateToProfile(post?.author?.address)}
       />
     );
-  }, [
-    post?.author?.profile_pic,
-    post?.author?.address,
-    handleNavigateToProfile,
-  ]);
+  }, [post?.author?.profile_pic, post?.author?.address, handleNavigateToProfile]);
 
   const renderItem = React.useCallback(
-    ({item}: any) => {
-      const {isPending} = item;
+    ({ item }: any) => {
+      const { isPending } = item;
 
       return (
         <CommentItem
@@ -187,9 +181,7 @@ const PostDetails = () => {
               focusCommentBox: true,
             });
           }}
-          handleProfilePicPress={() =>
-            handleNavigateToProfile(item.author_address)
-          }
+          handleProfilePicPress={() => handleNavigateToProfile(item.author_address)}
           handlePressLike={() => {
             if (isPending) return;
             handleAddReaction(item.id);
@@ -227,14 +219,14 @@ const PostDetails = () => {
   const countersImages = useMemo(() => {
     const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
-        return {uri: reaction.author.profile_pic};
+        return { uri: reaction.author.profile_pic };
       } else {
         return defaultProfilePic;
       }
     });
     const tipsImages = tips.map((tip: any) => {
       if (tip.sender.profile_pic) {
-        return {uri: tip.sender.profile_pic};
+        return { uri: tip.sender.profile_pic };
       } else {
         return defaultProfilePic;
       }
@@ -252,9 +244,7 @@ const PostDetails = () => {
           postLiked={post?.reactionPresence?.aggregate?.count > 0}
           handleLikePress={() => handleAddReaction(post.id)}
           handleCommentPress={focusTextInputRef}
-          handleTipPress={() =>
-            handlePressSendTips(post?.author?.address, post.id)
-          }
+          handleTipPress={() => handlePressSendTips(post?.author?.address, post.id)}
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
@@ -317,17 +307,10 @@ const PostDetails = () => {
         </View>
       </View>
     );
-  }, [
-    followOrUnfollowUser,
-    activeAddress,
-    Avatar,
-    formattedDate,
-    post?.author,
-    popupMenuParams,
-  ]);
+  }, [followOrUnfollowUser, activeAddress, Avatar, formattedDate, post?.author, popupMenuParams]);
 
   return postLoading || !post ? (
-    <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
       <ActivityIndicator color={theme.colors.surfaceBlack} />
     </SafeAreaView>
   ) : (
@@ -342,9 +325,7 @@ const PostDetails = () => {
         scrollEnabled={true}
         refreshing={postLoading}
         onRefresh={pageRefetch}
-        ListHeaderComponent={
-          postLoading || !post ? <ActivityIndicator /> : headerComponent
-        }
+        ListHeaderComponent={postLoading || !post ? <ActivityIndicator /> : headerComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}
         estimatedItemSize={160}
@@ -359,13 +340,9 @@ const PostDetails = () => {
         handlePostComment={handlePostComment}
         textInputRef={textInputRef}
         profileImage={
-          profileData?.profile_pic
-            ? {uri: profileData?.profile_pic}
-            : defaultProfilePic
+          profileData?.profile_pic ? { uri: profileData?.profile_pic } : defaultProfilePic
         }
-        onIconPress={() =>
-          handleExpandComment({author: post.author, postId: post.id})
-        }
+        onIconPress={() => handleExpandComment({ author: post.author, postId: post.id })}
       />
 
       <PopupMenu
@@ -387,10 +364,7 @@ const PostDetails = () => {
           {
             label: t('report'),
             onPress: () =>
-              handlePressReport(
-                popupMenuParams?.postId!,
-                popupMenuParams?.subspaceId!,
-              ),
+              handlePressReport(popupMenuParams?.postId!, popupMenuParams?.subspaceId!),
             icon: reportIcon,
           },
         ]}
@@ -408,10 +382,7 @@ const PostDetails = () => {
           {
             label: t('report'),
             onPress: () =>
-              handlePressReport(
-                popupMenuParams?.postId!,
-                popupMenuParams?.subspaceId!,
-              ),
+              handlePressReport(popupMenuParams?.postId!, popupMenuParams?.subspaceId!),
             icon: reportIcon,
           },
         ]}

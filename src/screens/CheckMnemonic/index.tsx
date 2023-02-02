@@ -1,42 +1,36 @@
-import {StackScreenProps} from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import MnemonicWordBadge from 'components/MnemonicWordBadge';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type CheckMnemonicParams = {
   mnemonic: string;
 };
 
-export type Props = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CHECK_MNEMONIC
->;
+export type Props = StackScreenProps<RootNavigatorParamList, ROUTES.CHECK_MNEMONIC>;
 const CheckMnemonic = (props: Props): JSX.Element => {
   const {
     route: {
-      params: {mnemonic},
+      params: { mnemonic },
     },
     navigation,
   } = props;
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('checkMnemonic');
+  const { t } = useTranslation('checkMnemonic');
   const receivedMnemonic = mnemonic;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const words = useMemo(
-    () => _.shuffle(receivedMnemonic.split(' ')),
-    [receivedMnemonic],
-  );
+  const words = useMemo(() => _.shuffle(receivedMnemonic.split(' ')), [receivedMnemonic]);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [availableWords, setAvailableWords] = useState<string[]>([...words]);
 
@@ -87,20 +81,20 @@ const CheckMnemonic = (props: Props): JSX.Element => {
   return (
     <DView style={styles.root} topBar={<TopBar />}>
       <Typography.H3>Backup Secret Recovery Phrase</Typography.H3>
-      <Typography.Body6 style={{marginTop: theme.spacing.m}}>
+      <Typography.Body6 style={{ marginTop: theme.spacing.m }}>
         {t('tap to order')}
       </Typography.Body6>
 
       <View
         style={[
           styles.selectedWordsContainer,
-          errorMessage ? {borderColor: theme.colors.pink01} : null,
+          errorMessage ? { borderColor: theme.colors.pink01 } : null,
         ]}>
         {selectedWords.map((w, i) => (
           <MnemonicWordBadge
             style={[
               styles.wordBadgeSelected,
-              errorMessage ? {backgroundColor: theme.colors.pink03} : null,
+              errorMessage ? { backgroundColor: theme.colors.pink03 } : null,
             ]}
             /* eslint-disable-next-line react/no-array-index-key */
             key={`${w}-${i}`}
@@ -111,11 +105,9 @@ const CheckMnemonic = (props: Props): JSX.Element => {
       </View>
       {errorMessage ? (
         <View style={styles.errorContainer}>
-          <Typography.Caption1 style={styles.errorParagraph}>
-            {errorMessage}
-          </Typography.Caption1>
+          <Typography.Caption1 style={styles.errorParagraph}>{errorMessage}</Typography.Caption1>
           <Button mode="text" onPress={() => onWordClearAll()}>
-            <Typography.Subtitle4 style={{color: theme.colors.butterOrange01}}>
+            <Typography.Subtitle4 style={{ color: theme.colors.butterOrange01 }}>
               {t('clear all')}
             </Typography.Subtitle4>
           </Button>

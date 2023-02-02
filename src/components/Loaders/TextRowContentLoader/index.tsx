@@ -1,9 +1,9 @@
-import React, {memo} from 'react';
-import ContentLoader, {Rect} from 'react-content-loader/native';
-import {Dimensions} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { memo } from 'react';
+import ContentLoader, { Rect } from 'react-content-loader/native';
+import { Dimensions } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
-const TextRowContentLoader = ({width}: {width: string}) => {
+const TextRowContentLoader = ({ width }: { width: string }) => {
   const theme = useTheme();
 
   return (

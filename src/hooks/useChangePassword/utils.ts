@@ -12,13 +12,9 @@ import {
  */
 export const deleteOldWalletData = async (wallets: LocalWallet[]) => {
   // maybe we could just pass an array of addresses instead.
-  const deleteLocalWalletPromises = wallets.map(wallet =>
-    deleteLocalWallet(wallet!.bech32Address),
-  );
+  const deleteLocalWalletPromises = wallets.map(wallet => deleteLocalWallet(wallet!.bech32Address));
 
-  const deleteMnemonicPromises = wallets.map(wallet =>
-    deleteMnemonic(wallet?.bech32Address!),
-  );
+  const deleteMnemonicPromises = wallets.map(wallet => deleteMnemonic(wallet?.bech32Address!));
 
   await Promise.all([...deleteLocalWalletPromises, ...deleteMnemonicPromises]);
 };
@@ -35,9 +31,7 @@ export const saveNewWalletData = async (
   mnemonic: string,
   newPassword: string,
 ) => {
-  const saveLocalWalletPromises = wallets.map(wallet =>
-    saveLocalWallet(wallet, newPassword),
-  );
+  const saveLocalWalletPromises = wallets.map(wallet => saveLocalWallet(wallet, newPassword));
   const saveMnemonicPromises = wallets.map(wallet =>
     saveMnemonic(wallet.bech32Address, mnemonic!, newPassword),
   );

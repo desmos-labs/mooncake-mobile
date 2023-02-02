@@ -9,8 +9,7 @@ const nftTestData = [
     tokenId: '1823',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1823',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1823',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -24,8 +23,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -43,8 +41,7 @@ const nftTestData = [
     tokenId: '1837',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1837',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1837',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -58,8 +55,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -77,8 +73,7 @@ const nftTestData = [
     tokenId: '1657',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1657',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1657',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -92,8 +87,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -111,8 +105,7 @@ const nftTestData = [
     tokenId: '1510',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1510',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1510',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -126,8 +119,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -145,8 +137,7 @@ const nftTestData = [
     tokenId: '1451',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1451',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1451',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -160,8 +151,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -179,8 +169,7 @@ const nftTestData = [
     tokenId: '2015',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/2015',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/2015',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -194,8 +183,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -213,8 +201,7 @@ const nftTestData = [
     tokenId: '1746',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1746',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1746',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -228,8 +215,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,
@@ -247,8 +233,7 @@ const nftTestData = [
     tokenId: '1845',
     creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
     owner: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
-    tokenUri:
-      'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1845',
+    tokenUri: 'ipfs://bafybeihicjsbqeoxqe6y7vfbsjvktghq3kl7nyovxe4p6ewc45k2z4a2jq/metadata/1845',
     collection: {
       creator: 'stars1p7k00hney7rx883qpp2gle0vv67sefnn8aun25',
       description:
@@ -262,8 +247,7 @@ const nftTestData = [
       },
       name: 'Stargaze X',
       symbol: 'SGX',
-      contractAddress:
-        'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
+      contractAddress: 'stars12qy53txlq7543yaszuxspkexnuuq8v4pjhx58ha6rtxpvvdtrj7saxd9l9',
       marketplaceInfo: null,
     },
     price: null,

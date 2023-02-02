@@ -1,6 +1,6 @@
-import {useActiveAccountAddress} from '@recoil/wallets';
-import {useMemo} from 'react';
-import {useQuery} from '@apollo/client';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
 import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
 
 /**
@@ -20,13 +20,10 @@ const useFollowersCount = (address: string | undefined) => {
   }
 
   // Get the followers count from the server
-  const {data, loading, refetch} = useQuery(GetFollowersCount, {
-    variables: {userAddress},
+  const { data, loading, refetch } = useQuery(GetFollowersCount, {
+    variables: { userAddress },
   });
-  const followersCount = useMemo(
-    () => data?.followers?.aggregate?.count ?? 0,
-    [data],
-  );
+  const followersCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
 
   return {
     count: followersCount,

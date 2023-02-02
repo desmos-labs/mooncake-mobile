@@ -1,15 +1,15 @@
-import {errorImage} from 'assets/images';
+import { errorImage } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Image, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Image, View } from 'react-native';
 
 const NoTweets = () => {
-  const {t} = useTranslation('connectApp');
+  const { t } = useTranslation('connectApp');
 
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{ alignItems: 'center' }}>
       <Spacer paddingVertical={40} />
       <Image
         source={errorImage}

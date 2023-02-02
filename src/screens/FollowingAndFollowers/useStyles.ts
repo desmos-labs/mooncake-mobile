@@ -1,4 +1,4 @@
-import {makeStyleWithProps} from 'config/theme';
+import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {

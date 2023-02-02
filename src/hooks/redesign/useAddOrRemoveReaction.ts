@@ -1,11 +1,11 @@
 import React from 'react';
-import {useActiveAddress} from '@recoil/redesign/wallets';
+import { useActiveAddress } from '@recoil/redesign/wallets';
 import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
 } from '@recoil/redesign/reactions';
-import {PostID} from 'types/desmos';
+import { PostID } from 'types/desmos';
 import useBroadcastTx from 'hooks/redesign/useBroadcastTx';
 import {
   MsgAddReactionEncodeObject,
@@ -14,9 +14,9 @@ import {
   MsgRemoveReactionTypeUrl,
 } from '@desmoslabs/desmjs';
 import Long from 'long';
-import {useLazyQuery} from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
-import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
+import { convertRegisteredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import useAppConfig from 'hooks/redesign/useAppConfig';
 
 /**
@@ -34,7 +34,7 @@ const useAddReaction = () => {
   return React.useCallback(
     async (postId: PostID, address: string) => {
       // Check if the reaction exists on the server
-      const {data} = await getReaction({
+      const { data } = await getReaction({
         variables: {
           postId,
           userAddress: address,
@@ -58,7 +58,7 @@ const useAddReaction = () => {
 
         // Broadcast the transaction
         // TODO: Handle if broadcastTx returns an error
-        await broadcastTx([messageAddReaction], {optimistic: true});
+        await broadcastTx([messageAddReaction], { optimistic: true });
       }
 
       // Add the reaction locally
@@ -83,7 +83,7 @@ const useRemoveReaction = () => {
   return React.useCallback(
     async (postId: PostID, address: string) => {
       // Get the reaction id from the server
-      const {data} = await getReaction({
+      const { data } = await getReaction({
         variables: {
           postId,
           userAddress: address,
@@ -107,7 +107,7 @@ const useRemoveReaction = () => {
 
         // Broadcast the transaction
         // TODO: Handle if the broadcast returns an error
-        await broadcastTx([messageRemoveReaction], {optimistic: true});
+        await broadcastTx([messageRemoveReaction], { optimistic: true });
       }
 
       // Remove the reaction locally
@@ -123,9 +123,7 @@ const useRemoveReaction = () => {
 const useAddOrRemoveReaction = () => {
   const activeAddress = useActiveAddress();
   if (!activeAddress) {
-    throw new Error(
-      'Trying to know add or remove a reaction, without active user',
-    );
+    throw new Error('Trying to know add or remove a reaction, without active user');
   }
 
   const hasPostReaction = useHasPostReaction();

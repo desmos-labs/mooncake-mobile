@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -33,7 +33,7 @@ const useStyles = makeStyle(theme => ({
     borderWidth: 0.5,
     marginHorizontal: -theme.spacing.l,
   },
-  image: {width: 24, height: 24, marginRight: theme.spacing.m},
+  image: { width: 24, height: 24, marginRight: theme.spacing.m },
   button: {
     flexDirection: 'row',
     paddingVertical: theme.spacing.l,

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import {deleteMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {useNavigation} from '@react-navigation/native';
+import { deleteMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
@@ -41,7 +41,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, any>;
  * A hook that augments the interceptors of the axiosInstance with react hook functionality.
  */
 export const useInitializeAxios = () => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
 
   React.useEffect(() => {
     axiosInstance.interceptors.response.use(

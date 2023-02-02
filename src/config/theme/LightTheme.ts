@@ -1,5 +1,5 @@
-import {DefaultTheme} from 'react-native-paper';
-import {addAlphaToHex} from 'config/theme/index';
+import { DefaultTheme } from 'react-native-paper';
+import { addAlphaToHex } from 'config/theme/index';
 
 const LightTheme: ReactNativePaper.Theme = {
   ...DefaultTheme,
@@ -83,17 +83,13 @@ const LightTheme: ReactNativePaper.Theme = {
       'rgba(255, 196, 82, 1)',
       'rgba(255, 228, 175, 1)',
     ],
-    butterOrangeGradient02: [
-      'rgba(254, 176, 39, 1)',
-      'rgba(255, 245, 243, 0)',
-    ].map(x => addAlphaToHex(x, 0.5)),
+    butterOrangeGradient02: ['rgba(254, 176, 39, 1)', 'rgba(255, 245, 243, 0)'].map(x =>
+      addAlphaToHex(x, 0.5),
+    ),
     butterYellowGradient: ['rgba(255, 159, 18, 1)', 'rgba(248, 218, 64, 1)'],
     pinkGradient: [addAlphaToHex('#F359A8', 0.24)],
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
-    blackGradient01: [
-      addAlphaToHex('#000000', 0.4),
-      addAlphaToHex('#FFFFFF', 0.1),
-    ],
+    blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
   },
 };
 

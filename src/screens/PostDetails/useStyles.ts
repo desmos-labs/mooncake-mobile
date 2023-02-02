@@ -1,7 +1,7 @@
 /**
  * Style hook for the ChangePassword screen
  */
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   root: {
@@ -35,7 +35,7 @@ const useStyles = makeStyle(theme => ({
     marginLeft: theme.spacing.s,
     minWidth: 160,
   },
-  rightContainer: {flexDirection: 'row', alignItems: 'center'},
+  rightContainer: { flexDirection: 'row', alignItems: 'center' },
   divider: {
     borderColor: theme.colors.dividerGrey,
     borderWidth: 0.5,

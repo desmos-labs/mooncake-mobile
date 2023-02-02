@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {Dimensions} from 'react-native';
+import { makeStyle } from 'config/theme';
+import { Dimensions } from 'react-native';
 
 /**
  * Theme hook for the PostCard component

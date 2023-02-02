@@ -1,24 +1,24 @@
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Dimensions, TouchableOpacity, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   PanGestureHandlerProps,
 } from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {RadioButtonInput} from 'react-native-simple-radio-button';
+import { RadioButtonInput } from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/Feather';
-import {ProfileRadioValue} from 'screens/Profiles/components/SettingsProfileBadgeGroup';
+import { ProfileRadioValue } from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useStyles from './useStyles';
 
 interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
@@ -49,25 +49,15 @@ type ContextType = {
 };
 
 const SettingsProfileBadge = (props: Props) => {
-  const {
-    value,
-    index,
-    onSelect,
-    onEditProfile,
-    onRemoveProfile,
-    simultaneousHandlers,
-  } = props;
+  const { value, index, onSelect, onEditProfile, onRemoveProfile, simultaneousHandlers } = props;
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('settings');
+  const { t } = useTranslation('settings');
   const translateX = useSharedValue(0);
-  const {width: SCREEN_WIDTH} = Dimensions.get('window');
+  const { width: SCREEN_WIDTH } = Dimensions.get('window');
   const TRANSLATE_X_THRESHOLD1 = -SCREEN_WIDTH * 0.22;
   const TRANSLATE_X_THRESHOLD2 = -SCREEN_WIDTH * 0.46;
-  const panGesture = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    ContextType
-  >({
+  const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, ContextType>({
     onStart: (event, context) => {
       context.translateX = translateX.value;
     },
@@ -77,10 +67,7 @@ const SettingsProfileBadge = (props: Props) => {
       }
     },
     onEnd: () => {
-      if (
-        translateX.value < TRANSLATE_X_THRESHOLD1 &&
-        translateX.value > TRANSLATE_X_THRESHOLD2
-      ) {
+      if (translateX.value < TRANSLATE_X_THRESHOLD1 && translateX.value > TRANSLATE_X_THRESHOLD2) {
         translateX.value = withTiming(TRANSLATE_X_THRESHOLD1);
       } else if (translateX.value < TRANSLATE_X_THRESHOLD2) {
         translateX.value = withTiming(TRANSLATE_X_THRESHOLD2);
@@ -103,46 +90,33 @@ const SettingsProfileBadge = (props: Props) => {
 
   return (
     <View>
-      <TouchableOpacity
-        style={styles.firstBox}
-        onPress={() => onEditProfile(index)}>
+      <TouchableOpacity style={styles.firstBox} onPress={() => onEditProfile(index)}>
         <Icon
           name="edit"
           size={26}
-          style={{alignSelf: 'center'}}
+          style={{ alignSelf: 'center' }}
           color={theme.colors.accentBlue01}
         />
-        <Typography.Subtitle4
-          style={{color: theme.colors.accentBlue01, textAlign: 'center'}}>
+        <Typography.Subtitle4 style={{ color: theme.colors.accentBlue01, textAlign: 'center' }}>
           {t('edit')}
         </Typography.Subtitle4>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.secondBox}
-        onPress={() => onRemoveProfile(index)}>
+      <TouchableOpacity style={styles.secondBox} onPress={() => onRemoveProfile(index)}>
         <Icon
           name="trash-2"
           size={26}
-          style={{alignSelf: 'center'}}
+          style={{ alignSelf: 'center' }}
           color={theme.colors.pink01}
         />
-        <Typography.Subtitle4
-          style={{color: theme.colors.pink01, textAlign: 'center'}}>
+        <Typography.Subtitle4 style={{ color: theme.colors.pink01, textAlign: 'center' }}>
           {t('remove')}
         </Typography.Subtitle4>
       </TouchableOpacity>
-      <PanGestureHandler
-        simultaneousHandlers={simultaneousHandlers}
-        onGestureEvent={panGesture}>
+      <PanGestureHandler simultaneousHandlers={simultaneousHandlers} onGestureEvent={panGesture}>
         <Animated.View style={animatedStyle}>
           <TouchableOpacity activeOpacity={1} onPress={() => onSelect(index)}>
-            <DropShadowWrapper
-              style={styles.externalContainer}
-              innerStyle={styles.container}>
-              <FastImage
-                source={value.profilePicture}
-                style={styles.profilePicture}
-              />
+            <DropShadowWrapper style={styles.externalContainer} innerStyle={styles.container}>
+              <FastImage source={value.profilePicture} style={styles.profilePicture} />
               <View style={styles.textContainer}>
                 <Typography.H5>{value.nickname}</Typography.H5>
                 <Typography.Body6>{value.dTag}</Typography.Body6>

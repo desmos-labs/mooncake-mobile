@@ -1,7 +1,7 @@
 import React from 'react';
 import ThemedLottieView from 'components/ThemedLottieView';
-import {loadingOrange} from 'assets/animations';
-import {StyleSheet, View} from 'react-native';
+import { loadingOrange } from 'assets/animations';
+import { StyleSheet, View } from 'react-native';
 
 type Props = {
   /**
@@ -15,7 +15,7 @@ type Props = {
   zIndexOverride?: number;
 };
 
-const LoadingOverlay = ({isVisible, zIndexOverride = 2}: Props) => {
+const LoadingOverlay = ({ isVisible, zIndexOverride = 2 }: Props) => {
   if (!isVisible) {
     return null;
   }

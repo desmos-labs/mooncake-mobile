@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
 import PostActionButtonsBar from './index';

@@ -1,21 +1,19 @@
 import React from 'react';
-import {followingState} from '@recoil/following';
+import { followingState } from '@recoil/following';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {act, renderHook} from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow/index';
-import {RecoilRoot} from 'recoil';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgCreateRelationship} from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
+import { RecoilRoot } from 'recoil';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { MsgCreateRelationship } from '@desmoslabs/desmjs-types/desmos/relationships/v1/msgs';
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
 
 const mockActiveAddress = 'i-am-an-address';
 
-jest.mock('hooks/useActiveAccount', () =>
-  jest.fn(() => ({activeAddress: mockActiveAddress})),
-);
+jest.mock('hooks/useActiveAccount', () => jest.fn(() => ({ activeAddress: mockActiveAddress })));
 
 jest.mock('hooks/authGrants/useCheckAndUpdateGrants');
 
@@ -32,8 +30,7 @@ jest.mock('@desmoslabs/desmjs', () => ({
 const mockResolveOptimisticRelationshipForAddress = jest.fn();
 jest.mock('hooks/useOptimisticRelationships', () => () => ({
   handleOptimisticRelationship: jest.fn(),
-  resolveOptimisticRelationshipForAddress:
-    mockResolveOptimisticRelationshipForAddress,
+  resolveOptimisticRelationshipForAddress: mockResolveOptimisticRelationshipForAddress,
 }));
 
 jest.mock('hooks/useGetFollowingForAddress', () => () => ({
@@ -63,12 +60,12 @@ describe('hook: useFollowOrUnfollow', () => {
   it('follows a user and resolves the optimistic UI', async () => {
     const mockCounterParty = 'mockCounterParty';
 
-    const mockCheckAndUpdateGrants = jest.fn(() => ({success: true}));
+    const mockCheckAndUpdateGrants = jest.fn(() => ({ success: true }));
     (useCheckAndUpdateGrants as jest.Mock).mockImplementation(() => ({
       checkAndUpdateGrants: mockCheckAndUpdateGrants,
     }));
 
-    const initializeState = ({set}: any) => {
+    const initializeState = ({ set }: any) => {
       // simulate a case where the user is not following the addrToFollow
       set(followingState, []);
     };
@@ -80,14 +77,10 @@ describe('hook: useFollowOrUnfollow', () => {
       }),
     });
 
-    (encodeAndBroadcastTx as jest.Mock).mockReturnValue({tx_hash: '123'});
+    (encodeAndBroadcastTx as jest.Mock).mockReturnValue({ tx_hash: '123' });
 
-    const {result} = renderHook(() => useFollowOrUnfollow(), {
-      wrapper: props => (
-        <RecoilRoot initializeState={initializeState}>
-          {props.children}
-        </RecoilRoot>
-      ),
+    const { result } = renderHook(() => useFollowOrUnfollow(), {
+      wrapper: props => <RecoilRoot initializeState={initializeState}>{props.children}</RecoilRoot>,
     });
 
     await act(async () => {
@@ -112,22 +105,20 @@ describe('hook: useFollowOrUnfollow', () => {
       optimistic: expect.anything(),
     });
 
-    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(
-      mockCounterParty,
-    );
+    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(mockCounterParty);
   });
 
   it('unfollows a user and resolves the optimistic UI', async () => {
     const mockCounterParty = 'mockCounterParty';
 
-    const mockCheckAndUpdateGrants = jest.fn(() => ({success: true}));
+    const mockCheckAndUpdateGrants = jest.fn(() => ({ success: true }));
     (useCheckAndUpdateGrants as jest.Mock).mockImplementation(() => ({
       checkAndUpdateGrants: mockCheckAndUpdateGrants,
     }));
 
-    const initializeState = ({set}: any) => {
+    const initializeState = ({ set }: any) => {
       // simulate a case where the user is already following the addrToFollow
-      set(followingState, [{address: mockCounterParty}]);
+      set(followingState, [{ address: mockCounterParty }]);
     };
 
     (useGetAuthzGrants as jest.Mock).mockReturnValue({
@@ -137,14 +128,10 @@ describe('hook: useFollowOrUnfollow', () => {
       }),
     });
 
-    (encodeAndBroadcastTx as jest.Mock).mockReturnValue({tx_hash: '123'});
+    (encodeAndBroadcastTx as jest.Mock).mockReturnValue({ tx_hash: '123' });
 
-    const {result} = renderHook(() => useFollowOrUnfollow(), {
-      wrapper: props => (
-        <RecoilRoot initializeState={initializeState}>
-          {props.children}
-        </RecoilRoot>
-      ),
+    const { result } = renderHook(() => useFollowOrUnfollow(), {
+      wrapper: props => <RecoilRoot initializeState={initializeState}>{props.children}</RecoilRoot>,
     });
 
     await act(async () => {
@@ -169,8 +156,6 @@ describe('hook: useFollowOrUnfollow', () => {
       optimistic: expect.anything(),
     });
 
-    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(
-      mockCounterParty,
-    );
+    expect(mockResolveOptimisticRelationshipForAddress).toHaveBeenCalledWith(mockCounterParty);
   });
 });

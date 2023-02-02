@@ -30,9 +30,7 @@ describe('lib/ValidationUtils', () => {
     it('enforces MIN_PW_LENGTH >= 10', () => {
       expect(validateMinPwLength('exact10cha')).toBeTruthy();
 
-      expect(
-        validateMinPwLength('this_is_a_string_with_more_than_10_chars'),
-      ).toBeTruthy();
+      expect(validateMinPwLength('this_is_a_string_with_more_than_10_chars')).toBeTruthy();
     });
   });
 
@@ -46,13 +44,9 @@ describe('lib/ValidationUtils', () => {
     });
 
     it('returns true if at least 1 lowercase is in string', () => {
-      expect(
-        validateMin1Lowercase('I_AM_A_STRING_WITH_a_LOWERCASE'),
-      ).toBeTruthy();
+      expect(validateMin1Lowercase('I_AM_A_STRING_WITH_a_LOWERCASE')).toBeTruthy();
 
-      expect(
-        validateMin1Lowercase('I_AM_A_STRING_WITH_a_loWERCASE'),
-      ).toBeTruthy();
+      expect(validateMin1Lowercase('I_AM_A_STRING_WITH_a_loWERCASE')).toBeTruthy();
     });
   });
 

@@ -1,13 +1,13 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {ReactNode} from 'react';
-import {Trans} from 'react-i18next';
+import React, { ReactNode } from 'react';
+import { Trans } from 'react-i18next';
 import {
   Image,
   ImageSourcePropType,
@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
@@ -111,7 +111,7 @@ const ConfirmModal = () => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
 
   const onPressPrimaryButton = () => {
     if (removeModalAfterButtonPress) {
@@ -134,7 +134,7 @@ const ConfirmModal = () => {
         {image && <Image source={image} style={styles.imageStyle} />}
 
         <Spacer paddingBottom={16}>
-          <Typography.H5 style={{textAlign: 'center'}}>{title}</Typography.H5>
+          <Typography.H5 style={{ textAlign: 'center' }}>{title}</Typography.H5>
         </Spacer>
 
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>

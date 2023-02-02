@@ -1,8 +1,8 @@
-import {renderHook, waitFor} from '@testing-library/react-native';
+import { renderHook, waitFor } from '@testing-library/react-native';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked/index';
-import {RecoilRoot} from 'recoil';
+import { RecoilRoot } from 'recoil';
 import React from 'react';
-import {ChainLink} from 'types/desmos';
+import { ChainLink } from 'types/desmos';
 
 const mockActiveAddr = 'active-addr';
 
@@ -34,7 +34,7 @@ jest.mock('services/graphql/client', () => ({
 
 describe('hook: useCheckIsAddressLinked', () => {
   it('checks if address is already linked', async () => {
-    const {result} = renderHook(() => useCheckIsAddressLinked(), {
+    const { result } = renderHook(() => useCheckIsAddressLinked(), {
       wrapper: props => <RecoilRoot>{props.children}</RecoilRoot>,
     });
 

@@ -1,13 +1,6 @@
-import React, {MutableRefObject} from 'react';
-import {
-  ColorValue,
-  StyleProp,
-  TextInput,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { MutableRefObject } from 'react';
+import { ColorValue, StyleProp, TextInput, TextStyle, View, ViewStyle } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
@@ -31,7 +24,7 @@ export type Props = Omit<React.ComponentProps<typeof TextInput>, 'style'> & {
 };
 
 const DTextInput: React.FC<Props> = props => {
-  const {rightElement, style, inputRef, inputStyle, placeHolderColor} = props;
+  const { rightElement, style, inputRef, inputStyle, placeHolderColor } = props;
   const styles = useStyles(props);
   const theme = useTheme();
 

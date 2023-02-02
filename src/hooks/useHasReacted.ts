@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react';
-import {useActiveAccountAddress} from '@recoil/wallets';
-import {PostID} from 'types/desmos';
+import React, { useMemo } from 'react';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { PostID } from 'types/desmos';
 import {
   useAddPostReaction,
   useHasPostReaction,
@@ -17,9 +17,7 @@ import useIsReactionOnServer from 'hooks/useIsReactionOnServer';
 const useHasReacted = (postId: PostID) => {
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
-    throw new Error(
-      'Trying to know if the user has reacted to a post, without active user',
-    );
+    throw new Error('Trying to know if the user has reacted to a post, without active user');
   }
 
   const hasPostReaction = useHasPostReaction();
@@ -35,8 +33,7 @@ const useHasReacted = (postId: PostID) => {
   );
 
   // Perform a server query to know if the reaction is stored remotely or not
-  const {isReactionPresent: isReactionOnServer, refetch} =
-    useIsReactionOnServer(postId);
+  const { isReactionPresent: isReactionOnServer, refetch } = useIsReactionOnServer(postId);
 
   // The following effect is used to react to updates of the data returned
   // by the query. The idea is to cache the response inside the Recoil atom,
@@ -54,13 +51,7 @@ const useHasReacted = (postId: PostID) => {
       // delete it from the cache
       removePostReaction(activeAddress, postId);
     }
-  }, [
-    isReactionOnServer,
-    activeAddress,
-    hasPostReaction,
-    addPostReaction,
-    removePostReaction,
-  ]);
+  }, [isReactionOnServer, activeAddress, hasPostReaction, addPostReaction, removePostReaction]);
 
   return {
     hasReacted,

@@ -1,8 +1,8 @@
-import {MsgUnlinkApplicationEncodeObject} from '@desmoslabs/desmjs';
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useApplicationLinks} from '@recoil/connectedApps';
-import {modalSuccess} from 'assets/images';
+import { MsgUnlinkApplicationEncodeObject } from '@desmoslabs/desmjs';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useApplicationLinks } from '@recoil/connectedApps';
+import { modalSuccess } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
@@ -11,28 +11,25 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnectedItem';
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.MANAGE_CONNECTED_APPS
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_APPS>;
 
 const ManageConnectedApps = () => {
-  const {t} = useTranslation('connectApp');
+  const { t } = useTranslation('connectApp');
   const styles = useStyles();
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const {chainAccount, activeAddress} = useActiveAccount();
-  const {appLinks} = useApplicationLinks(activeAddress!);
+  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { chainAccount, activeAddress } = useActiveAccount();
+  const { appLinks } = useApplicationLinks(activeAddress!);
   const unlockWallet = useUnlockWallet();
 
   function capitalize(word: string) {
@@ -59,7 +56,7 @@ const ManageConnectedApps = () => {
     async (appName: string, username: string) => {
       if (!chainAccount) return;
       try {
-        const result = await unlockWallet({chainAccount});
+        const result = await unlockWallet({ chainAccount });
 
         if (result && result.wallet) {
           const accounts = await result.wallet.getAccounts();
@@ -118,7 +115,7 @@ const ManageConnectedApps = () => {
         <View style={styles.buttonContainer}>
           <Button
             color={theme.colors.surfaceBlack}
-            onPress={() => navigate(ROUTES.CONNECT_APP, {mode: 'connect'})}
+            onPress={() => navigate(ROUTES.CONNECT_APP, { mode: 'connect' })}
             mode="contained"
             labelStyle={styles.buttonStyle}>
             {t('connect app')}
@@ -149,7 +146,7 @@ const ManageConnectedApps = () => {
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        style={{overflow: 'visible'}}
+        style={{ overflow: 'visible' }}
       />
     </DView>
   );

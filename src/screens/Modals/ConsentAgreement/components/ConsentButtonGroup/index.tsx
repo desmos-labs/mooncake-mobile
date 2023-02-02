@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {arrowRight} from 'assets/images';
+import { useTranslation } from 'react-i18next';
+import { arrowRight } from 'assets/images';
 import useStyles from './useStyles';
 
 type Props = {
@@ -17,9 +17,9 @@ type Props = {
   handlePressPP: () => void;
 };
 
-const ConsentButtonGroup = ({handlePressTOS, handlePressPP}: Props) => {
+const ConsentButtonGroup = ({ handlePressTOS, handlePressPP }: Props) => {
   const styles = useStyles();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>

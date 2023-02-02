@@ -9,10 +9,10 @@ import {
   Platform,
   ImageSourcePropType,
 } from 'react-native';
-import {whiteCross} from 'assets/images';
-import {makeStyle} from 'config/theme';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useTheme} from 'react-native-paper';
+import { whiteCross } from 'assets/images';
+import { makeStyle } from 'config/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from 'react-native-paper';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
   handlePress: () => void;
@@ -23,24 +23,22 @@ interface Props extends Omit<ImageProps, 'style' | 'source'> {
 const COMPONENT_SIZE = 100;
 
 const SelectedCommentImage = (props: Props) => {
-  const {handlePress, ...rest} = props;
+  const { handlePress, ...rest } = props;
   const styles = useStyles();
   const theme = useTheme();
-  const {bottom} = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <KeyboardAvoidingView
       // 116 is the width of this component with vertical margin (100 + 8 + 8)
       keyboardVerticalOffset={
-        Platform.OS === 'ios'
-          ? bottom + (theme.spacing.m as number) * 2 + COMPONENT_SIZE
-          : 0
+        Platform.OS === 'ios' ? bottom + (theme.spacing.m as number) * 2 + COMPONENT_SIZE : 0
       }
       behavior={Platform.OS === 'ios' ? 'position' : undefined}>
       {/* Invisible view acts as a placeholder, otherwise the component will appear */}
       {/* underneath the keyboard if an image is selected while the keyboard is expanded */}
       {!rest.source ? (
-        <View style={{opacity: 0}} />
+        <View style={{ opacity: 0 }} />
       ) : (
         <TouchableOpacity style={styles.container} onPress={handlePress}>
           <Image style={styles.imageStyle} source={rest.source} {...rest} />

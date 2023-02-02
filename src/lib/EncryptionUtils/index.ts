@@ -1,6 +1,6 @@
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 import Aes from 'react-native-aes-crypto';
 
 export interface EncryptedData {
@@ -12,9 +12,7 @@ export interface EncryptedData {
  * Derive a safe password using the pbkdf2 algorithm.
  * @param password The password from which will be derived the safer password.
  */
-export const deriveSecurePassword = async (
-  password: string,
-): Promise<string> => {
+export const deriveSecurePassword = async (password: string): Promise<string> => {
   return Aes.pbkdf2(password, password, 100000, 256);
 };
 
@@ -23,19 +21,11 @@ export const deriveSecurePassword = async (
  * @param text The text to encrypt.
  * @param password The password used to generate the cipher key.
  */
-export const encryptData = async (
-  text: string,
-  password: string,
-): Promise<EncryptedData> => {
+export const encryptData = async (text: string, password: string): Promise<EncryptedData> => {
   const securePassword: string = await deriveSecurePassword(password);
   const iv: string = await Aes.randomKey(16);
 
-  const encryptedData = await Aes.encrypt(
-    text,
-    securePassword,
-    iv,
-    'aes-256-cbc',
-  );
+  const encryptedData = await Aes.encrypt(text, securePassword, iv, 'aes-256-cbc');
 
   return {
     cipher: encryptedData,
@@ -48,9 +38,6 @@ export const encryptData = async (
  * @param data The data to be decrypted.
  * @param password The password used to generate the cipher key.
  */
-export const decryptData = async (
-  data: EncryptedData,
-  password: string,
-): Promise<string> => {
+export const decryptData = async (data: EncryptedData, password: string): Promise<string> => {
   return Aes.decrypt(data.cipher, password, data.iv, 'aes-256-cbc');
 };

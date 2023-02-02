@@ -1,6 +1,6 @@
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 
-export const {CryptoUtils} = NativeModules;
+export const { CryptoUtils } = NativeModules;
 
 export interface CryptoUtilsKeyPair {
   /**

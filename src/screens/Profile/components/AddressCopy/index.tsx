@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
-import {useTheme} from 'react-native-paper';
-import {copyIcon} from 'assets/images';
+import { useTheme } from 'react-native-paper';
+import { copyIcon } from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
   externalCallback?: () => void;
 };
 
-const AddressCopy = ({address, externalCallback}: Props) => {
+const AddressCopy = ({ address, externalCallback }: Props) => {
   const theme = useTheme();
 
   const handlePress = React.useCallback(() => {
@@ -38,7 +38,7 @@ const AddressCopy = ({address, externalCallback}: Props) => {
       <Typography.Body7
         numberOfLines={1}
         ellipsizeMode="middle"
-        style={{maxWidth: '35%', color: theme.colors.darkGrey}}>
+        style={{ maxWidth: '35%', color: theme.colors.darkGrey }}>
         {address}
       </Typography.Body7>
 

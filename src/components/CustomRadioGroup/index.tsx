@@ -1,8 +1,8 @@
 import Typography from 'components/Typography';
 import React from 'react';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {RadioButtonInput} from 'react-native-simple-radio-button';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { RadioButtonInput } from 'react-native-simple-radio-button';
 
 /**
  * Simple interface to display a radio button
@@ -34,17 +34,17 @@ interface Props {
 }
 
 const CustomRadioGroup = (props: Props) => {
-  const {values, selectedValue, onSelect} = props;
+  const { values, selectedValue, onSelect } = props;
   const theme = useTheme();
 
   return (
     <View>
       {values.map((value, index) => {
         return (
-          <View style={{flexDirection: 'row'}} key={`${value.value}`}>
+          <View style={{ flexDirection: 'row' }} key={`${value.value}`}>
             <RadioButtonInput
               accessibilityLabel={`${value.value}-radio-button`}
-              buttonStyle={{marginBottom: theme.spacing.m}}
+              buttonStyle={{ marginBottom: theme.spacing.m }}
               obj={value}
               index={index}
               onPress={() => onSelect(index, value.value)}
@@ -53,17 +53,13 @@ const CustomRadioGroup = (props: Props) => {
               // @ts-ignore
               borderWidth={1}
               buttonInnerColor={
-                selectedValue === index
-                  ? theme.colors.butterOrange01
-                  : theme.colors.white
+                selectedValue === index ? theme.colors.butterOrange01 : theme.colors.white
               }
               buttonOuterColor={
-                selectedValue === index
-                  ? theme.colors.butterOrange01
-                  : theme.colors.surfaceBlack
+                selectedValue === index ? theme.colors.butterOrange01 : theme.colors.surfaceBlack
               }
             />
-            <Typography.Body6 style={{marginLeft: theme.spacing.m}}>
+            <Typography.Body6 style={{ marginLeft: theme.spacing.m }}>
               {value.label}
             </Typography.Body6>
           </View>

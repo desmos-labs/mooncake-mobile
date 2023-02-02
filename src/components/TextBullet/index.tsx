@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
@@ -10,7 +10,7 @@ type Props = {
 /**
  * A component that renders an array of strings as individual bullet points
  */
-const TextBullet = ({textArr}: Props) => {
+const TextBullet = ({ textArr }: Props) => {
   const styles = useStyles();
   return (
     <View style={styles.outerContainer}>

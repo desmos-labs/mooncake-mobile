@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {activeAccountAddressState} from '@recoil/wallets';
-import {DesmosProfile} from 'types/desmos';
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { activeAccountAddressState } from '@recoil/wallets';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Atom that holds the data of all the cached profiles.
@@ -17,7 +11,7 @@ const profilesState = atom<Record<string, DesmosProfile>>({
   key: 'profilesState',
   default: getMMKV(MMKVKEYS.PROFILES) || {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(newProfiles => {
         setMMKV(MMKVKEYS.PROFILES, newProfiles);
       });
@@ -86,12 +80,10 @@ export const useDeleteProfile = () => {
  */
 const activeProfileState = selector<DesmosProfile | undefined>({
   key: 'activeProfileState',
-  get: ({get}) => {
+  get: ({ get }) => {
     const profiles = get(profilesState);
     const selectedAccountAddress = get(activeAccountAddressState);
-    return selectedAccountAddress && profiles
-      ? profiles[selectedAccountAddress]
-      : undefined;
+    return selectedAccountAddress && profiles ? profiles[selectedAccountAddress] : undefined;
   },
 });
 

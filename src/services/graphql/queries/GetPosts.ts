@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetPosts = gql`
@@ -13,25 +13,23 @@ const GetPosts = gql`
     post(
       offset: $offset
       limit: $limit
-      order_by: {creation_date: desc}
-      where: {subspace_id: {_eq: $subspaceID}, _not: {conversation: {}}}
+      order_by: { creation_date: desc }
+      where: { subspace_id: { _eq: $subspaceID }, _not: { conversation: {} } }
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(
-        where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
+        where: { author_address: { _eq: $user }, value: { _contains: $reaction } }
       ) {
         aggregate {
           count
         }
       }
-      tipPresence: tips_aggregate(where: {sender_address: {_eq: $user}}) {
+      tipPresence: tips_aggregate(where: { sender_address: { _eq: $user } }) {
         aggregate {
           count
         }
       }
-      commentPresence: comments_aggregate(
-        where: {author_address: {_eq: $user}}
-      ) {
+      commentPresence: comments_aggregate(where: { author_address: { _eq: $user } }) {
         aggregate {
           count
         }

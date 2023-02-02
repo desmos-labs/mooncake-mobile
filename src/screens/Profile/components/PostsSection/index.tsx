@@ -1,18 +1,13 @@
-import {useNavigation} from '@react-navigation/native';
-import {emptyPostsIcon} from 'assets/images';
+import { useNavigation } from '@react-navigation/native';
+import { emptyPostsIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  FlatList,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import useStyles from './useStyles';
@@ -25,20 +20,14 @@ interface Props {
   guestProfile?: boolean;
 }
 
-const PostsSection = ({
-  onPress,
-  postsData,
-  postsLoading,
-  posts,
-  guestProfile,
-}: Props) => {
+const PostsSection = ({ onPress, postsData, postsLoading, posts, guestProfile }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
-  const {navigate} = useNavigation<any>();
-  const {t} = useTranslation('profile');
+  const { navigate } = useNavigation<any>();
+  const { t } = useTranslation('profile');
 
   const handlePostPressed = React.useCallback(
-    ({subspaceID, id}: {subspaceID: number; id: number}) => {
+    ({ subspaceID, id }: { subspaceID: number; id: number }) => {
       navigate(ROUTES.POST_DETAILS, {
         subspaceID,
         postId: id,
@@ -48,7 +37,7 @@ const PostsSection = ({
     [],
   );
 
-  const renderPosts = ({item}: any) => (
+  const renderPosts = ({ item }: any) => (
     <ProfilePostCard
       postsMargin={2}
       postsSize={104}
@@ -69,14 +58,8 @@ const PostsSection = ({
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <FastImage
-        resizeMode="contain"
-        source={emptyPostsIcon}
-        style={styles.emptyImage}
-      />
-      <Typography.Body7 style={{color: theme.colors.midGrey}}>
-        {t('no posts')}
-      </Typography.Body7>
+      <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
+      <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
     </View>
   );
 
@@ -85,7 +68,7 @@ const PostsSection = ({
       <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
         {posts.length !== 0 && !postsLoading && !guestProfile && (
-          <Typography.Body7 style={{color: theme.colors.midGrey}}>
+          <Typography.Body7 style={{ color: theme.colors.midGrey }}>
             {t('created liked tipped')}
           </Typography.Body7>
         )}
@@ -113,12 +96,7 @@ const PostsSection = ({
             }}>
             {t('see more')}
           </Typography.Body6>
-          <Icon
-            name="angle-right"
-            color={theme.colors.butterOrange01}
-            size={22}
-            allowFontScaling
-          />
+          <Icon name="angle-right" color={theme.colors.butterOrange01} size={22} allowFontScaling />
         </TouchableOpacity>
       )}
     </View>

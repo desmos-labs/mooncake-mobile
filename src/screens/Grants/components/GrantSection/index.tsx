@@ -1,9 +1,9 @@
-import {verifiedIcon} from 'assets/images';
+import { verifiedIcon } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { Image, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
@@ -27,7 +27,7 @@ export type Props = {
 };
 
 const Section: React.FC<Props> = props => {
-  const {title, description, onPress, checked} = props;
+  const { title, description, onPress, checked } = props;
   const styles = useStyles();
   const theme = useTheme();
 
@@ -50,15 +50,10 @@ const Section: React.FC<Props> = props => {
       }}>
       <TouchableOpacity style={styles.container} onPress={onPress}>
         <View style={styles.titleView}>
-          <Typography.Subtitle2 style={styles.title}>
-            {title}
-          </Typography.Subtitle2>
+          <Typography.Subtitle2 style={styles.title}>{title}</Typography.Subtitle2>
           <Image
             source={verifiedIcon}
-            style={[
-              styles.icon,
-              !checked && {tintColor: theme.colors.lightGrey01},
-            ]}
+            style={[styles.icon, !checked && { tintColor: theme.colors.lightGrey01 }]}
           />
           <Icon
             name="angle-right"
@@ -69,9 +64,7 @@ const Section: React.FC<Props> = props => {
           />
         </View>
 
-        <Typography.Body6 style={styles.description}>
-          {description}
-        </Typography.Body6>
+        <Typography.Body6 style={styles.description}>{description}</Typography.Body6>
       </TouchableOpacity>
     </DropShadowWrapper>
   );

@@ -1,12 +1,12 @@
-import {Coin} from '@cosmjs/stargate';
-import {convertCoin} from '@desmoslabs/desmjs';
+import { Coin } from '@cosmjs/stargate';
+import { convertCoin } from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
-import {defaultProfilePic} from 'assets/images';
+import { defaultProfilePic } from 'assets/images';
 import Typography from 'components/Typography';
-import React, {useMemo} from 'react';
-import {ImageSourcePropType, View} from 'react-native';
+import React, { useMemo } from 'react';
+import { ImageSourcePropType, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useRecoilState} from 'recoil';
+import { useRecoilState } from 'recoil';
 import useStyles from './useStyles';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
   dTag?: string;
 };
 
-const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
+const TipItem = ({ tipAmount, avatar, address, nickname, dTag }: Props) => {
   const [settings] = useRecoilState(appSettingsState);
   const styles = useStyles();
 
@@ -27,18 +27,13 @@ const TipItem = ({tipAmount, avatar, address, nickname, dTag}: Props) => {
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <FastImage
-        source={avatar || defaultProfilePic}
-        style={styles.avatarStyle}
-      />
+      <FastImage source={avatar || defaultProfilePic} style={styles.avatarStyle} />
 
       <View style={styles.textGroup}>
         <Typography.Subtitle3 style={styles.textStyle} numberOfLines={1}>
           {nickname || address}
         </Typography.Subtitle3>
-        <Typography.Body7 style={styles.subTextStyle}>
-          @{dTag || 'no-dtag'}
-        </Typography.Body7>
+        <Typography.Body7 style={styles.subTextStyle}>@{dTag || 'no-dtag'}</Typography.Body7>
       </View>
 
       <Typography.Subtitle3 style={styles.textStyle}>

@@ -1,31 +1,28 @@
 import React from 'react';
 import Typography from 'components/Typography';
 // import Button from 'components/Button';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import {
   // ActivityIndicator, Platform,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-import {useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import PostTypeButton from 'screens/PostTypeSelection/PostTypeButton';
 // import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 // import Spacer from 'components/Spacer';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.SELECT_POST_TYPE
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_POST_TYPE>;
 
 const PostTypeSelection = () => {
-  const {t} = useTranslation('createPost');
+  const { t } = useTranslation('createPost');
   const styles = useStyles();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
 
   // const [permissionsGranted, setPermissionsGranted] = React.useState<
@@ -55,7 +52,7 @@ const PostTypeSelection = () => {
     return (
       <Typography.Subtitle2
         onPress={goBack}
-        style={{marginLeft: theme.spacing.s, color: theme.colors.surfaceBlack}}>
+        style={{ marginLeft: theme.spacing.s, color: theme.colors.surfaceBlack }}>
         {t('common:cancel')}
       </Typography.Subtitle2>
     );

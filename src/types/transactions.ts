@@ -1,4 +1,4 @@
-import {EncodeObject} from '@cosmjs/proto-signing';
+import { EncodeObject } from '@cosmjs/proto-signing';
 
 /**
  * Contains the data of a transaction that has been sent to the APIs to be broadcast,

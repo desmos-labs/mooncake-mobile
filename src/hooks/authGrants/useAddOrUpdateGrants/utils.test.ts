@@ -1,4 +1,4 @@
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
@@ -22,18 +22,18 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
   describe('buildRevokeAllowanceEncode', () => {
     it('properly builds a MsgRevokeAllowanceEncodeObject', () => {
       // msgEncodeObject
-      const msgEO = buildRevokeAllowanceEncode({grantee, granter});
+      const msgEO = buildRevokeAllowanceEncode({ grantee, granter });
 
       expect(msgEO).toEqual({
         typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
-        value: {granter: 'i-am-a-granter', grantee: 'i-am-a-grantee'},
+        value: { granter: 'i-am-a-granter', grantee: 'i-am-a-grantee' },
       });
     });
   });
 
   describe('buildGrantAllowanceEncode', () => {
     it('properly builds a MsgGrantAllowanceEncodeObject', () => {
-      const msgEO = buildGrantAllowanceEncode({grantee, granter, grants});
+      const msgEO = buildGrantAllowanceEncode({ grantee, granter, grants });
 
       expect(JSON.stringify(msgEO)).toEqual(
         JSON.stringify({
@@ -46,16 +46,14 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
               value: {
                 type: 'Buffer',
                 data: [
-                  10, 41, 10, 39, 47, 99, 111, 115, 109, 111, 115, 46, 102, 101,
-                  101, 103, 114, 97, 110, 116, 46, 118, 49, 98, 101, 116, 97,
-                  49, 46, 66, 97, 115, 105, 99, 65, 108, 108, 111, 119, 97, 110,
-                  99, 101, 18, 30, 47, 100, 101, 115, 109, 111, 115, 46, 112,
-                  111, 115, 116, 115, 46, 118, 50, 46, 77, 115, 103, 67, 114,
-                  101, 97, 116, 101, 80, 111, 115, 116, 18, 46, 47, 100, 101,
-                  115, 109, 111, 115, 46, 114, 101, 108, 97, 116, 105, 111, 110,
-                  115, 104, 105, 112, 115, 46, 118, 49, 46, 77, 115, 103, 67,
-                  114, 101, 97, 116, 101, 82, 101, 108, 97, 116, 105, 111, 110,
-                  115, 104, 105, 112,
+                  10, 41, 10, 39, 47, 99, 111, 115, 109, 111, 115, 46, 102, 101, 101, 103, 114, 97,
+                  110, 116, 46, 118, 49, 98, 101, 116, 97, 49, 46, 66, 97, 115, 105, 99, 65, 108,
+                  108, 111, 119, 97, 110, 99, 101, 18, 30, 47, 100, 101, 115, 109, 111, 115, 46,
+                  112, 111, 115, 116, 115, 46, 118, 50, 46, 77, 115, 103, 67, 114, 101, 97, 116,
+                  101, 80, 111, 115, 116, 18, 46, 47, 100, 101, 115, 109, 111, 115, 46, 114, 101,
+                  108, 97, 116, 105, 111, 110, 115, 104, 105, 112, 115, 46, 118, 49, 46, 77, 115,
+                  103, 67, 114, 101, 97, 116, 101, 82, 101, 108, 97, 116, 105, 111, 110, 115, 104,
+                  105, 112,
                 ],
               },
             },
@@ -67,7 +65,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
 
   describe('buildGrantMsgEncodes', () => {
     it('properly builds an array of MsgGRantEncodeObjects', () => {
-      const msgEO = buildGrantMsgEncodes({grantee, granter, grants});
+      const msgEO = buildGrantMsgEncodes({ grantee, granter, grants });
 
       expect(JSON.stringify(msgEO)).toEqual(
         JSON.stringify([
@@ -78,19 +76,18 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
               grantee: 'i-am-a-grantee',
               grant: {
                 authorization: {
-                  typeUrl:
-                    '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
+                  typeUrl: '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
                   value: {
                     type: 'Buffer',
                     data: [
-                      10, 1, 5, 18, 30, 47, 100, 101, 115, 109, 111, 115, 46,
-                      112, 111, 115, 116, 115, 46, 118, 50, 46, 77, 115, 103,
-                      67, 114, 101, 97, 116, 101, 80, 111, 115, 116,
+                      10, 1, 5, 18, 30, 47, 100, 101, 115, 109, 111, 115, 46, 112, 111, 115, 116,
+                      115, 46, 118, 50, 46, 77, 115, 103, 67, 114, 101, 97, 116, 101, 80, 111, 115,
+                      116,
                     ],
                   },
                 },
                 expiration: {
-                  seconds: {low: -602922496, high: 0, unsigned: false},
+                  seconds: { low: -602922496, high: 0, unsigned: false },
                   nanos: 0,
                 },
               },
@@ -103,21 +100,19 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
               grantee: 'i-am-a-grantee',
               grant: {
                 authorization: {
-                  typeUrl:
-                    '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
+                  typeUrl: '/desmos.subspaces.v3.authz.GenericSubspaceAuthorization',
                   value: {
                     type: 'Buffer',
                     data: [
-                      10, 1, 5, 18, 46, 47, 100, 101, 115, 109, 111, 115, 46,
-                      114, 101, 108, 97, 116, 105, 111, 110, 115, 104, 105, 112,
-                      115, 46, 118, 49, 46, 77, 115, 103, 67, 114, 101, 97, 116,
-                      101, 82, 101, 108, 97, 116, 105, 111, 110, 115, 104, 105,
-                      112,
+                      10, 1, 5, 18, 46, 47, 100, 101, 115, 109, 111, 115, 46, 114, 101, 108, 97,
+                      116, 105, 111, 110, 115, 104, 105, 112, 115, 46, 118, 49, 46, 77, 115, 103,
+                      67, 114, 101, 97, 116, 101, 82, 101, 108, 97, 116, 105, 111, 110, 115, 104,
+                      105, 112,
                     ],
                   },
                 },
                 expiration: {
-                  seconds: {low: -602922496, high: 0, unsigned: false},
+                  seconds: { low: -602922496, high: 0, unsigned: false },
                   nanos: 0,
                 },
               },
@@ -130,7 +125,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
 
   describe('buildRevokeGrantMsgEncodes', () => {
     it('properly builds an array og MsgRevokeEncodeObjects', () => {
-      const msgEO = buildRevokeGrantMsgEncodes({grants, grantee, granter});
+      const msgEO = buildRevokeGrantMsgEncodes({ grants, grantee, granter });
 
       expect(msgEO).toEqual([
         {

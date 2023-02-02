@@ -1,18 +1,18 @@
-import {AndroidColor} from '@notifee/react-native';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { AndroidColor } from '@notifee/react-native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import postsListOptions from '@recoil/postsListRef';
-import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
-import {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
+import { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Platform,
@@ -20,9 +20,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useToast} from 'react-native-toast-notifications';
-import {useRecoilState} from 'recoil';
+import { useTheme } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
+import { useRecoilState } from 'recoil';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
 import useHooks from 'screens/Home/useHooks';
@@ -53,7 +53,7 @@ export type HomeParams = {
 
 const Home = () => {
   const toast = useToast();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
   const postListRef = useRef<any>(null);
@@ -76,10 +76,7 @@ const Home = () => {
     fetchingMore,
   } = useHooks();
 
-  const [
-    onEndReachedCalledDuringMomentum,
-    setOnEndReachedCalledDuringMomentum,
-  ] = useState(false);
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
   const handlePressNewPostNotification = useCallback(async () => {
     await fetchNewestPosts();
@@ -91,12 +88,10 @@ const Home = () => {
     }
   }, [postListRef, fetchNewestPosts]);
 
-  const {resetNewPostNotificationState} = useWatchForNewPosts(
-    handlePressNewPostNotification,
-  );
+  const { resetNewPostNotificationState } = useWatchForNewPosts(handlePressNewPostNotification);
 
   const renderPost = React.useCallback(
-    ({item}: ListRenderItemInfo<Partial<PostItem> | PostItem>) => {
+    ({ item }: ListRenderItemInfo<Partial<PostItem> | PostItem>) => {
       if (!item) {
         return (
           <View style={styles.loaderView}>
@@ -196,8 +191,8 @@ const Home = () => {
    */
   useEffect(() => {
     if (listOptions.scrollToTop) {
-      postListRef.current?.scrollToOffset({animated: true, offset: 0});
-      setListOptions({...listOptions, scrollToTop: false});
+      postListRef.current?.scrollToOffset({ animated: true, offset: 0 });
+      setListOptions({ ...listOptions, scrollToTop: false });
     }
   }, [listOptions.scrollToTop, postListRef]);
 
@@ -205,14 +200,11 @@ const Home = () => {
     return (
       listOptions.searchBarFocused && (
         <TouchableWithoutFeedback
-          onPress={() =>
-            setListOptions({...listOptions, searchBarFocused: false})
-          }
+          onPress={() => setListOptions({ ...listOptions, searchBarFocused: false })}
           style={styles.searchView}>
           <View style={styles.absoluteView}>
             <Typography.Body6>
-              We are Anonymous, we are legion, we do not forgive, we do not
-              forget. Expect us.
+              We are Anonymous, we are legion, we do not forgive, we do not forget. Expect us.
             </Typography.Body6>
           </View>
         </TouchableWithoutFeedback>
@@ -249,9 +241,7 @@ const Home = () => {
           showsVerticalScrollIndicator={false}
           estimatedItemSize={497}
           ListFooterComponent={footerComponent}
-          onMomentumScrollBegin={() =>
-            setOnEndReachedCalledDuringMomentum(false)
-          }
+          onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
           onEndReached={async () => {
             if (!onEndReachedCalledDuringMomentum) {

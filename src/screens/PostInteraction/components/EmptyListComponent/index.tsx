@@ -1,9 +1,9 @@
-import {errorImage} from 'assets/images';
+import { errorImage } from 'assets/images';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 import React from 'react';
-import {Image, StyleProp, View, ViewStyle} from 'react-native';
+import { Image, StyleProp, View, ViewStyle } from 'react-native';
 
 type Props = {
   label: string;
@@ -33,9 +33,7 @@ const EmptyListComponent = ({
           style={[styles.additionalButton, additionalButtonStyle]}
           mode="contained"
           onPress={handleButton}>
-          <Typography.Button3 style={styles.buttonText}>
-            {buttonLabel}
-          </Typography.Button3>
+          <Typography.Button3 style={styles.buttonText}>{buttonLabel}</Typography.Button3>
         </Button>
       )}
     </View>

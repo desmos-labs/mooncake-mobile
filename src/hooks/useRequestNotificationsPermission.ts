@@ -1,6 +1,6 @@
-import notifee, {AuthorizationStatus} from '@notifee/react-native';
-import {useSetSetting} from '@recoil/settings';
-import {useCallback, useEffect} from 'react';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
+import { useSetSetting } from '@recoil/settings';
+import { useCallback, useEffect } from 'react';
 
 /**
  * Hook that allows to ask the user permission to access the device notifications.

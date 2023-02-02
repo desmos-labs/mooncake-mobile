@@ -1,16 +1,10 @@
-import React, {useState} from 'react';
-import {ImageMedia, UploadMedia} from 'services/axios/requests/UploadMedia';
+import React, { useState } from 'react';
+import { ImageMedia, UploadMedia } from 'services/axios/requests/UploadMedia';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {AccountWithWallet} from 'types/account';
-import useSignAndBroadcastTx, {
-  SignAndBroadcastSuccess,
-} from 'hooks/useSignAndBroadcastTx';
-import {
-  DoNotModify,
-  MsgSaveProfileEncodeObject,
-  MsgSaveProfileTypeUrl,
-} from '@desmoslabs/desmjs';
-import {err, Result} from 'neverthrow';
+import { AccountWithWallet } from 'types/account';
+import useSignAndBroadcastTx, { SignAndBroadcastSuccess } from 'hooks/useSignAndBroadcastTx';
+import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
+import { err, Result } from 'neverthrow';
 
 /**
  * Params used to save the profile.
@@ -47,9 +41,7 @@ export enum SaveProfileStatus {
  * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfile = () => {
-  const [status, setStatus] = useState<SaveProfileStatus>(
-    SaveProfileStatus.UNDEFINED,
-  );
+  const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
   const unlockWallet = useUnlockWallet();
   const signAndBroadcastTx = useSignAndBroadcastTx();
 
@@ -62,11 +54,11 @@ const useSaveProfile = () => {
 
       // Upload the profile and cover pictures
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
-      const {coverPicture, profilePicture} = params;
+      const { coverPicture, profilePicture } = params;
 
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        profilePicture && UploadMedia({mediaFile: profilePicture}),
-        coverPicture && UploadMedia({mediaFile: coverPicture}),
+        profilePicture && UploadMedia({ mediaFile: profilePicture }),
+        coverPicture && UploadMedia({ mediaFile: coverPicture }),
       ]);
 
       if (uploadProfilePicResult?.isErr()) {
@@ -81,7 +73,7 @@ const useSaveProfile = () => {
       const coverPicUrl = uploadCoverPicResult?.unwrapOr(undefined)?.url;
 
       // Build the message to save the profile on-chain
-      const {dTag, nickname, bio} = params;
+      const { dTag, nickname, bio } = params;
       const msgSaveProfile: MsgSaveProfileEncodeObject = {
         typeUrl: MsgSaveProfileTypeUrl,
         value: {

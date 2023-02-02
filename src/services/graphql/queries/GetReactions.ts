@@ -1,11 +1,8 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const GetPostReactions = gql`
-  query PostReactions($subspaceID: bigint!, $postID: bigint!)
-  @api(name: butter) {
-    reaction(
-      where: {post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
-    ) {
+  query PostReactions($subspaceID: bigint!, $postID: bigint!) @api(name: butter) {
+    reaction(where: { post: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } } }) {
       id
       value
       author {
@@ -19,15 +16,12 @@ export const GetPostReactions = gql`
 `;
 
 export const GetReactionForPostAndAuthor = gql`
-  query PostReactionsCount(
-    $subspaceID: bigint!
-    $postID: bigint!
-    $address: String
-  ) @api(name: butter) {
+  query PostReactionsCount($subspaceID: bigint!, $postID: bigint!, $address: String)
+  @api(name: butter) {
     reaction(
       where: {
-        post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}
-        author_address: {_eq: $address}
+        post: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } }
+        author_address: { _eq: $address }
       }
     ) {
       id

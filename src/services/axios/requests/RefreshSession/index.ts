@@ -8,9 +8,7 @@ const RefreshSession = async () => {
 
   if (_response.status !== 200) {
     throw new Error(
-      `There was an issue refreshing the session:\n\n${JSON.stringify(
-        _response.data,
-      )}`,
+      `There was an issue refreshing the session:\n\n${JSON.stringify(_response.data)}`,
     );
   } else {
     console.log('session refreshed');

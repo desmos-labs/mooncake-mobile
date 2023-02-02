@@ -4,35 +4,26 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {Formik, FormikHelpers} from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import useClearUserData from 'hooks/useClearUserData';
-import {LocalAccountAuthenticationArgs} from 'hooks/useUnlockWallet';
-import {
-  getLocalWallet,
-  getMnemonic,
-  getPasswordWithBiometrics,
-} from 'lib/SecureStorage';
+import { LocalAccountAuthenticationArgs } from 'hooks/useUnlockWallet';
+import { getLocalWallet, getMnemonic, getPasswordWithBiometrics } from 'lib/SecureStorage';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { AuthorizeWalletParamList } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import ROUTES from 'navigation/routes';
-import React, {ComponentProps, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import React, { ComponentProps, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useRecoilValue } from 'recoil';
 import * as Yup from 'yup';
 import useStyles from './useStyles';
 
@@ -74,9 +65,9 @@ const initialFormValues = {
 const EnterPassword = () => {
   const [loading, setLoading] = useState(false);
   const [biometricsLoading, setBiometricsLoading] = useState(false);
-  const {biometrics} = useRecoilValue(appSettingsState);
+  const { biometrics } = useRecoilValue(appSettingsState);
   const [resolved, setResolved] = useState(false);
-  const {t} = useTranslation('enterPassword');
+  const { t } = useTranslation('enterPassword');
   const {
     params: {
       address,
@@ -91,7 +82,7 @@ const EnterPassword = () => {
       skipBiometrics,
     },
   } = useRoute<NavProps['route']>();
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
   const clearUserData = useClearUserData();
 
   const styles = useStyles();
@@ -154,10 +145,10 @@ const EnterPassword = () => {
   const onFormSubmit = React.useCallback(
     async (
       formValues: typeof initialFormValues,
-      {setErrors}: FormikHelpers<typeof formValues>,
+      { setErrors }: FormikHelpers<typeof formValues>,
     ) => {
       setLoading(true);
-      const {password} = formValues;
+      const { password } = formValues;
 
       try {
         if (address) {
@@ -178,7 +169,7 @@ const EnterPassword = () => {
             goBack();
           } else {
             onFailedAuthentication && onFailedAuthentication();
-            setErrors({password: t('error:incorrectPassword')});
+            setErrors({ password: t('error:incorrectPassword') });
           }
         } else {
           throw new Error('address is empty'); // instead of do nothing
@@ -187,22 +178,16 @@ const EnterPassword = () => {
         // onFailedAuthentication && onFailedAuthentication();
         // Add other error case handlers here
         if (String(err).includes('Malformed UTF-8 data')) {
-          setErrors({password: t('error:incorrectPassword')});
+          setErrors({ password: t('error:incorrectPassword') });
         } else {
-          setErrors({password: t('error:incorrectPassword')});
+          setErrors({ password: t('error:incorrectPassword') });
         }
         console.log(String(err));
       } finally {
         setLoading(false);
       }
     },
-    [
-      address,
-      provideWallet,
-      provideMnemonic,
-      onSuccessfulAuthentication,
-      onFailedAuthentication,
-    ],
+    [address, provideWallet, provideMnemonic, onSuccessfulAuthentication, onFailedAuthentication],
   );
 
   const validationSchema = React.useMemo(() => {
@@ -218,15 +203,13 @@ const EnterPassword = () => {
       backgroundColor={theme.colors.white}
       topBar={<TopBar />}
       {...dViewProps}>
-      <Typography.H3 style={styles.headerText}>
-        {titleLabelOverride || t('header')}
-      </Typography.H3>
+      <Typography.H3 style={styles.headerText}>{titleLabelOverride || t('header')}</Typography.H3>
 
       <Formik
         initialValues={initialFormValues}
         onSubmit={onFormSubmit}
         validationSchema={validationSchema}>
-        {({handleSubmit, errors, setValues, values}) => (
+        {({ handleSubmit, errors, setValues, values }) => (
           <View style={styles.formContainer}>
             <Typography.Subtitle2 style={styles.inputLabel}>
               {inputLabelOverride || t('inputLabel')}
@@ -237,14 +220,12 @@ const EnterPassword = () => {
               placeholder={t('inputPlaceholder')}
               value={values.password}
               onChangeText={(text: string) => {
-                setValues({password: text}, true);
+                setValues({ password: text }, true);
               }}
               error={!!errors.password}
             />
             {errors.password && (
-              <Typography.Caption1 style={styles.errorText}>
-                {errors.password}
-              </Typography.Caption1>
+              <Typography.Caption1 style={styles.errorText}>{errors.password}</Typography.Caption1>
             )}
 
             <KeyboardAvoidingView
@@ -254,15 +235,11 @@ const EnterPassword = () => {
               <Button
                 loading={loading}
                 color={
-                  !values.password ||
-                  _.flatten(Object.values(errors)).length > 0
+                  !values.password || _.flatten(Object.values(errors)).length > 0
                     ? theme.colors.lightGrey02
                     : theme.colors.surfaceBlack
                 }
-                disabled={
-                  !values.password ||
-                  _.flatten(Object.values(errors)).length > 0
-                }
+                disabled={!values.password || _.flatten(Object.values(errors)).length > 0}
                 onPress={handleSubmit}
                 mode="contained">
                 <Typography.Button1 style={styles.confirmButtonText}>
@@ -270,9 +247,7 @@ const EnterPassword = () => {
                 </Typography.Button1>
               </Button>
 
-              <TouchableOpacity
-                style={styles.forgotPwButton}
-                onPress={clearUserData}>
+              <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>
                 <Typography.Button2>{t('forgotPassword')}</Typography.Button2>
               </TouchableOpacity>
             </KeyboardAvoidingView>

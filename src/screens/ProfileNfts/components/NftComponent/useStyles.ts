@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -20,8 +20,8 @@ const useStyles = makeStyle(theme => ({
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
   },
-  buttonContainer: {backgroundColor: theme.colors.white, borderRadius: 12},
-  textGroup: {padding: 12, alignItems: 'flex-start'},
+  buttonContainer: { backgroundColor: theme.colors.white, borderRadius: 12 },
+  textGroup: { padding: 12, alignItems: 'flex-start' },
 }));
 
 export default useStyles;

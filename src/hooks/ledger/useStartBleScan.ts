@@ -1,6 +1,6 @@
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Linking, Platform } from 'react-native';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 export enum ScanErrorCause {
@@ -15,12 +15,8 @@ export type ScanError = {
 };
 
 export default function useStartBleScan() {
-  const [subscription, setScanSubscription] = useState<
-    Subscription | undefined
-  >(undefined);
-  const [stopScanTimeout, setStopStopScanTimeout] = useState<
-    NodeJS.Timeout | undefined
-  >(undefined);
+  const [subscription, setScanSubscription] = useState<Subscription | undefined>(undefined);
+  const [stopScanTimeout, setStopStopScanTimeout] = useState<NodeJS.Timeout | undefined>(undefined);
   const [scanning, setScanning] = useState(false);
   const [devices, setDevices] = useState<BleLedger[]>([]);
 
@@ -69,11 +65,10 @@ export default function useStartBleScan() {
             },
             next: (e: any) => {
               if (e.type === 'add') {
-                const {id, name} = e.descriptor;
+                const { id, name } = e.descriptor;
 
                 setDevices(currentDevices => {
-                  const devicePresent =
-                    currentDevices.find(d => d.id === id) !== undefined;
+                  const devicePresent = currentDevices.find(d => d.id === id) !== undefined;
                   if (!devicePresent) {
                     return [
                       ...currentDevices,

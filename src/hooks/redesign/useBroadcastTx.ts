@@ -1,6 +1,6 @@
 import React from 'react';
-import {EncodeObject} from '@cosmjs/proto-signing';
-import {ok, Result} from 'neverthrow';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { ok, Result } from 'neverthrow';
 
 export interface BroadcastOptions {
   /**
@@ -37,7 +37,7 @@ const useBroadcastTx = () => {
       options?: BroadcastOptions,
     ): Promise<Result<BroadcastResult, Error>> => {
       console.log('Implement useBroadcastTx', msgs, options);
-      return ok({txHash: ''} as BroadcastResult);
+      return ok({ txHash: '' } as BroadcastResult);
     },
     [],
   );

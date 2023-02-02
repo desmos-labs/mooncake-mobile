@@ -1,8 +1,8 @@
-import {useActiveAccountAddress} from '@recoil/wallets';
-import {useMemo} from 'react';
-import {useQuery} from '@apollo/client';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
 import GetFollowageCount from 'services/graphql/queries/GetFollowageCount';
-import {useGetFollowageDifference} from '@recoil/relationships';
+import { useGetFollowageDifference } from '@recoil/relationships';
 
 /**
  * Hook that returns the followage count for the user having the given address.
@@ -21,13 +21,10 @@ const useFollowageCount = (address: string | undefined) => {
   }
 
   // Get the followage count from the server
-  const {data, loading, refetch} = useQuery(GetFollowageCount, {
-    variables: {userAddress},
+  const { data, loading, refetch } = useQuery(GetFollowageCount, {
+    variables: { userAddress },
   });
-  const serverFollowageCount = useMemo(
-    () => data?.followers?.aggregate?.count ?? 0,
-    [data],
-  );
+  const serverFollowageCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
 
   // Get the followage difference that is stored locally
   const getFollowageDifference = useGetFollowageDifference();

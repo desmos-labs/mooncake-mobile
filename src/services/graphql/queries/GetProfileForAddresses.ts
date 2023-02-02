@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetProfileForAddresses = gql`
   query GetProfileForAddress($addresses: [String]) @api(name: desmos) {
-    profile(where: {address: {_in: $addresses}}) {
+    profile(where: { address: { _in: $addresses } }) {
       address
       bio
       dtag

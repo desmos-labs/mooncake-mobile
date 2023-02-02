@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {verticalScale} from 'react-native-size-matters';
+import { makeStyle } from 'config/theme';
+import { verticalScale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   // inactiveDotColor: surface1,

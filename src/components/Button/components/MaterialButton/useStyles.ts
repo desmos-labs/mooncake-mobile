@@ -1,11 +1,9 @@
-import {makeStyleWithProps} from 'config/theme';
-import {Props} from 'components/Button/components/MaterialButton/index';
-import {StyleSheet} from 'react-native';
+import { makeStyleWithProps } from 'config/theme';
+import { Props } from 'components/Button/components/MaterialButton/index';
+import { StyleSheet } from 'react-native';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => {
-  const accent = props.accent
-    ? theme.colors.accent
-    : theme.colors.butterOrange01;
+  const accent = props.accent ? theme.colors.accent : theme.colors.butterOrange01;
   const color = props.color ? props.color : accent;
   return {
     labelStyle: {
@@ -16,9 +14,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => {
       lineHeight: 21,
       letterSpacing: 0.015,
       color:
-        props.mode === 'contained' || props.mode === 'gradientFilled'
-          ? theme.colors.white
-          : color,
+        props.mode === 'contained' || props.mode === 'gradientFilled' ? theme.colors.white : color,
       textTransform: 'capitalize',
     },
     btnStyle: {

@@ -1,21 +1,21 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
-import {useInitializeAxios} from 'services/axios';
+import { useInitializeAxios } from 'services/axios';
 import useButterConfig from 'hooks/useButterConfig';
 import useProfileParams from 'hooks/useProfileParams';
 import usePostsParams from 'hooks/usePostsParams';
 import useSubspaceParams from 'hooks/useSubspaceParams';
-import {useSetAppStateValue} from '@recoil/appState';
+import { useSetAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that allows initializing the application data.
  */
 const useInitializeAppData = () => {
   // Data refreshers
-  const {refetch: refreshButterConfig} = useButterConfig();
-  const {refetch: refreshSubspaceParams} = useSubspaceParams();
-  const {refetch: refreshProfileParams} = useProfileParams();
-  const {refetch: refreshPostsParams} = usePostsParams();
+  const { refetch: refreshButterConfig } = useButterConfig();
+  const { refetch: refreshSubspaceParams } = useSubspaceParams();
+  const { refetch: refreshProfileParams } = useProfileParams();
+  const { refetch: refreshPostsParams } = usePostsParams();
 
   // App state setters
   const setDataInitialized = useSetAppStateValue('dataInitialized');

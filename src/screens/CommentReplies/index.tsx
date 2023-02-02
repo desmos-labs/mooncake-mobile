@@ -1,35 +1,31 @@
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useFocusEffect,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps, useFocusEffect, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import activeProfileState from '@recoil/activeProfileState';
-import {isFollowingAddr} from '@recoil/following';
-import {defaultProfilePic, followBlackIcon, reportIcon} from 'assets/images';
+import { isFollowingAddr } from '@recoil/following';
+import { defaultProfilePic, followBlackIcon, reportIcon } from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import PopupMenu from 'components/PopupMenu';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, {useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, View} from 'react-native';
-import {Divider, useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, View } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
-import {FlashList} from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -56,10 +52,10 @@ export type CommentRepliesParams = {
 const CommentReplies = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('postDetails');
-  const {params} = useRoute<NavProps['route']>();
+  const { t } = useTranslation('postDetails');
+  const { params } = useRoute<NavProps['route']>();
   const [menuVisible, setMenuVisible] = React.useState(false);
-  const [anchor, setAnchor] = React.useState<{x: number; y: number}>();
+  const [anchor, setAnchor] = React.useState<{ x: number; y: number }>();
   const [profileData] = useRecoilState(activeProfileState);
   const [popupMenuParams, setPopupMenuParams] = useState<{
     postId: number;
@@ -67,13 +63,11 @@ const CommentReplies = () => {
     authorAddress: string;
   }>();
 
-  const isFollowingAddress = useRecoilValue(
-    isFollowingAddr(popupMenuParams?.authorAddress || ''),
-  );
+  const isFollowingAddress = useRecoilValue(isFollowingAddr(popupMenuParams?.authorAddress || ''));
 
-  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const { followOrUnfollowUser } = useFollowOrUnfollowUser();
 
-  const {textInputRef, focusTextInputRef} = useFocusTextInputOnNavigate();
+  const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   const {
     mainComment,
@@ -108,14 +102,14 @@ const CommentReplies = () => {
   const countersImages = useMemo(() => {
     const reactionsImages = reactions.map((reaction: any) => {
       if (reaction.author.profile_pic) {
-        return {uri: reaction.author.profile_pic};
+        return { uri: reaction.author.profile_pic };
       } else {
         return defaultProfilePic;
       }
     });
     const tipsImages = tips.map((tip: any) => {
       if (tip.sender.profile_pic) {
-        return {uri: tip.sender.profile_pic};
+        return { uri: tip.sender.profile_pic };
       } else {
         return defaultProfilePic;
       }
@@ -139,8 +133,8 @@ const CommentReplies = () => {
   );
 
   const renderItem = React.useCallback(
-    ({item}: any) => {
-      const {isPending} = item;
+    ({ item }: any) => {
+      const { isPending } = item;
       return (
         <CommentItem
           tipped={item?.tipPresence?.aggregate?.count > 0}
@@ -162,13 +156,9 @@ const CommentReplies = () => {
             setMenuVisible(true);
           }}
           handlePressComment={() => {}}
-          handleProfilePicPress={() =>
-            handleNavigateToProfile(item?.author_address)
-          }
+          handleProfilePicPress={() => handleNavigateToProfile(item?.author_address)}
           handlePressLike={() => !isPending && handleAddReaction(item.id)}
-          handlePressTip={() =>
-            !isPending && handlePressSendTips(item?.author?.address, item.id)
-          }
+          handlePressTip={() => !isPending && handlePressSendTips(item?.author?.address, item.id)}
           handleLongPress={() => console.log('longPress')}
           text={item.text}
           creation_date={item.creation_date}
@@ -205,12 +195,8 @@ const CommentReplies = () => {
           }}
           handlePressComment={focusTextInputRef}
           handlePressLike={() => handleAddReaction(mainComment.id)}
-          handleProfilePicPress={() =>
-            handleNavigateToProfile(mainComment?.author?.address)
-          }
-          handlePressTip={() =>
-            handlePressSendTips(mainComment?.author?.address, mainComment?.id)
-          }
+          handleProfilePicPress={() => handleNavigateToProfile(mainComment?.author?.address)}
+          handlePressTip={() => handlePressSendTips(mainComment?.author?.address, mainComment?.id)}
           {...mainComment}
         />
         <Divider style={styles.divider} />
@@ -236,7 +222,7 @@ const CommentReplies = () => {
   ]);
 
   return mainCommentLoading || commentsLoading || reactionsLoading ? (
-    <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
       <ActivityIndicator color={theme.colors.surfaceBlack} />
     </SafeAreaView>
   ) : (
@@ -264,9 +250,7 @@ const CommentReplies = () => {
         textInputRef={textInputRef}
         loading={commentReplyLoading}
         profileImage={
-          profileData?.profile_pic
-            ? {uri: profileData?.profile_pic}
-            : defaultProfilePic
+          profileData?.profile_pic ? { uri: profileData?.profile_pic } : defaultProfilePic
         }
         onIconPress={() =>
           handleExpandComment({
@@ -295,10 +279,7 @@ const CommentReplies = () => {
           {
             label: t('report'),
             onPress: () =>
-              handlePressReport(
-                popupMenuParams?.postId!,
-                popupMenuParams?.subspaceId!,
-              ),
+              handlePressReport(popupMenuParams?.postId!, popupMenuParams?.subspaceId!),
             icon: reportIcon,
           },
         ]}

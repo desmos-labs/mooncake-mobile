@@ -1,19 +1,16 @@
-import {
-  MsgAddReactionEncodeObject,
-  MsgRemoveReactionEncodeObject,
-} from '@desmoslabs/desmjs';
-import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
+import { MsgAddReactionEncodeObject, MsgRemoveReactionEncodeObject } from '@desmoslabs/desmjs';
+import { RegisteredReactionValue } from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
 import {
   MsgAddReaction,
   MsgRemoveReaction,
 } from '@desmoslabs/desmjs-types/desmos/reactions/v1/msgs';
-import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
+import { convertRegisteredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import EnvConfig from 'config/EnvConfig';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import Long from 'long';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 
-const addReaction = async ({postId, user}: Partial<MsgAddReaction>) => {
+const addReaction = async ({ postId, user }: Partial<MsgAddReaction>) => {
   const reaction = convertRegisteredReactionValueToAny(
     RegisteredReactionValue.fromPartial({
       registeredReactionId: 9, // TODO use registered reactions
@@ -29,14 +26,10 @@ const addReaction = async ({postId, user}: Partial<MsgAddReaction>) => {
       user,
     }),
   };
-  return encodeAndBroadcastTx({msgs: [msg]});
+  return encodeAndBroadcastTx({ msgs: [msg] });
 };
 
-const removeReaction = async ({
-  postId,
-  user,
-  reactionId,
-}: Partial<MsgRemoveReaction>) => {
+const removeReaction = async ({ postId, user, reactionId }: Partial<MsgRemoveReaction>) => {
   const msg: MsgRemoveReactionEncodeObject = {
     typeUrl: GrantEnums.MsgRemoveReaction,
     value: MsgRemoveReaction.fromPartial({
@@ -47,7 +40,7 @@ const removeReaction = async ({
     }),
   };
 
-  return encodeAndBroadcastTx({msgs: [msg]});
+  return encodeAndBroadcastTx({ msgs: [msg] });
 };
 
 // eslint-disable-next-line import/prefer-default-export
@@ -69,6 +62,6 @@ export const manageReaction = async ({
     });
   } else {
     console.log('add reaction');
-    return addReaction({postId: Long.fromNumber(postId), user});
+    return addReaction({ postId: Long.fromNumber(postId), user });
   }
 };

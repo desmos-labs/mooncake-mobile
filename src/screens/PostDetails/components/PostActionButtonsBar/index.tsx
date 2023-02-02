@@ -9,9 +9,9 @@ import {
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
-import {Divider} from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
+import { Image, TouchableOpacity, View } from 'react-native';
+import { Divider } from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -32,7 +32,7 @@ const PostActionButtonsBar = ({
   handleTipPress,
 }: Props) => {
   const styles = useStyles();
-  const {t} = useTranslation('postDetails');
+  const { t } = useTranslation('postDetails');
 
   return (
     <>

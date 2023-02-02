@@ -1,27 +1,21 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {
-  StyleProp,
-  StyleSheet,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useToast} from 'react-native-toast-notifications';
+import React, { useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useToast } from 'react-native-toast-notifications';
 import TextBullet from 'components/TextBullet';
-import {verticalScale} from 'react-native-size-matters';
+import { verticalScale } from 'react-native-size-matters';
 import useStyles from './useStyles';
 
 export type ActionAuthorizationParams = {
@@ -36,22 +30,19 @@ export type ActionAuthorizationParams = {
   onApprove?: () => void;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.ACTION_AUTHORIZATION
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ACTION_AUTHORIZATION>;
 
 const ActionAuthorization = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('authorization');
-  const {pop} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('authorization');
+  const { pop } = useNavigation<NavProps['navigation']>();
   const [loading, setLoading] = React.useState(false);
-  const {addOrUpdateGrants} = useAddOrUpdateGrants();
+  const { addOrUpdateGrants } = useAddOrUpdateGrants();
   const toast = useToast();
 
   const {
-    params: {grants, detailsModal, onCancel, onApprove},
+    params: { grants, detailsModal, onCancel, onApprove },
   } = useRoute<NavProps['route']>();
 
   const grantMessage: string[] = React.useMemo(() => {
@@ -88,7 +79,7 @@ const ActionAuthorization = () => {
     setLoading(true);
     try {
       detailsModal && pop();
-      await addOrUpdateGrants({grantsToRequest: grants});
+      await addOrUpdateGrants({ grantsToRequest: grants });
       !detailsModal && pop();
       // run onApprove last
       onApprove && onApprove();
@@ -105,10 +96,7 @@ const ActionAuthorization = () => {
   const bottomUpModal = useMemo(
     () => (
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.dismissTouchable}
-          onPress={handleCancel}
-        />
+        <TouchableOpacity style={styles.dismissTouchable} onPress={handleCancel} />
         <View style={styles.innerContainer}>
           <SafeAreaView edges={['bottom']}>
             <View style={styles.bar} />
@@ -138,19 +126,17 @@ const ActionAuthorization = () => {
 
             <Button
               mode="contained"
-              style={{backgroundColor: theme.colors.surfaceBlack}}
+              style={{ backgroundColor: theme.colors.surfaceBlack }}
               onPress={handleApprove}
               loading={loading}>
               {t('common:confirm')}
             </Button>
 
-            <Spacer
-              paddingTop={theme.spacing.l}
-              paddingBottom={theme.spacing.m}>
+            <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
               <Button
                 mode="outlined"
-                style={{borderColor: theme.colors.surfaceBlack}}
-                labelStyle={{color: theme.colors.surfaceBlack}}
+                style={{ borderColor: theme.colors.surfaceBlack }}
+                labelStyle={{ color: theme.colors.surfaceBlack }}
                 disabled={loading}
                 onPress={handleCancel}>
                 {t('common:refuse')}
@@ -177,22 +163,15 @@ const ActionAuthorization = () => {
           style={StyleSheet.absoluteFillObject}
         />
         <View style={styles.innerModalContainer}>
-          <Typography.H5 style={{textAlign: 'center'}}>
-            {detailsModal?.title}
-          </Typography.H5>
+          <Typography.H5 style={{ textAlign: 'center' }}>{detailsModal?.title}</Typography.H5>
 
           <Typography.Body5 style={[styles.bodyText, detailsModal?.bodyStyle]}>
             <Trans
               i18nKey={detailsModal?.body as string}
-              components={[
-                <Typography.Subtitle2 style={detailsModal?.bodyStyle} />,
-              ]}
+              components={[<Typography.Subtitle2 style={detailsModal?.bodyStyle} />]}
             />
           </Typography.Body5>
-          <Button
-            style={styles.primaryButton}
-            mode="contained"
-            onPress={handleApprove}>
+          <Button style={styles.primaryButton} mode="contained" onPress={handleApprove}>
             {detailsModal?.buttonLabel}
           </Button>
           <Button

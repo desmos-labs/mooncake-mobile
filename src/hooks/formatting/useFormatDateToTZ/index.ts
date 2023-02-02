@@ -1,7 +1,7 @@
 import React from 'react';
-import {useRecoilState} from 'recoil';
-import {formatInTimeZone} from 'date-fns-tz';
-import {parseISO} from 'date-fns';
+import { useRecoilState } from 'recoil';
+import { formatInTimeZone } from 'date-fns-tz';
+import { parseISO } from 'date-fns';
 import appSettingsState from '@recoil/settings';
 
 /**
@@ -19,9 +19,7 @@ const useFormatDateToTZ = (timeToFormat: string, formatString: string) => {
     if (!timeToFormat) return '';
     // append a zone designator to timestamp if it is not present
     // this is for formatting the time to different timezones
-    const parsedTime = parseISO(
-      !timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat,
-    );
+    const parsedTime = parseISO(!timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat);
 
     return formatInTimeZone(parsedTime, settings.currentTimezone, formatString);
   }, [timeToFormat, settings.currentTimezone]);

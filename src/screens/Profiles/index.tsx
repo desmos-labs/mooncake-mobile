@@ -1,50 +1,47 @@
 import messaging from '@react-native-firebase/messaging';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {signerState} from '@recoil/connectChainState';
-import {useLoadProfiles} from '@recoil/profiles';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { signerState } from '@recoil/connectChainState';
+import { useLoadProfiles } from '@recoil/profiles';
 import appSettingsState from '@recoil/settings';
-import {defaultProfilePic} from 'assets/images';
+import { defaultProfilePic } from 'assets/images';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import SettingsProfileBadgeGroup from 'screens/Profiles/components/SettingsProfileBadgeGroup';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import useResetOptimisticUI from '@recoil/optimisticUI/useResetOptimisticUI';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.SETTINGS_PROFILES
->;
+export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_PROFILES>;
 
 const Profiles = () => {
-  const {biometrics} = useRecoilValue(appSettingsState);
-  const {profiles, loadAddrsIntoState} = useLoadProfiles();
+  const { biometrics } = useRecoilValue(appSettingsState);
+  const { profiles, loadAddrsIntoState } = useLoadProfiles();
   const [changingProfileLoading, setChangingProfileLoading] = useState(false);
-  const {activeAddress, chainAccount, setActiveAddress} = useActiveAccount();
-  const {t} = useTranslation('settings');
+  const { activeAddress, chainAccount, setActiveAddress } = useActiveAccount();
+  const { t } = useTranslation('settings');
   const styles = useStyles();
   const scrollRef = useRef(null);
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const unlockWallet = useUnlockWallet();
   const setSigner = useSetRecoilState(signerState);
-  const {login} = useLogin();
+  const { login } = useLogin();
 
-  const {resetOptimisticUI} = useResetOptimisticUI();
+  const { resetOptimisticUI } = useResetOptimisticUI();
 
   const navigateToConfirmModal = useCallback((index: number) => {
     navigate({
@@ -54,11 +51,7 @@ const Profiles = () => {
         subtitle: (
           <Trans
             i18nKey="confirmModal:backupSeedphrase"
-            components={[
-              <Typography.Subtitle2
-                style={{color: theme.colors.butterOrange01}}
-              />,
-            ]}
+            components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
           />
         ),
         primaryButtonLabel: t('confirmModal:goToBackup'),
@@ -86,7 +79,7 @@ const Profiles = () => {
     try {
       const result = await unlockWallet({
         chainAccount,
-        enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+        enterPwScreenOptions: { titleLabelOverride: t('addProfile:title') },
         skipBiometrics: true,
       });
 
@@ -109,7 +102,7 @@ const Profiles = () => {
     try {
       const result = await unlockWallet({
         chainAccount,
-        enterPwScreenOptions: {titleLabelOverride: t('addProfile:title')},
+        enterPwScreenOptions: { titleLabelOverride: t('addProfile:title') },
         skipBiometrics: true,
       });
       if (result) {
@@ -140,11 +133,7 @@ const Profiles = () => {
                 chainAccount: chainAccount!,
                 skipBiometrics: true,
               });
-              if (
-                unlockResult &&
-                unlockResult.wallet &&
-                unlockResult.password
-              ) {
+              if (unlockResult && unlockResult.wallet && unlockResult.password) {
                 setChangingProfileLoading(true);
                 setSigner(unlockResult.wallet);
                 setActiveAddress(profile.address);
@@ -174,19 +163,14 @@ const Profiles = () => {
       return {
         nickname: profile.nickname,
         dTag: profile.dtag,
-        profilePicture: profile.profile_pic
-          ? {uri: profile.profile_pic}
-          : defaultProfilePic,
+        profilePicture: profile.profile_pic ? { uri: profile.profile_pic } : defaultProfilePic,
         isSelected: activeAddress === profile.address,
       };
     });
   }, [profiles, activeAddress]);
 
   return (
-    <DView
-      style={styles.root}
-      topBar={<TopBar />}
-      showLoadingOverlay={changingProfileLoading}>
+    <DView style={styles.root} topBar={<TopBar />} showLoadingOverlay={changingProfileLoading}>
       <View style={styles.titleBar}>
         <Typography.H3 style={styles.title}>{t('profiles')}</Typography.H3>
         <TouchableOpacity style={styles.plusButton} onPress={navigateToModal}>

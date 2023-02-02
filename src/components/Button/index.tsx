@@ -1,6 +1,6 @@
 import MaterialButton from 'components/Button/components/MaterialButton';
 import React from 'react';
-import {Platform, TouchableOpacity} from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 
 type Props = React.ComponentProps<typeof MaterialButton>;
 
@@ -10,14 +10,12 @@ type Props = React.ComponentProps<typeof MaterialButton>;
  * @param onPress The function to when the button is clicked
  * @param rest Every other param of the MaterialButton
  */
-const Button: React.FC<Props> = ({onPress, ...rest}: Props) => {
+const Button: React.FC<Props> = ({ onPress, ...rest }: Props) => {
   if (Platform.OS === 'ios') {
     return rest.mode === 'text' ? (
       <MaterialButton onPress={onPress} {...rest} />
     ) : (
-      <TouchableOpacity
-        disabled={rest.disabled || rest.loading}
-        onPress={onPress}>
+      <TouchableOpacity disabled={rest.disabled || rest.loading} onPress={onPress}>
         <MaterialButton {...rest} />
       </TouchableOpacity>
     );

@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetRegisteredReactions = gql`
   query RegisteredReactions($subspaceID: bigint!) @api(name: butter) {
-    subspace_registered_reaction(where: {subspace_id: {_eq: $subspaceID}}) {
+    subspace_registered_reaction(where: { subspace_id: { _eq: $subspaceID } }) {
       id
       display_value
       shorthand_code

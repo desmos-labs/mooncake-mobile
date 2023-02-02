@@ -1,15 +1,15 @@
 import React from 'react';
-import {Animated, View, TouchableOpacity} from 'react-native';
+import { Animated, View, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
-const CustomTabBar = ({state, descriptors, navigation, position}: any) => {
+const CustomTabBar = ({ state, descriptors, navigation, position }: any) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
       {state.routes.map((route: any, index: any) => {
-        const {options} = descriptors[route.key];
+        const { options } = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
@@ -28,7 +28,7 @@ const CustomTabBar = ({state, descriptors, navigation, position}: any) => {
 
           if (!isFocused && !event.defaultPrevented) {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
-            navigation.navigate({name: route.name, merge: true});
+            navigation.navigate({ name: route.name, merge: true });
           }
         };
 
@@ -54,19 +54,15 @@ const CustomTabBar = ({state, descriptors, navigation, position}: any) => {
           <TouchableOpacity
             key={route.name}
             accessibilityRole="button"
-            accessibilityState={isFocused ? {selected: true} : {}}
+            accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
             style={styles.tabButton}>
-            <Animated.View style={{opacity, alignItems: 'center'}}>
-              <Typography.Button2 style={{marginBottom: 4}}>
-                {label}
-              </Typography.Button2>
-              <Animated.View
-                style={[styles.indicatorStyle, {opacity: indicatorOpacity}]}
-              />
+            <Animated.View style={{ opacity, alignItems: 'center' }}>
+              <Typography.Button2 style={{ marginBottom: 4 }}>{label}</Typography.Button2>
+              <Animated.View style={[styles.indicatorStyle, { opacity: indicatorOpacity }]} />
             </Animated.View>
           </TouchableOpacity>
         );

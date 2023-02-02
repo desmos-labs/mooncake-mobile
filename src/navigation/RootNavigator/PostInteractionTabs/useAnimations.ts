@@ -1,22 +1,19 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {Dimensions} from 'react-native';
-import {Gesture} from 'react-native-gesture-handler';
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+import { Dimensions } from 'react-native';
+import { Gesture } from 'react-native-gesture-handler';
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.POST_INTERACTION
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_INTERACTION>;
 /**
  * Animation hook for the PostInteractionTabs tab navigator
  */
 const useAnimations = () => {
-  const {goBack} = useNavigation<NavProps['navigation']>();
-  const {params} = useRoute<NavProps['route']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
+  const { params } = useRoute<NavProps['route']>();
 
   const expandOnOpen = _.get(params, 'params.expandOnOpen');
   const allowPanning = _.get(params, 'params.allowPanning');
@@ -31,7 +28,7 @@ const useAnimations = () => {
   const panGesture = Gesture.Pan()
     .runOnJS(true)
     .onChange(event => {
-      const {changeY} = event;
+      const { changeY } = event;
 
       // TODO: these threshold values should be tweaked
       // also handle swipe action
@@ -41,7 +38,7 @@ const useAnimations = () => {
       }
     })
     .onEnd(event => {
-      const {velocityY} = event;
+      const { velocityY } = event;
 
       // swipe down
       if (velocityY > 500) {
@@ -55,7 +52,7 @@ const useAnimations = () => {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{translateY: yOffset.value}],
+      transform: [{ translateY: yOffset.value }],
     };
   });
 

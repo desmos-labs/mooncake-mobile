@@ -1,5 +1,5 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   connectTwitterProfileIcon,
   connectWalletProfileIcon,
@@ -9,13 +9,13 @@ import {
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {TouchableOpacity} from 'react-native';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Divider, useTheme} from 'react-native-paper';
+import { Divider, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type ManageConnectionsModalParams = {
@@ -23,23 +23,20 @@ export type ManageConnectionsModalParams = {
   chainsConnected: boolean;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.MANAGE_CONNECTIONS_MODAL
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTIONS_MODAL>;
 
 const ManageConnectionsModal = () => {
   const {
-    params: {appsConnected, chainsConnected},
+    params: { appsConnected, chainsConnected },
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('profile');
-  const {goBack, navigate} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('profile');
+  const { goBack, navigate } = useNavigation<NavProps['navigation']>();
 
   const onPressFirstButton = useCallback(() => {
     goBack();
-    setTimeout(() => navigate(ROUTES.CONNECT_APP, {mode: 'connect'}), 200);
+    setTimeout(() => navigate(ROUTES.CONNECT_APP, { mode: 'connect' }), 200);
   }, []);
 
   const onPressSecondButton = useCallback(() => {
@@ -93,10 +90,7 @@ const ManageConnectionsModal = () => {
       {chainsConnected && (
         <>
           <TouchableOpacity style={styles.button} onPress={onPressFourthButton}>
-            <FastImage
-              source={manageConnectedWalletsProfileIcon}
-              style={styles.image}
-            />
+            <FastImage source={manageConnectedWalletsProfileIcon} style={styles.image} />
             <Typography.Body6>{t('manageConnectedWallets')}</Typography.Body6>
           </TouchableOpacity>
           <Divider style={styles.divider} />

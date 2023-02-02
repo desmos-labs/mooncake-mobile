@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import React, {useState} from 'react';
-import {Dimensions, ImageStyle, StyleProp, StyleSheet} from 'react-native';
-import FastImage, {ResizeMode} from 'react-native-fast-image';
+import React, { useState } from 'react';
+import { Dimensions, ImageStyle, StyleProp, StyleSheet } from 'react-native';
+import FastImage, { ResizeMode } from 'react-native-fast-image';
 
 /**
  * A hook to serve as a singular point to handle rendering of post media attachments
@@ -21,8 +21,7 @@ const useRenderMediaAttachment = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const screenDimensions = Dimensions.get('window');
-  const imageWidth =
-    screenDimensions.width - (horizontalPaddingWithAutoSize || 0);
+  const imageWidth = screenDimensions.width - (horizontalPaddingWithAutoSize || 0);
 
   const MediaAttachment = React.useMemo(() => {
     // currently only render one attachment
@@ -35,8 +34,7 @@ const useRenderMediaAttachment = ({
       let imageHeight = 0;
       if (attachmentDimensions) {
         ratio =
-          (Dimensions.get('window').width -
-            (horizontalPaddingWithAutoSize || 0)) /
+          (Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0)) /
           attachmentDimensions.width;
         imageHeight = attachmentDimensions.height * ratio;
       }

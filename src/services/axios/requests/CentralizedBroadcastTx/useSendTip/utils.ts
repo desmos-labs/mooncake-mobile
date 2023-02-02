@@ -1,8 +1,8 @@
-import {Coin} from '@cosmjs/stargate';
-import {MsgExecuteContractEncodeObject} from '@cosmjs/cosmwasm-stargate';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgExecuteContract} from 'cosmjs-types/cosmwasm/wasm/v1/tx';
-import {toUtf8} from '@cosmjs/encoding';
+import { Coin } from '@cosmjs/stargate';
+import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
+import { toUtf8 } from '@cosmjs/encoding';
 
 export const buildPostTipMsg = ({
   amount,

@@ -1,27 +1,24 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import DView from 'components/DView';
-import {ActivityIndicator, Platform, TextInput, View} from 'react-native';
+import { ActivityIndicator, Platform, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
 import Button from 'components/Button';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {defaultProfilePic} from 'assets/images';
+import { defaultProfilePic } from 'assets/images';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import SelectedCommentImage from 'components/SelectedCommentImage';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import {
-  postAttachmentsState,
-  postTextState,
-} from '@recoil/screens/createPostState';
-import {useRecoilState} from 'recoil';
+import { postAttachmentsState, postTextState } from '@recoil/screens/createPostState';
+import { useRecoilState } from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 import useStyles from './useStyles';
 
@@ -45,29 +42,28 @@ export type EnterCommentParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_COMMENT>;
 
 const EnterComment = () => {
-  const {t} = useTranslation('postInteraction');
+  const { t } = useTranslation('postInteraction');
 
   const styles = useStyles();
 
   const theme = useTheme();
 
-  const {profileData} = useActiveAccount();
+  const { profileData } = useActiveAccount();
 
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
 
   const [commentText, setCommentText] = useRecoilState(postTextState);
-  const [commentAttachment, setCommentAttachment] =
-    useRecoilState(postAttachmentsState);
+  const [commentAttachment, setCommentAttachment] = useRecoilState(postAttachmentsState);
 
-  const {createPost} = useCreatePost();
+  const { createPost } = useCreatePost();
 
   const [loading, setLoading] = React.useState(false);
 
   const {
-    params: {author, postId, isCreatePost},
+    params: { author, postId, isCreatePost },
   } = useRoute<NavProps['route']>();
 
-  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+  const { imageFromCamera, imageFromLibrary } = useImageFromDevice({
     onImageSelected: setCommentAttachment,
   });
 
@@ -90,11 +86,9 @@ const EnterComment = () => {
         loading={loading}
         mode="contained"
         onPress={handlePress}
-        contentStyle={Platform.OS === 'android' && {height: '100%', width: 64}}
+        contentStyle={Platform.OS === 'android' && { height: '100%', width: 64 }}
         style={styles.postButton}>
-        <Typography.Button3 style={styles.postButtonText}>
-          {t('post')}
-        </Typography.Button3>
+        <Typography.Button3 style={styles.postButtonText}>{t('post')}</Typography.Button3>
       </Button>
     );
   }, [commentAttachment, handlePress, loading]);
@@ -102,11 +96,8 @@ const EnterComment = () => {
   const TopBarCenterElement = React.useMemo(() => {
     if (!author) return undefined;
     return (
-      <Typography.Body7
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        style={{textAlign: 'center'}}>
-        {t('replyTo', {replyTo: `@${author!.dtag}`})}
+      <Typography.Body7 numberOfLines={1} ellipsizeMode="tail" style={{ textAlign: 'center' }}>
+        {t('replyTo', { replyTo: `@${author!.dtag}` })}
       </Typography.Body7>
     );
   }, []);
@@ -130,10 +121,7 @@ const EnterComment = () => {
                 style={styles.avatar}
               />
             ) : (
-              <ActivityIndicator
-                style={styles.avatar}
-                color={theme.colors.surfaceBlack}
-              />
+              <ActivityIndicator style={styles.avatar} color={theme.colors.surfaceBlack} />
             )}
           </View>
 
@@ -158,9 +146,7 @@ const EnterComment = () => {
           handlePress={() => {
             setCommentAttachment(undefined);
           }}
-          source={
-            commentAttachment ? {uri: commentAttachment.uri} : ('' as any)
-          }
+          source={commentAttachment ? { uri: commentAttachment.uri } : ('' as any)}
         />
       </DView>
       <MediaBottomPanel

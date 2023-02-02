@@ -1,13 +1,13 @@
-import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {FC, useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import React, { FC, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import GetPaginatedFollowers from 'services/graphql/queries/GetPaginatedFollowers';
 import GetPaginatedFollowing from 'services/graphql/queries/GetPaginatedFollowing';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import EmptyFollowers from './components/EmptyFollowers';
 import EmptyFollowing from './components/EmptyFollowing';
@@ -39,14 +39,14 @@ export type FollowingParams = {
  * @param  - userAddress: The address of the user whose following accounts list we want to display.
  * @returns A list of users that the user is following accounts.
  */
-export const Following: FC<NavProps> = ({route}) => {
-  const {subspaceID, userAddress} = route.params;
+export const Following: FC<NavProps> = ({ route }) => {
+  const { subspaceID, userAddress } = route.params;
   const styles = useStyles();
-  const {t} = useTranslation('common');
+  const { t } = useTranslation('common');
 
   const isFollowing = route.name === (ROUTES.FOLLOWING as string);
 
-  const {loading, error, data, fetchMore, refetch} = useHooks(
+  const { loading, error, data, fetchMore, refetch } = useHooks(
     subspaceID,
     userAddress,
     isFollowing ? GetPaginatedFollowing : GetPaginatedFollowers,
@@ -54,10 +54,10 @@ export const Following: FC<NavProps> = ({route}) => {
   const [itemError, setItemError] = useState<string>('');
   const resetError = useCallback(() => setItemError(''), []);
 
-  const {handleNavigateToProfile} = useNavigateToProfile();
+  const { handleNavigateToProfile } = useNavigateToProfile();
 
   const renderItem = useCallback(
-    ({item}: ListRenderItemInfo<ProfileSummary>) => {
+    ({ item }: ListRenderItemInfo<ProfileSummary>) => {
       return (
         <FollowingListItem
           {...item}
@@ -69,10 +69,7 @@ export const Following: FC<NavProps> = ({route}) => {
     },
     [subspaceID],
   );
-  const Empty = useMemo(
-    () => (isFollowing ? EmptyFollowing : EmptyFollowers),
-    [isFollowing],
-  );
+  const Empty = useMemo(() => (isFollowing ? EmptyFollowing : EmptyFollowers), [isFollowing]);
 
   return (
     <View style={styles.container}>
@@ -91,12 +88,8 @@ export const Following: FC<NavProps> = ({route}) => {
         removeClippedSubviews={true}
         contentContainerStyle={styles.contentContainer}
       />
-      {!!error && (
-        <Error error={error.message} label={t('retry')} onPress={fetchMore} />
-      )}
-      {!!itemError && (
-        <Error error={itemError} label={t('dismiss')} onPress={resetError} />
-      )}
+      {!!error && <Error error={error.message} label={t('retry')} onPress={fetchMore} />}
+      {!!itemError && <Error error={itemError} label={t('dismiss')} onPress={resetError} />}
     </View>
   );
 };

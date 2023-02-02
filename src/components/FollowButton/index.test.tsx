@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import FollowButton from 'components/FollowButton/index';
 
 describe('component: FollowButton', () => {

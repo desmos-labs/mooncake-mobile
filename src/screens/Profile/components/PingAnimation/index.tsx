@@ -1,5 +1,5 @@
 import React from 'react';
-import {ColorValue, View} from 'react-native';
+import { ColorValue, View } from 'react-native';
 import AnimatedRing from './AnimatedRing';
 
 type Props = {
@@ -15,10 +15,10 @@ type Props = {
 };
 
 const PingAnimation = (props: Props) => {
-  const {size, color} = props;
+  const { size, color } = props;
 
   return (
-    <View style={{alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <AnimatedRing {...props} delay={0} />
       <AnimatedRing {...props} delay={1000} />
       <View

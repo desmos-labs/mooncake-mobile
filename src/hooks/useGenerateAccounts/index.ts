@@ -1,14 +1,14 @@
 import React from 'react';
-import {HdPath} from 'types/hdpath';
+import { HdPath } from 'types/hdpath';
 import {
   generateAccountUsingLedger,
   generateAccountUsingMnemonic,
   generateHdPaths,
 } from 'screens/ConnectAddress/utils';
-import {connectChainState, ExternalAccount} from '@recoil/connectChainState';
-import {useRoute} from '@react-navigation/native';
+import { connectChainState, ExternalAccount } from '@recoil/connectChainState';
+import { useRoute } from '@react-navigation/native';
 import _ from 'lodash';
-import {useRecoilValue} from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 /**
  * Generate accounts for chain link. For use in the create Chain Link flow.
@@ -17,14 +17,14 @@ const useGenerateAccounts = () => {
   const [accounts, setAccounts] = React.useState<ExternalAccount[]>([]);
   const [loading, setLoading] = React.useState(false);
 
-  const {selectedChain, mnemonic} = useRecoilValue(connectChainState);
+  const { selectedChain, mnemonic } = useRecoilValue(connectChainState);
 
   const {
     prefix,
-    hdPath: {coinType},
+    hdPath: { coinType },
   } = selectedChain;
 
-  const {params} = useRoute<any>();
+  const { params } = useRoute<any>();
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
 

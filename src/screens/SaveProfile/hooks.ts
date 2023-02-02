@@ -1,15 +1,15 @@
-import React, {useCallback, useMemo} from 'react';
-import {Asset} from 'react-native-image-picker';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useMemo } from 'react';
+import { Asset } from 'react-native-image-picker';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import {DesmosProfile, ProfileParams} from 'types/desmos';
-import {useLazyQuery} from '@apollo/client';
+import { DesmosProfile, ProfileParams } from 'types/desmos';
+import { useLazyQuery } from '@apollo/client';
 import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import useSaveProfile, {SaveProfileRequest} from 'hooks/useSaveProfile';
-import {AccountWithWallet} from 'types/account';
-import {NavProps} from './index';
+import useSaveProfile, { SaveProfileRequest } from 'hooks/useSaveProfile';
+import { AccountWithWallet } from 'types/account';
+import { NavProps } from './index';
 
 /**
  * State of the form allowing to create or edit an existing profile.
@@ -25,9 +25,7 @@ export interface SaveProfileFormState {
  * to create or edit an existing profile.
  * @param profile
  */
-export const useInitialFormState = (
-  profile: DesmosProfile | undefined,
-): SaveProfileFormState => ({
+export const useInitialFormState = (profile: DesmosProfile | undefined): SaveProfileFormState => ({
   nickname: profile?.nickname,
   dTag: profile?.dtag,
   bio: profile?.bio,
@@ -38,7 +36,7 @@ export const useInitialFormState = (
  * edit or create a profile.
  */
 export const useValidationSchema = (profileParams: ProfileParams) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   return useMemo(() => {
     return Yup.object().shape({
       nickname: Yup.string()
@@ -48,15 +46,9 @@ export const useValidationSchema = (profileParams: ProfileParams) => {
         .required(t('error:required'))
         .min(profileParams.dTag.minLength)
         .max(profileParams.dTag.maxLength)
-        .test(
-          'respect reg_ex',
-          t('Only _ is allowed as special character'),
-          value => {
-            return new RegExp(profileParams.dTag.regEx, 'g').test(
-              value as string,
-            );
-          },
-        ),
+        .test('respect reg_ex', t('Only _ is allowed as special character'), value => {
+          return new RegExp(profileParams.dTag.regEx, 'g').test(value as string);
+        }),
       bio: Yup.string().max(
         profileParams.bio.maxLength,
         t('error:maxLength', {
@@ -75,7 +67,7 @@ export const useCheckDTagAvailability = () => {
   const [getDTagAvailability] = useLazyQuery(GetProfileForDTag);
   return React.useCallback(
     async (inputDTag: string) => {
-      const {data} = await getDTagAvailability({variables: {dTag: inputDTag}});
+      const { data } = await getDTagAvailability({ variables: { dTag: inputDTag } });
       return (data?.profile?.length ?? 0) === 0;
     },
     [getDTagAvailability()],
@@ -87,8 +79,8 @@ export const useCheckDTagAvailability = () => {
  * TODO: This should be used if we are creating a new profile
  */
 export const useOpenInfoModal = () => {
-  const {t} = useTranslation('passwordManipulation');
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('passwordManipulation');
+  const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(() => {
     navigate(ROUTES.TEXTONLY_MODAL, {
       title: t('signup:profile dtag'),
@@ -116,12 +108,9 @@ export const useGetImageBackground = (
   profileValue: string | undefined,
   defaultImage: any,
 ) => {
-  const profileUri = React.useMemo(
-    () => inputValue || profileValue,
-    [inputValue, profileValue],
-  );
+  const profileUri = React.useMemo(() => inputValue || profileValue, [inputValue, profileValue]);
   return React.useMemo(() => {
-    return profileUri ? {uri: profileUri} : defaultImage;
+    return profileUri ? { uri: profileUri } : defaultImage;
   }, [profileUri, defaultImage]);
 };
 
@@ -161,7 +150,7 @@ export const useSubmitForm = (
   onSuccess: () => void,
   onError: (e: Error) => void,
 ) => {
-  const {status, saveProfile} = useSaveProfile();
+  const { status, saveProfile } = useSaveProfile();
 
   // Callback used when the user pressed the button to save the profile
   const submitForm = useCallback(

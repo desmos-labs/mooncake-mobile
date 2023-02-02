@@ -1,7 +1,7 @@
-import {desmosIcon, twitterIcon} from 'assets/images';
-import {ImageSourcePropType} from 'react-native';
+import { desmosIcon, twitterIcon } from 'assets/images';
+import { ImageSourcePropType } from 'react-native';
 
-const appsIconMap: {[index: string]: ImageSourcePropType} = {
+const appsIconMap: { [index: string]: ImageSourcePropType } = {
   twitter: twitterIcon,
 };
 

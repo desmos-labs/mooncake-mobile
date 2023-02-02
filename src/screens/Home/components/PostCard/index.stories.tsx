@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {action} from '@storybook/addon-actions';
-import {storiesOf} from '@storybook/react-native';
+import { action } from '@storybook/addon-actions';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {Dimensions, View} from 'react-native';
+import { Dimensions, View } from 'react-native';
 import PostCard from './index';
 
 type CompType = React.ComponentProps<typeof PostCard>;

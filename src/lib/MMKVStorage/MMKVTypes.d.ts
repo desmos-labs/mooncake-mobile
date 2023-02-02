@@ -1,4 +1,4 @@
-import {APP_AUTHORIZATIONS} from 'lib/MMKVStorage/MMKVEnums';
+import { APP_AUTHORIZATIONS } from 'lib/MMKVStorage/MMKVEnums';
 
 export {};
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import {TextInput, View} from 'react-native';
-import {scale, verticalScale} from 'react-native-size-matters';
+import { TextInput, View } from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
 import Typography from 'components/Typography';
-import {makeStyle} from 'config/theme';
-import {useTranslation} from 'react-i18next';
+import { makeStyle } from 'config/theme';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   coin: number;
 
-  values: {[index: string]: any};
+  values: { [index: string]: any };
 
   handleChangeAccount: (value: string) => void;
 
@@ -26,7 +26,7 @@ const HDDerivPathInputGroup = ({
 }: Props) => {
   const styles = useStyles();
 
-  const {t} = useTranslation('connectAddress');
+  const { t } = useTranslation('connectAddress');
 
   return (
     <View
@@ -34,31 +34,28 @@ const HDDerivPathInputGroup = ({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
       }}>
-      <View style={{width: scale(30)}}>
-        <Typography.Caption2 style={{opacity: 0}}>a</Typography.Caption2>
-        <Typography.Body5
-          style={[styles.textBottomElement, styles.textAdjustment]}>
+      <View style={{ width: scale(30) }}>
+        <Typography.Caption2 style={{ opacity: 0 }}>a</Typography.Caption2>
+        <Typography.Body5 style={[styles.textBottomElement, styles.textAdjustment]}>
           m/
         </Typography.Body5>
       </View>
 
-      <View style={{width: scale(41)}}>
+      <View style={{ width: scale(41) }}>
         <Typography.Caption2>{t('purpose')}</Typography.Caption2>
-        <Typography.Body5
-          style={[styles.textBottomElement, styles.textAdjustment]}>
+        <Typography.Body5 style={[styles.textBottomElement, styles.textAdjustment]}>
           44&apos;/
         </Typography.Body5>
       </View>
 
-      <View style={{width: scale(41)}}>
+      <View style={{ width: scale(41) }}>
         <Typography.Caption2>{t('coin')}</Typography.Caption2>
-        <Typography.Body5
-          style={[styles.textBottomElement, styles.textAdjustment]}>
+        <Typography.Body5 style={[styles.textBottomElement, styles.textAdjustment]}>
           {coin}&apos;/
         </Typography.Body5>
       </View>
 
-      <View style={{width: scale(50)}}>
+      <View style={{ width: scale(50) }}>
         <Typography.Caption2>{t('account')}</Typography.Caption2>
         <TextInput
           style={[styles.textInput, styles.textBottomElement]}
@@ -73,14 +70,13 @@ const HDDerivPathInputGroup = ({
           marginHorizontal: 4,
           width: scale(10),
         }}>
-        <Typography.Caption2 style={{opacity: 0}}>a</Typography.Caption2>
-        <Typography.Body5
-          style={[styles.textBottomElement, styles.textAdjustment]}>
+        <Typography.Caption2 style={{ opacity: 0 }}>a</Typography.Caption2>
+        <Typography.Body5 style={[styles.textBottomElement, styles.textAdjustment]}>
           &apos;/
         </Typography.Body5>
       </View>
 
-      <View style={{width: scale(41)}}>
+      <View style={{ width: scale(41) }}>
         <Typography.Caption2>{t('change')}</Typography.Caption2>
         <TextInput
           style={[styles.textInput, styles.textBottomElement]}
@@ -95,14 +91,13 @@ const HDDerivPathInputGroup = ({
           marginHorizontal: 4,
           width: scale(10),
         }}>
-        <Typography.Caption2 style={{opacity: 0}}>a</Typography.Caption2>
-        <Typography.Body5
-          style={[styles.textBottomElement, styles.textAdjustment]}>
+        <Typography.Caption2 style={{ opacity: 0 }}>a</Typography.Caption2>
+        <Typography.Body5 style={[styles.textBottomElement, styles.textAdjustment]}>
           &apos;/
         </Typography.Body5>
       </View>
 
-      <View style={{width: scale(41)}}>
+      <View style={{ width: scale(41) }}>
         <Typography.Caption2>{t('address')}</Typography.Caption2>
         <TextInput
           style={[styles.textInput, styles.textBottomElement]}

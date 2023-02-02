@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity, View} from 'react-native';
+import { Image, ImageSourcePropType, TouchableOpacity, View } from 'react-native';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
@@ -14,7 +14,7 @@ type Props = {
   handlePress: () => void;
 };
 
-const ChainItem = ({chainName, symbol, icon, handlePress}: Props) => {
+const ChainItem = ({ chainName, symbol, icon, handlePress }: Props) => {
   const styles = useStyles();
   return (
     <DropShadowWrapper customColor="rgba(37, 87, 188, 0.05)">

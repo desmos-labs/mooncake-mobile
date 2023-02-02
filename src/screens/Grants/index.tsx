@@ -1,17 +1,17 @@
-import {useFocusEffect} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {authorizationImage} from 'assets/images';
+import { useFocusEffect } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { authorizationImage } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   InteractionManager,
@@ -19,29 +19,29 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import GrantSection from 'screens/Grants/components/GrantSection';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 import useStyles from './useStyles';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GRANTS>;
 
 const Grants: React.FC<NavProps> = props => {
   const {
-    navigation: {navigate},
+    navigation: { navigate },
   } = props;
-  const {t} = useTranslation('grants');
+  const { t } = useTranslation('grants');
   const styles = useStyles();
   const theme = useTheme();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
   const [loading, setLoading] = useState<boolean>(false);
   const [fetchingGrants, setFetchingGrants] = useState<boolean>(true);
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
-  const {getAuthzGrants} = useGetAuthzGrants();
+  const { getAuthzGrants } = useGetAuthzGrants();
 
   const fetchGrants = useCallback(async () => {
     try {
-      const {grants} = await getAuthzGrants();
+      const { grants } = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
           grants.map(grant => {
@@ -81,14 +81,14 @@ const Grants: React.FC<NavProps> = props => {
         detailsModal: {
           title: t('grant permissions'),
           body: t('grant permissions desc'),
-          bodyStyle: {textAlign: 'left'},
+          bodyStyle: { textAlign: 'left' },
           buttonLabel: t('grant all permissions'),
         },
       });
       await fetchGrants();
       navigate(ROUTES.TEXTONLY_MODAL, {
         title: t('common:success'),
-        bodyStyle: {textAlign: 'center'},
+        bodyStyle: { textAlign: 'center' },
         body: t('successful grant'),
         image: authorizationImage,
       });
@@ -107,14 +107,13 @@ const Grants: React.FC<NavProps> = props => {
     }, [fetchGrants]),
   );
 
-  const navigateToSection = useCallback(async (section: {name: string}) => {
-    navigate(ROUTES.GRANTS_DETAILS, {section});
+  const navigateToSection = useCallback(async (section: { name: string }) => {
+    navigate(ROUTES.GRANTS_DETAILS, { section });
   }, []);
 
   if (fetchingGrants) {
     return (
-      <SafeAreaView
-        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator color={theme.colors.surfaceBlack} />
       </SafeAreaView>
     );
@@ -208,8 +207,8 @@ const Grants: React.FC<NavProps> = props => {
               mode="contained"
               color={theme.colors.surfaceBlack}
               onPress={grantAllPermissions}
-              style={{justifyContent: 'flex-end'}}>
-              <Typography.Button2 style={{color: theme.colors.white}}>
+              style={{ justifyContent: 'flex-end' }}>
+              <Typography.Button2 style={{ color: theme.colors.white }}>
                 {t('grant all permissions')}
               </Typography.Button2>
             </Button>

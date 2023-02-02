@@ -8,8 +8,8 @@ import {
   MsgRemoveReactionTypeUrl,
   MsgSaveProfileTypeUrl,
 } from '@desmoslabs/desmjs';
-import {useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   addReactionTxIcon,
   createPostTxIcon,
@@ -24,18 +24,13 @@ import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  ListRenderItemInfo,
-  SectionList,
-  View,
-} from 'react-native';
-import FastImage, {Source} from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, ListRenderItemInfo, SectionList, View } from 'react-native';
+import FastImage, { Source } from 'react-native-fast-image';
+import { useTheme } from 'react-native-paper';
 import TxComponent from 'screens/Profile/components/Operations/components/TxComponent';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -47,10 +42,10 @@ export interface OperationsParams {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.OPERATIONS>;
 
 const Operations = () => {
-  const {t} = useTranslation('operations');
+  const { t } = useTranslation('operations');
   const theme = useTheme();
   const styles = useStyles();
-  const {params} = useRoute<NavProps['route']>();
+  const { params } = useRoute<NavProps['route']>();
   const {
     convertedBalance,
     operationsData,
@@ -63,7 +58,7 @@ const Operations = () => {
     fetchingMore,
   } = useHooks(params.address);
 
-  const titleMap: {[index: string]: string} = {
+  const titleMap: { [index: string]: string } = {
     [MsgCreatePostTypeUrl]: t('create comment post'),
     [MsgCreateRelationshipTypeUrl]: t('follow user'),
     [MsgDeleteRelationshipTypeUrl]: t('unfollow user'),
@@ -73,7 +68,7 @@ const Operations = () => {
     [MsgCreateReportTypeUrl]: t('create report'),
   };
 
-  const imageMap: {[index: string]: Source} = {
+  const imageMap: { [index: string]: Source } = {
     [MsgCreatePostTypeUrl]: createPostTxIcon,
     [MsgCreateRelationshipTypeUrl]: editProfileTxIcon,
     [MsgDeleteRelationshipTypeUrl]: editProfileTxIcon,
@@ -91,18 +86,14 @@ const Operations = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <FastImage
-          resizeMode="contain"
-          source={emptyPostsIcon}
-          style={styles.emptyIcon}
-        />
+        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyIcon} />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
       </View>
     );
   }, [t, operationsDataLoading]);
 
   const renderTx = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({ item }: ListRenderItemInfo<any>) => {
       const fees = convertCoin(item.fees[0], 6, currentChain.currencies);
       return (
         <TxComponent
@@ -120,7 +111,7 @@ const Operations = () => {
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
       return (
-        <View style={{padding: theme.spacing.m}}>
+        <View style={{ padding: theme.spacing.m }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
@@ -139,36 +130,32 @@ const Operations = () => {
         {convertedBalance?.balance?.denom.toUpperCase()} {t('balance')}
       </Typography.Body5>
       <Typography.H2>
-        {convertedBalance?.balance?.amount}{' '}
-        {convertedBalance?.balance?.denom.toUpperCase()}
+        {convertedBalance?.balance?.amount} {convertedBalance?.balance?.denom.toUpperCase()}
       </Typography.H2>
       <Spacer paddingVertical={theme.spacing.s} />
       <Typography.H5>{t('operations')}</Typography.H5>
-      {pastActionsData?.messages_by_address?.length >= 0 &&
-      !operationsDataLoading ? (
+      {pastActionsData?.messages_by_address?.length >= 0 && !operationsDataLoading ? (
         <SectionList
           refreshing={refetching}
           onRefresh={refetch}
-          keyExtractor={(item, index) =>
-            String(`operationKey${index + item.timestamp}`)
-          }
-          style={{flex: 1}}
-          contentContainerStyle={{flexGrow: 1}}
+          keyExtractor={(item, index) => String(`operationKey${index + item.timestamp}`)}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={EmptyOperations}
           sections={operationsData}
           renderItem={renderTx}
           ListFooterComponent={footerComponent}
-          onEndReached={({distanceFromEnd}) => fetchMore(distanceFromEnd)}
+          onEndReached={({ distanceFromEnd }) => fetchMore(distanceFromEnd)}
           onEndReachedThreshold={0.5}
-          renderSectionHeader={({section: {section}}) => (
+          renderSectionHeader={({ section: { section } }) => (
             <View style={styles.sectionHeader}>
               <Typography.Button2>{section}</Typography.Button2>
             </View>
           )}
         />
       ) : (
-        <View style={{marginVertical: theme.spacing.m}}>
+        <View style={{ marginVertical: theme.spacing.m }}>
           <TextRowContentLoader width="120" />
           <Spacer paddingVertical={theme.spacing.s} />
           <OperationContentLoader />

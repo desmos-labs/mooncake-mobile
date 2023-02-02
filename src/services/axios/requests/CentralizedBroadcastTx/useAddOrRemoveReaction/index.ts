@@ -1,15 +1,15 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import useCheckAndUpdateGrants, {
   CheckAndUpdateGrantsArgs,
 } from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import useActiveAccount from 'hooks/useActiveAccount';
 import EnvConfig from 'config/EnvConfig';
 import ToastConfig from 'config/ToastConfig';
-import {useLazyQuery} from '@apollo/client';
-import {GetReactionForPostAndAuthor} from 'services/graphql/queries/GetReactions';
-import {useToast} from 'react-native-toast-notifications';
-import {manageReaction} from './utils';
+import { useLazyQuery } from '@apollo/client';
+import { GetReactionForPostAndAuthor } from 'services/graphql/queries/GetReactions';
+import { useToast } from 'react-native-toast-notifications';
+import { manageReaction } from './utils';
 
 /**
  * @typedef AddOrRemoveReactionArgs - Arguments for the addOrRemoveReaction callback
@@ -25,29 +25,18 @@ interface AddOrRemoveReactionArgs
  * A hook that exposes a callback that requests necessary grants and adds/removes a reaction from a post.
  */
 const useAddOrRemoveReaction = () => {
-  const {activeAddress} = useActiveAccount();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { activeAddress } = useActiveAccount();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
   const toast = useToast();
 
   const [loading, setLoading] = React.useState(false);
 
-  const [getReactionForPostAndAuthor] = useLazyQuery(
-    GetReactionForPostAndAuthor,
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
+  const [getReactionForPostAndAuthor] = useLazyQuery(GetReactionForPostAndAuthor, {
+    fetchPolicy: 'no-cache',
+  });
 
   const getReaction = useCallback(
-    async ({
-      id,
-      subspace_id,
-      address,
-    }: {
-      id: number;
-      subspace_id: number;
-      address: string;
-    }) => {
+    async ({ id, subspace_id, address }: { id: number; subspace_id: number; address: string }) => {
       return getReactionForPostAndAuthor({
         variables: {
           postID: id,
@@ -64,13 +53,13 @@ const useAddOrRemoveReaction = () => {
    * @param {AddOrRemoveReactionArgs}
    */
   const addOrRemoveReaction = React.useCallback(
-    async ({postId, stayOnCurrentScreen = true}: AddOrRemoveReactionArgs) => {
+    async ({ postId, stayOnCurrentScreen = true }: AddOrRemoveReactionArgs) => {
       const grantsToRequest: GrantEnums[] = [
         GrantEnums.MsgAddReaction,
         GrantEnums.MsgRemoveReaction,
       ];
       // check if user has grants first
-      const {success} = await checkAndUpdateGrants({
+      const { success } = await checkAndUpdateGrants({
         grantsToRequest,
         stayOnCurrentScreen,
       });
@@ -84,7 +73,7 @@ const useAddOrRemoveReaction = () => {
       setLoading(true);
 
       try {
-        const {data} = await getReaction({
+        const { data } = await getReaction({
           id: postId,
           subspace_id: EnvConfig.APP_SUBSPACE_ID,
           address: activeAddress!,

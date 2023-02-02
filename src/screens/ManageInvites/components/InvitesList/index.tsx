@@ -1,9 +1,9 @@
-import {emptyInvitesImage} from 'assets/images';
+import { emptyInvitesImage } from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -12,10 +12,8 @@ import {
   SectionList,
   View,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
-import InviteComponent, {
-  Invite,
-} from 'screens/ManageInvites/components/InviteComponent';
+import { useTheme } from 'react-native-paper';
+import InviteComponent, { Invite } from 'screens/ManageInvites/components/InviteComponent';
 import useHooks from '../../useHooks';
 import useStyles from './useStyles';
 
@@ -23,22 +21,19 @@ interface Props {
   navigate: (args: any) => void;
 }
 
-const InvitesList = ({navigate}: Props) => {
+const InvitesList = ({ navigate }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {invitesSectioned, filteredInvites, loading, refetch, t} = useHooks();
+  const { invitesSectioned, filteredInvites, loading, refetch, t } = useHooks();
 
-  const renderInvite = React.useCallback(
-    ({item}: ListRenderItemInfo<Invite>) => {
-      return <InviteComponent {...item} />;
-    },
-    [],
-  );
+  const renderInvite = React.useCallback(({ item }: ListRenderItemInfo<Invite>) => {
+    return <InviteComponent {...item} />;
+  }, []);
 
   const EmptyInvites = useMemo(() => {
     return (
       <View style={styles.container}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <Image source={emptyInvitesImage} style={styles.emptyImage} />
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
         </View>
@@ -69,16 +64,16 @@ const InvitesList = ({navigate}: Props) => {
         onPress={() => navigate(ROUTES.INVITES)}
         mode="contained"
         color={theme.colors.surfaceBlack}
-        style={{marginHorizontal: theme.spacing.m}}>
+        style={{ marginHorizontal: theme.spacing.m }}>
         {t('invite more')}
       </Button>
     );
   }, [filteredInvites]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       {!filteredInvites && loading ? (
-        <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </SafeAreaView>
       ) : (
@@ -87,7 +82,7 @@ const InvitesList = ({navigate}: Props) => {
             keyExtractor={(item, index) => item.code.toString() + index}
             refreshing={loading}
             onRefresh={refetch}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             contentContainerStyle={{
               flexGrow: 1,
               paddingHorizontal: theme.spacing.m,
@@ -96,7 +91,7 @@ const InvitesList = ({navigate}: Props) => {
             ListEmptyComponent={EmptyInvites}
             sections={invitesSectioned}
             renderItem={renderInvite}
-            renderSectionHeader={({section: {section}}) => (
+            renderSectionHeader={({ section: { section } }) => (
               <View style={styles.header}>
                 <Typography.Button2>{section}</Typography.Button2>
               </View>

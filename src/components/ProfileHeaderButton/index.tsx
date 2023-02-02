@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 type Props = {
@@ -25,13 +25,7 @@ type Props = {
   tintColor?: string;
 };
 
-const ProfileHeaderButton = ({
-  imageSrc,
-  onPress,
-  style,
-  containerStyle,
-  tintColor,
-}: Props) => {
+const ProfileHeaderButton = ({ imageSrc, onPress, style, containerStyle, tintColor }: Props) => {
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <FastImage

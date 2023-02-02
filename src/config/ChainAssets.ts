@@ -1,5 +1,5 @@
-import {ChainAsset} from 'types/chains';
-import {getDefaultChainAsset} from 'config/LinkableChains';
+import { ChainAsset } from 'types/chains';
+import { getDefaultChainAsset } from 'config/LinkableChains';
 
 /**
  * Get an asset's denom symbol, as well as exponent data.
@@ -17,9 +17,10 @@ export const getDenomSymbol = (
 
   return {
     symbol: chainAsset.symbol,
-    denom: chainAsset.denom_units.find(
-      x => x.denom === chainAsset.symbol.toLowerCase(),
-    ) as {denom: string; exponent: number},
+    denom: chainAsset.denom_units.find(x => x.denom === chainAsset.symbol.toLowerCase()) as {
+      denom: string;
+      exponent: number;
+    },
   };
 };
 
@@ -255,8 +256,7 @@ export const IXOAssets: ChainAsset[] = [
 
 export const IrisnetAssets: ChainAsset[] = [
   {
-    description:
-      'The IRIS token is the native governance token for the IrisNet chain.',
+    description: 'The IRIS token is the native governance token for the IrisNet chain.',
     denom_units: [
       {
         denom: 'uiris',
@@ -432,8 +432,7 @@ export const TgradeAssets: ChainAsset[] = [
 
 export const XPRTAssets: ChainAsset[] = [
   {
-    description:
-      'The XPRT token is primarily a governance token for the Persistence chain.',
+    description: 'The XPRT token is primarily a governance token for the Persistence chain.',
     denom_units: [
       {
         denom: 'uxprt',

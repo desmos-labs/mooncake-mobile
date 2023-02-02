@@ -1,7 +1,7 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import BackButton from 'components/BackButton';
-import React, {ReactElement, useMemo} from 'react';
-import {StyleProp, View, ViewStyle} from 'react-native';
+import React, { ReactElement, useMemo } from 'react';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -28,13 +28,7 @@ export type Props = {
  * TODO: use react-navigation's header prop on navigator instead
  */
 export const TopBar: React.FC<Props> = props => {
-  const {
-    centerElement,
-    rightElement,
-    style,
-    backButtonCustomBehavior,
-    noBackButton,
-  } = props;
+  const { centerElement, rightElement, style, backButtonCustomBehavior, noBackButton } = props;
   const styles = useStyles();
 
   const navigation = useNavigation<any>();
@@ -50,15 +44,9 @@ export const TopBar: React.FC<Props> = props => {
 
   return (
     <View style={[styles.root, style]}>
-      <View style={[styles.container, styles.containerLeft]}>
-        {navigationGoBack}
-      </View>
-      <View style={[styles.container, styles.containerCenter]}>
-        {centerElement}
-      </View>
-      <View style={[styles.container, styles.containerRight]}>
-        {rightElement}
-      </View>
+      <View style={[styles.container, styles.containerLeft]}>{navigationGoBack}</View>
+      <View style={[styles.container, styles.containerCenter]}>{centerElement}</View>
+      <View style={[styles.container, styles.containerRight]}>{rightElement}</View>
     </View>
   );
 };

@@ -1,9 +1,9 @@
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {act, renderHook, waitFor} from '@testing-library/react-native';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants/index';
-import {useMMKVStorage} from 'lib/MMKVStorage';
+import { useMMKVStorage } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 
 jest.mock('lib/MMKVStorage', () => ({
   useMMKVStorage: jest.fn(),
@@ -32,10 +32,7 @@ describe('hook: useCheckAndUpdateGrants', () => {
   });
 
   it('navigates to request grant screen if missing grants', async () => {
-    const mockRequestedGrants = [
-      GrantEnums.MsgCreateRelationship,
-      GrantEnums.MsgRemoveReaction,
-    ];
+    const mockRequestedGrants = [GrantEnums.MsgCreateRelationship, GrantEnums.MsgRemoveReaction];
 
     (useMMKVStorage as jest.Mock).mockReturnValue(['123']);
 
@@ -51,7 +48,7 @@ describe('hook: useCheckAndUpdateGrants', () => {
       }),
     });
 
-    const {result} = renderHook(() => useCheckAndUpdateGrants());
+    const { result } = renderHook(() => useCheckAndUpdateGrants());
 
     act(() => {
       result.current.checkAndUpdateGrants({
@@ -83,7 +80,7 @@ describe('hook: useCheckAndUpdateGrants', () => {
       }),
     });
 
-    const {result} = renderHook(() => useCheckAndUpdateGrants());
+    const { result } = renderHook(() => useCheckAndUpdateGrants());
 
     act(() => {
       result.current.checkAndUpdateGrants({

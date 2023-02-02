@@ -1,14 +1,14 @@
-import {storiesOf} from '@storybook/react-native';
-import React, {useState} from 'react';
+import { storiesOf } from '@storybook/react-native';
+import React, { useState } from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
-import CustomRadioGroup, {RadioValue} from './index';
+import CustomRadioGroup, { RadioValue } from './index';
 
 const initialiRadioValues: RadioValue[] = [
-  {label: 'spam', value: 'spam'},
-  {label: 'scam', value: 'scam'},
-  {label: 'nudity', value: 'nudity'},
-  {label: 'violent', value: 'violent'},
-  {label: 'others', value: 'others'},
+  { label: 'spam', value: 'spam' },
+  { label: 'scam', value: 'scam' },
+  { label: 'nudity', value: 'nudity' },
+  { label: 'violent', value: 'violent' },
+  { label: 'others', value: 'others' },
 ];
 
 const RenderComponent = () => {

@@ -1,18 +1,12 @@
-import {timestampFromDate} from '@desmoslabs/desmjs';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import {act, renderHook} from '@testing-library/react-native';
+import { timestampFromDate } from '@desmoslabs/desmjs';
+import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
+import { act, renderHook } from '@testing-library/react-native';
 import EnvConfig from 'config/EnvConfig';
-import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import {
-  AllowedMsgAllowance,
-  BasicAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {
-  MsgGrantAllowance,
-  MsgRevokeAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import { MsgGrantAllowance, MsgRevokeAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants/index';
 import {
   buildGrantAllowanceEncode,
@@ -21,9 +15,9 @@ import {
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import Long from 'long';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 import useActiveAccount from 'hooks/useActiveAccount';
 
 jest.mock('lib/desmos/fees');
@@ -49,10 +43,7 @@ jest.mock('hooks/useUnlockWallet', () => jest.fn());
 
 let mockBroadcastMessages = jest.fn(() => true);
 
-jest.mock(
-  'hooks/broadcastTx/useBroadcastMessages',
-  () => () => mockBroadcastMessages,
-);
+jest.mock('hooks/broadcastTx/useBroadcastMessages', () => () => mockBroadcastMessages);
 
 jest.mock('services/graphql/queries/GetAuthGrants', () => ({
   useGetAuthzGrants: jest.fn(),
@@ -165,13 +156,13 @@ describe('hooks: useAddOrUpdateGrants', () => {
       });
 
       (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
-        unlockWallet: () => ({wallet: true}),
+        unlockWallet: () => ({ wallet: true }),
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       await act(async () => {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       });
 
       expect(buildGrantAllowanceEncode).toBeCalled();
@@ -189,14 +180,12 @@ describe('hooks: useAddOrUpdateGrants', () => {
         unlockWallet: () => undefined,
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       } catch (err: any) {
-        expect(err.message).toBe(
-          'Error unlocking wallet or user cancelled authentication',
-        );
+        expect(err.message).toBe('Error unlocking wallet or user cancelled authentication');
       }
     });
 
@@ -213,10 +202,10 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       } catch (err: any) {
         expect(err.message).toBe('No active chain account found.');
       }
@@ -231,13 +220,13 @@ describe('hooks: useAddOrUpdateGrants', () => {
       });
 
       (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
-        unlockWallet: () => ({wallet: true}),
+        unlockWallet: () => ({ wallet: true }),
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       await act(async () => {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       });
 
       expect(buildRevokeAllowanceEncode).toHaveBeenCalledTimes(1);
@@ -252,9 +241,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-        mockGrantAllowanceEncode,
-      );
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(mockGrantAllowanceEncode);
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
@@ -262,10 +249,10 @@ describe('hooks: useAddOrUpdateGrants', () => {
         wallet: true,
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       await act(async () => {
-        await result.current.addOrUpdateGrants({grantsToRequest: mockGrants});
+        await result.current.addOrUpdateGrants({ grantsToRequest: mockGrants });
       });
 
       expect(mockBroadcastMessages).toHaveBeenCalledWith(
@@ -283,22 +270,18 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-        mockGrantAllowanceEncode,
-      );
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(mockGrantAllowanceEncode);
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       } catch (err: any) {
-        expect(err.message).toBe(
-          'Error unlocking wallet or user cancelled authentication',
-        );
+        expect(err.message).toBe('Error unlocking wallet or user cancelled authentication');
       }
     });
 
@@ -311,9 +294,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-        mockGrantAllowanceEncode,
-      );
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(mockGrantAllowanceEncode);
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
@@ -324,10 +305,10 @@ describe('hooks: useAddOrUpdateGrants', () => {
       // @ts-ignore
       mockBroadcastMessages = jest.fn(() => undefined);
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
-        await result.current.addOrUpdateGrants({grantsToRequest: []});
+        await result.current.addOrUpdateGrants({ grantsToRequest: [] });
       } catch (err: any) {
         expect(err.message).toBe('Error requesting grants');
       }
@@ -346,19 +327,15 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       mockBroadcastMessages = jest.fn(() => true);
 
-      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(
-        mockRevokeGrantMsgEncodes,
-      );
+      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(mockRevokeGrantMsgEncodes);
 
-      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(
-        mockRevokeAllowanceEncode,
-      );
+      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(mockRevokeAllowanceEncode);
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       await act(async () => {
         await result.current.revokeGrants();
@@ -380,22 +357,18 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(
-        mockGrantAllowanceEncode,
-      );
+      (buildGrantAllowanceEncode as jest.Mock).mockReturnValue(mockGrantAllowanceEncode);
 
       (buildGrantMsgEncodes as jest.Mock).mockReturnValue(mockMsgsGrantEncodes);
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => undefined);
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
         await result.current.revokeGrants();
       } catch (err: any) {
-        expect(err.message).toBe(
-          'Error unlocking wallet or user cancelled authentication',
-        );
+        expect(err.message).toBe('Error unlocking wallet or user cancelled authentication');
       }
     });
 
@@ -412,7 +385,7 @@ describe('hooks: useAddOrUpdateGrants', () => {
         }),
       });
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
         await result.current.revokeGrants();
@@ -432,19 +405,15 @@ describe('hooks: useAddOrUpdateGrants', () => {
 
       (mockBroadcastMessages as any) = jest.fn(() => undefined);
 
-      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(
-        mockRevokeGrantMsgEncodes,
-      );
+      (buildRevokeGrantMsgEncodes as jest.Mock).mockReturnValue(mockRevokeGrantMsgEncodes);
 
-      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(
-        mockRevokeAllowanceEncode,
-      );
+      (buildRevokeAllowanceEncode as jest.Mock).mockReturnValue(mockRevokeAllowanceEncode);
 
       (useUnlockWallet as jest.Mock).mockReturnValue((_: any) => ({
         wallet: true,
       }));
 
-      const {result} = renderHook(() => useAddOrUpdateGrants());
+      const { result } = renderHook(() => useAddOrUpdateGrants());
 
       try {
         await result.current.revokeGrants();

@@ -1,20 +1,16 @@
-import {BlurView} from '@react-native-community/blur';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {isFollowingAddr} from '@recoil/following';
-import {defaultBanner, profileBack} from 'assets/images';
+import { BlurView } from '@react-native-community/blur';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { isFollowingAddr } from '@recoil/following';
+import { defaultBanner, profileBack } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   ImageBackground,
@@ -27,7 +23,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Divider, useTheme} from 'react-native-paper';
+import { Divider, useTheme } from 'react-native-paper';
 import Animated, {
   Extrapolation,
   FadeIn,
@@ -36,8 +32,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRecoilValue} from 'recoil';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRecoilValue } from 'recoil';
 import useGuestProfileDataQueries from 'screens/GuestProfile/useGuestProfileDataQueries';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BadgesSection from 'screens/Profile/components/BadgesSection';
@@ -47,7 +43,7 @@ import PostsSection from 'screens/Profile/components/PostsSection';
 import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile/components/UserBio';
 import useQueries from 'screens/Profile/useQueries';
-import {mapConnectedChainImages} from 'screens/Profile/utils';
+import { mapConnectedChainImages } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useStyles from './useStyles';
 
@@ -62,15 +58,15 @@ export interface GuestProfileParams {
 
 const GuestProfile = () => {
   const theme = useTheme();
-  const {t} = useTranslation('profile');
+  const { t } = useTranslation('profile');
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavProps['navigation']>();
   const route = useRoute<NavProps['route']>();
   const [initialLoading, setInitialLoading] = useState(true);
   const [userDataLoading, setUserDataLoading] = useState(false);
-  const styles = useStyles({insets});
-  const {navigate, goBack} = navigation;
-  const {params} = route;
+  const styles = useStyles({ insets });
+  const { navigate, goBack } = navigation;
+  const { params } = route;
 
   const {
     profileLoading,
@@ -114,11 +110,11 @@ const GuestProfile = () => {
   } = useQueries(address);
 
   const isFollowing = useRecoilValue(isFollowingAddr(address!));
-  const {followOrUnfollowUser} = useFollowOrUnfollow();
+  const { followOrUnfollowUser } = useFollowOrUnfollow();
 
   const handlePressFollow = useCallback(
     async (_address: string) => {
-      await followOrUnfollowUser({addrToFollow: _address});
+      await followOrUnfollowUser({ addrToFollow: _address });
       refreshNumRelationships();
     },
     [refreshNumRelationships, followOrUnfollowUser],
@@ -127,8 +123,7 @@ const GuestProfile = () => {
   /**
    * Animations
    */
-  const AnimatedImageBackground =
-    Animated.createAnimatedComponent(ImageBackground);
+  const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
   // @ts-ignore
   const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
   const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -146,7 +141,7 @@ const GuestProfile = () => {
 
     return {
       opacity,
-      transform: [{translateY}],
+      transform: [{ translateY }],
     };
   });
 
@@ -157,7 +152,7 @@ const GuestProfile = () => {
     });
 
     return {
-      transform: [{scale}],
+      transform: [{ scale }],
     };
   });
 
@@ -170,47 +165,32 @@ const GuestProfile = () => {
   });
 
   const animatedProfilePicStyle = useAnimatedStyle(() => {
-    const scale = interpolate(
-      scrollY.value,
-      [0, HEADER_HEIGHT_EXPANDED],
-      [1, 0.5],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    );
+    const scale = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [1, 0.5], {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    });
 
-    const translateY = interpolate(
-      scrollY.value,
-      [0, HEADER_HEIGHT_EXPANDED],
-      [0, 46],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    );
+    const translateY = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [0, 46], {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    });
 
     const top = scrollOffset.value;
-    const opacity = interpolate(
-      scrollY.value,
-      [0, HEADER_HEIGHT_EXPANDED],
-      [1, 0],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    );
+    const opacity = interpolate(scrollY.value, [0, HEADER_HEIGHT_EXPANDED], [1, 0], {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    });
 
     return {
       opacity,
       top,
-      transform: [{translateY}, {scale}],
+      transform: [{ translateY }, { scale }],
     };
   });
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
-      const {contentOffset} = event;
+      const { contentOffset } = event;
       scrollOffset.value = 45 + HEADER_HEIGHT_EXPANDED - contentOffset.y;
       scrollY.value = contentOffset.y;
     },
@@ -255,9 +235,7 @@ const GuestProfile = () => {
     const timeout = setTimeout(() => {
       if (userDataLoading) {
         InteractionManager.runAfterInteractions(() => {
-          refetchUserData().then(() =>
-            setTimeout(() => setUserDataLoading(false), 500),
-          );
+          refetchUserData().then(() => setTimeout(() => setUserDataLoading(false), 500));
         });
       }
     }, 500);
@@ -303,7 +281,7 @@ const GuestProfile = () => {
       chainLinksLoading
     ) {
       return (
-        <View style={{alignSelf: 'flex-start'}}>
+        <View style={{ alignSelf: 'flex-start' }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
@@ -315,7 +293,7 @@ const GuestProfile = () => {
     return (
       <AnimatedImageBackground
         resizeMode="cover"
-        source={cover_pic !== '' ? {uri: cover_pic} : defaultBanner}
+        source={cover_pic !== '' ? { uri: cover_pic } : defaultBanner}
         style={[
           {
             position: 'absolute',
@@ -344,7 +322,7 @@ const GuestProfile = () => {
   const Avatar = useMemo(() => {
     return (
       <AnimatedFastImage
-        source={profile_pic !== '' ? {uri: profile_pic} : defaultBanner}
+        source={profile_pic !== '' ? { uri: profile_pic } : defaultBanner}
         style={[
           {
             zIndex: 2,
@@ -377,11 +355,7 @@ const GuestProfile = () => {
 
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <ImageButton
         image={profileBack}
         buttonStyle={styles.buttonStyleLeft}
@@ -423,8 +397,8 @@ const GuestProfile = () => {
           paddingTop: HEADER_HEIGHT_EXPANDED,
         }}>
         <View style={styles.contentContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flexDirection: 'row', right: 0, marginLeft: 'auto'}}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', right: 0, marginLeft: 'auto' }}>
               <View
                 style={{
                   justifyContent: 'center',
@@ -433,33 +407,19 @@ const GuestProfile = () => {
                 <Typography.Subtitle3>{postsCounter || 0}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
-              <TouchableOpacity
-                style={styles.centerLeftSpacingM}
-                onPress={handleFollowingPressed}>
+              <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator
-                    size={21}
-                    color={theme.colors.surfaceBlack}
-                  />
+                  <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
                 ) : (
-                  <Typography.Subtitle3>
-                    {numRelationships?.numFollowing}
-                  </Typography.Subtitle3>
+                  <Typography.Subtitle3>{numRelationships?.numFollowing}</Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('following')}</Typography.Caption1>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.centerLeftSpacingM}
-                onPress={handleFollowersPressed}>
+              <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowersPressed}>
                 {numRelationshipsLoading ? (
-                  <ActivityIndicator
-                    size={21}
-                    color={theme.colors.surfaceBlack}
-                  />
+                  <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
                 ) : (
-                  <Typography.Subtitle3>
-                    {numRelationships?.numFollowers}
-                  </Typography.Subtitle3>
+                  <Typography.Subtitle3>{numRelationships?.numFollowers}</Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('followers')}</Typography.Caption1>
               </TouchableOpacity>
@@ -493,7 +453,7 @@ const GuestProfile = () => {
             <TouchableOpacity
               style={styles.unfollowButton}
               onPress={() => handlePressFollow(address)}>
-              <Typography.Subtitle4 style={{color: theme.colors.surfaceBlack}}>
+              <Typography.Subtitle4 style={{ color: theme.colors.surfaceBlack }}>
                 {t('following')}
               </Typography.Subtitle4>
             </TouchableOpacity>
@@ -501,7 +461,7 @@ const GuestProfile = () => {
             <TouchableOpacity
               style={styles.followButton}
               onPress={() => handlePressFollow(address)}>
-              <Typography.Subtitle4 style={{color: theme.colors.white}}>
+              <Typography.Subtitle4 style={{ color: theme.colors.white }}>
                 {t('follow')}
               </Typography.Subtitle4>
             </TouchableOpacity>

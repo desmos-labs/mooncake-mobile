@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -29,7 +29,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  tipButton: {minWidth: 106, borderColor: theme.colors.surfaceBlack},
+  tipButton: { minWidth: 106, borderColor: theme.colors.surfaceBlack },
   textInput: {
     borderWidth: 1,
     backgroundColor: theme.colors.white,

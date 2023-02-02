@@ -3,26 +3,26 @@ import {
   MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
 import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
-import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/FormatUtils';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { formatNumShorthand } from 'lib/FormatUtils';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   GestureResponderEvent,
   I18nManager,
   PanResponder,
   PanResponderGestureState,
 } from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import useNumRelationships from '@recoil/numRelationshipState';
 import _ from 'lodash';
-import FollowingTab, {FollowingParams} from '../Following';
+import FollowingTab, { FollowingParams } from '../Following';
 import useStyles from './useStyles';
 
 export type FollowingAndFollowersParams = {
@@ -34,34 +34,31 @@ export type FollowingAndFollowersParams = {
 const Tab = createMaterialTopTabNavigator();
 const numOfTabs = 2;
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.FOLLOWING_AND_FOLLOWERS
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING_AND_FOLLOWERS>;
 
 /* A React component for the following and followers screen. */
 const FollowingAndFollowers = () => {
   const route = useRoute<NavProps['route']>();
 
   const {
-    params: {params},
+    params: { params },
   } = route;
 
   const userAddress = _.get(params, 'userAddress', '');
   const headerTitle = _.get(params, 'headerTitle', '');
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const styles = useStyles(numOfTabs);
 
-  const {numRelationships} = useNumRelationships(userAddress);
+  const { numRelationships } = useNumRelationships(userAddress);
 
-  const followingTabName = `${formatNumShorthand(
-    numRelationships?.numFollowing || 0,
-  )} ${t('profile:following')}`;
+  const followingTabName = `${formatNumShorthand(numRelationships?.numFollowing || 0)} ${t(
+    'profile:following',
+  )}`;
 
-  const followersTabName = `${formatNumShorthand(
-    numRelationships?.numFollowers || 0,
-  )} ${t('profile:followers')}`;
+  const followersTabName = `${formatNumShorthand(numRelationships?.numFollowers || 0)} ${t(
+    'profile:followers',
+  )}`;
 
   /* To allow going back to previous screen via swipe left. */
   const [swipeEnabled, setSwipeEnabled] = useState(true);
@@ -101,9 +98,7 @@ const FollowingAndFollowers = () => {
     swipeEnabled,
   };
 
-  const centerElement = (
-    <Typography.Subtitle3>{headerTitle}</Typography.Subtitle3>
-  );
+  const centerElement = <Typography.Subtitle3>{headerTitle}</Typography.Subtitle3>;
 
   return (
     <DView
@@ -121,13 +116,13 @@ const FollowingAndFollowers = () => {
         <Tab.Screen
           name={ROUTES.FOLLOWING}
           component={FollowingTab}
-          options={{tabBarLabel: followingTabName}}
+          options={{ tabBarLabel: followingTabName }}
           initialParams={params}
         />
         <Tab.Screen
           name={ROUTES.FOLLOWERS}
           component={FollowingTab}
-          options={{tabBarLabel: followersTabName}}
+          options={{ tabBarLabel: followersTabName }}
           initialParams={params}
         />
       </Tab.Navigator>

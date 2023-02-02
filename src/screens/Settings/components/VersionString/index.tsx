@@ -1,15 +1,13 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import Typography from 'components/Typography';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {getVersion} from 'react-native-device-info';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { getVersion } from 'react-native-device-info';
 
 const VersionString = () => {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <Typography.Body7 style={styles.textStyle}>
-        Version {getVersion()}
-      </Typography.Body7>
+      <Typography.Body7 style={styles.textStyle}>Version {getVersion()}</Typography.Body7>
     </SafeAreaView>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
-import ProfileItem from 'screens/SelectAccount/components/ProfileItem/index';
+import ProfileItem from 'screens/SelectDtag/components/ProfileItem/index';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 

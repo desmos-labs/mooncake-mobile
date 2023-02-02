@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import React from 'react';
 import TextBullet from 'components/TextBullet/index';

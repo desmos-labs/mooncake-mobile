@@ -1,14 +1,8 @@
-import {useQuery} from '@apollo/client';
-import {useMemo} from 'react';
-import {GetPostTips} from 'services/graphql/queries/GetPostTips';
+import { useQuery } from '@apollo/client';
+import { useMemo } from 'react';
+import { GetPostTips } from 'services/graphql/queries/GetPostTips';
 
-const useHooks = ({
-  postId,
-  subspaceId,
-}: {
-  postId: number;
-  subspaceId: number;
-}) => {
+const useHooks = ({ postId, subspaceId }: { postId: number; subspaceId: number }) => {
   const {
     data: postTips,
     loading: tipsLoading,

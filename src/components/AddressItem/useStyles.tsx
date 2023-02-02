@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {scale} from 'react-native-size-matters';
+import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -21,7 +21,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  alignRight: {right: 0, marginLeft: 'auto'},
+  alignRight: { right: 0, marginLeft: 'auto' },
   linkedAddrStyle: {
     flex: 1,
     marginLeft: 16,

@@ -1,8 +1,5 @@
-import {
-  postAttachmentsState,
-  postTextState,
-} from '@recoil/screens/createPostState';
-import {expandCommentIcon} from 'assets/images';
+import { postAttachmentsState, postTextState } from '@recoil/screens/createPostState';
+import { expandCommentIcon } from 'assets/images';
 import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
@@ -13,8 +10,8 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import React, {useEffect, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Keyboard,
@@ -26,10 +23,10 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Shadow} from 'react-native-shadow-2';
-import {useRecoilState, useResetRecoilState} from 'recoil';
+import { useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Shadow } from 'react-native-shadow-2';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -66,12 +63,11 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   textInputRef,
   loading,
 }) => {
-  const {t} = useTranslation('comment');
-  const {bottom} = useSafeAreaInsets();
+  const { t } = useTranslation('comment');
+  const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
   const [comment, setComment] = useRecoilState(postTextState);
-  const [commentAttachment, setCommentAttachment] =
-    useRecoilState(postAttachmentsState);
+  const [commentAttachment, setCommentAttachment] = useRecoilState(postAttachmentsState);
   const resetCommentAttachment = useResetRecoilState(postAttachmentsState);
   const [keyboardShow, setKeyboardShow] = useState<boolean>(false);
 
@@ -83,7 +79,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
     bottomInset: bottom,
   });
 
-  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+  const { imageFromCamera, imageFromLibrary } = useImageFromDevice({
     onImageSelected: setCommentAttachment,
   });
 
@@ -127,9 +123,7 @@ const EnterCommentBottomBar: React.FC<Props> = ({
         style={styles.postButton}
         loading={loading}
         onPress={handlePostComment}>
-        <Typography.Button3 style={{color: theme.colors.white}}>
-          {t('post')}
-        </Typography.Button3>
+        <Typography.Button3 style={{ color: theme.colors.white }}>{t('post')}</Typography.Button3>
       </Button>
     );
   }, [comment, loading, commentAttachment]);
@@ -140,24 +134,21 @@ const EnterCommentBottomBar: React.FC<Props> = ({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Shadow
         stretch={true}
-        style={[styles.shadow, !keyboardShow ? {paddingBottom: bottom} : {}]}
+        style={[styles.shadow, !keyboardShow ? { paddingBottom: bottom } : {}]}
         startColor="rgba(51, 51, 51, 0.1)"
         distance={30}>
         <View style={styles.container}>
           {profileImage ? (
             <FastImage source={profileImage} style={styles.profilePic} />
           ) : (
-            <ActivityIndicator
-              color={theme.colors.surfaceBlack}
-              style={styles.profilePic}
-            />
+            <ActivityIndicator color={theme.colors.surfaceBlack} style={styles.profilePic} />
           )}
           <View style={styles.textInputContainer}>
             {commentAttachment && (
               <Spacer paddingBottom={12}>
                 <SelectedCommentImage
                   handlePress={resetCommentAttachment}
-                  source={{uri: commentAttachment.uri}}
+                  source={{ uri: commentAttachment.uri }}
                 />
               </Spacer>
             )}

@@ -1,8 +1,8 @@
-import {magnifyingGlass} from 'assets/images';
-import React, {useEffect, useRef} from 'react';
-import {TextInput, View} from 'react-native';
+import { magnifyingGlass } from 'assets/images';
+import React, { useEffect, useRef } from 'react';
+import { TextInput, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -13,13 +13,7 @@ type Props = {
   focused?: boolean;
 };
 
-const HomeSearchBar = ({
-  handleChange,
-  searchPlaceHolder,
-  onFocus,
-  onBlur,
-  focused,
-}: Props) => {
+const HomeSearchBar = ({ handleChange, searchPlaceHolder, onFocus, onBlur, focused }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const textInputRef = useRef<TextInput>(null);

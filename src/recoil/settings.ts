@@ -1,10 +1,10 @@
 import React from 'react';
-import {DesmosTestnet} from '@desmoslabs/desmjs/build/types/chains';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {AppSettings} from 'types/settings';
+import { DesmosTestnet } from '@desmoslabs/desmjs/build/types/chains';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { AppSettings } from 'types/settings';
 import EnvConfig from 'config/EnvConfig';
-import {DesmosMainnet} from '@desmoslabs/desmjs';
+import { DesmosMainnet } from '@desmoslabs/desmjs';
 
 /**
  * Default application settings
@@ -30,7 +30,7 @@ const settingsAppState = atom<AppSettings>({
     return savedSettings || DefaultAppSettings;
   })(),
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(newSettingsValues => {
         setMMKV(MMKVKEYS.APP_SETTINGS, newSettingsValues);
       });
@@ -45,7 +45,7 @@ const settingState = selectorFamily({
   key: 'setting',
   get:
     (key: keyof AppSettings) =>
-    ({get}) => {
+    ({ get }) => {
       const settings = get(settingsAppState);
       return settings[key];
     },

@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
-import {useTheme} from 'react-native-paper';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { useTheme } from 'react-native-paper';
 
 type Props = {
   /**
@@ -50,10 +50,7 @@ const RadialTextCounter = ({
     return max - current;
   }, [current, max]);
 
-  const showWarning = React.useMemo(
-    () => remainingChars < 10,
-    [remainingChars],
-  );
+  const showWarning = React.useMemo(() => remainingChars < 10, [remainingChars]);
 
   const fillColor = React.useMemo(() => {
     return customFillColor || theme.colors.iconGrey;

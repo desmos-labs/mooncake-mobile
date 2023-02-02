@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {action} from '@storybook/addon-actions';
-import {tipIcon} from 'assets/images';
-import {storiesOf} from '@storybook/react-native';
+import { action } from '@storybook/addon-actions';
+import { tipIcon } from 'assets/images';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import Typography from 'components/Typography';
 import InteractionButton from './index';
 
@@ -37,16 +37,16 @@ storiesOf('components/InteractionButton', module)
     </SbContainer>
   ))
   .add('Default', () => (
-    <View style={{alignItems: 'center'}}>
+    <View style={{ alignItems: 'center' }}>
       <Typography.Body1>Less than 1000</Typography.Body1>
       <InteractionButton {...LessThan1000} />
 
-      <Typography.Body1 style={{marginTop: 24}}>1000 - 999999</Typography.Body1>
+      <Typography.Body1 style={{ marginTop: 24 }}>1000 - 999999</Typography.Body1>
       <InteractionButton {...LessThan1000000} interactionCount={2560} />
 
       <InteractionButton {...LessThan1000000} />
 
-      <Typography.Body1 style={{marginTop: 24}}>{'>1000000'}</Typography.Body1>
+      <Typography.Body1 style={{ marginTop: 24 }}>{'>1000000'}</Typography.Body1>
       <InteractionButton {...If1000000AndMore} />
     </View>
   ));

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {checkboxChecked, checkboxUnchecked} from 'assets/images';
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated';
-import {makeStyle} from 'config/theme';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { checkboxChecked, checkboxUnchecked } from 'assets/images';
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { makeStyle } from 'config/theme';
 
 type Props = {
   /**
@@ -45,29 +45,19 @@ const CustomCheckbox = ({
 
     return {
       opacity,
-      transform: [{scale}],
+      transform: [{ scale }],
     };
   });
 
   return (
-    <TouchableOpacity
-      accessibilityLabel={accessibilityLabel}
-      onPress={handlePress}>
+    <TouchableOpacity accessibilityLabel={accessibilityLabel} onPress={handlePress}>
       <Image
         source={checkboxUnchecked}
-        style={[
-          styles.image,
-          error && styles.errorTint,
-          checked && styles.checkedTint,
-        ]}
+        style={[styles.image, error && styles.errorTint, checked && styles.checkedTint]}
       />
       <Animated.Image
         source={checkboxChecked}
-        style={[
-          StyleSheet.absoluteFillObject,
-          styles.image,
-          animatedCheckStyle,
-        ]}
+        style={[StyleSheet.absoluteFillObject, styles.image, animatedCheckStyle]}
       />
     </TouchableOpacity>
   );

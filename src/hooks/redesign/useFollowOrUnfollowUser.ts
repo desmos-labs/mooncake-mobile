@@ -5,7 +5,7 @@ import {
   useHasFollowedUser,
   useRemoveFollowedUser,
 } from '@recoil/redesign/relationships';
-import {useLazyQuery} from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
   MsgCreateRelationshipEncodeObject,
@@ -14,7 +14,7 @@ import {
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
 import useAppConfig from 'hooks/redesign/useAppConfig';
-import {useActiveAddress} from '@recoil/redesign/wallets';
+import { useActiveAddress } from '@recoil/redesign/wallets';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
@@ -26,7 +26,7 @@ const useDoesRelationshipExistRemotely = () => {
 
   return React.useCallback(
     async (address: string, counterparty: string) => {
-      const {data} = await getRelationship({
+      const { data } = await getRelationship({
         variables: {
           userAddress: address,
           counterpartyAddress: counterparty,
@@ -64,7 +64,7 @@ const useFollowUser = () => {
 
         // Broadcast the transaction
         // TODO: Handle if the broadcastTx returns an error
-        await broadcastTx([messageCreateRelationship], {optimistic: true});
+        await broadcastTx([messageCreateRelationship], { optimistic: true });
       }
 
       // Add the relationships locally
@@ -100,7 +100,7 @@ const useUnfollowUser = () => {
 
         // Broadcasts the transaction
         // TODO: Handle if broadcastTx returns an error
-        await broadcastTx([messageDeleteRelationship], {optimistic: true});
+        await broadcastTx([messageDeleteRelationship], { optimistic: true });
       }
 
       // Delete the relationship locally

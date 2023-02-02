@@ -7,7 +7,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import {ColorValue, StyleSheet} from 'react-native';
+import { ColorValue, StyleSheet } from 'react-native';
 
 type Props = {
   /**
@@ -26,7 +26,7 @@ type Props = {
   size: number;
 };
 
-const AnimatedRing = ({delay, color, size}: Props) => {
+const AnimatedRing = ({ delay, color, size }: Props) => {
   const ring = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -55,7 +55,7 @@ const AnimatedRing = ({delay, color, size}: Props) => {
     <Animated.View
       style={[
         styles.ring,
-        {borderColor: color, height: size, width: size, borderRadius: size},
+        { borderColor: color, height: size, width: size, borderRadius: size },
         animatedStyle,
       ]}
     />

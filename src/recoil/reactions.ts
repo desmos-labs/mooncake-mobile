@@ -1,6 +1,6 @@
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {DataStatus, PostID, PostReaction} from 'types/desmos';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { DataStatus, PostID, PostReaction } from 'types/desmos';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 
 /**
@@ -11,7 +11,7 @@ const reactionsState = atom<Record<string, PostReaction[]>>({
   key: 'reactionsState',
   default: getMMKV(MMKVKEYS.POST_REACTIONS) || {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(reactions => {
         setMMKV(MMKVKEYS.POST_REACTIONS, reactions);
       });
@@ -106,9 +106,7 @@ export const useRemovePostReaction = () => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions[user] ?? [];
-        const filteredReactions = existingReactions.filter(
-          reaction => reaction.postId !== postId,
-        );
+        const filteredReactions = existingReactions.filter(reaction => reaction.postId !== postId);
 
         // Store the new values
         const newReactions: Record<string, PostReaction[]> = {

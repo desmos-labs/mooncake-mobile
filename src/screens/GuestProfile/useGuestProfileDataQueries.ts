@@ -1,13 +1,10 @@
 import useNumRelationships from '@recoil/numRelationshipState';
 import useProfileDataGivenAddress from 'hooks/useProfileDataGivenAddress';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 const useGuestProfileDataQueries = (guestAddress: string) => {
-  const {
-    visitingProfileData,
-    visitingProfileLoading,
-    refetchVisitingProfileData,
-  } = useProfileDataGivenAddress(guestAddress || '');
+  const { visitingProfileData, visitingProfileLoading, refetchVisitingProfileData } =
+    useProfileDataGivenAddress(guestAddress || '');
 
   /**
    * Refetch profile data if address changes
@@ -17,8 +14,7 @@ const useGuestProfileDataQueries = (guestAddress: string) => {
     refetchVisitingProfileData();
   }, []);
 
-  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
-    visitingProfileData;
+  const { address, bio, dtag, cover_pic, profile_pic, nickname } = visitingProfileData;
 
   const profileLoading = visitingProfileLoading;
 

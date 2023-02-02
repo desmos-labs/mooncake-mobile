@@ -1,4 +1,4 @@
-import {useRecoilValue} from 'recoil';
+import { useRecoilValue } from 'recoil';
 import pendingTxState from '@recoil/pendingTx/pendingTxState';
 
 /**

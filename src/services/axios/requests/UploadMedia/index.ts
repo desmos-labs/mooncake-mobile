@@ -1,8 +1,8 @@
 import axiosInstance from 'services/axios';
-import {Platform} from 'react-native';
-import {Asset} from 'react-native-image-picker';
-import {AxiosProgressEvent} from 'axios/index';
-import {err, ok, Result} from 'neverthrow';
+import { Platform } from 'react-native';
+import { Asset } from 'react-native-image-picker';
+import { AxiosProgressEvent } from 'axios/index';
+import { err, ok, Result } from 'neverthrow';
 
 export type UploadEvent = {
   /**
@@ -68,8 +68,8 @@ export interface UploadMediaSuccess {
 export const UploadMedia = async (
   params: UploadMediaParams,
 ): Promise<Result<UploadMediaSuccess, Error>> => {
-  const {mediaFile, onUploadProgress} = params;
-  const {fileName, type, uri} = mediaFile;
+  const { mediaFile, onUploadProgress } = params;
+  const { fileName, type, uri } = mediaFile;
 
   const formData = new FormData();
   formData.append('file', {

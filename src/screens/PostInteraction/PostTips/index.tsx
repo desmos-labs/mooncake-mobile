@@ -1,20 +1,16 @@
-import {
-  CompositeScreenProps,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {defaultProfilePic} from 'assets/images';
+import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { defaultProfilePic } from 'assets/images';
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/FormatUtils';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
+import { formatNumShorthand } from 'lib/FormatUtils';
+import { MMKVKEYS, useMMKVStorage } from 'lib/MMKVStorage';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
+import { FlatList, ListRenderItemInfo } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
@@ -27,32 +23,26 @@ type NavProps = CompositeScreenProps<
 >;
 
 const PostTips = () => {
-  const {t} = useTranslation('postInteraction');
+  const { t } = useTranslation('postInteraction');
   const theme = useTheme();
   const {
-    params: {postId, subspaceId},
+    params: { postId, subspaceId },
   } = useRoute<NavProps['route']>();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
-  const [activeAddress] = useMMKVStorage<string | undefined>(
-    MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS,
-  );
-  const {tips, tipsLoading, tipsRefetch} = useHooks({
+  const [activeAddress] = useMMKVStorage<string | undefined>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
+  const { tips, tipsLoading, tipsRefetch } = useHooks({
     postId,
     subspaceId,
   });
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({ item }: ListRenderItemInfo<any>) => {
       return (
         <TipItem
           address={item.sender?.address}
           tipAmount={item.amount[0]}
-          avatar={
-            item.sender.profile_pic
-              ? {uri: item.sender.profile_pic}
-              : defaultProfilePic
-          }
+          avatar={item.sender.profile_pic ? { uri: item.sender.profile_pic } : defaultProfilePic}
           nickname={item.sender.nickname}
           dTag={item.sender.dtag}
         />
@@ -62,7 +52,7 @@ const PostTips = () => {
   );
 
   const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS, {postAuthor: activeAddress!});
+    navigate(ROUTES.SEND_TIPS, { postAuthor: activeAddress! });
   }, [activeAddress]);
 
   const ListEmptyComponent = React.useCallback(() => {
@@ -72,7 +62,7 @@ const PostTips = () => {
         additionalButton
         buttonLabel={t('tip')}
         handleButton={handlePressSendTips}
-        additionalButtonStyle={{backgroundColor: theme.colors.black}}
+        additionalButtonStyle={{ backgroundColor: theme.colors.black }}
       />
     );
   }, []);

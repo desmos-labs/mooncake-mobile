@@ -1,11 +1,9 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {action} from '@storybook/addon-actions';
-import {storiesOf} from '@storybook/react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { action } from '@storybook/addon-actions';
+import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import ConfirmModal, {
-  ConfirmModalParams,
-} from 'screens/Modals/ConfirmModal/index';
+import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal/index';
 import SbContainer from 'storybook/decorators/SbContainer';
 
 type StackParams = {

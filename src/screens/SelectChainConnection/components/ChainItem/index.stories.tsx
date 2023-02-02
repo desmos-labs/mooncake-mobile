@@ -1,9 +1,9 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem/index';
-import {desmosIcon} from 'assets/images';
-import {action} from '@storybook/addon-actions';
+import { desmosIcon } from 'assets/images';
+import { action } from '@storybook/addon-actions';
 
 storiesOf('components/ChainItem', module)
   .addDecorator(s => (

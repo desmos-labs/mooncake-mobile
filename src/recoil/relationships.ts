@@ -1,13 +1,13 @@
 import React from 'react';
-import {DataStatus, FollowedUser} from 'types/desmos';
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { DataStatus, FollowedUser } from 'types/desmos';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 
 const followageState = atom<Record<string, FollowedUser[]>>({
   key: 'followageState',
   default: getMMKV(MMKVKEYS.FOLLOWAGE) || {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(followage => {
         setMMKV(MMKVKEYS.FOLLOWAGE, followage);
       });
@@ -133,9 +133,7 @@ export const useRemoveFollowedUser = () => {
       setFollowage(currentFollowage => {
         // Add the new followed user
         const existingFollowage = currentFollowage[user] ?? [];
-        const filteredFollowage = existingFollowage.filter(
-          f => f.address !== address,
-        );
+        const filteredFollowage = existingFollowage.filter(f => f.address !== address);
 
         const newFollowage: Record<string, FollowedUser[]> = {
           ...currentFollowage,

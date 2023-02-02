@@ -1,4 +1,4 @@
-import {makeStyleWithProps} from 'config/theme';
+import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((props: any, theme) => ({
   container: {
@@ -24,7 +24,7 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  topBarImage: {height: 32, width: 32},
+  topBarImage: { height: 32, width: 32 },
   divider: {
     marginHorizontal: -theme.spacing.m,
     height: 8,

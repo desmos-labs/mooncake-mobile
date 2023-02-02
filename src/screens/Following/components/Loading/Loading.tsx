@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
-import {View} from 'react-native';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
+import React, { FC } from 'react';
+import { View } from 'react-native';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 /**

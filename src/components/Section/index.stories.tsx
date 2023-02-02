@@ -2,7 +2,7 @@ import SectionButton from 'components/SectionButton';
 import SectionSwitch from 'components/SectionSwitch';
 import SectionText from 'components/SectionText';
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import Typography from '../Typography';
 import Section from './index';
@@ -60,10 +60,6 @@ const SectionWithButtons: CompProps = {
 };
 
 storiesOf('components/Section', module)
-  .addDecorator(getStories => (
-    <SbContainer padding={16}>{getStories()}</SbContainer>
-  ))
+  .addDecorator(getStories => <SbContainer padding={16}>{getStories()}</SbContainer>)
   .add('Section with typography', () => <Section {...SectionProps} />)
-  .add('Section with nested childrens', () => (
-    <Section {...SectionWithButtons} />
-  ));
+  .add('Section with nested childrens', () => <Section {...SectionWithButtons} />);

@@ -1,42 +1,39 @@
-import {StackScreenProps} from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {Snackbar, useTheme} from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { Snackbar, useTheme } from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
-import {ChainLink} from 'types/desmos';
+import { ChainLink } from 'types/desmos';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
 import ImageButton from 'components/ImageButton';
-import {addButton} from 'assets/images';
-import {useChainLinks} from '@recoil/chainLinks';
+import { addButton } from 'assets/images';
+import { useChainLinks } from '@recoil/chainLinks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.MANAGE_CONNECTED_CHAINS
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
 
 const ManageConnectedChains = () => {
-  const {t} = useTranslation('manageChains');
+  const { t } = useTranslation('manageChains');
   const styles = useStyles();
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
 
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  const {chainAccount, activeAddress} = useActiveAccount();
+  const { chainAccount, activeAddress } = useActiveAccount();
 
-  const {chainLinks} = useChainLinks(activeAddress!);
+  const { chainLinks } = useChainLinks(activeAddress!);
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
@@ -94,9 +91,7 @@ const ManageConnectedChains = () => {
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
           <View style={styles.headerTextGroup}>
-            <Typography.H4 style={{flex: 1}}>
-              {t('connectedAddresses')}
-            </Typography.H4>
+            <Typography.H4 style={{ flex: 1 }}>{t('connectedAddresses')}</Typography.H4>
 
             <ImageButton
               onPress={() => {
@@ -107,9 +102,7 @@ const ManageConnectedChains = () => {
             />
           </View>
 
-          <Typography.Body5 style={styles.descriptionText}>
-            {t('description')}
-          </Typography.Body5>
+          <Typography.Body5 style={styles.descriptionText}>{t('description')}</Typography.Body5>
         </View>
 
         <GradientBorder height={5} />
@@ -121,7 +114,7 @@ const ManageConnectedChains = () => {
         ListEmptyComponent={ListEmptyComponent}
         contentContainerStyle={styles.flatListContainer}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        style={{overflow: 'visible'}}
+        style={{ overflow: 'visible' }}
       />
       <Snackbar
         visible={showSnackbar}

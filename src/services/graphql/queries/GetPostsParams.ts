@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetPostsParams = gql`
   query ProfileParams @api(name: desmos) {

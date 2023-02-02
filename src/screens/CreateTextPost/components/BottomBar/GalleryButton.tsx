@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity } from 'react-native';
 
 type Props = {
   image: ImageSourcePropType;
@@ -12,7 +7,7 @@ type Props = {
   handlePress: () => void;
 };
 
-const GalleryButton = ({image, handlePress}: Props) => {
+const GalleryButton = ({ image, handlePress }: Props) => {
   return (
     <TouchableOpacity onPress={handlePress}>
       <Image source={image} style={styles.imageStyle} />

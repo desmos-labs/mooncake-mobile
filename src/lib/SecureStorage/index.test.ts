@@ -1,8 +1,4 @@
-import {
-  decryptData,
-  deriveSecurePassword,
-  encryptData,
-} from 'lib/EncryptionUtils';
+import { decryptData, deriveSecurePassword, encryptData } from 'lib/EncryptionUtils';
 import {
   deleteLocalWallet,
   deleteMnemonic,
@@ -20,7 +16,7 @@ import {
   resetGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
-import {ChainAccount, ChainAccountType} from 'types/chains';
+import { ChainAccount, ChainAccountType } from 'types/chains';
 import LocalWallet from 'lib/LocalWallet';
 
 jest.mock('lib/EncryptionUtils', () => ({
@@ -80,7 +76,7 @@ describe('lib/SecureStorage', () => {
     });
 
     it('saves appends new accounts to existing accounts list', async () => {
-      (getGenericPassword as jest.Mock).mockResolvedValue({password: '[{}]'});
+      (getGenericPassword as jest.Mock).mockResolvedValue({ password: '[{}]' });
 
       const mockAccountData: ChainAccount = {
         type: ChainAccountType.Local,
@@ -111,14 +107,12 @@ describe('lib/SecureStorage', () => {
     it('retrieves all accounts stored in keychain', async () => {
       await getAccounts();
 
-      expect(getGenericPassword).toHaveBeenCalledWith({service: 'ACCOUNTS'});
+      expect(getGenericPassword).toHaveBeenCalledWith({ service: 'ACCOUNTS' });
     });
   });
   describe('saveLocalWallet', () => {
     it('saves a new wallet if no existing wallets are found', async () => {
-      (deriveSecurePassword as jest.Mock).mockReturnValue(
-        'mockDerivedSecurePassword',
-      );
+      (deriveSecurePassword as jest.Mock).mockReturnValue('mockDerivedSecurePassword');
 
       (encryptData as jest.Mock).mockReturnValue({
         value: 'mockEncrypteddWalletData',
@@ -155,7 +149,7 @@ describe('lib/SecureStorage', () => {
   // TODO: write test for retrieving with biometrics
   describe('getLocalWallet', () => {
     it('returns deserialized localWallet by key', async () => {
-      (getGenericPassword as jest.Mock).mockResolvedValue({password: '[]'});
+      (getGenericPassword as jest.Mock).mockResolvedValue({ password: '[]' });
       (decryptData as jest.Mock).mockReturnValue(
         JSON.stringify({
           version: 3,
@@ -185,23 +179,19 @@ describe('lib/SecureStorage', () => {
 
       await saveMnemonic('mockAddress', 'mockMnemonic', 'mockPassword');
 
-      expect(setGenericPassword).toHaveBeenCalledWith(
-        'secureValue',
-        '"mockEncryptedMnemonic"',
-        {service: 'mockAddress_MNEMONIC'},
-      );
+      expect(setGenericPassword).toHaveBeenCalledWith('secureValue', '"mockEncryptedMnemonic"', {
+        service: 'mockAddress_MNEMONIC',
+      });
     });
   });
 
   // TODO: write tests for biometrics
   describe('getMnemonic', () => {
     it('retrieves a stored mnemonic from secure storage', async () => {
-      (deriveSecurePassword as jest.Mock).mockReturnValue(
-        'mockDerivedSecurePassword',
-      );
+      (deriveSecurePassword as jest.Mock).mockReturnValue('mockDerivedSecurePassword');
 
       (getGenericPassword as jest.Mock).mockResolvedValue({
-        password: JSON.stringify({value: 'mockStoredMnemonic'}),
+        password: JSON.stringify({ value: 'mockStoredMnemonic' }),
       });
 
       await getMnemonic('mockAddress', 'mockPassword');
@@ -209,7 +199,7 @@ describe('lib/SecureStorage', () => {
       expect(deriveSecurePassword).toHaveBeenCalledWith('mockPassword');
 
       expect(decryptData).toHaveBeenCalledWith(
-        {value: 'mockStoredMnemonic'},
+        { value: 'mockStoredMnemonic' },
         'mockDerivedSecurePassword',
       );
     });

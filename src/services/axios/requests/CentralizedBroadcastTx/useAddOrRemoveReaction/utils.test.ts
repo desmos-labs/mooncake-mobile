@@ -1,13 +1,13 @@
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import {
   MsgAddReaction,
   MsgRemoveReaction,
 } from '@desmoslabs/desmjs-types/desmos/reactions/v1/msgs';
 import EnvConfig from 'config/EnvConfig';
-import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
-import {RegisteredReactionValue} from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
+import { convertRegisteredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
+import { RegisteredReactionValue } from '@desmoslabs/desmjs-types/desmos/reactions/v1/models';
 import axiosInstance from 'services/axios';
-import {manageReaction} from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction/utils';
+import { manageReaction } from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction/utils';
 
 const mockEncodeToAmino = jest.fn(() => 'mockAminoEncodedMessage');
 
@@ -22,9 +22,7 @@ jest.mock('@desmoslabs/desmjs', () => ({
 
 const mockCentralizedBroadcastTx = jest.fn();
 jest.mock('services/axios/requests/CentralizedBroadcastTx', () => {
-  const actual = jest.requireActual(
-    'services/axios/requests/CentralizedBroadcastTx',
-  );
+  const actual = jest.requireActual('services/axios/requests/CentralizedBroadcastTx');
 
   return {
     encodeAndBroadcastTx: actual.encodeAndBroadcastTx,
@@ -45,7 +43,7 @@ describe('hooks: useManageReactions', () => {
   it('adds a reaction', async () => {
     const mockTxHash = 'mockTxHash';
     (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
-      data: {tx_hash: mockTxHash},
+      data: { tx_hash: mockTxHash },
     });
 
     await manageReaction({
@@ -83,7 +81,7 @@ describe('hooks: useManageReactions', () => {
 
     const mockTxHash = 'mockTxHash';
     (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
-      data: {tx_hash: mockTxHash},
+      data: { tx_hash: mockTxHash },
     });
 
     await manageReaction({

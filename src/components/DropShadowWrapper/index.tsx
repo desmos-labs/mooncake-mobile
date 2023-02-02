@@ -1,6 +1,6 @@
 import React from 'react';
-import {ColorValue, StyleProp, ViewProps, ViewStyle} from 'react-native';
-import {Shadow} from 'react-native-shadow-2';
+import { ColorValue, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
 export type Props = ViewProps & {

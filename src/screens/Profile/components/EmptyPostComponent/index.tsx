@@ -1,21 +1,21 @@
-import {errorImage} from 'assets/images';
+import { errorImage } from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
-import {Image, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { Image, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 interface Props {
   textLabel: string;
   buttonLabel: string;
 }
 
-const EmptyPostComponent = ({textLabel, buttonLabel}: Props) => {
+const EmptyPostComponent = ({ textLabel, buttonLabel }: Props) => {
   const theme = useTheme();
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Spacer paddingVertical={theme.spacing.m} />
       <Image
         style={{
@@ -26,9 +26,7 @@ const EmptyPostComponent = ({textLabel, buttonLabel}: Props) => {
         }}
         source={errorImage}
       />
-      <Typography.Body6 style={{textAlign: 'center'}}>
-        {textLabel}
-      </Typography.Body6>
+      <Typography.Body6 style={{ textAlign: 'center' }}>{textLabel}</Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
       <Button
         mode="outlined"

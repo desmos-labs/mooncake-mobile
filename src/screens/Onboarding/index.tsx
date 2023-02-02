@@ -1,28 +1,20 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {
-  bgonboarding,
-  onboarding1,
-  onboarding2,
-  onboarding3,
-  onboarding4,
-} from 'assets/images';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Animated as ClassicAnimated, Dimensions, View} from 'react-native';
-import {ScalingDot} from 'react-native-animated-pagination-dots';
-import FastImage, {Source} from 'react-native-fast-image';
-import PagerView, {
-  PagerViewOnPageScrollEventData,
-} from 'react-native-pager-view';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Animated as ClassicAnimated, Dimensions, View } from 'react-native';
+import { ScalingDot } from 'react-native-animated-pagination-dots';
+import FastImage, { Source } from 'react-native-fast-image';
+import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
@@ -40,10 +32,10 @@ interface OnboardingData {
 }
 
 const Onboarding = () => {
-  const {t} = useTranslation('onboarding');
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('onboarding');
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const {
-    params: {invited},
+    params: { invited },
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
@@ -72,22 +64,17 @@ const Onboarding = () => {
     },
   ];
 
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
   const ref = React.useRef<PagerView>(null);
-  const scrollOffsetAnimatedValue = React.useRef(
-    new ClassicAnimated.Value(0),
-  ).current;
-  const positionAnimatedValue = React.useRef(
-    new ClassicAnimated.Value(0),
-  ).current;
+  const scrollOffsetAnimatedValue = React.useRef(new ClassicAnimated.Value(0)).current;
+  const positionAnimatedValue = React.useRef(new ClassicAnimated.Value(0)).current;
   const inputRange = [0, data.length];
-  const scrollX = ClassicAnimated.add(
-    scrollOffsetAnimatedValue,
-    positionAnimatedValue,
-  ).interpolate({
-    inputRange,
-    outputRange: [0, data.length * width],
-  });
+  const scrollX = ClassicAnimated.add(scrollOffsetAnimatedValue, positionAnimatedValue).interpolate(
+    {
+      inputRange,
+      outputRange: [0, data.length * width],
+    },
+  );
 
   const onPageScroll = React.useMemo(
     () =>
@@ -119,17 +106,11 @@ const Onboarding = () => {
     return (
       <View key={item.title} style={styles.itemView}>
         <Spacer paddingTop={50} paddingBottom={30}>
-          <FastImage
-            source={item.imageSrc}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <FastImage source={item.imageSrc} style={styles.image} resizeMode="cover" />
         </Spacer>
         <Typography.H3>{item.title}</Typography.H3>
         <Spacer paddingVertical={theme.spacing.s} />
-        <Typography.Body6 style={{textAlign: 'center'}}>
-          {item.subtitle}
-        </Typography.Body6>
+        <Typography.Body6 style={{ textAlign: 'center' }}>{item.subtitle}</Typography.Body6>
       </View>
     );
   }, []);
@@ -140,7 +121,7 @@ const Onboarding = () => {
       style={styles.root}
       topBar={
         <TopBar
-          style={{zIndex: 2}}
+          style={{ zIndex: 2 }}
           noBackButton={true}
           rightElement={
             selected !== 3 ? (
@@ -156,7 +137,7 @@ const Onboarding = () => {
                 <Typography.Button2>{t('skip')}</Typography.Button2>
               </Button>
             ) : (
-              <View style={{height: 37}} />
+              <View style={{ height: 37 }} />
             )
           }
         />
@@ -166,18 +147,16 @@ const Onboarding = () => {
       backgroundColor={theme.colors.background}>
       <AnimatedPagerView
         ref={ref}
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         initialPage={0}
         onPageScroll={onPageScroll}
-        onPageSelected={(selectedEvent: any) =>
-          setSelected(selectedEvent.nativeEvent.position)
-        }>
+        onPageSelected={(selectedEvent: any) => setSelected(selectedEvent.nativeEvent.position)}>
         {data.map(item => {
           return renderItem(item);
         })}
       </AnimatedPagerView>
       {selected === 3 ? (
-        <View style={{marginHorizontal: theme.spacing.m}}>
+        <View style={{ marginHorizontal: theme.spacing.m }}>
           <Button
             mode="contained"
             color={theme.colors.surfaceBlack}

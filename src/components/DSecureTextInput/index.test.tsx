@@ -1,7 +1,7 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import DSecureTextInput from 'components/DSecureTextInput/index';
-import {fireEvent} from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 import LightTheme from 'config/theme/LightTheme';
 
 describe('component: DSecureTextInput', () => {
@@ -12,7 +12,7 @@ describe('component: DSecureTextInput', () => {
   });
 
   it('shows hidden values when eye button is pressed', () => {
-    const {getByLabelText} = render(
+    const { getByLabelText } = render(
       <DSecureTextInput accessibilityLabel="testInput" value="hello world" />,
     );
     fireEvent.press(getByLabelText('testInput-hidden'));
@@ -21,7 +21,7 @@ describe('component: DSecureTextInput', () => {
   });
 
   it('eye button changes depending if values are hidden or visible', () => {
-    const {getByLabelText} = render(
+    const { getByLabelText } = render(
       <DSecureTextInput accessibilityLabel="testInput" value="hello world" />,
     );
 
@@ -34,11 +34,8 @@ describe('component: DSecureTextInput', () => {
 
   it('calls on outerFocus when focused', () => {
     const mockOnOuterFocus = jest.fn();
-    const {getByLabelText} = render(
-      <DSecureTextInput
-        onOuterFocus={mockOnOuterFocus}
-        accessibilityLabel="testInput"
-      />,
+    const { getByLabelText } = render(
+      <DSecureTextInput onOuterFocus={mockOnOuterFocus} accessibilityLabel="testInput" />,
     );
 
     fireEvent(getByLabelText('testInput'), 'onFocus');
@@ -48,9 +45,7 @@ describe('component: DSecureTextInput', () => {
 
   // This will test both the focused icon color as well as the onBlur function
   it('eye button iconColor changes depending on whether input is focused', () => {
-    const {getByLabelText} = render(
-      <DSecureTextInput accessibilityLabel="testInput" />,
-    );
+    const { getByLabelText } = render(<DSecureTextInput accessibilityLabel="testInput" />);
 
     fireEvent(getByLabelText('testInput'), 'onFocus');
 

@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -32,7 +32,7 @@ const useStyles = makeStyle(theme => ({
     marginLeft: 'auto',
     color: theme.colors.red01,
   },
-  flexRowView: {flexDirection: 'row', alignItems: 'center'},
+  flexRowView: { flexDirection: 'row', alignItems: 'center' },
 }));
 
 export default useStyles;

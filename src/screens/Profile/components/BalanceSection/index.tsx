@@ -1,11 +1,11 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
-import {Divider, useTheme} from 'react-native-paper';
-import {verticalScale} from 'react-native-size-matters';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
+import { verticalScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 
@@ -24,16 +24,12 @@ const BalanceSection = ({
 }) => {
   const theme = useTheme();
   const styles = useStyles();
-  const {t} = useTranslation('profile');
-  const {navigate} = useNavigation<any>();
+  const { t } = useTranslation('profile');
+  const { navigate } = useNavigation<any>();
   return (
     <View>
       {balanceData && !balanceLoading ? (
-        <View
-          style={[
-            styles.container,
-            !guestProfile && {height: verticalScale(140)},
-          ]}>
+        <View style={[styles.container, !guestProfile && { height: verticalScale(140) }]}>
           <Typography.Body6>
             {convertedBalance?.balance?.denom.toUpperCase()} {t('balance')}
           </Typography.Body6>
@@ -41,10 +37,9 @@ const BalanceSection = ({
             style={{
               color: theme.colors.surfaceBlack,
             }}>
-            {convertedBalance?.balance?.amount}{' '}
-            {convertedBalance?.balance?.denom.toUpperCase()}
+            {convertedBalance?.balance?.amount} {convertedBalance?.balance?.denom.toUpperCase()}
           </Typography.H3>
-          <Typography.Body6 style={{color: theme.colors.midGrey}}>
+          <Typography.Body6 style={{ color: theme.colors.midGrey }}>
             $ {convertedBalance?.convertedAmount}
           </Typography.Body6>
           {!guestProfile && (
@@ -52,7 +47,7 @@ const BalanceSection = ({
               <Divider style={styles.divider} />
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigate(ROUTES.OPERATIONS, {address})}>
+                onPress={() => navigate(ROUTES.OPERATIONS, { address })}>
                 <Typography.Body6
                   style={{
                     marginRight: theme.spacing.s,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import i18next from 'i18next';
 
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import PostTypeTab from './index';
 
@@ -13,10 +13,7 @@ const RenderDefault = () => {
     <PostTypeTab
       selectedIndex={selectedIndex}
       setSelectedIndex={setSelectedIndex}
-      postTypes={[
-        i18next.t('home:DISCOVER_POSTS'),
-        i18next.t('home:FOLLOWING_POSTS'),
-      ]}
+      postTypes={[i18next.t('home:DISCOVER_POSTS'), i18next.t('home:FOLLOWING_POSTS')]}
     />
   );
 };

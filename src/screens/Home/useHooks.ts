@@ -1,12 +1,12 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {POST_TYPE} from '@recoil/posts';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { POST_TYPE } from '@recoil/posts';
 import EnvConfig from 'config/EnvConfig';
 import useGetPosts from 'hooks/useGetPosts';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import usePendingPosts from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {NavProps} from 'screens/Home';
+import React, { useCallback } from 'react';
+import { NavProps } from 'screens/Home';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 
@@ -19,23 +19,17 @@ const postFamilyMap = {
  * Hooks for the Home screen.
  */
 const useHooks = () => {
-  const {name: routeName} = useRoute<NavProps['route']>();
-  const {handleNavigateToProfile} = useNavigateToProfile();
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const {addOrRemoveReaction} = useAddOrRemoveReaction();
-  const {parsedPendingPosts} = usePendingPosts();
-  const {
-    posts,
-    fetchMorePosts,
-    fetchNewestPosts,
-    loading,
-    refetching,
-    fetchingMore,
-  } = useGetPosts({
-    type: postFamilyMap[routeName],
-  });
+  const { name: routeName } = useRoute<NavProps['route']>();
+  const { handleNavigateToProfile } = useNavigateToProfile();
+  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { addOrRemoveReaction } = useAddOrRemoveReaction();
+  const { parsedPendingPosts } = usePendingPosts();
+  const { posts, fetchMorePosts, fetchNewestPosts, loading, refetching, fetchingMore } =
+    useGetPosts({
+      type: postFamilyMap[routeName],
+    });
 
-  const {followOrUnfollowUser} = useFollowOrUnfollowUser();
+  const { followOrUnfollowUser } = useFollowOrUnfollowUser();
 
   // sort and combine pending posts with posts from API
   const combinedPosts: Partial<PostItem>[] = React.useMemo(() => {
@@ -49,19 +43,16 @@ const useHooks = () => {
     [parsedPendingPosts],
   );
 
-  const handlePressReport = React.useCallback(
-    (postId: number, subspaceId: number) => {
-      navigate(ROUTES.REPORT_POST, {
-        postId,
-        subspaceId,
-      });
-    },
-    [],
-  );
+  const handlePressReport = React.useCallback((postId: number, subspaceId: number) => {
+    navigate(ROUTES.REPORT_POST, {
+      postId,
+      subspaceId,
+    });
+  }, []);
 
   const handlePressFollow = React.useCallback(
     async (address: string) => {
-      const result = await followOrUnfollowUser({addrToFollow: address});
+      const result = await followOrUnfollowUser({ addrToFollow: address });
       console.log('Home/handlePressFollow result', result);
     },
     [followOrUnfollowUser],
@@ -103,13 +94,10 @@ const useHooks = () => {
     });
   }, []);
 
-  const handlePressTip = React.useCallback(
-    (postAuthor: string, postId: number) => {
-      if (checkIfPostIsPending(postId)) return;
-      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
-    },
-    [],
-  );
+  const handlePressTip = React.useCallback((postAuthor: string, postId: number) => {
+    if (checkIfPostIsPending(postId)) return;
+    navigate(ROUTES.SEND_TIPS, { postAuthor, postId });
+  }, []);
 
   return {
     handlePressDetails,

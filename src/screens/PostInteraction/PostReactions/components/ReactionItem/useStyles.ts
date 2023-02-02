@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {scale, verticalScale} from 'react-native-size-matters';
+import { makeStyle } from 'config/theme';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 /**
  * Style hook for the ReactionItem component

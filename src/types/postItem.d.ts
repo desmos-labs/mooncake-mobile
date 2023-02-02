@@ -1,4 +1,4 @@
-import {Media, Poll} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { Media, Poll } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 export {};
 
@@ -68,7 +68,7 @@ declare global {
   interface PostAttachment {
     id: number;
     content: Media | Poll;
-    size: {height: number; width: number}[];
+    size: { height: number; width: number }[];
   }
 
   interface MediaContent {

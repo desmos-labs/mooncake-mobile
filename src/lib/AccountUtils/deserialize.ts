@@ -9,9 +9,9 @@ import {
   SerializableWeb3AuthAccount,
   Web3AuthAccount,
 } from 'types/account';
-import {WalletType} from 'types/wallet';
-import {stringToPath} from '@cosmjs/crypto/build/slip10';
-import {fromHex} from '@cosmjs/encoding';
+import { WalletType } from 'types/wallet';
+import { stringToPath } from '@cosmjs/crypto/build/slip10';
+import { fromHex } from '@cosmjs/encoding';
 
 const ACCOUNT_ALGOS = ['secp256k1', 'ed25519', 'sr25519'];
 
@@ -130,9 +130,7 @@ export const deserializeWeb3AuthAccount = (
   };
 };
 
-export const deserializeAccount = (
-  account: Partial<SerializableAccount>,
-): Account => {
+export const deserializeAccount = (account: Partial<SerializableAccount>): Account => {
   if (account.walletType === undefined) {
     throw new Error('invalid account');
   }

@@ -1,16 +1,9 @@
 import MaskedView from '@react-native-masked-view/masked-view';
-import React, {ElementType, ReactNode} from 'react';
-import {
-  StyleProp,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, { ElementType, ReactNode } from 'react';
+import { StyleProp, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Button, useTheme} from 'react-native-paper';
-import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
+import { Button, useTheme } from 'react-native-paper';
+import { IconSource } from 'react-native-paper/lib/typescript/components/Icon';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -23,13 +16,7 @@ export type Props = {
    * - `gradientFilled` - button with a gradient filled background color
    * - `backgroundComponent` - button with a react component filled as background
    */
-  mode?:
-    | 'text'
-    | 'outlined'
-    | 'contained'
-    | 'gradient'
-    | 'gradientFilled'
-    | 'backgroundComponent';
+  mode?: 'text' | 'outlined' | 'contained' | 'gradient' | 'gradientFilled' | 'backgroundComponent';
   /**
    * Custom text color for flat button,
    * or background color for contained button.
@@ -104,12 +91,7 @@ const MaterialButton: React.FC<Props> = props => {
     return (
       <TouchableOpacity
         disabled={disabled}
-        style={[
-          {alignSelf: 'center'},
-          styles.btnStyle,
-          style,
-          disabled && styles.disabledStyle,
-        ]}
+        style={[{ alignSelf: 'center' }, styles.btnStyle, style, disabled && styles.disabledStyle]}
         onPress={onPress}>
         <Text style={[styles.labelStyle, labelStyle]}>{children}</Text>
       </TouchableOpacity>
@@ -118,12 +100,7 @@ const MaterialButton: React.FC<Props> = props => {
 
   if (mode === 'gradient') {
     return (
-      <View
-        style={[
-          styles.container,
-          containerStyle,
-          disabled && styles.disabledStyle,
-        ]}>
+      <View style={[styles.container, containerStyle, disabled && styles.disabledStyle]}>
         <MaskedView
           style={styles.maskedView}
           maskElement={
@@ -160,11 +137,7 @@ const MaterialButton: React.FC<Props> = props => {
   if (mode === 'gradientFilled') {
     return (
       <View
-        style={[
-          styles.gradientFilledContainer,
-          containerStyle,
-          disabled && styles.disabledStyle,
-        ]}>
+        style={[styles.gradientFilledContainer, containerStyle, disabled && styles.disabledStyle]}>
         <LinearGradient
           style={[styles.maskedView, styles.linearGradient]}
           colors={theme.colors.butterYellowGradient}

@@ -9,9 +9,9 @@ import {
   SerializableWeb3AuthAccount,
   Web3AuthAccount,
 } from 'types/account';
-import {WalletType} from 'types/wallet';
-import {pathToString} from '@cosmjs/crypto';
-import {toHex} from '@cosmjs/encoding';
+import { WalletType } from 'types/wallet';
+import { pathToString } from '@cosmjs/crypto';
+import { toHex } from '@cosmjs/encoding';
 
 export const serializeMnemonicAccount = (
   account: MnemonicAccount,
@@ -24,9 +24,7 @@ export const serializeMnemonicAccount = (
   pubKey: toHex(account.pubKey),
 });
 
-export const serializeLedgerAccount = (
-  account: LedgerAccount,
-): SerializableLedgerAccount => ({
+export const serializeLedgerAccount = (account: LedgerAccount): SerializableLedgerAccount => ({
   version: AccountSerializationVersion.Ledger,
   walletType: WalletType.Ledger,
   address: account.address,

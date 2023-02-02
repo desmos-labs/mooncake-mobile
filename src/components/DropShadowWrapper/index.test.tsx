@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import DropShadowWrapper from 'components/DropShadowWrapper/index';
 
 describe('component: DropShadowWrapper', () => {

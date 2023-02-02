@@ -1,20 +1,20 @@
-import {OfflineSigner} from '@cosmjs/proto-signing';
-import {MsgRevokeAllowanceEncodeObject} from '@desmoslabs/desmjs';
-import {useNavigation} from '@react-navigation/native';
-import {authorizationImage} from 'assets/images';
+import { OfflineSigner } from '@cosmjs/proto-signing';
+import { MsgRevokeAllowanceEncodeObject } from '@desmoslabs/desmjs';
+import { useNavigation } from '@react-navigation/native';
+import { authorizationImage } from 'assets/images';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
-import {useActiveAccount} from '@recoil/accounts';
+import { useTranslation } from 'react-i18next';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
+import { useActiveAccount } from '@recoil/accounts';
 import useButterConfig from 'hooks/useButterConfig';
 
 /**
@@ -23,11 +23,11 @@ import useButterConfig from 'hooks/useButterConfig';
  */
 const useAddOrUpdateGrants = () => {
   const account = useActiveAccount();
-  const {config: butterConfig} = useButterConfig();
+  const { config: butterConfig } = useButterConfig();
 
   const getAuthzGrants = useGetAuthzGrants();
-  const {navigate} = useNavigation<any>();
-  const {t} = useTranslation();
+  const { navigate } = useNavigation<any>();
+  const { t } = useTranslation();
 
   /**
    * Remove all user's grants and authorizations from chain.
@@ -44,12 +44,10 @@ const useAddOrUpdateGrants = () => {
 
       const grantsData = await getAuthzGrants();
 
-      const {grants} = grantsData;
+      const { grants } = grantsData;
       const formattedGrants = grants.map(x => x.msg_type);
       const grantsToRevoke = selectedGrants || grants.map(x => x.msg_type);
-      const remainingGrants = formattedGrants.filter(
-        grant => !grantsToRevoke.includes(grant),
-      );
+      const remainingGrants = formattedGrants.filter(grant => !grantsToRevoke.includes(grant));
 
       console.log('Revoking the following grants:', grantsToRevoke.join(', '));
       const msgRevokeAllowanceEncode = buildRevokeAllowanceEncode({
@@ -72,15 +70,13 @@ const useAddOrUpdateGrants = () => {
             })
           : undefined;
 
-      const unlockResult = await unlockWallet({chainAccount});
+      const unlockResult = await unlockWallet({ chainAccount });
 
       if (!unlockResult) {
-        throw new Error(
-          'Error unlocking wallet or user cancelled authentication',
-        );
+        throw new Error('Error unlocking wallet or user cancelled authentication');
       }
 
-      const {wallet} = unlockResult;
+      const { wallet } = unlockResult;
 
       const combinedMessages = _.compact([
         msgRevokeAllowanceEncode,
@@ -88,10 +84,7 @@ const useAddOrUpdateGrants = () => {
         ...msgRevokeGrantEncode,
       ]);
 
-      const broadcastResult = await broadcastMessages(
-        wallet as OfflineSigner,
-        combinedMessages,
-      );
+      const broadcastResult = await broadcastMessages(wallet as OfflineSigner, combinedMessages);
 
       if (!broadcastResult) {
         throw new Error('Error deleting grants');
@@ -100,7 +93,7 @@ const useAddOrUpdateGrants = () => {
       navigate(ROUTES.TEXTONLY_MODAL, {
         title: t('common:success'),
         body: t('grants:successful revoke'),
-        bodyStyle: {textAlign: 'center'},
+        bodyStyle: { textAlign: 'center' },
         image: authorizationImage,
       });
     },
@@ -114,11 +107,11 @@ const useAddOrUpdateGrants = () => {
    * @param {GrantEnums[]} grantsToRequest - An array of grants to request.
    */
   const addOrUpdateGrants = React.useCallback(
-    async ({grantsToRequest}: {grantsToRequest: GrantEnums[]}) => {
+    async ({ grantsToRequest }: { grantsToRequest: GrantEnums[] }) => {
       if (!chainAccount) throw new Error('No active chain account found.');
       const grantsData = await getAuthzGrants();
 
-      const {has_fee_grant} = grantsData;
+      const { has_fee_grant } = grantsData;
 
       const grantee = butterConfig.desmos_address;
       const granter = chainAccount.address;
@@ -128,9 +121,7 @@ const useAddOrUpdateGrants = () => {
        * If user already has a fee grant, we need to revoke it by creating a MsgRevokeAllowanceEncodeObject
        * Otherwise, do nothing.
        */
-      const msgRevokeAllowanceEncode:
-        | MsgRevokeAllowanceEncodeObject
-        | undefined = has_fee_grant
+      const msgRevokeAllowanceEncode: MsgRevokeAllowanceEncodeObject | undefined = has_fee_grant
         ? buildRevokeAllowanceEncode({
             grantee,
             granter,
@@ -143,17 +134,15 @@ const useAddOrUpdateGrants = () => {
         granter,
       });
 
-      const msgsGrantEncodes = buildGrantMsgEncodes({grants, grantee, granter});
+      const msgsGrantEncodes = buildGrantMsgEncodes({ grants, grantee, granter });
 
-      const unlockResult = await unlockWallet({chainAccount});
+      const unlockResult = await unlockWallet({ chainAccount });
 
       if (!unlockResult) {
-        throw new Error(
-          'Error unlocking wallet or user cancelled authentication',
-        );
+        throw new Error('Error unlocking wallet or user cancelled authentication');
       }
 
-      const {wallet} = unlockResult;
+      const { wallet } = unlockResult;
 
       // compact to remove undefined message, as msgRevokeAllowanceEncode is undefined
       // if user does not have a fee grant
@@ -163,10 +152,7 @@ const useAddOrUpdateGrants = () => {
         ...msgsGrantEncodes,
       ]);
 
-      const broadcastResult = await broadcastMessages(
-        wallet as OfflineSigner,
-        combinedMessages,
-      );
+      const broadcastResult = await broadcastMessages(wallet as OfflineSigner, combinedMessages);
 
       if (!broadcastResult) {
         throw new Error('Error requesting grants');

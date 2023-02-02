@@ -1,16 +1,16 @@
-import {useQuery} from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
-import {useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import GetInvites from 'services/graphql/queries/GetInvites';
 
 const useHooks = () => {
-  const {activeAddress} = useActiveAccount();
-  const {t} = useTranslation('invites');
+  const { activeAddress } = useActiveAccount();
+  const { t } = useTranslation('invites');
   const [rewardBalance, setRewardBalance] = useState<number>();
   const [filteredInvites, setFilteredInvites] = useState<any[]>();
-  const {data, loading, refetch} = useQuery(GetInvites, {
+  const { data, loading, refetch } = useQuery(GetInvites, {
     fetchPolicy: 'no-cache',
   });
 
@@ -43,18 +43,16 @@ const useHooks = () => {
       (invite: any) => invite.claimer,
     );
 
-    setRewardBalance(prev =>
-      prev ? prev + successful.length * 2 : successful.length * 2,
-    );
+    setRewardBalance(prev => (prev ? prev + successful.length * 2 : successful.length * 2));
 
     if (pending.length > 0 && successful.length <= 0) {
-      return [{section: t('pending invites'), data: pending}];
+      return [{ section: t('pending invites'), data: pending }];
     } else if (pending.length <= 0 && successful.length > 0) {
-      return [{section: t('successful invites'), data: successful}];
+      return [{ section: t('successful invites'), data: successful }];
     } else if (pending.length > 0 && successful.length > 0) {
       return [
-        {section: t('pending invites'), data: pending},
-        {section: t('successful invites'), data: successful},
+        { section: t('pending invites'), data: pending },
+        { section: t('successful invites'), data: successful },
       ];
     } else {
       return [];

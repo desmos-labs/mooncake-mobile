@@ -1,8 +1,8 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {action} from '@storybook/addon-actions';
-import {Text} from 'react-native';
+import { action } from '@storybook/addon-actions';
+import { Text } from 'react-native';
 import MaterialButton from './index';
 
 type CompProps = React.ComponentProps<typeof MaterialButton>;
@@ -76,21 +76,19 @@ storiesOf('components/MaterialButton', module)
   ))
   .add('Mixed', () => (
     <>
-      <MaterialButton {...TextMode} style={{marginBottom: 8}}>
+      <MaterialButton {...TextMode} style={{ marginBottom: 8 }}>
         <Text>Text Button</Text>
       </MaterialButton>
-      <MaterialButton {...OutlinedMode} style={{marginBottom: 8}}>
+      <MaterialButton {...OutlinedMode} style={{ marginBottom: 8 }}>
         <Text>Outlined</Text>
       </MaterialButton>
-      <MaterialButton {...ContainedMode} style={{marginBottom: 8}}>
+      <MaterialButton {...ContainedMode} style={{ marginBottom: 8 }}>
         <Text>Contained</Text>
       </MaterialButton>
-      <MaterialButton {...GradientMode} containerStyle={{marginBottom: 8}}>
+      <MaterialButton {...GradientMode} containerStyle={{ marginBottom: 8 }}>
         <Text>Gradient</Text>
       </MaterialButton>
-      <MaterialButton
-        {...GradientFilledMode}
-        containerStyle={{marginBottom: 8}}>
+      <MaterialButton {...GradientFilledMode} containerStyle={{ marginBottom: 8 }}>
         <Text>Gradient filled</Text>
       </MaterialButton>
     </>

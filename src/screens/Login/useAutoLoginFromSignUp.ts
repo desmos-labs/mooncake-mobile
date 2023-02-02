@@ -1,13 +1,13 @@
 import React from 'react';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import signUpPasswordState from '@recoil/signUpPasswordState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useLogin from 'services/axios/requests/Login/useLogin';
-import {useToast} from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
-import {NavProps} from './index';
+import { useNavigation } from '@react-navigation/native';
+import { NavProps } from './index';
 
 /**
  * A hook that will auto-login the user if they have entered a password during the signup/import account screen.
@@ -15,10 +15,10 @@ import {NavProps} from './index';
 const useAutoLoginFromSignUp = () => {
   const signUpPassword = useRecoilValue(signUpPasswordState);
   const resetSignUpPassword = useResetRecoilState(signUpPasswordState);
-  const {activeAddress} = useActiveAccount();
-  const {login} = useLogin();
+  const { activeAddress } = useActiveAccount();
+  const { login } = useLogin();
   const toast = useToast();
-  const {reset} = useNavigation<NavProps['navigation']>();
+  const { reset } = useNavigation<NavProps['navigation']>();
 
   React.useEffect(() => {
     if (!signUpPassword || !activeAddress) return;
@@ -48,7 +48,7 @@ const useAutoLoginFromSignUp = () => {
       autoLogin();
     } catch (err) {
       console.warn(String(err));
-      toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
+      toast.show(String(err), { type: ToastConfig.ERROR_NO_RETRY });
     }
 
     // reset password on unmount to avoid login screen loading from flickering

@@ -1,8 +1,8 @@
-import {useSubscription} from '@apollo/client';
+import { useSubscription } from '@apollo/client';
 import EnvConfig from 'config/EnvConfig';
-import {useCallback, useRef} from 'react';
+import { useCallback, useRef } from 'react';
 import PostCommentsAggregateSubscription from 'services/graphql/subscriptions/PostCommentsAggregateSubscription';
-import {OnDataOptions} from '@apollo/client/react/types/types';
+import { OnDataOptions } from '@apollo/client/react/types/types';
 import _ from 'lodash';
 
 type Props = {
@@ -17,16 +17,12 @@ type Props = {
   updateAction: () => void;
 };
 
-const useSubscribeToPostComments = ({postID, updateAction}: Props) => {
+const useSubscribeToPostComments = ({ postID, updateAction }: Props) => {
   const savedCount = useRef<number>(0);
 
   const onData = useCallback(
     (options: OnDataOptions) => {
-      const count = _.get(
-        options,
-        'data.data.post_aggregate.aggregate.count',
-        0,
-      );
+      const count = _.get(options, 'data.data.post_aggregate.aggregate.count', 0);
       if (savedCount && savedCount.current !== count) {
         savedCount.current = count;
         updateAction();

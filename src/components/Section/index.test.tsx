@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import Section from 'components/Section/index';
 
 describe('component: Section', () => {
@@ -10,9 +10,7 @@ describe('component: Section', () => {
   });
 
   it('renders with title', () => {
-    const tree = render(
-      <Section title="hello world">Hello world</Section>,
-    ).toJSON();
+    const tree = render(<Section title="hello world">Hello world</Section>).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

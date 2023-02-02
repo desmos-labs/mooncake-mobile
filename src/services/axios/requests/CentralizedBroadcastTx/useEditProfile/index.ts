@@ -1,8 +1,8 @@
-import {MsgSaveProfileEncodeObject} from '@desmoslabs/desmjs';
-import {MsgSaveProfile} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_profile';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {useCallback} from 'react';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import { MsgSaveProfileEncodeObject } from '@desmoslabs/desmjs';
+import { MsgSaveProfile } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_profile';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { useCallback } from 'react';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 
 /**
  * Hook that wraps logic to allow the user to edit their profile.
@@ -31,14 +31,14 @@ const useEditProfile = () => {
         }),
       };
 
-      const result = await encodeAndBroadcastTx({msgs: [msg]});
+      const result = await encodeAndBroadcastTx({ msgs: [msg] });
 
       return result;
     },
     [],
   );
 
-  return {editProfile};
+  return { editProfile };
 };
 
 export default useEditProfile;

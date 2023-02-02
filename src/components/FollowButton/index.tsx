@@ -1,5 +1,5 @@
-import React, {ComponentProps, FC} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { ComponentProps, FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
@@ -9,9 +9,9 @@ type Props = ComponentProps<typeof Button> & {
 };
 
 const FollowButton: FC<Props> = props => {
-  const {style, labelStyle, children, type, onPress, ...rest} = props;
+  const { style, labelStyle, children, type, onPress, ...rest } = props;
   const styles = useStyles();
-  const {t} = useTranslation('followingAndFollowers');
+  const { t } = useTranslation('followingAndFollowers');
   const [styleOfButton, styleOfLabel, label] =
     type === 'follow'
       ? [styles.follow, styles.followLabel, t('follow')]

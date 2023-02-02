@@ -1,5 +1,5 @@
 import LoadingOverlay from 'components/LoadingOverlay';
-import React, {ReactElement, useCallback} from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import {
   ColorValue,
   ImageBackground,
@@ -10,12 +10,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Animated, {FadeIn} from 'react-native-reanimated';
-import {
-  Edge,
-  SafeAreaView,
-  SafeAreaViewProps,
-} from 'react-native-safe-area-context';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { Edge, SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 export type Props = SafeAreaViewProps & {
@@ -83,7 +79,7 @@ const DView: React.FC<Props> = props => {
         onPress={handleBackgroundPress}>
         <SafeAreaView
           edges={edges ?? ['bottom', 'left', 'right', 'top']}
-          style={[styles.root, backgroundColor ? {backgroundColor} : {}]}
+          style={[styles.root, backgroundColor ? { backgroundColor } : {}]}
           {...rest}>
           <StatusBar
             barStyle="dark-content"
@@ -93,17 +89,12 @@ const DView: React.FC<Props> = props => {
           />
           {backgroundImage !== undefined && (
             <ImageBackground
-              style={[
-                styles.background,
-                backgroundFillScreen && {bottom: 0, height: undefined},
-              ]}
+              style={[styles.background, backgroundFillScreen && { bottom: 0, height: undefined }]}
               source={backgroundImage}
             />
           )}
           {topBar}
-          <Animated.View
-            entering={FadeIn.duration(250)}
-            style={[styles.content, style]}>
+          <Animated.View entering={FadeIn.duration(250)} style={[styles.content, style]}>
             {scrollable ? (
               <ScrollView
                 refreshControl={
@@ -121,7 +112,7 @@ const DView: React.FC<Props> = props => {
                 {/*
               this View will save the world (ScrollView behavior back to work normally as intended on iOS)
               */}
-                <View onStartShouldSetResponder={() => true} style={{flex: 1}}>
+                <View onStartShouldSetResponder={() => true} style={{ flex: 1 }}>
                   {children}
                 </View>
               </ScrollView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {EncodeObject} from '@cosmjs/proto-signing';
+import { EncodeObject } from '@cosmjs/proto-signing';
 
 export interface BroadcastOptions {
   /**
@@ -42,12 +42,9 @@ export interface BroadcastResult {
 const useBroadcastTx = () => {
   // TODO: Create useUnlockWallet hook to unlock the wallet, if needed
 
-  return React.useCallback(
-    async (msgs: EncodeObject[], options?: BroadcastOptions) => {
-      console.log('Implement useBroadcastTx', msgs, options);
-    },
-    [],
-  );
+  return React.useCallback(async (msgs: EncodeObject[], options?: BroadcastOptions) => {
+    console.log('Implement useBroadcastTx', msgs, options);
+  }, []);
 };
 
 export default useBroadcastTx;

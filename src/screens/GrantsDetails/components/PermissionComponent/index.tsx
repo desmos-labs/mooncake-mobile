@@ -1,8 +1,8 @@
-import {verifiedIcon} from 'assets/images';
+import { verifiedIcon } from 'assets/images';
 import Typography from 'components/Typography';
 import React from 'react';
-import {Image, View} from 'react-native';
-import {Divider, useTheme} from 'react-native-paper';
+import { Image, View } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
 
 export type Props = {
   /**
@@ -16,18 +16,18 @@ export type Props = {
 };
 
 const PermissionComponent: React.FC<Props> = props => {
-  const {permissionName, checked} = props;
+  const { permissionName, checked } = props;
   const theme = useTheme();
 
   return (
     <>
-      <View style={{flexDirection: 'row', paddingVertical: theme.spacing.l}}>
+      <View style={{ flexDirection: 'row', paddingVertical: theme.spacing.l }}>
         <Typography.Body6>{permissionName}</Typography.Body6>
         <Image
           source={verifiedIcon}
           style={[
-            {width: 18, height: 18, right: 0, marginLeft: 'auto'},
-            !checked && {tintColor: theme.colors.lightGrey01},
+            { width: 18, height: 18, right: 0, marginLeft: 'auto' },
+            !checked && { tintColor: theme.colors.lightGrey01 },
           ]}
         />
       </View>

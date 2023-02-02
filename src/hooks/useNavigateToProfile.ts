@@ -1,10 +1,10 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import useActiveAccount from 'hooks/useActiveAccount';
 import ROUTES from 'navigation/routes';
-import {useCallback} from 'react';
+import { useCallback } from 'react';
 
 const useNavigateToProfile = () => {
-  const {activeAddress} = useActiveAccount();
+  const { activeAddress } = useActiveAccount();
   const navigation = useNavigation<any>();
 
   const handleNavigateToProfile = useCallback(

@@ -1,5 +1,5 @@
 import React from 'react';
-import {gql, useQuery} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 
 export type GetFollowStatsForAddressData = {
   profile: {
@@ -17,20 +17,16 @@ export type GetFollowStatsForAddressData = {
 };
 
 const GetNumRelationshipsForAddress = gql`
-  query GetFollowStatsForAddress($subspaceID: bigint!, $address: String!)
-  @api(name: butter) {
+  query GetFollowStatsForAddress($subspaceID: bigint!, $address: String!) @api(name: butter) {
     followage_aggregate: user_relationship_aggregate(
-      where: {
-        subspace_id: {_eq: $subspaceID}
-        counterparty_address: {_eq: $address}
-      }
+      where: { subspace_id: { _eq: $subspaceID }, counterparty_address: { _eq: $address } }
     ) {
       aggregate {
         count
       }
     }
     following_aggregate: user_relationship_aggregate(
-      where: {subspace_id: {_eq: $subspaceID}, creator_address: {_eq: $address}}
+      where: { subspace_id: { _eq: $subspaceID }, creator_address: { _eq: $address } }
     ) {
       aggregate {
         count
@@ -40,14 +36,13 @@ const GetNumRelationshipsForAddress = gql`
 `;
 
 export const useFollowStatsForAddress = (address: string) => {
-  const {data} = useQuery<GetFollowStatsForAddressData>(
-    GetNumRelationshipsForAddress,
-    {variables: {address}},
-  );
+  const { data } = useQuery<GetFollowStatsForAddressData>(GetNumRelationshipsForAddress, {
+    variables: { address },
+  });
 
   const profileData = React.useMemo(() => {
     if (!data) return undefined;
-    const {profile} = data;
+    const { profile } = data;
 
     const [firstProfile] = profile;
 

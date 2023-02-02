@@ -1,25 +1,17 @@
-import {StdFee} from '@cosmjs/amino';
-import {toHex} from '@cosmjs/encoding';
-import {OfflineSigner} from '@cosmjs/proto-signing';
-import {
-  getPubKeyRawBytes,
-  getSignatureBytes,
-  getSignedBytes,
-} from '@desmoslabs/desmjs';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { StdFee } from '@cosmjs/amino';
+import { toHex } from '@cosmjs/encoding';
+import { OfflineSigner } from '@cosmjs/proto-signing';
+import { getPubKeyRawBytes, getSignatureBytes, getSignedBytes } from '@desmoslabs/desmjs';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import useSignCustomTx from 'hooks/useSignCustomTx';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Linking} from 'react-native';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Linking } from 'react-native';
 import CheckTwitterUsername from 'services/axios/requests/CheckTwitterUsername';
 import PostProof from 'services/axios/requests/PostProof';
 
@@ -30,9 +22,9 @@ export type ConnectAppParams = {
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_APP>;
 
 const useHooks = () => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const {
-    params: {mode},
+    params: { mode },
   } = useRoute<NavProps['route']>();
   const [openingTwitterApp, setOpeningTwitterApp] = useState<boolean>(false);
   const [generatingProof, setGeneratingProof] = useState<boolean>(false);
@@ -40,19 +32,18 @@ const useHooks = () => {
   const [wallet, setWallet] = useState<OfflineSigner>();
   const [proofString, setProofString] = useState<string>('');
   const [twitterUsername, setTwitterUsername] = useState<string>('');
-  const [twitterUsernameExisting, setTwitterUsernameExisting] =
-    useState<boolean>(false);
+  const [twitterUsernameExisting, setTwitterUsernameExisting] = useState<boolean>(false);
   const [checkingUsername, setCheckingUsername] = useState<boolean>(false);
-  const {chainAccount} = useActiveAccount();
+  const { chainAccount } = useActiveAccount();
   const unlockWallet = useUnlockWallet();
   const signCustomTx = useSignCustomTx();
-  const {t} = useTranslation('connectApp');
+  const { t } = useTranslation('connectApp');
 
   const handleUnlockWallet = useCallback(async () => {
     if (chainAccount) {
       const unlockResult = await unlockWallet({
         chainAccount,
-        enterPwScreenOptions: {titleLabelOverride: t('proof')},
+        enterPwScreenOptions: { titleLabelOverride: t('proof') },
       });
       if (unlockResult) {
         setWallet(unlockResult.wallet);
@@ -64,7 +55,7 @@ const useHooks = () => {
   }, [chainAccount, unlockWallet]);
 
   const handleSelectTweet = useCallback(() => {
-    navigate(ROUTES.SELECT_TWEET, {username: twitterUsername});
+    navigate(ROUTES.SELECT_TWEET, { username: twitterUsername });
   }, [twitterUsername]);
 
   const handleOnPress = useCallback(() => {
@@ -79,11 +70,7 @@ const useHooks = () => {
 
   const openTwitterApp = useCallback(() => {
     setOpeningTwitterApp(true);
-    Linking.openURL(
-      `twitter://post?message=${encodeURIComponent(
-        t('link proof') + proofString,
-      )}`,
-    )
+    Linking.openURL(`twitter://post?message=${encodeURIComponent(t('link proof') + proofString)}`)
       .catch(() => {
         Linking.openURL(
           `https://twitter.com/intent/tweet?text=${encodeURIComponent(

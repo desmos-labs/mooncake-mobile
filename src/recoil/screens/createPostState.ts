@@ -1,5 +1,5 @@
-import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {UploadAssetType} from 'services/axios/requests/UploadMedia';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import React from 'react';
 
 /**
@@ -40,7 +40,7 @@ const createPostStateValue = selectorFamily({
   key: 'createPostStateValue',
   get:
     (key: keyof CreatePostState) =>
-    ({get}) => {
+    ({ get }) => {
       const settings = get(createPostState);
       return settings[key];
     },
@@ -51,17 +51,14 @@ const createPostStateValue = selectorFamily({
  * @param valueKey - Key associated to the value that needs to be retrieved.
  * @return The value of the state associated with the given key.
  */
-export const useCreatePostValue = <K extends keyof CreatePostState>(
-  valueKey: K,
-) => useRecoilValue(createPostStateValue(valueKey)) as CreatePostState[K];
+export const useCreatePostValue = <K extends keyof CreatePostState>(valueKey: K) =>
+  useRecoilValue(createPostStateValue(valueKey)) as CreatePostState[K];
 
 /**
  * Hook that provides a function to update the value of a single {@link CreatePostState} field.
  * @param valueKey - Key of the value of interest.
  */
-export const useSetCreatePostValue = <K extends keyof CreatePostState>(
-  valueKey: K,
-) => {
+export const useSetCreatePostValue = <K extends keyof CreatePostState>(valueKey: K) => {
   const setCreatePostState = useSetRecoilState(createPostState);
   return React.useCallback(
     (value: CreatePostState[K]) => {

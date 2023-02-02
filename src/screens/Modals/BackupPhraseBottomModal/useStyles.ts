@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
@@ -27,7 +27,7 @@ const useStyles = makeStyle(theme => ({
     paddingBottom: theme.spacing.l,
     paddingTop: 10,
   },
-  image: {width: 24, height: 24, marginRight: theme.spacing.m},
+  image: { width: 24, height: 24, marginRight: theme.spacing.m },
 }));
 
 export default useStyles;

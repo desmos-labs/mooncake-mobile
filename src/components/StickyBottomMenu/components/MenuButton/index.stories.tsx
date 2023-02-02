@@ -1,8 +1,8 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {action} from '@storybook/addon-actions';
-import {commentIcon} from 'assets/images';
+import { action } from '@storybook/addon-actions';
+import { commentIcon } from 'assets/images';
 import MenuButton from './index';
 
 type CompProps = React.ComponentProps<typeof MenuButton>;

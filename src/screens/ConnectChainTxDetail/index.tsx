@@ -2,37 +2,34 @@ import React from 'react';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Image, View} from 'react-native';
-import {connectIcon, desmosIcon, errorImage, modalSuccess} from 'assets/images';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Image, View } from 'react-native';
+import { connectIcon, desmosIcon, errorImage, modalSuccess } from 'assets/images';
 import Button from 'components/Button';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
-import {connectChainState} from '@recoil/connectChainState';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {MsgLinkChainAccount} from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useTheme } from 'react-native-paper';
+import { useRecoilValue } from 'recoil';
+import { connectChainState } from '@recoil/connectChainState';
+import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
+import { MsgLinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import LocalWallet from 'lib/LocalWallet';
-import {computeTxFees, messagesGas} from 'lib/desmos/fees';
-import {formatFeeWithDenoms} from 'lib/FormatUtils';
+import { computeTxFees, messagesGas } from 'lib/desmos/fees';
+import { formatFeeWithDenoms } from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';
 import EnvConfig from 'config/EnvConfig';
-import {MsgLinkChainAccountEncodeObject} from '@desmoslabs/desmjs';
+import { MsgLinkChainAccountEncodeObject } from '@desmoslabs/desmjs';
 import {
   Bech32Address,
   Proof,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CONNECT_CHAIN_TX_DETAIL
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_CHAIN_TX_DETAIL>;
 
 export type ConnectChainTxDetailParams = {
   proof: Proof;
@@ -41,27 +38,25 @@ export type ConnectChainTxDetailParams = {
 };
 
 const ConnectChainTxDetail = () => {
-  const {t} = useTranslation('connectChainTxDetail');
+  const { t } = useTranslation('connectChainTxDetail');
 
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
   const {
-    params: {proof, externalAddress},
+    params: { proof, externalAddress },
   } = useRoute<NavProps['route']>();
 
-  const {chainAccount} = useActiveAccount();
+  const { chainAccount } = useActiveAccount();
 
   const unlockWallet = useUnlockWallet();
 
-  const {selectedChain} = useRecoilValue(connectChainState);
+  const { selectedChain } = useRecoilValue(connectChainState);
 
   const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
 
   const styles = useStyles();
   const theme = useTheme();
   const [message, setMessage] = React.useState<any>(undefined);
-  const [deserializedExternalWallet] = React.useState<LocalWallet | undefined>(
-    undefined,
-  );
+  const [deserializedExternalWallet] = React.useState<LocalWallet | undefined>(undefined);
 
   React.useEffect(() => {
     const generateMessage = async () => {
@@ -109,7 +104,7 @@ const ConnectChainTxDetail = () => {
 
   const handlePressNext = React.useCallback(async () => {
     if (!chainAccount) return;
-    const unlockResponse = await unlockWallet({chainAccount});
+    const unlockResponse = await unlockWallet({ chainAccount });
 
     // handle case here
     if (!unlockResponse || !unlockResponse.wallet) return;
@@ -157,27 +152,17 @@ const ConnectChainTxDetail = () => {
         <Image source={selectedChain.icon} style={styles.chainIcon} />
       </View>
 
-      <Typography.Subtitle2 style={styles.textStyle}>
-        {t('from')}
-      </Typography.Subtitle2>
-      <Typography.Body6
-        style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={2}>
+      <Typography.Subtitle2 style={styles.textStyle}>{t('from')}</Typography.Subtitle2>
+      <Typography.Body6 style={[styles.textStyle, styles.valueStyle]} numberOfLines={2}>
         {activeAddr}
       </Typography.Body6>
 
-      <Typography.Subtitle2 style={styles.textStyle}>
-        {t('connectTo')}
-      </Typography.Subtitle2>
-      <Typography.Body6
-        style={[styles.textStyle, styles.valueStyle]}
-        numberOfLines={2}>
+      <Typography.Subtitle2 style={styles.textStyle}>{t('connectTo')}</Typography.Subtitle2>
+      <Typography.Body6 style={[styles.textStyle, styles.valueStyle]} numberOfLines={2}>
         {externalAddress}
       </Typography.Body6>
 
-      <Typography.Subtitle2 style={styles.textStyle}>
-        {t('fee')}
-      </Typography.Subtitle2>
+      <Typography.Subtitle2 style={styles.textStyle}>{t('fee')}</Typography.Subtitle2>
       <Typography.Body6 style={[styles.textStyle, styles.valueStyle]}>
         {feeString || <ActivityIndicator color={theme.colors.surfaceBlack} />}
       </Typography.Body6>

@@ -1,14 +1,14 @@
-import {modalSuccess} from 'assets/images';
+import { modalSuccess } from 'assets/images';
 import Typography from 'components/Typography';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Image, View} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Image, View } from 'react-native';
 
 const NoConnections = () => {
-  const {t} = useTranslation('manageChains');
+  const { t } = useTranslation('manageChains');
 
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{ alignItems: 'center' }}>
       <Image
         source={modalSuccess}
         style={{

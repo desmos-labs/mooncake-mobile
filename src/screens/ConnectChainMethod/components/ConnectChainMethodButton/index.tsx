@@ -1,8 +1,8 @@
 import React from 'react';
 import DropShadowWrapper from 'components/DropShadowWrapper';
-import {Image, TouchableOpacity} from 'react-native';
-import {useLedgerIcon, usePasswordIcon} from 'assets/images';
-import {useTranslation} from 'react-i18next';
+import { Image, TouchableOpacity } from 'react-native';
+import { useLedgerIcon, usePasswordIcon } from 'assets/images';
+import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import useStyles from './useStyles';
 
@@ -12,10 +12,10 @@ type Props = {
   handlePress: () => void;
 };
 
-const ConnectChainMethodButton = ({method, handlePress}: Props) => {
+const ConnectChainMethodButton = ({ method, handlePress }: Props) => {
   const styles = useStyles();
 
-  const {t} = useTranslation('connectChain');
+  const { t } = useTranslation('connectChain');
 
   const buttonImage = React.useMemo(() => {
     const imageMap = {

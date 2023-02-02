@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   followButton: {
@@ -14,7 +14,7 @@ const useStyles = makeStyle(theme => ({
     right: 1,
     justifyContent: 'center',
   },
-  followText: {color: theme.colors.white, alignSelf: 'center'},
+  followText: { color: theme.colors.white, alignSelf: 'center' },
 }));
 
 export default useStyles;

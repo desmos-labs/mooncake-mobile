@@ -1,4 +1,4 @@
-import {HdPath, Slip10RawIndex} from '@cosmjs/crypto';
+import { HdPath, Slip10RawIndex } from '@cosmjs/crypto';
 
 export const DesmosHdPath: HdPath = [
   Slip10RawIndex.hardened(44),

@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetTransactionsByAddress = gql`
   query Transactions(
@@ -8,7 +8,7 @@ const GetTransactionsByAddress = gql`
     $types: _text = "{}"
   ) @api(name: forbole) {
     messages_by_address(
-      args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
+      args: { addresses: $address, types: $types, limit: $limit, offset: $offset }
     ) {
       type
       value

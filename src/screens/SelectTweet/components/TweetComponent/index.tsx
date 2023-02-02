@@ -1,11 +1,11 @@
-import {twitterIcon} from 'assets/images';
+import { twitterIcon } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import React from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { Image, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 const TweetComponent = ({
@@ -26,7 +26,7 @@ const TweetComponent = ({
   return (
     <DropShadowWrapper
       style={styles.container}
-      outerShadowProps={{startColor: 'rgba(16, 24, 40, 0.03)', distance: 30}}>
+      outerShadowProps={{ startColor: 'rgba(16, 24, 40, 0.03)', distance: 30 }}>
       <TouchableOpacity
         onPress={() => onPress(data.id)}
         style={[
@@ -35,10 +35,10 @@ const TweetComponent = ({
             borderRadius: theme.roundness,
             backgroundColor: theme.colors.white,
           },
-          selected && {backgroundColor: theme.colors.butterOrange05},
+          selected && { backgroundColor: theme.colors.butterOrange05 },
         ]}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image source={{uri: user.profile_pic}} style={styles.profilePic} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={{ uri: user.profile_pic }} style={styles.profilePic} />
           <View
             style={{
               flexDirection: 'column',
@@ -53,7 +53,7 @@ const TweetComponent = ({
         <Spacer paddingBottom={theme.spacing.m} />
         <Typography.Body6>{data.text}</Typography.Body6>
         <Spacer paddingVertical={theme.spacing.s} />
-        <Typography.Caption3 style={{color: theme.colors.grey02}}>
+        <Typography.Caption3 style={{ color: theme.colors.grey02 }}>
           {formattedDate}
         </Typography.Caption3>
       </TouchableOpacity>

@@ -1,19 +1,19 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {HdPath} from 'types/hdpath';
-import {toCosmjsHdPath} from 'lib/FormatUtils';
-import {LedgerSigner} from '@cosmjs/ledger-amino';
+import { HdPath } from 'types/hdpath';
+import { toCosmjsHdPath } from 'lib/FormatUtils';
+import { LedgerSigner } from '@cosmjs/ledger-amino';
 import LocalWallet from 'lib/LocalWallet';
-import {ExternalAccountEnum} from '@recoil/connectChainState';
+import { ExternalAccountEnum } from '@recoil/connectChainState';
 import {
   Proof,
   SignatureValueType,
   SingleSignature,
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import {isStdSignDoc} from '@desmoslabs/desmjs';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {toHex} from '@cosmjs/encoding';
-import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-import {serializeSignDoc, StdSignDoc} from '@cosmjs/amino';
+import { isStdSignDoc } from '@desmoslabs/desmjs';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import { toHex } from '@cosmjs/encoding';
+import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
+import { serializeSignDoc, StdSignDoc } from '@cosmjs/amino';
 import _ from 'lodash';
 
 export const generateAccountUsingMnemonic = async ({
@@ -54,7 +54,7 @@ export const generateAccountUsingLedger = _.debounce(
   }) => {
     const cosmJsPaths = hdPaths.map(toCosmjsHdPath);
 
-    const {name: ledgerAppName, minVersion: minLedgerAppVersion} = ledgerApp;
+    const { name: ledgerAppName, minVersion: minLedgerAppVersion } = ledgerApp;
 
     const ledgerSigner = new LedgerSigner(ledgerTransport, {
       ledgerAppName,

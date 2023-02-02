@@ -1,10 +1,6 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {authorizationImage} from 'assets/images';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { authorizationImage } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -12,15 +8,15 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, ScrollView} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, ScrollView } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import PermissionComponent from 'screens/GrantsDetails/components/PermissionComponent';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 import useStyles from './useStyles';
 
 export type GrantsSection = {
@@ -31,28 +27,25 @@ export type GrantsDetailsParams = {
   section: GrantsSection;
 };
 
-declare type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.GRANTS_DETAILS
->;
+declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GRANTS_DETAILS>;
 
 const GrantsDetails: React.FC<NavProps> = () => {
   const [initialLoading, setInitialLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const {t} = useTranslation('grantsDetails');
-  const {params} = useRoute<NavProps['route']>();
-  const {navigate, pop} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('grantsDetails');
+  const { params } = useRoute<NavProps['route']>();
+  const { navigate, pop } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
   const [grantsGiven, setGrantsGiven] = useState<GrantEnums[]>([]);
-  const {getAuthzGrants} = useGetAuthzGrants();
-  const {revokeGrants} = useAddOrUpdateGrants();
+  const { getAuthzGrants } = useGetAuthzGrants();
+  const { revokeGrants } = useAddOrUpdateGrants();
 
   const fetchGrants = useCallback(async () => {
     try {
       setInitialLoading(true);
-      const {grants} = await getAuthzGrants();
+      const { grants } = await getAuthzGrants();
       if (grants) {
         setGrantsGiven(
           grants.map(grant => {
@@ -127,10 +120,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
       case 'profile':
         return [GrantEnums.MsgSaveProfile];
       case 'relationships':
-        return [
-          GrantEnums.MsgCreateRelationship,
-          GrantEnums.MsgDeleteRelationship,
-        ];
+        return [GrantEnums.MsgCreateRelationship, GrantEnums.MsgDeleteRelationship];
       case 'report':
         return [GrantEnums.MsgCreateReport];
       case 'contracts':
@@ -153,9 +143,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
         detailsModal: {
           title: t('grants:grant permissions'),
           body: t('grant following', {
-            permissions:
-              params.section.name.charAt(0).toUpperCase() +
-              params.section.name.slice(1),
+            permissions: params.section.name.charAt(0).toUpperCase() + params.section.name.slice(1),
           }),
           buttonLabel: t('yes grant'),
         },
@@ -163,7 +151,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
       await fetchGrants();
       navigate(ROUTES.TEXTONLY_MODAL, {
         title: t('common:success'),
-        bodyStyle: {textAlign: 'center'},
+        bodyStyle: { textAlign: 'center' },
         body: t('grants:successful grant'),
         image: authorizationImage,
       });
@@ -190,9 +178,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('grants:revoke permissions'),
       subtitle: t('revoke following', {
-        permissions:
-          params.section.name.charAt(0).toUpperCase() +
-          params.section.name.slice(1),
+        permissions: params.section.name.charAt(0).toUpperCase() + params.section.name.slice(1),
       }),
       primaryButtonLabel: t('yes revoke'),
       secondaryButtonLabel: t('common:cancel'),
@@ -203,10 +189,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
   }, [navigate, pop, revokePermissionsWrapper, t]);
 
   return (
-    <DView
-      style={styles.root}
-      topBar={<TopBar />}
-      disableHideKeyboardTouchable={true}>
+    <DView style={styles.root} topBar={<TopBar />} disableHideKeyboardTouchable={true}>
       <Spacer paddingBottom={16}>
         <Typography.H3>{title}</Typography.H3>
       </Spacer>

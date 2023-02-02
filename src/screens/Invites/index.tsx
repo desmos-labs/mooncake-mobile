@@ -1,8 +1,8 @@
-import {useQuery} from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useButterConfig} from '@recoil/butterConfigState';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useButterConfig } from '@recoil/butterConfigState';
 import {
   copyIcon,
   infoIcon,
@@ -21,20 +21,14 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Image,
-  Share,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
-import {useToast} from 'react-native-toast-notifications';
+import { useTheme } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
@@ -44,42 +38,36 @@ import useStyles from './useStyles';
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
 
 const Invites = () => {
-  const {activeAddress} = useActiveAccount();
-  const {butterConfig} = useButterConfig();
+  const { activeAddress } = useActiveAccount();
+  const { butterConfig } = useButterConfig();
   const [inviteGenerated, setInviteGenerated] = useState<boolean>();
   const [generationLoading, setGenerationLoading] = useState<boolean>(false);
   const [inviteLink, setInviteLink] = useState<string>('');
   const styles = useStyles();
-  const {t} = useTranslation('invites');
+  const { t } = useTranslation('invites');
   const theme = useTheme();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const toast = useToast();
-  const {data, refetch} = useQuery(GetInvites, {
+  const { data, refetch } = useQuery(GetInvites, {
     fetchPolicy: 'no-cache',
   });
 
-  const {data: impactPointsData} = useQuery(GetImpactPoints, {
+  const { data: impactPointsData } = useQuery(GetImpactPoints, {
     fetchPolicy: 'no-cache',
   });
 
   const impactPoints = useMemo(() => {
-    if (
-      !impactPointsData?.impact_record_aggregate?.aggregate?.sum
-        ?.rewarded_points
-    ) {
+    if (!impactPointsData?.impact_record_aggregate?.aggregate?.sum?.rewarded_points) {
       return 0;
     }
-    return impactPointsData.impact_record_aggregate.aggregate.sum
-      .rewarded_points;
+    return impactPointsData.impact_record_aggregate.aggregate.sum.rewarded_points;
   }, [impactPointsData]);
 
   const numInvitesGenerated = useMemo(() => {
     if (!data) {
       return undefined;
     } else {
-      return data.invite.filter(
-        (invite: any) => invite?.claimer_address !== activeAddress,
-      ).length;
+      return data.invite.filter((invite: any) => invite?.claimer_address !== activeAddress).length;
     }
   }, [data, activeAddress]);
 
@@ -87,13 +75,10 @@ const Invites = () => {
     if (numInvitesGenerated === undefined) {
       return undefined;
     }
-    const maxInvitesNumber =
-      butterConfig?.invites?.required_impact_points.length;
+    const maxInvitesNumber = butterConfig?.invites?.required_impact_points.length;
     const required =
-      parseInt(
-        butterConfig?.invites?.required_impact_points[numInvitesGenerated],
-        10,
-      ) - impactPoints;
+      parseInt(butterConfig?.invites?.required_impact_points[numInvitesGenerated], 10) -
+      impactPoints;
     if (numInvitesGenerated >= maxInvitesNumber) {
       return 0;
     }
@@ -155,7 +140,7 @@ const Invites = () => {
 
   const shareComponent = useMemo(() => {
     return (
-      <View style={{marginHorizontal: theme.spacing.m}}>
+      <View style={{ marginHorizontal: theme.spacing.m }}>
         <View style={styles.inviteContainer}>
           <Typography.Body6 selectable={true} style={styles.inviteText}>
             {inviteLink}
@@ -166,10 +151,7 @@ const Invites = () => {
             <Image source={copyIcon} style={styles.copyIcon} />
           </TouchableOpacity>
         </View>
-        <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
-          onPress={onShare}>
+        <Button mode="contained" color={theme.colors.surfaceBlack} onPress={onShare}>
           {t('share')}
         </Button>
       </View>
@@ -182,17 +164,8 @@ const Invites = () => {
       disableHideKeyboardTouchable={true}
       style={styles.container}
       scrollable={true}
-      topBar={
-        <TopBar
-          rightElement={rightElement}
-          style={{paddingBottom: theme.spacing.m}}
-        />
-      }>
-      <FastImage
-        resizeMode="cover"
-        source={invitesBanner}
-        style={styles.banner}
-      />
+      topBar={<TopBar rightElement={rightElement} style={{ paddingBottom: theme.spacing.m }} />}>
+      <FastImage resizeMode="cover" source={invitesBanner} style={styles.banner} />
 
       <View style={styles.subtitleContainer}>
         <Typography.H3>{t('invite friends')}</Typography.H3>
@@ -205,24 +178,21 @@ const Invites = () => {
         <Button
           disabled={
             numInvitesGenerated === undefined ||
-            numInvitesGenerated ===
-              butterConfig?.invites?.required_impact_points?.length
+            numInvitesGenerated === butterConfig?.invites?.required_impact_points?.length
           }
           onPress={generateInvite}
           loading={generationLoading}
           color={theme.colors.surfaceBlack}
-          style={{marginHorizontal: theme.spacing.m}}
+          style={{ marginHorizontal: theme.spacing.m }}
           mode="contained">
           {t('generate invite')}
         </Button>
       )}
       <Spacer paddingVertical={theme.spacing.m} />
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <View style={styles.rowCenter}>
           {requiredPoints !== undefined ? (
-            <Typography.Subtitle2>
-              {t('points', {number: requiredPoints})}
-            </Typography.Subtitle2>
+            <Typography.Subtitle2>{t('points', { number: requiredPoints })}</Typography.Subtitle2>
           ) : (
             <ActivityIndicator color={theme.colors.surfaceBlack} />
           )}
@@ -237,7 +207,7 @@ const Invites = () => {
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
           {numInvitesGenerated !== undefined ? (
-            <Typography.Body6 style={{color: theme.colors.midGrey}}>
+            <Typography.Body6 style={{ color: theme.colors.midGrey }}>
               {t('invites shared', {
                 number: numInvitesGenerated,
                 total: butterConfig?.invites?.required_impact_points?.length,
@@ -249,23 +219,14 @@ const Invites = () => {
         </View>
       </View>
       <Spacer paddingVertical={16} />
-      <View style={{paddingHorizontal: theme.spacing.m}}>
+      <View style={{ paddingHorizontal: theme.spacing.m }}>
         <Typography.Subtitle2>{t('invite steps')}</Typography.Subtitle2>
-        <View style={{padding: theme.spacing.m}}>
-          <StepComponent
-            image={invite1}
-            number={1}
-            text={t('generate invite')}
-          />
+        <View style={{ padding: theme.spacing.m }}>
+          <StepComponent image={invite1} number={1} text={t('generate invite')} />
 
           <StepComponent image={invite2} number={2} text={t('share invite')} />
           <StepComponent image={invite3} number={3} text={t('wait redeem')} />
-          <StepComponent
-            image={invite4}
-            number={4}
-            text={t('get rewards')}
-            disableLine={true}
-          />
+          <StepComponent image={invite4} number={4} text={t('get rewards')} disableLine={true} />
         </View>
       </View>
     </DView>

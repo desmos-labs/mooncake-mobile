@@ -1,35 +1,32 @@
-import {useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/FormatUtils';
-import {PostInteractionTabsParamList} from 'navigation/RootNavigator/PostInteractionTabs';
+import { formatNumShorthand } from 'lib/FormatUtils';
+import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {FlatList, ListRenderItemInfo} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  PostInteractionTabsParamList,
-  ROUTES.POST_REACTIONS
->;
+type NavProps = StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_REACTIONS>;
 
 const PostReactions = () => {
-  const {t} = useTranslation('postInteraction');
+  const { t } = useTranslation('postInteraction');
   const styles = useStyles();
   const {
-    params: {postId, subspaceId},
+    params: { postId, subspaceId },
   } = useRoute<NavProps['route']>();
-  const {reactions, reactionsLoading, reactionsRefetch} = useHooks({
+  const { reactions, reactionsLoading, reactionsRefetch } = useHooks({
     postId,
     subspaceId,
   });
 
-  const renderItem = React.useCallback(({item}: ListRenderItemInfo<any>) => {
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<any>) => {
     return <ReactionItem reaction={item} />;
   }, []);
 
@@ -48,9 +45,7 @@ const PostReactions = () => {
       )}
       <FlatList
         refreshing={reactionsLoading}
-        onRefresh={() =>
-          reactionsRefetch({postID: postId, subspaceID: subspaceId})
-        }
+        onRefresh={() => reactionsRefetch({ postID: postId, subspaceID: subspaceId })}
         keyExtractor={item => item.id}
         data={reactions}
         renderItem={renderItem}

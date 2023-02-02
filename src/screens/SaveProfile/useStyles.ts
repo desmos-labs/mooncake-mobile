@@ -1,7 +1,7 @@
-import {makeStyleWithProps} from 'config/theme';
-import {RefObject} from 'react';
-import {TextInput} from 'react-native';
-import {verticalScale} from 'react-native-size-matters';
+import { makeStyleWithProps } from 'config/theme';
+import { RefObject } from 'react';
+import { TextInput } from 'react-native';
+import { verticalScale } from 'react-native-size-matters';
 
 type Props = {
   nicknameInputRef: RefObject<TextInput>;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const useStyles = makeStyleWithProps(
-  ({nicknameInputRef, dTagInputRef, bioInputRef}: Props, theme) => ({
+  ({ nicknameInputRef, dTagInputRef, bioInputRef }: Props, theme) => ({
     container: {
       flex: 1,
     },
@@ -60,17 +60,17 @@ const useStyles = makeStyleWithProps(
       borderTopRightRadius: 32,
       backgroundColor: theme.colors.white,
     },
-    scrollContainer: {flex: 1, marginTop: 60},
-    bioInput: {alignSelf: 'flex-start'},
+    scrollContainer: { flex: 1, marginTop: 60 },
+    bioInput: { alignSelf: 'flex-start' },
     bioDTextInput: {
       minHeight: 160,
       borderWidth: 1,
       borderColor: theme.colors.lightGrey01,
     },
-    errorText: {color: theme.colors.pink01, flex: 1},
-    nickname: {opacity: nicknameInputRef.current?.isFocused() ? 1 : 0},
-    dTag: {opacity: dTagInputRef.current?.isFocused() ? 1 : 0},
-    bio: {opacity: bioInputRef.current?.isFocused() ? 1 : 0},
+    errorText: { color: theme.colors.pink01, flex: 1 },
+    nickname: { opacity: nicknameInputRef.current?.isFocused() ? 1 : 0 },
+    dTag: { opacity: dTagInputRef.current?.isFocused() ? 1 : 0 },
+    bio: { opacity: bioInputRef.current?.isFocused() ? 1 : 0 },
   }),
 );
 

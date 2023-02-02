@@ -1,12 +1,12 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  iconLeft: {width: 18, height: 18, marginLeft: 4},
-  iconRight: {width: 18, height: 18, marginRight: 4},
+  iconLeft: { width: 18, height: 18, marginLeft: 4 },
+  iconRight: { width: 18, height: 18, marginRight: 4 },
   banner: {
     width: 375,
     height: 375,
@@ -40,8 +40,8 @@ const useStyles = makeStyle(theme => ({
     marginHorizontal: theme.spacing.s,
     marginVertical: theme.spacing.m,
   },
-  subtitleContainer: {padding: theme.spacing.m, alignItems: 'center'},
-  rowCenter: {flexDirection: 'row', alignItems: 'center'},
+  subtitleContainer: { padding: theme.spacing.m, alignItems: 'center' },
+  rowCenter: { flexDirection: 'row', alignItems: 'center' },
 }));
 
 export default useStyles;

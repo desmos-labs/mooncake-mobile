@@ -1,28 +1,22 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {lookingForDevicesAnimation} from 'assets/animations';
-import {iconCrossBlack, noLedgerFound} from 'assets/images';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { lookingForDevicesAnimation } from 'assets/animations';
+import { iconCrossBlack, noLedgerFound } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
-import {DesmosLedgerApp} from 'config/LedgerApps';
+import { DesmosLedgerApp } from 'config/LedgerApps';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  ListRenderItemInfo,
-  View,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {AuthorizeWalletParamList} from 'navigation/RootNavigator/AuthorizeWalletStack';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, FlatList, Image, ListRenderItemInfo, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { AuthorizeWalletParamList } from 'navigation/RootNavigator/AuthorizeWalletStack';
 import LedgerDeviceItem from './components/LedgerDeviceItem';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
@@ -37,39 +31,26 @@ export type LookingForDevicesParams = {
   onCancel?: () => void;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.LOOKING_FOR_DEVICES
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOOKING_FOR_DEVICES>;
 
-type AuthNavProps = StackScreenProps<
-  AuthorizeWalletParamList,
-  ROUTES.AUTH_LOOKING_FOR_DEVICES
->;
+type AuthNavProps = StackScreenProps<AuthorizeWalletParamList, ROUTES.AUTH_LOOKING_FOR_DEVICES>;
 
 /**
  * Screen where users can search for Nano X devices via Bluetooth.
  */
 const LookingForDevices = () => {
-  const {navigate, replace} = useNavigation<any>();
-  const {params} = useRoute<NavProps['route'] | AuthNavProps['route']>();
-  const {goBack} = useNavigation<NavProps['navigation']>();
-  const {t} = useTranslation('lookingForDevices');
+  const { navigate, replace } = useNavigation<any>();
+  const { params } = useRoute<NavProps['route'] | AuthNavProps['route']>();
+  const { goBack } = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('lookingForDevices');
   const styles = useStyles();
 
   const theme = useTheme();
 
-  const {
-    isBTOn,
-    screenReady,
-    scanning,
-    devices,
-    handlePressEnableBT,
-    onPressRetry,
-  } = useHooks();
+  const { isBTOn, screenReady, scanning, devices, handlePressEnableBT, onPressRetry } = useHooks();
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<BleLedger>) => {
+    ({ item }: ListRenderItemInfo<BleLedger>) => {
       return (
         <LedgerDeviceItem
           name={item.name || 'UNKNOWN LEDGER DEVICE'}
@@ -111,9 +92,7 @@ const LookingForDevices = () => {
             {t('btNotOn')}
           </Typography.H4>
 
-          <Typography.Body6 style={styles.descriptionStyle}>
-            {t('pleaseEnableBT')}
-          </Typography.Body6>
+          <Typography.Body6 style={styles.descriptionStyle}>{t('pleaseEnableBT')}</Typography.Body6>
 
           <Button
             mode="gradientFilled"
@@ -139,7 +118,7 @@ const LookingForDevices = () => {
           <ImageButton
             onPress={goBack}
             image={iconCrossBlack}
-            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+            style={{ height: 24, width: 24, right: 0, marginLeft: 'auto' }}
           />
           <View style={styles.graphicGroup}>
             <Image source={noLedgerFound} style={styles.noDeviceImage} />
@@ -148,9 +127,7 @@ const LookingForDevices = () => {
             {t('noDeviceFound')}
           </Typography.H4>
 
-          <Typography.Body6 style={styles.descriptionStyle}>
-            {t('description')}
-          </Typography.Body6>
+          <Typography.Body6 style={styles.descriptionStyle}>{t('description')}</Typography.Body6>
 
           <Button
             color={theme.colors.surfaceBlack}
@@ -169,23 +146,14 @@ const LookingForDevices = () => {
           <ImageButton
             onPress={goBack}
             image={iconCrossBlack}
-            style={{height: 24, width: 24, right: 0, marginLeft: 'auto'}}
+            style={{ height: 24, width: 24, right: 0, marginLeft: 'auto' }}
           />
-          <View style={{alignSelf: 'center', marginTop: 60}}>
-            <ThemedLottieView
-              source={lookingForDevicesAnimation}
-              autoPlay
-              autoSize
-              loop
-            />
+          <View style={{ alignSelf: 'center', marginTop: 60 }}>
+            <ThemedLottieView source={lookingForDevicesAnimation} autoPlay autoSize loop />
           </View>
-          <View style={{marginHorizontal: theme.spacing.m}}>
-            <Typography.H4 style={styles.headerStyle}>
-              {t('header')}
-            </Typography.H4>
-            <Typography.Body6 style={styles.descriptionStyle}>
-              {t('description')}
-            </Typography.Body6>
+          <View style={{ marginHorizontal: theme.spacing.m }}>
+            <Typography.H4 style={styles.headerStyle}>{t('header')}</Typography.H4>
+            <Typography.Body6 style={styles.descriptionStyle}>{t('description')}</Typography.Body6>
           </View>
         </>
 

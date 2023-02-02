@@ -1,5 +1,5 @@
-import {ImageSourcePropType} from 'react-native';
-import {HdPath} from '@cosmjs/crypto';
+import { ImageSourcePropType } from 'react-native';
+import { HdPath } from '@cosmjs/crypto';
 
 export type Subscription = {
   unsubscribe: () => void;

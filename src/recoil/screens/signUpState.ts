@@ -1,6 +1,6 @@
 import React from 'react';
-import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {UploadAssetType} from 'services/axios/requests/UploadMedia';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 
 export interface SignUpState {
   readonly dTag: string;
@@ -45,7 +45,7 @@ const signUpStateValue = selectorFamily({
   key: 'signUpStateValue',
   get:
     (key: keyof SignUpState) =>
-    ({get}) => {
+    ({ get }) => {
       const settings = get(signUpState);
       return settings[key];
     },

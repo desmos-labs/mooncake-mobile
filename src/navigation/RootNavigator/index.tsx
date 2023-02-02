@@ -3,18 +3,15 @@ import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import DevScreen from 'screens/DEV';
-import MnemonicInput, {
-  MNEMONIC_INPUT_MODE,
-  MnemonicInputParams,
-} from 'screens/MnemonicInput';
+import MnemonicInput, { MNEMONIC_INPUT_MODE, MnemonicInputParams } from 'screens/MnemonicInput';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
-import TextOnlyModal, {TextOnlyModalParams} from 'screens/Modals/TextOnlyModal';
+import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
 import Signup from 'screens/Signup';
 import Landing from 'screens/Landing';
-import SaveProfile, {SaveProfileParams} from 'screens/SaveProfile';
+import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import SignupResult from 'screens/SignupResult';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, {
@@ -172,7 +169,7 @@ const RootNavigator = () => {
   useInitializeNotifications();
   useInitializeDynamicLinks();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   // const theme = useTheme();
 
   /**
@@ -252,7 +249,7 @@ const RootNavigator = () => {
         }}
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
-       />
+      />
       {/* <Stack.Screen name={ROUTES.SETTINGS} component={Settings} /> */}
       {/* <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} /> */}
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
@@ -381,7 +378,7 @@ const RootNavigator = () => {
       <Stack.Screen
         name={ROUTES.ONBOARDING}
         component={Onboarding}
-        initialParams={{invited: false}}
+        initialParams={{ invited: false }}
       />
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
@@ -431,10 +428,7 @@ const RootNavigator = () => {
       {/*    component={AddProfileModal} */}
       {/*  /> */}
 
-      <Stack.Screen
-        name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
-        component={BackupPhraseBottomModal}
-      />
+      <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
       <Stack.Screen
         initialParams={{
           title: t('signup:profile dtag'),

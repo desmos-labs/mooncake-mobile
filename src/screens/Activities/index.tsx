@@ -1,23 +1,17 @@
-import notifee, {AndroidColor} from '@notifee/react-native';
-import {useFocusEffect} from '@react-navigation/native';
-import {FlashList} from '@shopify/flash-list';
-import {errorImage} from 'assets/images';
+import notifee, { AndroidColor } from '@notifee/react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { errorImage } from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import React, {useCallback, useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  ActivityIndicator,
-  Image,
-  Platform,
-  RefreshControl,
-  View,
-} from 'react-native';
-import {Divider, useTheme} from 'react-native-paper';
+import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
+import { Divider, useTheme } from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
 import NotificationTypesEnum from 'types/notificationTypes';
 import useHooks from './useHooks';
@@ -74,7 +68,7 @@ export interface CompleteNotification {
 }
 
 const Activities = () => {
-  const {t} = useTranslation('activities');
+  const { t } = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
   const {
@@ -110,7 +104,7 @@ const Activities = () => {
     return null;
   }, [data, notificationsLoading]);
 
-  const renderNotification = useCallback(({item}: string | any) => {
+  const renderNotification = useCallback(({ item }: string | any) => {
     if (typeof item === 'string') {
       if (item === 'divider') {
         return (
@@ -141,7 +135,7 @@ const Activities = () => {
   const footerComponent = useMemo(() => {
     if (fetchingMore) {
       return (
-        <View style={{padding: theme.spacing.m}}>
+        <View style={{ padding: theme.spacing.m }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
@@ -180,9 +174,7 @@ const Activities = () => {
       notificationsData.length > 0 ? (
         <FlashList
           keyExtractor={(item, index) =>
-            typeof item === 'string'
-              ? `sectionHeader${index}`
-              : `row${item.id}${item.timestamp}`
+            typeof item === 'string' ? `sectionHeader${index}` : `row${item.id}${item.timestamp}`
           }
           refreshControl={
             <RefreshControl
@@ -208,7 +200,7 @@ const Activities = () => {
           onEndReached={fetchMore}
         />
       ) : (
-        <View style={{margin: theme.spacing.m}}>
+        <View style={{ margin: theme.spacing.m }}>
           <TextRowContentLoader width="90" />
           <Spacer paddingVertical={theme.spacing.s} />
           <NotificationContentLoader />

@@ -5,25 +5,16 @@ import {
   MsgRevokeEncodeObject,
   timestampFromDate,
 } from '@desmoslabs/desmjs';
-import {GenericSubspaceAuthorization} from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import {Any} from '@desmoslabs/desmjs-types/google/protobuf/any';
-import {genericAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
-import {genericSubspaceAuthorizationToAny} from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
+import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import { genericAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
+import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
 import EnvConfig from 'config/EnvConfig';
-import {
-  GenericAuthorization,
-  Grant,
-} from 'cosmjs-types/cosmos/authz/v1beta1/authz';
-import {MsgGrant, MsgRevoke} from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import {
-  AllowedMsgAllowance,
-  BasicAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
-import {
-  MsgGrantAllowance,
-  MsgRevokeAllowance,
-} from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import { MsgGrantAllowance, MsgRevokeAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 import Long from 'long';
 
 /**
@@ -112,8 +103,7 @@ export const buildGrantMsgEncodes = ({
 }): MsgGrantEncodeObject[] => {
   return grants.map(grant => {
     const content =
-      grant === GrantEnums.MsgExecuteContract ||
-      grant === GrantEnums.MsgSaveProfile
+      grant === GrantEnums.MsgExecuteContract || grant === GrantEnums.MsgSaveProfile
         ? genericAuthorizationToAny(
             GenericAuthorization.fromPartial({
               msg: grant,

@@ -1,5 +1,5 @@
 import UploadMedia from 'services/axios/requests/UploadMedia';
-import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
+import { uploadImageForPost } from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 
 jest.mock('services/axios/requests/UploadMedia');
 
@@ -11,9 +11,9 @@ describe('utils: useCreatePost utils', () => {
         type: 'mock-type',
       };
 
-      (UploadMedia as jest.Mock).mockResolvedValueOnce({url: mockUrl});
+      (UploadMedia as jest.Mock).mockResolvedValueOnce({ url: mockUrl });
 
-      const result = await uploadImageForPost({mediaFile: mockMediaFile});
+      const result = await uploadImageForPost({ mediaFile: mockMediaFile });
 
       expect(result).toEqual({
         uri: mockUrl,

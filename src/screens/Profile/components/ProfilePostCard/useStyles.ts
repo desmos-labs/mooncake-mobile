@@ -1,5 +1,5 @@
-import {makeStyleWithProps} from 'config/theme';
-import {scale, verticalScale} from 'react-native-size-matters';
+import { makeStyleWithProps } from 'config/theme';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 /**
  * Style hook for the ProfilePostCard component

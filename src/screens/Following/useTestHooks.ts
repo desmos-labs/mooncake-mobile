@@ -1,20 +1,11 @@
 // START debug
-import {ApolloError, DocumentNode} from '@apollo/client';
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {useSetRecoilState} from 'recoil';
+import { ApolloError, DocumentNode } from '@apollo/client';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
 
 const MAX_MOCK_FOLLOWERS = 10000000;
-function mockGaginatedFollowers(
-  ref: MutableRefObject<ProfileSummary[]>,
-  initialOffset: number,
-) {
+function mockGaginatedFollowers(ref: MutableRefObject<ProfileSummary[]>, initialOffset: number) {
   const paginatedFollowers = ref.current;
   let offset = initialOffset;
   for (let i = 0; i < 20; i++) {
@@ -90,23 +81,19 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (
-  subspaceID: number,
-  userAddress: string,
-  query: DocumentNode,
-) => {
-  console.log('useHooks', {subspaceID, userAddress, query});
+const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) => {
+  console.log('useHooks', { subspaceID, userAddress, query });
 
   // START debug
   const paginatedFollowers = useRef<ProfileSummary[]>([]);
   const [data, setData] = useState<ProfileSummary[]>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApolloError>();
-  function fetchMore(params: {variables: {offset: number}}) {
+  function fetchMore(params: { variables: { offset: number } }) {
     console.log('fetchMore', params);
     return fetch(params.variables.offset);
   }
-  function refetch(params: {offset: number}) {
+  function refetch(params: { offset: number }) {
     console.log('refetch', params);
     return fetch(params.offset);
   }
@@ -119,7 +106,7 @@ const useHooks = (
         console.log('fetching', offset);
         if (Math.random() > 1) {
           setLoading(false);
-          setError(new ApolloError({errorMessage: 'random error'}));
+          setError(new ApolloError({ errorMessage: 'random error' }));
           return;
         }
         setLoading(false);
@@ -133,7 +120,7 @@ const useHooks = (
   // END debug
 
   const setNumOfFollowers = useSetRecoilState(
-    numOfFollowerState({type: 'following', subspaceID, userAddress}),
+    numOfFollowerState({ type: 'following', subspaceID, userAddress }),
   );
   useEffect(() => setNumOfFollowers(MAX_MOCK_FOLLOWERS), [data]);
 
@@ -147,7 +134,7 @@ const useHooks = (
   }, [data]);
 
   const refetchCallback = useCallback(() => {
-    refetch({offset: 0});
+    refetch({ offset: 0 });
   }, []);
 
   return {

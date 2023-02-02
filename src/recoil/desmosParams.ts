@@ -1,6 +1,6 @@
-import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {PostsParams, ProfileParams} from 'types/desmos';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { PostsParams, ProfileParams } from 'types/desmos';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 
 interface DesmosParams {
@@ -32,7 +32,7 @@ const desmosParamsState = atom<DesmosParams>({
   key: 'profileParamsState',
   default: getMMKV(MMKVKEYS.DESMOS_CONFIG) ?? DefaultParams,
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(params => {
         setMMKV(MMKVKEYS.DESMOS_CONFIG, params);
       });
@@ -47,7 +47,7 @@ const paramsState = selectorFamily({
   key: 'param',
   get:
     (key: keyof DesmosParams) =>
-    ({get}) => {
+    ({ get }) => {
       const settings = get(desmosParamsState);
       return settings[key];
     },
@@ -65,9 +65,7 @@ export const useDesmosParam = <K extends keyof DesmosParams>(paramKey: K) =>
  * Hook that provides a function to update the value of a Desmos params.
  * @param settingKey - Key of the params of interest.
  */
-export const useSetDesmosParam = <K extends keyof DesmosParams>(
-  settingKey: K,
-) => {
+export const useSetDesmosParam = <K extends keyof DesmosParams>(settingKey: K) => {
   const setParams = useSetRecoilState(desmosParamsState);
   return React.useCallback(
     (setting: DesmosParams[K]) => {

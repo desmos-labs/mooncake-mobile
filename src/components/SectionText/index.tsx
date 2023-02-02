@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 
@@ -16,7 +16,7 @@ export type Props = {
 
 // Unused component
 const SectionText: React.FC<Props> = props => {
-  const {leftText, rightText} = props;
+  const { leftText, rightText } = props;
   const styles = useStyles();
 
   return (

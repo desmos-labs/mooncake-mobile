@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import SearchBar from './index';
 
@@ -10,9 +10,7 @@ const RenderComponent = () => {
     console.log(value);
   }, [value]);
 
-  return (
-    <SearchBar handleChange={setValue} searchPlaceHolder="search placeholder" />
-  );
+  return <SearchBar handleChange={setValue} searchPlaceHolder="search placeholder" />;
 };
 
 storiesOf('components/SearchBar', module)

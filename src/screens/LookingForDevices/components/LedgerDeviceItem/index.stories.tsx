@@ -1,7 +1,7 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {action} from '@storybook/addon-actions';
+import { action } from '@storybook/addon-actions';
 import LedgerDeviceItem from './index';
 
 type LedgerDeviceItemProps = React.ComponentProps<typeof LedgerDeviceItem>;

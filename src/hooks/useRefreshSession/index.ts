@@ -1,8 +1,8 @@
 import messaging from '@react-native-firebase/messaging';
-import {useNavigation} from '@react-navigation/native';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import { useNavigation } from '@react-navigation/native';
+import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
-import {useCallback} from 'react';
+import { useCallback } from 'react';
 import axiosInstance from 'services/axios';
 import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import RefreshSession from 'services/axios/requests/RefreshSession';
@@ -12,7 +12,7 @@ import RefreshSession from 'services/axios/requests/RefreshSession';
  * if it is invalid or cannot be found.
  */
 const useRefreshSession = () => {
-  const {replace} = useNavigation<any>();
+  const { replace } = useNavigation<any>();
 
   const refreshSession = useCallback(async () => {
     const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);

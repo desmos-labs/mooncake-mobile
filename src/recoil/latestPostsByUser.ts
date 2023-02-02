@@ -1,12 +1,12 @@
 import React from 'react';
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 
 const latestPostsState = atom<Record<string, PostItem[]>>({
   key: 'latestPostsState',
   default: {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(posts => {
         setMMKV(MMKVKEYS.LATEST_POSTS, posts);
       });

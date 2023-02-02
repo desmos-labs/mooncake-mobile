@@ -1,15 +1,15 @@
-import {useLazyQuery} from '@apollo/client';
-import {convertCoin} from '@desmoslabs/desmjs';
+import { useLazyQuery } from '@apollo/client';
+import { convertCoin } from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import React, {useEffect, useMemo} from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
+import React, { useEffect, useMemo } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { useRecoilState } from 'recoil';
 import getAccountBalance from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
 type Props = {
@@ -22,11 +22,11 @@ type Props = {
   isAlreadyLinked?: boolean;
 };
 
-const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
-  const {t} = useTranslation('connectAddress');
+const AddressItem = ({ index, address, handlePress, isAlreadyLinked }: Props) => {
+  const { t } = useTranslation('connectAddress');
   const [settings] = useRecoilState(appSettingsState);
-  const [getBalance, {data, loading}] = useLazyQuery(getAccountBalance, {
-    variables: {address},
+  const [getBalance, { data, loading }] = useLazyQuery(getAccountBalance, {
+    variables: { address },
   });
   const styles = useStyles();
 
@@ -53,8 +53,7 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
   const rightElement = React.useMemo(() => {
     if (isAlreadyLinked) {
       return (
-        <Typography.Subtitle4
-          style={[styles.alignRight, styles.linkedAddrStyle]}>
+        <Typography.Subtitle4 style={[styles.alignRight, styles.linkedAddrStyle]}>
           {t('alreadyLinked')}
         </Typography.Subtitle4>
       );
@@ -79,16 +78,9 @@ const AddressItem = ({index, address, handlePress, isAlreadyLinked}: Props) => {
 
   return (
     <DropShadowWrapper customColor="rgba(16, 24, 40, 0.01)">
-      <TouchableOpacity
-        disabled={isAlreadyLinked}
-        onPress={handlePress}
-        style={styles.container}>
+      <TouchableOpacity disabled={isAlreadyLinked} onPress={handlePress} style={styles.container}>
         <View style={styles.innerContainer}>
-          <Typography.Body7
-            style={[
-              styles.indexStyle,
-              isAlreadyLinked && styles.linkedTextStyle,
-            ]}>
+          <Typography.Body7 style={[styles.indexStyle, isAlreadyLinked && styles.linkedTextStyle]}>
             #{index + 1}
           </Typography.Body7>
           <Spacer paddingLeft={theme.spacing.l}>

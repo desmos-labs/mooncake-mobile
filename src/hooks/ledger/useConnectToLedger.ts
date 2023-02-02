@@ -1,11 +1,8 @@
-import {LedgerConnector} from '@cosmjs/ledger-amino';
+import { LedgerConnector } from '@cosmjs/ledger-amino';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useCallback, useEffect, useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export default function useConnectToLedger(
-  ledger: BleLedger,
-  ledgerApp: LedgerApp,
-) {
+export default function useConnectToLedger(ledger: BleLedger, ledgerApp: LedgerApp) {
   const [paired, setPaired] = useState(false);
   const [connecting, setConnecting] = useState(true);
   const [connected, setConnected] = useState(false);
@@ -21,8 +18,9 @@ export default function useConnectToLedger(
       setTransport(undefined);
 
       try {
-        const transportToUse: BluetoothTransport =
-          await BluetoothTransport.open(ledgerToConnect.id);
+        const transportToUse: BluetoothTransport = await BluetoothTransport.open(
+          ledgerToConnect.id,
+        );
 
         setPaired(true);
         const launchpad = new LedgerConnector(transportToUse, {

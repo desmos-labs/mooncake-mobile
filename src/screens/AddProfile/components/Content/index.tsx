@@ -1,7 +1,7 @@
-import {useLazyQuery} from '@apollo/client';
-import {toBase64} from '@cosmjs/encoding';
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useLazyQuery } from '@apollo/client';
+import { toBase64 } from '@cosmjs/encoding';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import profilesState from '@recoil/profiles';
 import Button from 'components/Button';
 import Typography from 'components/Typography';
@@ -13,16 +13,16 @@ import {
   saveNewAccount,
   savePasswordWithBiometrics,
 } from 'lib/SecureStorage';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, ScrollView, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useRecoilState} from 'recoil';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useRecoilState } from 'recoil';
 import AddProfileBadge from 'screens/AddProfile/components/AddProfileBadge';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
-import {ChainAccount, ChainAccountType} from 'types/chains';
+import { ChainAccount, ChainAccountType } from 'types/chains';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE>;
@@ -32,7 +32,7 @@ type ContentProps = {
   password?: string;
 };
 
-const Content = ({mnemonic, password}: ContentProps) => {
+const Content = ({ mnemonic, password }: ContentProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string>();
   const [globalLoading, setGlobalLoading] = useState(true);
   const [fetchLimit, setFetchLimit] = useState(10);
@@ -40,11 +40,11 @@ const Content = ({mnemonic, password}: ContentProps) => {
   const [generatedWallets, setGeneratedWallets] = useState<any[]>([]);
   const [profiles] = useRecoilState(profilesState);
   const [getProfiles] = useLazyQuery(GetProfileForAddresses);
-  const {generateAccounts} = useGenerateAccountsToAdd();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { generateAccounts } = useGenerateAccountsToAdd();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const isAlreadyAdded = (address: string) => {
     return profiles.findIndex(profile => profile.address === address) !== -1;
   };
@@ -55,9 +55,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
       const result = await generateAccounts(0, 10, mnemonic);
       if (result) {
         setGeneratedWallets(result);
-        const addressesToFetch = result.map(
-          (account: {address: any}) => account.address,
-        );
+        const addressesToFetch = result.map((account: { address: any }) => account.address);
         await getProfiles({
           variables: {
             addresses: addressesToFetch,
@@ -74,22 +72,14 @@ const Content = ({mnemonic, password}: ContentProps) => {
   const generateMoreAccountsAndFetchProfiles = useCallback(async () => {
     try {
       setGlobalLoading(true);
-      const result = await generateAccounts(
-        fetchLimit,
-        fetchLimit + 10,
-        mnemonic,
-      );
+      const result = await generateAccounts(fetchLimit, fetchLimit + 10, mnemonic);
       if (result) {
-        const addressesToFetch = result.map(
-          (account: {address: any}) => account.address,
-        );
+        const addressesToFetch = result.map((account: { address: any }) => account.address);
         await getProfiles({
           variables: {
             addresses: addressesToFetch,
           },
-        }).then(res =>
-          setFetchedAccounts(prev => [...prev, ...res.data.profile]),
-        );
+        }).then(res => setFetchedAccounts(prev => [...prev, ...res.data.profile]));
       }
     } catch (e) {
       console.error(e);
@@ -101,12 +91,8 @@ const Content = ({mnemonic, password}: ContentProps) => {
 
   const createNewAccount = useCallback(async () => {
     try {
-      const walletToSave = generatedWallets.find(
-        wallet => wallet.address === selectedAddress,
-      );
-      const deserializedWallet = await LocalWallet.deserialize(
-        walletToSave.signer as string,
-      );
+      const walletToSave = generatedWallets.find(wallet => wallet.address === selectedAddress);
+      const deserializedWallet = await LocalWallet.deserialize(walletToSave.signer as string);
       const chainAccount: ChainAccount = {
         address: deserializedWallet.bech32Address,
         type: ChainAccountType.Local,
@@ -134,21 +120,19 @@ const Content = ({mnemonic, password}: ContentProps) => {
 
   return (
     <View style={styles.content}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Typography.Body6>
-          Searches the first {fetchLimit} accounts
-        </Typography.Body6>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Typography.Body6>Searches the first {fetchLimit} accounts</Typography.Body6>
         <Button mode="text">
           <Typography.Button2
-            style={{color: theme.colors.butterOrange01}}
+            style={{ color: theme.colors.butterOrange01 }}
             onPress={generateMoreAccountsAndFetchProfiles}>
             {t('search more')}
           </Typography.Button2>
         </Button>
       </View>
       <ScrollView
-        style={{marginHorizontal: -theme.spacing.m}}
-        contentContainerStyle={{padding: theme.spacing.m, flexGrow: 1}}>
+        style={{ marginHorizontal: -theme.spacing.m }}
+        contentContainerStyle={{ padding: theme.spacing.m, flexGrow: 1 }}>
         {globalLoading ? (
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         ) : (
@@ -169,10 +153,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
         )}
       </ScrollView>
       <View>
-        <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
-          onPress={createNewAccount}>
+        <Button mode="contained" color={theme.colors.surfaceBlack} onPress={createNewAccount}>
           {t('confirm')}
         </Button>
         <Button
@@ -182,7 +163,7 @@ const Content = ({mnemonic, password}: ContentProps) => {
               password,
             })
           }
-          style={{paddingVertical: theme.spacing.m}}
+          style={{ paddingVertical: theme.spacing.m }}
           mode="text"
           color={theme.colors.surfaceBlack}>
           create desmos profile

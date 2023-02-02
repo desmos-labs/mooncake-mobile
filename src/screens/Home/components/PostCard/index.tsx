@@ -1,5 +1,5 @@
-import {isFollowingAddr} from '@recoil/following';
-import {loadingOrange} from 'assets/animations';
+import { isFollowingAddr } from '@recoil/following';
+import { loadingOrange } from 'assets/animations';
 import {
   defaultProfilePic,
   followBlackIcon,
@@ -17,17 +17,17 @@ import ImageButton from 'components/ImageButton';
 import PopupMenu from 'components/PopupMenu';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
-import {parseISO} from 'date-fns';
+import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import {formatMsToHumanReadable} from 'lib/FormatUtils';
-import React, {memo, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View} from 'react-native';
+import { formatMsToHumanReadable } from 'lib/FormatUtils';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
-import {useRecoilValue} from 'recoil';
+import { useTheme } from 'react-native-paper';
+import { useRecoilValue } from 'recoil';
 import useStyles from './useStyles';
 
 interface Props
@@ -97,8 +97,8 @@ const PostCard = ({
 }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('home');
-  const {activeAddress, profileData} = useActiveAccount();
+  const { t } = useTranslation('home');
+  const { activeAddress, profileData } = useActiveAccount();
   const formattedDate = useFormatTimeForPostDetails(creation_date);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<{
@@ -115,11 +115,11 @@ const PostCard = ({
 
   const isFollowing = useRecoilValue(isFollowingAddr(authorData?.address));
 
-  const {MediaAttachment} = useRenderMediaAttachment({
+  const { MediaAttachment } = useRenderMediaAttachment({
     attachments,
     useAutoSize: true,
     horizontalPaddingWithAutoSize: 32,
-    imageStyle: {borderRadius: 10, backgroundColor: theme.colors.background},
+    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.background },
     resizeMode: 'contain',
   });
 
@@ -152,13 +152,7 @@ const PostCard = ({
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
-      return (
-        <ThemedLottieView
-          source={loadingOrange}
-          autoPlay
-          style={styles.pendingIcon}
-        />
-      );
+      return <ThemedLottieView source={loadingOrange} autoPlay style={styles.pendingIcon} />;
     } else if (activeAddress !== authorData?.address) {
       return (
         <ImageButton
@@ -175,7 +169,7 @@ const PostCard = ({
             marginTop: theme.spacing.s,
             marginRight: theme.spacing.xs,
           }}
-          style={{width: 20, height: 20}}
+          style={{ width: 20, height: 20 }}
         />
       );
     }
@@ -184,20 +178,17 @@ const PostCard = ({
   const ProfileInfo = React.useMemo(() => {
     return (
       <View style={styles.profileInfoView}>
-        <TouchableOpacity
-          style={{flexDirection: 'row'}}
-          onPress={onPressAuthor}>
+        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
           <FastImage
             source={
-              (authorData?.profile_pic && {uri: authorData?.profile_pic}) ||
-              defaultProfilePic
+              (authorData?.profile_pic && { uri: authorData?.profile_pic }) || defaultProfilePic
             }
             style={styles.profilePic}
           />
-          <View style={{flexDirection: 'column'}}>
+          <View style={{ flexDirection: 'column' }}>
             <Typography.Subtitle2>{authorData?.nickname}</Typography.Subtitle2>
-            <View style={{flexDirection: 'row'}}>
-              <Typography.Body6 style={{color: theme.colors.midGrey}}>
+            <View style={{ flexDirection: 'row' }}>
+              <Typography.Body6 style={{ color: theme.colors.midGrey }}>
                 @{authorData?.dtag}
               </Typography.Body6>
               <Typography.Body6
@@ -234,24 +225,18 @@ const PostCard = ({
                 ? theme.colors.butterOrange01
                 : theme.colors.grey02
             }
-            image={
-              reactionPresence?.aggregate?.count >= 1
-                ? postLikedIcon
-                : postToLikeIcon
-            }
+            image={reactionPresence?.aggregate?.count >= 1 ? postLikedIcon : postToLikeIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
             style={
               reactionPresence?.aggregate?.count >= 1
-                ? {color: theme.colors.butterOrange01}
-                : {color: theme.colors.grey02}
+                ? { color: theme.colors.butterOrange01 }
+                : { color: theme.colors.grey02 }
             }>
             {reactions?.length}
           </Typography.Subtitle3>
-          <TouchableOpacity
-            onPress={onPressComment}
-            style={styles.commentButton}>
+          <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
             <FastImage
               resizeMode="cover"
               tintColor={
@@ -260,17 +245,15 @@ const PostCard = ({
                   : theme.colors.grey02
               }
               source={
-                commentPresence?.aggregate?.count >= 1
-                  ? postCommentedIcon
-                  : postToCommentIcon
+                commentPresence?.aggregate?.count >= 1 ? postCommentedIcon : postToCommentIcon
               }
               style={styles.bottomBarIcon}
             />
             <Typography.Subtitle3
               style={
                 commentPresence?.aggregate?.count >= 1
-                  ? {color: theme.colors.butterOrange01}
-                  : {color: theme.colors.grey02}
+                  ? { color: theme.colors.butterOrange01 }
+                  : { color: theme.colors.grey02 }
               }>
               {repliesCount?.aggregate?.count}
             </Typography.Subtitle3>
@@ -286,18 +269,14 @@ const PostCard = ({
           }}>
           <FastImage
             resizeMode="cover"
-            source={
-              tipPresence?.aggregate?.count >= 1
-                ? postTippedIcon
-                : postToTipIcon
-            }
+            source={tipPresence?.aggregate?.count >= 1 ? postTippedIcon : postToTipIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
             style={
               tipPresence?.aggregate?.count >= 1
-                ? {color: theme.colors.butterOrange01}
-                : {color: theme.colors.grey02}
+                ? { color: theme.colors.butterOrange01 }
+                : { color: theme.colors.grey02 }
             }>
             {t('tip')}
           </Typography.Subtitle3>
@@ -316,19 +295,10 @@ const PostCard = ({
   ]);
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.9}
-      style={styles.container}
-      onPress={onPressDetails}>
+    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={onPressDetails}>
       {ProfileInfo}
-      {text && (
-        <Typography.Body6 style={{marginTop: theme.spacing.m}}>
-          {text}
-        </Typography.Body6>
-      )}
-      {MediaAttachment && (
-        <View style={styles.mediaView}>{MediaAttachment}</View>
-      )}
+      {text && <Typography.Body6 style={{ marginTop: theme.spacing.m }}>{text}</Typography.Body6>}
+      {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
       {!isPending && BottomBar}
       <PopupMenu
         anchor={menuAnchor}

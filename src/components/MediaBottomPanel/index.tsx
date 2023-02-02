@@ -1,16 +1,10 @@
-import {cameraIcon, galleryIcon, tagIcon} from 'assets/images';
+import { cameraIcon, galleryIcon, tagIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import React from 'react';
-import {
-  ImageStyle,
-  KeyboardAvoidingView,
-  Platform,
-  StyleProp,
-  View,
-} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import { ImageStyle, KeyboardAvoidingView, Platform, StyleProp, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import useStyles from './useStyles';
 
 type Props = {
@@ -55,7 +49,7 @@ const MediaBottomPanel = ({
 }: Props) => {
   const styles = useStyles();
 
-  const {bottom} = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <KeyboardAvoidingView
@@ -89,10 +83,7 @@ const MediaBottomPanel = ({
         </View>
 
         <View style={styles.rightGroup}>
-          <RadialTextCounter
-            max={EnvConfig.MAX_COMMENT_LENGTH}
-            current={commentLength}
-          />
+          <RadialTextCounter max={EnvConfig.MAX_COMMENT_LENGTH} current={commentLength} />
           {rightComponent}
         </View>
       </SafeAreaView>

@@ -1,4 +1,4 @@
-import {EnglishMnemonic} from '@cosmjs/crypto';
+import { EnglishMnemonic } from '@cosmjs/crypto';
 
 export const MIN_PW_LENGTH = 10;
 
@@ -19,11 +19,8 @@ export const validateMinPwLength = (value: string | undefined) => {
   if (!value) return false;
   return value.length >= MIN_PW_LENGTH;
 };
-export const validateMin1Lowercase = (value: string | undefined) =>
-  /(?=.*[a-z])/.test(value || '');
+export const validateMin1Lowercase = (value: string | undefined) => /(?=.*[a-z])/.test(value || '');
 
-export const validateMin1Uppercase = (value: string | undefined) =>
-  /(?=.*[A-Z])/.test(value || '');
+export const validateMin1Uppercase = (value: string | undefined) => /(?=.*[A-Z])/.test(value || '');
 
-export const validateMin1SpecialChar = (value: string | undefined) =>
-  /(?=.*\W)/.test(value || '');
+export const validateMin1SpecialChar = (value: string | undefined) => /(?=.*\W)/.test(value || '');

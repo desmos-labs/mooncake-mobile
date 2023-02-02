@@ -1,12 +1,12 @@
-import {useActiveAccountAddress} from '@recoil/wallets';
-import {useQuery} from '@apollo/client';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { useQuery } from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
   useAddFollowedUser,
   useHasFollowedUser,
   useRemoveFollowedUser,
 } from '@recoil/relationships';
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 
 /**
  * Hook that allows to know if the current user is following a given user or not.
@@ -34,7 +34,7 @@ const useIsFollowing = (counterparty: string) => {
     [hasFollowedUser, activeAddress, counterparty],
   );
 
-  const {data, refetch} = useQuery(GetRelationshipForAddress, {
+  const { data, refetch } = useQuery(GetRelationshipForAddress, {
     fetchPolicy: 'cache-and-network',
     variables: {
       userAddress: activeAddress,
@@ -64,13 +64,7 @@ const useIsFollowing = (counterparty: string) => {
       // delete it from the cache
       removeFollowedUser(activeAddress, counterparty);
     }
-  }, [
-    data,
-    activeAddress,
-    hasFollowedUser,
-    addFollowedUser,
-    removeFollowedUser,
-  ]);
+  }, [data, activeAddress, hasFollowedUser, addFollowedUser, removeFollowedUser]);
 
   return {
     isFollowing,

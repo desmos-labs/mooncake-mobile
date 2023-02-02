@@ -1,7 +1,7 @@
 /**
  * Style hook for the ChangePassword screen
  */
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   container: {

@@ -1,41 +1,35 @@
-import {useQuery} from '@apollo/client';
-import {useNavigation} from '@react-navigation/native';
-import {pendingCommentsByPost} from '@recoil/pendingTx/pendingPosts';
+import { useQuery } from '@apollo/client';
+import { useNavigation } from '@react-navigation/native';
+import { pendingCommentsByPost } from '@recoil/pendingTx/pendingPosts';
 import createPostState from '@recoil/screens/createPostState';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import usePendingPosts from 'hooks/usePendingPosts';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
-import {Keyboard} from 'react-native';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
-import {NavProps} from 'screens/PostDetails/index';
+import React, { useCallback, useMemo } from 'react';
+import { Keyboard } from 'react-native';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { NavProps } from 'screens/PostDetails/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
-import {GetPostComments} from 'services/graphql/queries/GetComments';
+import { GetPostComments } from 'services/graphql/queries/GetComments';
 import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
-import {GetPostTips} from 'services/graphql/queries/GetPostTips';
-import {GetPostReactions} from 'services/graphql/queries/GetReactions';
+import { GetPostTips } from 'services/graphql/queries/GetPostTips';
+import { GetPostReactions } from 'services/graphql/queries/GetReactions';
 import useSubscribeToPostComments from 'hooks/subscriptions/useSubscribeToPostComments';
-import {CommentRepliesParams} from 'screens/CommentReplies';
+import { CommentRepliesParams } from 'screens/CommentReplies';
 
-const useHooks = ({
-  postID,
-  subspaceID,
-}: {
-  postID: number;
-  subspaceID: number;
-}) => {
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const {activeAddress, profileData} = useActiveAccount();
-  const {createPost, loading} = useCreatePost();
-  const {addOrRemoveReaction} = useAddOrRemoveReaction();
+const useHooks = ({ postID, subspaceID }: { postID: number; subspaceID: number }) => {
+  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { activeAddress, profileData } = useActiveAccount();
+  const { createPost, loading } = useCreatePost();
+  const { addOrRemoveReaction } = useAddOrRemoveReaction();
   const resetSharedPostState = useResetRecoilState(createPostState);
-  const {handleNavigateToProfile} = useNavigateToProfile();
+  const { handleNavigateToProfile } = useNavigateToProfile();
   const pendingCommentsOfPost = useRecoilValue(pendingCommentsByPost(postID));
 
-  const {resolveByExternalId} = usePendingPosts();
+  const { resolveByExternalId } = usePendingPosts();
 
   const {
     data: originalPost,
@@ -102,9 +96,7 @@ const useHooks = ({
   React.useEffect(() => {
     if (!postComments) return;
 
-    const externalIds: string[] = postComments.post.map(
-      (x: PostItem) => x.external_id,
-    );
+    const externalIds: string[] = postComments.post.map((x: PostItem) => x.external_id);
 
     externalIds.forEach(resolveByExternalId);
   }, [postComments]);
@@ -114,19 +106,11 @@ const useHooks = ({
       return [...pendingCommentsOfPost.map(x => x.postData).reverse()];
     }
 
-    return [
-      ...postComments.post,
-      ...pendingCommentsOfPost.map(x => x.postData).reverse(),
-    ];
+    return [...postComments.post, ...pendingCommentsOfPost.map(x => x.postData).reverse()];
   }, [pendingCommentsOfPost, postComments]);
 
   const pageRefetch = useCallback(async () => {
-    await Promise.all([
-      postRefetch,
-      commentsRefetch,
-      reactionsRefetch,
-      tipsRefetch,
-    ]);
+    await Promise.all([postRefetch, commentsRefetch, reactionsRefetch, tipsRefetch]);
   }, [postRefetch, commentsRefetch, reactionsRefetch, tipsRefetch]);
 
   const post = React.useMemo(() => {
@@ -146,15 +130,12 @@ const useHooks = ({
 
   const formattedDate = useFormatTimeForPostDetails(post?.creation_date);
 
-  const handlePressSelectedComment = React.useCallback(
-    (args: CommentRepliesParams) => {
-      navigate(ROUTES.COMMENT_REPLIES, args);
-    },
-    [],
-  );
+  const handlePressSelectedComment = React.useCallback((args: CommentRepliesParams) => {
+    navigate(ROUTES.COMMENT_REPLIES, args);
+  }, []);
 
   const handleExpandComment = React.useCallback(
-    ({author, postId}: {author: PostAuthor; postId: number}) => {
+    ({ author, postId }: { author: PostAuthor; postId: number }) => {
       navigate(ROUTES.ENTER_COMMENT, {
         author,
         postId,
@@ -164,7 +145,7 @@ const useHooks = ({
   );
 
   const handlePostComment = React.useCallback(async () => {
-    await createPost({conversationId: postID, referencedPostId: postID});
+    await createPost({ conversationId: postID, referencedPostId: postID });
     Keyboard.dismiss();
   }, [postID]);
 
@@ -179,26 +160,20 @@ const useHooks = ({
     [addOrRemoveReaction],
   );
 
-  const handlePressReport = React.useCallback(
-    (postId: number, subspaceId: number) => {
-      navigate(ROUTES.REPORT_POST, {
-        postId,
-        subspaceId,
-      });
-    },
-    [],
-  );
+  const handlePressReport = React.useCallback((postId: number, subspaceId: number) => {
+    navigate(ROUTES.REPORT_POST, {
+      postId,
+      subspaceId,
+    });
+  }, []);
 
   React.useEffect(() => {
     resetSharedPostState();
   }, []);
 
-  const handlePressSendTips = React.useCallback(
-    (postAuthor: string, postId: number) => {
-      navigate(ROUTES.SEND_TIPS, {postAuthor, postId});
-    },
-    [],
-  );
+  const handlePressSendTips = React.useCallback((postAuthor: string, postId: number) => {
+    navigate(ROUTES.SEND_TIPS, { postAuthor, postId });
+  }, []);
 
   const handlePressCounters = React.useCallback(() => {
     navigate(ROUTES.POST_INTERACTION, {

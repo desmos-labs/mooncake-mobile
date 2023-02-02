@@ -1,7 +1,7 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Source} from 'react-native-fast-image';
-import {PanGestureHandlerProps} from 'react-native-gesture-handler';
+import { View } from 'react-native';
+import { Source } from 'react-native-fast-image';
+import { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import SettingsProfileBadge from 'screens/Profiles/components/SettingsProfileBadge';
 
 /**
@@ -49,15 +49,9 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
 }
 
 const SettingsProfileBadgeGroup = (props: Props) => {
-  const {
-    values,
-    onSelect,
-    onEditProfile,
-    onRemoveProfile,
-    simultaneousHandlers,
-  } = props;
+  const { values, onSelect, onEditProfile, onRemoveProfile, simultaneousHandlers } = props;
 
-  const radioValues: {label: string; value: string | number}[] | undefined = [];
+  const radioValues: { label: string; value: string | number }[] | undefined = [];
 
   return (
     <View>

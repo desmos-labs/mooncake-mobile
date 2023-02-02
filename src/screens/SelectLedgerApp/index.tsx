@@ -1,23 +1,20 @@
 import React from 'react';
 import DView from 'components/DView';
-import {FlatList, ListRenderItemInfo, View} from 'react-native';
-import {useRecoilValue} from 'recoil';
-import {selectedChainState} from '@recoil/connectChainState';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { useRecoilValue } from 'recoil';
+import { selectedChainState } from '@recoil/connectChainState';
 import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
 import ROUTES from 'navigation/routes';
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {useTranslation} from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { useTranslation } from 'react-i18next';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.SELECT_LEDGER_APP
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_LEDGER_APP>;
 
 /**
  * A screen where users select a ledger app to connect chains with more than one
@@ -26,10 +23,10 @@ type NavProps = StackScreenProps<
 const SelectLedgerApp = () => {
   const selectedChain = useRecoilValue(selectedChainState);
   const theme = useTheme();
-  const {navigate, replace} = useNavigation<NavProps['navigation']>();
-  const {t} = useTranslation('selectLedgerApp');
+  const { navigate, replace } = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('selectLedgerApp');
 
-  const renderItem = ({item}: ListRenderItemInfo<LedgerApp>) => {
+  const renderItem = ({ item }: ListRenderItemInfo<LedgerApp>) => {
     const handlePress = () => {
       navigate(ROUTES.AUTHORIZE_WALLET, {
         screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
@@ -45,14 +42,7 @@ const SelectLedgerApp = () => {
         },
       });
     };
-    return (
-      <ChainItem
-        chainName=""
-        symbol={item.name}
-        icon={item.icon}
-        handlePress={handlePress}
-      />
-    );
+    return <ChainItem chainName="" symbol={item.name} icon={item.icon} handlePress={handlePress} />;
   };
 
   const ItemSeparatorComponent = React.useCallback(() => {
@@ -61,7 +51,7 @@ const SelectLedgerApp = () => {
 
   return (
     <DView topBar={<TopBar />}>
-      <View style={{paddingHorizontal: theme.spacing.m}}>
+      <View style={{ paddingHorizontal: theme.spacing.m }}>
         <Typography.H3
           style={{
             color: theme.colors.surfaceBlack,

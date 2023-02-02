@@ -1,6 +1,4 @@
-import UploadMedia, {
-  UploadMediaParams,
-} from 'services/axios/requests/UploadMedia';
+import UploadMedia, { UploadMediaParams } from 'services/axios/requests/UploadMedia';
 
 /**
  * Uploads an image and returns an object that is compatible with the Media.fromPartial helper function.
@@ -10,8 +8,7 @@ export const uploadImageForPost = async ({
   mediaFile,
   onUploadProgress,
 }: UploadMediaParams): Promise<
-  | {uri: string; mimeType: string; size: {width: number; height: number}}
-  | undefined
+  { uri: string; mimeType: string; size: { width: number; height: number } } | undefined
 > => {
   try {
     const uploadResponse = await UploadMedia({
@@ -19,9 +16,9 @@ export const uploadImageForPost = async ({
       onUploadProgress,
     });
 
-    const {url} = uploadResponse!;
+    const { url } = uploadResponse!;
 
-    const {type} = mediaFile;
+    const { type } = mediaFile;
 
     return {
       uri: url,

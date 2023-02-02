@@ -1,10 +1,10 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 /**
  * Style hook for the Settings screen
  */
 const useStyles = makeStyle(theme => ({
-  root: {flex: 1, paddingTop: theme.spacing.m},
+  root: { flex: 1, paddingTop: theme.spacing.m },
   scrollViewOuter: {
     flex: 1,
   },
@@ -17,7 +17,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     paddingHorizontal: theme.spacing.m,
   },
-  image: {height: 374, width: 374},
+  image: { height: 374, width: 374 },
   dotView: {
     justifyContent: 'center',
     alignSelf: 'center',

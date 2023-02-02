@@ -1,9 +1,9 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {settingsButton} from 'assets/images';
-import {action} from '@storybook/addon-actions';
-import {View} from 'react-native';
+import { settingsButton } from 'assets/images';
+import { action } from '@storybook/addon-actions';
+import { View } from 'react-native';
 import ImageButton from './index';
 
 type CompProps = React.ComponentProps<typeof ImageButton>;

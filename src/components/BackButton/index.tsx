@@ -1,8 +1,8 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 import React from 'react';
-import {ColorValue, StyleProp, ViewStyle} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import { ColorValue, StyleProp, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export type Props = {
@@ -11,13 +11,13 @@ export type Props = {
   iconColor?: ColorValue;
 };
 
-export const BackButton: React.FC<Props> = ({onPress, style, iconColor}) => {
+export const BackButton: React.FC<Props> = ({ onPress, style, iconColor }) => {
   const theme = useTheme();
   const styles = useStyles();
   return (
     <TouchableOpacity
       accessibilityLabel="back-button"
-      hitSlop={{top: 50, bottom: 50, right: 50, left: 50}}
+      hitSlop={{ top: 50, bottom: 50, right: 50, left: 50 }}
       onPress={onPress}
       style={[styles.button, style]}>
       <Icon

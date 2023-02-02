@@ -8,8 +8,8 @@ import {
   ReportReason,
   SubspaceParams,
 } from 'types/desmos';
-import {applicationLinkStateFromJSON} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
-import {ButterConfig} from 'types/butter';
+import { applicationLinkStateFromJSON } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
+import { ButterConfig } from 'types/butter';
 
 /**
  * Format an incoming Subspace params data from the server into a format that is easier to parse by the app.
@@ -35,8 +35,7 @@ export const convertGraphQLSubspaceParams = (params: any) =>
         } as ReportReason),
     ),
     tipsContractConfig: {
-      serviceFeePercentage:
-        params.tips_contract[0].config.service_fee.percentage.value,
+      serviceFeePercentage: params.tips_contract[0].config.service_fee.percentage.value,
     },
   } as SubspaceParams);
 

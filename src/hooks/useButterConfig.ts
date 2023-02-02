@@ -1,14 +1,14 @@
 import React from 'react';
-import {useQuery} from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import GetButterConfig from 'services/graphql/queries/GetButterConfig';
-import {useSetButterConfig, useStoredButterConfig} from '@recoil/butterConfig';
-import {convertGraphQLButterConfig} from 'lib/GraphQLUtils';
+import { useSetButterConfig, useStoredButterConfig } from '@recoil/butterConfig';
+import { convertGraphQLButterConfig } from 'lib/GraphQLUtils';
 
 /**
  * Hook that allows to get the Butter config and also refresh its value if needed.
  */
 const useButterConfig = () => {
-  const {data, refetch} = useQuery(GetButterConfig);
+  const { data, refetch } = useQuery(GetButterConfig);
 
   const config = useStoredButterConfig();
   const setButterConfig = useSetButterConfig();

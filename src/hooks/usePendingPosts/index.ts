@@ -1,11 +1,8 @@
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
-import {latestPostsByUserState} from '@recoil/latestPostsByUser';
-import {POST_TYPE, usePostsFamily} from '@recoil/posts';
-import React, {useCallback, useMemo} from 'react';
-import {
-  allPendingPostsState,
-  pendingPostsState,
-} from '@recoil/pendingTx/pendingPosts';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { latestPostsByUserState } from '@recoil/latestPostsByUser';
+import { POST_TYPE, usePostsFamily } from '@recoil/posts';
+import React, { useCallback, useMemo } from 'react';
+import { allPendingPostsState, pendingPostsState } from '@recoil/pendingTx/pendingPosts';
 
 /**
  * Check if an array of PostItems contains a given txHash
@@ -13,25 +10,20 @@ import {
  * @param {PostItem[]} posts - An array of posts to search for the txHash in.
  * @returns {PostItem|undefined} - The matching post data or undefined if no match.
  */
-export const isTxHashInLatestPost = (
-  txHash: string,
-  posts: PostItem[],
-): PostItem | undefined =>
+export const isTxHashInLatestPost = (txHash: string, posts: PostItem[]): PostItem | undefined =>
   posts.find(x => {
     const txHashes = x.transactions.map(y => y.hash);
     return txHashes.includes(txHash);
   });
 
-export const isExternalIdInLatestPosts = (
-  externalId: string,
-  posts: PostItem[],
-) => posts.find(y => y.external_id === externalId);
+export const isExternalIdInLatestPosts = (externalId: string, posts: PostItem[]) =>
+  posts.find(y => y.external_id === externalId);
 
 export const useSyncPendingPosts = () => {
   const [pendingPosts, setPendingPosts] = useRecoilState(allPendingPostsState);
   const latestPostsByUser = useRecoilValue(latestPostsByUserState);
 
-  const {setPosts} = usePostsFamily(POST_TYPE.DISCOVER);
+  const { setPosts } = usePostsFamily(POST_TYPE.DISCOVER);
 
   /**
    * An effect that runs whenever the user's latest posts have changed.
@@ -53,10 +45,7 @@ export const useSyncPendingPosts = () => {
       const externalIdsToRemove: string[] = [];
 
       _pendingPosts.forEach(x => {
-        const post = isExternalIdInLatestPosts(
-          x.msg.value.externalId,
-          newPosts,
-        );
+        const post = isExternalIdInLatestPosts(x.msg.value.externalId, newPosts);
         if (post) {
           postsToTransfer.push(post);
           externalIdsToRemove.push(x.msg.value.externalId);
@@ -91,18 +80,14 @@ const usePendingPosts = () => {
   }, []);
 
   const resolveByExternalId = useCallback((externalId: string) => {
-    setAllPendingPosts(prev =>
-      prev.filter(x => x.msg.value.externalId !== externalId),
-    );
+    setAllPendingPosts(prev => prev.filter(x => x.msg.value.externalId !== externalId));
   }, []);
 
   /**
    * Format pending post data into a format that is easier for render code to use
    */
   const parsedPendingPosts = useMemo(() => {
-    return pendingPosts
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(x => x.postData);
+    return pendingPosts.sort((a, b) => a.timestamp - b.timestamp).map(x => x.postData);
   }, [pendingPosts]);
 
   return {

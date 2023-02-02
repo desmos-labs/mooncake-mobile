@@ -1,11 +1,10 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 import POST_FIELDS from './fragments/PostFields';
 
 const GetPostBySubspaceIDandPostID = gql`
   ${POST_FIELDS}
-  query GetPostBySubspaceIDandPostID($postID: bigint, $subspaceID: bigint)
-  @api(name: butter) {
-    posts: post(where: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}) {
+  query GetPostBySubspaceIDandPostID($postID: bigint, $subspaceID: bigint) @api(name: butter) {
+    posts: post(where: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } }) {
       ...PostFields
     }
   }

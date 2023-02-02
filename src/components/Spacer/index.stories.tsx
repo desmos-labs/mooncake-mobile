@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {storiesOf} from '@storybook/react-native';
+import { View, Text } from 'react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import Spacer from 'components/Spacer/index';
 

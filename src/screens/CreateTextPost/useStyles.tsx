@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {Dimensions, StyleSheet} from 'react-native';
+import { makeStyle } from 'config/theme';
+import { Dimensions, StyleSheet } from 'react-native';
 
 /**
  * Style hook for the CreateTextPost screen

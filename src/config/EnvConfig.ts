@@ -3,7 +3,7 @@ import Config from 'react-native-config';
 declare module 'react-native-config' {
   interface NativeConfig {
     MMKV_ID: string;
-    GQL_ENDPOINT: {[index: string]: string};
+    GQL_ENDPOINT: { [index: string]: string };
     CHAIN: string;
     DESMOS_RPC: string;
     BASE_DENOM: string;

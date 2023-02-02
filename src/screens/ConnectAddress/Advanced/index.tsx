@@ -1,36 +1,29 @@
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {
-  connectChainState,
-  selectedExternalAccountState,
-} from '@recoil/connectChainState';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { connectChainState, selectedExternalAccountState } from '@recoil/connectChainState';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {Formik, isNaN} from 'formik';
+import { Formik, isNaN } from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useCheckIsAddressLinked from 'hooks/useCheckIsAddressLinked';
 import useGenerateAccounts from 'hooks/useGenerateAccounts';
 import useGenerateProof from 'hooks/useGenerateProof';
-import {removeNonNumbers} from 'lib/FormatUtils';
+import { removeNonNumbers } from 'lib/FormatUtils';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import {BottomTabsParamList} from 'navigation/RootNavigator/BottomTabs';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {IconButton, useTheme} from 'react-native-paper';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { IconButton, useTheme } from 'react-native-paper';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import useStyles from '../useStyles';
 
 export type NavProps = CompositeScreenProps<
@@ -48,19 +41,16 @@ export type ConnectAddressAdvancedParams = {
 };
 
 const ConnectAddressAdvanced = () => {
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
 
-  const {activeAddress} = useActiveAccount();
-  const {generateProof} = useGenerateProof();
+  const { activeAddress } = useActiveAccount();
+  const { generateProof } = useGenerateProof();
 
-  const {t} = useTranslation('connectAddress');
+  const { t } = useTranslation('connectAddress');
   const route = useRoute<NavProps['route']>();
-  const {nextRouteOverride, loadedProfileMap, titleLabelOverride} =
-    route?.params ?? {};
+  const { nextRouteOverride, loadedProfileMap, titleLabelOverride } = route?.params ?? {};
 
-  const setSelectedExternalAccount = useSetRecoilState(
-    selectedExternalAccountState,
-  );
+  const setSelectedExternalAccount = useSetRecoilState(selectedExternalAccountState);
 
   const styles = useStyles();
 
@@ -68,13 +58,13 @@ const ConnectAddressAdvanced = () => {
 
   const [invalidField, setInvalidField] = React.useState(false);
 
-  const {selectedChain} = useRecoilValue(connectChainState);
+  const { selectedChain } = useRecoilValue(connectChainState);
 
   const ledgerTransport = _.get(route, 'params.ledgerTransport');
 
-  const {generateAccount, loading, accounts} = useGenerateAccounts();
+  const { generateAccount, loading, accounts } = useGenerateAccounts();
 
-  const {checkIsAddressLinked} = useCheckIsAddressLinked();
+  const { checkIsAddressLinked } = useCheckIsAddressLinked();
 
   const generatedAccount = accounts.length > 0 ? accounts[0] : undefined;
 
@@ -88,7 +78,7 @@ const ConnectAddressAdvanced = () => {
 
   // generate first account
   React.useEffect(() => {
-    const {change, account, addressIndex} = initialFormValues;
+    const { change, account, addressIndex } = initialFormValues;
 
     generateAccount({
       change: parseInt(change, 10),
@@ -109,9 +99,7 @@ const ConnectAddressAdvanced = () => {
 
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>{t('general')}</Typography.Button2>
         </Button>
       </View>
     );
@@ -145,29 +133,26 @@ const ConnectAddressAdvanced = () => {
     }
   }, [generatedAccount, activeAddress]);
 
-  const onFormChange = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      const {change, account, addressIndex} = formValues;
+  const onFormChange = React.useCallback((formValues: typeof initialFormValues) => {
+    const { change, account, addressIndex } = formValues;
 
-      if (
-        isNaN(parseInt(change, 10)) ||
-        isNaN(parseInt(account, 10)) ||
-        isNaN(parseInt(addressIndex, 10))
-      ) {
-        setInvalidField(true);
-        return;
-      }
+    if (
+      isNaN(parseInt(change, 10)) ||
+      isNaN(parseInt(account, 10)) ||
+      isNaN(parseInt(addressIndex, 10))
+    ) {
+      setInvalidField(true);
+      return;
+    }
 
-      generateAccount({
-        change: parseInt(change, 10),
-        account: parseInt(account, 10),
-        addressIndex: parseInt(addressIndex, 10),
-      }).then(() => {
-        setInvalidField(false);
-      });
-    },
-    [],
-  );
+    generateAccount({
+      change: parseInt(change, 10),
+      account: parseInt(account, 10),
+      addressIndex: parseInt(addressIndex, 10),
+    }).then(() => {
+      setInvalidField(false);
+    });
+  }, []);
 
   const isAddressLinked = checkIsAddressLinked(generatedAccount?.address || '');
 
@@ -177,17 +162,13 @@ const ConnectAddressAdvanced = () => {
       return (
         <>
           <Typography.Body6>{generatedAccount.address}</Typography.Body6>
-          <Typography.Body6 style={{marginTop: 8}}>
-            {t('addrAlreadyLinked')}
-          </Typography.Body6>
+          <Typography.Body6 style={{ marginTop: 8 }}>{t('addrAlreadyLinked')}</Typography.Body6>
         </>
       );
     }
     return (
       <Typography.Body6>
-        {loading || !generatedAccount
-          ? t('generating')
-          : generatedAccount.address}
+        {loading || !generatedAccount ? t('generating') : generatedAccount.address}
       </Typography.Body6>
     );
   }, [generatedAccount, loading, invalidField, isAddressLinked]);
@@ -197,20 +178,14 @@ const ConnectAddressAdvanced = () => {
       topBar={<TopBar rightElement={SwitchToGeneralButton} />}
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H5 style={styles.textStyle}>
-          {titleLabelOverride || t('header')}
-        </Typography.H5>
+        <Typography.H5 style={styles.textStyle}>{titleLabelOverride || t('header')}</Typography.H5>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-          <Typography.Body6 style={styles.textStyle}>
-            {t('enterDerivPath')}
-          </Typography.Body6>
+          <Typography.Body6 style={styles.textStyle}>{t('enterDerivPath')}</Typography.Body6>
         </Spacer>
 
         <View style={styles.tooltipGroup}>
-          <Typography.Body6 style={styles.textStyle}>
-            {t('hdDerivPath')}
-          </Typography.Body6>
+          <Typography.Body6 style={styles.textStyle}>{t('hdDerivPath')}</Typography.Body6>
           <IconButton
             icon="information-outline"
             onPress={() => {
@@ -224,11 +199,8 @@ const ConnectAddressAdvanced = () => {
           />
         </View>
 
-        <Formik
-          onSubmit={() => {}}
-          initialValues={initialFormValues}
-          validate={onFormChange}>
-          {({setFieldValue, values}) => {
+        <Formik onSubmit={() => {}} initialValues={initialFormValues} validate={onFormChange}>
+          {({ setFieldValue, values }) => {
             return (
               <View>
                 <HDDerivPathInputGroup
@@ -245,15 +217,11 @@ const ConnectAddressAdvanced = () => {
                   }
                 />
 
-                <Spacer
-                  paddingTop={theme.spacing.l}
-                  paddingBottom={theme.spacing.m}>
+                <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
                   <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
                 </Spacer>
 
-                <Spacer paddingBottom={theme.spacing.l}>
-                  {addressOrErrorElement}
-                </Spacer>
+                <Spacer paddingBottom={theme.spacing.l}>{addressOrErrorElement}</Spacer>
 
                 <Button
                   color={theme.colors.surfaceBlack}

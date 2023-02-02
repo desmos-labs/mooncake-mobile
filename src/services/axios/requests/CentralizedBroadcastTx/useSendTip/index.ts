@@ -1,13 +1,13 @@
 import appSettingsState from '@recoil/settings';
 import ToastConfig from 'config/ToastConfig';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import React, {useCallback} from 'react';
-import {useToast} from 'react-native-toast-notifications';
-import {useRecoilState} from 'recoil';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import React, { useCallback } from 'react';
+import { useToast } from 'react-native-toast-notifications';
+import { useRecoilState } from 'recoil';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import _ from 'lodash';
-import {buildPostTipMsg, buildUserTipMsg, numberToPlainCoin} from './utils';
+import { buildPostTipMsg, buildUserTipMsg, numberToPlainCoin } from './utils';
 
 /**
  * Hook that manange tips
@@ -16,7 +16,7 @@ const useSendTip = () => {
   const [appSettings] = useRecoilState(appSettingsState);
   const [sendTipLoading, setSendTipLoading] = React.useState(false);
   const toast = useToast();
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
 
   /**
    * @param {number} amount The amount number
@@ -39,16 +39,13 @@ const useSendTip = () => {
       message?: string;
       postId?: number;
     }) => {
-      const denom = _.get(
-        appSettings,
-        'currentChain.stakeCurrency.coinMinimalDenom',
-      );
+      const denom = _.get(appSettings, 'currentChain.stakeCurrency.coinMinimalDenom');
       const percentage = _.get(
         appSettings.contractsConfig[0],
         'config.service_fee.percentage.value',
       );
 
-      const depCheckMap: {[index: string]: any} = {
+      const depCheckMap: { [index: string]: any } = {
         denom,
         percentage,
       };
@@ -61,7 +58,7 @@ const useSendTip = () => {
       });
 
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgExecuteContract];
-      const {success} = await checkAndUpdateGrants({
+      const { success } = await checkAndUpdateGrants({
         grantsToRequest,
         stayOnCurrentScreen: true,
       });
@@ -76,9 +73,7 @@ const useSendTip = () => {
       setSendTipLoading(true);
       try {
         const convertedAmount = [numberToPlainCoin(amount, denom)];
-        const convertedFee = [
-          numberToPlainCoin(amount + amount * percentage * 0.01, denom),
-        ];
+        const convertedFee = [numberToPlainCoin(amount + amount * percentage * 0.01, denom)];
         let msg;
 
         if (postId) {
@@ -103,7 +98,7 @@ const useSendTip = () => {
 
         if (!msg) throw new Error('Invalid tip target');
 
-        const result = await encodeAndBroadcastTx({msgs: [msg], memo: message});
+        const result = await encodeAndBroadcastTx({ msgs: [msg], memo: message });
 
         console.log('useSendTip', result);
 
@@ -118,7 +113,7 @@ const useSendTip = () => {
     [appSettings, checkAndUpdateGrants, toast],
   );
 
-  return {sendTip, sendTipLoading};
+  return { sendTip, sendTipLoading };
 };
 
 export default useSendTip;

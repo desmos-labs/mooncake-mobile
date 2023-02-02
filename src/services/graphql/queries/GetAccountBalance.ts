@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetAccountBalance = gql`
   query Balance($address: String!) @api(name: forbole) {

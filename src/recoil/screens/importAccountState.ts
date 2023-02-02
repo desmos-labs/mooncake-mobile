@@ -1,8 +1,8 @@
-import {WalletType} from 'types/wallet';
-import {AccountWithWallet} from 'types/account';
-import {SupportedChain} from 'types/chains';
-import {LedgerApp} from 'types/ledger';
-import {atom} from 'recoil';
+import { WalletType } from 'types/wallet';
+import { AccountWithWallet } from 'types/account';
+import { SupportedChain } from 'types/chains';
+import { LedgerApp } from 'types/ledger';
+import { atom } from 'recoil';
 
 export interface ImportAccountState {
   /**
@@ -17,10 +17,7 @@ export interface ImportAccountState {
   /**
    * Function called after the user have selected the account that want to import.
    */
-  readonly onSuccess: (data: {
-    account: AccountWithWallet;
-    chain: SupportedChain;
-  }) => any;
+  readonly onSuccess: (data: { account: AccountWithWallet; chain: SupportedChain }) => any;
   /**
    * Function called if the user cancel the import flow.
    */

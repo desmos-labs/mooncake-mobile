@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
-import {err, ok, Result} from 'neverthrow';
-import {useQuery} from '@apollo/client';
+import { err, ok, Result } from 'neverthrow';
+import { useQuery } from '@apollo/client';
 import GetAccountBalance from 'services/graphql/queries/GetAccountBalance';
 
 export interface AcceptInviteSuccess {}
@@ -14,18 +14,13 @@ const hasBalance = (data: any | undefined): boolean => {
   );
 };
 
-const useWaitForAccountBalance = (
-  pollInterval: number = 1000,
-  timeout: number = 30 * 1000,
-) => {
+const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number = 30 * 1000) => {
   // Reference to the address to check. This is done because this function
   // returns a hook, which should allow setting the address later on
   const [addressToCheck, setAddressToCheck] = useState<string>('');
 
   // Get a reference to the function that will be used to accept the returned promise
-  const accept = React.useRef<
-    (result: Result<AcceptInviteSuccess, Error>) => void
-  >(() => {});
+  const accept = React.useRef<(result: Result<AcceptInviteSuccess, Error>) => void>(() => {});
 
   // Build a promise that will be returned by this hook.
   // This is built here, before the query, in order to avoid mistakenly
@@ -36,7 +31,7 @@ const useWaitForAccountBalance = (
   });
 
   // Start the polling of the data
-  const {data, startPolling, stopPolling} = useQuery(GetAccountBalance, {
+  const { data, startPolling, stopPolling } = useQuery(GetAccountBalance, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
     variables: {
@@ -88,10 +83,7 @@ const useWaitForAccountBalance = (
  * @param timeout {number} - Optional number of seconds after which to stop the
  * polling and return a timeout error.
  */
-const useAcceptInvite = (
-  pollInterval: number = 1000,
-  timeout: number = 30 * 1000,
-) => {
+const useAcceptInvite = (pollInterval: number = 1000, timeout: number = 30 * 1000) => {
   const waitForAccountBalance = useWaitForAccountBalance(pollInterval, timeout);
   return React.useCallback(
     async (userAddress: string, inviteCode: string) => {

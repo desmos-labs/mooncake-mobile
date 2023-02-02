@@ -1,7 +1,7 @@
 import React from 'react';
-import {AccountWithWallet} from 'types/account';
-import {EncodeObject} from '@cosmjs/proto-signing';
-import {ok, Result} from 'neverthrow';
+import { AccountWithWallet } from 'types/account';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { ok, Result } from 'neverthrow';
 
 /**
  * Represents the type that is returned when a sign and broadcast
@@ -60,9 +60,7 @@ export interface SignAndBroadcastOptions {
  * Represents all the possible error types that can be raised during
  * the signing and broadcasting of a transaction.
  */
-export type SignAndBroadcastError =
-  | SignAndBroadcastTimeout
-  | SignAndBroadcastTxError;
+export type SignAndBroadcastError = SignAndBroadcastTimeout | SignAndBroadcastTxError;
 
 /**
  * Hook that allows to sign and broadcast a transaction given an account
@@ -76,7 +74,7 @@ const useSignAndBroadcastTx = () => {
       options?: SignAndBroadcastOptions,
     ): Promise<Result<SignAndBroadcastSuccess, SignAndBroadcastError>> => {
       // TODO: Implement this method
-      return ok({txHash: ''});
+      return ok({ txHash: '' });
     },
     [],
   );

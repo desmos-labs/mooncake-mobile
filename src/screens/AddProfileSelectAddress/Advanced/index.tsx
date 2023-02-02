@@ -1,8 +1,8 @@
-import {toBase64} from '@cosmjs/encoding';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { toBase64 } from '@cosmjs/encoding';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import createLocalWalletState from '@recoil/createLocalWalletState';
-import {useLoadProfiles} from '@recoil/profiles';
+import { useLoadProfiles } from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import Button from 'components/Button';
 import DView from 'components/DView';
@@ -10,20 +10,20 @@ import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import {Formik, isNaN} from 'formik';
+import { Formik, isNaN } from 'formik';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
-import {removeNonNumbers} from 'lib/FormatUtils';
+import { removeNonNumbers } from 'lib/FormatUtils';
 import LocalWallet from 'lib/LocalWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {IconButton, useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
-import {ChainAccount, ChainAccountType} from 'types/chains';
-import {DESMOS_COIN_TYPE} from 'types/hdpath';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { IconButton, useTheme } from 'react-native-paper';
+import { useSetRecoilState } from 'recoil';
+import { ChainAccount, ChainAccountType } from 'types/chains';
+import { DESMOS_COIN_TYPE } from 'types/hdpath';
 import useStyles from '../useStyles';
 
 export type NavProps = StackScreenProps<
@@ -37,23 +37,21 @@ export type AddProfileSelectAddressAdvancedParams = {
 };
 
 const AddProfileSelectAddressAdvanced = () => {
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
-  const {activeAddress} = useActiveAccount();
-  const {t} = useTranslation('connectAddress');
+  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
+  const { activeAddress } = useActiveAccount();
+  const { t } = useTranslation('connectAddress');
   const {
-    params: {mnemonic, password},
+    params: { mnemonic, password },
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {generateAccount} = useGenerateAccountsToAdd();
+  const { generateAccount } = useGenerateAccountsToAdd();
   const [invalidField, setInvalidField] = useState(false);
   const [generatedAccount, setGeneratedAccount] = useState<any>();
   const [loading, setLoading] = useState(true);
   const setAccountCreation = useSetRecoilState(createLocalWalletState);
-  const {profiles} = useLoadProfiles();
-  const setWalletAndAccountToAdd = useSetRecoilState(
-    walletAndAccountToAddState,
-  );
+  const { profiles } = useLoadProfiles();
+  const setWalletAndAccountToAdd = useSetRecoilState(walletAndAccountToAddState);
 
   const initialFormValues = React.useMemo(() => {
     return {
@@ -95,8 +93,8 @@ const AddProfileSelectAddressAdvanced = () => {
 
   // generate first account
   React.useEffect(() => {
-    const {change, account, addressIndex} = initialFormValues;
-    generateAccountFromParams({change, account, addressIndex});
+    const { change, account, addressIndex } = initialFormValues;
+    generateAccountFromParams({ change, account, addressIndex });
   }, []);
 
   const SwitchToGeneralButton = React.useMemo(() => {
@@ -105,11 +103,9 @@ const AddProfileSelectAddressAdvanced = () => {
         <Button
           mode="text"
           onPress={async () => {
-            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic});
+            navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, { mnemonic });
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>{t('general')}</Typography.Button2>
         </Button>
       </View>
     );
@@ -117,9 +113,7 @@ const AddProfileSelectAddressAdvanced = () => {
 
   const handleSubmit = React.useCallback(async () => {
     if (!generatedAccount || !activeAddress) return;
-    const deserializedWallet = await LocalWallet.deserialize(
-      generatedAccount.signer as string,
-    );
+    const deserializedWallet = await LocalWallet.deserialize(generatedAccount.signer as string);
     const chainAccount: ChainAccount = {
       address: deserializedWallet.bech32Address,
       type: ChainAccountType.Local,
@@ -141,35 +135,29 @@ const AddProfileSelectAddressAdvanced = () => {
     navigate(ROUTES.CREATE_DESMOS_PROFILE);
   }, []);
 
-  const onFormChange = React.useCallback(
-    (formValues: typeof initialFormValues) => {
-      const {change, account, addressIndex} = formValues;
+  const onFormChange = React.useCallback((formValues: typeof initialFormValues) => {
+    const { change, account, addressIndex } = formValues;
 
-      if (
-        isNaN(parseInt(change, 10)) ||
-        isNaN(parseInt(account, 10)) ||
-        isNaN(parseInt(addressIndex, 10))
-      ) {
-        setInvalidField(true);
-        return;
-      }
+    if (
+      isNaN(parseInt(change, 10)) ||
+      isNaN(parseInt(account, 10)) ||
+      isNaN(parseInt(addressIndex, 10))
+    ) {
+      setInvalidField(true);
+      return;
+    }
 
-      generateAccountFromParams({
-        change,
-        account,
-        addressIndex,
-      }).then(() => {
-        setInvalidField(false);
-      });
-    },
-    [],
-  );
+    generateAccountFromParams({
+      change,
+      account,
+      addressIndex,
+    }).then(() => {
+      setInvalidField(false);
+    });
+  }, []);
 
   const isProfileAlreadyAdded = useMemo(
-    () =>
-      profiles.findIndex(
-        profile => profile.address === generatedAccount?.address,
-      ) !== -1,
+    () => profiles.findIndex(profile => profile.address === generatedAccount?.address) !== -1,
     [generatedAccount],
   );
 
@@ -179,7 +167,7 @@ const AddProfileSelectAddressAdvanced = () => {
       return (
         <>
           <Typography.Body6>{generatedAccount.address}</Typography.Body6>
-          <Typography.Body6 style={{marginTop: 8}}>
+          <Typography.Body6 style={{ marginTop: 8 }}>
             {t('addProfile:alreadyImported')}
           </Typography.Body6>
         </>
@@ -187,9 +175,7 @@ const AddProfileSelectAddressAdvanced = () => {
     }
     return (
       <Typography.Body6>
-        {loading || !generatedAccount
-          ? t('generating')
-          : generatedAccount.address}
+        {loading || !generatedAccount ? t('generating') : generatedAccount.address}
       </Typography.Body6>
     );
   }, [generatedAccount, loading, invalidField, isProfileAlreadyAdded]);
@@ -199,20 +185,14 @@ const AddProfileSelectAddressAdvanced = () => {
       topBar={<TopBar rightElement={SwitchToGeneralButton} />}
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H3 style={styles.textStyle}>
-          {t('addProfile:title')}
-        </Typography.H3>
+        <Typography.H3 style={styles.textStyle}>{t('addProfile:title')}</Typography.H3>
 
         <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
-          <Typography.Body6 style={styles.textStyle}>
-            {t('enterDerivPath')}
-          </Typography.Body6>
+          <Typography.Body6 style={styles.textStyle}>{t('enterDerivPath')}</Typography.Body6>
         </Spacer>
 
         <View style={styles.tooltipGroup}>
-          <Typography.Subtitle2 style={styles.textStyle}>
-            {t('hdDerivPath')}
-          </Typography.Subtitle2>
+          <Typography.Subtitle2 style={styles.textStyle}>{t('hdDerivPath')}</Typography.Subtitle2>
           <IconButton
             icon="information-outline"
             onPress={() => {
@@ -226,11 +206,8 @@ const AddProfileSelectAddressAdvanced = () => {
           />
         </View>
 
-        <Formik
-          onSubmit={() => {}}
-          initialValues={initialFormValues}
-          validate={onFormChange}>
-          {({setFieldValue, values}) => {
+        <Formik onSubmit={() => {}} initialValues={initialFormValues} validate={onFormChange}>
+          {({ setFieldValue, values }) => {
             return (
               <View>
                 <HDDerivPathInputGroup
@@ -247,15 +224,11 @@ const AddProfileSelectAddressAdvanced = () => {
                   }
                 />
 
-                <Spacer
-                  paddingTop={theme.spacing.l}
-                  paddingBottom={theme.spacing.m}>
+                <Spacer paddingTop={theme.spacing.l} paddingBottom={theme.spacing.m}>
                   <Typography.Subtitle2>{t('address')}</Typography.Subtitle2>
                 </Spacer>
 
-                <Spacer paddingBottom={theme.spacing.l}>
-                  {addressOrErrorElement}
-                </Spacer>
+                <Spacer paddingBottom={theme.spacing.l}>{addressOrErrorElement}</Spacer>
 
                 <Button
                   color={theme.colors.surfaceBlack}

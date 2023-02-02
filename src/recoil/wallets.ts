@@ -1,5 +1,5 @@
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 
 /**
  * Atom that holds the address of the currently active wallet.
@@ -10,7 +10,7 @@ export const activeAccountAddressState = atom<string | undefined>({
   key: 'activeAccountAddressState',
   default: getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS),
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(newValue => {
         setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS, newValue);
       });
@@ -18,8 +18,6 @@ export const activeAccountAddressState = atom<string | undefined>({
   ],
 });
 
-export const useActiveAccountAddress = () =>
-  useRecoilValue(activeAccountAddressState);
+export const useActiveAccountAddress = () => useRecoilValue(activeAccountAddressState);
 
-export const useSetActiveAccountAddress = () =>
-  useSetRecoilState(activeAccountAddressState);
+export const useSetActiveAccountAddress = () => useSetRecoilState(activeAccountAddressState);

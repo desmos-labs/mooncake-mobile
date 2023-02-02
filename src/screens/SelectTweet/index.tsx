@@ -3,9 +3,9 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import React, {useMemo} from 'react';
-import {FlatList, ListRenderItemInfo} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { useMemo } from 'react';
+import { FlatList, ListRenderItemInfo } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import NoTweets from 'screens/SelectTweet/components/NoConnections';
 import TweetComponent from 'screens/SelectTweet/components/TweetComponent';
 import useHooks from './useHooks';
@@ -31,7 +31,7 @@ const SelectTweet = () => {
   } = useHooks();
 
   const renderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
+    ({ item }: ListRenderItemInfo<any>) => {
       return (
         <TweetComponent
           selected={item.id === selectedTweetId}
@@ -94,7 +94,7 @@ const SelectTweet = () => {
             color={theme.colors.surfaceBlack}
             onPress={handleConnectTweet}
             style={styles.button}>
-            <Typography.Button2 style={{color: theme.colors.white}}>
+            <Typography.Button2 style={{ color: theme.colors.white }}>
               {t('common:next')}
             </Typography.Button2>
           </Button>

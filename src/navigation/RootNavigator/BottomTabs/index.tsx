@@ -1,8 +1,5 @@
 import notifee from '@notifee/react-native';
-import {
-  BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   bottomActivitiesIcon,
   bottomCommunitiesIcon,
@@ -14,21 +11,21 @@ import ImageButton from 'components/ImageButton';
 import LoadingOverlay from 'components/LoadingOverlay';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import HomeTabs, {HomeTabsParamList} from 'navigation/RootNavigator/HomeTabs';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo} from 'react';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useToast} from 'react-native-toast-notifications';
+import React, { useCallback, useMemo } from 'react';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useToast } from 'react-native-toast-notifications';
 import Activities from 'screens/Activities';
 import Communities from 'screens/Communities';
 import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
-import {useAppStateValue, useSetAppStateValue} from '@recoil/appState';
-import {useResetCreatePostState} from '@recoil/screens/createPostState';
-import {useActiveAccountAddress} from '@recoil/wallets';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
+import { useResetCreatePostState } from '@recoil/screens/createPostState';
+import { useActiveAccountAddress } from '@recoil/wallets';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {
@@ -67,9 +64,9 @@ const getCorrectImage = (routeName: string) => {
   }
 };
 
-const BottomTabBar = ({state, navigation, setLoading}: Props) => {
+const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
   const styles = useStyles();
-  const {navigate} = navigation;
+  const { navigate } = navigation;
   const theme = useTheme();
   const toast = useToast();
 
@@ -83,7 +80,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
   const resetCreatePostState = useResetCreatePostState();
 
   // Allows to check and update the grants if necessary
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
 
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
@@ -94,7 +91,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
     try {
       const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
 
-      const {success} = await checkAndUpdateGrants({
+      const { success } = await checkAndUpdateGrants({
         grantsToRequest,
       });
 
@@ -106,7 +103,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
         });
       }
     } catch (err) {
-      toast.show(String(err), {type: ToastConfig.ERROR_NO_RETRY});
+      toast.show(String(err), { type: ToastConfig.ERROR_NO_RETRY });
     } finally {
       setLoading(false);
     }
@@ -137,7 +134,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
               setNotificationsCount(0);
             }
             // @ts-ignore
-            navigation.navigate({name: route.name, merge: true});
+            navigation.navigate({ name: route.name, merge: true });
           }
         };
 
@@ -147,7 +144,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
               <ImageButton
                 onPress={handlePressCreatePost}
                 image={middleButtonIcon}
-                style={{height: 41, width: 41, alignSelf: 'center'}}
+                style={{ height: 41, width: 41, alignSelf: 'center' }}
               />
             </View>
           );
@@ -156,18 +153,12 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
         return (
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
-              overlayComponent={
-                route.name === ROUTES.ACTIVITIES && overlayComponent
-              }
-              overlayPosition={{left: 18, top: 2}}
+              overlayComponent={route.name === ROUTES.ACTIVITIES && overlayComponent}
+              overlayPosition={{ left: 18, top: 2 }}
               onPress={onPress}
-              tintColor={
-                isFocused
-                  ? theme.colors.butterOrange01
-                  : theme.colors.lightGrey02
-              }
+              tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
               image={getCorrectImage(route.name)}
-              style={{height: 32, width: 32, alignSelf: 'center'}}
+              style={{ height: 32, width: 32, alignSelf: 'center' }}
             />
           </View>
         );
@@ -184,24 +175,19 @@ const BottomTabsNavigator = () => {
   const [loading, setLoading] = React.useState(false);
   const theme = useTheme();
   const renderTabBar = useCallback(
-    (props: BottomTabBarProps) => (
-      <BottomTabBar {...props} setLoading={setLoading} />
-    ),
+    (props: BottomTabBarProps) => <BottomTabBar {...props} setLoading={setLoading} />,
     [setLoading],
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.colors.white}}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.white }}>
       <Tab.Navigator
         tabBar={renderTabBar}
         initialRouteName={ROUTES.HOME_TABS}
-        screenOptions={{headerShown: false}}>
+        screenOptions={{ headerShown: false }}>
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
         <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
-        <Tab.Screen
-          name={ROUTES.CREATE_BUTTON}
-          component={MiddleFakeComponent}
-        />
+        <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} />
       </Tab.Navigator>

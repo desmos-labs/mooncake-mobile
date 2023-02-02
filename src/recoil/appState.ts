@@ -1,9 +1,9 @@
-import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
-import {SubspaceParams} from 'types/desmos';
+import { SubspaceParams } from 'types/desmos';
 import EnvConfig from 'config/EnvConfig';
-import {AppStateStatus} from 'react-native';
+import { AppStateStatus } from 'react-native';
 
 /**
  * Contains the overall state of the application.
@@ -64,7 +64,7 @@ const appState = atom<AppState>({
   key: 'appState',
   default: getMMKV(MMKVKEYS.APP_STATE) ?? DefaultAppState,
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(state => {
         setMMKV(MMKVKEYS.APP_STATE, state);
       });
@@ -79,7 +79,7 @@ const appStateValue = selectorFamily({
   key: 'appStateValue',
   get:
     (key: keyof AppState) =>
-    ({get}) => {
+    ({ get }) => {
       const appStateFields = get(appState);
       return appStateFields[key];
     },
@@ -97,9 +97,7 @@ export const useAppStateValue = <K extends keyof AppState>(appStateKey: K) =>
  * Hook that provides a function to update the value of a appState field.
  * @param appStateKey - Key of the appState field of interest.
  */
-export const useSetAppStateValue = <K extends keyof AppState>(
-  appStateKey: K,
-) => {
+export const useSetAppStateValue = <K extends keyof AppState>(appStateKey: K) => {
   const setAppState = useSetRecoilState(appState);
   return React.useCallback(
     (valueOrUpdater: ((current: AppState[K]) => AppState[K]) | AppState[K]) => {

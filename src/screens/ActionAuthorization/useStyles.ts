@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {StyleSheet} from 'react-native';
+import { makeStyle } from 'config/theme';
+import { StyleSheet } from 'react-native';
 
 /**
  * Style hook for the Authorization screen

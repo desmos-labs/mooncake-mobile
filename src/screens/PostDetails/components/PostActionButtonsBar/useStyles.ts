@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 export type StyleProp = {
   numTypes: number;
@@ -38,7 +38,7 @@ const useStyles = makeStyle(theme => ({
   orangeIconAndText: {
     tintColor: theme.colors.butterOrange01,
   },
-  orangeText: {color: theme.colors.butterOrange01},
+  orangeText: { color: theme.colors.butterOrange01 },
 }));
 
 export default useStyles;

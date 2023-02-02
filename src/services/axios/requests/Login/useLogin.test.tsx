@@ -1,9 +1,9 @@
-import {act, renderHook} from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import useLogin from 'services/axios/requests/Login/useLogin';
 import GetNonce from 'services/axios/requests/GetNonce';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import {generateLoginData} from 'services/axios/requests/Login/utils';
-import {updateAuthToken} from 'services/axios';
+import { generateLoginData } from 'services/axios/requests/Login/utils';
+import { updateAuthToken } from 'services/axios';
 import Login from './index';
 
 jest.mock('./utils', () => {
@@ -35,18 +35,18 @@ const DUMMY_ADDRESS = 'i-am-an-address';
 const DUMMY_NONCE = 'i-am-a-nonce';
 
 jest.mock('lib/SecureStorage', () => ({
-  getAccounts: async () => [{address: DUMMY_ADDRESS}],
+  getAccounts: async () => [{ address: DUMMY_ADDRESS }],
 }));
 
 describe('services/axios: useLogin', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (GetNonce as jest.Mock).mockReturnValue({nonce: DUMMY_NONCE});
+    (GetNonce as jest.Mock).mockReturnValue({ nonce: DUMMY_NONCE });
     (useUnlockWallet as jest.Mock).mockReturnValue(() => ({
       wallet: 'placeholder',
     }));
-    (Login as jest.Mock).mockReturnValue({token: DUMMY_TOKEN});
+    (Login as jest.Mock).mockReturnValue({ token: DUMMY_TOKEN });
     (generateLoginData as jest.Mock).mockReturnValue({
       signatureBytes: [1],
       pubkeyBytes: [1],
@@ -55,7 +55,7 @@ describe('services/axios: useLogin', () => {
   });
 
   it('logins and saves auth token to localStorage & axios config', async () => {
-    const {result} = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin());
 
     await act(async () => {
       await result.current.login({
@@ -72,7 +72,7 @@ describe('services/axios: useLogin', () => {
       throw new Error('i-am-an-error');
     });
 
-    const {result} = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin());
 
     try {
       await act(async () => {
@@ -87,7 +87,7 @@ describe('services/axios: useLogin', () => {
   });
 
   it('throws an error if no activeAccount is found', async () => {
-    const {result} = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin());
 
     try {
       await act(async () => {
@@ -106,7 +106,7 @@ describe('services/axios: useLogin', () => {
   it('throws an error if no wallet cannot be unlocked', async () => {
     (useUnlockWallet as jest.Mock).mockReturnValue(() => undefined);
 
-    const {result} = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin());
 
     try {
       await result.current.login({
@@ -114,9 +114,7 @@ describe('services/axios: useLogin', () => {
         password: '123',
       });
     } catch (err: any) {
-      expect(String(err)).toBe(
-        'Error: [LOGIN] Unable to resolve wallet from unlock request',
-      );
+      expect(String(err)).toBe('Error: [LOGIN] Unable to resolve wallet from unlock request');
     }
   });
 });

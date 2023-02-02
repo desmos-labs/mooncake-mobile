@@ -1,5 +1,5 @@
 import React from 'react';
-import {differenceInYears, parseISO} from 'date-fns';
+import { differenceInYears, parseISO } from 'date-fns';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 
 /**

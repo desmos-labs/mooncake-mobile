@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  CameraOptions,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
-import {Asset, ImageLibraryOptions} from 'react-native-image-picker/src/types';
-import {Alert, Platform} from 'react-native';
-import {Permission, PERMISSIONS, request} from 'react-native-permissions';
+import { CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { Asset, ImageLibraryOptions } from 'react-native-image-picker/src/types';
+import { Alert, Platform } from 'react-native';
+import { Permission, PERMISSIONS, request } from 'react-native-permissions';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
@@ -39,10 +35,7 @@ type ReturnValue = {
   imageFromCamera: () => void;
 };
 
-const resizeImages = async (
-  selectedImages: Asset[],
-  disableResize?: boolean,
-): Promise<Asset[]> => {
+const resizeImages = async (selectedImages: Asset[], disableResize?: boolean): Promise<Asset[]> => {
   if (disableResize) {
     return selectedImages;
   }
@@ -77,25 +70,16 @@ const resizeImages = async (
  * A hook that wraps react-native-image-picker logic and stores the selected
  * image in a useState hook.
  */
-const useImageFromDevice = ({
-  onImageSelected,
-  disableResizeImage,
-}: Params): ReturnValue => {
+const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): ReturnValue => {
   // selecting webp images on ios will return an error code
   const imageFromLibrary = React.useCallback(async () => {
     const result = await launchImageLibrary(DEFAULT_OPTIONS);
 
     // Temporary error handling
     if (result.errorCode) {
-      Alert.alert(
-        'Error',
-        'Unable to load photo. Please select another photo.',
-      );
+      Alert.alert('Error', 'Unable to load photo. Please select another photo.');
     } else if (result.assets) {
-      const processedImages = await resizeImages(
-        result.assets,
-        disableResizeImage,
-      );
+      const processedImages = await resizeImages(result.assets, disableResizeImage);
       onImageSelected(processedImages[0]);
     }
   }, []);
@@ -113,15 +97,9 @@ const useImageFromDevice = ({
     const result = await launchCamera(DEFAULT_OPTIONS);
     if (result.errorCode) {
       // Temporary error handling
-      Alert.alert(
-        'Error',
-        'Unable to load photo. Please select another photo.',
-      );
+      Alert.alert('Error', 'Unable to load photo. Please select another photo.');
     } else if (result.assets) {
-      const processedImages = await resizeImages(
-        result.assets,
-        disableResizeImage,
-      );
+      const processedImages = await resizeImages(result.assets, disableResizeImage);
       onImageSelected(processedImages[0]);
     }
   }, []);

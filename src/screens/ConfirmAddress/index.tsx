@@ -1,31 +1,28 @@
 import React from 'react';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { useTranslation } from 'react-i18next';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
-import {View} from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { View } from 'react-native';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type ConfirmAddressParams = {
   address: string;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CONFIRM_ADDRESS
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_ADDRESS>;
 
 const ConfirmAddress = () => {
-  const {t} = useTranslation('confirmAddress');
+  const { t } = useTranslation('confirmAddress');
   const styles = useStyles();
   const {
-    params: {address},
+    params: { address },
   } = useRoute<NavProps['route']>();
 
   const theme = useTheme();
@@ -35,9 +32,7 @@ const ConfirmAddress = () => {
       <Typography.H5 style={styles.textStyle}>{t('header')}</Typography.H5>
 
       <Spacer paddingTop={theme.spacing.m}>
-        <Typography.Body6 style={styles.textStyle}>
-          {t('isThisYourAddress')}
-        </Typography.Body6>
+        <Typography.Body6 style={styles.textStyle}>{t('isThisYourAddress')}</Typography.Body6>
       </Spacer>
 
       <View style={styles.addressPreviewBox}>

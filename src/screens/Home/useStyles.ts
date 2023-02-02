@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
   homeView: {
@@ -32,8 +32,8 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     backgroundColor: theme.colors.white,
   },
-  loaderView: {flex: 1, marginHorizontal: theme.spacing.m},
-  searchView: {flex: 1, zIndex: 2},
+  loaderView: { flex: 1, marginHorizontal: theme.spacing.m },
+  searchView: { flex: 1, zIndex: 2 },
 }));
 
 export default useStyles;

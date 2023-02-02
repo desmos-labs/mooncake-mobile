@@ -1,6 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 const HomeItemSeparatorComponent = () => {
   const theme = useTheme();

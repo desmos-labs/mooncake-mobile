@@ -1,12 +1,5 @@
-import React, {useCallback, useMemo} from 'react';
-import {
-  FlatList,
-  ListRenderItemInfo,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, ListRenderItemInfo, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import MnemonicWordBadge from '../MnemonicWordBadge';
 import useStyles from './useStyles';
 
@@ -19,7 +12,7 @@ export type Props = {
 };
 
 const MnemonicGrid: React.FC<Props> = props => {
-  const {mnemonic, style} = props;
+  const { mnemonic, style } = props;
   const styles = useStyles();
 
   const words = useMemo(() => mnemonic.split(' '), [mnemonic]);

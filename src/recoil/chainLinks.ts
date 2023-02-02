@@ -1,7 +1,7 @@
 import React from 'react';
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {ChainLink} from 'types/desmos';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { ChainLink } from 'types/desmos';
 
 /**
  * Recoil atom that holds all the chain links of all the profiles stored inside the application.
@@ -10,7 +10,7 @@ const chainLinksState = atom<Record<string, ChainLink[]>>({
   key: 'chainLinksState',
   default: getMMKV(MMKVKEYS.CHAIN_LINKS) || {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(chainLinks => {
         setMMKV(MMKVKEYS.CHAIN_LINKS, chainLinks);
       });
@@ -34,32 +34,20 @@ const getUniqueLinkInfo = (link: ChainLink) =>
     externalAddress: link.externalAddress,
   } as UniqueChainLinkInfo);
 
-const findLinkByUniqueInfo = (
-  chainLink: ChainLink[],
-  info: UniqueChainLinkInfo,
-) =>
+const findLinkByUniqueInfo = (chainLink: ChainLink[], info: UniqueChainLinkInfo) =>
   chainLink.find(
-    link =>
-      link.chainName === info.chainName &&
-      link.externalAddress === info.externalAddress,
+    link => link.chainName === info.chainName && link.externalAddress === info.externalAddress,
   );
 
 const mergeChainLinks = (first: ChainLink[], second: ChainLink[]) => {
   // Get the unique chain links data
   const uniqueChainLinks: Set<string> = new Set();
-  first
-    .map(getUniqueLinkInfo)
-    .forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
-  second
-    .map(getUniqueLinkInfo)
-    .forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
+  first.map(getUniqueLinkInfo).forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
+  second.map(getUniqueLinkInfo).forEach(value => uniqueChainLinks.add(JSON.stringify(value)));
 
   return Array.from(uniqueChainLinks)
     .map(value => JSON.parse(value) as UniqueChainLinkInfo)
-    .map(
-      info =>
-        findLinkByUniqueInfo(second, info) || findLinkByUniqueInfo(first, info),
-    )
+    .map(info => findLinkByUniqueInfo(second, info) || findLinkByUniqueInfo(first, info))
     .filter(value => value)
     .sort((a, b) => a!.chainName.localeCompare(b!.chainName)) as ChainLink[];
 };

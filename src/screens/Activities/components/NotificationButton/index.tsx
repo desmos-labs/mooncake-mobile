@@ -1,9 +1,9 @@
 import Button from 'components/Button';
 import Typography from 'components/Typography';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 interface Props {
@@ -11,10 +11,10 @@ interface Props {
   isFollowingAddress: boolean;
 }
 
-const NotificationButton = ({handleButtonPress, isFollowingAddress}: Props) => {
+const NotificationButton = ({ handleButtonPress, isFollowingAddress }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
-  const {t} = useTranslation('activities');
+  const { t } = useTranslation('activities');
   return (
     <View style={styles.buttonView}>
       {isFollowingAddress ? (

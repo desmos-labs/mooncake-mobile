@@ -1,8 +1,8 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import ConnectChainMethodButton from 'screens/ConnectChainMethod/components/ConnectChainMethodButton/index';
-import {action} from '@storybook/addon-actions';
+import { action } from '@storybook/addon-actions';
 import Spacer from 'components/Spacer';
 
 storiesOf('components/ConnectChainMethodButton', module)
@@ -13,15 +13,9 @@ storiesOf('components/ConnectChainMethodButton', module)
   ))
   .add('default', () => (
     <>
-      <ConnectChainMethodButton
-        method="ledger"
-        handlePress={action('handlePress')}
-      />
+      <ConnectChainMethodButton method="ledger" handlePress={action('handlePress')} />
       <Spacer paddingVertical={16} />
 
-      <ConnectChainMethodButton
-        method="password"
-        handlePress={action('handlePress')}
-      />
+      <ConnectChainMethodButton method="password" handlePress={action('handlePress')} />
     </>
   ));

@@ -1,10 +1,10 @@
-import {ChainInfo} from '@desmoslabs/desmjs/build/types/chains';
+import { ChainInfo } from '@desmoslabs/desmjs/build/types/chains';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import React, {memo} from 'react';
-import {View} from 'react-native';
-import FastImage, {Source} from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import React, { memo } from 'react';
+import { View } from 'react-native';
+import FastImage, { Source } from 'react-native-fast-image';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 const TxComponent = ({
@@ -30,7 +30,7 @@ const TxComponent = ({
         <FastImage style={styles.avatar} source={image} />
         <View style={styles.profileView}>
           <Typography.Subtitle3>{title}</Typography.Subtitle3>
-          <Typography.Body7 style={{color: theme.colors.grey02, marginTop: 2}}>
+          <Typography.Body7 style={{ color: theme.colors.grey02, marginTop: 2 }}>
             {formattedDate}
           </Typography.Body7>
         </View>

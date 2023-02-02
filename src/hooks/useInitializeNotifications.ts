@@ -1,16 +1,13 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
-import {useCallback, useEffect, useState} from 'react';
-import {AppState} from 'react-native';
-import {useSetAppStateValue} from '@recoil/appState';
+import { useCallback, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
+import { useSetAppStateValue } from '@recoil/appState';
 import useCreateLocalNotification from 'hooks/useCreateLocalNotification';
-import {
-  isSocialNotification,
-  isTransactionNotification,
-} from 'types/notifications';
+import { isSocialNotification, isTransactionNotification } from 'types/notifications';
 import useCreateTransactionNotificationSnackbar from 'hooks/useCreateTransactionSnackbar';
-import {parseRemoteNotification} from 'lib/NotificationsUtils';
+import { parseRemoteNotification } from 'lib/NotificationsUtils';
 
 /**
  * Hook to initialize the notifications handling.
@@ -18,8 +15,7 @@ import {parseRemoteNotification} from 'lib/NotificationsUtils';
 const useInitializeNotifications = () => {
   // Utility hooks to create the notifications UI
   const createLocalNotification = useCreateLocalNotification();
-  const createTransactionNotificationSnackbar =
-    useCreateTransactionNotificationSnackbar();
+  const createTransactionNotificationSnackbar = useCreateTransactionNotificationSnackbar();
 
   // Contains the current application visibility state
   const [appStateVisible, setAppStateVisible] = useState(AppState.currentState);
@@ -42,7 +38,7 @@ const useInitializeNotifications = () => {
       });
 
       // Navigation to the correct screen based on notification
-      const {notification} = initialNotification;
+      const { notification } = initialNotification;
       handleNotificationPressEvent(parseRemoteNotification(notification.data));
     }
   }, [handleNotificationPressEvent]);
@@ -77,11 +73,7 @@ const useInitializeNotifications = () => {
       // Unsubscribe the listener when the effect is destroyed
       return () => unsubscribe();
     }
-  }, [
-    appStateVisible,
-    createTransactionNotificationSnackbar,
-    createLocalNotification,
-  ]);
+  }, [appStateVisible, createTransactionNotificationSnackbar, createLocalNotification]);
 };
 
 export default useInitializeNotifications;

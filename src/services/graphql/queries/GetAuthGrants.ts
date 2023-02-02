@@ -1,20 +1,16 @@
 import EnvConfig from 'config/EnvConfig';
 import React from 'react';
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useButterConfig} from '@recoil/butterConfigState';
+import { useButterConfig } from '@recoil/butterConfigState';
 import client from 'services/graphql/client';
 import _ from 'lodash';
-import {GrantEnums} from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/desmos/msgtypes';
 
 const GetAuthzGrants = gql`
-  query UserAuthzGrants($userAddress: String!, $granterAddress: String!)
-  @api(name: desmos) {
+  query UserAuthzGrants($userAddress: String!, $granterAddress: String!) @api(name: desmos) {
     authz_grant(
-      where: {
-        grantee_address: {_eq: $userAddress}
-        granter_address: {_eq: $granterAddress}
-      }
+      where: { grantee_address: { _eq: $userAddress }, granter_address: { _eq: $granterAddress } }
     ) {
       msg_type_url
       authorization
@@ -24,13 +20,9 @@ const GetAuthzGrants = gql`
 `;
 
 const GetFeeGrantCount = gql`
-  query UserFeeGrants($userAddress: String!, $granterAddress: String!)
-  @api(name: desmos) {
+  query UserFeeGrants($userAddress: String!, $granterAddress: String!) @api(name: desmos) {
     fee_grant_aggregate(
-      where: {
-        granter_address: {_eq: $granterAddress}
-        grantee_address: {_eq: $userAddress}
-      }
+      where: { granter_address: { _eq: $granterAddress }, grantee_address: { _eq: $userAddress } }
     ) {
       aggregate {
         count
@@ -41,9 +33,9 @@ const GetFeeGrantCount = gql`
 
 // eslint-disable-next-line import/prefer-default-export
 export const useGetAuthzGrants = () => {
-  const {activeAddress} = useActiveAccount();
+  const { activeAddress } = useActiveAccount();
 
-  const {butterConfig} = useButterConfig();
+  const { butterConfig } = useButterConfig();
 
   return React.useCallback(async (): Promise<{
     has_fee_grant: boolean;
@@ -78,17 +70,13 @@ export const useGetAuthzGrants = () => {
       }),
     ]);
     await grantsData.result();
-    const _grants: any[] =
-      _.get(grantsData.getCurrentResult(), 'data.authz_grant') || [];
+    const _grants: any[] = _.get(grantsData.getCurrentResult(), 'data.authz_grant') || [];
     const formattedGrants = _grants.map(grant => ({
       msg_type: grant.authorization.msg,
       expiration: grant.expiration,
     }));
 
-    const numFeeGrants = _.get(
-      feeGrantData,
-      'data.fee_grant_aggregate.aggregate.count',
-    );
+    const numFeeGrants = _.get(feeGrantData, 'data.fee_grant_aggregate.aggregate.count');
 
     const has_fee_grant = numFeeGrants > 0;
 

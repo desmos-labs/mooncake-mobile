@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 /**
  * Style hook for the Settings screen
@@ -19,7 +19,7 @@ const useStyles = makeStyle(theme => ({
   signOutButton: {
     marginTop: theme.spacing.l,
   },
-  scrollViewOuter: {margin: -20},
+  scrollViewOuter: { margin: -20 },
   scrollViewInner: {
     padding: 20,
     flexGrow: 1,

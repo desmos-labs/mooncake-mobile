@@ -1,7 +1,7 @@
 import React from 'react';
-import {useQuery} from '@apollo/client';
-import {convertGraphQLPostsParams} from 'lib/GraphQLUtils';
-import {useDesmosParam, useSetDesmosParam} from '@recoil/desmosParams';
+import { useQuery } from '@apollo/client';
+import { convertGraphQLPostsParams } from 'lib/GraphQLUtils';
+import { useDesmosParam, useSetDesmosParam } from '@recoil/desmosParams';
 import GetPostsParams from 'services/graphql/queries/GetPostsParams';
 
 /**
@@ -11,7 +11,7 @@ const usePostsParams = () => {
   const postsParams = useDesmosParam('posts');
   const setPostsParams = useSetDesmosParam('posts');
 
-  const {data, refetch} = useQuery(GetPostsParams);
+  const { data, refetch } = useQuery(GetPostsParams);
 
   // We use an effect in order to make sure that when the data is fetched from the server,
   // we update the local storage with the new value

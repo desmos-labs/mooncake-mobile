@@ -1,12 +1,12 @@
-import {defaultProfilePic} from 'assets/images';
+import { defaultProfilePic } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
-import React, {useCallback} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import React, { useCallback } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {PanGestureHandlerProps} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
-import {RadioButtonInput} from 'react-native-simple-radio-button';
+import { PanGestureHandlerProps } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
+import { RadioButtonInput } from 'react-native-simple-radio-button';
 import useStyles from './useStyles';
 
 /**
@@ -52,7 +52,7 @@ interface Props extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
 }
 
 const AddProfileBadge = (props: Props) => {
-  const {value, onSelect, disabled} = props;
+  const { value, onSelect, disabled } = props;
   const styles = useStyles();
   const theme = useTheme();
   const handleSelect = useCallback(() => {
@@ -61,18 +61,15 @@ const AddProfileBadge = (props: Props) => {
     }
   }, [disabled, onSelect, value.address]);
 
-  const {nickname, dtag, profile_pic, isSelected} = value;
+  const { nickname, dtag, profile_pic, isSelected } = value;
 
   return (
     <TouchableOpacity onPress={handleSelect} disabled={disabled}>
       <DropShadowWrapper
-        style={[
-          styles.externalContainer,
-          disabled && styles.externalContainerDisabled,
-        ]}
+        style={[styles.externalContainer, disabled && styles.externalContainerDisabled]}
         innerStyle={styles.container}>
         <FastImage
-          source={profile_pic ? {uri: profile_pic} : defaultProfilePic}
+          source={profile_pic ? { uri: profile_pic } : defaultProfilePic}
           style={styles.profilePicture}
         />
         <View style={styles.textContainer}>
@@ -85,8 +82,7 @@ const AddProfileBadge = (props: Props) => {
             {dtag}
           </Typography.Body6>
         </View>
-        <View
-          style={[styles.radioButton, disabled && styles.radioButtonDisabled]}>
+        <View style={[styles.radioButton, disabled && styles.radioButtonDisabled]}>
           <RadioButtonInput
             obj={value}
             isSelected={isSelected}

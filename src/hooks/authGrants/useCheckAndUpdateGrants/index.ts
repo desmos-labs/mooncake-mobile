@@ -1,11 +1,11 @@
-import {useNavigation} from '@react-navigation/native';
-import {differenceInMilliseconds} from 'date-fns';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MMKVKEYS, useMMKVStorage} from 'lib/MMKVStorage';
+import { useNavigation } from '@react-navigation/native';
+import { differenceInMilliseconds } from 'date-fns';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { MMKVKEYS, useMMKVStorage } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {StyleProp, TextStyle} from 'react-native';
-import {useGetAuthzGrants} from 'services/graphql/queries/GetAuthGrants';
+import { StyleProp, TextStyle } from 'react-native';
+import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 
 /**
  * @typedef CheckAndUpdateGrantsArgs
@@ -29,8 +29,8 @@ export interface CheckAndUpdateGrantsArgs {
  * the user to the authorization popup and carry out the necessary steps (unlocking wallet, broadcast tx, etc)
  */
 const useCheckAndUpdateGrants = () => {
-  const {navigate, pop} = useNavigation<any>();
-  const {getAuthzGrants} = useGetAuthzGrants();
+  const { navigate, pop } = useNavigation<any>();
+  const { getAuthzGrants } = useGetAuthzGrants();
   const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
   /**
    * Convenience function to check if the user has enabled a grant for a given list
@@ -42,7 +42,7 @@ const useCheckAndUpdateGrants = () => {
       if (!activeAddr) throw new Error('[checkGrant]: No active address found');
       const grantsResponse = await getAuthzGrants();
       const grants: {
-        [index: string]: {msg_type: GrantEnums; expiration: string};
+        [index: string]: { msg_type: GrantEnums; expiration: string };
       } = grantsResponse.grants.reduce((acc, cur) => {
         return {
           ...acc,
@@ -73,21 +73,21 @@ const useCheckAndUpdateGrants = () => {
       grantsToRequest,
       stayOnCurrentScreen,
       detailsModal,
-    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
+    }: CheckAndUpdateGrantsArgs): Promise<{ success: boolean }> => {
       return new Promise(resolve => {
         if (grantsToRequest.length === 0) {
-          resolve({success: true});
+          resolve({ success: true });
         } else {
           navigate(ROUTES.ACTION_AUTHORIZATION, {
             grants: grantsToRequest,
             detailsModal,
             onApprove: () => {
               !stayOnCurrentScreen && pop();
-              resolve({success: true});
+              resolve({ success: true });
             },
             onCancel: () => {
               pop();
-              resolve({success: false});
+              resolve({ success: false });
             },
           });
         }
@@ -104,7 +104,7 @@ const useCheckAndUpdateGrants = () => {
       grantsToRequest,
       stayOnCurrentScreen,
       detailsModal,
-    }: CheckAndUpdateGrantsArgs): Promise<{success: boolean}> => {
+    }: CheckAndUpdateGrantsArgs): Promise<{ success: boolean }> => {
       const missingOrExpiredGrants = await checkGrants(grantsToRequest);
       return updateGrants({
         grantsToRequest: missingOrExpiredGrants,

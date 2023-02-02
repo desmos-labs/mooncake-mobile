@@ -1,21 +1,17 @@
-import {MsgLinkApplicationEncodeObject} from '@desmoslabs/desmjs';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {useButterConfig} from '@recoil/butterConfigState';
-import {errorImage} from 'assets/images';
+import { MsgLinkApplicationEncodeObject } from '@desmoslabs/desmjs';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useButterConfig } from '@recoil/butterConfigState';
+import { errorImage } from 'assets/images';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import _ from 'lodash';
 import Long from 'long';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Alert, Linking} from 'react-native';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert, Linking } from 'react-native';
 import GetTweetsGivenAnUsername from 'services/axios/requests/GetTweetsGivenAnUsername';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_TWEET>;
@@ -25,19 +21,19 @@ const useHooks = () => {
   const [tweets, setTweets] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
   const [selectedTweetId, setSelectedTweetId] = useState<number>();
-  const {chainAccount} = useActiveAccount();
+  const { chainAccount } = useActiveAccount();
   const unlockWallet = useUnlockWallet();
-  const {butterConfig} = useButterConfig();
-  const {navigate} = useNavigation<NavProps['navigation']>();
+  const { butterConfig } = useButterConfig();
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const {
-    params: {username},
+    params: { username },
   } = useRoute<NavProps['route']>();
-  const {t} = useTranslation('connectApp');
+  const { t } = useTranslation('connectApp');
 
   const getTweets = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await GetTweetsGivenAnUsername({username});
+      const response = await GetTweetsGivenAnUsername({ username });
       if (response) {
         setUser(response.user);
         setTweets(response.tweets);
@@ -65,9 +61,7 @@ const useHooks = () => {
           method: 'tweet',
           value: selectedTweetId?.toString(),
         };
-        const verificationDataHex = Buffer.from(
-          JSON.stringify(verificationData),
-        ).toString('hex');
+        const verificationDataHex = Buffer.from(JSON.stringify(verificationData)).toString('hex');
 
         const msg: MsgLinkApplicationEncodeObject = {
           typeUrl: '/desmos.profiles.v3.MsgLinkApplication',

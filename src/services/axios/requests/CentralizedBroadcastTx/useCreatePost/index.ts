@@ -1,5 +1,5 @@
 import React from 'react';
-import {MsgCreatePost} from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';
+import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
 import useActiveAccount from 'hooks/useActiveAccount';
@@ -9,20 +9,20 @@ import {
   PostReferenceType,
   ReplySetting,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import {MsgCreatePostEncodeObject} from '@desmoslabs/desmjs';
-import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
-import {UploadEvent} from 'services/axios/requests/UploadMedia';
+import { MsgCreatePostEncodeObject } from '@desmoslabs/desmjs';
+import { mediaToAny } from '@desmoslabs/desmjs/build/aminomessages/posts';
+import { UploadEvent } from 'services/axios/requests/UploadMedia';
 import ToastConfig from 'config/ToastConfig';
-import {useToast} from 'react-native-toast-notifications';
-import {useRecoilCallback, useResetRecoilState} from 'recoil';
+import { useToast } from 'react-native-toast-notifications';
+import { useRecoilCallback, useResetRecoilState } from 'recoil';
 import createPostState from '@recoil/screens/createPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {uploadImageForPost} from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { uploadImageForPost } from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 import usePendingPosts from 'hooks/usePendingPosts';
-import {PendingPostEnum} from '@recoil/pendingTx/pendingPosts';
-import {v4 as uuidv4} from 'uuid';
+import { PendingPostEnum } from '@recoil/pendingTx/pendingPosts';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  *
@@ -41,32 +41,28 @@ interface CreatePostArgs {
  * A Hook that exposes a callback that requests necessary grants and creates a post.
  */
 const useCreatePost = () => {
-  const {activeAddress} = useActiveAccount();
+  const { activeAddress } = useActiveAccount();
 
   const toast = useToast();
 
   const resetSharedPostState = useResetRecoilState(createPostState);
   const [loading, setLoading] = React.useState(false);
 
-  const {checkAndUpdateGrants} = useCheckAndUpdateGrants();
+  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
 
-  const {addNewPendingPost, resolveByExternalId} = usePendingPosts();
+  const { addNewPendingPost, resolveByExternalId } = usePendingPosts();
 
   /**
    * Helper function that serves as a centralized point to create posts across the app.
    * Under this context, comments are considered posts as well.
    */
   const createPost = useRecoilCallback(
-    ({snapshot}) =>
-      async ({
-        conversationId,
-        referencedPostId,
-        onUploadProgress,
-      }: CreatePostArgs) => {
+    ({ snapshot }) =>
+      async ({ conversationId, referencedPostId, onUploadProgress }: CreatePostArgs) => {
         if (!activeAddress) return;
         setLoading(true);
 
-        const {success} = await checkAndUpdateGrants({
+        const { success } = await checkAndUpdateGrants({
           grantsToRequest: [GrantEnums.MsgCreatePost],
           stayOnCurrentScreen: true,
         });
@@ -79,7 +75,7 @@ const useCreatePost = () => {
           // get the postText and any attachments from recoil state
           const _sharedPostState = await snapshot.getPromise(createPostState);
 
-          const {postAttachments, postText} = _sharedPostState;
+          const { postAttachments, postText } = _sharedPostState;
 
           // note: only Media attachments
           // only support 1 image attachment for now
@@ -135,9 +131,7 @@ const useCreatePost = () => {
           // don't add comments to pending for now
           const _pendingPost: PendingPost = {
             postType:
-              _referencedPosts.length === 0
-                ? PendingPostEnum.POST
-                : PendingPostEnum.COMMENT,
+              _referencedPosts.length === 0 ? PendingPostEnum.POST : PendingPostEnum.COMMENT,
             postData: {
               // id can be any number, since it is assigned by the server
               id: Date.now(),
@@ -175,7 +169,7 @@ const useCreatePost = () => {
           addNewPendingPost(_pendingPost);
 
           // resolve the pending post if an error occurs during broadcast
-          encodeAndBroadcastTx({msgs: [msg]}).catch(() => {
+          encodeAndBroadcastTx({ msgs: [msg] }).catch(() => {
             resolveByExternalId(externalId);
           });
 
@@ -194,7 +188,7 @@ const useCreatePost = () => {
     [activeAddress],
   );
 
-  return {createPost, loading};
+  return { createPost, loading };
 };
 
 export default useCreatePost;

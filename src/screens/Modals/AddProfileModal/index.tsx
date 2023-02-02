@@ -1,16 +1,16 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {addNewProfileIcon, addProfileIcon} from 'assets/images';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { addNewProfileIcon, addProfileIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {TouchableOpacity} from 'react-native';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Divider, useTheme} from 'react-native-paper';
+import { Divider, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type AddProfileModalParams = {
@@ -24,19 +24,16 @@ export type AddProfileModalParams = {
   onPressSecondary: () => void;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.ADD_PROFILE_MODAL
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ADD_PROFILE_MODAL>;
 
 const AddProfileModal = () => {
   const {
-    params: {onPressPrimary, onPressSecondary},
+    params: { onPressPrimary, onPressSecondary },
   } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
-  const {t} = useTranslation('addProfile');
-  const {goBack} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('addProfile');
+  const { goBack } = useNavigation<NavProps['navigation']>();
 
   const onPressFirstButton = useCallback(() => {
     goBack();

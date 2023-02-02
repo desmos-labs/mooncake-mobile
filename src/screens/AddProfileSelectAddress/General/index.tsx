@@ -1,9 +1,9 @@
-import {toBase64} from '@cosmjs/encoding';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {ExternalAccount} from '@recoil/connectChainState';
+import { toBase64 } from '@cosmjs/encoding';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { ExternalAccount } from '@recoil/connectChainState';
 import createLocalWalletState from '@recoil/createLocalWalletState';
-import {useLoadProfiles} from '@recoil/profiles';
+import { useLoadProfiles } from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
 import AddressItem from 'components/AddressItem';
 import Button from 'components/Button';
@@ -14,14 +14,14 @@ import Typography from 'components/Typography';
 import useActiveAccount from 'hooks/useActiveAccount';
 import useGenerateAccountsToAdd from 'hooks/useGenerateAccountsToAdd';
 import LocalWallet from 'lib/LocalWallet';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, FlatList, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
-import {ChainAccount, ChainAccountType} from 'types/chains';
+import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useSetRecoilState } from 'recoil';
+import { ChainAccount, ChainAccountType } from 'types/chains';
 import useStyles from '../useStyles';
 
 export type NavProps = StackScreenProps<
@@ -35,33 +35,27 @@ export type AddProfileSelectAddressGeneralParams = {
 };
 
 const AddProfileSelectAddressGeneral = () => {
-  const {activeAddress} = useActiveAccount();
+  const { activeAddress } = useActiveAccount();
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(10);
   const navigation = useNavigation<NavProps['navigation']>();
   const {
-    params: {mnemonic, password},
+    params: { mnemonic, password },
   } = useRoute<NavProps['route']>();
-  const {t} = useTranslation('addProfile');
+  const { t } = useTranslation('addProfile');
   const styles = useStyles();
   const theme = useTheme();
-  const {generateAccounts} = useGenerateAccountsToAdd();
-  const {profiles} = useLoadProfiles();
+  const { generateAccounts } = useGenerateAccountsToAdd();
+  const { profiles } = useLoadProfiles();
   const setAccountCreation = useSetRecoilState(createLocalWalletState);
-  const setWalletAndAccountToAdd = useSetRecoilState(
-    walletAndAccountToAddState,
-  );
+  const setWalletAndAccountToAdd = useSetRecoilState(walletAndAccountToAddState);
 
   const asyncGenerateAccounts = useCallback(
     async (startingIndex: number, limitIndex: number) => {
       try {
         setLoading(true);
-        const generatedAccounts = await generateAccounts(
-          startingIndex,
-          limitIndex,
-          mnemonic!,
-        );
+        const generatedAccounts = await generateAccounts(startingIndex, limitIndex, mnemonic!);
         if (generatedAccounts) {
           setAccounts(prev => [...prev, ...generatedAccounts]);
         }
@@ -88,9 +82,7 @@ const AddProfileSelectAddressGeneral = () => {
               mnemonic,
             });
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('advanced')}
-          </Typography.Button2>
+          <Typography.Button2 style={styles.modeButtonText}>{t('advanced')}</Typography.Button2>
         </Button>
       </View>
     );
@@ -110,9 +102,7 @@ const AddProfileSelectAddressGeneral = () => {
         return <ActivityIndicator color={theme.colors.surfaceBlack} />;
       }
       const handlePress = async (wallet: ExternalAccount) => {
-        const deserializedWallet = await LocalWallet.deserialize(
-          wallet.signer as string,
-        );
+        const deserializedWallet = await LocalWallet.deserialize(wallet.signer as string);
         const chainAccount: ChainAccount = {
           address: deserializedWallet.bech32Address,
           type: ChainAccountType.Local,
@@ -140,10 +130,7 @@ const AddProfileSelectAddressGeneral = () => {
           index={index}
           address={item.address}
           handlePress={() => handlePress(item)}
-          isAlreadyLinked={
-            profiles.findIndex(profile => profile.address === item.address) !==
-            -1
-          }
+          isAlreadyLinked={profiles.findIndex(profile => profile.address === item.address) !== -1}
         />
       );
     },
@@ -159,7 +146,7 @@ const AddProfileSelectAddressGeneral = () => {
     if (loading) {
       return (
         <ActivityIndicator
-          style={{width: '100%', marginVertical: 16}}
+          style={{ width: '100%', marginVertical: 16 }}
           color={theme.colors.surfaceBlack}
         />
       );
@@ -171,9 +158,7 @@ const AddProfileSelectAddressGeneral = () => {
       topBar={<TopBar rightElement={SwitchToAdvancedButton} />}
       backgroundColor={theme.colors.white}>
       <View style={styles.container}>
-        <Typography.H3 style={styles.textStyle}>
-          {t('addProfile:title')}
-        </Typography.H3>
+        <Typography.H3 style={styles.textStyle}>{t('addProfile:title')}</Typography.H3>
         <Spacer paddingTop={theme.spacing.m} paddingBottom={theme.spacing.s}>
           <Typography.Body6 style={styles.textStyle}>
             {t('addProfile:select account')}

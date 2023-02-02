@@ -1,5 +1,5 @@
-import {useRecoilCallback, useRecoilValue} from 'recoil';
-import {followedAddressesState} from '@recoil/following';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { followedAddressesState } from '@recoil/following';
 import {
   OptimisticRelationship,
   optimisticRelationshipState,
@@ -12,8 +12,8 @@ const useOptimisticRelationships = () => {
   const optimisticUnfollow = useRecoilValue(optimisticToUnfollow);
 
   const handleOptimisticRelationship = useRecoilCallback(
-    ({snapshot, set}) =>
-      async ({counterParty, type}: OptimisticRelationship) => {
+    ({ snapshot, set }) =>
+      async ({ counterParty, type }: OptimisticRelationship) => {
         const optFollowing = await snapshot.getPromise(optimisticToFollow);
         const optUnfollow = await snapshot.getPromise(optimisticToUnfollow);
 
@@ -30,44 +30,32 @@ const useOptimisticRelationships = () => {
 
           set(optimisticRelationshipState, prev => [...prev]);
         } else {
-          set(optimisticRelationshipState, prev => [
-            ...prev,
-            {counterParty, type},
-          ]);
+          set(optimisticRelationshipState, prev => [...prev, { counterParty, type }]);
         }
       },
   );
 
-  const resolveOptimisticRelationships = useRecoilCallback(
-    ({snapshot, set}) =>
-      async () => {
-        const optRelationships = await snapshot.getPromise(
-          optimisticRelationshipState,
-        );
-        const followingSet = await snapshot.getPromise(followedAddressesState);
+  const resolveOptimisticRelationships = useRecoilCallback(({ snapshot, set }) => async () => {
+    const optRelationships = await snapshot.getPromise(optimisticRelationshipState);
+    const followingSet = await snapshot.getPromise(followedAddressesState);
 
-        const resolvedOptRelationships = optRelationships.filter(x => {
-          if (x.type === 'follow') {
-            return !followingSet.has(x.counterParty);
-          } else {
-            return followingSet.has(x.counterParty);
-          }
-        });
-        set(optimisticRelationshipState, resolvedOptRelationships);
-      },
-  );
+    const resolvedOptRelationships = optRelationships.filter(x => {
+      if (x.type === 'follow') {
+        return !followingSet.has(x.counterParty);
+      } else {
+        return followingSet.has(x.counterParty);
+      }
+    });
+    set(optimisticRelationshipState, resolvedOptRelationships);
+  });
 
   const resolveOptimisticRelationshipForAddress = useRecoilCallback(
-    ({snapshot, set}) =>
+    ({ snapshot, set }) =>
       async (address: string) => {
         console.log('resolving optimistic relationship for address');
-        const optRelationships = await snapshot.getPromise(
-          optimisticRelationshipState,
-        );
+        const optRelationships = await snapshot.getPromise(optimisticRelationshipState);
 
-        const filteredOptRelationships = optRelationships.filter(
-          x => x.counterParty !== address,
-        );
+        const filteredOptRelationships = optRelationships.filter(x => x.counterParty !== address);
 
         set(optimisticRelationshipState, filteredOptRelationships);
       },

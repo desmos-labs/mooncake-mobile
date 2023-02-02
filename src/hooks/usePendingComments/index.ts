@@ -1,11 +1,11 @@
 import React from 'react';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   pendingCommentsByPost,
   PendingPostEnum,
   pendingPostsState,
 } from '@recoil/pendingTx/pendingPosts';
-import {isTxHashInLatestPost} from 'hooks/usePendingPosts';
+import { isTxHashInLatestPost } from 'hooks/usePendingPosts';
 
 const usePendingComments = (postID: number, commentData: PostItem[]) => {
   const [pendingComments, setPendingComments] = useRecoilState(
@@ -35,9 +35,7 @@ const usePendingComments = (postID: number, commentData: PostItem[]) => {
           txHashesToRemove.push(x.txHash);
         }
       });
-      setPendingComments(prev =>
-        prev.filter(x => !txHashesToRemove.includes(x.txHash)),
-      );
+      setPendingComments(prev => prev.filter(x => !txHashesToRemove.includes(x.txHash)));
     },
     [pendingComments],
   );

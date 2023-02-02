@@ -1,6 +1,6 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
-import {StyleSheet, View} from 'react-native';
+import { storiesOf } from '@storybook/react-native';
+import { StyleSheet, View } from 'react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import Typography from '../Typography';
 import DView from './index';
@@ -44,9 +44,7 @@ const TypographyPlaceholder = (
 );
 
 storiesOf('components/DView', module)
-  .addDecorator(getStories => (
-    <SbContainer padding={16}>{getStories()}</SbContainer>
-  ))
+  .addDecorator(getStories => <SbContainer padding={16}>{getStories()}</SbContainer>)
   .add('Default with placeholder', () => <DView>{TypographyPlaceholder}</DView>)
   .add('Default scrollable with placeholder', () => (
     <DView {...Scrollable}>{TypographyPlaceholder}</DView>

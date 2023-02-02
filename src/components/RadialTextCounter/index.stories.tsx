@@ -1,7 +1,7 @@
 import React from 'react';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {TextInput} from 'react-native';
+import { TextInput } from 'react-native';
 import RadialTextCounter from './index';
 
 const ComponentWithState = () => {

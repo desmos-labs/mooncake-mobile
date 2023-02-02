@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 /**
  * Style hook for the Settings screen
@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
   disabled: {
     opacity: 0.3,
   },
-  bodyText: {marginTop: theme.spacing.l},
+  bodyText: { marginTop: theme.spacing.l },
 }));
 
 export default useStyles;

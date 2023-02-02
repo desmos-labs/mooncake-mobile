@@ -1,18 +1,18 @@
-import {useQuery} from '@apollo/client';
-import {convertCoin} from '@desmoslabs/desmjs';
-import {useChainLinks} from '@recoil/chainLinks';
-import {useApplicationLinks} from '@recoil/connectedApps';
+import { useQuery } from '@apollo/client';
+import { convertCoin } from '@desmoslabs/desmjs';
+import { useChainLinks } from '@recoil/chainLinks';
+import { useApplicationLinks } from '@recoil/connectedApps';
 import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
-import React, {useMemo} from 'react';
-import {useRecoilValue} from 'recoil';
+import React, { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import GetAccountBalanceAndTokenPrice from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
 import GetPostsNumberForAddress from 'services/graphql/queries/GetPostsNumberForAddress';
 
 const useQueries = (address?: string) => {
-  const {currentChain} = useRecoilValue(appSettingsState);
+  const { currentChain } = useRecoilValue(appSettingsState);
   const {
     data: postsData,
     loading: postsLoading,
@@ -46,17 +46,13 @@ const useQueries = (address?: string) => {
     data: impactPointsData,
     loading: impactPointsLoading,
     refetch: refetchImpactPoints,
-  } = useQuery(GetImpactPoints, {fetchPolicy: 'no-cache'});
+  } = useQuery(GetImpactPoints, { fetchPolicy: 'no-cache' });
 
   const impactPoints = useMemo(() => {
-    if (
-      !impactPointsData?.impact_record_aggregate?.aggregate?.sum
-        ?.rewarded_points
-    ) {
+    if (!impactPointsData?.impact_record_aggregate?.aggregate?.sum?.rewarded_points) {
       return 0;
     }
-    return impactPointsData.impact_record_aggregate.aggregate.sum
-      .rewarded_points;
+    return impactPointsData.impact_record_aggregate.aggregate.sum.rewarded_points;
   }, [impactPointsData]);
 
   const {

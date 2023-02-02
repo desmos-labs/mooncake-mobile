@@ -1,7 +1,7 @@
-import {magnifyingGlass} from 'assets/images';
+import { magnifyingGlass } from 'assets/images';
 import React from 'react';
-import {Image, TextInput, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { Image, TextInput, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   searchPlaceHolder: string;
 };
 
-const SearchBar = ({handleChange, searchPlaceHolder}: Props) => {
+const SearchBar = ({ handleChange, searchPlaceHolder }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
 

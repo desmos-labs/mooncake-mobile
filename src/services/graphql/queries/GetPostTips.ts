@@ -1,11 +1,9 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 export const GetPostTips = gql`
   query PostTips($postID: bigint, $subspaceID: bigint) @api(name: butter) {
-    tip_post(
-      where: {post: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}}
-    ) {
+    tip_post(where: { post: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } } }) {
       sender {
         address
         dtag
@@ -23,9 +21,7 @@ export const GetPostTips = gql`
 export const GetTippedPostsFromAddress = gql`
   ${POST_FIELDS}
   query TippedPosts($subspaceID: bigint!, $user: String!) @api(name: butter) {
-    tip_post(
-      where: {subspace_id: {_eq: $subspaceID}, sender_address: {_eq: $user}}
-    ) {
+    tip_post(where: { subspace_id: { _eq: $subspaceID }, sender_address: { _eq: $user } }) {
       post {
         ...PostFields
       }

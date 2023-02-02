@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import React, { FC } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 // import FollowButton from 'components/FollowButton';
 import Typography from 'components/Typography';
-import {defaultProfilePic} from 'assets/images';
+import { defaultProfilePic } from 'assets/images';
 // import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 // import {useRecoilValue} from 'recoil';
 // import {isFollowingAddr} from '@recoil/following';
@@ -36,17 +36,14 @@ const FollowingListItem: FC<Props> = ({
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <FastImage
-        source={profile_pic ? {uri: profile_pic} : defaultProfilePic}
+        source={profile_pic ? { uri: profile_pic } : defaultProfilePic}
         style={styles.pic}
       />
       <View style={styles.names}>
         <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">
           {nickname}
         </Typography.Subtitle3>
-        <Typography.Body7
-          style={styles.dTagStyle}
-          numberOfLines={1}
-          ellipsizeMode="tail">
+        <Typography.Body7 style={styles.dTagStyle} numberOfLines={1} ellipsizeMode="tail">
           @{dtag}
         </Typography.Body7>
       </View>

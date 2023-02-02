@@ -1,5 +1,5 @@
-import {makeStyle} from 'config/theme';
-import {Dimensions} from 'react-native';
+import { makeStyle } from 'config/theme';
+import { Dimensions } from 'react-native';
 
 /**
  * Theme hook for the PostCard component
@@ -23,7 +23,7 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.m,
     justifyContent: 'space-between',
   },
-  bottomBarIcon: {height: 24, width: 24, marginRight: theme.spacing.xs},
+  bottomBarIcon: { height: 24, width: 24, marginRight: theme.spacing.xs },
   profileInfoView: {
     flex: 1,
     flexDirection: 'row',
@@ -43,8 +43,8 @@ const useStyles = makeStyle(theme => ({
     left: 'auto',
     right: 0,
   },
-  bottomBarInnerView: {flexDirection: 'row', alignItems: 'center'},
-  mediaView: {alignItems: 'center', marginTop: theme.spacing.m},
+  bottomBarInnerView: { flexDirection: 'row', alignItems: 'center' },
+  mediaView: { alignItems: 'center', marginTop: theme.spacing.m },
 }));
 
 export default useStyles;

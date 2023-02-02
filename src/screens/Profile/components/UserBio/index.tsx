@@ -1,8 +1,8 @@
 import Typography from 'components/Typography';
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {TouchableOpacity} from 'react-native';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -17,11 +17,11 @@ type Props = {
   content: string;
 };
 
-const UserBio = ({content}: Props) => {
+const UserBio = ({ content }: Props) => {
   const [collapsed, setCollapsed] = useState(true);
   const [maxLines, setMaxLines] = useState<number | undefined>(1);
   const animationHeight = useSharedValue(16);
-  const {t} = useTranslation('profile');
+  const { t } = useTranslation('profile');
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -31,7 +31,7 @@ const UserBio = ({content}: Props) => {
   });
 
   const collapseView = () => {
-    animationHeight.value = withTiming(21, {duration: 200}, isFinished => {
+    animationHeight.value = withTiming(21, { duration: 200 }, isFinished => {
       if (isFinished) {
         runOnJS(setMaxLines)(1);
       }
@@ -54,17 +54,11 @@ const UserBio = ({content}: Props) => {
   }, [collapsed]);
 
   if (!content) {
-    return (
-      <Typography.Body7 style={{textAlign: 'left'}}>
-        {t('noBio')}
-      </Typography.Body7>
-    );
+    return <Typography.Body7 style={{ textAlign: 'left' }}>{t('noBio')}</Typography.Body7>;
   }
 
   return (
-    <TouchableOpacity
-      onPress={() => setCollapsed(prevState => !prevState)}
-      activeOpacity={0.8}>
+    <TouchableOpacity onPress={() => setCollapsed(prevState => !prevState)} activeOpacity={0.8}>
       <Animated.View style={animatedStyle}>
         <Typography.Body7 numberOfLines={maxLines} ellipsizeMode="tail">
           {content}

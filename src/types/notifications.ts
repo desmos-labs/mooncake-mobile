@@ -27,13 +27,11 @@ export interface TransactionNotificationData extends BaseNotificationData {
   txHash: string;
 }
 
-export interface TransactionSuccessNotificationData
-  extends TransactionNotificationData {
+export interface TransactionSuccessNotificationData extends TransactionNotificationData {
   type: NotificationType.TransactionSuccess;
 }
 
-export interface TransactionFailNotificationData
-  extends TransactionNotificationData {
+export interface TransactionFailNotificationData extends TransactionNotificationData {
   type: NotificationType.TransactionFail;
 }
 
@@ -60,8 +58,7 @@ export interface PostReactionNotificationData extends SocialNotificationData {
   postId: number;
 }
 
-export interface CommentReactionNotificationData
-  extends SocialNotificationData {
+export interface CommentReactionNotificationData extends SocialNotificationData {
   type: NotificationType.ReactionComment;
   subspaceId: number;
   commentId: number;
@@ -98,19 +95,12 @@ export type NotificationData =
   | InviteClaimedNotificationData
   | InviteUnlockedNotificationData;
 
-export function isTransactionNotification(
-  data: unknown,
-): data is TransactionNotificationData {
-  const {type} = data as TransactionNotificationData;
-  return (
-    type === NotificationType.TransactionSuccess ||
-    type === NotificationType.TransactionFail
-  );
+export function isTransactionNotification(data: unknown): data is TransactionNotificationData {
+  const { type } = data as TransactionNotificationData;
+  return type === NotificationType.TransactionSuccess || type === NotificationType.TransactionFail;
 }
 
-export function isSocialNotification(
-  data: unknown,
-): data is SocialNotificationData {
-  const {title, body} = data as SocialNotificationData;
+export function isSocialNotification(data: unknown): data is SocialNotificationData {
+  const { title, body } = data as SocialNotificationData;
   return title !== undefined && body !== undefined;
 }

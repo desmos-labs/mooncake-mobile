@@ -1,7 +1,7 @@
 import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
-import {storiesOf} from '@storybook/react-native';
-import {action} from '@storybook/addon-actions';
+import { storiesOf } from '@storybook/react-native';
+import { action } from '@storybook/addon-actions';
 import CommentItem from './index';
 
 type CompProps = React.ComponentProps<typeof CommentItem>;
@@ -12,7 +12,7 @@ const defaultProps: CompProps = {
   handlePressLike: action('handlePressLike'),
   handlePressMore: action('handlePressMore'),
   handlePressTip: action('handlePressTip'),
-  avatar: {uri: 'https://i.imgur.com/aih9snA.png'},
+  avatar: { uri: 'https://i.imgur.com/aih9snA.png' },
   nickname: 'Shrek',
   dTag: 'Swampyboi',
   numComments: 1,

@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export type GetFollowedUsersForAddressData = {
   user_relationship: Array<{
@@ -12,7 +12,7 @@ export type GetFollowedUsersForAddressData = {
 
 const GetFollowedUsersForAddress = gql`
   query Following($userAddress: String) @api(name: butter) {
-    user_relationship(where: {creator_address: {_eq: $userAddress}}) {
+    user_relationship(where: { creator_address: { _eq: $userAddress } }) {
       counterparty {
         dtag
         nickname

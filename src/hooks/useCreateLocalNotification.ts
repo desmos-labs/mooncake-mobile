@@ -1,7 +1,7 @@
 import React from 'react';
-import {SocialNotificationData} from 'types/notifications';
+import { SocialNotificationData } from 'types/notifications';
 import notifee from '@notifee/react-native';
-import {useSetAppStateValue} from '@recoil/appState';
+import { useSetAppStateValue } from '@recoil/appState';
 
 const useCreateLocalNotification = () => {
   const setNotificationsCount = useSetAppStateValue('notificationsCount');

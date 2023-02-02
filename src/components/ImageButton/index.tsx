@@ -1,5 +1,5 @@
-import {placeholderIcon} from 'assets/images';
-import React, {ReactNode, useEffect, useState} from 'react';
+import { placeholderIcon } from 'assets/images';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -8,7 +8,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
-import FastImage, {ImageStyle, Source} from 'react-native-fast-image';
+import FastImage, { ImageStyle, Source } from 'react-native-fast-image';
 
 interface Props extends TouchableOpacityProps {
   /**
@@ -70,7 +70,7 @@ const ImageButton = ({
 
   return (
     <TouchableOpacity
-      style={[{opacity: rest.disabled ? 0.3 : 1}, buttonStyle]}
+      style={[{ opacity: rest.disabled ? 0.3 : 1 }, buttonStyle]}
       hitSlop={hitSlop}
       {...rest}>
       <FastImage
@@ -81,7 +81,7 @@ const ImageButton = ({
         onError={() => setImageSource(placeholderIcon)}
       />
       {overlayComponent && (
-        <View style={[StyleSheet.absoluteFillObject, {...overlayPosition}]}>
+        <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>
           {overlayComponent}
         </View>
       )}

@@ -1,12 +1,12 @@
 import React from 'react';
-import {useActiveAccountAddress} from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/wallets';
 import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
   useSetPostReactionStatus,
 } from '@recoil/reactions';
-import {DataStatus, PostID} from 'types/desmos';
+import { DataStatus, PostID } from 'types/desmos';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import {
   MsgAddReactionEncodeObject,
@@ -15,9 +15,9 @@ import {
   MsgRemoveReactionTypeUrl,
 } from '@desmoslabs/desmjs';
 import Long from 'long';
-import {useLazyQuery} from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
-import {convertRegisteredReactionValueToAny} from '@desmoslabs/desmjs/build/aminomessages/reactions';
+import { convertRegisteredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
 import useAppConfig from 'hooks/useAppConfig';
 
 /**
@@ -41,7 +41,7 @@ const useAddReaction = () => {
       addPostReaction(address, postId);
 
       // Check if the reaction exists on the server
-      const {data} = await getReaction({
+      const { data } = await getReaction({
         variables: {
           postId,
           userAddress: address,
@@ -106,7 +106,7 @@ const useRemoveReaction = () => {
       setPostReactionStatus(address, postId, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server
-      const {data} = await getReaction({
+      const { data } = await getReaction({
         variables: {
           postId,
           userAddress: address,
@@ -157,9 +157,7 @@ const useRemoveReaction = () => {
 const useAddOrRemoveReaction = () => {
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
-    throw new Error(
-      'Trying to know add or remove a reaction, without active user',
-    );
+    throw new Error('Trying to know add or remove a reaction, without active user');
   }
 
   const hasPostReaction = useHasPostReaction();

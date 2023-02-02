@@ -1,8 +1,8 @@
-import {storiesOf} from '@storybook/react-native';
-import {moreIcon} from 'assets/images';
+import { storiesOf } from '@storybook/react-native';
+import { moreIcon } from 'assets/images';
 import Button from 'components/Button';
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import PopupMenu from './index';
 
@@ -18,13 +18,13 @@ const RenderComponent = () => {
         open menu
       </Button>
       <PopupMenu
-        anchor={{x: 100, y: 100}}
+        anchor={{ x: 100, y: 100 }}
         visible={menuOpen}
         closeMenu={closeMenu}
         menuItems={[
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
-          {label: 'test1', onPress: () => console.log('test'), icon: moreIcon},
+          { label: 'test1', onPress: () => console.log('test'), icon: moreIcon },
+          { label: 'test1', onPress: () => console.log('test'), icon: moreIcon },
+          { label: 'test1', onPress: () => console.log('test'), icon: moreIcon },
         ]}
       />
     </View>

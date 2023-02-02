@@ -1,6 +1,6 @@
 import React from 'react';
-import {Image, ImageSourcePropType, View} from 'react-native';
-import {editProfilePic} from 'assets/images';
+import { Image, ImageSourcePropType, View } from 'react-native';
+import { editProfilePic } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 
 type Props = {
@@ -9,9 +9,9 @@ type Props = {
   handlePressEdit: () => void;
 };
 
-const CreateAvatar = ({avatar, handlePressEdit}: Props) => {
+const CreateAvatar = ({ avatar, handlePressEdit }: Props) => {
   return (
-    <View style={{alignSelf: 'center', zIndex: 2, bottom: -45}}>
+    <View style={{ alignSelf: 'center', zIndex: 2, bottom: -45 }}>
       <Image
         style={{
           resizeMode: 'cover',

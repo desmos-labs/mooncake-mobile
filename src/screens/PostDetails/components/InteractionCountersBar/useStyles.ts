@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 export type StyleProp = {
   numTypes: number;
@@ -38,7 +38,7 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: 28,
     height: 28,
-    transform: [{translateX: 21}],
+    transform: [{ translateX: 21 }],
     resizeMode: 'cover',
   },
   icon3: {
@@ -48,7 +48,7 @@ const useStyles = makeStyle(theme => ({
     position: 'absolute',
     width: 28,
     height: 28,
-    transform: [{translateX: 42}],
+    transform: [{ translateX: 42 }],
     resizeMode: 'cover',
   },
 }));

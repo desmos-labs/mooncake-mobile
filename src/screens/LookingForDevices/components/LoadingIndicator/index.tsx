@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, ColorValue, StyleSheet, View} from 'react-native';
+import { Animated, ColorValue, StyleSheet, View } from 'react-native';
 
 type Props = {
   /**
@@ -50,9 +50,7 @@ const LoadingIndicator = ({
   // I am too lazy to prepare a proper keyExtractor function
   const iterableArray = React.useRef(new Array(numDots).fill(0)).current;
 
-  const opacity = React.useRef(
-    iterableArray.map(_ => new Animated.Value(0)),
-  ).current;
+  const opacity = React.useRef(iterableArray.map(_ => new Animated.Value(0))).current;
 
   const dotsAnimation = React.useRef(
     Animated.loop(
@@ -110,7 +108,7 @@ const LoadingIndicator = ({
           key={`${idx}-dot2`}
           style={[
             styles.ellipsis,
-            {opacity: opacity[idx]},
+            { opacity: opacity[idx] },
             {
               height: dotSize,
               width: dotSize,

@@ -1,5 +1,5 @@
-import {Props} from 'components/DTextInput/index';
-import {makeStyleWithProps} from 'config/theme';
+import { Props } from 'components/DTextInput/index';
+import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((props: Props, theme) => ({
   container: {
@@ -26,8 +26,7 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     // textAlignVertical: props.multiline === true ? 'top' : 'center',
     // height: '100%',
     color: props.error ? theme.colors.pink01 : theme.colors.surfaceBlack,
-    minHeight:
-      props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,
+    minHeight: props.numberOfLines !== undefined ? 25 * props.numberOfLines : undefined,
   },
   right: {
     padding: 0,

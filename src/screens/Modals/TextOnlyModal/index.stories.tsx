@@ -1,10 +1,8 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {storiesOf} from '@storybook/react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import TextOnlyModal, {
-  TextOnlyModalParams,
-} from 'screens/Modals/TextOnlyModal/index';
+import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal/index';
 import SbContainer from 'storybook/decorators/SbContainer';
 
 type StackParams = {

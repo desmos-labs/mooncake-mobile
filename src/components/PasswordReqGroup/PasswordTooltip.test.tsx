@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import PasswordTooltip from 'components/PasswordReqGroup/PasswordTooltip';
 
 describe('component: PasswordTooltop', () => {
@@ -10,9 +10,7 @@ describe('component: PasswordTooltop', () => {
   });
 
   it('renders not satisfied style', () => {
-    const tree = render(
-      <PasswordTooltip label="label" isSatisfied={false} />,
-    ).toJSON();
+    const tree = render(<PasswordTooltip label="label" isSatisfied={false} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

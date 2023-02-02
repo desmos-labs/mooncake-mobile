@@ -1,8 +1,8 @@
-import {DocumentNode, useQuery} from '@apollo/client';
-import {QueueData as QueueFollowing} from 'services/graphql/queries/GetPaginatedFollowing';
-import {QueueData as QueueFollowers} from 'services/graphql/queries/GetPaginatedFollowers';
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {useSetRecoilState} from 'recoil';
+import { DocumentNode, useQuery } from '@apollo/client';
+import { QueueData as QueueFollowing } from 'services/graphql/queries/GetPaginatedFollowing';
+import { QueueData as QueueFollowers } from 'services/graphql/queries/GetPaginatedFollowers';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import numOfFollowerState from '@recoil/numOfFollowerState';
 import _ from 'lodash';
 
@@ -30,31 +30,26 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (
-  subspaceID: number,
-  userAddress: string,
-  query: DocumentNode,
-) => {
+const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) => {
   const [paginatedData, setPaginatedData] = useState<ProfileSummary[]>([]);
 
   /* It's making a GraphQL query to the server. */
-  const {loading, error, data, fetchMore, refetch, variables} =
-    useQuery<QueueData>(query, {
-      variables: {
-        subspaceID,
-        userAddress,
-        limit: ITEMS_PER_FETCH,
-        offset: 0,
-      },
-      fetchPolicy: 'no-cache',
-    });
+  const { loading, error, data, fetchMore, refetch, variables } = useQuery<QueueData>(query, {
+    variables: {
+      subspaceID,
+      userAddress,
+      limit: ITEMS_PER_FETCH,
+      offset: 0,
+    },
+    fetchPolicy: 'no-cache',
+  });
 
   const dataOrNull = !loading && !error && data ? data : null;
   const offset = variables?.offset ?? 0;
   useEffect(() => {
     if (!dataOrNull) return;
     setPaginatedData(prevData => {
-      const newData = dataOrNull.paginatedFollowers.map(({_: ps}) => ps);
+      const newData = dataOrNull.paginatedFollowers.map(({ _: ps }) => ps);
       const mergedData = _.uniqBy(
         offset < prevData.length
           ? prevData.slice(0, offset).concat(newData) // refetch or concurrent fetchMore
@@ -67,7 +62,7 @@ const useHooks = (
 
   const count = data?.paginatedFollowers?.length ?? 0;
   const setNumOfFollowers = useSetRecoilState(
-    numOfFollowerState({type: 'following', subspaceID, userAddress}),
+    numOfFollowerState({ type: 'following', subspaceID, userAddress }),
   );
   useEffect(() => setNumOfFollowers(count), [count]);
 
@@ -82,7 +77,7 @@ const useHooks = (
   }, [subspaceID, userAddress, nextOffset]);
 
   const refetchCallback = useCallback(() => {
-    refetch({subspaceID, userAddress, offset: 0});
+    refetch({ subspaceID, userAddress, offset: 0 });
   }, [subspaceID, userAddress]);
 
   /* Refetch when subspaceID, userAddress changed. */

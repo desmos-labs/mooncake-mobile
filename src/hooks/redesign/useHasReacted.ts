@@ -1,7 +1,7 @@
-import React, {useMemo} from 'react';
-import {useActiveAddress} from '@recoil/redesign/wallets';
-import {PostID} from 'types/desmos';
-import {useQuery} from '@apollo/client';
+import React, { useMemo } from 'react';
+import { useActiveAddress } from '@recoil/redesign/wallets';
+import { PostID } from 'types/desmos';
+import { useQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
 import {
   useAddPostReaction,
@@ -18,9 +18,7 @@ import {
 const useHasReacted = (postId: PostID) => {
   const activeAddress = useActiveAddress();
   if (!activeAddress) {
-    throw new Error(
-      'Trying to know if the user has reacted to a post, without active user',
-    );
+    throw new Error('Trying to know if the user has reacted to a post, without active user');
   }
 
   const hasPostReaction = useHasPostReaction();
@@ -35,7 +33,7 @@ const useHasReacted = (postId: PostID) => {
     [hasPostReaction, activeAddress, postId],
   );
 
-  const {data, refetch} = useQuery(GetPostReactionForAddress, {
+  const { data, refetch } = useQuery(GetPostReactionForAddress, {
     fetchPolicy: 'cache-and-network',
     variables: {
       postID: postId,
@@ -65,13 +63,7 @@ const useHasReacted = (postId: PostID) => {
       // delete it from the cache
       removePostReaction(activeAddress, postId);
     }
-  }, [
-    data,
-    activeAddress,
-    hasPostReaction,
-    addPostReaction,
-    removePostReaction,
-  ]);
+  }, [data, activeAddress, hasPostReaction, addPostReaction, removePostReaction]);
 
   return {
     hasReacted,

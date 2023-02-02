@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostDetailsAndUserActionsPresence = gql`
@@ -9,23 +9,21 @@ const GetPostDetailsAndUserActionsPresence = gql`
     $user: String
     $reaction: jsonb!
   ) @api(name: butter) {
-    posts: post(where: {subspace_id: {_eq: $subspaceID}, id: {_eq: $postID}}) {
+    posts: post(where: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } }) {
       ...PostFields
       reactionPresence: reactions_aggregate(
-        where: {author_address: {_eq: $user}, value: {_contains: $reaction}}
+        where: { author_address: { _eq: $user }, value: { _contains: $reaction } }
       ) {
         aggregate {
           count
         }
       }
-      tipPresence: tips_aggregate(where: {sender_address: {_eq: $user}}) {
+      tipPresence: tips_aggregate(where: { sender_address: { _eq: $user } }) {
         aggregate {
           count
         }
       }
-      commentPresence: comments_aggregate(
-        where: {author_address: {_eq: $user}}
-      ) {
+      commentPresence: comments_aggregate(where: { author_address: { _eq: $user } }) {
         aggregate {
           count
         }

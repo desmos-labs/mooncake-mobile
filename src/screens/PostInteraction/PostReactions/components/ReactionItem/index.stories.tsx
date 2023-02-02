@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactionItem from 'screens/PostInteraction/PostReactions/components/ReactionItem/index';
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 
 const RenderComponent = () => {
@@ -11,7 +11,7 @@ const RenderComponent = () => {
       userAddress="123123123"
       nickname="Shrek"
       dTag="SwampyBoi"
-      avatar={{uri: 'https://i.imgur.com/aih9snA.png'}}
+      avatar={{ uri: 'https://i.imgur.com/aih9snA.png' }}
       handlePressFollow={() => {
         setFollowed(true);
       }}

@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import SbContainer from 'storybook/decorators/SbContainer';
 import EnterCommentBottomBar from './index';
@@ -17,7 +17,5 @@ const DefaultProps: CompProps = {
 
 // MaterialButton as in Desmos Button
 storiesOf('components/EnterCommentBottomBar', module)
-  .addDecorator(getStories => (
-    <SbContainer justifyContent="flex-end">{getStories()}</SbContainer>
-  ))
+  .addDecorator(getStories => <SbContainer justifyContent="flex-end">{getStories()}</SbContainer>)
   .add('Text', () => <EnterCommentBottomBar {...DefaultProps} />);

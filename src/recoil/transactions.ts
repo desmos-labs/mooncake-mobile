@@ -1,7 +1,7 @@
 import React from 'react';
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {PendingTransaction} from 'types/transactions';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { PendingTransaction } from 'types/transactions';
 
 /**
  * Atom that holds all the pending transactions that have been sent to the APIs to be broadcast,
@@ -11,7 +11,7 @@ const pendingTransactionsState = atom<Record<string, PendingTransaction[]>>({
   key: 'pendingTransactionsState',
   default: getMMKV(MMKVKEYS.PENDING_TRANSACTIONS) ?? {},
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(transactions => {
         setMMKV(MMKVKEYS.PENDING_TRANSACTIONS, transactions);
       });
@@ -102,8 +102,7 @@ export const useDeletePendingTransaction = () => {
       setTransactions(currentTransactions => {
         // Find the entry which transactions contain the one with the provided hash
         const entry = Object.entries(currentTransactions).find(
-          ([_, transactions]) =>
-            transactions.find(t => t.hash === txHash) !== undefined,
+          ([_, transactions]) => transactions.find(t => t.hash === txHash) !== undefined,
         );
 
         // If the entry was not found, it means the transaction was already deleted
@@ -113,9 +112,7 @@ export const useDeletePendingTransaction = () => {
 
         // Update the transactions list removing the one with the provided hash
         const [user, transactions] = entry;
-        const filteredTransactions = transactions.filter(
-          t => t.hash !== txHash,
-        );
+        const filteredTransactions = transactions.filter(t => t.hash !== txHash);
 
         // Update the stored value
         const updatedTransactions: Record<string, PendingTransaction[]> = {

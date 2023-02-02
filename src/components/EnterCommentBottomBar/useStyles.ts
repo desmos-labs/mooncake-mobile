@@ -1,5 +1,5 @@
-import {makeStyleWithProps} from 'config/theme';
-import {Dimensions, Platform} from 'react-native';
+import { makeStyleWithProps } from 'config/theme';
+import { Dimensions, Platform } from 'react-native';
 
 const useStyles = makeStyleWithProps(
   (

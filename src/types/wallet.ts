@@ -1,7 +1,7 @@
-import {HdPath} from '@cosmjs/crypto';
-import {LedgerApp} from 'types/ledger';
+import { HdPath } from '@cosmjs/crypto';
+import { LedgerApp } from 'types/ledger';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {Signer} from '@desmoslabs/desmjs';
+import { Signer } from '@desmoslabs/desmjs';
 
 export enum WalletSerializationVersion {
   Mnemonic = 1,
@@ -100,10 +100,7 @@ export interface LedgerWallet extends BaseWallet {
 /**
  * [LedgerWallet] that can be serialized to JSON.
  */
-export type SerializableLedgerWallet = Omit<
-  LedgerWallet,
-  'signer' | 'hdPath'
-> & {
+export type SerializableLedgerWallet = Omit<LedgerWallet, 'signer' | 'hdPath'> & {
   version: WalletSerializationVersion.Ledger;
   /**
    * HD Derivation path used to generate the user
@@ -130,10 +127,7 @@ export interface Web3AuthWallet extends BaseWallet {
 /**
  * [Web3AuthWallet] that can be serialized to JSON.
  */
-export type SerializableWeb3AuthWallet = Omit<
-  Web3AuthWallet,
-  'signer' | 'privateKey'
-> & {
+export type SerializableWeb3AuthWallet = Omit<Web3AuthWallet, 'signer' | 'privateKey'> & {
   version: WalletSerializationVersion.Web3Auth;
   /**
    * Hex encoded private key.

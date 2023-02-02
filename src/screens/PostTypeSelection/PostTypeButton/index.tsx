@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
-import {imagePostIcon, textPostIcon} from 'assets/images';
+import { useTranslation } from 'react-i18next';
+import { imagePostIcon, textPostIcon } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import useStyles from './useStyles';
 
@@ -12,8 +12,8 @@ type Props = {
   handlePress: () => void;
 };
 
-const PostTypeButton = ({type, handlePress}: Props) => {
-  const {t} = useTranslation('createPost');
+const PostTypeButton = ({ type, handlePress }: Props) => {
+  const { t } = useTranslation('createPost');
   const styles = useStyles();
 
   const buttonText = React.useMemo(() => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useStyles from './useStyles';
@@ -13,17 +13,12 @@ type Props = {
   postsMargin: string | number;
 };
 
-const ProfilePostCard = ({
-  postData,
-  onPress,
-  postsSize,
-  postsMargin,
-}: Props) => {
-  const styles = useStyles({size: postsSize, margin: postsMargin});
+const ProfilePostCard = ({ postData, onPress, postsSize, postsMargin }: Props) => {
+  const styles = useStyles({ size: postsSize, margin: postsMargin });
 
-  const {attachments} = postData;
+  const { attachments } = postData;
 
-  const {MediaAttachment} = useRenderMediaAttachment({
+  const { MediaAttachment } = useRenderMediaAttachment({
     attachments,
     resizeMode: 'cover',
   });

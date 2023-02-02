@@ -54,9 +54,7 @@ const convertRemoteMessage = (data: any): ReceivedNotificationData => {
  * If the received type is not supported, returns `undefined` instead.
  * @param data {ReceivedNotificationData} - Data to be parsed.
  */
-const parseNotification = (
-  data: ReceivedNotificationData,
-): NotificationData | undefined => {
+const parseNotification = (data: ReceivedNotificationData): NotificationData | undefined => {
   switch (data.type as NotificationType) {
     case NotificationType.TransactionSuccess:
       return {
@@ -147,8 +145,6 @@ const parseNotification = (
  */
 // Suppress the default export warning as we might add other methods here in the future
 // eslint-disable-next-line import/prefer-default-export
-export const parseRemoteNotification = (
-  data: any,
-): NotificationData | undefined => {
+export const parseRemoteNotification = (data: any): NotificationData | undefined => {
   return parseNotification(convertRemoteMessage(data));
 };

@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const POST_FIELDS = gql`
   fragment PostFields on post {
@@ -42,7 +42,7 @@ const POST_FIELDS = gql`
     transactions {
       hash
     }
-    replies: references(where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}) {
+    replies: references(where: { type: { _eq: "POST_REFERENCE_TYPE_REPLY" } }) {
       type
       post {
         id
@@ -51,9 +51,7 @@ const POST_FIELDS = gql`
         id
       }
     }
-    repliesCount: referees_aggregate(
-      where: {type: {_eq: "POST_REFERENCE_TYPE_REPLY"}}
-    ) {
+    repliesCount: referees_aggregate(where: { type: { _eq: "POST_REFERENCE_TYPE_REPLY" } }) {
       aggregate {
         count
       }

@@ -1,9 +1,9 @@
 import React from 'react';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
-import {Alert, Linking, Platform} from 'react-native';
-import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
+import { Alert, Linking, Platform } from 'react-native';
+import { PERMISSIONS, requestMultiple } from 'react-native-permissions';
 import useStartBleScan from 'hooks/ledger/useStartBleScan';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const checkPermissions = async () => {
   const buildPermissions = () => {
@@ -34,8 +34,8 @@ const checkPermissions = async () => {
 };
 
 const useHooks = () => {
-  const {t} = useTranslation('lookingForDevices');
-  const {scan, scanning, devices} = useStartBleScan();
+  const { t } = useTranslation('lookingForDevices');
+  const { scan, scanning, devices } = useStartBleScan();
 
   const [screenReady, setScreenReady] = React.useState(false);
   const [isBTOn, setIsBTOn] = React.useState(false);
@@ -43,17 +43,14 @@ const useHooks = () => {
   const btStateManagerRef = React.useRef<any>(undefined);
 
   React.useEffect(() => {
-    btStateManagerRef.current = BluetoothStateManager.onStateChange(
-      bluetoothState => {
-        switch (bluetoothState) {
-          case 'PoweredOff':
-            return setIsBTOn(false);
-          case 'PoweredOn':
-            return setIsBTOn(true);
-        }
-      },
-      true,
-    );
+    btStateManagerRef.current = BluetoothStateManager.onStateChange(bluetoothState => {
+      switch (bluetoothState) {
+        case 'PoweredOff':
+          return setIsBTOn(false);
+        case 'PoweredOn':
+          return setIsBTOn(true);
+      }
+    }, true);
 
     return () => {
       if (btStateManagerRef.current) btStateManagerRef.current.remove();

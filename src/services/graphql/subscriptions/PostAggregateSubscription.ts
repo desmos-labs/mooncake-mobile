@@ -1,15 +1,13 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const PostAggregateSubscription = gql`
-  subscription PostAggregateSubscription(
-    $subspaceID: bigint!
-    $userAddress: String!
-  ) @api(name: butter) {
+  subscription PostAggregateSubscription($subspaceID: bigint!, $userAddress: String!)
+  @api(name: butter) {
     post_aggregate(
       where: {
-        subspace_id: {_eq: $subspaceID}
-        _not: {conversation: {}}
-        _and: {author_address: {_neq: $userAddress}}
+        subspace_id: { _eq: $subspaceID }
+        _not: { conversation: {} }
+        _and: { author_address: { _neq: $userAddress } }
       }
     ) {
       aggregate {
@@ -20,15 +18,13 @@ export const PostAggregateSubscription = gql`
 `;
 
 export const PostAggregateSubscriptionFollowing = gql`
-  subscription PostAggregateSubscriptionFollowing(
-    $subspaceID: bigint!
-    $followingAddrs: [String]!
-  ) @api(name: butter) {
+  subscription PostAggregateSubscriptionFollowing($subspaceID: bigint!, $followingAddrs: [String]!)
+  @api(name: butter) {
     post_aggregate(
       where: {
-        subspace_id: {_eq: $subspaceID}
-        _not: {conversation: {}}
-        author_address: {_in: $followingAddrs}
+        subspace_id: { _eq: $subspaceID }
+        _not: { conversation: {} }
+        author_address: { _in: $followingAddrs }
       }
     ) {
       aggregate {

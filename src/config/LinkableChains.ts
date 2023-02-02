@@ -1,6 +1,6 @@
-import {ChainConfig} from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
-import {SupportedChain} from 'types/chains';
-import {DesmosMainnet, DesmosTestnet} from '@desmoslabs/desmjs';
+import { ChainConfig } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import { SupportedChain } from 'types/chains';
+import { DesmosMainnet, DesmosTestnet } from '@desmoslabs/desmjs';
 import {
   akashIcon,
   bandIcon,

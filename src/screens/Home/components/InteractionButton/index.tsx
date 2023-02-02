@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
-import {formatNumShorthand} from 'lib/FormatUtils';
+import { formatNumShorthand } from 'lib/FormatUtils';
 import React from 'react';
-import {Image, ImageSourcePropType, TouchableOpacity} from 'react-native';
+import { Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
   icon: ImageSourcePropType;
 };
 
-const InteractionButton = ({onPress, interactionCount, icon}: Props) => {
+const InteractionButton = ({ onPress, interactionCount, icon }: Props) => {
   const styles = useStyles();
 
   return (

@@ -1,14 +1,10 @@
-import {eyeClosed, eyeOpen} from 'assets/images';
-import DTextInput, {Props as DTextInputProps} from 'components/DTextInput';
-import React, {useState} from 'react';
-import {IconButton, useTheme} from 'react-native-paper';
+import { eyeClosed, eyeOpen } from 'assets/images';
+import DTextInput, { Props as DTextInputProps } from 'components/DTextInput';
+import React, { useState } from 'react';
+import { IconButton, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
-const DSecureTextInput: React.FC<DTextInputProps> = ({
-  onOuterFocus,
-  onOuterBlur,
-  ...rest
-}) => {
+const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur, ...rest }) => {
   const [focused, setFocused] = useState<boolean>(false);
   // const {error} = props;
   const theme = useTheme();

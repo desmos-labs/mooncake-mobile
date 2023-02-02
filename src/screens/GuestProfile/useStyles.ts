@@ -1,4 +1,4 @@
-import {makeStyleWithProps} from 'config/theme';
+import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((props: any, theme) => ({
   container: {
@@ -25,13 +25,13 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  topBarImage: {height: 32, width: 32},
+  topBarImage: { height: 32, width: 32 },
   divider: {
     marginHorizontal: -theme.spacing.m,
     height: 8,
     backgroundColor: theme.colors.surfaceGrey,
   },
-  flexCenter: {flex: 1, justifyContent: 'center'},
+  flexCenter: { flex: 1, justifyContent: 'center' },
   arrowView: {
     zIndex: 2,
     position: 'absolute',

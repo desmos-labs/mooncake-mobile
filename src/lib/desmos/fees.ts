@@ -1,7 +1,7 @@
-import {StdFee} from '@cosmjs/amino';
-import {EncodeObject} from '@cosmjs/proto-signing';
-import {calculateFee} from '@cosmjs/stargate';
-import {GenericMsgEnums} from './msgtypes';
+import { StdFee } from '@cosmjs/amino';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { calculateFee } from '@cosmjs/stargate';
+import { GenericMsgEnums } from './msgtypes';
 
 /**
  * @deprecated
@@ -49,11 +49,7 @@ export interface TxFees {
  * @param denom - The chain coin denom.
  * @param prices - Optional gas price levels.
  */
-export function computeTxFees(
-  gas: number,
-  denom: string,
-  prices?: GasPrices,
-): TxFees {
+export function computeTxFees(gas: number, denom: string, prices?: GasPrices): TxFees {
   const gasPrices = prices ?? DefaultGasPrice;
   return {
     low: calculateFee(gas, `${gasPrices.low}${denom}`),

@@ -1,13 +1,11 @@
-import {useGetProfileData} from '@recoil/activeProfileState';
+import { useGetProfileData } from '@recoil/activeProfileState';
 import useNumRelationships from '@recoil/numRelationshipState';
 import useActiveAccount from 'hooks/useActiveAccount';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 const useProfileDataQueries = () => {
-  const {activeAddress, profileData} = useActiveAccount();
-  const {refetch: refetchProfileData, loading} = useGetProfileData(
-    activeAddress!,
-  );
+  const { activeAddress, profileData } = useActiveAccount();
+  const { refetch: refetchProfileData, loading } = useGetProfileData(activeAddress!);
 
   /**
    * Refetch profile data if activeAddress changes
@@ -17,8 +15,7 @@ const useProfileDataQueries = () => {
     refetchProfileData();
   }, [activeAddress]);
 
-  const {address, bio, dtag, cover_pic, profile_pic, nickname} =
-    profileData as ProfileData;
+  const { address, bio, dtag, cover_pic, profile_pic, nickname } = profileData as ProfileData;
 
   const profileLoading = loading;
 

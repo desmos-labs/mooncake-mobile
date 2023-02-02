@@ -1,7 +1,7 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import BackButton from 'components/BackButton/index';
-import {fireEvent} from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 describe('component: BackButton', () => {
   it('renders', () => {
@@ -13,7 +13,7 @@ describe('component: BackButton', () => {
   it('calls the onPress prop function when pressed', () => {
     const onPressFn = jest.fn();
 
-    const {getByLabelText} = render(<BackButton onPress={onPressFn} />);
+    const { getByLabelText } = render(<BackButton onPress={onPressFn} />);
 
     fireEvent.press(getByLabelText('back-button'));
 

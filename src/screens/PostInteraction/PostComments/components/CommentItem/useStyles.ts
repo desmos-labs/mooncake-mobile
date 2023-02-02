@@ -1,4 +1,4 @@
-import {makeStyleWithProps} from 'config/theme';
+import { makeStyleWithProps } from 'config/theme';
 
 /**
  * Style hook for the CommentItem component

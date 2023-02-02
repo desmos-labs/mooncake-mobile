@@ -1,5 +1,5 @@
 import React from 'react';
-import {AccountWithWallet} from 'types/account';
+import { AccountWithWallet } from 'types/account';
 
 /**
  * Hook that allows to generate a new account with a wallet that is

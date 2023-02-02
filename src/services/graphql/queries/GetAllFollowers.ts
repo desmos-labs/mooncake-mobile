@@ -1,12 +1,11 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetAllFollowers = gql`
-  query GetFollowers($subspaceID: bigint!, $userAddress: String!)
-  @api(name: butter) {
+  query GetFollowers($subspaceID: bigint!, $userAddress: String!) @api(name: butter) {
     followers: user_relationship(
       where: {
-        subspace_id: {_eq: $subspaceID}
-        counterparty_address: {_eq: $userAddress}
+        subspace_id: { _eq: $subspaceID }
+        counterparty_address: { _eq: $userAddress }
         counterparty: {}
         creator: {}
       }

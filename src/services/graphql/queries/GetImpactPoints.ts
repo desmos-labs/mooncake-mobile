@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetImpactPoints = gql`
   query ImpactPointsCount @api(name: butter) {

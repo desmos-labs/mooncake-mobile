@@ -1,13 +1,8 @@
-import {makeStyle} from 'config/theme';
-import React, {useState} from 'react';
-import {
-  Keyboard,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native';
-import {GestureDetector} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import { makeStyle } from 'config/theme';
+import React, { useState } from 'react';
+import { Keyboard, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 
@@ -30,24 +25,16 @@ export type Props = TouchableOpacityProps & {
  * Feel free to update any prop you need
  */
 const BottomUpModalWrapper: React.FC<Props> = props => {
-  const {goBack, paddingHorizontal, paddingTop, paddingBottom, children} =
-    props;
+  const { goBack, paddingHorizontal, paddingTop, paddingBottom, children } = props;
   const styles = useStyles();
   const theme = useTheme();
   const [threshold, setThreshold] = useState(0);
-  const {
-    panGesture,
-    animatedStyle,
-    tabAnimatedStyleLeft,
-    tabAnimatedStyleRight,
-  } = useModalAnimations(threshold);
+  const { panGesture, animatedStyle, tabAnimatedStyleLeft, tabAnimatedStyleRight } =
+    useModalAnimations(threshold);
 
   return (
     <GestureDetector gesture={panGesture}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={goBack}
-        style={styles.container}>
+      <TouchableOpacity activeOpacity={1} onPress={goBack} style={styles.container}>
         {/* animated view to manage the dragY animation */}
         <Animated.View
           style={animatedStyle}
@@ -67,13 +54,9 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
                 paddingBottom: paddingBottom || theme.spacing.l,
               },
             ]}>
-            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-              <Animated.View
-                style={[styles.tabIconLeft, tabAnimatedStyleLeft]}
-              />
-              <Animated.View
-                style={[styles.tabIconRight, tabAnimatedStyleRight]}
-              />
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Animated.View style={[styles.tabIconLeft, tabAnimatedStyleLeft]} />
+              <Animated.View style={[styles.tabIconRight, tabAnimatedStyleRight]} />
             </View>
             {children}
           </TouchableOpacity>

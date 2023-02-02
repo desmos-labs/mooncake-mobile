@@ -1,7 +1,7 @@
-import {storiesOf} from '@storybook/react-native';
+import { storiesOf } from '@storybook/react-native';
 import Typography from 'components/Typography';
 import React from 'react';
-import {ScrollView} from 'react-native';
+import { ScrollView } from 'react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import StickyBottomMenu from './index';
 

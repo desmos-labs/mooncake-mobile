@@ -1,8 +1,8 @@
 import React from 'react';
-import {Animated, TouchableOpacity, View} from 'react-native';
+import { Animated, TouchableOpacity, View } from 'react-native';
 import Typography from 'components/Typography';
-import {ParamListBase, TabNavigationState} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
 type Props = {
@@ -13,10 +13,10 @@ type Props = {
   navigation: any;
 };
 
-const PostTypeTab = ({state, position, navigation}: Props) => {
+const PostTypeTab = ({ state, position, navigation }: Props) => {
   const styles = useStyles();
 
-  const {t} = useTranslation('home');
+  const { t } = useTranslation('home');
 
   return (
     <View style={styles.container}>
@@ -38,27 +38,19 @@ const PostTypeTab = ({state, position, navigation}: Props) => {
 
           if (!isFocused && !event.defaultPrevented) {
             // The `merge: true` option makes sure that the params inside the tab screen are preserved
-            navigation.navigate({name: route.name, merge: true});
+            navigation.navigate({ name: route.name, merge: true });
           }
         };
 
         return (
-          <TouchableOpacity
-            key={route.key}
-            onPress={onPress}
-            style={styles.tabButton}>
+          <TouchableOpacity key={route.key} onPress={onPress} style={styles.tabButton}>
             <Typography.Button2
               numberOfLines={1}
-              style={[
-                styles.buttonText,
-                isFocused ? styles.selected : styles.unselected,
-              ]}>
+              style={[styles.buttonText, isFocused ? styles.selected : styles.unselected]}>
               {t(route.name)}
             </Typography.Button2>
 
-            {isFocused && (
-              <Animated.View style={[styles.selectedIndicator, {opacity}]} />
-            )}
+            {isFocused && <Animated.View style={[styles.selectedIndicator, { opacity }]} />}
           </TouchableOpacity>
         );
       })}

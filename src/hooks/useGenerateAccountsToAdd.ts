@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import _ from 'lodash';
 import React from 'react';
 import {
@@ -6,10 +6,10 @@ import {
   generateAccountUsingMnemonic,
   generateHdPaths,
 } from 'screens/ConnectAddress/utils';
-import {DESMOS_COIN_TYPE, HdPath} from 'types/hdpath';
+import { DESMOS_COIN_TYPE, HdPath } from 'types/hdpath';
 
 const useGenerateAccountsToAdd = () => {
-  const {params} = useRoute<any>();
+  const { params } = useRoute<any>();
   const ledgerTransport = _.get(params, 'ledgerTransport');
   const ledgerApp = _.get(params, 'ledgerApp');
   const isUsingLedger = !!(ledgerTransport && ledgerApp);
@@ -45,12 +45,7 @@ const useGenerateAccountsToAdd = () => {
   );
 
   const generateAccount = React.useCallback(
-    async (
-      change: number,
-      account: number,
-      addressIndex: number,
-      mnemonic?: string,
-    ) => {
+    async (change: number, account: number, addressIndex: number, mnemonic?: string) => {
       const hdPath: HdPath = {
         coinType: DESMOS_COIN_TYPE,
         change,

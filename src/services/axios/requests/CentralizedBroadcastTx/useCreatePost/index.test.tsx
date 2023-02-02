@@ -1,13 +1,10 @@
-import {act, renderHook} from '@testing-library/react-native';
+import { act, renderHook } from '@testing-library/react-native';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/index';
-import {RecoilRoot} from 'recoil';
-import {
-  postAttachmentsState,
-  postTextState,
-} from '@recoil/screens/createPostState';
+import { RecoilRoot } from 'recoil';
+import { postAttachmentsState, postTextState } from '@recoil/screens/createPostState';
 import React from 'react';
-import {GrantEnums} from 'lib/desmos/msgtypes';
-import {MsgCreatePost} from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';
+import { GrantEnums } from 'lib/desmos/msgtypes';
+import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
 import {
@@ -17,9 +14,9 @@ import {
   ReplySetting,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import UploadMedia from 'services/axios/requests/UploadMedia';
-import {mediaToAny} from '@desmoslabs/desmjs/build/aminomessages/posts';
+import { mediaToAny } from '@desmoslabs/desmjs/build/aminomessages/posts';
 import axiosInstance from 'services/axios';
-import {encodeAndBroadcastTx} from 'services/axios/requests/CentralizedBroadcastTx';
+import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 
 const mockActiveAddress = '123';
 const mockPostText = 'some text';
@@ -30,7 +27,7 @@ const mockPostAttachment = {
 };
 const mockUrl = 'mockUrl';
 
-const mockCheckAndUpdateGrants = {success: true};
+const mockCheckAndUpdateGrants = { success: true };
 
 const mockConversationId = 1;
 const mockReferencedPostId = 1;
@@ -52,9 +49,7 @@ jest.mock('hooks/authGrants/useCheckAndUpdateGrants', () =>
   })),
 );
 
-jest.mock('hooks/useActiveAccount', () =>
-  jest.fn(() => ({activeAddress: mockActiveAddress})),
-);
+jest.mock('hooks/useActiveAccount', () => jest.fn(() => ({ activeAddress: mockActiveAddress })));
 
 jest.mock('services/axios');
 
@@ -78,21 +73,17 @@ describe('hooks: useCreatePost', () => {
   it('creates a text post', async () => {
     const mockTxHash = 'mockTxHash';
     (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
-      data: {tx_hash: mockTxHash},
+      data: { tx_hash: mockTxHash },
     });
 
     (encodeAndBroadcastTx as jest.Mock).mockReturnValue(true);
 
-    const initializeState = ({set}: any) => {
+    const initializeState = ({ set }: any) => {
       set(postTextState, mockPostText);
     };
 
-    const {result} = renderHook(() => useCreatePost(), {
-      wrapper: props => (
-        <RecoilRoot initializeState={initializeState}>
-          {props.children}
-        </RecoilRoot>
-      ),
+    const { result } = renderHook(() => useCreatePost(), {
+      wrapper: props => <RecoilRoot initializeState={initializeState}>{props.children}</RecoilRoot>,
     });
 
     await act(async () => {
@@ -130,23 +121,19 @@ describe('hooks: useCreatePost', () => {
   it('creates an image post', async () => {
     const mockTxHash = 'mockTxHash';
     (axiosInstance.post as jest.Mock).mockResolvedValueOnce({
-      data: {tx_hash: mockTxHash},
+      data: { tx_hash: mockTxHash },
     });
 
-    const initializeState = ({set}: any) => {
+    const initializeState = ({ set }: any) => {
       set(postTextState, mockPostText);
 
       set(postAttachmentsState, mockPostAttachment);
     };
 
-    (UploadMedia as jest.Mock).mockResolvedValueOnce({url: mockUrl});
+    (UploadMedia as jest.Mock).mockResolvedValueOnce({ url: mockUrl });
 
-    const {result} = renderHook(() => useCreatePost(), {
-      wrapper: props => (
-        <RecoilRoot initializeState={initializeState}>
-          {props.children}
-        </RecoilRoot>
-      ),
+    const { result } = renderHook(() => useCreatePost(), {
+      wrapper: props => <RecoilRoot initializeState={initializeState}>{props.children}</RecoilRoot>,
     });
 
     await act(async () => {

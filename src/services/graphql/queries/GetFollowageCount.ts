@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetFollowageCount = gql`
   query GetFollowageCount($userAddress: String!) @api(name: butter) {

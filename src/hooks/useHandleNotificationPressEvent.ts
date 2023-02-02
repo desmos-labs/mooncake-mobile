@@ -1,19 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useCallback} from 'react';
-import {Alert} from 'react-native';
-import {NotificationData, NotificationType} from 'types/notifications';
-import {useActiveProfile} from '@recoil/profiles';
+import { useCallback } from 'react';
+import { Alert } from 'react-native';
+import { NotificationData, NotificationType } from 'types/notifications';
+import { useActiveProfile } from '@recoil/profiles';
 
 /**
  * Hook that allows handling the navigation to the proper screen when the user
  * clicks on a notification that is received from the server.
  */
 const useHandleNotificationPressEvent = () => {
-  const {navigate} =
-    useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
+  const { navigate } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
 
   const profile = useActiveProfile();
   if (!profile) {

@@ -1,20 +1,18 @@
 import React from 'react';
-import {makeStyle} from 'config/theme';
-import {Image, View} from 'react-native';
-import {noMorePosts} from 'assets/images';
+import { makeStyle } from 'config/theme';
+import { Image, View } from 'react-native';
+import { noMorePosts } from 'assets/images';
 import Typography from 'components/Typography';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const NoMorePosts = () => {
   const styles = useStyles();
-  const {t} = useTranslation('home');
+  const { t } = useTranslation('home');
 
   return (
     <View style={styles.container}>
       <Image source={noMorePosts} style={styles.imageStyle} />
-      <Typography.Body5 style={styles.textStyle}>
-        {t('noMorePosts')}
-      </Typography.Body5>
+      <Typography.Body5 style={styles.textStyle}>{t('noMorePosts')}</Typography.Body5>
     </View>
   );
 };

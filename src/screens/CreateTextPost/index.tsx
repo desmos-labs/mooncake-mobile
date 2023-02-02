@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -8,63 +8,55 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {postBG, whiteCross} from 'assets/images';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useTranslation} from 'react-i18next';
+import { postBG, whiteCross } from 'assets/images';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
 import _ from 'lodash';
-import {useTheme} from 'react-native-paper';
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
-import {postParamsState} from '@recoil/postParamsState';
+import { useTheme } from 'react-native-paper';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { postParamsState } from '@recoil/postParamsState';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import LoadingOverlay from 'components/LoadingOverlay';
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {
-  postAttachmentsState,
-  postTextState,
-} from '@recoil/screens/createPostState';
+import { postAttachmentsState, postTextState } from '@recoil/screens/createPostState';
 import ImageButton from 'components/ImageButton';
-import {addAlphaToHex} from 'config/theme';
-import {mapPostFontSize} from 'lib/FormatUtils';
-import {Asset} from 'react-native-image-picker';
+import { addAlphaToHex } from 'config/theme';
+import { mapPostFontSize } from 'lib/FormatUtils';
+import { Asset } from 'react-native-image-picker';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import BottomBar from './components/BottomBar';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CREATE_TEXT_POST
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CREATE_TEXT_POST>;
 
 const CreateTextPost = () => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const {t} = useTranslation('createPost');
+  const { t } = useTranslation('createPost');
   const postParams = useRecoilValue(postParamsState);
   const [sharedComment, setSharedComment] = useRecoilState(postTextState);
-  const {createPost, loading} = useCreatePost();
-  const {replace, goBack} = useNavigation<NavProps['navigation']>();
+  const { createPost, loading } = useCreatePost();
+  const { replace, goBack } = useNavigation<NavProps['navigation']>();
   const [inputFocused, setInputFocused] = React.useState(false);
   const setCommentAttachment = useSetRecoilState(postAttachmentsState);
 
   const imageSelectedCallback = React.useCallback((image: Asset) => {
-    replace(ROUTES.ENTER_COMMENT, {isCreatePost: true});
+    replace(ROUTES.ENTER_COMMENT, { isCreatePost: true });
 
     setCommentAttachment(image);
   }, []);
 
-  const {imageFromCamera, imageFromLibrary} = useImageFromDevice({
+  const { imageFromCamera, imageFromLibrary } = useImageFromDevice({
     onImageSelected: imageSelectedCallback,
   });
 
-  const [backgroundIndex, setBackgroundIndex] = React.useState(
-    _.random(0, postBG.length),
-  );
+  const [backgroundIndex, setBackgroundIndex] = React.useState(_.random(0, postBG.length));
   const inputRef = useRef<any>();
 
   const handlePressBGButton = React.useCallback(() => {
@@ -100,11 +92,7 @@ const CreateTextPost = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <SafeAreaView edges={['top']} style={styles.safeAreaContainer}>
         <TouchableOpacity
           onPress={handlePostPressed}
@@ -115,7 +103,7 @@ const CreateTextPost = () => {
           <View style={styles.headerGroup}>
             <ImageButton
               onPress={goBack}
-              hitSlop={{top: 50, bottom: 50, right: 50, left: 50}}
+              hitSlop={{ top: 50, bottom: 50, right: 50, left: 50 }}
               image={whiteCross}
               style={{
                 width: 28,
@@ -124,10 +112,7 @@ const CreateTextPost = () => {
             />
 
             <TouchableOpacity onPress={handlePressBGButton}>
-              <Image
-                source={postBG[backgroundIndex]}
-                style={styles.switchBgButton}
-              />
+              <Image source={postBG[backgroundIndex]} style={styles.switchBgButton} />
             </TouchableOpacity>
           </View>
           <KeyboardAvoidingView
@@ -143,8 +128,8 @@ const CreateTextPost = () => {
               placeholder={inputFocused ? '' : t('tapToType')}
               style={[
                 styles.inputStyle,
-                {opacity: inputOpacity},
-                {fontSize: mapPostFontSize(sharedComment.length)},
+                { opacity: inputOpacity },
+                { fontSize: mapPostFontSize(sharedComment.length) },
               ]}
               placeholderTextColor={addAlphaToHex('#FFFFFF', 0.5)}
             />
@@ -152,10 +137,7 @@ const CreateTextPost = () => {
         </TouchableOpacity>
       </SafeAreaView>
 
-      <TouchableOpacity
-        style={{zIndex: 2}}
-        activeOpacity={1}
-        onPress={handlePostPressed}>
+      <TouchableOpacity style={{ zIndex: 2 }} activeOpacity={1} onPress={handlePostPressed}>
         <BottomBar
           handlePressPost={handleSubmitPost}
           handlePressGallery={imageFromLibrary}

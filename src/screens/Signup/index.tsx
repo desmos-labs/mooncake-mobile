@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
-import {passwordStrength} from 'check-password-strength';
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
@@ -10,23 +10,23 @@ import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import {Formik} from 'formik';
-import {MIN_PW_LENGTH} from 'lib/ValidationUtils';
+import { Formik } from 'formik';
+import { MIN_PW_LENGTH } from 'lib/ValidationUtils';
 import _ from 'lodash';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, ScrollView, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useResetSignUpState} from '@recoil/screens/signUpState';
-import {useToast} from 'react-native-toast-notifications';
+import { useResetSignUpState } from '@recoil/screens/signUpState';
+import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import {
   SignUpStatus,
@@ -46,8 +46,8 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
  * @constructor
  */
 const Signup = () => {
-  const {t} = useTranslation('passwordManipulation');
-  const {navigate, goBack} = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('passwordManipulation');
+  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
   const toast = useToast();
@@ -61,8 +61,7 @@ const Signup = () => {
   const resetSignUpInfo = useResetSignUpState();
 
   // Animations
-  const [animatedPswChecksVisible, setAnimatedPswChecksVisible] =
-    useState(false);
+  const [animatedPswChecksVisible, setAnimatedPswChecksVisible] = useState(false);
   const animatedOpacity = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -91,14 +90,12 @@ const Signup = () => {
   );
 
   // Hook that is used in order to submit the form
-  const {handleFormSubmit, signUpStatus} = useSubmitForm(onSuccess, onError);
+  const { handleFormSubmit, signUpStatus } = useSubmitForm(onSuccess, onError);
 
   // Check if the sign up flow is completed
   // TODO: Probably this indication can be improved with a more explicit UI that tells the steps being done
   const loading = useMemo(
-    () =>
-      signUpStatus !== SignUpStatus.UNDEFINED &&
-      signUpStatus !== SignUpStatus.DONE,
+    () => signUpStatus !== SignUpStatus.UNDEFINED && signUpStatus !== SignUpStatus.DONE,
     [signUpStatus],
   );
 
@@ -110,7 +107,7 @@ const Signup = () => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const mapPwStyle = useCallback((password: string) => {
-    const {value} = passwordStrength(password);
+    const { value } = passwordStrength(password);
     switch (value) {
       case 'Medium':
         return styles.mediumPw;
@@ -139,21 +136,19 @@ const Signup = () => {
       backgroundColor={theme.colors.white}
       style={styles.container}
       topBar={
-        <View style={{backgroundColor: theme.colors.white}}>
+        <View style={{ backgroundColor: theme.colors.white }}>
           <Spacer paddingLeft={theme.spacing.m} paddingTop={theme.spacing.s}>
             <BackButton onPress={goBack} />
           </Spacer>
         </View>
       }>
-      <Typography.H3 style={styles.headerText}>
-        {t('signup:signup')}
-      </Typography.H3>
+      <Typography.H3 style={styles.headerText}>{t('signup:signup')}</Typography.H3>
       <Formik
         initialValues={initialFormValues}
         onSubmit={handleFormSubmit}
         validationSchema={validationSchema}
         validate={validateForm}>
-        {({handleSubmit, values, errors, setFieldValue}) => {
+        {({ handleSubmit, values, errors, setFieldValue }) => {
           return (
             <>
               <KeyboardAvoidingView
@@ -163,12 +158,9 @@ const Signup = () => {
                 <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag">
                   <View style={styles.formContainer}>
                     <View style={styles.labelGroup}>
-                      <Typography.Subtitle2>
-                        {t('signup:password')}
-                      </Typography.Subtitle2>
+                      <Typography.Subtitle2>{t('signup:password')}</Typography.Subtitle2>
                       {values.newPassword.length >= MIN_PW_LENGTH && (
-                        <Typography.Subtitle4
-                          style={mapPwStyle(values.newPassword)}>
+                        <Typography.Subtitle4 style={mapPwStyle(values.newPassword)}>
                           {t(passwordStrength(values.newPassword).value)}
                         </Typography.Subtitle4>
                       )}
@@ -194,8 +186,7 @@ const Signup = () => {
                     )}
                     {animatedPasswordChecks(values)}
                     <Spacer paddingBottom={theme.spacing.m} />
-                    <Typography.Subtitle2
-                      style={{marginBottom: theme.spacing.s}}>
+                    <Typography.Subtitle2 style={{ marginBottom: theme.spacing.s }}>
                       {t('signup:invite code')}
                     </Typography.Subtitle2>
                     <DTextInput
@@ -222,9 +213,7 @@ const Signup = () => {
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
                     checked={values.consent}
-                    handlePress={() =>
-                      setFieldValue('consent', !values.consent, true)
-                    }
+                    handlePress={() => setFieldValue('consent', !values.consent, true)}
                     error={!!errors.consent}
                   />
 
@@ -235,17 +224,13 @@ const Signup = () => {
                         <Typography.Body6
                           onPress={handlePressTOS}
                           style={
-                            values.consent
-                              ? styles.touchableTextChecked
-                              : styles.touchableText
+                            values.consent ? styles.touchableTextChecked : styles.touchableText
                           }
                         />,
                         <Typography.Body6
                           onPress={handlePressPrivacyPolicy}
                           style={
-                            values.consent
-                              ? styles.touchableTextChecked
-                              : styles.touchableText
+                            values.consent ? styles.touchableTextChecked : styles.touchableText
                           }
                         />,
                       ]}

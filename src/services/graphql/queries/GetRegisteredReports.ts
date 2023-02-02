@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 const GetRegisteredReports = gql`
   query ReportingReasons($subspaceID: bigint!) @api(name: butter) {
-    subspace_report_reason(where: {subspace_id: {_eq: $subspaceID}}) {
+    subspace_report_reason(where: { subspace_id: { _eq: $subspaceID } }) {
       id
       title
     }

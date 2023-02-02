@@ -1,26 +1,23 @@
-import {useQuery} from '@apollo/client';
-import {convertCoin} from '@desmoslabs/desmjs';
+import { useQuery } from '@apollo/client';
+import { convertCoin } from '@desmoslabs/desmjs';
 import appSettingsState from '@recoil/settings';
-import {parseISO} from 'date-fns';
-import {formatInTimeZone} from 'date-fns-tz';
-import {useCallback, useMemo, useState} from 'react';
-import {useRecoilValue} from 'recoil';
+import { parseISO } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
+import { useCallback, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import GetAccountBalanceAndTokenPrice from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
 import GetPastActions from 'services/graphql/queries/GetPastActions';
 
 const useHooks = (address: string) => {
-  const {currentChain, currentTimezone} = useRecoilValue(appSettingsState);
+  const { currentChain, currentTimezone } = useRecoilValue(appSettingsState);
   const [refetching, setRefetching] = useState(false);
   const [fetchingMore, setFetchingMore] = useState(false);
-  const {data: balanceData, loading: balanceLoading} = useQuery(
-    GetAccountBalanceAndTokenPrice,
-    {
-      variables: {
-        address,
-        tokenName: currentChain.stakeCurrency.coinDenom,
-      },
+  const { data: balanceData, loading: balanceLoading } = useQuery(GetAccountBalanceAndTokenPrice, {
+    variables: {
+      address,
+      tokenName: currentChain.stakeCurrency.coinDenom,
     },
-  );
+  });
 
   const {
     data: pastActionsData,
@@ -52,7 +49,7 @@ const useHooks = (address: string) => {
         variables: {
           offset: pastActionsData?.messages_by_address.length,
         },
-        updateQuery: (prev, {fetchMoreResult}) => {
+        updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
             return prev;
           }
@@ -104,11 +101,7 @@ const useHooks = (address: string) => {
     const sections = uniqueDates.map(date => {
       const parsedTime = parseISO(`${date}Z`);
 
-      const formattedDate = formatInTimeZone(
-        parsedTime,
-        currentTimezone,
-        'dd MMM, yyyy',
-      );
+      const formattedDate = formatInTimeZone(parsedTime, currentTimezone, 'dd MMM, yyyy');
 
       return {
         section: formattedDate,
@@ -119,15 +112,9 @@ const useHooks = (address: string) => {
     pastActionsData.messages_by_address.forEach((msg: any) => {
       const parsedTime = parseISO(`${msg.timestamp}Z`);
 
-      const formattedDate = formatInTimeZone(
-        parsedTime,
-        currentTimezone,
-        'dd MMM, yyyy',
-      );
+      const formattedDate = formatInTimeZone(parsedTime, currentTimezone, 'dd MMM, yyyy');
 
-      const sectionToPopulate = sections.find(
-        section => section.section === formattedDate,
-      );
+      const sectionToPopulate = sections.find(section => section.section === formattedDate);
       if (sectionToPopulate) sectionToPopulate.data.push(msg);
     });
 

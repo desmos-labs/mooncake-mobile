@@ -1,16 +1,10 @@
-import React, {useCallback} from 'react';
-import {
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
-import {Account} from 'types/account';
-import {deserializeAccounts} from 'lib/AccountUtils/deserialize';
-import {serializeAccounts} from 'lib/AccountUtils/serialize';
-import {useActiveAccountAddress} from '@recoil/wallets';
+import React, { useCallback } from 'react';
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { Account } from 'types/account';
+import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
+import { serializeAccounts } from 'lib/AccountUtils/serialize';
+import { useActiveAccountAddress } from '@recoil/wallets';
 
 /**
  * An atom that holds all the accounts stored in the application.
@@ -19,7 +13,7 @@ export const accountsAppState = atom<Record<string, Account>>({
   key: 'accounts',
   default: deserializeAccounts(getMMKV(MMKVKEYS.ACCOUNTS), {}),
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(newAccounts => {
         setMMKV(MMKVKEYS.ACCOUNTS, serializeAccounts(newAccounts));
       });
@@ -51,7 +45,7 @@ export const useStoreAccount = () => {
  */
 const hasAccountAppState = selector({
   key: 'hasAccount',
-  get: ({get}) => {
+  get: ({ get }) => {
     const accounts = get(accountsAppState);
     return Object.keys(accounts).length > 0;
   },
@@ -72,7 +66,7 @@ export const useStoredAccounts = () => useRecoilValue(accountsAppState);
  */
 const storedAccountsNumberAppState = selector({
   key: 'storedAccountsNumber',
-  get: ({get}) => {
+  get: ({ get }) => {
     const accounts = get(accountsAppState);
     return Object.keys(accounts).length;
   },
@@ -81,8 +75,7 @@ const storedAccountsNumberAppState = selector({
 /**
  * Hook that allows to easily get the number of stored accounts.
  */
-export const useStoredAccountsNumber = () =>
-  useRecoilValue(storedAccountsNumberAppState);
+export const useStoredAccountsNumber = () => useRecoilValue(storedAccountsNumberAppState);
 
 /**
  * Hook that allows to easily delete the account of a user having a given address.
@@ -108,7 +101,7 @@ export const useDeleteAccount = () => {
  */
 const accountsAddressesAppState = selector<string[]>({
   key: 'accountsAddresses',
-  get: ({get}) => {
+  get: ({ get }) => {
     const accounts = get(accountsAppState);
     return Object.values(accounts).map(account => account.address);
   },
@@ -117,8 +110,7 @@ const accountsAddressesAppState = selector<string[]>({
 /**
  * Hook that allows to get the currently stored accounts HD paths.
  */
-export const useStoredAccountsAddresses = () =>
-  useRecoilValue(accountsAddressesAppState);
+export const useStoredAccountsAddresses = () => useRecoilValue(accountsAddressesAppState);
 
 /**
  * Hook that allows to get the currently active account of the user.

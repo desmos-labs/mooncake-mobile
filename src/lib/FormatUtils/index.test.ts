@@ -1,8 +1,4 @@
-import {
-  formatNumShorthand,
-  mapPostFontSize,
-  sanitizeMnemonic,
-} from 'lib/FormatUtils/index';
+import { formatNumShorthand, mapPostFontSize, sanitizeMnemonic } from 'lib/FormatUtils/index';
 
 describe('utils: FormatUtils', () => {
   describe('formatNumShorthand', () => {
@@ -26,9 +22,7 @@ describe('utils: FormatUtils', () => {
   describe('sanitizeMnemonic', () => {
     it('sanitizes strings properly', () => {
       // eslint-disable-next-line no-useless-concat
-      expect(sanitizeMnemonic('outpu\n\n' + 'joy\n\n' + 'happy \n\n')).toEqual(
-        'outpu joy happy',
-      );
+      expect(sanitizeMnemonic('outpu\n\n' + 'joy\n\n' + 'happy \n\n')).toEqual('outpu joy happy');
     });
   });
 

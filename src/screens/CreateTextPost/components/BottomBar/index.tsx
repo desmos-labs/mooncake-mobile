@@ -1,15 +1,12 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'components/Button';
-import {useTranslation} from 'react-i18next';
-import {cameraIcon, defaultProfilePic} from 'assets/images';
+import { useTranslation } from 'react-i18next';
+import { cameraIcon, defaultProfilePic } from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
-import {
-  CameraRoll,
-  PhotoIdentifier,
-} from '@react-native-camera-roll/camera-roll';
+import { CameraRoll, PhotoIdentifier } from '@react-native-camera-roll/camera-roll';
 import ImageButton from 'components/ImageButton';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import useStyles from './useStyles';
 import GalleryButton from './GalleryButton';
 
@@ -42,17 +39,13 @@ export const convertEdgeToImageDTO = (edges: PhotoIdentifier[]): ImageDto[] => {
   }));
 };
 
-const BottomBar = ({
-  handlePressGallery,
-  handlePressPost,
-  handlePressCamera,
-}: Props) => {
+const BottomBar = ({ handlePressGallery, handlePressPost, handlePressCamera }: Props) => {
   const styles = useStyles();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [firstPhoto, setFirstPhoto] = React.useState<any>(undefined);
 
-  const {permissionsState, requestStoragePermissions} = useStoragePermissions();
+  const { permissionsState, requestStoragePermissions } = useStoragePermissions();
 
   React.useEffect(() => {
     requestStoragePermissions();
@@ -60,9 +53,9 @@ const BottomBar = ({
 
   React.useEffect(() => {
     if (permissionsState === 'granted') {
-      CameraRoll.getPhotos({first: 2}).then(({edges}) => {
+      CameraRoll.getPhotos({ first: 2 }).then(({ edges }) => {
         const imageDto = convertEdgeToImageDTO(edges);
-        setFirstPhoto({uri: imageDto[0]?.uri});
+        setFirstPhoto({ uri: imageDto[0]?.uri });
       });
     }
   }, [permissionsState]);
@@ -70,16 +63,9 @@ const BottomBar = ({
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.leftButtonGroup}>
-        <GalleryButton
-          image={firstPhoto || defaultProfilePic}
-          handlePress={handlePressGallery}
-        />
+        <GalleryButton image={firstPhoto || defaultProfilePic} handlePress={handlePressGallery} />
 
-        <ImageButton
-          image={cameraIcon}
-          style={styles.cameraButton}
-          onPress={handlePressCamera}
-        />
+        <ImageButton image={cameraIcon} style={styles.cameraButton} onPress={handlePressCamera} />
       </View>
 
       <Button

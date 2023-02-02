@@ -5,11 +5,11 @@ import {
   defaultDataIdFromObject,
   InMemoryCache,
 } from '@apollo/client';
-import {setContext} from '@apollo/client/link/context';
-import {MultiAPILink} from '@habx/apollo-multi-endpoint-link';
+import { setContext } from '@apollo/client/link/context';
+import { MultiAPILink } from '@habx/apollo-multi-endpoint-link';
 import EnvConfig from 'config/EnvConfig';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
-import {WebSocketLink} from '@apollo/client/link/ws';
+import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
+import { WebSocketLink } from '@apollo/client/link/ws';
 import NotificationMergePolicy from 'services/graphql/queries/typePolicies/notification';
 
 const multiApiLink = ApolloLink.from([
@@ -48,7 +48,7 @@ const cache = new InMemoryCache({
     }
   },
 });
-const authLink = setContext((_, {headers}) => {
+const authLink = setContext((_, { headers }) => {
   const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
   return {
     headers: {

@@ -13,9 +13,9 @@ import {
   regenIcon,
   terraIcon,
 } from 'assets/images';
-import {ImageSourcePropType} from 'react-native';
+import { ImageSourcePropType } from 'react-native';
 
-const chainIconMap: {[index: string]: ImageSourcePropType} = {
+const chainIconMap: { [index: string]: ImageSourcePropType } = {
   akash: akashIcon,
   bitcanna: bitcannaIcon,
   band: bandIcon,

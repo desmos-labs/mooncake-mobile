@@ -6,7 +6,7 @@ import {
   useRemoveFollowedUser,
   useSetFollowedUserStatus,
 } from '@recoil/relationships';
-import {useLazyQuery} from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import GetRelationshipForAddress from 'services/graphql/queries/GetRelationshipForAddress';
 import {
   MsgCreateRelationshipEncodeObject,
@@ -15,8 +15,8 @@ import {
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
 import useAppConfig from 'hooks/useAppConfig';
-import {useActiveAccountAddress} from '@recoil/wallets';
-import {DataStatus} from 'types/desmos';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { DataStatus } from 'types/desmos';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
@@ -28,7 +28,7 @@ const useDoesRelationshipExistRemotely = () => {
 
   return React.useCallback(
     async (address: string, counterparty: string) => {
-      const {data} = await getRelationship({
+      const { data } = await getRelationship({
         variables: {
           userAddress: address,
           counterpartyAddress: counterparty,

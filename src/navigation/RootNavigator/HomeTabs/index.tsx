@@ -1,15 +1,15 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import {broadcastAnim} from 'assets/animations';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
+import { broadcastAnim } from 'assets/animations';
 import ThemedLottieView from 'components/ThemedLottieView';
 import useRefreshSession from 'hooks/useRefreshSession';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {StatusBar, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Home, {HomeParams} from 'screens/Home';
+import { StatusBar, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import Home, { HomeParams } from 'screens/Home';
 import useProfileGivenAddress from 'hooks/useProfileGivenAddress';
 
 export type HomeTabsParamList = {
@@ -26,9 +26,9 @@ const Tab = createMaterialTopTabNavigator<HomeTabsParamList>();
  */
 const HomeTabs = () => {
   const theme = useTheme();
-  const {top} = useSafeAreaInsets();
-  const {refreshSession} = useRefreshSession();
-  const {profile, refetch: fetchProfileData} = useProfileGivenAddress();
+  const { top } = useSafeAreaInsets();
+  const { refreshSession } = useRefreshSession();
+  const { profile, refetch: fetchProfileData } = useProfileGivenAddress();
 
   const [screenReady, setScreenReady] = React.useState(false);
 
@@ -49,8 +49,7 @@ const HomeTabs = () => {
 
   if (!screenReady) {
     return (
-      <SafeAreaView
-        style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ThemedLottieView autoSize autoPlay loop source={broadcastAnim} />
       </SafeAreaView>
     );
@@ -63,11 +62,7 @@ const HomeTabs = () => {
         backgroundColor: theme.colors.white,
         paddingTop: Math.max(24, top),
       }}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Tab.Navigator
         tabBar={renderTabBar}
         screenOptions={{
@@ -75,13 +70,13 @@ const HomeTabs = () => {
         }}>
         <Tab.Screen
           name={ROUTES.HOME_DISCOVER}
-          initialParams={{type: 'discover'}}
+          initialParams={{ type: 'discover' }}
           component={Home}
         />
 
         <Tab.Screen
           name={ROUTES.HOME_FOLLOWING}
-          initialParams={{type: 'following'}}
+          initialParams={{ type: 'following' }}
           component={Home}
         />
       </Tab.Navigator>

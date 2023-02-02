@@ -1,10 +1,10 @@
-import {verifiedIcon} from 'assets/images';
+import { verifiedIcon } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import GetAppIcon from 'lib/GetAppIcon';
-import React, {useEffect} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Image, TouchableOpacity, View} from 'react-native';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Image, TouchableOpacity, View } from 'react-native';
 import useStyles from './useStyles';
 
 type Props = {
@@ -26,13 +26,8 @@ type Props = {
   state: string;
 };
 
-const AppConnectedItem = ({
-  appName,
-  username,
-  onPressDisconnect,
-  state,
-}: Props) => {
-  const {t} = useTranslation('common');
+const AppConnectedItem = ({ appName, username, onPressDisconnect, state }: Props) => {
+  const { t } = useTranslation('common');
   const styles = useStyles();
 
   useEffect(() => {
@@ -57,7 +52,7 @@ const AppConnectedItem = ({
         <Image style={styles.icon} source={GetAppIcon(appName)} />
 
         <View style={styles.centerGroup}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Typography.H5 style={styles.baseText}>{username}</Typography.H5>
             {state === 'APPLICATION_LINK_STATE_VERIFICATION_SUCCESS' ? (
               <Image
@@ -84,10 +79,7 @@ const AppConnectedItem = ({
           </View>
 
           <View style={styles.addressGroup}>
-            <Typography.Body7
-              style={styles.baseText}
-              numberOfLines={1}
-              ellipsizeMode="middle">
+            <Typography.Body7 style={styles.baseText} numberOfLines={1} ellipsizeMode="middle">
               @{appName}
             </Typography.Body7>
           </View>

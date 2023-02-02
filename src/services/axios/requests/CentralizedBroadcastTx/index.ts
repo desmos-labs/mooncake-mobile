@@ -1,7 +1,7 @@
 import axiosInstance from 'services/axios';
-import {AminoMsg} from '@cosmjs/amino';
-import {EncodeObject} from '@cosmjs/proto-signing';
-import {DesmosClient} from '@desmoslabs/desmjs';
+import { AminoMsg } from '@cosmjs/amino';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { DesmosClient } from '@desmoslabs/desmjs';
 import EnvConfig from 'config/EnvConfig';
 
 type Response = {

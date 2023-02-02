@@ -1,25 +1,17 @@
-import {StackScreenProps} from '@react-navigation/stack';
-import {modalSuccess} from 'assets/images';
+import { StackScreenProps } from '@react-navigation/stack';
+import { modalSuccess } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
-import React, {ReactNode} from 'react';
-import {
-  GestureResponderEvent,
-  Image,
-  ImageSourcePropType,
-  Pressable,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import React, { ReactNode } from 'react';
+import { GestureResponderEvent, Image, ImageSourcePropType, Pressable } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import ROUTES from 'navigation/routes';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.FULLSCREEN_STATUS_SCREEN
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FULLSCREEN_STATUS_SCREEN>;
 
 /**
  * @property {ImageSourcePropType} image - The image to display in the background.
@@ -67,16 +59,9 @@ const FullscreenStatusScreen = () => {
       backgroundColor="transparent"
       onBackgroundPress={handleBackgroundPress}
       style={styles.root}>
-      <Pressable
-        style={styles.cardContainer}
-        onPressIn={stopEventPropagation}
-        android_disableSound>
+      <Pressable style={styles.cardContainer} onPressIn={stopEventPropagation} android_disableSound>
         <Typography.H4 style={styles.title}>{title}</Typography.H4>
-        <Image
-          source={image || modalSuccess}
-          style={styles.image}
-          resizeMode="contain"
-        />
+        <Image source={image || modalSuccess} style={styles.image} resizeMode="contain" />
         <Typography.Body6 style={styles.subtitle}>{subtitle}</Typography.Body6>
         <Button
           style={styles.button}

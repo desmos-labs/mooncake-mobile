@@ -1,6 +1,6 @@
-import {atom, useRecoilValue, useSetRecoilState} from 'recoil';
-import {ButterConfig} from 'types/butter';
-import {getMMKV, MMKVKEYS, setMMKV} from 'lib/MMKVStorage';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
+import { ButterConfig } from 'types/butter';
+import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 
 /**
  * A recoil atom used to store the config details of
@@ -10,7 +10,7 @@ const butterConfigState = atom<ButterConfig | undefined>({
   key: 'butterConfigState',
   default: getMMKV(MMKVKEYS.BUTTER_CONFIG),
   effects: [
-    ({onSet}) => {
+    ({ onSet }) => {
       onSet(config => {
         setMMKV(MMKVKEYS.BUTTER_CONFIG, config);
       });

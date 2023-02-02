@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 /**
  * Style hook for the ResultModal screen
@@ -31,7 +31,7 @@ const useStyles = makeStyle(theme => ({
     borderRadius: 8,
     borderWidth: 1,
   },
-  flexRow: {flexDirection: 'row'},
+  flexRow: { flexDirection: 'row' },
 }));
 
 export default useStyles;

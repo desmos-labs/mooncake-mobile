@@ -1,29 +1,27 @@
 import React from 'react';
 import GetNonce from 'services/axios/requests/GetNonce';
-import {StdFee} from '@cosmjs/amino';
+import { StdFee } from '@cosmjs/amino';
 import {
   DesmosClient,
   getPubKeyBytes,
   getSignatureBytes,
   getSignedBytes,
 } from '@desmoslabs/desmjs';
-import {toHex} from '@cosmjs/encoding';
-import {AccountWithWallet} from 'types/account';
-import {SignerData} from '@cosmjs/stargate';
-import Login, {LoginParams} from 'services/axios/requests/Login';
-import {updateAuthToken} from 'services/axios';
+import { toHex } from '@cosmjs/encoding';
+import { AccountWithWallet } from 'types/account';
+import { SignerData } from '@cosmjs/stargate';
+import Login, { LoginParams } from 'services/axios/requests/Login';
+import { updateAuthToken } from 'services/axios';
 
 /**
  * Generate the params to be used when performing the login on the APIs.
  * @param account {@link AccountWithWallet} - Account with wallet that should be used to sign the login data.
  */
-const generateLoginParams = async (
-  account: AccountWithWallet,
-): Promise<LoginParams> => {
-  const {nonce} = await GetNonce(account.account.address);
-  const fee: StdFee = {amount: [], gas: '0'};
+const generateLoginParams = async (account: AccountWithWallet): Promise<LoginParams> => {
+  const { nonce } = await GetNonce(account.account.address);
+  const fee: StdFee = { amount: [], gas: '0' };
 
-  const {address} = account.wallet;
+  const { address } = account.wallet;
   const signerData: SignerData = {
     sequence: 0,
     chainId: 'desmos',
@@ -52,7 +50,7 @@ const usePerformLogin = () => {
   return React.useCallback(async (account: AccountWithWallet) => {
     // Perform the login
     const params = await generateLoginParams(account);
-    const {token} = await Login(params);
+    const { token } = await Login(params);
 
     // Update the Axios auth token for future requests
     updateAuthToken(token);

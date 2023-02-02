@@ -1,8 +1,8 @@
-import {commentIcon, commentLikeEmptyIcon, tipIcon} from 'assets/images';
+import { commentIcon, commentLikeEmptyIcon, tipIcon } from 'assets/images';
 import MenuButton from 'components/StickyBottomMenu/components/MenuButton';
 import React from 'react';
-import {View} from 'react-native';
-import {Shadow} from 'react-native-shadow-2';
+import { View } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 import useStyles from './useStyles';
 
 interface Props {
@@ -36,11 +36,7 @@ const StickyBottomMenu: React.FC<Props> = props => {
   const styles = useStyles();
 
   return (
-    <Shadow
-      viewStyle={styles.shadow}
-      startColor="rgba(51, 51, 51, 0.15)"
-      distance={20}
-      radius={0}>
+    <Shadow viewStyle={styles.shadow} startColor="rgba(51, 51, 51, 0.15)" distance={20} radius={0}>
       <View style={styles.container}>
         <MenuButton
           onPress={leftButtonAction}

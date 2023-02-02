@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import { render } from 'jest/utils/CustomRender';
 import LoadingIndicator from './index';
 
 describe('components: LoadingIndicator', () => {
@@ -10,9 +10,7 @@ describe('components: LoadingIndicator', () => {
   });
 
   it('stops animation if hideActiveDots is true', () => {
-    const tree = render(
-      <LoadingIndicator numDots={2} hideActiveDots />,
-    ).toJSON();
+    const tree = render(<LoadingIndicator numDots={2} hideActiveDots />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

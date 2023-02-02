@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import useStyles from './useStyles';
 import Typography from '../Typography';
 
@@ -26,7 +20,7 @@ export type Props = {
 };
 
 const MnemonicWordBadge: React.FC<Props> = props => {
-  const {value, index, onPress, style} = props;
+  const { value, index, onPress, style } = props;
   const styles = useStyles();
 
   return (
