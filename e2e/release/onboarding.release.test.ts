@@ -1,3 +1,5 @@
+import {by, device, element, expect} from 'detox';
+
 describe('App first launch should display welcome screen.', () => {
   beforeEach(async () => {
     await device.launchApp({

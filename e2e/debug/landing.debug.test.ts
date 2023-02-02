@@ -1,3 +1,5 @@
+import {by, device, element, expect} from 'detox';
+
 describe('Debug to Landing Test', () => {
   beforeEach(async () => {
     await device.launchApp({
