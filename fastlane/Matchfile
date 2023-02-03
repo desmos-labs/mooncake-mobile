@@ -1,13 +1,13 @@
 # ssh url for easier initial syncing
-#git_url("git@github.com:desmos-labs/ios-butter-fastlane-certs.git")
-git_url("https://github.com/desmos-labs/ios-butter-fastlane-certs")
+git_url("git@github.com:butter-labs/ios-butter-fastlane-certs.git")
+# git_url("https://github.com/butter-labs/ios-butter-fastlane-certs")
 
 storage_mode("git")
 
-type("development") # The default type, can be: appstore, adhoc, enterprise or development
+# type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
-# app_identifier(["tools.fastlane.app", "tools.fastlane.app2"])
-# username("user@fastlane.tools") # Your Apple Developer Portal username
+app_identifier(["social.butter"])
+username("dev@butter.social") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options
