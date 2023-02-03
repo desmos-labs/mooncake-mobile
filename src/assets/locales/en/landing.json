@@ -2,6 +2,6 @@
   "butter": "Butter",
   "header": "Your decentralized social network",
   "signUp": "Sign up",
-  "importMnemonic": "Import Secret Recovery Phrase",
+  "signUp with wallet": "Sign Up with wallet",
   "connectLedger": "Connect Ledger"
 }

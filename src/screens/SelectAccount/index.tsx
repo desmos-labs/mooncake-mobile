@@ -1,0 +1,56 @@
+import TopBar from 'components/TopBar';
+import React from 'react';
+import DView from 'components/DView';
+import { useTranslation } from 'react-i18next';
+import Typography from 'components/Typography';
+import Spacer from 'components/Spacer';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import { AccountWithWallet } from 'types/account';
+import AccountPicker from 'screens/SelectAccount/components/AccountPicker';
+import { AccountPickerParams } from './components/AccountPicker/types';
+
+export interface SelectAccountParamList {
+  accountPickerParams: AccountPickerParams;
+  onSelect: (wallet: AccountWithWallet) => any;
+  onCancel?: () => any;
+}
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_ACCOUNT>;
+
+const SelectDtag = ({ route: { params }, navigation }: NavProps) => {
+  const { accountPickerParams, onSelect, onCancel } = params;
+  const { t } = useTranslation('selectDtag');
+
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        if (e.data.action.type === 'GO_BACK' && onCancel !== undefined) {
+          onCancel();
+        }
+      }),
+    [navigation, onCancel],
+  );
+
+  const onAccountSelected = React.useCallback(
+    (accountWithWallet: AccountWithWallet | null) => {
+      if (accountWithWallet !== null) {
+        onSelect(accountWithWallet);
+      }
+    },
+    [onSelect],
+  );
+
+  return (
+    <DView topBar={<TopBar />}>
+      <Spacer padding={16}>
+        <Typography.H4>{t('header')}</Typography.H4>
+      </Spacer>
+
+      <AccountPicker onAccountSelected={onAccountSelected} params={accountPickerParams} />
+    </DView>
+  );
+};
+
+export default SelectDtag;

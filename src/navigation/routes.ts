@@ -5,6 +5,10 @@ enum ROUTES {
   LOGIN = 'LOGIN',
 
   SIGNUP = 'SIGNUP',
+  /**
+   * Route that let the user select how an account should be imported.
+   */
+  IMPORT_ACCOUNT_SELECT_MODE = 'IMPORT_ACCOUNT_SELECT_MODE',
 
   SIGNUP_RESULT = 'SIGNUP_RESULT',
 
@@ -37,8 +41,10 @@ enum ROUTES {
   GUEST_PROFILE = 'GUEST_PROFILE',
 
   MNEMONIC_INPUT = 'MNEMONIC_INPUT',
-
-  SELECT_DTAG = 'SELECT_DTAG',
+  /**
+   * Screen that let the user select an account to import.
+   */
+  SELECT_ACCOUNT = 'SELECT_ACCOUNT',
 
   CHECK_MNEMONIC = 'CHECK_MNEMONIC',
 

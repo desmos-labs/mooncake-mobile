@@ -1,20 +1,24 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import {getMMKV, MMKVKEYS} from 'lib/MMKVStorage';
+import { createStackNavigator } from '@react-navigation/stack';
+import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import DevScreen from 'screens/DEV';
-import MnemonicInput, {
-  MNEMONIC_INPUT_MODE,
-  MnemonicInputParams,
-} from 'screens/MnemonicInput';
+import MnemonicInput, { MNEMONIC_INPUT_MODE, MnemonicInputParams } from 'screens/MnemonicInput';
+import SelectAccount, { SelectAccountParamList } from 'screens/SelectAccount';
+import Landing from 'screens/Landing';
+import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
+import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 
 export type RootNavigatorParamList = {
+  // [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   /*
-  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
+  */
   [ROUTES.LANDING]: undefined;
+  [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
+  /*
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.SIGNUP_RESULT]: undefined;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -32,9 +36,13 @@ export type RootNavigatorParamList = {
   /*
   [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
-  [ROUTES.SELECT_DTAG]: SelectDtagParamList;
+  */
+  [ROUTES.SELECT_ACCOUNT]: SelectAccountParamList;
+  /*
   [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
+  */
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
+  /*
   [ROUTES.WELCOME_PAGE]: undefined;
   [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   [ROUTES.BOTTOM_MODAL]: BottomModalParams;
@@ -190,12 +198,10 @@ const RootNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      {__DEV__ && (
-        <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />
-      )}
-      {/*
+      {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
-
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
+      {/*
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
 
       <Stack.Screen
@@ -204,8 +210,10 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} />
-      <Stack.Screen name={ROUTES.SELECT_DTAG} component={SelectDtag} />
+      */}
+      <Stack.Screen name={ROUTES.SELECT_ACCOUNT} component={SelectAccount} />
 
+      {/*
       {/* Perhaps turn this into a more general "BroadcastTx" screen that
       {/* navigates away once the tx is finished broadcasting
       <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} />
@@ -378,10 +386,9 @@ const RootNavigator = () => {
           cardOverlayEnabled: true,
           ...NativeTransition,
         }}>
-        <Stack.Screen
-          name={ROUTES.CONSENT_AGREEMENT}
-          component={ConsentAgreement}
-        />
+        */}
+      <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
+      {/*
         <Stack.Screen
           name={ROUTES.CONFIRM_MODAL}
           component={ConfirmModal}

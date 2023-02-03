@@ -1,27 +1,37 @@
 import React from 'react';
-import {validateMnemonic} from 'lib/ValidationUtils';
-import {sanitizeMnemonic} from 'lib/FormatUtils';
-import ROUTES from 'navigation/routes';
-import {PASSWORD_MANIPULATION_MODE} from 'screens/PasswordManipulation';
-import {MNEMONIC_INPUT_MODE, NavProps} from 'screens/MnemonicInput';
-import {useTranslation} from 'react-i18next';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useSetRecoilState} from 'recoil';
-import createLocalWalletState from '@recoil/createLocalWalletState';
+import { validateMnemonic } from 'lib/ValidationUtils';
+import { sanitizeMnemonic } from 'lib/FormatUtils';
+import { MNEMONIC_INPUT_MODE, NavProps } from 'screens/MnemonicInput';
+import { useTranslation } from 'react-i18next';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import useSelectAccount from 'hooks/useSelectAccount';
+import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
+import { useImportAccountState } from '@recoil/importAccountState';
+
+export interface FormField {
+  /**
+   * Mnemonic inserted from the user.
+   */
+  mnemonic: string;
+  /**
+   * Tells if the user have accepted the Terms of Service and the Privacy Polices.
+   */
+  consent: boolean;
+}
 
 /**
  * Hooks for the MnemonicInput screen
  */
 const useHooks = () => {
   const {
-    params: {mode},
+    params: { mode },
   } = useRoute<NavProps['route']>();
-  const {navigate} = useNavigation<NavProps['navigation']>();
-  const setCreateLocalWalletState = useSetRecoilState(createLocalWalletState);
+  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { t } = useTranslation('mnemonicInput');
+  const selectAccount = useSelectAccount();
+  const importAccountState = useImportAccountState()!;
 
-  const {t} = useTranslation('mnemonicInput');
-
-  const initialFormFields = React.useMemo(
+  const initialFormFields = React.useMemo<FormField>(
     () => ({
       mnemonic: '',
       // only ask for consent if in import mode
@@ -33,15 +43,15 @@ const useHooks = () => {
   const headerText = React.useMemo(() => {
     switch (mode) {
       case MNEMONIC_INPUT_MODE.RESET_PASSWORD:
-        return 'forgotPw';
+        return t('forgotPw');
       case MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE:
-        return 'importMnemonic';
+        return t('importMnemonic');
       default:
         return '';
     }
   }, [mode]);
 
-  const validateForm = React.useCallback((values: typeof initialFormFields) => {
+  const validateForm = React.useCallback((values: FormField) => {
     const errors: any = {};
 
     if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
@@ -49,11 +59,8 @@ const useHooks = () => {
     }
 
     if (!values.consent) {
-      errors.consent = 'Consent not checked';
+      errors.consent = t('consent not checked');
     }
-
-    // Additionally, check if the mnemonic matches that of the wallet depending on
-    // mode (future feature)
 
     return errors;
   }, []);
@@ -61,19 +68,24 @@ const useHooks = () => {
   const onSubmit = React.useCallback(
     (values: typeof initialFormFields) => {
       if (mode === MNEMONIC_INPUT_MODE.RESET_PASSWORD) {
-        navigate(ROUTES.PASSWORD_MANIPULATION, {
-          mode: PASSWORD_MANIPULATION_MODE.RESET_PASSWORD,
-        });
-      }
-      if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
-        setCreateLocalWalletState({
-          mnemonic: values.mnemonic.trim(),
-        });
-
-        navigate(ROUTES.PASSWORD_MANIPULATION, {
-          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
-          mnemonic: values.mnemonic.trim(),
-        });
+        // TODO: Implement reset password logic.
+        console.warn('Implement Reset password');
+      } else if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
+        // Go to import account screen.
+        selectAccount(
+          {
+            mode: WalletPickerMode.Mnemonic,
+            addressPrefix: importAccountState.selectedChain!.prefix,
+            mnemonic: sanitizeMnemonic(values.mnemonic),
+            ignoreAddresses: importAccountState.ignoreAddresses,
+            masterHdPath: importAccountState!.selectedChain!.masterHDPath!,
+          },
+          {
+            onSuccess: account => {
+              importAccountState!.onSuccess({ account, chain: importAccountState!.selectedChain! });
+            },
+          },
+        );
       }
     },
     [mode],
@@ -81,24 +93,26 @@ const useHooks = () => {
 
   const buttonText = React.useMemo(() => {
     if (mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE) {
-      return 'common:next';
+      return t('common:next');
     }
-    return 'common:confirm';
+    return t('common:confirm');
   }, [mode]);
 
-  const handlePressPP = React.useCallback(() => {
-    // go to Privacy policy page
+  const handlePressPrivacyPolicy = React.useCallback(() => {
+    // TODO: Implement Privacy policy visualization.
+    console.warn('Implement Privacy policy visualization.');
   }, []);
 
-  const handlePressTOS = React.useCallback(() => {
-    // go to Terms of Service page
+  const handlePressTermOfService = React.useCallback(() => {
+    // TODO: Implement Term of Service visualization.
+    console.warn('Implement Term of Service visualization.');
   }, []);
 
   return {
     headerText,
     buttonText,
-    handlePressPP,
-    handlePressTOS,
+    handlePressPrivacyPolicy,
+    handlePressTermOfService,
     onSubmit,
     validateForm,
     initialFormFields,

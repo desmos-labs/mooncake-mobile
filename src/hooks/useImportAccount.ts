@@ -1,0 +1,121 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { SupportedChain } from 'types/chains';
+import { WalletType } from 'types/wallet';
+import { useSetImportAccountState } from '@recoil/importAccountState';
+import { AccountWithWallet } from 'types/account';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import { MNEMONIC_INPUT_MODE } from 'screens/MnemonicInput';
+
+export interface ImportAccountOptions {
+  /**
+   * List of chain from which the account can be imported.
+   * If the length of the list is 1, the chain selection screen will be
+   * skipped.
+   */
+  chains: SupportedChain[];
+  /**
+   * Tells if should be displayed the balance of the address.
+   * If undefined will be considered as false.
+   */
+  showBalances?: boolean;
+  /**
+   * Tells the minimum amount of tokens that the account must have to be selected.
+   * If zero or undefined any account can be selected.
+   */
+  minAccountBalance?: number;
+  /**
+   * Defines the type of account to import, if this is undefined will be displayed the
+   * account type selection screen.
+   */
+  accountType?: WalletType;
+  /**
+   * List of addresses that will be ignored during the generation to prevent the
+   * import of a duplicate addresses.
+   */
+  ignoreAddresses?: [];
+}
+
+/**
+ * Hook that provides a function to start the flow to import an account.
+ * The flow is:
+ * 1. Select chain, if options.chains len is === 1 this screen will be skipped;
+ * 2. Select the import mode, if options.accountType !== undefined
+ * this screen will be skipped;
+ *
+ * Since the import mode can be different from here the flow have some
+ * ramifications.
+ *
+ * Case Mnemonic:
+ * 3a. Input the mnemonic;
+ * 4a. Show the list of addresses from which the user can select the account
+ * to import.
+ *
+ * Case Ledger:
+ * 3b. Select the Ledger app that be used to connect to the selected chain;
+ * 4b. Connect to Ledger;
+ * 5b. Show the list of addresses from which the user can select the account
+ * to import.
+ *
+ * Case Web3Auth:
+ * 3b. Select the login provider;
+ * 4b. Display the account that can be imported.
+ *
+ * @param options - Import account options.
+ */
+const useImportAccount = (options: ImportAccountOptions) => {
+  const navigation = useNavigation<NavigationProp<RootNavigatorParamList>>();
+  const setImportAccountState = useSetImportAccountState();
+
+  return React.useCallback(() => {
+    return new Promise<AccountWithWallet | undefined>(resolve => {
+      const selectedChain: SupportedChain | undefined =
+        options.chains.length === 1 ? options.chains[0] : undefined;
+
+      // Set the import account state according to the provided options.
+      setImportAccountState({
+        chains: options.chains,
+        ignoreAddresses: options.ignoreAddresses ?? [],
+        showBalances: options.showBalances ?? false,
+        minAccountBalance: options.minAccountBalance,
+        importMode: options.accountType,
+        selectedChain,
+        onSuccess: account => resolve(account.account),
+        onCancel: () => resolve(undefined),
+      });
+
+      if (selectedChain === undefined) {
+        // TODO: Implement navigate to chain selection.
+        console.warn('Chain selection is not supported');
+        resolve(undefined);
+        return;
+      }
+
+      if (options.accountType === undefined) {
+        navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_MODE);
+      } else {
+        switch (options.accountType) {
+          case WalletType.Mnemonic:
+            console.warn('Import with Mnemonic not supported');
+            navigation.navigate(ROUTES.MNEMONIC_INPUT, {
+              mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
+            });
+            break;
+          case WalletType.Ledger:
+            // TODO: Implement navigation to Ledger connect flow.
+            console.warn('Import with Ledger not supported');
+            resolve(undefined);
+            break;
+          case WalletType.Web3Auth:
+            // TODO: Implement navigation to web3auth login provider selection.
+            console.warn('Import with Web3Auth not supported');
+            resolve(undefined);
+            break;
+        }
+      }
+    });
+  }, [navigation, setImportAccountState]);
+};
+
+export default useImportAccount;

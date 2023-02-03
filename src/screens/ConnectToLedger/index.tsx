@@ -1,12 +1,12 @@
-import {toBase64} from '@cosmjs/encoding';
-import {LedgerSigner} from '@cosmjs/ledger-amino';
-import {DesmosClient} from '@desmoslabs/desmjs';
+import { toBase64 } from '@cosmjs/encoding';
+import { LedgerSigner } from '@cosmjs/ledger-amino';
+import { DesmosClient } from '@desmoslabs/desmjs';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
-import {pairDevicesAnim, unlockLedgerAnimation} from 'assets/animations';
-import {iconCrossBlack, ledgerConnectionError} from 'assets/images';
+import { pairDevicesAnim, unlockLedgerAnimation } from 'assets/animations';
+import { iconCrossBlack, ledgerConnectionError } from 'assets/images';
 import Button from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
@@ -14,20 +14,20 @@ import Spacer from 'components/Spacer';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
-import {DesmosLedgerApp} from 'config/LedgerApps';
+import { DesmosLedgerApp } from 'config/LedgerApps';
 import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
-import {toCosmjsHdPath} from 'lib/FormatUtils';
-import {RootNavigatorParamList} from 'navigation/RootNavigator';
+import { toCosmjsHdPath } from 'lib/FormatUtils';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Image, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {useSetRecoilState} from 'recoil';
-import {ChainAccount, ChainAccountType} from 'types/chains';
-import {HdPath} from 'types/hdpath';
-import {verticalScale} from 'react-native-size-matters';
-import {useLazyQuery} from '@apollo/client';
+import { useTranslation } from 'react-i18next';
+import { Image, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useSetRecoilState } from 'recoil';
+import { ChainAccount, ChainAccountType } from 'types/chains';
+import { HdPath } from 'types/hdpath';
+import { verticalScale } from 'react-native-size-matters';
+import { useLazyQuery } from '@apollo/client';
 import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useConnectInstructions from './useConnectInstructions';
 import useStyles from './useStyles';
@@ -44,36 +44,34 @@ export type ConnectToLedgerParams = {
   onCancel?: () => void;
 };
 
-type NavProps = StackScreenProps<
-  RootNavigatorParamList,
-  ROUTES.CONNECT_TO_LEDGER
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONNECT_TO_LEDGER>;
 
 const ConnectToLedger = () => {
   const {
-    params: {bleLedger, ledgerApp},
+    params: { bleLedger, ledgerApp },
   } = useRoute<NavProps['route']>();
-  const {t} = useTranslation('connectToLedger');
+  const { t } = useTranslation('connectToLedger');
   const theme = useTheme();
   const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
 
-  const {navigate, goBack, addListener} =
-    useNavigation<NavProps['navigation']>();
+  const { navigate, goBack, addListener } = useNavigation<NavProps['navigation']>();
   const {
-    params: {autoClose, onCancel, onConnectionEstablished},
+    params: { autoClose, onCancel, onConnectionEstablished },
   } = useRoute<NavProps['route']>();
 
   const setCreateLedgerAccount = useSetRecoilState(createLedgerAccountState);
 
   const styles = useStyles();
-  const {connecting, connected, connectionError, transport, retry, paired} =
-    useConnectToLedger(bleLedger, ledgerApp);
+  const { connecting, connected, connectionError, transport, retry, paired } = useConnectToLedger(
+    bleLedger,
+    ledgerApp,
+  );
 
   const isFocused = useIsFocused();
 
   const statusButton = connected ? t('next') : t('retry');
 
-  const {instruction, instructionsIndex} = useConnectInstructions(
+  const { instruction, instructionsIndex } = useConnectInstructions(
     paired && !connected && isFocused,
   );
 
@@ -87,11 +85,7 @@ const ConnectToLedger = () => {
   React.useEffect(() => {
     if (autoClose) {
       addListener('beforeRemove', e => {
-        if (
-          e.data.action.type === 'GO_BACK' &&
-          !connected &&
-          onCancel !== undefined
-        ) {
+        if (e.data.action.type === 'GO_BACK' && !connected && onCancel !== undefined) {
           onCancel();
         }
       });
@@ -143,9 +137,7 @@ const ConnectToLedger = () => {
           chainAccount: y.value.chainAccount,
         }));
 
-      const addressesOfAccounts = accountsOnChain.map(
-        x => x.chainAccount.address,
-      );
+      const addressesOfAccounts = accountsOnChain.map(x => x.chainAccount.address);
 
       const existingAccounts = await getProfileForAddresses({
         variables: {
@@ -155,11 +147,11 @@ const ConnectToLedger = () => {
 
       if (existingAccounts.data && existingAccounts.data.profile.length === 0) {
         // Register the first account retrieved from ledger
-        setCreateLedgerAccount({account: chainAccounts[0]});
+        setCreateLedgerAccount({ account: chainAccounts[0] });
         console.log(chainAccounts[0]);
         navigate(ROUTES.NO_DTAG_FOUND);
       } else {
-        navigate(ROUTES.SELECT_DTAG, {
+        navigate(ROUTES.SELECT_ACCOUNT, {
           accountsWithWalletData: accountsOnChain,
         });
       }
@@ -192,11 +184,7 @@ const ConnectToLedger = () => {
     if (!paired) {
       return (
         <>
-          <ImageButton
-            onPress={goBack}
-            image={iconCrossBlack}
-            style={styles.crossIcon}
-          />
+          <ImageButton onPress={goBack} image={iconCrossBlack} style={styles.crossIcon} />
           <Spacer paddingBottom={theme.spacing.l} paddingTop={topSpacing}>
             <ThemedLottieView
               source={pairDevicesAnim}
@@ -208,12 +196,8 @@ const ConnectToLedger = () => {
           </Spacer>
 
           <View style={styles.centeredGroup}>
-            <Typography.H4 style={styles.headerText}>
-              {t('pairYourDevices')}
-            </Typography.H4>
-            <Typography.Body6>
-              {t('followInstructionOnLedger')}
-            </Typography.Body6>
+            <Typography.H4 style={styles.headerText}>{t('pairYourDevices')}</Typography.H4>
+            <Typography.Body6>{t('followInstructionOnLedger')}</Typography.Body6>
           </View>
         </>
       );
@@ -222,19 +206,12 @@ const ConnectToLedger = () => {
     if (connectionError && !connectionError.includes('Please close BOLOS')) {
       return (
         <>
-          <ImageButton
-            onPress={goBack}
-            image={iconCrossBlack}
-            style={styles.crossIcon}
-          />
+          <ImageButton onPress={goBack} image={iconCrossBlack} style={styles.crossIcon} />
           <Spacer paddingTop={topSpacing} paddingBottom={theme.spacing.l}>
             <Image source={ledgerConnectionError} style={styles.errorImage} />
           </Spacer>
-          <View
-            style={[styles.centeredGroup, {marginBottom: theme.spacing.xl}]}>
-            <Typography.H4 style={styles.headerText}>
-              {t('sorryConnectionFailed')}
-            </Typography.H4>
+          <View style={[styles.centeredGroup, { marginBottom: theme.spacing.xl }]}>
+            <Typography.H4 style={styles.headerText}>{t('sorryConnectionFailed')}</Typography.H4>
             <Typography.Body6>{connectionError}</Typography.Body6>
           </View>
 
@@ -253,11 +230,7 @@ const ConnectToLedger = () => {
     if (paired && !connected) {
       return (
         <>
-          <ImageButton
-            onPress={goBack}
-            image={iconCrossBlack}
-            style={styles.crossIcon}
-          />
+          <ImageButton onPress={goBack} image={iconCrossBlack} style={styles.crossIcon} />
           <Spacer paddingBottom={theme.spacing.l} paddingTop={topSpacing} />
           <View style={styles.centeredGroup}>
             <Spacer paddingBottom={54}>
@@ -269,15 +242,10 @@ const ConnectToLedger = () => {
                 loop
               />
             </Spacer>
-            <Typography.H4 style={{textAlign: 'center'}}>
-              {instruction}
-            </Typography.H4>
+            <Typography.H4 style={{ textAlign: 'center' }}>{instruction}</Typography.H4>
 
             {instructionsIndex % 2 !== 0 && (
-              <Button
-                mode="text"
-                style={styles.howToDLText}
-                onPress={handlePressHowToDL}>
+              <Button mode="text" style={styles.howToDLText} onPress={handlePressHowToDL}>
                 <Typography.Button1
                   style={{
                     textAlign: 'center',
