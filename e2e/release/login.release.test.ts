@@ -3,7 +3,7 @@ import {
   DETOX_DEV_ACCOUNT_NICKNAME,
   DETOX_DEV_BLANK_MNEMONIC,
   DETOX_DEV_MNEMONIC,
-} from '../__mocks__/detox.env';
+} from '../__mocks__/detox.env.sample';
 import launchAppConfig from '../config';
 
 describe('Login flow', () => {
