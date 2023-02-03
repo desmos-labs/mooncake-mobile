@@ -6,12 +6,13 @@ import LightTheme from "config/theme/LightTheme";
 import { RecoilRoot } from "recoil";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
+import { MeasureOptions, measurePerformance } from "@callstack/reassure-measure";
 
 /**
  * A custom render function for use in unit tests for components that
  * require a PaperProvider (or any other Provider) context
  */
-const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
+const AllTheProviders: FC<{ children: React.ReactElement }> = ({ children }) => {
   return (
       <RecoilRoot>
         <NavigationContainer>
@@ -25,10 +26,29 @@ const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
+const ReassureCompatWrapper = (node: React.ReactElement) => {
+  return (
+    <RecoilRoot>
+      <NavigationContainer>
+        <PaperProvider theme={LightTheme}>
+          <SafeAreaProvider style={{flex:1}}>
+            {node}
+          </SafeAreaProvider>
+        </PaperProvider>
+      </NavigationContainer>
+    </RecoilRoot>
+  );
+};
+
 const customRender = (
   ui: ReactElement,
   options?: Omit<Options, "wrapper">,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
+const customMeasurePerformance = (
+  ui: React.ReactElement, options?: Omit<MeasureOptions, "wrapper">
+) => measurePerformance(ui, {wrapper: ReassureCompatWrapper, ...options});
+
 export * from "@testing-library/react-native";
 export { customRender as render };
+export {customMeasurePerformance as measurePerformance};
