@@ -6,7 +6,7 @@ import {
   createProfileBanner,
   defaultProfilePic,
 } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
@@ -79,8 +79,6 @@ const CreateDesmosProfile: FC<NavProps> = () => {
     setLoading,
     profilePicture,
     coverPicture,
-    accountCreation,
-    createLedgerAccount,
   );
 
   const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
@@ -263,12 +261,16 @@ const CreateDesmosProfile: FC<NavProps> = () => {
               </ScrollView>
               <View style={{padding: theme.spacing.m}}>
                 <Button
+                  size={ButtonSize.M}
                   disabled={
                     isAddingProfile ? !values.dTag || !!errors.dTag : false
                   }
-                  color={theme.colors.surfaceBlack}
-                  mode="contained"
-                  onPress={fromSignUp ? navigation.goBack : handleSubmit}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  mode={ButtonMode.CONTAINED}
+                  onPress={
+                    fromSignUp ? navigation.goBack : () => handleSubmit()
+                  }
                   loading={loading}>
                   {t('common:confirm')}
                 </Button>

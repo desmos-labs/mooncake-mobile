@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
@@ -66,8 +66,10 @@ const BottomModal = () => {
 
             <Spacer paddingVertical={40}>
               <Button
-                color={theme.colors.surfaceBlack}
-                mode="contained"
+                backgroundColor={theme.colors.surfaceBlack}
+                textColor={theme.colors.white}
+                size={44}
+                mode={ButtonMode.CONTAINED}
                 onPress={onPressButton}>
                 {primaryButtonLabel}
               </Button>

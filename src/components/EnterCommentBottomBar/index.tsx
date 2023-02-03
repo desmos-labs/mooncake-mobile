@@ -1,13 +1,12 @@
 import {postAttachmentsState, postTextState} from '@recoil/sharedPostState';
 import {expandCommentIcon} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -114,19 +113,14 @@ const EnterCommentBottomBar: React.FC<Props> = ({
   const rightButtonComponent = useMemo(() => {
     return (
       <Button
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
+        size={32}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.butterOrange01}
         disabled={commentAttachment ? false : comment.length === 0}
-        contentStyle={
-          Platform.OS === 'android' && {
-            height: '100%',
-          }
-        }
-        style={styles.postButton}
-        loading={loading}
+        additionalStyle={styles.postButton}
         onPress={handlePostComment}>
-        <Typography.Button3 style={{color: theme.colors.white}}>
-          {t('post')}
-        </Typography.Button3>
+        {t('post')}
       </Button>
     );
   }, [comment, loading, commentAttachment]);

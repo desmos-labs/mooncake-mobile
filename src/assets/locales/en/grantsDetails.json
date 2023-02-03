@@ -21,6 +21,9 @@
   "send tip": "Send tips",
   "yes revoke": "Yes, Revoke",
   "yes grant": "Yes, Grant",
+  "cancel": "Cancel",
+  "grant permission": "Grant permission",
+  "revoke permission": "Revoke permission",
   "grant following": "Are you sure you want to grant {{permissions}} permissions?",
   "revoke following": "Are you sure you want to revoke {{permissions}} permissions?"
 }

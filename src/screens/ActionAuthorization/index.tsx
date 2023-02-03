@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
@@ -137,8 +137,10 @@ const ActionAuthorization = () => {
             {/* <Image source={authorizationImage} style={styles.imageStyle} /> */}
 
             <Button
-              mode="contained"
-              style={{backgroundColor: theme.colors.surfaceBlack}}
+              mode={ButtonMode.CONTAINED}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
               onPress={handleApprove}
               loading={loading}>
               {t('common:confirm')}
@@ -148,9 +150,8 @@ const ActionAuthorization = () => {
               paddingTop={theme.spacing.l}
               paddingBottom={theme.spacing.m}>
               <Button
-                mode="outlined"
-                style={{borderColor: theme.colors.surfaceBlack}}
-                labelStyle={{color: theme.colors.surfaceBlack}}
+                mode={ButtonMode.OUTLINED}
+                size={44}
                 disabled={loading}
                 onPress={handleCancel}>
                 {t('common:refuse')}
@@ -190,15 +191,18 @@ const ActionAuthorization = () => {
             />
           </Typography.Body5>
           <Button
-            style={styles.primaryButton}
-            mode="contained"
+            size={44}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            additionalStyle={styles.primaryButton}
+            mode={ButtonMode.CONTAINED}
             onPress={handleApprove}>
             {detailsModal?.buttonLabel}
           </Button>
           <Button
-            containerStyle={styles.secondaryButton}
-            color={theme.colors.surfaceBlack}
-            mode="text"
+            additionalStyle={styles.secondaryButton}
+            size={44}
+            mode={ButtonMode.TEXT}
             onPress={handleCancel}>
             {t('commmon:cancel')}
           </Button>

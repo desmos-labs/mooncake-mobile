@@ -1,5 +1,5 @@
 import {errorImage} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import Typography from 'components/Typography';
 import {makeStyle} from 'config/theme';
 import React from 'react';
@@ -30,8 +30,9 @@ const EmptyListComponent = ({
       </View>
       {additionalButton && (
         <Button
-          style={[styles.additionalButton, additionalButtonStyle]}
-          mode="contained"
+          size={ButtonSize.M}
+          additionalStyle={[styles.additionalButton, additionalButtonStyle]}
+          mode={ButtonMode.CONTAINED}
           onPress={handleButton}>
           <Typography.Button3 style={styles.buttonText}>
             {buttonLabel}

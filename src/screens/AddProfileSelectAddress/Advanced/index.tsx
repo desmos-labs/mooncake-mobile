@@ -4,7 +4,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useLoadProfiles} from '@recoil/profiles';
 import walletAndAccountToAddState from '@recoil/walletAndAccountToAddState';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
@@ -103,13 +103,13 @@ const AddProfileSelectAddressAdvanced = () => {
     return (
       <View style={styles.topBarButtonContainer}>
         <Button
-          mode="text"
+          mode={ButtonMode.TEXT}
+          size={26}
+          textColor={theme.colors.butterOrange01}
           onPress={async () => {
             navigate(ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL, {mnemonic});
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          {t('general')}
         </Button>
       </View>
     );
@@ -258,8 +258,10 @@ const AddProfileSelectAddressAdvanced = () => {
                 </Spacer>
 
                 <Button
-                  color={theme.colors.surfaceBlack}
-                  mode="contained"
+                  size={44}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  mode={ButtonMode.CONTAINED}
                   loading={loading || !generatedAccount}
                   disabled={invalidField || isProfileAlreadyAdded}
                   onPress={handleSubmit}>

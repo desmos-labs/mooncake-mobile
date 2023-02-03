@@ -71,7 +71,7 @@ const useHooks = () => {
     navigate(ROUTES.CONFIRM_MODAL, {
       title: t('proof'),
       subtitle: t('proof description'),
-      primaryButtonLabel: 'confirm',
+      primaryButtonLabel: t('common:confirm'),
       onPressPrimary: handleUnlockWallet,
       removeModalAfterButtonPress: true,
     });

@@ -1,5 +1,4 @@
-import Button from 'components/Button';
-import Typography from 'components/Typography';
+import Button, {ButtonMode} from 'components/Button';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -20,22 +19,20 @@ const NotificationButton = ({handleButtonPress, isFollowingAddress}: Props) => {
       {isFollowingAddress ? (
         <Button
           onPress={handleButtonPress}
-          mode="outlined"
-          color={theme.colors.surfaceBlack}
-          style={styles.followButton}>
-          <Typography.Button3 style={styles.alignCenter}>
-            {t('followingAndFollowers:unfollow')}
-          </Typography.Button3>
+          mode={ButtonMode.OUTLINED}
+          size={32}
+          additionalStyle={styles.followButton}>
+          {t('followingAndFollowers:unfollow')}
         </Button>
       ) : (
         <Button
           onPress={handleButtonPress}
-          mode="contained"
-          color={theme.colors.butterOrange01}
-          style={styles.followButton}>
-          <Typography.Button3 style={styles.followText}>
-            {t('followingAndFollowers:follow')}
-          </Typography.Button3>
+          mode={ButtonMode.CONTAINED}
+          size={32}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.butterOrange01}
+          additionalStyle={styles.followButton}>
+          {t('followingAndFollowers:follow')}
         </Button>
       )}
     </View>

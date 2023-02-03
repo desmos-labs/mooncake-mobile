@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -129,8 +129,10 @@ const ManageBiometrics = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
+                size={ButtonSize.M}
                 loading={loading}
-                color={
+                textColor={theme.colors.white}
+                backgroundColor={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                     ? theme.colors.lightGrey02
@@ -140,8 +142,8 @@ const ManageBiometrics = () => {
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                onPress={handleSubmit}
-                mode="contained">
+                onPress={() => handleSubmit()}
+                mode={ButtonMode.CONTAINED}>
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:next')}
                 </Typography.Button1>

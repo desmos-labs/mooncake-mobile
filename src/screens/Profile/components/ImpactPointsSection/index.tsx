@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import appSettingsState from '@recoil/settings';
 import {infoIcon} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -44,15 +44,11 @@ const ImpactPointsSection = ({
             </TouchableOpacity>
 
             <Button
-              mode="text"
+              size={ButtonSize.S}
+              mode={ButtonMode.TEXT}
+              textColor={theme.colors.butterOrange01}
               onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}>
-              <Typography.Body7
-                style={{
-                  textTransform: 'none',
-                  color: theme.colors.butterOrange01,
-                }}>
-                {t('how to earn points')}
-              </Typography.Body7>
+              {t('how to earn points')}
             </Button>
           </View>
           <Spacer paddingVertical={theme.spacing.s} />

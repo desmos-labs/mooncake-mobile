@@ -1,5 +1,5 @@
 import {emptyInvitesImage} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -45,8 +45,10 @@ const InvitesList = ({navigate}: Props) => {
 
         <Spacer paddingVertical={theme.spacing.l} />
         <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
+          mode={ButtonMode.CONTAINED}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={() => navigate(ROUTES.INVITES)}>
           {t('invite friends now')}
         </Button>
@@ -67,9 +69,11 @@ const InvitesList = ({navigate}: Props) => {
     ) : (
       <Button
         onPress={() => navigate(ROUTES.INVITES)}
-        mode="contained"
-        color={theme.colors.surfaceBlack}
-        style={{marginHorizontal: theme.spacing.m}}>
+        mode={ButtonMode.CONTAINED}
+        size={44}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}
+        additionalStyle={{marginHorizontal: theme.spacing.m}}>
         {t('invite more')}
       </Button>
     );

@@ -13,11 +13,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: '#000000',
     zIndex: 2,
   },
-  postButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 32,
-  },
   leftButtonGroup: {
     flexDirection: 'row',
   },

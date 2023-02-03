@@ -49,8 +49,9 @@ const CustomToast = ({type, toast}: Props): JSX.Element => {
 
         {type === ToastConfig.ERROR ? (
           <Button
-            style={styles.button}
-            mode="text"
+            size={32}
+            additionalStyle={styles.button}
+            mode={ButtonMode.TEXT}
             onPress={toast.onPressRetry}>
             <Typography.Subtitle3>Retry</Typography.Subtitle3>
           </Button>
