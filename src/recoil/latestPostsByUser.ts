@@ -8,7 +8,7 @@ const latestPostsState = atom<Record<string, PostItem[]>>({
   effects: [
     ({ onSet }) => {
       onSet(posts => {
-        setMMKV(MMKVKEYS.TIMELINE, posts);
+        setMMKV(MMKVKEYS.POSTS, posts);
       });
     },
   ],

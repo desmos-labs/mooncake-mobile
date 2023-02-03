@@ -1,17 +1,10 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
-import useGetPosts from 'hooks/useGetPosts';
-import usePendingPosts from 'hooks/usePendingPosts';
+import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { NavProps } from 'screens/Home';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { isPostPending, Post } from 'types/posts';
-
-const postFamilyMap = {
-  [ROUTES.HOME_DISCOVER]: POST_TYPE.DISCOVER,
-  [ROUTES.HOME_FOLLOWING]: POST_TYPE.FOLLOWING,
-};
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -109,34 +102,3 @@ export const useHandlePressTip = () => {
     [isPostPending, navigate],
   );
 };
-
-/**
- * Hooks for the Home screen.
- */
-const hooks = () => {
-  const { name: routeName } = useRoute<NavProps['route']>();
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  const { parsedPendingPosts } = usePendingPosts();
-  const { posts, fetchMorePosts, fetchNewestPosts, loading, refetching, fetchingMore } =
-    useGetPosts({
-      type: postFamilyMap[routeName],
-    });
-
-  // sort and combine pending posts with posts from API
-  const combinedPosts: Partial<PostItem>[] = React.useMemo(() => {
-    return [...parsedPendingPosts, ...posts];
-  }, [JSON.stringify(posts), JSON.stringify(parsedPendingPosts)]);
-
-  return {
-    posts: combinedPosts,
-    queryPostsData: posts,
-    checkIfPostIsPending,
-    loading,
-    refetching,
-    fetchingMore,
-    fetchNewestPosts,
-    fetchMorePosts,
-  };
-};
-
-export default hooks;

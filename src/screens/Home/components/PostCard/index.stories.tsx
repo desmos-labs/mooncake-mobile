@@ -4,51 +4,31 @@ import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
 import { Dimensions, View } from 'react-native';
+import { Post, PostStatus } from 'types/posts';
 import PostCard from './index';
 
 type CompType = React.ComponentProps<typeof PostCard>;
 
-const textPostData: PostItem = {
-  creation_date: '2022-06-30T17:06:47.475817',
-  author_address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
+const textPostData: Post = {
+  status: PostStatus.SYNCED,
+  externalId: '',
+  creationDate: '2022-06-30T17:06:47.475817',
   attachments: [],
   author: {
     address: 'desmos1ha4f852205lgsntq579x74ndfnqacy8z9uqqqa',
     bio: '',
     dtag: 'Donatello',
-    profile_pic: 'https://i.imgur.com/aih9snA.png',
+    profilePicture: 'https://i.imgur.com/aih9snA.png',
     nickname: 'Nickname',
   },
-  subspace_id: 5,
-  reactions: [],
+  subspaceId: 5,
   text: "I'm a ninja turtle that is a teenager.",
-  conversation: null,
+  conversationId: 0,
   id: 3,
-  reactionPresence: {
-    aggregate: {
-      count: 1,
-    },
-  },
-  commentPresence: {
-    aggregate: {
-      count: 1,
-    },
-  },
-  tipPresence: {
-    aggregate: {
-      count: 1,
-    },
-  },
-  repliesCount: {
-    aggregate: {
-      count: 4,
-    },
-  },
-  tips: [],
   transactions: [],
 };
 
-const imagePostData: PostItem = {
+const imagePostData: Post = {
   ...textPostData,
   text: '',
   attachments: [
@@ -58,11 +38,15 @@ const imagePostData: PostItem = {
         uri: 'https://i.imgur.com/aih9snA.png',
         mimeType: 'image/png',
       },
+      size: {
+        height: 100,
+        width: 100,
+      },
     },
   ],
 };
 
-const imageAndTextPostData: PostItem = {
+const imageAndTextPostData: Post = {
   ...textPostData,
   text: 'Shrek is my favorite anime.Shrek is my favorite anime.Shrek is my favorite anime.',
   attachments: [
@@ -72,13 +56,16 @@ const imageAndTextPostData: PostItem = {
         uri: 'https://i.imgur.com/aih9snA.png',
         mimeType: 'image/png',
       },
+      size: {
+        height: 100,
+        width: 100,
+      },
     },
   ],
 };
 
 const textPost: CompType = {
-  ...textPostData,
-
+  post: textPostData,
   onPressAuthor: action('onPressAuthor'),
   onPressFollow: action('onPressFollow'),
   onPressDetails: action('onPressDetails'),
@@ -90,12 +77,12 @@ const textPost: CompType = {
 
 const imagePost: CompType = {
   ...textPost,
-  ...imagePostData,
+  post: imagePostData,
 };
 
 const textAndImagePost: CompType = {
   ...textPost,
-  ...imageAndTextPostData,
+  post: imageAndTextPostData,
 };
 
 // These dimensions are not the same as the ones found on the

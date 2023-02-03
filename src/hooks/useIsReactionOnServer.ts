@@ -1,15 +1,15 @@
-import { PostID } from 'types/desmos';
 import { useQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
 import { useMemo } from 'react';
 import { useActiveAccountAddress } from '@recoil/wallets';
+import { Post } from 'types/posts';
 
 /**
  * Hook that allows to know if the reaction to a given post, from the current application user,
  * is stored remotely or not.
- * @param postId {PostID} - Id of the post for which to check the user's reaction presence.
+ * @param post {Post} - Post for which to check if the reaction is on the server.
  */
-const useIsReactionOnServer = (postId: PostID) => {
+const useIsReactionOnServer = (post: Post) => {
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error('Trying to know if a post reaction is stored remotely, without active user');
@@ -18,7 +18,8 @@ const useIsReactionOnServer = (postId: PostID) => {
   const { data, refetch } = useQuery(GetPostReactionForAddress, {
     fetchPolicy: 'cache-and-network',
     variables: {
-      postID: postId,
+      subspaceId: post.subspaceId,
+      postId: post.id,
       userAddress: activeAddress,
     },
   });

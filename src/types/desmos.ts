@@ -33,6 +33,21 @@ export interface SubspaceParams {
 }
 
 /**
+ * Search inside the given params to find the id of a registered reaction that represents a like.
+ * @param params {SubspaceParams} - Params inside which to search.
+ * @throws {Error} if no registered reaction represents a like.
+ */
+export const getLikeReactionId = (params: SubspaceParams): number => {
+  const reaction = params.registeredReactions.find(r => r.shortHandCode.includes('like'));
+  if (!reaction) {
+    throw new Error(
+      'Subspace does not contain any registered reaction with shorthand code that represents a like',
+    );
+  }
+  return reaction.id;
+};
+
+/**
  * On-chain parameters related to the posts' module.
  * These data should be considered when creating or editing a post.
  */
@@ -170,17 +185,54 @@ export interface FollowedUser {
    * Identifies the status of this relationship user.
    */
   readonly status: DataStatus;
+  /**
+   * Date in which the relationship was lastly edited.
+   * This is used in order to merge relationships from the server and stored locally,
+   * to avoid having the local storage going too much off-sync with the server.
+   */
+  readonly editedDate: Date;
 }
 
 export type PostID = number;
 
 export interface PostReaction {
   /**
-   * Id of the post related to this reaction.
+   * ID of the subspace of the post related to this reaction.
+   */
+  readonly subspaceId: number;
+  /**
+   * ID of the post related to this reaction.
    */
   readonly postId: PostID;
   /**
    * Identifies the status of this reaction.
    */
   readonly status: DataStatus;
+  /**
+   * Date in which the reaction was lastly edited.
+   * This is used in order to merge reactions from the server and stored locally,
+   * to avoid having the local storage going too much off-sync with the server.
+   */
+  readonly editedDate: Date;
+}
+
+export interface PostTip {
+  /**
+   * ID of the subspace of the post related to this tip.
+   */
+  readonly subspaceId: number;
+  /**
+   * ID of the post related to this tip.
+   */
+  readonly postId: PostID;
+  /**
+   * Identifies the status of this tip.
+   */
+  readonly status: DataStatus;
+  /**
+   * Date in which the tip was lastly edited.
+   * This is used in order to merge tips from the server and stored locally,
+   * to avoid having the local storage going too much off-sync with the server.
+   */
+  readonly editedDate: Date;
 }

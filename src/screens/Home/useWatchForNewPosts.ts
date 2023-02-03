@@ -141,16 +141,12 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   }, [hasNewDiscoverPosts, JSON.stringify(currentScreen), newDiscPostNotification, isFocused]);
 
   // I think this function is pretty lightweight and doesn't need to be useCallback'd
-  const resetNewPostNotificationState = () => {
+  return useCallback(() => {
     if (params?.type === 'discover') setHasNewDiscoverPosts(false);
     else if (params?.type === 'following') {
       setHasNewFollowingPosts(false);
     }
-  };
-
-  return {
-    resetNewPostNotificationState,
-  };
+  }, [params, setHasNewDiscoverPosts];
 };
 
 export default useWatchForNewPosts;

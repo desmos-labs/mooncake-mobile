@@ -11,7 +11,7 @@ const GetPostsFromFollowing = gql`
     $user: String
     $reaction: jsonb!
   ) @api(name: butter) {
-    post(
+    posts: post(
       offset: $offset
       limit: $limit
       order_by: { creation_date: desc }

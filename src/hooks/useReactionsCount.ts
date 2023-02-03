@@ -1,15 +1,15 @@
-import { PostID } from 'types/desmos';
 import { useQuery } from '@apollo/client';
 import GetPostReactionsCount from 'services/graphql/queries/GetPostReactionsCount';
 import { useHasPostReaction } from '@recoil/reactions';
 import { useActiveAccountAddress } from '@recoil/wallets';
 import useIsReactionOnServer from 'hooks/useIsReactionOnServer';
 import { useMemo } from 'react';
+import { Post } from 'types/posts';
 
 /**
  * Hook that allows to get the count of reactions of a given post.
  */
-const useReactionsCount = (postId: PostID) => {
+const useReactionsCount = (post: Post) => {
   const address = useActiveAccountAddress();
   if (!address) {
     throw new Error("Trying to get a post's reactions count, without an active address");
@@ -18,13 +18,13 @@ const useReactionsCount = (postId: PostID) => {
   // Check whether the reaction exists locally or not
   const hasPostReaction = useHasPostReaction();
   const hasReactedLocally = useMemo(
-    () => hasPostReaction(address, postId),
-    [hasPostReaction, address, postId],
+    () => hasPostReaction(address, post),
+    [hasPostReaction, address, post],
   );
 
   // Check whether the reaction exists on the server or not
   const { isReactionPresent: hasReactedOnServer, refetch: refetchHasReacted } =
-    useIsReactionOnServer(postId);
+    useIsReactionOnServer(post);
 
   // Get the reactions count from the server
   const {
@@ -33,7 +33,8 @@ const useReactionsCount = (postId: PostID) => {
     refetch: refetchCount,
   } = useQuery(GetPostReactionsCount, {
     variables: {
-      postID: postId,
+      subspaceId: post.subspaceId,
+      postId: post.id,
     },
   });
   const serverReactionsCount = useMemo(() => data?.reactions?.aggregate?.count ?? 0, [data]);

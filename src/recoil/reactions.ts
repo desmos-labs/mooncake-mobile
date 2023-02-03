@@ -1,7 +1,8 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DataStatus, PostID, PostReaction } from 'types/desmos';
+import { DataStatus, PostReaction } from 'types/desmos';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
+import { Post } from 'types/posts';
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
@@ -25,10 +26,13 @@ const reactionsState = atom<Record<string, PostReaction[]>>({
 export const useHasPostReaction = () => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (user: string, postId: PostID) => {
+    (user: string, post: Post) => {
       const userReactions = reactions[user] ?? [];
       const postReaction = userReactions.find(
-        r => r.postId === postId && r.status !== DataStatus.DELETED_LOCALLY,
+        r =>
+          r.subspaceId === post.subspaceId &&
+          r.postId === post.id &&
+          r.status !== DataStatus.DELETED_LOCALLY,
       );
       return postReaction !== undefined;
     },
@@ -42,15 +46,16 @@ export const useHasPostReaction = () => {
 export const useSetPostReactionStatus = () => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, postId: PostID, status: DataStatus) => {
+    (user: string, post: Post, status: DataStatus) => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions[user] ?? [];
         const updatedReactions = existingReactions.map(reaction =>
-          reaction.postId === postId
+          reaction.subspaceId === post.subspaceId && reaction.postId === post.id
             ? ({
-                postId: reaction.postId,
+                ...reaction,
                 status,
+                editedDate: new Date(Date.now()),
               } as PostReaction)
             : reaction,
         );
@@ -74,13 +79,15 @@ export const useSetPostReactionStatus = () => {
 export const useAddPostReaction = () => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, postId: PostID) => {
+    (user: string, post: Post) => {
       setReactions(currentReactions => {
         // Add the reaction to the existing ones
         const existingReactions = currentReactions[user] ?? [];
         existingReactions.push({
-          postId,
+          subspaceId: post.subspaceId,
+          postId: post.id,
           status: DataStatus.CREATED_LOCALLY,
+          editedDate: new Date(Date.now()),
         } as PostReaction);
 
         const newReactions: Record<string, PostReaction[]> = {
@@ -102,11 +109,13 @@ export const useAddPostReaction = () => {
 export const useRemovePostReaction = () => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, postId: PostID) => {
+    (user: string, post: Post) => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions[user] ?? [];
-        const filteredReactions = existingReactions.filter(reaction => reaction.postId !== postId);
+        const filteredReactions = existingReactions.filter(
+          reaction => reaction.subspaceId !== post.subspaceId || reaction.postId !== post.id,
+        );
 
         // Store the new values
         const newReactions: Record<string, PostReaction[]> = {

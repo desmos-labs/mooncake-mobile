@@ -1,9 +1,12 @@
 import { gql } from '@apollo/client';
 
 const GetPostReactionForAddress = gql`
-  query Reaction($postID: bigint!, $userAddress: String!) {
+  query Reaction($subspaceId: bigint!, $postId: bigint!, $userAddress: String!) @api(name: butter) {
     reactions: reaction(
-      where: { post: { id: { _eq: $postID } }, author_address: { _eq: $userAddress } }
+      where: {
+        post: { subspace_id: { _eq: $subspaceId }, id: { _eq: $postId } }
+        author_address: { _eq: $userAddress }
+      }
     ) {
       id
       value

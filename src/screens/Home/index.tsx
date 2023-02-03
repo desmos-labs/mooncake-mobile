@@ -1,6 +1,6 @@
 import { AndroidColor } from '@notifee/react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
@@ -23,16 +23,19 @@ import { useTheme } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
-import hooks, {
+import {
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressFollow,
   useHandlePressReaction,
   useHandlePressReport,
+  useHandlePressTip,
 } from 'screens/Home/hooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import { isPostPending, Post } from 'types/posts';
+import useGetPosts, { PostsQueryType } from 'hooks/useGetPosts';
 import useStyles from './useStyles';
 
 type FollowingNavProps = CompositeScreenProps<
@@ -53,56 +56,71 @@ type DiscoverNavProps = CompositeScreenProps<
 
 export type NavProps = DiscoverNavProps | FollowingNavProps;
 
-export type HomeParams = {
-  type: 'discover' | 'following';
-};
+export interface HomeParams {
+  readonly type: 'discover' | 'following';
+}
 
+/**
+ * Home screen of the application that displays the list of posts the user is
+ * currently viewing.
+ * @constructor
+ */
 const Home = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
+  const { name: routeName } = useRoute<NavProps['route']>();
 
   // Reference and state of the post list, to be able to scroll to the top of it
   const postListRef = useRef<any>(null);
   const postsListState = usePostsListState();
   const setPostsListState = useSetPostsListState();
 
-  // Actions
+  // State to know whether the list end was reached during the momentum
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
+
+  // --- Actions ---
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollow = useHandlePressFollow();
   const handlePressDetails = useHandlePressDetails();
   const handlePressReaction = useHandlePressReaction();
   const handlePressReport = useHandlePressReport();
   const handlePressComments = useHandlePressComments();
+  const handlePressTip = useHandlePressTip();
+
+  // --- Data queries ---
+  const postsQueryType = useMemo(() => {
+    return routeName === 'HOME_DISCOVER' ? PostsQueryType.DISCOVERY : PostsQueryType.TIMELINE;
+  }, [routeName]);
 
   const {
     posts,
-    fetchNewestPosts,
-    fetchMorePosts,
-    checkIfPostIsPending,
-    queryPostsData,
     loading,
-    refetching,
+    fetchMore: fetchMorePosts,
     fetchingMore,
-  } = hooks();
+    refresh: refreshPosts,
+    refreshing,
+  } = useGetPosts(postsQueryType);
 
-  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
+  // --- Notifications ---
 
   const handlePressNewPostNotification = useCallback(async () => {
-    await fetchNewestPosts();
+    await refreshPosts();
     if (postListRef && postListRef.current) {
       postListRef.current.scrollToIndex({
         animated: true,
         index: 0,
       });
     }
-  }, [postListRef, fetchNewestPosts]);
+  }, [postListRef, refreshPosts]);
 
-  const { resetNewPostNotificationState } = useWatchForNewPosts(handlePressNewPostNotification);
+  const resetNewPostNotificationState = useWatchForNewPosts(handlePressNewPostNotification);
+
+  // --- Child components ---
 
   const renderPost = React.useCallback(
-    ({ item }: ListRenderItemInfo<Partial<PostItem> | PostItem>) => {
+    ({ item }: ListRenderItemInfo<Post>) => {
       if (!item) {
         return (
           <View style={styles.loaderView}>
@@ -112,58 +130,48 @@ const Home = () => {
       }
       return (
         <PostCard
-          author={item.author!}
-          isPending={item.isPending}
-          attachments={item.attachments!}
-          text={item.text!}
-          id={item.id!}
-          reactionPresence={item.reactionPresence!}
-          commentPresence={item.commentPresence!}
-          tipPresence={item.tipPresence!}
-          reactions={item.reactions!}
-          repliesCount={item.repliesCount!}
-          creation_date={item.creation_date!}
-          onPressAuthor={() => handleNavigateToProfile(item.author_address!)}
+          post={item}
+          onPressAuthor={() => handleNavigateToProfile(item.author.address)}
           onPressDetails={() => {
-            if (checkIfPostIsPending(item.id!)) {
+            if (isPostPending(item)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressDetails(item.id!, item.subspace_id!);
+            handlePressDetails(item);
           }}
           onPressLike={() => {
-            if (checkIfPostIsPending(item.id!)) {
+            if (isPostPending(item)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handleAddReaction(item.id!);
+            handlePressReaction(item);
           }}
           onPressComment={() => {
-            if (checkIfPostIsPending(item.id!)) {
+            if (isPostPending(item)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressComments(item.id!);
+            handlePressComments(item);
           }}
           onPressTip={() => {
-            if (checkIfPostIsPending(item.id!) || !item.author) {
+            if (isPostPending(item)) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressTip(item.author!.address, item.id!);
+            handlePressTip(item);
           }}
-          onPressFollow={() => handlePressFollow(item.author_address!)}
+          onPressFollow={() => handlePressFollow(item.author.address)}
           onPressReport={() => {
-            if (checkIfPostIsPending(item.id!) || !item.author) {
+            if (isPostPending(item) || !item.author) {
               return toast.show(t('toast:postTxInProgress'), {
                 type: ToastConfig.ERROR_NO_RETRY,
               });
             }
-            handlePressReport(item.id!, item.subspace_id!);
+            handlePressReport(item);
           }}
         />
       );
@@ -174,9 +182,8 @@ const Home = () => {
       handleNavigateToProfile,
       handlePressDetails,
       handlePressComments,
-      handleAddReaction,
+      handlePressReaction,
       handlePressTip,
-      fetchingMore,
     ],
   );
 
@@ -194,9 +201,9 @@ const Home = () => {
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
-    await fetchNewestPosts();
+    await refreshPosts();
     resetNewPostNotificationState();
-  }, [fetchNewestPosts, resetNewPostNotificationState]);
+  }, [refreshPosts, resetNewPostNotificationState]);
 
   // Little trick to scroll to top from a parent component, the HomeTabBar in this case
   useEffect(() => {
@@ -223,8 +230,12 @@ const Home = () => {
     );
   }, [postsListState]);
 
+  // --- Component rendering ---
+
   // Return the loading view if the posts are still loading
-  if (!queryPostsData || !posts || loading) {
+  // TODO: If the view is NOT loading, and there are no posts, we should return an empty view
+  // This might be the case if the user is offline and has no cached posts
+  if (!posts && loading) {
     return (
       <View style={styles.loadingView}>
         <ActivityIndicator color={theme.colors.surfaceBlack} />
@@ -245,7 +256,7 @@ const Home = () => {
               colors={[AndroidColor.BLACK]}
               enabled
               onRefresh={onRefresh}
-              refreshing={refetching}
+              refreshing={refreshing}
               progressViewOffset={Platform.OS === 'android' ? 30 : 0}
             />
           }

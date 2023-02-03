@@ -1,4 +1,3 @@
-import { isFollowingAddr } from '@recoil/following';
 import { loadingOrange } from 'assets/animations';
 import {
   defaultProfilePic,
@@ -19,7 +18,6 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import useActiveAccount from 'hooks/useActiveAccount';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import React, { memo, useMemo, useState } from 'react';
@@ -27,26 +25,23 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
-import { useRecoilValue } from 'recoil';
+import { isPostPending, Post } from 'types/posts';
+import useIsFollowing from 'hooks/useIsFollowing';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import useHasCommented from 'hooks/useHasCommented';
+import useHasReacted from 'hooks/useHasReacted';
+import useReactionsCount from 'hooks/useReactionsCount';
+import useHasTipped from 'hooks/useHasTipped';
+import useCommentsCount from 'hooks/useCommentsCount';
 import useStyles from './useStyles';
 
-interface Props
-  extends Pick<
-    PostItem,
-    | 'author'
-    | 'isPending'
-    | 'attachments'
-    | 'text'
-    | 'id'
-    | 'commentPresence'
-    | 'reactionPresence'
-    | 'tipPresence'
-    | 'reactions'
-    | 'repliesCount'
-    | 'creation_date'
-  > {
+interface PostCardProps {
   /**
-   * What to do when the author's avatar, name, or dtag is pressed.
+   * Post that is related to this card.
+   */
+  post: Post;
+  /**
+   * What to do when the author's avatar, name, or DTag is pressed.
    */
   onPressAuthor: () => void;
   /**
@@ -75,60 +70,64 @@ interface Props
   onPressTip: () => void;
 }
 
-// The post dimensions are controlled by the Carousel
-const PostCard = ({
-  onPressAuthor,
-  onPressFollow,
-  onPressReport,
-  onPressLike,
-  onPressComment,
-  onPressTip,
-  onPressDetails,
-  author,
-  isPending,
-  attachments,
-  text,
-  creation_date,
-  reactionPresence,
-  commentPresence,
-  tipPresence,
-  reactions,
-  repliesCount,
-}: Props) => {
+/**
+ * Card that allows properly displaying a single post inside a view.
+ *
+ * <b>Note</b>
+ * The dimensions of this card should be managed by the parent using it.
+ * @constructor
+ */
+const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('home');
-  const { activeAddress, profileData } = useActiveAccount();
-  const formattedDate = useFormatTimeForPostDetails(creation_date);
+
+  // Unwrap the props
+  const {
+    post,
+    onPressAuthor,
+    onPressFollow,
+    onPressReport,
+    onPressLike,
+    onPressComment,
+    onPressTip,
+    onPressDetails,
+  } = props;
+
+  // --- Menu visibility --- //
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<{
     x: number;
     y: number;
   }>();
 
-  // Use the current active user's profile data if the post is pending
-  const authorData = React.useMemo(() => {
-    if (isPending) {
-      return profileData || ({} as any);
-    } else return author;
-  }, [author, isPending, profileData]);
+  // --- Utility hooks --- //
+  const activeAddress = useActiveAccountAddress();
+  const isFollowing = useIsFollowing(post.author.address);
+  const hasReacted = useHasReacted(post);
+  const { count: reactionsCount } = useReactionsCount(post);
+  const hasCommented = useHasCommented(post);
+  const { count: commentsCount } = useCommentsCount(post);
+  const hasTipped = useHasTipped(post);
 
-  const isFollowing = useRecoilValue(isFollowingAddr(authorData?.address));
+  // --- Formatted data --- //
+  const isCurrentUserAuthor = useMemo(
+    () => post.author.address === activeAddress,
+    [post, activeAddress],
+  );
 
-  const { MediaAttachment } = useRenderMediaAttachment({
-    attachments,
-    useAutoSize: true,
-    horizontalPaddingWithAutoSize: 32,
-    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.background },
-    resizeMode: 'contain',
-  });
+  const authorProfilePic = useMemo(() => {
+    return post.author.profilePicture ? { uri: post.author.profilePicture } : defaultProfilePic;
+  }, [post]);
 
+  const isPending = useMemo(() => isPostPending(post), [post]);
+
+  const formattedDate = useFormatTimeForPostDetails(post.creationDate);
   const calculatedCreationDate = useMemo(() => {
-    const parsedTime = parseISO(`${creation_date}Z`);
+    const parsedTime = parseISO(`${post.creationDate}Z`);
     const now = new Date();
 
     const differenceInUnix = now.getTime() - parsedTime.getTime();
-
     if (differenceInUnix < 59999) {
       return t('seconds ago', {
         count: formatMsToHumanReadable(differenceInUnix, 'seconds'),
@@ -148,12 +147,21 @@ const PostCard = ({
     } else {
       return formattedDate;
     }
-  }, [creation_date, formattedDate]);
+  }, [post, t]);
+
+  // --- Child components --- //
+
+  const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
+    useAutoSize: true,
+    horizontalPaddingWithAutoSize: 32,
+    imageStyle: { borderRadius: 10, backgroundColor: theme.colors.background },
+    resizeMode: 'contain',
+  });
 
   const PendingIndicator = useMemo(() => {
     if (isPending) {
       return <ThemedLottieView source={loadingOrange} autoPlay style={styles.pendingIcon} />;
-    } else if (activeAddress !== authorData?.address) {
+    } else if (!isCurrentUserAuthor) {
       return (
         <ImageButton
           onPress={event => {
@@ -173,23 +181,18 @@ const PostCard = ({
         />
       );
     }
-  }, [isPending, activeAddress, authorData?.address]);
+  }, [isPending, isCurrentUserAuthor]);
 
   const ProfileInfo = React.useMemo(() => {
     return (
       <View style={styles.profileInfoView}>
         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
-          <FastImage
-            source={
-              (authorData?.profile_pic && { uri: authorData?.profile_pic }) || defaultProfilePic
-            }
-            style={styles.profilePic}
-          />
+          <FastImage source={authorProfilePic} style={styles.profilePic} />
           <View style={{ flexDirection: 'column' }}>
-            <Typography.Subtitle2>{authorData?.nickname}</Typography.Subtitle2>
+            <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
             <View style={{ flexDirection: 'row' }}>
               <Typography.Body6 style={{ color: theme.colors.midGrey }}>
-                @{authorData?.dtag}
+                @{post.author.dtag}
               </Typography.Body6>
               <Typography.Body6
                 style={{
@@ -204,15 +207,7 @@ const PostCard = ({
         {PendingIndicator}
       </View>
     );
-  }, [
-    onPressAuthor,
-    authorData?.profile_pic,
-    authorData?.nickname,
-    authorData?.dtag,
-    isPending,
-    calculatedCreationDate,
-    PendingIndicator,
-  ]);
+  }, [onPressAuthor, post, isPending, calculatedCreationDate, PendingIndicator]);
 
   const BottomBar = React.useMemo(() => {
     return (
@@ -220,42 +215,30 @@ const PostCard = ({
         <View style={styles.bottomBarInnerView}>
           <ImageButton
             onPress={onPressLike}
-            tintColor={
-              reactionPresence?.aggregate?.count >= 1
-                ? theme.colors.butterOrange01
-                : theme.colors.grey02
-            }
-            image={reactionPresence?.aggregate?.count >= 1 ? postLikedIcon : postToLikeIcon}
+            tintColor={hasReacted ? theme.colors.butterOrange01 : theme.colors.grey02}
+            image={hasReacted ? postLikedIcon : postToLikeIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
             style={
-              reactionPresence?.aggregate?.count >= 1
-                ? { color: theme.colors.butterOrange01 }
-                : { color: theme.colors.grey02 }
+              hasReacted ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }
             }>
-            {reactions?.length}
+            {reactionsCount}
           </Typography.Subtitle3>
           <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
             <FastImage
               resizeMode="cover"
-              tintColor={
-                commentPresence?.aggregate?.count >= 1
-                  ? theme.colors.butterOrange01
-                  : theme.colors.grey02
-              }
-              source={
-                commentPresence?.aggregate?.count >= 1 ? postCommentedIcon : postToCommentIcon
-              }
+              tintColor={hasCommented ? theme.colors.butterOrange01 : theme.colors.grey02}
+              source={hasCommented ? postCommentedIcon : postToCommentIcon}
               style={styles.bottomBarIcon}
             />
             <Typography.Subtitle3
               style={
-                commentPresence?.aggregate?.count >= 1
+                hasCommented
                   ? { color: theme.colors.butterOrange01 }
                   : { color: theme.colors.grey02 }
               }>
-              {repliesCount?.aggregate?.count}
+              {commentsCount}
             </Typography.Subtitle3>
           </TouchableOpacity>
         </View>
@@ -269,14 +252,12 @@ const PostCard = ({
           }}>
           <FastImage
             resizeMode="cover"
-            source={tipPresence?.aggregate?.count >= 1 ? postTippedIcon : postToTipIcon}
+            source={hasTipped ? postTippedIcon : postToTipIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
             style={
-              tipPresence?.aggregate?.count >= 1
-                ? { color: theme.colors.butterOrange01 }
-                : { color: theme.colors.grey02 }
+              hasTipped ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }
             }>
             {t('tip')}
           </Typography.Subtitle3>
@@ -285,19 +266,21 @@ const PostCard = ({
     );
   }, [
     onPressLike,
-    reactionPresence?.aggregate?.count,
-    reactions?.length,
+    hasReacted,
+    reactionsCount,
     onPressComment,
-    commentPresence?.aggregate?.count,
-    repliesCount?.aggregate?.count,
+    hasCommented,
+    commentsCount,
     onPressTip,
-    tipPresence?.aggregate?.count,
+    hasTipped,
   ]);
 
   return (
     <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={onPressDetails}>
       {ProfileInfo}
-      {text && <Typography.Body6 style={{ marginTop: theme.spacing.m }}>{text}</Typography.Body6>}
+      {post.text && (
+        <Typography.Body6 style={{ marginTop: theme.spacing.m }}>{post.text}</Typography.Body6>
+      )}
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
       {!isPending && BottomBar}
       <PopupMenu

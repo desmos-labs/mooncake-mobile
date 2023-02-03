@@ -18,7 +18,7 @@ export enum MMKVKEYS {
   AUTHORIZATIONS = 'AUTHORIZATIONS',
 
   // Posts data
-  TIMELINE = 'TIMELINE',
+  POSTS = 'POSTS',
   POST_REACTIONS = 'POST_REACTIONS',
 
   // Transactions data

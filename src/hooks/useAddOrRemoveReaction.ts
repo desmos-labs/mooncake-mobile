@@ -6,7 +6,7 @@ import {
   useRemovePostReaction,
   useSetPostReactionStatus,
 } from '@recoil/reactions';
-import { DataStatus, PostID } from 'types/desmos';
+import { DataStatus, getLikeReactionId } from 'types/desmos';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import {
   MsgAddReactionEncodeObject,
@@ -17,15 +17,16 @@ import {
 import Long from 'long';
 import { useLazyQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
-import { convertRegisteredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
-import useAppConfig from 'hooks/useAppConfig';
 import { Post } from 'types/posts';
+import { useAppStateValue } from '@recoil/appState';
+import { registeredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
 
 /**
  * Hook that allows to add a reaction both remotely and locally.
  */
 const useAddReaction = () => {
-  const config = useAppConfig();
+  const subspaceId = useAppStateValue('subspaceId');
+  const subspaceParams = useAppStateValue('subspaceParams');
   const broadcastTx = useBroadcastTx();
 
   const addPostReaction = useAddPostReaction();
@@ -37,14 +38,14 @@ const useAddReaction = () => {
   });
 
   return React.useCallback(
-    async (postId: PostID, address: string) => {
+    async (post: Post, address: string) => {
       // Add the reaction locally
-      addPostReaction(address, postId);
+      addPostReaction(address, post);
 
       // Check if the reaction exists on the server
       const { data } = await getReaction({
         variables: {
-          postId,
+          postId: post.id,
           userAddress: address,
         },
       });
@@ -55,10 +56,10 @@ const useAddReaction = () => {
         const messageAddReaction: MsgAddReactionEncodeObject = {
           typeUrl: MsgAddReactionTypeUrl,
           value: {
-            subspaceId: config.subspaceId,
-            postId: Long.fromNumber(postId),
-            value: convertRegisteredReactionValueToAny({
-              registeredReactionId: config.registeredReactionId,
+            subspaceId: Long.fromNumber(subspaceId),
+            postId: Long.fromNumber(post.id),
+            value: registeredReactionValueToAny({
+              registeredReactionId: getLikeReactionId(subspaceParams),
             }),
             user: address,
           },
@@ -66,12 +67,12 @@ const useAddReaction = () => {
 
         // If the transaction is successful, set the reaction as synced with the chain
         const onSuccess = () => {
-          setPostReactionStatus(address, postId, DataStatus.SYNCED);
+          setPostReactionStatus(address, post, DataStatus.SYNCED);
         };
 
         // If the transaction is canceled or errors, revert the addition of the reaction.
         const onCancelOrError = () => {
-          removePostReaction(address, postId);
+          removePostReaction(address, post);
         };
 
         // Broadcast the transaction
@@ -83,7 +84,7 @@ const useAddReaction = () => {
         });
       }
     },
-    [config, getReaction, broadcastTx, addPostReaction],
+    [subspaceId, subspaceParams, getReaction, broadcastTx, addPostReaction],
   );
 };
 
@@ -91,7 +92,7 @@ const useAddReaction = () => {
  * Hook that allows to remove a reaction both remotely (if present) and locally.
  */
 const useRemoveReaction = () => {
-  const config = useAppConfig();
+  const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
   const setPostReactionStatus = useSetPostReactionStatus();
@@ -102,14 +103,14 @@ const useRemoveReaction = () => {
   });
 
   return React.useCallback(
-    async (postId: PostID, address: string) => {
+    async (post: Post, address: string) => {
       // Remove the reaction locally
-      setPostReactionStatus(address, postId, DataStatus.DELETED_LOCALLY);
+      setPostReactionStatus(address, post, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server
       const { data } = await getReaction({
         variables: {
-          postId,
+          postId: post.id,
           userAddress: address,
         },
       });
@@ -122,8 +123,8 @@ const useRemoveReaction = () => {
         const messageRemoveReaction: MsgRemoveReactionEncodeObject = {
           typeUrl: MsgRemoveReactionTypeUrl,
           value: {
-            subspaceId: config.subspaceId,
-            postId: Long.fromNumber(postId),
+            subspaceId: Long.fromNumber(subspaceId),
+            postId: Long.fromNumber(post.id),
             reactionId,
             user: address,
           },
@@ -131,12 +132,12 @@ const useRemoveReaction = () => {
 
         // If the transaction is successful, remove the reaction from the local storage as well
         const onSuccess = () => {
-          removePostReaction(address, postId);
+          removePostReaction(address, post);
         };
 
         // If the transaction is canceled or errors, revert the removal of the reaction.
         const onCancelOrError = () => {
-          setPostReactionStatus(address, postId, DataStatus.SYNCED);
+          setPostReactionStatus(address, post, DataStatus.SYNCED);
         };
 
         // Broadcast the transaction
@@ -148,7 +149,7 @@ const useRemoveReaction = () => {
         });
       }
     },
-    [config, getReaction, broadcastTx, removePostReaction],
+    [subspaceId, getReaction, broadcastTx, removePostReaction],
   );
 };
 
@@ -167,11 +168,11 @@ const useAddOrRemoveReaction = () => {
 
   return React.useCallback(
     async (post: Post) => {
-      const doesReactionExist = hasPostReaction(activeAddress, postId);
+      const doesReactionExist = hasPostReaction(activeAddress, post);
       if (doesReactionExist) {
-        await removeReaction(postId, activeAddress);
+        await removeReaction(post, activeAddress);
       } else {
-        await addReaction(postId, activeAddress);
+        await addReaction(post, activeAddress);
       }
     },
     [hasPostReaction, addReaction, removeReaction],
