@@ -230,7 +230,7 @@ const Home = () => {
 
   return (
     <>
-      <View style={styles.homeView}>
+      <View style={styles.homeView} testID="homeView">
         <FlashList
           keyExtractor={(item, index) => `${index}item+${item.id}`}
           ref={postListRef}
