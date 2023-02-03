@@ -8,7 +8,7 @@ import {
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import _ from 'lodash';
 import ROUTES from 'navigation/routes';
 import React from 'react';

@@ -14,9 +14,9 @@ import {
   MsgDeleteRelationshipEncodeObject,
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
-import useAppConfig from 'hooks/useAppConfig';
 import { useActiveAccountAddress } from '@recoil/wallets';
 import { DataStatus } from 'types/desmos';
+import useAppConfig from 'hooks/redesign/useAppConfig';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.

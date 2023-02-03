@@ -1,4 +1,4 @@
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,

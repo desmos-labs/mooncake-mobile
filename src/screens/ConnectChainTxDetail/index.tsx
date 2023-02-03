@@ -16,7 +16,7 @@ import { connectChainState } from '@recoil/connectChainState';
 import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import { MsgLinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import LocalWallet from 'lib/LocalWallet';
-import { computeTxFees, messagesGas } from 'lib/desmos/fees';
+import { computeTxFees, messagesGas } from 'lib/DesmosUtils/fees';
 import { formatFeeWithDenoms } from 'lib/FormatUtils';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import useActiveAccount from 'hooks/useActiveAccount';

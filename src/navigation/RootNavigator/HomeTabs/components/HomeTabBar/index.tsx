@@ -1,7 +1,6 @@
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import postsListOptions from '@recoil/postsListRef';
 import { butterflyLandingIcon, homeInviteIcon } from 'assets/images';
 import HomeSearchBar from 'components/HomeSearchBar';
 import ImageButton from 'components/ImageButton';
@@ -19,18 +18,27 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useRecoilState } from 'recoil';
 import PostTypeTab from 'screens/Home/components/PostTypeTab';
+import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.HOME_TABS>;
 
+/**
+ * Tab bar that is present inside the home page of the application.
+ * @constructor
+ */
 const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => {
   const styles = useStyles();
   const { t } = useTranslation('home');
   const { navigate } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
-  const [listOptions, setListOptions] = useRecoilState(postsListOptions);
+
+  // List state
+  const listState = usePostsListState();
+  const setListState = useSetPostsListState();
+
+  // Search bar details
   const searchBarWidth = useSharedValue(Dimensions.get('window').width - 64 - 48);
   const xOffset = useSharedValue(0);
   const [focused, setFocused] = useState(false);
@@ -42,15 +50,15 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
   });
 
   useEffect(() => {
-    if (!listOptions.searchBarFocused) {
+    if (!listState.searchBarFocused) {
       setFocused(false);
     }
-  }, [listOptions.searchBarFocused]);
+  }, [listState.searchBarFocused]);
 
   return (
     <Animated.View style={styles.container}>
       <Animated.View style={styles.animatedView}>
-        {!listOptions.searchBarFocused && (
+        {!listState.searchBarFocused && (
           <Animated.View
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(300)}
@@ -59,7 +67,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
               tintColor={theme.colors.butterOrange01}
               style={styles.butterflyImage}
               image={butterflyLandingIcon}
-              onPress={() => setListOptions({ ...listOptions, scrollToTop: true })}
+              onPress={() => setListState(value => ({ ...value, scrollToTop: true }))}
             />
           </Animated.View>
         )}
@@ -72,17 +80,17 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
               searchBarWidth.value = withTiming(Dimensions.get('window').width - 64 - 24);
               xOffset.value = withTiming(-32);
               setFocused(true);
-              setListOptions({ ...listOptions, searchBarFocused: true });
+              setListState(value => ({ ...value, searchBarFocused: true }));
             }}
             onBlur={() => {
               searchBarWidth.value = withTiming(Dimensions.get('window').width - 64 - 48);
               xOffset.value = withTiming(0);
-              setListOptions({ ...listOptions, searchBarFocused: false });
+              setListState(value => ({ ...value, searchBarFocused: false }));
             }}
           />
         </Animated.View>
 
-        {!listOptions.searchBarFocused ? (
+        {!listState.searchBarFocused ? (
           <Animated.View
             exiting={FadeOut.duration(300)}
             style={{ position: 'absolute', left: 'auto', right: 0 }}>
@@ -103,7 +111,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             exiting={FadeOut.duration(300)}>
             <TouchableOpacity
               onPress={() => {
-                setListOptions({ ...listOptions, searchBarFocused: false });
+                setListState(value => ({ ...value, searchBarFocused: false }));
                 setFocused(false);
               }}>
               <Typography.Body6>Cancel</Typography.Body6>
@@ -111,7 +119,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           </Animated.View>
         )}
       </Animated.View>
-      {!listOptions.searchBarFocused && (
+      {!listState.searchBarFocused && (
         <Animated.View style={styles.tabContainer} exiting={FadeOut.duration(300)}>
           <PostTypeTab state={state} position={position} navigation={navigation} />
         </Animated.View>

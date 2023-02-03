@@ -7,15 +7,12 @@ import useStyles from './useStyles';
 
 type Props = {
   state: TabNavigationState<ParamListBase>;
-
-  position: Animated.AnimatedInterpolation;
-
+  position: Animated.AnimatedInterpolation<any>;
   navigation: any;
 };
 
 const PostTypeTab = ({ state, position, navigation }: Props) => {
   const styles = useStyles();
-
   const { t } = useTranslation('home');
 
   return (

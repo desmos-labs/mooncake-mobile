@@ -1,11 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { differenceInMilliseconds } from 'date-fns';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { MMKVKEYS, useMMKVStorage } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
-import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 
 /**
  * @typedef CheckAndUpdateGrantsArgs
@@ -26,7 +25,8 @@ export interface CheckAndUpdateGrantsArgs {
 
 /**
  * A Hook that checks and updates missing/expired grants. It will redirect
- * the user to the authorization popup and carry out the necessary steps (unlocking wallet, broadcast tx, etc)
+ * the user to the authorization popup and carry out the necessary steps
+ * (unlocking wallet, broadcast tx, etc)
  */
 const useCheckAndUpdateGrants = () => {
   const { navigate, pop } = useNavigation<any>();

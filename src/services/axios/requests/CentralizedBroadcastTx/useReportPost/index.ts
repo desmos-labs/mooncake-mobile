@@ -1,5 +1,5 @@
 import React from 'react';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import { useToast } from 'react-native-toast-notifications';

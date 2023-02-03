@@ -5,6 +5,7 @@ export {};
 
 // min_length and max_length are returned as strings, but we can use
 // the power of javascript to automatically cast them into numbers
+// TODO: This should be deleted in favor of in-app specific types and converters
 declare global {
   interface ProfileSummary {
     dtag: string;

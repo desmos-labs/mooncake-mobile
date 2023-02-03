@@ -1,13 +1,13 @@
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import useActiveAccount from 'hooks/useActiveAccount';
 import ROUTES from 'navigation/routes';
-import { useCallback } from 'react';
+import { useActiveAccountAddress } from '@recoil/wallets';
 
 const useNavigateToProfile = () => {
-  const { activeAddress } = useActiveAccount();
+  const activeAddress = useActiveAccountAddress();
   const navigation = useNavigation<any>();
 
-  const handleNavigateToProfile = useCallback(
+  return React.useCallback(
     (address: string, onBeforeNavigation?: () => void) => {
       onBeforeNavigation && onBeforeNavigation();
       if (activeAddress === address) {
@@ -20,10 +20,6 @@ const useNavigateToProfile = () => {
     },
     [activeAddress],
   );
-
-  return {
-    handleNavigateToProfile,
-  };
 };
 
 export default useNavigateToProfile;

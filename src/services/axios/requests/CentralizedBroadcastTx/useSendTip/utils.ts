@@ -1,6 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
 import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { toUtf8 } from '@cosmjs/encoding';
 

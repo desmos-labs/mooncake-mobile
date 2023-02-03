@@ -33,7 +33,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   const { newDiscPostNotification, newFollowPostNotification } = useRecoilValue(appSettingsState);
   const currentScreen: any =
     // @ts-ignore
-    getState().history[_.get(getState(), 'history').length - 1 || 0].key;
+    getState().history[getState().history.length - 1 || 0].key;
 
   const isFocused = useIsFocused();
 

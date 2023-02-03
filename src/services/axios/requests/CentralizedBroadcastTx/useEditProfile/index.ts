@@ -1,6 +1,6 @@
 import { MsgSaveProfileEncodeObject } from '@desmoslabs/desmjs';
 import { MsgSaveProfile } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_profile';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { useCallback } from 'react';
 import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 

@@ -1,6 +1,6 @@
 import appSettingsState from '@recoil/settings';
 import ToastConfig from 'config/ToastConfig';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import React, { useCallback } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import { useRecoilState } from 'recoil';

@@ -7,7 +7,7 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';

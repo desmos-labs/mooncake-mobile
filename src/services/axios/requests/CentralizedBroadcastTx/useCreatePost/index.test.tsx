@@ -3,7 +3,7 @@ import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCre
 import { RecoilRoot } from 'recoil';
 import { postAttachmentsState, postTextState } from '@recoil/screens/createPostState';
 import React from 'react';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { MsgCreatePost } from '@desmoslabs/desmjs-types/desmos/posts/v2/msgs';
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';

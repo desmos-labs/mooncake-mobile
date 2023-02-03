@@ -1,4 +1,4 @@
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants/index';
 import { useMMKVStorage } from 'lib/MMKVStorage';

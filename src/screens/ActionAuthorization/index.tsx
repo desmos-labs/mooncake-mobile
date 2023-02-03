@@ -5,7 +5,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import useAddOrUpdateGrants from 'hooks/authGrants/useAddOrUpdateGrants';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useMemo } from 'react';

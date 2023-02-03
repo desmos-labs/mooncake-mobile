@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-native';
 import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/useReportPost/index';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
 import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { MsgCreateReport } from '@desmoslabs/desmjs-types/desmos/reports/v1/msgs';
 import EnvConfig from 'config/EnvConfig';
 import { convertPostTargetToAny } from '@desmoslabs/desmjs/build/aminomessages/reports';

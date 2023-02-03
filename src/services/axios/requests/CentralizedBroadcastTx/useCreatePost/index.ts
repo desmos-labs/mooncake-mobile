@@ -17,7 +17,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { useRecoilCallback, useResetRecoilState } from 'recoil';
 import createPostState from '@recoil/screens/createPostState';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import { uploadImageForPost } from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost/utils';
 import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 import usePendingPosts from 'hooks/usePendingPosts';

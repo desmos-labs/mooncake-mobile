@@ -14,11 +14,9 @@ import Landing from 'screens/Landing';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
 import SignupResult from 'screens/SignupResult';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
-import BottomTabs, {
-  BottomTabsParamList,
-} from 'navigation/RootNavigator/BottomTabs';
-import {NavigatorScreenParams} from '@react-navigation/native';
-import Onboarding, {OnboardingParams} from 'screens/Onboarding';
+import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
+import { NavigatorScreenParams } from '@react-navigation/native';
+import Onboarding, { OnboardingParams } from 'screens/Onboarding';
 import SelectAccount, { SelectAccountParamList } from 'screens/SelectAccount';
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';

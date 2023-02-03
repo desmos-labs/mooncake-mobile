@@ -1,18 +1,29 @@
-import { atom } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
-export type ListOptions = {
+export type PostsListState = {
   scrollToTop: boolean;
   searchBarFocused: boolean;
 };
 
-export const DefaultListOptions = {
+const DefaultListOptions: PostsListState = {
   scrollToTop: false,
   searchBarFocused: false,
 };
 
-const postsListState = atom<ListOptions>({
-  key: 'posts',
+/**
+ * Atom that holds the current state of the posts list.
+ */
+const postsListState = atom<PostsListState>({
+  key: 'postsListState',
   default: DefaultListOptions,
 });
 
-export default postsListState;
+/**
+ * Hook that allows to edit the current posts list state.
+ */
+export const useSetPostsListState = () => useSetRecoilState(postsListState);
+
+/**
+ * Hook that allows to get the current posts list state.
+ */
+export const usePostsListState = () => useRecoilValue(postsListState);

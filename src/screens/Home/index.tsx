@@ -2,7 +2,6 @@ import { AndroidColor } from '@notifee/react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import postsListOptions from '@recoil/postsListRef';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
@@ -22,11 +21,18 @@ import {
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useRecoilState } from 'recoil';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
-import useHooks from 'screens/Home/useHooks';
+import hooks, {
+  useHandlePressComments,
+  useHandlePressDetails,
+  useHandlePressFollow,
+  useHandlePressReaction,
+  useHandlePressReport,
+} from 'screens/Home/hooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
+import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import useStyles from './useStyles';
 
 type FollowingNavProps = CompositeScreenProps<
@@ -56,16 +62,21 @@ const Home = () => {
   const { t } = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
+
+  // Reference and state of the post list, to be able to scroll to the top of it
   const postListRef = useRef<any>(null);
-  const [listOptions, setListOptions] = useRecoilState(postsListOptions);
+  const postsListState = usePostsListState();
+  const setPostsListState = useSetPostsListState();
+
+  // Actions
+  const handleNavigateToProfile = useNavigateToProfile();
+  const handlePressFollow = useHandlePressFollow();
+  const handlePressDetails = useHandlePressDetails();
+  const handlePressReaction = useHandlePressReaction();
+  const handlePressReport = useHandlePressReport();
+  const handlePressComments = useHandlePressComments();
+
   const {
-    handlePressDetails,
-    handlePressFollow,
-    handleNavigateToProfile,
-    handlePressTip,
-    handleAddReaction,
-    handlePressComments,
-    handlePressReport,
     posts,
     fetchNewestPosts,
     fetchMorePosts,
@@ -74,7 +85,7 @@ const Home = () => {
     loading,
     refetching,
     fetchingMore,
-  } = useHooks();
+  } = hooks();
 
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
@@ -181,26 +192,26 @@ const Home = () => {
     }
   }, [fetchingMore]);
 
+  // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
     await fetchNewestPosts();
     resetNewPostNotificationState();
   }, [fetchNewestPosts, resetNewPostNotificationState]);
 
-  /**
-   * Little trick to scroll to top from a parent component, the HomeTabBar in this case
-   */
+  // Little trick to scroll to top from a parent component, the HomeTabBar in this case
   useEffect(() => {
-    if (listOptions.scrollToTop) {
+    if (postsListState.scrollToTop) {
       postListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-      setListOptions({ ...listOptions, scrollToTop: false });
+      setPostsListState(value => ({ ...value, scrollToTop: false }));
     }
-  }, [listOptions.scrollToTop, postListRef]);
+  }, [postsListState, postListRef]);
 
+  // View that represents the search bar
   const SearchView = useMemo(() => {
     return (
-      listOptions.searchBarFocused && (
+      postsListState.searchBarFocused && (
         <TouchableWithoutFeedback
-          onPress={() => setListOptions({ ...listOptions, searchBarFocused: false })}
+          onPress={() => setPostsListState(value => ({ ...value, searchBarFocused: false }))}
           style={styles.searchView}>
           <View style={styles.absoluteView}>
             <Typography.Body6>
@@ -210,8 +221,9 @@ const Home = () => {
         </TouchableWithoutFeedback>
       )
     );
-  }, [listOptions]);
+  }, [postsListState]);
 
+  // Return the loading view if the posts are still loading
   if (!queryPostsData || !posts || loading) {
     return (
       <View style={styles.loadingView}>

@@ -11,7 +11,7 @@ import ImageButton from 'components/ImageButton';
 import LoadingOverlay from 'components/LoadingOverlay';
 import ToastConfig from 'config/ToastConfig';
 import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import { GrantEnums } from 'lib/desmos/msgtypes';
+import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
