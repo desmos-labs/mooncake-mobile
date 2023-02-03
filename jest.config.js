@@ -1,3 +1,7 @@
+const {configure} = require('reassure');
+
+configure({testingLibrary: 'react-native'});
+
 const config = {
   preset: 'react-native',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
