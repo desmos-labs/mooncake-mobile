@@ -1,9 +1,27 @@
 /** @type {Detox.DetoxConfig} */
+
+// Determines the configuration to use base on simulator type (debug/release)
+const getConfigFromParams = (params) => {
+
+  // Find the test environment based on whether the string includes release or debug,
+  // eg. ios.simulator.release, android.att.debug, etc
+  const testEnvironment = params.find(x => {
+    return x.includes('release') || x.includes('debug')
+  });
+
+  if(testEnvironment.includes('release')){
+    return 'release';
+  }
+  return 'debug';
+}
+
+const config = getConfigFromParams(process.argv);
+
 module.exports = {
   testRunner: {
     args: {
       $0: 'jest',
-      config: 'e2e/jest.config.js',
+      config: `e2e/jest.config.${config}.js`,
     },
     jest: {
       setupTimeout: 120000,
