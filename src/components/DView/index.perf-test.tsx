@@ -1,5 +1,5 @@
 import React from 'react';
-import {measurePerformance} from 'jest/utils/CustomRender';
+import {measurePerformance} from 'jest/utils/CustomWrappers';
 import {Text, View} from 'react-native';
 import DView from './index';
 
