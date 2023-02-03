@@ -70,6 +70,9 @@ export const useHandlePressReport = () => {
   );
 };
 
+/**
+ * Hook that allows to handle the press of the comments button of a post.
+ */
 export const useHandlePressComments = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
@@ -87,6 +90,9 @@ export const useHandlePressComments = () => {
   );
 };
 
+/**
+ * Hook that allows to handle the press of the tip button of a post.
+ */
 export const useHandlePressTip = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
