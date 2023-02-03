@@ -17,7 +17,8 @@
     "deploy:iosInternal": "fastlane ios closed_beta",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
     "detox:build-ios": "detox build -c ios.sim.release",
-    "detox:test-ios": "detox test -c ios.sim.release"
+    "detox:test-ios": "detox test -c ios.sim.release",
+    "reassure:test": "reassure"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
@@ -156,6 +157,7 @@
     "react-native-flipper-performance-plugin": "^0.3.1",
     "react-native-storybook-loader": "^2.0.5",
     "react-test-renderer": "18.2.0",
+    "reassure": "^0.7.1",
     "ts-jest": "^29.0.5",
     "typescript": "4.8.4"
   },
