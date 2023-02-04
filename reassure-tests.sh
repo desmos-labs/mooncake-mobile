@@ -7,7 +7,7 @@ BASELINE_BRANCH=${BASELINE_BRANCH:="main"}
 git fetch origin
 
 # Gather baseline perf measurements
-git switch "$BASELINE_BRANCH"
+#git switch "$BASELINE_BRANCH"
 yarn install --force
 yarn reassure --baseline
 
