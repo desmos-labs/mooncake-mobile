@@ -7,7 +7,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import createLedgerAccountState from '@recoil/createLedgerAccountState';
 import {pairDevicesAnim, unlockLedgerAnimation} from 'assets/animations';
 import {iconCrossBlack, ledgerConnectionError} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
@@ -239,8 +239,10 @@ const ConnectToLedger = () => {
           </View>
 
           <Button
-            color={theme.colors.surfaceBlack}
-            mode="contained"
+            size={ButtonSize.M}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            mode={ButtonMode.CONTAINED}
             onPress={retry}
             disabled={connecting}
             loading={connecting}>
@@ -275,8 +277,10 @@ const ConnectToLedger = () => {
 
             {instructionsIndex % 2 !== 0 && (
               <Button
-                mode="text"
-                style={styles.howToDLText}
+                textColor={theme.colors.butterOrange01}
+                size={ButtonSize.M}
+                mode={ButtonMode.TEXT}
+                additionalStyle={styles.howToDLText}
                 onPress={handlePressHowToDL}>
                 <Typography.Button1
                   style={{

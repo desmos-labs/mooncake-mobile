@@ -1,5 +1,5 @@
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import Section from 'components/Section';
 import SectionButton from 'components/SectionButton';
@@ -236,10 +236,10 @@ const Settings: React.FC<NavProps> = props => {
       </Section>
       <Spacer paddingVertical={12} />
       <Button
-        mode="outlined"
-        style={styles.signOutButton}
+        size={ButtonSize.M}
+        mode={ButtonMode.OUTLINED}
         onPress={navigateToConfirmModal}>
-        <Typography.Button1>{t('confirmModal:signout')}</Typography.Button1>
+        {t('confirmModal:signout')}
       </Button>
 
       <Typography.Body7 style={styles.bottomText}>

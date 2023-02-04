@@ -10,11 +10,6 @@ const useStyles = makeStyle(theme => ({
   title: {
     marginBottom: 24,
   },
-  signOutButton: {
-    borderColor: theme.colors.surfaceBlack,
-    borderRadius: theme.roundness,
-    padding: 1,
-  },
   buttonContainer: {
     marginTop: theme.spacing.m,
   },

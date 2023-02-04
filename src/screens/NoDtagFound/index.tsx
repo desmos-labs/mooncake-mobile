@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import DView from 'components/DView';
 import Typography from 'components/Typography';
 import {Image, View} from 'react-native';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import {errorImage} from 'assets/images';
 import {useTheme} from 'react-native-paper';
 import {useRecoilValue} from 'recoil';
@@ -43,8 +43,10 @@ const NoDtagFound = () => {
 
       <Button
         onPress={handlePress}
-        mode="contained"
-        color={theme.colors.surfaceBlack}>
+        size={ButtonSize.M}
+        mode={ButtonMode.CONTAINED}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}>
         {t('createDesmosProfile')}
       </Button>
     </DView>

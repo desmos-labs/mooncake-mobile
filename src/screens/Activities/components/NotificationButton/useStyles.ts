@@ -3,8 +3,6 @@ import {makeStyle} from 'config/theme';
 const useStyles = makeStyle(theme => ({
   followButton: {
     minWidth: 86,
-    height: 34,
-    justifyContent: 'center',
   },
   alignCenter: {
     alignSelf: 'center',

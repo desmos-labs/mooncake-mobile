@@ -10,7 +10,7 @@ import {
   connectChainState,
   selectedExternalAccountState,
 } from '@recoil/connectChainState';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import HDDerivPathInputGroup from 'components/HDDerivPathInputGroup';
 import Spacer from 'components/Spacer';
@@ -101,7 +101,9 @@ const ConnectAddressAdvanced = () => {
     return (
       <View style={styles.topBarButtonContainer}>
         <Button
-          mode="text"
+          mode={ButtonMode.TEXT}
+          size={26}
+          textColor={theme.colors.butterOrange01}
           onPress={async () => {
             if (ledgerTransport) {
               await (ledgerTransport as BluetoothTransport).close();
@@ -109,9 +111,7 @@ const ConnectAddressAdvanced = () => {
 
             navigate(ROUTES.CONNECT_ADDRESS_GENERAL, route.params);
           }}>
-          <Typography.Button2 style={styles.modeButtonText}>
-            {t('general')}
-          </Typography.Button2>
+          {t('general')}
         </Button>
       </View>
     );
@@ -256,8 +256,10 @@ const ConnectAddressAdvanced = () => {
                 </Spacer>
 
                 <Button
-                  color={theme.colors.surfaceBlack}
-                  mode="contained"
+                  size={44}
+                  textColor={theme.colors.white}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  mode={ButtonMode.CONTAINED}
                   loading={loading || !generatedAccount}
                   disabled={invalidField || isAddressLinked}
                   onPress={handleSubmit}>

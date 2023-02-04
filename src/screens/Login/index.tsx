@@ -8,7 +8,7 @@ import {
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import {butterflyLandingIcon, landingBG} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -230,15 +230,15 @@ const Login = () => {
 
           <Spacer paddingTop={theme.spacing.m}>
             <Button
-              color={theme.colors.white}
+              size={56}
+              textColor="white"
+              backgroundColor="transparent"
               disabled={loading || !password}
               loading={loading}
-              style={{borderColor: theme.colors.white}}
               onPress={handleSubmit}
-              mode="outlined">
-              <Typography.Button2 style={{color: theme.colors.white}}>
-                {t('common:confirm')}
-              </Typography.Button2>
+              additionalStyle={{borderColor: theme.colors.white}}
+              mode={ButtonMode.OUTLINED}>
+              {t('common:confirm')}
             </Button>
           </Spacer>
         </View>
