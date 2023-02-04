@@ -19,7 +19,7 @@ jobs:
       - name: Run tests with coverage
         run: yarn test --coverage
       - name: Run performance testing script
-        run: ./reassure-tests.sh
+        run: bash ./reassure-tests.sh
       - name: Run Danger.js
         run: yarn danger ci
         env:
