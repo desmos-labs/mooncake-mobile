@@ -12,6 +12,6 @@ git fetch origin
 #yarn reassure --baseline
 
 # Gather current perf measurements & compare results
-git switch --detach -
+#git switch --detach -
 yarn install --force
 yarn reassure
