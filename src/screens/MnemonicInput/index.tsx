@@ -1,6 +1,6 @@
 import {useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -140,6 +140,8 @@ const MnemonicInput = () => {
               <View style={{backgroundColor: theme.colors.background}}>
                 {__DEV__ && (
                   <Button
+                    mode={ButtonMode.TEXT}
+                    size={32}
                     onPress={() =>
                       setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)
                     }>
@@ -147,10 +149,11 @@ const MnemonicInput = () => {
                   </Button>
                 )}
                 <Button
-                  color={theme.colors.surfaceBlack}
-                  mode="contained"
-                  labelStyle={styles.labelStyle}
-                  onPress={handleSubmit}>
+                  backgroundColor={theme.colors.surfaceBlack}
+                  textColor={theme.colors.white}
+                  mode={ButtonMode.CONTAINED}
+                  size={44}
+                  onPress={() => handleSubmit()}>
                   {t(buttonText)}
                 </Button>
               </View>

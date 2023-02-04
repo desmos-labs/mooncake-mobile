@@ -82,7 +82,10 @@ const useStyles = makeStyle(theme => ({
   },
   completeProfileButton: {
     alignSelf: 'flex-end',
-    color: theme.colors.butterOrange01,
+  },
+  loadingView: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.m,
   },
 }));
 

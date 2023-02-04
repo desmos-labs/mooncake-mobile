@@ -1,7 +1,7 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -162,21 +162,17 @@ const RevealRecoveryPhrase: React.FC<NavProps> = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
-                color={theme.colors.surfaceBlack}
+                textColor={theme.colors.white}
+                backgroundColor={theme.colors.surfaceBlack}
                 loading={loading}
-                mode="contained"
-                onPress={handleSubmit}
+                size={44}
+                mode={ButtonMode.CONTAINED}
+                onPress={() => handleSubmit()}
                 disabled={
                   !values.password ||
                   _.flatten(Object.values(errors)).length > 0
                 }
-                style={styles.button}
-                containerStyle={
-                  !values.password ||
-                  _.flatten(Object.values(errors)).length > 0
-                    ? styles.disabled
-                    : null
-                }>
+                additionalStyle={styles.button}>
                 <Typography.Button1 style={styles.confirmButtonText}>
                   {t('common:next')}
                 </Typography.Button1>

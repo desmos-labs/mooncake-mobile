@@ -181,7 +181,6 @@ const PostDetails = () => {
           }}
           handlePressComment={() => {
             handlePressSelectedComment({
-              postId: post.id,
               commentId: item.id,
               subspaceId: item.subspace_id,
               focusCommentBox: true,
@@ -201,7 +200,6 @@ const PostDetails = () => {
           handlePress={() => {
             if (isPending) return;
             handlePressSelectedComment({
-              postId: post.id,
               commentId: item.id,
               subspaceId: item.subspace_id,
             });

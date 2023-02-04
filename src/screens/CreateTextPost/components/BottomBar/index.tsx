@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import {useTranslation} from 'react-i18next';
 import {cameraIcon, defaultProfilePic} from 'assets/images';
 import useStoragePermissions from 'hooks/permissions/useStoragePermissions';
@@ -10,6 +10,7 @@ import {
 } from '@react-native-camera-roll/camera-roll';
 import ImageButton from 'components/ImageButton';
 import {View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import useStyles from './useStyles';
 import GalleryButton from './GalleryButton';
 
@@ -48,6 +49,7 @@ const BottomBar = ({
   handlePressCamera,
 }: Props) => {
   const styles = useStyles();
+  const theme = useTheme();
   const {t} = useTranslation();
 
   const [firstPhoto, setFirstPhoto] = React.useState<any>(undefined);
@@ -83,11 +85,11 @@ const BottomBar = ({
       </View>
 
       <Button
-        style={styles.postButton}
-        mode="contained"
-        labelStyle={{
-          lineHeight: 34.7,
-        }}
+        size={32}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.butterOrange01}
+        mode={ButtonMode.CONTAINED}
+        additionalStyle={{width: 58}}
         onPress={handlePressPost}>
         {t('postInteraction:post')}
       </Button>

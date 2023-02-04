@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {modalSuccess} from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -49,23 +49,24 @@ const WelcomePage: React.FC<Props> = () => {
         <Typography.Body6>{t('dtag created')}</Typography.Body6>
       </View>
       <Button
-        containerStyle={{marginBottom: theme.spacing.m}}
-        mode="gradientFilled"
+        size={ButtonSize.M}
+        additionalStyle={{marginBottom: theme.spacing.m}}
+        mode={ButtonMode.CONTAINED}
         onPress={navigateToHome}>
-        <Typography.Button2 style={{color: theme.colors.white}}>
-          {t('welcome to', {product: 'Butter'})}
-        </Typography.Button2>
-      </Button>
-      <Button mode="outlined" onPress={navigateToBackupPhrase}>
-        <Typography.Button2 style={{color: theme.colors.butterOrange01}}>
-          {t('backup phrase')}
-        </Typography.Button2>
+        {t('welcome to', {product: 'Butter'})}
       </Button>
       <Button
-        mode="text"
+        size={ButtonSize.M}
+        mode={ButtonMode.OUTLINED}
+        onPress={navigateToBackupPhrase}>
+        {t('backup phrase')}
+      </Button>
+      <Button
+        size={ButtonSize.M}
+        mode={ButtonMode.TEXT}
         onPress={navigateToBackupPhraseExplanation}
         style={{marginTop: theme.spacing.m}}>
-        <Typography.Subtitle4>{t('backup explanation')}</Typography.Subtitle4>
+        {t('backup explanation')}
       </Button>
     </DView>
   );

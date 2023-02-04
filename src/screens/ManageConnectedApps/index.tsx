@@ -119,7 +119,7 @@ const ManageConnectedApps = () => {
           <Button
             color={theme.colors.surfaceBlack}
             onPress={() => navigate(ROUTES.CONNECT_APP, {mode: 'connect'})}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             labelStyle={styles.buttonStyle}>
             {t('connect app')}
           </Button>

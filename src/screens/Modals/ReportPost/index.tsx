@@ -2,7 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import appSettingsState from '@recoil/settings';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import CustomRadioGroup from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
@@ -11,7 +11,12 @@ import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {KeyboardAvoidingView, Platform, View} from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  View,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useRecoilState} from 'recoil';
 import useReportPost from 'services/axios/requests/CentralizedBroadcastTx/useReportPost';
@@ -93,13 +98,20 @@ const ReportPost = () => {
           />
         </View>
         <Spacer paddingVertical={30}>
-          <Button
-            loading={loading}
-            color={theme.colors.surfaceBlack}
-            mode="contained"
-            onPress={onSubmit}>
-            {t('submit')}
-          </Button>
+          {loading ? (
+            <View style={styles.loadingView}>
+              <ActivityIndicator color={theme.colors.surfaceBlack} />
+            </View>
+          ) : (
+            <Button
+              size={44}
+              backgroundColor={theme.colors.surfaceBlack}
+              textColor={theme.colors.white}
+              mode={ButtonMode.CONTAINED}
+              onPress={onSubmit}>
+              {t('submit')}
+            </Button>
+          )}
         </Spacer>
       </BottomUpModalWrapper>
     </KeyboardAvoidingView>

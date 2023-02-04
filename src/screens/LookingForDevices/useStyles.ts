@@ -64,7 +64,6 @@ const useStyles = makeStyle(theme => ({
     redizeMode: 'contain',
   },
   retryButton: {
-    color: theme.colors.white,
     marginTop: theme.spacing.xl,
     marginHorizontal: theme.spacing.m,
   },
