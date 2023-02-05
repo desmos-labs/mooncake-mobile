@@ -1,6 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
 import Button from 'components/Button';
 import CustomRadioGroup from 'components/CustomRadioGroup';

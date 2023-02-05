@@ -105,17 +105,17 @@ const Home = () => {
 
   // --- Notifications ---
 
-  const handlePressNewPostNotification = useCallback(async () => {
-    await refreshPosts();
-    if (postListRef && postListRef.current) {
-      postListRef.current.scrollToIndex({
-        animated: true,
-        index: 0,
-      });
-    }
-  }, [postListRef, refreshPosts]);
-
-  const resetNewPostNotificationState = useWatchForNewPosts(handlePressNewPostNotification);
+  useWatchForNewPosts(
+    useCallback(async () => {
+      await refreshPosts();
+      if (postListRef && postListRef.current) {
+        postListRef.current.scrollToIndex({
+          animated: true,
+          index: 0,
+        });
+      }
+    }, [postListRef, refreshPosts]),
+  );
 
   // --- Child components ---
 
@@ -202,8 +202,7 @@ const Home = () => {
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
     await refreshPosts();
-    resetNewPostNotificationState();
-  }, [refreshPosts, resetNewPostNotificationState]);
+  }, [refreshPosts]);
 
   // Little trick to scroll to top from a parent component, the HomeTabBar in this case
   useEffect(() => {

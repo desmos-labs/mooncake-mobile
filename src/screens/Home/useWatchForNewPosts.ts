@@ -1,152 +1,133 @@
-import { useSubscription } from '@apollo/client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import _ from 'lodash';
-import {
-  PostAggregateSubscription,
-  PostAggregateSubscriptionFollowing,
-} from 'services/graphql/subscriptions/PostAggregateSubscription';
-import EnvConfig from 'config/EnvConfig';
-import { useRecoilValue } from 'recoil';
-import { followingState } from '@recoil/following';
-import ROUTES from 'navigation/routes';
+import { DocumentNode, useSubscription } from '@apollo/client';
+import { useCallback, useRef } from 'react';
 import ToastConfig from 'config/ToastConfig';
 import { useToast } from 'react-native-toast-notifications';
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
 import { useTranslation } from 'react-i18next';
-import appSettingsState from '@recoil/settings';
-import useActiveAccount from 'hooks/useActiveAccount';
 import { OnDataOptions } from '@apollo/client/react/types/types';
+import { useAppStateValue } from '@recoil/appState';
+import { useActiveAccountAddress } from '@recoil/wallets';
+import { OperationVariables } from '@apollo/client/core';
+import DiscoveryPostsCount from 'services/graphql/subscriptions/DiscoveryPostsCount';
+import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCount';
+import useFollowingAddresses from 'hooks/useFollowingAddresses';
+import debounce from '@react-navigation/stack/lib/typescript/src/utils/debounce';
 
 /**
- * Subscribe to new posts in discover and following tab and show a notification
- * when a new post is detected.
- *
+ * Hook that allows to observe a generic posts count subscription,
+ * performing a specific operation when there are new posts.
+ * @param subscription {DocumentNode} - Subscription that will be observed
+ * @param variables {any} - Variables used inside the subscription.
+ * @param onNewPosts {Function} - Function called when a new data is retrieved.
+ */
+const usePostsCountSubscription = <TVariables = OperationVariables>(
+  subscription: DocumentNode,
+  variables: TVariables,
+  onNewPosts: () => void,
+) => {
+  // Reference to the last retrieved posts count for the subscription
+  const postsCount = useRef<number>(0);
+
+  // Callback that is used in order to update the current posts count
+  // and perform the given action when there are new posts
+  const onNewData = useCallback(
+    (options: OnDataOptions) => {
+      const retrievedCount = options.data?.data?.posts?.aggregate?.count || 0;
+      if (retrievedCount !== 0 && retrievedCount !== postsCount) {
+        postsCount.current = retrievedCount;
+        onNewPosts();
+      }
+    },
+    [postsCount.current],
+  );
+
+  // We use a debounced callback of 30 seconds in order to avoid
+  // spamming the user with new notifications continuously
+  const debouncedCallback = debounce(onNewData, 30 * 1000);
+
+  useSubscription(subscription, {
+    variables,
+    onData: debouncedCallback,
+  });
+};
+
+/**
+ * Hook that allows to observe new posts that are placed inside the Discovery section of the user.
+ * Each time there is a new post, a notification is shown.
+ * @param onPressNotification {Function} - Function that is called when the user presses the notification.
+ */
+const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
+  const { t } = useTranslation('home');
+  const toast = useToast();
+  const isFocused = useIsFocused();
+  const { name: routeName } = useRoute<NavProps['route']>();
+
+  const subspaceId = useAppStateValue('subspaceId');
+  const activeAddress = useActiveAccountAddress();
+
+  const onNewDiscoveryPosts = useCallback(() => {
+    if (!isFocused || routeName !== 'HOME_DISCOVER') return;
+    toast.show(t('newDiscoverPost'), {
+      type: ToastConfig.SUCCESS,
+      onPress: onPressNotification,
+    });
+  }, []);
+
+  usePostsCountSubscription(
+    DiscoveryPostsCount,
+    {
+      subspaceID: subspaceId,
+      userAddress: activeAddress,
+    },
+    onNewDiscoveryPosts,
+  );
+};
+
+/**
+ * Hook that allows to observe new posts form the users that the current application user is following.
+ * Each time there is a new post, a notification will be shown to the user.
+ * @param onPressNotification {Function} - Function that is called when the user presses the notification.
+ */
+const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
+  const { t } = useTranslation('home');
+  const toast = useToast();
+  const isFocused = useIsFocused();
+  const { name: routeName } = useRoute<NavProps['route']>();
+
+  const subspaceId = useAppStateValue('subspaceId');
+  const followingAddresses = useFollowingAddresses();
+
+  const onNewFollowingPosts = useCallback(() => {
+    if (!isFocused || routeName !== 'HOME_FOLLOWING') return;
+    toast.show(t('newFollowingPost'), {
+      type: ToastConfig.SUCCESS,
+      onPress: onPressNotification,
+    });
+  }, []);
+
+  usePostsCountSubscription(
+    FollowingPostsCount,
+    {
+      subspaceID: subspaceId,
+      userAddress: followingAddresses,
+    },
+    onNewFollowingPosts,
+  );
+};
+
+/**
+ * Subscribe to new posts and show a notification when a new post is detected.
  * @param {function} onPressNotification - What to do when the notification is pressed
  */
 const useWatchForNewPosts = (onPressNotification: () => void) => {
-  const { t } = useTranslation('home');
-  const toast = useToast();
-  const { params } = useRoute<NavProps['route']>();
-  const { getState } = useNavigation();
-  const { activeAddress } = useActiveAccount();
-  const { newDiscPostNotification, newFollowPostNotification } = useRecoilValue(appSettingsState);
-  const currentScreen: any =
-    // @ts-ignore
-    getState().history[getState().history.length - 1 || 0].key;
-
-  const isFocused = useIsFocused();
-
-  const [hasNewDiscoverPosts, setHasNewDiscoverPosts] = useState<boolean>(false);
-  const [hasNewFollowingPosts, setHasNewFollowingPosts] = useState<boolean>(false);
-  const following = useRecoilValue(followingState);
-
-  const followingAddrs = useMemo(() => {
-    return following.map(x => x.address);
-  }, [JSON.stringify(following)]);
-
-  const storedPostAggregate = useRef<number>(0);
-  const storedPostAggregateFollowing = useRef<number>(0);
-
-  const processData = useCallback((aggregateData: any) => {
-    return _.get(aggregateData, 'data.post_aggregate.aggregate.count');
+  // Callback used when the user presses a notification
+  const onPress = useCallback(() => {
+    onPressNotification();
   }, []);
 
-  const onNewDiscoverData = useCallback(
-    (options: OnDataOptions) => {
-      const numPosts = processData(options.data);
-
-      if (numPosts && numPosts !== storedPostAggregate.current) {
-        if (storedPostAggregate.current !== 0) {
-          setHasNewDiscoverPosts(true);
-        }
-
-        storedPostAggregate.current = numPosts;
-      }
-    },
-    [storedPostAggregate.current],
-  );
-
-  const onNewFollowingData = useCallback(
-    (options: OnDataOptions) => {
-      const numPosts = processData(options.data);
-
-      if (numPosts && numPosts !== storedPostAggregateFollowing.current) {
-        if (storedPostAggregateFollowing.current !== 0) {
-          setHasNewFollowingPosts(true);
-        }
-
-        storedPostAggregateFollowing.current = numPosts;
-      }
-    },
-    [storedPostAggregateFollowing.current],
-  );
-
-  useSubscription(PostAggregateSubscription, {
-    variables: {
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      userAddress: activeAddress,
-    },
-    onData: onNewDiscoverData,
-  });
-
-  useSubscription(PostAggregateSubscriptionFollowing, {
-    variables: {
-      subspaceID: EnvConfig.APP_SUBSPACE_ID,
-      followingAddrs,
-    },
-    onData: onNewFollowingData,
-  });
-
-  /**
-   * Show notification if new posts from following are detected
-   */
-  useEffect(() => {
-    if (!newFollowPostNotification || !isFocused) return;
-
-    if (
-      hasNewFollowingPosts &&
-      params?.type === 'following' &&
-      currentScreen.includes(ROUTES.HOME_FOLLOWING)
-    ) {
-      toast.show(t('newFollowingPost'), {
-        type: ToastConfig.SUCCESS,
-        onPress: () => {
-          onPressNotification();
-          resetNewPostNotificationState();
-        },
-      });
-    }
-  }, [hasNewFollowingPosts, JSON.stringify(currentScreen), newFollowPostNotification, isFocused]);
-
-  /**
-   * Show notification if new posts from discover tab is detected
-   */
-  useEffect(() => {
-    if (!newDiscPostNotification || !isFocused) return;
-
-    if (
-      hasNewDiscoverPosts &&
-      params?.type === 'discover' &&
-      currentScreen.includes(ROUTES.HOME_DISCOVER)
-    ) {
-      toast.show(t('newDiscoverPost'), {
-        type: ToastConfig.SUCCESS,
-        onPress: () => {
-          onPressNotification();
-          resetNewPostNotificationState();
-        },
-      });
-    }
-  }, [hasNewDiscoverPosts, JSON.stringify(currentScreen), newDiscPostNotification, isFocused]);
-
-  // I think this function is pretty lightweight and doesn't need to be useCallback'd
-  return useCallback(() => {
-    if (params?.type === 'discover') setHasNewDiscoverPosts(false);
-    else if (params?.type === 'following') {
-      setHasNewFollowingPosts(false);
-    }
-  }, [params, setHasNewDiscoverPosts];
+  useWatchNewDiscoveryPosts(onPress);
+  useWatchNewFollowingPosts(onPress);
 };
 
 export default useWatchForNewPosts;
