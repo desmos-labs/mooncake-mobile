@@ -1,6 +1,7 @@
 import { Algo } from '@cosmjs/amino';
 import { Wallet, WalletType } from 'types/wallet';
 import { HdPath } from '@cosmjs/crypto';
+import { DesmosProfile } from 'types/desmos';
 
 export enum AccountSerializationVersion {
   Mnemonic = 1,
@@ -106,6 +107,10 @@ export type Account = MnemonicAccount | LedgerAccount | Web3AuthAccount;
 export interface AccountWithWallet {
   readonly account: Account;
   readonly wallet: Wallet;
+}
+
+export interface SelectedAccount extends AccountWithWallet {
+  readonly profile?: DesmosProfile;
 }
 
 export type SerializableAccount =

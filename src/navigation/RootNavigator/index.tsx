@@ -8,9 +8,14 @@ import SelectAccount, { SelectAccountParamList } from 'screens/SelectAccount';
 import Landing from 'screens/Landing';
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
+import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
+import ChangePassword, {
+  PASSWORD_MANIPULATION_MODE,
+  PasswordManipulationParams,
+} from 'screens/PasswordManipulation';
 
 export type RootNavigatorParamList = {
-  // [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
+  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   /*
   [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
@@ -20,7 +25,9 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   /*
   [ROUTES.SIGNUP]: undefined;
-  [ROUTES.SIGNUP_RESULT]: undefined;
+  */
+  [ROUTES.SAVE_ACCOUNT]: SaveAccountParams;
+  /*
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
@@ -233,8 +240,8 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} />
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
       */}
+      <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
@@ -290,6 +297,7 @@ const RootNavigator = () => {
         name={ROUTES.CONNECT_TO_LEDGER}
         component={ConnectToLedger}
       />
+      */}
       <Stack.Screen
         initialParams={{
           mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
@@ -297,6 +305,7 @@ const RootNavigator = () => {
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
       />
+      {/*
       <Stack.Screen
         name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE}
         component={RevealRecoveryPhrase}

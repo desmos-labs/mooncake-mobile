@@ -3,7 +3,7 @@ import React from 'react';
 import { SupportedChain } from 'types/chains';
 import { WalletType } from 'types/wallet';
 import { useSetImportAccountState } from '@recoil/importAccountState';
-import { AccountWithWallet } from 'types/account';
+import { SelectedAccount } from 'types/account';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { MNEMONIC_INPUT_MODE } from 'screens/MnemonicInput';
@@ -37,6 +37,11 @@ export interface ImportAccountOptions {
   ignoreAddresses?: [];
 }
 
+export interface ImportAccountCallbacks {
+  onSelect: (account: SelectedAccount) => any;
+  onCancel?: () => any;
+}
+
 /**
  * Hook that provides a function to start the flow to import an account.
  * The flow is:
@@ -68,10 +73,11 @@ const useImportAccount = (options: ImportAccountOptions) => {
   const navigation = useNavigation<NavigationProp<RootNavigatorParamList>>();
   const setImportAccountState = useSetImportAccountState();
 
-  return React.useCallback(() => {
-    return new Promise<AccountWithWallet | undefined>(resolve => {
+  return React.useCallback(
+    ({ onSelect, onCancel }: ImportAccountCallbacks) => {
       const selectedChain: SupportedChain | undefined =
         options.chains.length === 1 ? options.chains[0] : undefined;
+      const onCancelFunction = onCancel ?? (() => {});
 
       // Set the import account state according to the provided options.
       setImportAccountState({
@@ -81,14 +87,14 @@ const useImportAccount = (options: ImportAccountOptions) => {
         minAccountBalance: options.minAccountBalance,
         importMode: options.accountType,
         selectedChain,
-        onSuccess: account => resolve(account.account),
-        onCancel: () => resolve(undefined),
+        onSuccess: account => onSelect(account.account),
+        onCancel: onCancelFunction,
       });
 
       if (selectedChain === undefined) {
         // TODO: Implement navigate to chain selection.
         console.warn('Chain selection is not supported');
-        resolve(undefined);
+        onCancelFunction();
         return;
       }
 
@@ -105,17 +111,18 @@ const useImportAccount = (options: ImportAccountOptions) => {
           case WalletType.Ledger:
             // TODO: Implement navigation to Ledger connect flow.
             console.warn('Import with Ledger not supported');
-            resolve(undefined);
+            onCancelFunction();
             break;
           case WalletType.Web3Auth:
             // TODO: Implement navigation to web3auth login provider selection.
             console.warn('Import with Web3Auth not supported');
-            resolve(undefined);
+            onCancelFunction();
             break;
         }
       }
-    });
-  }, [navigation, setImportAccountState]);
+    },
+    [navigation, setImportAccountState],
+  );
 };
 
 export default useImportAccount;

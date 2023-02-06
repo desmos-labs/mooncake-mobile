@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { HdPath, Slip10RawIndex } from '@cosmjs/crypto';
 import { WalletGenerationData, WalletType } from 'types/wallet';
 import _ from 'lodash';
@@ -41,36 +41,6 @@ function generationParamsToWalletGenerationData(
       throw new Error(`can't covert WalletPickerParams with mode ${params.mode}`);
   }
 }
-
-export const useGenerateAccountWithWalletFromHdPath = () => {
-  const [generationError, setGenerationError] = useState<string>();
-
-  const generateWalletAccountFromHdPath = useCallback(
-    async (hdPath: HdPath, generationParams: AccountPickerParams) => {
-      try {
-        const wallets = await generateAccountWithWallets(
-          generationParamsToWalletGenerationData(generationParams, [hdPath]),
-        );
-
-        if (wallets.length === 0) {
-          setGenerationError('no wallet generated');
-          return null;
-        }
-
-        return wallets[0];
-      } catch (e) {
-        setGenerationError(e.toString());
-        return null;
-      }
-    },
-    [],
-  );
-
-  return {
-    generationError,
-    generateWalletAccountFromHdPath,
-  };
-};
 
 export const useFetchWallets = (params: AccountPickerParams) => {
   const fetchWallets = useCallback(

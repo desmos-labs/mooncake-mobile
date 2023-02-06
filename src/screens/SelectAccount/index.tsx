@@ -7,13 +7,13 @@ import Spacer from 'components/Spacer';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { AccountWithWallet } from 'types/account';
+import { SelectedAccount } from 'types/account';
 import AccountPicker from 'screens/SelectAccount/components/AccountPicker';
 import { AccountPickerParams } from './components/AccountPicker/types';
 
 export interface SelectAccountParamList {
   accountPickerParams: AccountPickerParams;
-  onSelect: (wallet: AccountWithWallet) => any;
+  onSelect: (wallet: SelectedAccount) => any;
   onCancel?: () => any;
 }
 
@@ -33,22 +33,13 @@ const SelectDtag = ({ route: { params }, navigation }: NavProps) => {
     [navigation, onCancel],
   );
 
-  const onAccountSelected = React.useCallback(
-    (accountWithWallet: AccountWithWallet | null) => {
-      if (accountWithWallet !== null) {
-        onSelect(accountWithWallet);
-      }
-    },
-    [onSelect],
-  );
-
   return (
     <DView topBar={<TopBar />}>
       <Spacer padding={16}>
         <Typography.H4>{t('header')}</Typography.H4>
       </Spacer>
 
-      <AccountPicker onAccountSelected={onAccountSelected} params={accountPickerParams} />
+      <AccountPicker onAccountSelected={onSelect} params={accountPickerParams} />
     </DView>
   );
 };

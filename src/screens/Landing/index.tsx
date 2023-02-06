@@ -14,6 +14,7 @@ import { Text, useTheme } from 'react-native-paper';
 import { useAppStateValue } from '@recoil/appState';
 import useImportAccount from 'hooks/useImportAccount';
 import { DesmosChain } from 'config/LinkableChains';
+import useSaveAccount from 'hooks/useSaveAccount';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -28,6 +29,7 @@ const Landing = () => {
     showBalances: true,
     minAccountBalance: 0.1,
   });
+  const saveAccount = useSaveAccount();
 
   // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
   const consentGiven = useAppStateValue('consentGiven');
@@ -46,9 +48,16 @@ const Landing = () => {
   }, [consentGiven]);
 
   const onSignUpWithWallet = React.useCallback(() => {
-    const performImportAccount = async () => {
-      const account = await importAccount();
-      console.log('imported account', account);
+    const performImportAccount = () => {
+      importAccount({
+        onSelect: account => {
+          if (account.profile === undefined) {
+            console.log('navigate to create profile');
+          } else {
+            saveAccount(account);
+          }
+        },
+      });
     };
 
     if (!consentGiven) {
