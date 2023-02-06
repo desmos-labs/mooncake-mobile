@@ -75,6 +75,7 @@ const MnemonicInput = () => {
                   </Typography.Subtitle2>
 
                   <DTextInput
+                    testID="mnemonicInput"
                     autoCapitalize="none"
                     textAlignVertical="top"
                     multiline
@@ -113,6 +114,7 @@ const MnemonicInput = () => {
               {mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE && (
                 <View style={styles.consentGroup}>
                   <CustomCheckbox
+                    testID="loginCheckbox"
                     checked={values.consent}
                     handlePress={() =>
                       setFieldValue('consent', !values.consent, false)

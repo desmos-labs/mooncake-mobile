@@ -129,6 +129,7 @@ const PasswordManipulation = () => {
                   </View>
 
                   <DSecureTextInput
+                    testID="newPasswordField"
                     value={values.newPassword}
                     onChangeText={(value: string) =>
                       setFieldValue('newPassword', value, true)
@@ -150,6 +151,7 @@ const PasswordManipulation = () => {
                     {t('confirmPw')}
                   </Typography.Subtitle2>
                   <DSecureTextInput
+                    testID="confirmPasswordField"
                     onOuterFocus={() =>
                       setTimeout(
                         () =>

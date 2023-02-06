@@ -138,6 +138,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^8.31.0",
     "detox": "^20.1.2",
+    "dotenv": "^16.0.3",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-recommended": "^4.1.0",
     "eslint-config-typescript": "^3.0.0",

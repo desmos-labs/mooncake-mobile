@@ -1,7 +1,7 @@
 import {by, device, element, expect} from 'detox';
 import launchAppConfig from '../config';
 
-describe('App first launch should display welcome screen.', () => {
+describe('Onboarding flow', () => {
   beforeEach(async () => {
     await device.launchApp(launchAppConfig);
   });
@@ -16,14 +16,13 @@ describe('App first launch should display welcome screen.', () => {
     await expect(
       element(by.text('Your decentralized social network')),
     ).toBeVisible();
-    await expect(element(by.text('Sign Up'))).toBeVisible();
+    await expect(element(by.text('Sign up'))).toBeVisible();
     await expect(
       element(by.text('Import Secret Recovery Phrase')),
     ).toBeVisible();
   });
 
   it('Goes to landing page if reached the last tab and Join Butter button is pressed', async () => {
-    await device.reloadReactNative();
     await expect(element(by.text('Welcome to Butter'))).toBeVisible();
     await element(by.id('onboardingPagerView')).swipe('left');
     await expect(element(by.text('Privacy First'))).toBeVisible();
