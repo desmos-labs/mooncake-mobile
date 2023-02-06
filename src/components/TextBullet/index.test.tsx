@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import TextBullet from 'components/TextBullet/index';
 
 describe('component/TextBullet', function () {
