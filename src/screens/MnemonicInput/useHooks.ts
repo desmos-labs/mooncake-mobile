@@ -3,7 +3,7 @@ import { validateMnemonic } from 'lib/ValidationUtils';
 import { sanitizeMnemonic } from 'lib/FormatUtils';
 import { MNEMONIC_INPUT_MODE, NavProps } from 'screens/MnemonicInput';
 import { useTranslation } from 'react-i18next';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import useSelectAccount from 'hooks/useSelectAccount';
 import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
 import { useImportAccountState } from '@recoil/importAccountState';
@@ -13,10 +13,6 @@ export interface FormField {
    * Mnemonic inserted from the user.
    */
   mnemonic: string;
-  /**
-   * Tells if the user have accepted the Terms of Service and the Privacy Polices.
-   */
-  consent: boolean;
 }
 
 /**
@@ -26,7 +22,6 @@ const useHooks = () => {
   const {
     params: { mode },
   } = useRoute<NavProps['route']>();
-  const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('mnemonicInput');
   const selectAccount = useSelectAccount();
   const importAccountState = useImportAccountState()!;
@@ -34,8 +29,6 @@ const useHooks = () => {
   const initialFormFields = React.useMemo<FormField>(
     () => ({
       mnemonic: '',
-      // only ask for consent if in import mode
-      consent: mode !== MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
     }),
     [mode],
   );
@@ -49,21 +42,20 @@ const useHooks = () => {
       default:
         return '';
     }
-  }, [mode]);
+  }, [mode, t]);
 
-  const validateForm = React.useCallback((values: FormField) => {
-    const errors: any = {};
+  const validateForm = React.useCallback(
+    (values: FormField) => {
+      const errors: any = {};
 
-    if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
-      errors.mnemonic = t('invalidMnemonic');
-    }
+      if (!validateMnemonic(sanitizeMnemonic(values.mnemonic))) {
+        errors.mnemonic = t('invalidMnemonic');
+      }
 
-    if (!values.consent) {
-      errors.consent = t('consent not checked');
-    }
-
-    return errors;
-  }, []);
+      return errors;
+    },
+    [t],
+  );
 
   const onSubmit = React.useCallback(
     (values: typeof initialFormFields) => {
@@ -88,7 +80,7 @@ const useHooks = () => {
         );
       }
     },
-    [mode],
+    [importAccountState, mode, selectAccount],
   );
 
   const buttonText = React.useMemo(() => {
@@ -96,23 +88,11 @@ const useHooks = () => {
       return t('common:next');
     }
     return t('common:confirm');
-  }, [mode]);
-
-  const handlePressPrivacyPolicy = React.useCallback(() => {
-    // TODO: Implement Privacy policy visualization.
-    console.warn('Implement Privacy policy visualization.');
-  }, []);
-
-  const handlePressTermOfService = React.useCallback(() => {
-    // TODO: Implement Term of Service visualization.
-    console.warn('Implement Term of Service visualization.');
-  }, []);
+  }, [mode, t]);
 
   return {
     headerText,
     buttonText,
-    handlePressPrivacyPolicy,
-    handlePressTermOfService,
     onSubmit,
     validateForm,
     initialFormFields,

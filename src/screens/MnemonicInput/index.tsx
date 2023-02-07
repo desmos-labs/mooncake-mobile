@@ -1,7 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
-import CustomCheckbox from 'components/CustomCheckbox';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -11,7 +10,7 @@ import { Formik } from 'formik';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,15 +37,7 @@ const MnemonicInput = () => {
   const { top } = useSafeAreaInsets();
   const { t } = useTranslation('mnemonicInput');
 
-  const {
-    headerText,
-    buttonText,
-    handlePressPrivacyPolicy,
-    handlePressTermOfService,
-    onSubmit,
-    validateForm,
-    initialFormFields,
-  } = useHooks();
+  const { headerText, buttonText, onSubmit, validateForm, initialFormFields } = useHooks();
 
   return (
     <DView style={styles.container} topBar={<TopBar />}>
@@ -103,33 +94,6 @@ const MnemonicInput = () => {
                   )}
                 </View>
               </ScrollView>
-
-              {/* Term of Services and Privacy Policies approve section */}
-              {mode === MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE && (
-                <View style={styles.consentGroup}>
-                  <CustomCheckbox
-                    checked={values.consent}
-                    handlePress={() => setFieldValue('consent', !values.consent, false)}
-                    error={!!errors.consent}
-                  />
-
-                  <Typography.Body6 style={styles.consentText}>
-                    <Trans
-                      i18nKey="mnemonicInput:userConsent"
-                      components={[
-                        <Typography.Body6
-                          onPress={handlePressTermOfService}
-                          style={styles.touchableText}
-                        />,
-                        <Typography.Body6
-                          onPress={handlePressPrivacyPolicy}
-                          style={styles.touchableText}
-                        />,
-                      ]}
-                    />
-                  </Typography.Body6>
-                </View>
-              )}
 
               <View>
                 {__DEV__ && (
