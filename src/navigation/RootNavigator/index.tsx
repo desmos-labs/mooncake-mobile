@@ -13,6 +13,9 @@ import ChangePassword, {
   PASSWORD_MANIPULATION_MODE,
   PasswordManipulationParams,
 } from 'screens/PasswordManipulation';
+import ConnectToLedgerStack, {
+  ConnectToLedgerStackParams,
+} from 'navigation/RootNavigator/ConnectToLedgerStack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -27,6 +30,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SIGNUP]: undefined;
   */
   [ROUTES.SAVE_ACCOUNT]: SaveAccountParams;
+  [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
   /*
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
@@ -242,6 +246,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       */}
       <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
+      <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
       <Stack.Screen
         initialParams={{
           mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,

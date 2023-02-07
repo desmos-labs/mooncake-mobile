@@ -35,7 +35,17 @@ enum ROUTES {
   SETTINGS_SHOW_SECRET_PHRASE = 'SETTINGS_SHOW_SECRET_PHRASE',
 
   LOOKING_FOR_DEVICES = 'LOOKING_FOR_DEVICES',
-
+  /**
+   * Navigate to the stack that allow the user to connect to a ledger device.
+   */
+  CONNECT_TO_LEDGER_STACK = 'CONNECT_TO_LEDGER_STACK',
+  /**
+   * Screen that performs a bluetooth scan in order to find a Ledger device.
+   */
+  PERFORM_LEDGER_SCAN = 'PERFORM_LEDGER_SCAN',
+  /**
+   * Screen that performs a bluetooth scan in order to find a Ledger device.
+   */
   CONNECT_TO_LEDGER = 'CONNECT_TO_LEDGER',
 
   GUEST_PROFILE = 'GUEST_PROFILE',

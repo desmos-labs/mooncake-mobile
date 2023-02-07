@@ -1,13 +1,13 @@
 import LottieView from 'lottie-react-native';
-import React, {useMemo} from 'react';
-import {useTheme} from 'react-native-paper';
+import React, { useMemo } from 'react';
+import { useTheme } from 'react-native-paper';
 
 type Props = Omit<React.ComponentProps<typeof LottieView>, 'source'> & {
   source: LottieAnimation;
 };
 
 const ThemedLottieView: React.FC<Props> = props => {
-  const {source} = props;
+  const { source } = props;
   const theme = useTheme();
 
   const themeMode = React.useMemo(() => {
@@ -16,7 +16,7 @@ const ThemedLottieView: React.FC<Props> = props => {
 
   const animation = useMemo(() => {
     return source[themeMode];
-  }, [theme, source]);
+  }, [source, themeMode]);
 
   return <LottieView {...props} source={animation} />;
 };

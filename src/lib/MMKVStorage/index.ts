@@ -1,4 +1,4 @@
-import {MMKV, useMMKVObject} from 'react-native-mmkv';
+import { MMKV, useMMKVObject } from 'react-native-mmkv';
 import EnvConfig from 'config/EnvConfig';
 
 export enum MMKVKEYS {
@@ -27,6 +27,9 @@ export enum MMKVKEYS {
 
   // REST APIs
   REST_AUTH_TOKEN = 'REST_AUTH_TOKEN',
+
+  // Key used to store the permissions request count.
+  PERMISSIONS_REQUEST_COUNT = 'PERMISSIONS_REQUEST_COUNT',
 }
 
 const MMKVStorage = new MMKV({
@@ -52,8 +55,7 @@ export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
 /**
  * Stringifies a value and writes it to a given MMKV key
  */
-export const setMMKV = (key: MMKVKEYS, value: any) =>
-  MMKVStorage.set(key, JSON.stringify(value));
+export const setMMKV = (key: MMKVKEYS, value: any) => MMKVStorage.set(key, JSON.stringify(value));
 
 /**
  * Clear the whole MMKV storage
