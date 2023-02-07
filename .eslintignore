@@ -5,5 +5,3 @@ storybook
 jest
 
 *.tsx.snap
-
-e2e
