@@ -1,33 +1,22 @@
-import {
-  backButton,
-  cameraButton,
-  defaultBanner,
-  defaultProfilePic,
-} from 'assets/images';
+import { backButton, cameraButton, defaultBanner, defaultProfilePic } from 'assets/images';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import TextCounter from 'components/TextCounter';
 import Typography from 'components/Typography';
-import {Formik} from 'formik';
-import React, {useRef} from 'react';
-import {useTranslation} from 'react-i18next';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { Formik } from 'formik';
+import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import CreateAvatar from 'screens/CreateDesmosProfile/components/CreateAvatar';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 const EditProfile = () => {
   const theme = useTheme();
-  const {t} = useTranslation('createProfile');
+  const { t } = useTranslation('createProfile');
   const {
     profileParams,
     validationSchema,
@@ -44,19 +33,15 @@ const EditProfile = () => {
   const dTagInputRef = useRef<TextInput>(null);
   const bioInputRef = useRef<TextInput>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-  const styles = useStyles({nicknameInputRef, dTagInputRef, bioInputRef});
+  const styles = useStyles({ nicknameInputRef, dTagInputRef, bioInputRef });
   return (
     <DView
       showLoadingOverlay={loading}
       style={styles.container}
-      backgroundImage={coverPictureUri ? {uri: coverPictureUri} : defaultBanner}
+      backgroundImage={coverPictureUri ? { uri: coverPictureUri } : defaultBanner}
       backgroundColor={theme.colors.white}>
       <View style={styles.headerButtonGroup}>
-        <ProfileHeaderButton
-          imageSrc={backButton}
-          style={styles.topButton}
-          onPress={goBack}
-        />
+        <ProfileHeaderButton imageSrc={backButton} style={styles.topButton} onPress={goBack} />
 
         <ProfileHeaderButton
           imageSrc={cameraButton}
@@ -66,9 +51,7 @@ const EditProfile = () => {
       </View>
 
       <CreateAvatar
-        avatar={
-          profilePictureUri ? {uri: profilePictureUri} : defaultProfilePic
-        }
+        avatar={profilePictureUri ? { uri: profilePictureUri } : defaultProfilePic}
         handlePressEdit={selectProfilePicture}
       />
 
@@ -79,15 +62,13 @@ const EditProfile = () => {
           initialValues={initialFormState}
           validationSchema={validationSchema}
           onSubmit={onEditProfile}>
-          {({setFieldValue, values, handleSubmit, errors}) => (
+          {({ setFieldValue, values, handleSubmit, errors }) => (
             <>
               <ScrollView
                 ref={scrollViewRef}
                 style={styles.scrollView}
                 contentContainerStyle={styles.card}>
-                <View
-                  style={styles.scrollContainer}
-                  onStartShouldSetResponder={() => true}>
+                <View style={styles.scrollContainer} onStartShouldSetResponder={() => true}>
                   <Typography.Subtitle2 style={styles.inputLabel}>
                     {t('nickname')}
                   </Typography.Subtitle2>
@@ -145,9 +126,7 @@ const EditProfile = () => {
                     </View>
                   )}
 
-                  <Typography.Subtitle2 style={styles.inputLabel}>
-                    {t('bio')}
-                  </Typography.Subtitle2>
+                  <Typography.Subtitle2 style={styles.inputLabel}>{t('bio')}</Typography.Subtitle2>
                   <DTextInput
                     inputRef={bioInputRef}
                     value={values.bio}
@@ -162,9 +141,7 @@ const EditProfile = () => {
                     style={styles.bioDTextInput}
                   />
                   {errors.bio && (
-                    <Typography.Caption1 style={styles.errorText}>
-                      {errors.bio}
-                    </Typography.Caption1>
+                    <Typography.Caption1 style={styles.errorText}>{errors.bio}</Typography.Caption1>
                   )}
                   {bioInputRef.current && (
                     <View style={styles.bio}>
@@ -176,7 +153,7 @@ const EditProfile = () => {
                   )}
                 </View>
               </ScrollView>
-              <View style={{padding: theme.spacing.m}}>
+              <View style={{ padding: theme.spacing.m }}>
                 <Button
                   disabled={!values.dTag}
                   color={theme.colors.surfaceBlack}
