@@ -3,7 +3,6 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useProfileParams from 'hooks/useProfileParams';
 import * as Yup from 'yup';
 import useGenerateRandomAccount from 'hooks/useGenerateRandomAccount';
 import { useAppStateValue } from '@recoil/appState';
@@ -24,9 +23,10 @@ interface FormValues {
  * Hook that exports the initial form values.
  */
 export const useInitialFormValues = (): FormValues => {
+  const inviteCode = useAppStateValue('inviteCode');
   return {
     newPassword: '',
-    inviteCode: '',
+    inviteCode,
     consent: false,
   } as FormValues;
 };
@@ -36,12 +36,11 @@ export const useInitialFormValues = (): FormValues => {
  */
 export const useValidationSchema = () => {
   const { t } = useTranslation('passwordManipulation');
-  const { params: profileParams } = useProfileParams();
   return React.useMemo(() => {
     return Yup.object().shape({
       inviteCode: Yup.string().required(t('error:required')),
     });
-  }, [profileParams]);
+  }, [t]);
 };
 
 /**
@@ -123,7 +122,7 @@ const usePerformSignUp = () => {
           return err(new Error('Your invite code is invalid'));
         }
 
-        console.log('Creating account with invite code:', inviteCode);
+        console.log('Creating account with invite code', inviteCode);
 
         // Create a random wallet
         setStatus(SignUpStatus.CREATING_WALLET);
@@ -158,7 +157,7 @@ const usePerformSignUp = () => {
         return err(new Error(e.toString()));
       }
     },
-    [],
+    [acceptInvite, appInviteCode, generateRandomAccount, performLogin, saveAccount],
   );
 
   return {
@@ -181,6 +180,7 @@ export const useSubmitForm = (onSuccess: () => void, onError: (error: Error) => 
     // Signup the user inside the APIs
     const signUpResult = await performSignUp(values);
     if (signUpResult.isErr()) {
+      console.log(signUpResult.error);
       onError(signUpResult.error);
       return;
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { useQuery } from '@apollo/client';
@@ -26,9 +26,13 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
   // This is built here, before the query, in order to avoid mistakenly
   // calling a non-set accept function when we execute the first
   // GetAccountBalance query later on
-  const promise = new Promise<Result<AcceptInviteSuccess, Error>>(a => {
-    accept.current = a;
-  });
+  const promise = useMemo(
+    () =>
+      new Promise<Result<AcceptInviteSuccess, Error>>(a => {
+        accept.current = a;
+      }),
+    [],
+  );
 
   // Start the polling of the data
   const { data, startPolling, stopPolling } = useQuery(GetAccountBalance, {
@@ -46,7 +50,7 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
         stopPolling();
         accept.current(err(new Error('Accept invite request timeout')));
       }, timeout),
-    [],
+    [stopPolling, timeout],
   );
 
   // Observe the changes in the data field, and accept the promise as
@@ -57,13 +61,16 @@ const useWaitForAccountBalance = (pollInterval: number = 1000, timeout: number =
       stopPolling();
       accept.current(ok({} as AcceptInviteSuccess));
     }
-  }, [data]);
+  }, [data, stopPolling, t]);
 
-  return React.useCallback((address: string) => {
-    setAddressToCheck(address);
-    startPolling(pollInterval);
-    return promise;
-  }, []);
+  return React.useCallback(
+    (address: string) => {
+      setAddressToCheck(address);
+      startPolling(pollInterval);
+      return promise;
+    },
+    [pollInterval, promise, startPolling],
+  );
 };
 
 /**
@@ -88,8 +95,8 @@ const useAcceptInvite = (pollInterval: number = 1000, timeout: number = 30 * 100
   return React.useCallback(
     async (userAddress: string, inviteCode: string) => {
       const response = await AcceptInvite(inviteCode);
-      if (!response) {
-        return err(new Error('Accept invite request error'));
+      if (response.isErr()) {
+        return err(response.error);
       }
       return waitForAccountBalance(userAddress);
     },

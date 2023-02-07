@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -17,16 +17,22 @@ const useInitializeDynamicLinks = () => {
   const activeAddress = useActiveAccountAddress();
   const setInviteCode = useSetAppStateValue('inviteCode');
 
-  const handleDynamicLink = (link: FirebaseDynamicLinksTypes.DynamicLink | null) => {
-    if (link && !activeAddress) {
-      const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
-      Alert.alert('You received an invite!', `${inviteCode}`);
-      setInviteCode(inviteCode);
-      navigate(ROUTES.ONBOARDING, { invited: true });
-    } else if (link && activeAddress) {
-      Alert.alert('Error', 'Your already have an account');
-    }
-  };
+  const handleDynamicLink = useCallback(
+    (link: FirebaseDynamicLinksTypes.DynamicLink | null) => {
+      if (link && !activeAddress) {
+        const inviteCode = link.url.substring(link.url.indexOf('=') + 1);
+        console.log('Invite code found:', inviteCode);
+
+        // TODO: Improve this alert - The OS UI sucks
+        Alert.alert('You received an invite!', `${inviteCode}`);
+        setInviteCode(inviteCode);
+        navigate(ROUTES.ONBOARDING, { invited: true });
+      } else if (link && activeAddress) {
+        Alert.alert('Error', 'Your already have an account');
+      }
+    },
+    [activeAddress, navigate, setInviteCode],
+  );
 
   useEffect(() => {
     // Listen to Firebase dynamic links, foreground and background modes
@@ -37,7 +43,7 @@ const useInitializeDynamicLinks = () => {
 
     // Clear the subscription
     return () => unsubscribe();
-  }, []);
+  }, [handleDynamicLink]);
 };
 
 export default useInitializeDynamicLinks;

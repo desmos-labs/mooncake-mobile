@@ -1,12 +1,7 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
 import { deleteMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import _ from 'lodash';
-import ROUTES from 'navigation/routes';
 
 const axiosInstance = axios.create({
   baseURL: EnvConfig.BUTTER_REST,
@@ -32,30 +27,17 @@ export const deleteAuthToken = () => {
   };
 };
 
-// Some possible token related error messages
-const invalidAuthMsgs = ['Wrong Authorization header value', 'Invalid token'];
-
-type NavProps = StackScreenProps<RootNavigatorParamList, any>;
-
 /**
  * A hook that augments the interceptors of the axiosInstance with react hook functionality.
  */
 export const useInitializeAxios = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
-
   React.useEffect(() => {
     axiosInstance.interceptors.response.use(
       response => response,
       error => {
-        const responseMsg = _.get(error, 'response.data');
-
-        if (invalidAuthMsgs.includes(responseMsg)) {
-          navigate(ROUTES.LOGIN);
-          return Promise.reject(error);
-        } else {
-          console.warn(`[AXIOS]: ${responseMsg}`);
-          return Promise.reject(error);
-        }
+        const responseMsg = error.response?.data ?? error.toString();
+        console.warn(`[AXIOS]: ${responseMsg}`);
+        throw new Error(responseMsg);
       },
     );
   }, []);

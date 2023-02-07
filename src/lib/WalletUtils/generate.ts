@@ -56,6 +56,52 @@ export const generateLedgerAccountWallets = async (
 };
 
 /**
+ * Function allowing to generate a MnemonicWallet.
+ * @param prefix - Account prefix that should be used to generate the Bech32 address of the wallet.
+ * @param hdPath - HD path that should be used to generate the wallet.
+ * @param mnemonic - Mnemonic from which to generate the wallet.
+ */
+export const generateMnemonicWallet = async (
+  prefix: string,
+  hdPath: HdPath,
+  mnemonic: string,
+): Promise<AccountWithWallet> => {
+  const [, coinType, account, change, index] = hdPath;
+  const { privkey } = await CryptoUtils.deriveKeyPairFromMnemonic(
+    mnemonic,
+    slip10IndexToBaseNumber(coinType),
+    slip10IndexToBaseNumber(account),
+    slip10IndexToBaseNumber(change),
+    slip10IndexToBaseNumber(index),
+  );
+  const signer = PrivateKeySigner.fromSecp256k1(privkey, SigningMode.DIRECT, {
+    prefix,
+  });
+  await signer.connect();
+
+  const [accountData] = await signer.getAccounts();
+
+  return {
+    wallet: {
+      type: WalletType.Mnemonic,
+      signer,
+      address: accountData.address,
+      hdPath,
+      privateKey: signer.privateKey.key,
+      publicKey: accountData.pubkey,
+      addressPrefix: prefix,
+    },
+    account: {
+      walletType: WalletType.Mnemonic,
+      address: accountData.address,
+      hdPath,
+      algo: accountData.algo,
+      pubKey: accountData.pubkey,
+    },
+  } as AccountWithWallet;
+};
+
+/**
  * Function allowing to generate a list of MnemonicWallet.
  * @param prefix - Account prefix that should be used to generate the Bech32 address of the wallet.
  * @param hdPaths - HD paths that should be used to generate the wallet. If more than one is specified,
@@ -67,43 +113,7 @@ export const generateMnemonicWallets = async (
   hdPaths: HdPath[],
   mnemonic: string,
 ): Promise<AccountWithWallet[]> =>
-  Promise.all(
-    hdPaths.map(async hdPath => {
-      const [, coinType, account, change, index] = hdPath;
-      const { privkey } = await CryptoUtils.deriveKeyPairFromMnemonic(
-        mnemonic,
-        slip10IndexToBaseNumber(coinType),
-        slip10IndexToBaseNumber(account),
-        slip10IndexToBaseNumber(change),
-        slip10IndexToBaseNumber(index),
-      );
-      const signer = PrivateKeySigner.fromSecp256k1(privkey, SigningMode.DIRECT, {
-        prefix,
-      });
-      await signer.connect();
-
-      const [accountData] = await signer.getAccounts();
-
-      return {
-        wallet: {
-          type: WalletType.Mnemonic,
-          signer,
-          address: accountData.address,
-          hdPath,
-          privateKey: signer.privateKey.key,
-          publicKey: accountData.pubkey,
-          addressPrefix: prefix,
-        },
-        account: {
-          walletType: WalletType.Mnemonic,
-          address: accountData.address,
-          hdPath,
-          algo: accountData.algo,
-          pubKey: accountData.pubkey,
-        },
-      } as AccountWithWallet;
-    }),
-  );
+  Promise.all(hdPaths.map(async hdPath => generateMnemonicWallet(prefix, hdPath, mnemonic)));
 
 /**
  * Function allowing to generate a Web3AuthWallet.
