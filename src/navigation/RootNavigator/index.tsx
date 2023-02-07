@@ -12,7 +12,6 @@ import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal
 import Signup from 'screens/Signup';
 import Landing from 'screens/Landing';
 import SaveProfile, { SaveProfileParams } from 'screens/SaveProfile';
-import SignupResult from 'screens/SignupResult';
 import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import { NavigatorScreenParams } from '@react-navigation/native';
@@ -36,7 +35,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
-  [ROUTES.SIGNUP_RESULT]: undefined;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -238,7 +236,6 @@ const RootNavigator = () => {
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.SIGNUP_RESULT} component={SignupResult} />
       <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
       <Stack.Screen
