@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar/index';
 import {defaultProfilePic} from 'assets/images';
 import {act, fireEvent, waitFor} from '@testing-library/react-native';

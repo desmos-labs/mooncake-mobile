@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import CustomCheckbox from 'components/CustomCheckbox/index';
 import {fireEvent} from '@testing-library/react-native';
 import {

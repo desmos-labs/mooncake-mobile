@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import MnemonicWordBadge from 'components/MnemonicWordBadge/index';
 import {fireEvent} from '@testing-library/react-native';
 

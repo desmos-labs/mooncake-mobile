@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import DSecureTextInput from 'components/DSecureTextInput/index';
 import {fireEvent} from '@testing-library/react-native';
 import LightTheme from 'config/theme/LightTheme';

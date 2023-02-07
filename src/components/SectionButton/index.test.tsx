@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import SectionButton from 'components/SectionButton/index';
 import {desmosIcon} from 'assets/images';
 
