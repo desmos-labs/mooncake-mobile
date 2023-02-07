@@ -45,7 +45,7 @@ const Landing = () => {
     } else {
       navigate(ROUTES.SIGNUP);
     }
-  }, [consentGiven]);
+  }, [consentGiven, navigate, replace]);
 
   const onSignUpWithWallet = React.useCallback(() => {
     const performImportAccount = () => {
@@ -67,7 +67,7 @@ const Landing = () => {
     } else {
       performImportAccount();
     }
-  }, [consentGiven, importAccount]);
+  }, [consentGiven, importAccount, navigate, saveAccount]);
 
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
