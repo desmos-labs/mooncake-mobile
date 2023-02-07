@@ -19,7 +19,9 @@ const usePostsParams = () => {
     if (!data) {
       return;
     }
-    setPostsParams(convertGraphQLPostsParams(data.params.params));
+    const { params } = data;
+    const onChainParams = params[0];
+    setPostsParams(convertGraphQLPostsParams(onChainParams.params));
   }, [data, setPostsParams]);
 
   return {

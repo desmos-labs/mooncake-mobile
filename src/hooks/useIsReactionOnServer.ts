@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
 import { useMemo } from 'react';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { Post } from 'types/posts';
 
 /**

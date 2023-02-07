@@ -1,9 +1,9 @@
 import { DesmosProfile } from 'types/desmos';
-import { useActiveAccountAddress } from '@recoil/activeAccount';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 export interface EditProfileOptions {
   /**

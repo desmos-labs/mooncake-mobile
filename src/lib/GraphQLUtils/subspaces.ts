@@ -26,6 +26,9 @@ export const convertGraphQLSubspaceParams = (params: any) =>
         } as ReportReason),
     ),
     tipsContractConfig: {
-      serviceFeePercentage: params.tips_contract[0].config.service_fee.percentage.value,
+      serviceFeePercentage:
+        params.tips_contract.length > 0
+          ? params.tips_contract[0].config.service_fee.percentage.value
+          : undefined,
     },
   } as SubspaceParams);

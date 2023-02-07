@@ -1,5 +1,5 @@
 import { Post } from 'types/posts';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasPostTip } from '@recoil/tips';
 
 /**

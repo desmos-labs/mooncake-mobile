@@ -37,8 +37,8 @@ export type ScanError = ScanErrorBtOff | ScanErrorUnknown;
 export const iOSOpenSettingsAndCheckBtStatus = async () => {
   // Prepare the promise that will check the settings after the application
   // come back to focus.
-  const promise = new Promise<boolean>((resolve) => {
-    const subscription = AppState.addEventListener('change', async (state) => {
+  const promise = new Promise<boolean>(resolve => {
+    const subscription = AppState.addEventListener('change', async state => {
       if (state === 'active') {
         subscription.remove();
         const btState = await BluetoothStateManager.getState();
@@ -65,7 +65,7 @@ export function useRequestEnableBt() {
 
     // Don't block the app and show the splash screen
     // after showing the turn on bluetooth dialog
-    setAppState((currentState) => ({
+    setAppState(currentState => ({
       ...currentState,
       noSplashScreen: true,
       noLockOnBackground: true,
@@ -90,7 +90,7 @@ export function useBleScan() {
   const [subscription, setScanSubscription] = useState<Subscription | undefined>(undefined);
 
   // Disable the next line warning as the NodeJS namespace will be provided by React
-  // eslint-disable-next-line no-undef
+
   const [stopScanTimeout, setStopStopScanTimeout] = useState<NodeJS.Timeout | undefined>(undefined);
   const requestEnableBt = useRequestEnableBt();
 
@@ -155,8 +155,8 @@ export function useBleScan() {
                 id: e.descriptor.id,
                 name: e.descriptor.name,
               };
-              setDevices((currValue) => {
-                const deviceExists = currValue.find((d) => d.id === bleLedger.id) !== undefined;
+              setDevices(currValue => {
+                const deviceExists = currValue.find(d => d.id === bleLedger.id) !== undefined;
                 if (!deviceExists) {
                   return [...currValue, bleLedger];
                 }

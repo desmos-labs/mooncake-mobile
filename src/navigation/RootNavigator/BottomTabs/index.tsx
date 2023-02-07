@@ -22,7 +22,7 @@ import { useToast } from 'react-native-toast-notifications';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {

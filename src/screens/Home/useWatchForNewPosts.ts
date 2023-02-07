@@ -7,7 +7,7 @@ import { NavProps } from 'screens/Home';
 import { useTranslation } from 'react-i18next';
 import { OnDataOptions } from '@apollo/client/react/types/types';
 import { useAppStateValue } from '@recoil/appState';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { OperationVariables } from '@apollo/client/core';
 import DiscoveryPostsCount from 'services/graphql/subscriptions/DiscoveryPostsCount';
 import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCount';

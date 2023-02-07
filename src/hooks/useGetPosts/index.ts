@@ -4,7 +4,7 @@ import GetPosts from 'services/graphql/queries/GetPosts';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
 import { useStoredFollowingPosts, useStoredRootPosts } from '@recoil/posts';
 import EnvConfig from 'config/EnvConfig';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useFollowingAddresses from 'hooks/useFollowingAddresses';
 
 /**

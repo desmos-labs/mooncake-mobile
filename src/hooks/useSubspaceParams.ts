@@ -23,7 +23,7 @@ const useSubspaceParams = () => {
       return;
     }
     setSubspaceParams(convertGraphQLSubspaceParams(data));
-  }, [data]);
+  }, [data, setSubspaceParams]);
 
   return {
     params: subspaceParams,

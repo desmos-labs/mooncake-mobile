@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import GetPostReactionsCount from 'services/graphql/queries/GetPostReactionsCount';
 import { useHasPostReaction } from '@recoil/reactions';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useIsReactionOnServer from 'hooks/useIsReactionOnServer';
 import { useMemo } from 'react';
 import { Post } from 'types/posts';

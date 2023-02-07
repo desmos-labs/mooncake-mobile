@@ -27,7 +27,7 @@ import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/useIsFollowing';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useHasCommented from 'hooks/useHasCommented';
 import useHasReacted from 'hooks/useHasReacted';
 import useReactionsCount from 'hooks/useReactionsCount';

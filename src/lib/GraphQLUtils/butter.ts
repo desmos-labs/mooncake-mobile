@@ -5,6 +5,8 @@ import { ButterConfig } from 'types/butter';
  * @param {any} config - Config fetched from the server.
  * @returns {ProfileParams} - A formatted ButterConfig object
  */
+// It's fine to ignore the default export warning here since we might add other functions in the future
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLButterConfig = (config: any) =>
   ({
     desmosAddress: config.desmos_address,

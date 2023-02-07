@@ -14,12 +14,12 @@ const useConnectToLedger = () => {
 
   return useCallback(
     (ledgerApp: LedgerApp) =>
-      new Promise<BluetoothTransport | undefined>((resolve) => {
+      new Promise<BluetoothTransport | undefined>(resolve => {
         navigator.navigate({
           name: ROUTES.CONNECT_TO_LEDGER_STACK,
           params: {
             ledgerApp,
-            onConnect: (transport) => {
+            onConnect: transport => {
               resolve(transport);
               returnToCurrentScreen();
             },

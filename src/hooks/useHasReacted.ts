@@ -1,4 +1,4 @@
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasPostReaction } from '@recoil/reactions';
 import { Post } from 'types/posts';
 

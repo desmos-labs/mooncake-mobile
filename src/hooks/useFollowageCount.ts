@@ -1,4 +1,4 @@
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import GetFollowageCount from 'services/graphql/queries/GetFollowageCount';

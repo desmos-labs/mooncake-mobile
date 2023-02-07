@@ -18,9 +18,8 @@ const useButterConfig = () => {
     if (!data) {
       return;
     }
-
     setButterConfig(convertGraphQLButterConfig(data.config));
-  });
+  }, [data, setButterConfig]);
 
   return {
     config,

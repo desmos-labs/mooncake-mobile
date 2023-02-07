@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import { DesmosProfile } from 'types/desmos';
 import { useStoredProfiles, useStoreProfile } from '@recoil/profiles';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Hook to retrieve the Desmos profile of the user having the given address.

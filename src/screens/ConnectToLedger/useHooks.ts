@@ -23,7 +23,7 @@ export function useConnectToLedger(ledger: BLELedger, ledgerApp: LedgerApp) {
         const launchpad = new LedgerConnector(transportToUse, {
           ledgerAppName: ledgerAppToUse.name,
         });
-        await launchpad.getCosmosAppVersion().catch(async (ex) => {
+        await launchpad.getCosmosAppVersion().catch(async ex => {
           await transportToUse.close();
           throw ex;
         });

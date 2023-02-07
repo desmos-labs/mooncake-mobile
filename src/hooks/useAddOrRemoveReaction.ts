@@ -1,5 +1,5 @@
 import React from 'react';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import {
   useAddPostReaction,
   useHasPostReaction,

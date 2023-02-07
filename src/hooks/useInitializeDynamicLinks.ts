@@ -6,7 +6,7 @@ import ROUTES from 'navigation/routes';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Hook that allows to properly set up the Firebase Dynamic Links usage.

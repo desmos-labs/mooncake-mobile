@@ -1,7 +1,7 @@
 import React from 'react';
 import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { activeAccountAddressState } from '@recoil/wallets';
+import { activeAccountAddressState } from '@recoil/accounts';
 import { DesmosProfile } from 'types/desmos';
 
 /**

@@ -14,7 +14,7 @@ import {
   MsgDeleteRelationshipEncodeObject,
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { DataStatus } from 'types/desmos';
 import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';

@@ -1,4 +1,4 @@
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useButterConfig from 'hooks/useButterConfig';
 import React from 'react';
 import GetFeeGrantCount from 'services/graphql/GetFeeGrantCount';

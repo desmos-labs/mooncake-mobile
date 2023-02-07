@@ -21,8 +21,8 @@ const useProfileParams = () => {
     }
 
     const { params } = data;
-    const profileParams = params[0];
-    setProfileParams(convertGraphQLProfileParams(profileParams));
+    const onChainParams = params[0];
+    setProfileParams(convertGraphQLProfileParams(onChainParams.params));
   }, [data, setProfileParams]);
 
   return {

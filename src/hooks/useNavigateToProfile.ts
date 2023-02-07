@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 const useNavigateToProfile = () => {
   const activeAddress = useActiveAccountAddress();

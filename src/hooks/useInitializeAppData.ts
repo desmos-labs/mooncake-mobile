@@ -42,7 +42,14 @@ const useInitializeAppData = () => {
     //   await resolveOptimisticRelationships();
     // };
     // resolveOutstandingOptimisticRelationships();
-  }, []);
+  }, [
+    refreshButterConfig,
+    refreshPostsParams,
+    refreshProfileParams,
+    refreshSubspaceParams,
+    setCurrentTimezone,
+    setDataInitialized,
+  ]);
 };
 
 export default useInitializeAppData;

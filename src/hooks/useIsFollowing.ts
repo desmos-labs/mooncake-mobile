@@ -1,4 +1,4 @@
-import { useActiveAccountAddress } from '@recoil/wallets';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasFollowedUser } from '@recoil/relationships';
 
 /**

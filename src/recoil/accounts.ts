@@ -4,7 +4,10 @@ import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { Account } from 'types/account';
 import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
 import { serializeAccounts } from 'lib/AccountUtils/serialize';
-import { useActiveAccountAddress } from '@recoil/wallets';
+
+// -------------------------------------------------------------------------------------------------------------------
+// --- STORED ACCOUNTS
+// -------------------------------------------------------------------------------------------------------------------
 
 /**
  * An atom that holds all the accounts stored in the application.
@@ -41,41 +44,9 @@ export const useStoreAccount = () => {
 };
 
 /**
- * Recoil select that allows to easily know if there is at least one account stored in the device or not.
- */
-const hasAccountAppState = selector({
-  key: 'hasAccount',
-  get: ({ get }) => {
-    const accounts = get(accountsAppState);
-    return Object.keys(accounts).length > 0;
-  },
-});
-
-/**
- * Hook that allows to easily know if there is at least one account stored inside the device or not.
- */
-export const useHasAccount = () => useRecoilValue(hasAccountAppState);
-
-/**
  * Hook that allows to get the accounts stored on the device.
  */
 export const useStoredAccounts = () => useRecoilValue(accountsAppState);
-
-/**
- * Selector that allows to easily get the number of stored accounts.
- */
-const storedAccountsNumberAppState = selector({
-  key: 'storedAccountsNumber',
-  get: ({ get }) => {
-    const accounts = get(accountsAppState);
-    return Object.keys(accounts).length;
-  },
-});
-
-/**
- * Hook that allows to easily get the number of stored accounts.
- */
-export const useStoredAccountsNumber = () => useRecoilValue(storedAccountsNumberAppState);
 
 /**
  * Hook that allows to easily delete the account of a user having a given address.
@@ -96,11 +67,55 @@ export const useDeleteAccount = () => {
   );
 };
 
+// -------------------------------------------------------------------------------------------------------------------
+// --- ACCOUNTS EXISTENCE CHECK
+// -------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Recoil select that allows to easily know if there is at least one account stored in the device or not.
+ */
+const hasAccountAppState = selector({
+  key: 'hasAccount',
+  get: ({ get }) => {
+    const accounts = get(accountsAppState);
+    return Object.keys(accounts).length > 0;
+  },
+});
+
+/**
+ * Hook that allows to easily know if there is at least one account stored inside the device or not.
+ */
+export const useHasAccount = () => useRecoilValue(hasAccountAppState);
+
+// -------------------------------------------------------------------------------------------------------------------
+// --- ACCOUNTS COUNT
+// -------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Selector that allows to easily get the number of stored accounts.
+ */
+const storedAccountsNumberAppState = selector({
+  key: 'storedAccountsNumber',
+  get: ({ get }) => {
+    const accounts = get(accountsAppState);
+    return Object.keys(accounts).length;
+  },
+});
+
+/**
+ * Hook that allows to easily get the number of stored accounts.
+ */
+export const useStoredAccountsNumber = () => useRecoilValue(storedAccountsNumberAppState);
+
+// -------------------------------------------------------------------------------------------------------------------
+// --- ACCOUNTS ADDRESSES
+// -------------------------------------------------------------------------------------------------------------------
+
 /**
  * An atom that holds all the accounts addresses.
  */
 const accountsAddressesAppState = selector<string[]>({
-  key: 'accountsAddresses',
+  key: 'accountsAddressesAppState',
   get: ({ get }) => {
     const accounts = get(accountsAppState);
     return Object.values(accounts).map(account => account.address);
@@ -111,6 +126,31 @@ const accountsAddressesAppState = selector<string[]>({
  * Hook that allows to get the currently stored accounts HD paths.
  */
 export const useStoredAccountsAddresses = () => useRecoilValue(accountsAddressesAppState);
+
+// -------------------------------------------------------------------------------------------------------------------
+// --- ACTIVE ACCOUNT
+// -------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Atom that holds the address of the currently active wallet.
+ * This should be used as the unique reference across the entire application to determine
+ * whether the user is logged in or not.
+ */
+export const activeAccountAddressState = atom<string | undefined>({
+  key: 'activeAccountAddressState',
+  default: getMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS),
+  effects: [
+    ({ onSet }) => {
+      onSet(newValue => {
+        setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS, newValue);
+      });
+    },
+  ],
+});
+
+export const useActiveAccountAddress = () => useRecoilValue(activeAccountAddressState);
+
+export const useSetActiveAccountAddress = () => useSetRecoilState(activeAccountAddressState);
 
 /**
  * Hook that allows to get the currently active account of the user.
