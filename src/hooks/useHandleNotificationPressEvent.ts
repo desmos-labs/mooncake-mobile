@@ -15,15 +15,16 @@ const useHandleNotificationPressEvent = () => {
   const { navigate } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
 
   const profile = useActiveProfile();
-  if (!profile) {
-    throw new Error('Using the application without a profile');
-  }
 
   // Return a callback that allows to navigate to the proper screen
   // given a ReceivedNotificationData instance that is retrieved from
   // the server
   return useCallback(
     (data: NotificationData | undefined) => {
+      if (!profile) {
+        return;
+      }
+
       switch (data?.type) {
         case NotificationType.Comment:
           navigate(ROUTES.POST_DETAILS, {

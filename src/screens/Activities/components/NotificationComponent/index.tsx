@@ -10,43 +10,41 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useRecoilValue } from 'recoil';
-import { CompleteNotification } from 'screens/Activities';
 import NotificationButton from 'screens/Activities/components/NotificationButton';
 import NotificationImage from 'screens/Activities/components/NotificationImage';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import PostNotificationRead from 'services/axios/requests/PostNotificationRead';
 import client from 'services/graphql/client';
 import NotificationReadFields from 'services/graphql/queries/fragments/NotificationReadFields';
-import NotificationTypesEnum from 'types/notificationTypes';
+import { NotificationType } from 'types/notifications';
+import { CompleteNotification } from 'screens/Activities/types';
 import useStyles from './useStyles';
 
 const componentMap: { [index: string]: any } = {
-  [NotificationTypesEnum.Reaction_Post]: NotificationImage,
-  [NotificationTypesEnum.Reaction_Comment]: NotificationImage,
-  [NotificationTypesEnum.Reaction_Reply]: NotificationImage,
-  [NotificationTypesEnum.Comment]: NotificationImage,
-  [NotificationTypesEnum.Reply]: NotificationImage,
-  [NotificationTypesEnum.Follow]: NotificationButton,
-  [NotificationTypesEnum.InviteClaimed]: undefined,
-  [NotificationTypesEnum.InviteUnlocked]: undefined,
+  [NotificationType.ReactionPost]: NotificationImage,
+  [NotificationType.ReactionComment]: NotificationImage,
+  [NotificationType.ReactionReply]: NotificationImage,
+  [NotificationType.Comment]: NotificationImage,
+  [NotificationType.Reply]: NotificationImage,
+  [NotificationType.Follow]: NotificationButton,
+  [NotificationType.InviteClaimed]: undefined,
+  [NotificationType.InviteUnlocked]: undefined,
 };
 
-const NotificationComponent = ({
-  id,
-  data: { type, post_id, comment_id, reply_id, subspace_id, relationship_creator },
-  profile,
-  timestamp,
-  post,
-  read_receipts,
-}: CompleteNotification) => {
+export interface NotificationComponentProps {
+  readonly notification: CompleteNotification;
+}
+
+const NotificationComponent = (notification: CompleteNotification) => {
   const { t } = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
+
+  const { timestamp } = notification;
   const formattedDate = useFormatTimeForPostDetails(timestamp);
   const isFollowingAddress = useRecoilValue(isFollowingAddr(relationship_creator || ''));
   const { followOrUnfollowUser } = useFollowOrUnfollowUser();
-  const { handleNavigateToProfile } = useNavigateToProfile();
-  const { navigateToCorrectScreen } = useHandleNotificationPressEvent();
+  const handleNavigateToProfile = useNavigateToProfile();
+  const navigateToCorrectScreen = useHandleNotificationPressEvent();
 
   const handleNavigateToNotification = useCallback(async () => {
     navigateToCorrectScreen({

@@ -12,7 +12,7 @@ import { OperationVariables } from '@apollo/client/core';
 import DiscoveryPostsCount from 'services/graphql/subscriptions/DiscoveryPostsCount';
 import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCount';
 import useFollowingAddresses from 'hooks/useFollowingAddresses';
-import debounce from '@react-navigation/stack/lib/typescript/src/utils/debounce';
+import { debounce } from 'lodash';
 
 /**
  * Hook that allows to observe a generic posts count subscription,

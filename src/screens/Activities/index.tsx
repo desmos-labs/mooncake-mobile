@@ -13,59 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationComponent';
-import NotificationTypesEnum from 'types/notificationTypes';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
-
-export interface CompleteNotification {
-  /**
-   * Notification UUID
-   */
-  id?: string;
-  /**
-   * data object, containing notification fields
-   */
-  data: {
-    /**
-     * {NotificationsTypeEnum} Notification type
-     */
-    type: NotificationTypesEnum;
-    /**
-     * notification IDs
-     * if post, only post_id
-     * if comment/reply, only post_id and comment_id
-     * if post reaction, only post_id
-     * if comment reaction, only post_id and comment_id
-     * if reply reaction, post_id comment_id and reply_id
-     */
-    post_id?: string;
-    comment_id?: string;
-    reply_id?: string;
-    /**
-     * subspace id, should not be undefined/null
-     */
-    subspace_id?: string;
-
-    /**
-     * If follow notification, the author of the relationship
-     */
-    relationship_creator?: string;
-  };
-  read_receipts: any[];
-  /**
-   * Profile of the notification author
-   */
-  profile?: any;
-
-  /**
-   * Complete post object
-   */
-  post?: any;
-  /**
-   * Notification timestamp
-   */
-  timestamp: string;
-}
 
 const Activities = () => {
   const { t } = useTranslation('activities');

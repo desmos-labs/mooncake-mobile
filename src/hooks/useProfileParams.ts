@@ -19,7 +19,10 @@ const useProfileParams = () => {
     if (!data) {
       return;
     }
-    setProfileParams(convertGraphQLProfileParams(data.params.params));
+
+    const { params } = data;
+    const profileParams = params[0];
+    setProfileParams(convertGraphQLProfileParams(profileParams));
   }, [data, setProfileParams]);
 
   return {

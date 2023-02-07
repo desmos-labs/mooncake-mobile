@@ -16,7 +16,8 @@ import {
 } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/wallets';
 import { DataStatus } from 'types/desmos';
-import useAppConfig from 'hooks/redesign/useAppConfig';
+import { useAppStateValue } from '@recoil/appState';
+import Long from 'long';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
@@ -44,7 +45,7 @@ const useDoesRelationshipExistRemotely = () => {
  * Hook that allows to follow a user both remotely and locally.
  */
 const useFollowUser = () => {
-  const appConfig = useAppConfig();
+  const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
   const addFollowedUser = useAddFollowedUser();
@@ -64,7 +65,7 @@ const useFollowUser = () => {
         const messageCreateRelationship: MsgCreateRelationshipEncodeObject = {
           typeUrl: MsgCreateRelationshipTypeUrl,
           value: {
-            subspaceId: appConfig.subspaceId,
+            subspaceId: Long.fromNumber(subspaceId),
             counterparty,
             signer: address,
           },
@@ -97,7 +98,7 @@ const useFollowUser = () => {
  * Hook that allows to unfollow a user, both locally and remotely.
  */
 const useUnfollowUser = () => {
-  const appConfig = useAppConfig();
+  const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
   const setFollowedUserStatus = useSetFollowedUserStatus();
@@ -116,7 +117,7 @@ const useUnfollowUser = () => {
         const messageDeleteRelationship: MsgDeleteRelationshipEncodeObject = {
           typeUrl: MsgDeleteRelationshipTypeUrl,
           value: {
-            subspaceId: appConfig.subspaceId,
+            subspaceId: Long.fromNumber(subspaceId),
             counterparty,
             signer: address,
           },

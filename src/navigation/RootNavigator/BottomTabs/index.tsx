@@ -19,9 +19,6 @@ import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
-import Activities from 'screens/Activities';
-import Communities from 'screens/Communities';
-import Profile from 'screens/Profile';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
@@ -186,10 +183,12 @@ const BottomTabsNavigator = () => {
         initialRouteName={ROUTES.HOME_TABS}
         screenOptions={{ headerShown: false }}>
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-        <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
-        <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
-        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
-        <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} />
+
+        {/* TODO: Re-add these */}
+        {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
+        {/* <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} /> */}
+        {/* <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
+        {/* <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} /> */}
       </Tab.Navigator>
       <LoadingOverlay isVisible={loading} />
     </View>

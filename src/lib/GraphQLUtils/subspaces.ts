@@ -5,6 +5,8 @@ import { RegisteredReaction, ReportReason, SubspaceParams } from 'types/desmos';
  * @param {any} params - Params fetched from the server.
  * @returns {ProfileParams} - A formatted SubspaceParams object
  */
+// It's fine to disable the default export here cause we might add other methods in the future
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLSubspaceParams = (params: any) =>
   ({
     registeredReactions: params.registered_reactions.map(
