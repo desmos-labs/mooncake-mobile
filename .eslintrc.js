@@ -20,7 +20,6 @@ module.exports = {
     'import/extensions': 0,
     'import/no-extraneous-dependencies': 0,
     'react/jsx-props-no-spreading': 0,
-    'react-hooks/exhaustive-deps': 0,
     'react/require-default-props': 0,
     'react/function-component-definition': 0,
     'react-native/sort-styles': 'error',
@@ -28,7 +27,10 @@ module.exports = {
     '@typescript-eslint/no-shadow': ['error'],
     'no-unused-vars': 'off',
     'no-undef': 0,
-    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    // React hooks deps lints
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
   settings: {
     'import/resolver': {
