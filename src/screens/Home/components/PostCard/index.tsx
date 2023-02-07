@@ -154,6 +154,7 @@ const PostCard = ({
     if (isPending) {
       return (
         <ThemedLottieView
+          testID="pendingIndicator"
           source={loadingOrange}
           autoPlay
           style={styles.pendingIcon}
@@ -228,6 +229,7 @@ const PostCard = ({
       <View style={styles.bottomBarView}>
         <View style={styles.bottomBarInnerView}>
           <ImageButton
+            testID="postcardLikeButton"
             onPress={onPressLike}
             tintColor={
               reactionPresence?.aggregate?.count >= 1
@@ -250,6 +252,7 @@ const PostCard = ({
             {reactions?.length}
           </Typography.Subtitle3>
           <TouchableOpacity
+            testID="postcardCommentButton"
             onPress={onPressComment}
             style={styles.commentButton}>
             <FastImage
@@ -278,6 +281,7 @@ const PostCard = ({
         </View>
 
         <TouchableOpacity
+          testID="postcardTipButton"
           onPress={onPressTip}
           style={{
             flexDirection: 'row',

@@ -1,12 +1,12 @@
 import React, {useRef} from 'react';
 import {
-  View,
   Image,
-  StatusBar,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {postBG, whiteCross} from 'assets/images';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -131,6 +131,7 @@ const CreateTextPost = () => {
             behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
             keyboardVerticalOffset={50}>
             <TextInput
+              testID="postText"
               maxLength={postParams.max_text_length}
               ref={inputRef}
               value={sharedComment}

@@ -85,6 +85,7 @@ const BottomBar = ({
       </View>
 
       <Button
+        testID="postButton"
         size={32}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}

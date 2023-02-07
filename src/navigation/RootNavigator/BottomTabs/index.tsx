@@ -145,6 +145,7 @@ const BottomTabBar = ({state, navigation, setLoading}: Props) => {
           return (
             <View key={route.key} style={styles.middleButtonView}>
               <ImageButton
+                testID="createPostButton"
                 onPress={handlePressCreatePost}
                 image={middleButtonIcon}
                 style={{height: 41, width: 41, alignSelf: 'center'}}
