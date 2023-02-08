@@ -96,7 +96,7 @@ export async function setItem<T>(
     data = JSON.stringify(encryptedData);
   }
 
-  return Keychain.setGenericPassword('dpm', data, {
+  return Keychain.setGenericPassword('butter', data, {
     service: key,
     ...moreOptions,
   });
