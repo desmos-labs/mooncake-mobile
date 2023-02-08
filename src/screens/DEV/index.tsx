@@ -61,13 +61,6 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
   const toast = useToast();
-  /*  const a = [1, 2];
-  const b = [1, 2, 3];
-
-  console.log(_.includes(b, a)); */
-
-  // const resetSigner = useResetRecoilState(signerState);
-  // const resetMnemonic = useResetRecoilState(mnemonicState);
 
   const showToast = () => {
     toast.show('I am a toast', {
@@ -81,9 +74,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       onPress() {
         console.log('test');
       },
-      /*      onPressRetry() {
-        console.log('retry');
-      }, */
     });
     toast.show('I am a toast', {
       type: ToastConfig.ERROR_NO_RETRY,
@@ -94,7 +84,12 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   };
 
   const acceptInvite = useCallback(async (code: string) => {
-    await AcceptInvite(code).then(result => Alert.alert('Accept invite tx hash', result.tx_hash));
+    const result = await AcceptInvite(code);
+    if (result.isErr()) {
+      Alert.alert('Accept invite error', result.error.message);
+    } else {
+      Alert.alert('Accept invite tx hash', result.value.txHash);
+    }
   }, []);
 
   const redeemAnInvite = useCallback(async () => {
@@ -103,9 +98,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         Alert.alert('Error', e.response.data);
       });
     });
-  }, []);
-
-  // const {activeAddress} = useActiveAccount();
+  }, [acceptInvite]);
 
   const renderItem = ({ item }: any) => {
     return (
@@ -122,8 +115,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               });
               break;
             case ROUTES.ADD_PROFILE:
-              // resetSigner();
-              // resetMnemonic();
               navigate(item);
               break;
             default:
