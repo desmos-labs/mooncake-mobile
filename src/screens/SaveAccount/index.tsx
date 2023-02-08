@@ -15,17 +15,30 @@ import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
-import { useSaveAccount } from 'screens/SaveAccount/useHooks';
+import useSaveAccount from './hooks';
 import useStyles from './useStyles';
 
 export interface SaveAccountParams {
+  /**
+   * Account that should be stored.
+   */
   account: Account;
+  /**
+   * Wallet associated to the account that should be stored.
+   */
   wallet: Wallet;
+  /**
+   * Password that should be used in order to securely encrypt the wallet data.
+   */
   password: string;
 }
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_ACCOUNT>;
 
+/**
+ * Screen that allows the user to save an account inside the device local storage.
+ * @constructor
+ */
 const SaveAccount = () => {
   const { reset } = useNavigation<NavProps['navigation']>();
   const {
@@ -38,14 +51,11 @@ const SaveAccount = () => {
 
   React.useEffect(() => {
     (async () => {
-      await saveAccount(
-        {
-          account,
-          wallet,
-        },
-        password,
-      );
+      await saveAccount({ account, wallet }, password);
     })();
+    // Disable the lint warning on the next line as we want this effect to be
+    // called only one time when the user sees the saving account screen
+    // eslint-disable-next-line
   }, []);
 
   const resetToHome = React.useCallback(async () => {

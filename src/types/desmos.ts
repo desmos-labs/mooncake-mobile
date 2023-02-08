@@ -1,4 +1,5 @@
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
+import { Asset } from 'react-native-image-picker';
 
 /**
  * Represents a reaction that is registered on the subspace and can be used.
@@ -90,7 +91,7 @@ export interface DesmosProfile {
   /**
    * User DTag
    */
-  readonly dtag?: string;
+  readonly dTag?: string;
   /**
    * The user nickname
    */
@@ -102,11 +103,11 @@ export interface DesmosProfile {
   /**
    * Url to the user profile picture
    */
-  readonly profilePicture?: string;
+  readonly profilePicture?: Asset | string;
   /**
    * Url to the user cover picture
    */
-  readonly coverPicture?: string;
+  readonly coverPicture?: Asset | string;
 }
 
 export interface ChainLink {

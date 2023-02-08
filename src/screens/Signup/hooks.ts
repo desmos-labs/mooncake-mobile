@@ -10,8 +10,8 @@ import usePerformLogin from 'hooks/usePerformLogin';
 import useAcceptInvite from 'hooks/useAcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { AccountWithWallet } from 'types/account';
-import useSaveAccount from 'hooks/useSaveAccount';
 import { useNavigation } from '@react-navigation/native';
+import useStoreAccount from 'hooks/useStoreAccount';
 
 interface FormValues {
   readonly newPassword: string;
@@ -110,54 +110,49 @@ const usePerformSignUp = () => {
   const appInviteCode = useAppStateValue('inviteCode');
   const performLogin = usePerformLogin();
   const acceptInvite = useAcceptInvite();
-  const saveAccount = useSaveAccount();
+  const storeAccount = useStoreAccount();
 
   const performSignUp = React.useCallback(
     async (values: FormValues): Promise<Result<SignUpSuccess, Error>> => {
-      try {
-        // Get and check the invite code
-        const inviteCode = appInviteCode ?? values.inviteCode;
-        if (!inviteCode) {
-          setStatus(SignUpStatus.DONE);
-          return err(new Error('Your invite code is invalid'));
-        }
-
-        console.log('Creating account with invite code', inviteCode);
-
-        // Create a random wallet
-        setStatus(SignUpStatus.CREATING_WALLET);
-        const account = await generateRandomAccount();
-
-        // Perform the login
-        setStatus(SignUpStatus.CREATING_ACCOUNT);
-        const token = await performLogin(account);
-        if (!token) {
-          setStatus(SignUpStatus.DONE);
-          return err(new Error('Cannot get token from APIs'));
-        }
-
-        console.log('Login successful. Token:', token);
-
-        // Accept the invitation
-        setStatus(SignUpStatus.ACCEPTING_INVITE);
-        const result = await acceptInvite(account.account.address, inviteCode);
-        if (result.isErr()) {
-          setStatus(SignUpStatus.DONE);
-          return err(result.error);
-        }
-
-        // Save the account locally
-        await saveAccount(account);
-
-        // Return
+      // Get and check the invite code
+      const inviteCode = appInviteCode ?? values.inviteCode;
+      if (!inviteCode) {
         setStatus(SignUpStatus.DONE);
-        return ok({ account } as SignUpSuccess);
-      } catch (e: any) {
-        setStatus(SignUpStatus.DONE);
-        return err(new Error(e.toString()));
+        return err(new Error('Your invite code is invalid'));
       }
+
+      console.log('Creating account with invite code', inviteCode);
+
+      // Create a random wallet
+      setStatus(SignUpStatus.CREATING_WALLET);
+      const account = await generateRandomAccount();
+
+      // Perform the login
+      setStatus(SignUpStatus.CREATING_ACCOUNT);
+      const token = await performLogin(account);
+      if (!token) {
+        setStatus(SignUpStatus.DONE);
+        return err(new Error('Cannot get token from APIs'));
+      }
+
+      console.log('Login successful. Token:', token);
+
+      // Accept the invitation
+      setStatus(SignUpStatus.ACCEPTING_INVITE);
+      const result = await acceptInvite(account.account.address, inviteCode);
+      if (result.isErr()) {
+        setStatus(SignUpStatus.DONE);
+        return err(result.error);
+      }
+
+      // Save the account locally
+      await storeAccount(account, values.newPassword);
+
+      // Return
+      setStatus(SignUpStatus.DONE);
+      return ok({ account } as SignUpSuccess);
     },
-    [acceptInvite, appInviteCode, generateRandomAccount, performLogin, saveAccount],
+    [acceptInvite, appInviteCode, generateRandomAccount, performLogin, storeAccount],
   );
 
   return {
@@ -187,8 +182,19 @@ export const useSubmitForm = (onSuccess: () => void, onError: (error: Error) => 
 
     // Navigate to the screen allowing to save the profile
     navigate(ROUTES.SAVE_PROFILE, {
+      // We don't immediately store the profile on-chain as this will be done
+      // before the first transaction is broadcast. This is made in order to
+      // make sure that there is enough time to get the tokens from the APIs,
+      // as well as to speed up the signup procedure.
+      storeOnChain: false,
+
+      // Use the account that was generated during the signup in order to
+      // store the profile
       account: signUpResult.value.account,
+
+      // Callbacks used to get back the result of the profile saving
       onSuccess,
+      onError,
     });
   };
 

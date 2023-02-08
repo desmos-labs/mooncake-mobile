@@ -19,9 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import { Asset } from 'react-native-image-picker';
 import useProfileParams from 'hooks/useProfileParams';
-import { SaveProfileStatus } from 'hooks/useSaveProfile';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import { SaveProfileStatus } from 'hooks/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
 import CreateAvatar from './components/CreateAvatar';
 import {
@@ -39,9 +37,11 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_PROF
  */
 export interface SaveProfileParams {
   /**
-   * Optional callback that is used when the profile is saved properly.
+   * Whether the profile should be immediately stored on chain when
+   * the user saves it.
+   * Default: <code>true</code>
    */
-  readonly onSuccess?: () => void;
+  readonly storeOnChain?: boolean;
   /**
    * Optional profile that should be edited.
    * If this is not provided, a new profile will be created instead.
@@ -52,6 +52,14 @@ export interface SaveProfileParams {
    * If this is not provided, the current account will be used instead.
    */
   readonly account?: AccountWithWallet;
+  /**
+   * Optional callback that is used when the profile is saved properly.
+   */
+  readonly onSuccess?: () => void;
+  /**
+   * Optional callback used when the profile saving returns any error.
+   */
+  readonly onError?: (error: Error) => void;
 }
 
 /**
@@ -61,7 +69,6 @@ export interface SaveProfileParams {
 const SaveProfile = (props: NavProps) => {
   const theme = useTheme();
   const { t } = useTranslation('createProfile');
-  const toast = useToast();
 
   // Screen props
   const { goBack } = useNavigation<NavProps['navigation']>();
@@ -70,6 +77,8 @@ const SaveProfile = (props: NavProps) => {
   const profile = params?.profile;
   const account = params?.account;
   const onSuccess = params?.onSuccess;
+  const onError = params?.onError;
+  const saveOnChain = params?.storeOnChain ?? true;
 
   // Validation params
   const { params: profileParams } = useProfileParams();
@@ -107,30 +116,21 @@ const SaveProfile = (props: NavProps) => {
     onImageSelected: image => setProfilePic(image),
   });
 
-  // Callback used when the profile saving is successful.
-  const onSubmitSuccess = useCallback(() => {
-    if (onSuccess) {
-      onSuccess();
-    }
-  }, [onSuccess]);
-
-  // Callback used when the profile saving has an error.
-  const onSubmitError = useCallback(
-    (error: Error) => {
-      toast.show(error.message, {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
-    },
-    [toast],
-  );
-
   // Hook to submit the form and check the status of the profile saving.
-  const { status, submitForm } = useSubmitForm(profile, account, onSubmitSuccess, onSubmitError);
+  const { status, submitForm } = useSubmitForm(profile, account, saveOnChain);
 
   // Callback used when the user presses the Save button.
-  const onEditProfile = useCallback(async (values: SaveProfileFormState) => {
-    await submitForm(values, profilePic, coverPic);
-  }, []);
+  const onEditProfile = useCallback(
+    async (values: SaveProfileFormState) => {
+      const result = await submitForm(values, profilePic, coverPic);
+      if (result.isErr() && onError) {
+        onError(result.error);
+      } else if (result.isOk() && onSuccess) {
+        onSuccess();
+      }
+    },
+    [coverPic, onError, onSuccess, profilePic, submitForm],
+  );
 
   /**
    * Value that tells whether the profile is being saved or not.

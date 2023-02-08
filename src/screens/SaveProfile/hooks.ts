@@ -7,8 +7,10 @@ import { useLazyQuery } from '@apollo/client';
 import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import useSaveProfile, { SaveProfileRequest } from 'hooks/useSaveProfile';
+import useSaveProfileOnChain from 'hooks/useSaveProfileOnChain';
 import { AccountWithWallet } from 'types/account';
+import { useStoreProfile } from '@recoil/profiles';
+import { err, ok, Result } from 'neverthrow';
 import { NavProps } from './index';
 
 /**
@@ -27,7 +29,7 @@ export interface SaveProfileFormState {
  */
 export const useInitialFormState = (profile: DesmosProfile | undefined): SaveProfileFormState => ({
   nickname: profile?.nickname,
-  dTag: profile?.dtag,
+  dTag: profile?.dTag,
   bio: profile?.bio,
 });
 
@@ -70,7 +72,7 @@ export const useCheckDTagAvailability = () => {
       const { data } = await getDTagAvailability({ variables: { dTag: inputDTag } });
       return (data?.profile?.length ?? 0) === 0;
     },
-    [getDTagAvailability()],
+    [getDTagAvailability],
   );
 };
 
@@ -86,7 +88,7 @@ export const useOpenInfoModal = () => {
       title: t('signup:profile dtag'),
       body: t('signup:dtag info'),
     });
-  }, []);
+  }, [navigate, t]);
 };
 
 /**
@@ -100,12 +102,12 @@ export const omitEmptyValue = (value: string): string | undefined => {
 /**
  * Hook that allows to get the proper value to be displayed as an image background.
  * @param inputValue {Asset | undefined} - Value selected by the user inside the editor
- * @param profileValue {string | undefined} - URI defined inside the Desmos profile
+ * @param profileValue {Asset | string | undefined} - Value defined inside the Desmos profile
  * @param defaultImage {any} - Default image to be used if the above two are not defined
  */
 export const useGetImageBackground = (
   inputValue: Asset | undefined,
-  profileValue: string | undefined,
+  profileValue: Asset | string | undefined,
   defaultImage: any,
 ) => {
   const profileUri = React.useMemo(() => inputValue || profileValue, [inputValue, profileValue]);
@@ -132,6 +134,11 @@ const getValueToSave = (
 };
 
 /**
+ * Represents the success response of a profile saving.
+ */
+export interface SaveProfileSuccess {}
+
+/**
  * Hook that allows to submit the form that allows to create or edit
  * a Desmos profile.
  *
@@ -141,16 +148,16 @@ const getValueToSave = (
  * @param account {AccountWithWallet | undefined} - Account to be used
  * while signing the transaction. If no account is provided, then the
  * current user account will be used instead.
- * @param onSuccess - Function called when everything ends properly.
- * @param onError - Function called if any error is raised.
+ * @param saveOnChain {boolean} - Whether the profile should
+ * immediately be stored on chain.
  */
 export const useSubmitForm = (
   profile: DesmosProfile | undefined,
   account: AccountWithWallet | undefined,
-  onSuccess: () => void,
-  onError: (e: Error) => void,
+  saveOnChain: boolean = true,
 ) => {
-  const { status, saveProfile } = useSaveProfile();
+  const storeProfile = useStoreProfile();
+  const { status, saveProfile } = useSaveProfileOnChain();
 
   // Callback used when the user pressed the button to save the profile
   const submitForm = useCallback(
@@ -158,30 +165,37 @@ export const useSubmitForm = (
       values: SaveProfileFormState,
       profilePic: Asset | undefined,
       coverPic: Asset | undefined,
-    ) => {
-      try {
-        // Get the profile to save
-        const profileToSave: SaveProfileRequest = {
-          dTag: getValueToSave(values.dTag, profile?.dtag),
-          nickname: getValueToSave(values.nickname, profile?.nickname),
-          bio: getValueToSave(values.bio, profile?.bio),
-          profilePicture: profilePic,
-          coverPicture: coverPic,
-        };
+    ): Promise<Result<SaveProfileSuccess, Error>> => {
+      // Get the address of the profile based on the given params
+      const profileAddress = account?.account?.address ?? profile?.address;
+      if (!profileAddress) {
+        return err(new Error('Cannot save a profile without a known address'));
+      }
 
-        // Save the profile
+      // Get the profile to save
+      const profileToSave: DesmosProfile = {
+        dTag: getValueToSave(values.dTag, profile?.dTag),
+        nickname: getValueToSave(values.nickname, profile?.nickname),
+        bio: getValueToSave(values.bio, profile?.bio),
+        profilePicture: profilePic,
+        coverPicture: coverPic,
+        address: profileAddress,
+      };
+
+      // Store the profile locally
+      storeProfile(profileAddress, profileToSave);
+
+      // Save the profile on-chain, if required
+      if (saveOnChain) {
         const result = await saveProfile(profileToSave, account);
         if (result.isErr()) {
-          onError(result.error);
-          return;
+          return result;
         }
-
-        onSuccess();
-      } catch (error: any) {
-        onError(new Error(error.toString()));
       }
+
+      return ok({});
     },
-    [profile, account, saveProfile],
+    [account, profile, storeProfile, saveOnChain, saveProfile],
   );
 
   return {

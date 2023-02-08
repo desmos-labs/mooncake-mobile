@@ -75,8 +75,18 @@ const Signup = () => {
 
   // Callback that is used when the signup completes properly
   const onSuccess = useCallback(() => {
-    navigate(ROUTES.SIGNUP_RESULT);
-  }, []);
+    navigate(ROUTES.BOTTOM_TABS, {
+      screen: ROUTES.HOME_TABS,
+      params: {
+        HOME_DISCOVER: {
+          type: 'discover',
+        },
+        HOME_FOLLOWING: {
+          type: 'following',
+        },
+      },
+    });
+  }, [navigate]);
 
   // Callback that is used when the signup procedure raises any error
   const onError = useCallback(
@@ -102,21 +112,27 @@ const Signup = () => {
   // Reset recoil state on entry
   React.useEffect(() => {
     resetSignUpInfo();
+    // Disable the lint on the next line in order to have this being called only
+    // the first time that the user enters this screen (to avoid reset on goBack)
+    // eslint-disable-next-line
   }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const mapPwStyle = useCallback((password: string) => {
-    const { value } = passwordStrength(password);
-    switch (value) {
-      case 'Medium':
-        return styles.mediumPw;
-      case 'Strong':
-        return styles.strongPw;
-      default:
-        return styles.weakPw;
-    }
-  }, []);
+  const mapPwStyle = useCallback(
+    (password: string) => {
+      const { value } = passwordStrength(password);
+      switch (value) {
+        case 'Medium':
+          return styles.mediumPw;
+        case 'Strong':
+          return styles.strongPw;
+        default:
+          return styles.weakPw;
+      }
+    },
+    [styles],
+  );
 
   const animatedPasswordChecks = useCallback(
     (values: any) => {
@@ -128,7 +144,7 @@ const Signup = () => {
         )
       );
     },
-    [animatedPswChecksVisible],
+    [animatedPswChecksVisible, animatedStyle],
   );
 
   return (

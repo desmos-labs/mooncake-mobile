@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
-import { ImageMedia, UploadMedia } from 'services/axios/requests/UploadMedia';
+import { UploadMedia } from 'services/axios/requests/UploadMedia';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { AccountWithWallet } from 'types/account';
 import useSignAndBroadcastTx, { SignAndBroadcastSuccess } from 'hooks/useSignAndBroadcastTx';
 import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
 import { err, Result } from 'neverthrow';
-
-/**
- * Params used to save the profile.
- * Each parameter that is marked as <code>undefined</code> will be replaced
- * with the <code>[do-not-modify]</code> value when building the message
- * to save the profile on-chain.
- */
-export interface SaveProfileRequest {
-  readonly dTag?: string;
-  readonly nickname?: string;
-  readonly bio?: string;
-  readonly profilePicture?: ImageMedia;
-  readonly coverPicture?: ImageMedia;
-}
+import { DesmosProfile } from 'types/desmos';
+import { Asset } from 'react-native-image-picker';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -36,18 +24,29 @@ export enum SaveProfileStatus {
 }
 
 /**
+ * Tells whether the given picture is a valid {@link Asset} or not.
+ */
+const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
+  if (picture === undefined) {
+    return false;
+  }
+  const { uri } = picture as Asset;
+  return uri !== undefined;
+};
+
+/**
  * Hook that allows to save a Desmos profile on-chain.
  * The profile will be saved using the given parameters and account.
  * If no account is provided, the current user account will be used instead.
  */
-const useSaveProfile = () => {
+const useSaveProfileOnChain = () => {
   const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
   const unlockWallet = useUnlockWallet();
   const signAndBroadcastTx = useSignAndBroadcastTx();
 
   const saveProfile = React.useCallback(
     async (
-      params: SaveProfileRequest,
+      params: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
     ): Promise<Result<SignAndBroadcastSuccess, Error>> => {
       const account = providedAccount ?? (await unlockWallet());
@@ -57,8 +56,8 @@ const useSaveProfile = () => {
       const { coverPicture, profilePicture } = params;
 
       const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        profilePicture && UploadMedia({ mediaFile: profilePicture }),
-        coverPicture && UploadMedia({ mediaFile: coverPicture }),
+        isPictureAsset(profilePicture) ? UploadMedia({ mediaFile: profilePicture }) : undefined,
+        isPictureAsset(coverPicture) ? UploadMedia({ mediaFile: coverPicture }) : undefined,
       ]);
 
       if (uploadProfilePicResult?.isErr()) {
@@ -108,4 +107,4 @@ const useSaveProfile = () => {
   };
 };
 
-export default useSaveProfile;
+export default useSaveProfileOnChain;

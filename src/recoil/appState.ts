@@ -26,7 +26,7 @@ export interface AppState {
    */
   readonly consentGiven: boolean;
   /**
-   * Invitation code that the user has used in order .
+   * Invitation code that the user has used in order to join the application.
    */
   readonly inviteCode: string | undefined;
   /**
