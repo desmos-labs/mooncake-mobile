@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import CustomRadioGroup from 'components/CustomRadioGroup/index';
 import {fireEvent} from '@testing-library/react-native';
 

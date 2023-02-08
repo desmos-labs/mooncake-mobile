@@ -137,7 +137,9 @@
     "babel-loader": "9.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "danger": "^11.2.3",
     "detox": "^20.1.2",
+    "dotenv": "^16.0.3",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-recommended": "^4.1.0",
@@ -157,42 +159,12 @@
     "react-native-flipper-performance-plugin": "^0.3.1",
     "react-native-storybook-loader": "^2.0.5",
     "react-test-renderer": "18.2.0",
+    "reassure": "^0.7.1",
     "ts-jest": "^29.0.5",
     "typescript": "4.8.4"
   },
   "resolutions": {
     "@types/react": "^18"
-  },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "testEnvironment": "jsdom",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@react-native-community|@react-native|@react-navigation)|crypto-es"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect",
-      "<rootDir>/jest/setupAfterEnv.js",
-      "<rootDir>/jest/globalMock.js"
-    ],
-    "setupFiles": [
-      "<rootDir>/jest/setup.js",
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/assets/"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/e2e"
-    ]
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --quiet"

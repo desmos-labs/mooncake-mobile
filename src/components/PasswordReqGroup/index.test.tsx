@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import PasswordReqGroup from 'components/PasswordReqGroup/index';
 
 describe('component: PasswordReqGroup', () => {

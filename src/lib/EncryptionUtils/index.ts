@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {NativeModules} from 'react-native';
 import Aes from 'react-native-aes-crypto';
+import {getFirstInstallTime} from 'react-native-device-info';
 
 export interface EncryptedData {
   iv: string;
@@ -15,7 +16,8 @@ export interface EncryptedData {
 export const deriveSecurePassword = async (
   password: string,
 ): Promise<string> => {
-  return Aes.pbkdf2(password, password, 100000, 256);
+  const firstInstallTime = await getFirstInstallTime();
+  return Aes.pbkdf2(password, String(firstInstallTime), 100100, 256);
 };
 
 /**
