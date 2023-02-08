@@ -33,7 +33,7 @@ export class MockGraphQLServer {
 
   public async startServer() {
     if (!this.server) {
-      throw new Error('Starting a server that has not been configured yet.');
+      throw new Error('Server object does not exist.');
     }
     this.server.listen(4000, () => {
       console.log('yoga graphql listening on port 4000');
@@ -42,7 +42,7 @@ export class MockGraphQLServer {
 
   public stopServer() {
     if (!this.server) {
-      throw new Error('Server does not exist');
+      throw new Error('Server object does not exist.');
     }
 
     this.server.close();
