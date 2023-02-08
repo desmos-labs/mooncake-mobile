@@ -129,7 +129,6 @@ export const navigateToPost = async (index: number) => {
     by.id('homePostText'),
   ).getAttributes();
   // @ts-ignore
-  console.log(multipleMatchedElements.elements[index].text);
   await element(by.id('postCard')).atIndex(index).tap();
   await expect(element(by.id('postDetailsScreen'))).toBeVisible();
   await expect(
