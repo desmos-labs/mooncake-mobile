@@ -11,7 +11,7 @@ const RefreshSession = async () => {
       `There was an issue refreshing the session:\n\n${JSON.stringify(_response.data)}`,
     );
   } else {
-    console.log('session refreshed');
+    console.log('Session refreshed');
   }
 };
 

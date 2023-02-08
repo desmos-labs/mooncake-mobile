@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { differenceInMilliseconds } from 'date-fns';
 import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
-import { MMKVKEYS, useMMKVStorage } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
+import useGetGrantsInformation from 'hooks/useGetGrantsInformation';
 
 /**
  * @typedef CheckAndUpdateGrantsArgs
@@ -30,23 +30,21 @@ export interface CheckAndUpdateGrantsArgs {
  */
 const useCheckAndUpdateGrants = () => {
   const { navigate, pop } = useNavigation<any>();
-  const { getAuthzGrants } = useGetAuthzGrants();
-  const [activeAddr] = useMMKVStorage<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
+  const { info } = useGetGrantsInformation();
+
   /**
    * Convenience function to check if the user has enabled a grant for a given list
    * @param {GrantEnums[]} grantsToCheck - check if user has provided grants for these grants
    * @return {GrantEnums[]} - an empty array or subset of grantsToCheck that have not yet been granted
    */
-  const checkGrants = React.useCallback(
+  const getPermissionsToGrant = React.useCallback(
     async (grantsToCheck: GrantEnums[]): Promise<GrantEnums[]> => {
-      if (!activeAddr) throw new Error('[checkGrant]: No active address found');
-      const grantsResponse = await getAuthzGrants();
       const grants: {
         [index: string]: { msg_type: GrantEnums; expiration: string };
-      } = grantsResponse.grants.reduce((acc, cur) => {
+      } = info.authz.grants.reduce((acc, cur) => {
         return {
           ...acc,
-          [cur.msg_type]: cur,
+          [cur.msgTypeUrl]: cur,
         };
       }, {});
 
@@ -58,65 +56,67 @@ const useCheckAndUpdateGrants = () => {
           );
 
           if (differenceFromNow >= 0) {
-            console.log('grant', grants[x].msg_type, 'is expired');
+            console.log('Grant', grants[x].msg_type, 'is expired');
             return grants[x];
           }
         }
         return !grants[x];
       });
     },
-    [activeAddr, getAuthzGrants],
+    [info.authz.grants],
   );
 
+  /**
+   * Allows to update the grants.
+   * @return <code>true</code> if the update was successful, or <code>false</code> otherwise.
+   */
   const updateGrants = React.useCallback(
-    async ({
-      grantsToRequest,
-      stayOnCurrentScreen,
-      detailsModal,
-    }: CheckAndUpdateGrantsArgs): Promise<{ success: boolean }> => {
+    async (args: CheckAndUpdateGrantsArgs): Promise<boolean> => {
       return new Promise(resolve => {
+        const { grantsToRequest, stayOnCurrentScreen, detailsModal } = args;
         if (grantsToRequest.length === 0) {
-          resolve({ success: true });
+          resolve(true);
         } else {
           navigate(ROUTES.ACTION_AUTHORIZATION, {
             grants: grantsToRequest,
             detailsModal,
             onApprove: () => {
               !stayOnCurrentScreen && pop();
-              resolve({ success: true });
+              resolve(true);
             },
             onCancel: () => {
               pop();
-              resolve({ success: false });
+              resolve(false);
             },
           });
         }
       });
     },
-    [],
+    [navigate, pop],
   );
 
   /**
-   * Check and update a user's on-chain grants
+   * Check and update a user's on-chain grants.
+   * @return <code>true</code> if the update was successful, or <code>false</code> otherwise.
    */
   const checkAndUpdateGrants = React.useCallback(
     async ({
       grantsToRequest,
       stayOnCurrentScreen,
       detailsModal,
-    }: CheckAndUpdateGrantsArgs): Promise<{ success: boolean }> => {
-      const missingOrExpiredGrants = await checkGrants(grantsToRequest);
+    }: CheckAndUpdateGrantsArgs): Promise<boolean> => {
+      const missingOrExpiredGrants = await getPermissionsToGrant(grantsToRequest);
       return updateGrants({
         grantsToRequest: missingOrExpiredGrants,
         stayOnCurrentScreen,
         detailsModal,
       });
     },
-    [checkGrants, updateGrants],
+    [getPermissionsToGrant, updateGrants],
   );
   return {
+    getPermissionsToGrant,
     checkAndUpdateGrants,
-    checkGrants,
     updateGrants,
   };
 };

@@ -23,6 +23,7 @@ import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import Communities from 'screens/Communities';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {
@@ -43,7 +44,7 @@ const Tab = createBottomTabNavigator<BottomTabsParamList>();
  * Navigation bottom tabs
  */
 
-// Fake component to have a button inside the navigation barß
+// Fake component to have a button inside the navigation bar
 const MiddleFakeComponent = () => {
   return null;
 };
@@ -71,7 +72,6 @@ const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
   const activeAddress = useActiveAccountAddress();
   const notificationsCount = useAppStateValue('notificationsCount');
   const setNotificationsCount = useSetAppStateValue('notificationsCount');
-  const appActiveState = useAppStateValue('appActiveState');
 
   // Allows to reset the post creation state to delete any draft when needed
   const resetCreatePostState = useResetCreatePostState();
@@ -81,37 +81,28 @@ const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
 
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
-
     resetCreatePostState();
+
     setLoading(true);
-
-    try {
-      const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
-
-      const { success } = await checkAndUpdateGrants({
-        grantsToRequest,
+    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
+    const success = await checkAndUpdateGrants({ grantsToRequest });
+    if (success) {
+      navigate(ROUTES.CREATE_TEXT_POST);
+    } else {
+      // TODO: Edit this placeholder
+      toast.show('[PLACEHOLDER] Authorization is required.', {
+        type: ToastConfig.ERROR_NO_RETRY,
       });
-
-      if (success) {
-        navigate(ROUTES.CREATE_TEXT_POST);
-      } else {
-        toast.show('[PLACEHOLDER]Authorization is required.', {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
-      }
-    } catch (err) {
-      toast.show(String(err), { type: ToastConfig.ERROR_NO_RETRY });
-    } finally {
-      setLoading(false);
     }
-  }, [activeAddress, checkAndUpdateGrants]);
+    setLoading(false);
+  }, [activeAddress, checkAndUpdateGrants, navigate, resetCreatePostState, setLoading, toast]);
 
   const overlayComponent = useMemo(() => {
     if (notificationsCount && notificationsCount > 0) {
       return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
     }
     return undefined; // or alternate "no ping" state
-  }, [notificationsCount, appActiveState]);
+  }, [notificationsCount, theme]);
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
@@ -185,7 +176,7 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
 
         {/* TODO: Re-add these */}
-        {/* <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} /> */}
+        <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
         {/* <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} /> */}
         {/* <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
         {/* <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} /> */}

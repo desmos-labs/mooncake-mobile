@@ -1,4 +1,8 @@
-import { useHasAccount, useStoreAccount as usePersistAccount } from '@recoil/accounts';
+import {
+  useHasAccount,
+  useSetActiveAccountAddress,
+  useStoreAccount as usePersistAccount,
+} from '@recoil/accounts';
 import { useCallback, useMemo } from 'react';
 import { AccountWithWallet } from 'types/account';
 import {
@@ -24,7 +28,9 @@ import { err, ok, Result } from 'neverthrow';
 const useStoreAccount = () => {
   const hasAccount = useHasAccount();
   const savingFirstAccount = useMemo(() => !hasAccount, [hasAccount]);
+
   const storeAccount = usePersistAccount();
+  const setActiveAccountAddress = useSetActiveAccountAddress();
 
   return useCallback(
     async (account: AccountWithWallet, password: string): Promise<Result<void, Error>> => {
@@ -38,8 +44,11 @@ const useStoreAccount = () => {
         return err(result.error);
       }
 
-      // Set the user password if this is the first account being saved
       if (savingFirstAccount) {
+        // Set the active account address
+        setActiveAccountAddress(account.wallet.address);
+
+        // Set the user password
         const passwordResult = await setUserPassword(password);
         if (passwordResult.isErr()) {
           return err(passwordResult.error);
@@ -50,7 +59,7 @@ const useStoreAccount = () => {
       storeAccount(account.account);
       return ok(undefined);
     },
-    [savingFirstAccount, storeAccount],
+    [savingFirstAccount, setActiveAccountAddress, storeAccount],
   );
 };
 

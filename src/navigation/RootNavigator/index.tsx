@@ -27,6 +27,7 @@ import ChangePassword, {
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
+import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
@@ -48,7 +49,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.SETTINGS]: undefined;
   // [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   // [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
-  // [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
+  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
   // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
   // [ROUTES.SETTINGS_COMMUNITY]: undefined;
@@ -87,7 +88,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
-  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+  // [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
@@ -247,8 +248,8 @@ const RootNavigator = () => {
         component={MnemonicInput}
       />
       {/* <Stack.Screen name={ROUTES.SETTINGS} component={Settings} /> */}
-      {/* <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} /> */}
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
+      <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       {/* <Stack.Screen */}
       {/*  initialParams={{ */}
       {/*    postId: 1, */}

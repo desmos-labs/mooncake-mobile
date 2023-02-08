@@ -177,13 +177,16 @@ const Home = () => {
       );
     },
     [
-      handlePressFollow,
-      handlePressReport,
+      styles,
       handleNavigateToProfile,
       handlePressDetails,
-      handlePressComments,
+      toast,
+      t,
       handlePressReaction,
+      handlePressComments,
       handlePressTip,
+      handlePressFollow,
+      handlePressReport,
     ],
   );
 
@@ -197,7 +200,7 @@ const Home = () => {
     } else {
       return null;
     }
-  }, [fetchingMore]);
+  }, [fetchingMore, styles]);
 
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
@@ -210,7 +213,7 @@ const Home = () => {
       postListRef.current?.scrollToOffset({ animated: true, offset: 0 });
       setPostsListState(value => ({ ...value, scrollToTop: false }));
     }
-  }, [postsListState, postListRef]);
+  }, [postsListState, postListRef, setPostsListState]);
 
   // View that represents the search bar
   const SearchView = useMemo(() => {
@@ -227,7 +230,7 @@ const Home = () => {
         </TouchableWithoutFeedback>
       )
     );
-  }, [postsListState]);
+  }, [postsListState, styles]);
 
   // --- Component rendering ---
 

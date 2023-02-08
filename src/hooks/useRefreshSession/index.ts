@@ -14,7 +14,7 @@ import RefreshSession from 'services/axios/requests/RefreshSession';
 const useRefreshSession = () => {
   const { replace } = useNavigation<any>();
 
-  const refreshSession = useCallback(async () => {
+  return useCallback(async () => {
     const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
 
     // Bearer token refresh
@@ -49,10 +49,6 @@ const useRefreshSession = () => {
       console.error('NOTIFICATIONS TOKEN', err);
     }
   }, []);
-
-  return {
-    refreshSession,
-  };
 };
 
 export default useRefreshSession;
