@@ -229,7 +229,11 @@ const PostCard = ({
       <View style={styles.bottomBarView}>
         <View style={styles.bottomBarInnerView}>
           <ImageButton
-            testID="postcardLikeButton"
+            testID={
+              reactionPresence?.aggregate?.count >= 1
+                ? 'postcardRemoveLikeButton'
+                : 'postcardAddLikeButton'
+            }
             onPress={onPressLike}
             tintColor={
               reactionPresence?.aggregate?.count >= 1
@@ -321,6 +325,7 @@ const PostCard = ({
 
   return (
     <TouchableOpacity
+      testID="postCard"
       activeOpacity={0.9}
       style={styles.container}
       onPress={onPressDetails}>

@@ -330,6 +330,7 @@ const PostDetails = () => {
     </SafeAreaView>
   ) : (
     <DView
+      testID="postDetailsScreen"
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
