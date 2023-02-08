@@ -1,6 +1,6 @@
 import {MockList} from '@graphql-tools/mock';
 import {faker} from '@faker-js/faker';
-import {MockGraphQLServer} from '../e2e/__mocks__/MockGraphQLServer';
+import {MockGraphQLServer} from '../../e2e/__mocks__/MockGraphQLServer';
 
 // This is a temporary test file to demonstrate how to construct mock graphql data
 
@@ -43,6 +43,12 @@ describe('MockGraphQLServer test', () => {
     server.startServer();
   });
 
+  // uncomment this to manually test
+  afterAll(() => {
+    server.stopServer();
+  });
+
+  // fake test to keep server up
   it('tests', () => {
     expect(1).toEqual(1);
   });
