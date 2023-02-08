@@ -14,6 +14,7 @@ export class MockGraphQLServer {
   constructor(schema: YogaSchemaDefinition<any>) {
     const yoga = createYoga({
       schema,
+      graphqlEndpoint: '/v1/graphql',
     });
 
     this.server = createServer(yoga);
@@ -21,18 +22,6 @@ export class MockGraphQLServer {
 
   /**
    * TODO: figure out proper types for this
-   * Example mock object:
-   * {
-   *   post: () => ({
-   *     author_address: 'example-address',
-   *     id: 1,
-   *     reactions: [],
-   *     tips: [],
-   *     mentions: [],
-   *     text: 'hello world',
-   *     attachments: []
-   *   })
-   * }
    */
   static createServerWithMocks(mocks: any) {
     // @ts-ignore
