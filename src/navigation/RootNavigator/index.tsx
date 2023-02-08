@@ -29,6 +29,7 @@ import ConnectToLedgerStack, {
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
+import Settings from 'screens/Settings';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -46,7 +47,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   // [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  // [ROUTES.SETTINGS]: undefined;
+  [ROUTES.SETTINGS]: undefined;
   // [ROUTES.LOOKING_FOR_DEVICES]: undefined;
   // [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
@@ -247,7 +248,7 @@ const RootNavigator = () => {
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
-      {/* <Stack.Screen name={ROUTES.SETTINGS} component={Settings} /> */}
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       {/* <Stack.Screen */}

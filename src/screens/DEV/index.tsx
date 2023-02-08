@@ -48,6 +48,7 @@ const routesToRender = [
   // ROUTES.FOLLOWING_AND_FOLLOWERS,
   // ROUTES.NO_DTAG_FOUND,
   // ROUTES.ADD_PROFILE,
+  ROUTES.SETTINGS,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {

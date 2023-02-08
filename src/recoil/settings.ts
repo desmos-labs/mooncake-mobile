@@ -87,3 +87,8 @@ export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
  * Please make sure you use this sparingly, and prefer {@link useSetSetting} whenever possible instead.
  */
 export const useSetSettings = () => useSetRecoilState(settingsAppState);
+
+/**
+ * Hook that provides the application settings.
+ */
+export const useSettings = () => useRecoilValue(settingsAppState);

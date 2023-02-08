@@ -7,25 +7,21 @@ import SectionSwitch from 'components/SectionSwitch';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import { deleteBiometricData } from 'lib/SecureStorage';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { InteractionManager, Linking } from 'react-native';
 import { getSupportedBiometryType } from 'react-native-keychain';
-import { useTheme } from 'react-native-paper';
-import { useRecoilState } from 'recoil';
-import appSettingsState from 'recoil/settings';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { deleteAuthToken } from 'services/axios';
 import { useNavigation } from '@react-navigation/native';
-import { AppSettings } from 'types/settings';
+import { AppSettings, BiometricAuthorizations } from 'types/settings';
+import { useSetSettings, useSettings } from '@recoil/settings';
+import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -33,17 +29,16 @@ const Settings: React.FC<NavProps> = props => {
   const {
     navigation: { navigate },
   } = props;
-  const [settings, setSettings] = useRecoilState(appSettingsState);
+  const settings = useSettings();
+  const setSettings = useSetSettings();
   const [biometricsSupported, setBiometricsSupported] = useState<boolean>();
-  const { chainAccount, profileData, activeAddress } = useActiveAccount();
   const { t } = useTranslation('settings');
   const styles = useStyles();
-  const theme = useTheme();
-  const unlockWallet = useUnlockWallet();
   const { reset } = useNavigation<NavProps['navigation']>();
 
   const formattedAccountCreationDate = useFormatDateToTZ(
-    profileData?.creation_time || '',
+    // TODO: Get the proper profile creation time.
+    new Date().toISOString() || '',
     'MMM dd yyyy',
   );
 
@@ -60,35 +55,35 @@ const Settings: React.FC<NavProps> = props => {
 
   const manageBiometrics = useCallback(async () => {
     if (settings.biometrics) {
-      const result = await deleteBiometricData();
+      const result = await deleteBiometricAuthorization(BiometricAuthorizations.UnlockWallet);
       if (result) {
         setSettings((oldState: AppSettings) => {
           return {
             ...oldState,
-            biometrics: !settings.biometrics,
+            biometrics: !oldState.biometrics,
           };
         });
       }
     } else {
       navigate(ROUTES.MANAGE_BIOMETRICS);
     }
-  }, [activeAddress, navigate, setSettings, settings.biometrics]);
+  }, [settings.biometrics, navigate, setSettings]);
 
   const manageNewPostNotif = useCallback(
     (type: 'discover' | 'following') => () => {
       if (type === 'discover') {
-        setSettings(prev => ({
-          ...prev,
-          newDiscPostNotification: !settings.newDiscPostNotification,
+        setSettings(oldSettings => ({
+          ...oldSettings,
+          newDiscPostNotification: !oldSettings.newDiscPostNotification,
         }));
       } else if (type === 'following') {
-        setSettings(prev => ({
-          ...prev,
-          newFollowPostNotification: !settings.newFollowPostNotification,
+        setSettings(oldSettings => ({
+          ...oldSettings,
+          newFollowPostNotification: !oldSettings.newFollowPostNotification,
         }));
       }
     },
-    [settings.newDiscPostNotification, settings.newFollowPostNotification],
+    [setSettings],
   );
 
   useEffect(() => {
@@ -96,6 +91,10 @@ const Settings: React.FC<NavProps> = props => {
       areBiometricsSupported();
     });
     return () => interactionPromise.cancel();
+
+    // We need to check the biometric support just when we open this screen
+    // it's safe to ignore the hooks lint error here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePressSignOut = () => {
@@ -113,41 +112,30 @@ const Settings: React.FC<NavProps> = props => {
   };
 
   const handleChangePassword = useCallback(async () => {
-    if (chainAccount) {
-      const unlockResult = await unlockWallet({
-        chainAccount,
-        skipBiometrics: true,
-        enterPwScreenOptions: {
-          titleLabelOverride: t('passwordManipulation:changePw'),
-        },
-      });
-      if (unlockResult) {
-        navigate(ROUTES.PASSWORD_MANIPULATION, {
-          mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
-          oldPassword: unlockResult.password,
-        });
-      }
-    }
-  }, [chainAccount, navigate, unlockWallet]);
-
-  const navigateToConfirmModal = useCallback(() => {
-    navigate({
-      name: ROUTES.CONFIRM_MODAL,
-      params: {
-        title: t('confirmModal:signout'),
-        subtitle: (
-          <Trans
-            i18nKey="confirmModal:backupSeedphrase"
-            components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
-          />
-        ),
-        primaryButtonLabel: t('confirmModal:goToBackup'),
-        secondaryButtonLabel: t('confirmModal:signout'),
-        onPressPrimary: () => console.log('primary'),
-        onPressSecondary: handlePressSignOut,
-      },
+    navigate(ROUTES.PASSWORD_MANIPULATION, {
+      mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
     });
-  }, [handlePressSignOut]);
+  }, [navigate]);
+
+  const confirmSignOut = useCallback(() => {
+    // TODO: Enable sign out.
+    // navigate({
+    //   name: ROUTES.CONFIRM_MODAL,
+    //   params: {
+    //     title: t('confirmModal:signout'),
+    //     subtitle: (
+    //       <Trans
+    //         i18nKey="confirmModal:backupSeedphrase"
+    //         components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
+    //       />
+    //     ),
+    //     primaryButtonLabel: t('confirmModal:goToBackup'),
+    //     secondaryButtonLabel: t('confirmModal:signout'),
+    //     onPressPrimary: () => console.log('primary'),
+    //     onPressSecondary: handlePressSignOut,
+    //   },
+    // });
+  }, []);
 
   const sendFeedback = useCallback(async () => {
     Linking.openURL('mailto:dev@forbole.com').catch(err =>
@@ -210,7 +198,7 @@ const Settings: React.FC<NavProps> = props => {
         <SectionButton label={t('about')} onPress={() => console.log('about')} />
       </Section>
       <Spacer paddingVertical={12} />
-      <Button mode="outlined" style={styles.signOutButton} onPress={navigateToConfirmModal}>
+      <Button mode="outlined" style={styles.signOutButton} onPress={confirmSignOut}>
         <Typography.Button1>{t('confirmModal:signout')}</Typography.Button1>
       </Button>
 
