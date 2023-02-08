@@ -10,8 +10,8 @@ import usePerformLogin from 'hooks/usePerformLogin';
 import useAcceptInvite from 'hooks/useAcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { AccountWithWallet } from 'types/account';
-import { useNavigation } from '@react-navigation/native';
 import useStoreAccount from 'hooks/useStoreAccount';
+import useSaveProfile from 'hooks/useSaveProfile';
 
 interface FormValues {
   readonly newPassword: string;
@@ -167,36 +167,39 @@ const usePerformSignUp = () => {
  * @param onError - Function that is called if an error is raised.
  */
 export const useSubmitForm = (onSuccess: () => void, onError: (error: Error) => void) => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
   const { performSignUp, status: signUpStatus } = usePerformSignUp();
+  const saveProfile = useSaveProfile();
 
   // Handles the submission of the form by first signing up the user, and then saving their profile.
-  const handleFormSubmit = async (values: FormValues) => {
-    // Signup the user inside the APIs
-    const signUpResult = await performSignUp(values);
-    if (signUpResult.isErr()) {
-      console.log(signUpResult.error);
-      onError(signUpResult.error);
-      return;
-    }
+  const handleFormSubmit = React.useCallback(
+    async (values: FormValues) => {
+      // Signup the user inside the APIs
+      const signUpResult = await performSignUp(values);
+      if (signUpResult.isErr()) {
+        console.log(signUpResult.error);
+        onError(signUpResult.error);
+        return;
+      }
 
-    // Navigate to the screen allowing to save the profile
-    navigate(ROUTES.SAVE_PROFILE, {
-      // We don't immediately store the profile on-chain as this will be done
-      // before the first transaction is broadcast. This is made in order to
-      // make sure that there is enough time to get the tokens from the APIs,
-      // as well as to speed up the signup procedure.
-      storeOnChain: false,
+      // Navigate to the screen allowing to save the profile
+      saveProfile({
+        // We don't immediately store the profile on-chain as this will be done
+        // before the first transaction is broadcast. This is made in order to
+        // make sure that there is enough time to get the tokens from the APIs,
+        // as well as to speed up the signup procedure.
+        storeOnChain: false,
 
-      // Use the account that was generated during the signup in order to
-      // store the profile
-      account: signUpResult.value.account,
+        // Use the account that was generated during the signup in order to
+        // store the profile
+        account: signUpResult.value.account,
 
-      // Callbacks used to get back the result of the profile saving
-      onSuccess,
-      onError,
-    });
-  };
+        // Callbacks used to get back the result of the profile saving
+        onSuccess,
+        onError,
+      });
+    },
+    [onError, onSuccess, performSignUp, saveProfile],
+  );
 
   return {
     handleFormSubmit,

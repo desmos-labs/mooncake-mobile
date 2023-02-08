@@ -15,7 +15,7 @@ import { useAppStateValue } from '@recoil/appState';
 import useImportAccount from 'hooks/useImportAccount';
 import { DesmosChain } from 'config/LinkableChains';
 import useSaveAccount from 'hooks/useSaveAccount';
-import useEditProfile from 'hooks/useEditProfile';
+import useSaveProfile from 'hooks/useSaveProfile';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
@@ -31,7 +31,7 @@ const Landing = () => {
     minAccountBalance: 0.1,
   });
   const saveAccount = useSaveAccount();
-  const createProfile = useEditProfile();
+  const saveProfile = useSaveProfile();
 
   // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
   const consentGiven = useAppStateValue('consentGiven');
@@ -54,9 +54,11 @@ const Landing = () => {
       importAccount({
         onSelect: account => {
           if (account.profile === undefined) {
-            createProfile({
-              account: account.account.address,
-              isLocalOnly: true,
+            saveProfile({
+              storeOnChain: false,
+              profile: {
+                address: account.account.address,
+              },
               onSuccess: () => saveAccount(account),
             });
           } else {
@@ -73,7 +75,7 @@ const Landing = () => {
     } else {
       performImportAccount();
     }
-  }, [consentGiven, createProfile, importAccount, navigate, saveAccount]);
+  }, [consentGiven, saveProfile, importAccount, navigate, saveAccount]);
 
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>
