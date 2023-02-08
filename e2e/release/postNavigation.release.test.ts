@@ -24,7 +24,11 @@ describe('Post navigation flow', () => {
     await expect(element(by.id('homeView'))).toBeVisible();
   });
 
-  it('Navigate to a post', async () => {
+  it('Navigate to a post with index 0', async () => {
     await navigateToPost(0);
+  });
+
+  it('Navigate to a post with index 1', async () => {
+    await navigateToPost(1);
   });
 });

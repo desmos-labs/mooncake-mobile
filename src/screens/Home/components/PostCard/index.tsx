@@ -331,7 +331,9 @@ const PostCard = ({
       onPress={onPressDetails}>
       {ProfileInfo}
       {text && (
-        <Typography.Body6 style={{marginTop: theme.spacing.m}}>
+        <Typography.Body6
+          style={{marginTop: theme.spacing.m}}
+          testID="homePostText">
           {text}
         </Typography.Body6>
       )}
