@@ -17,7 +17,7 @@ import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import * as Yup from 'yup';
 import { AccountWithWallet } from 'types/account';
@@ -54,6 +54,7 @@ const PasswordManipulation = () => {
   const styles = useStyles();
   const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
 
   const validationSchema = React.useMemo(() => {
     return Yup.object().shape({
@@ -61,7 +62,7 @@ const PasswordManipulation = () => {
         .required(t('error:required'))
         .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
     });
-  }, []);
+  }, [t]);
 
   const {
     loading,
@@ -112,6 +113,8 @@ const PasswordManipulation = () => {
                       style={styles.inputLabel}
                       placeholder={t('newPw')}
                       // error={!!errors.newPassword}
+                      onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+                      blurOnSubmit={false}
                     />
 
                     {errors.newPassword && (
@@ -126,6 +129,7 @@ const PasswordManipulation = () => {
                       {t('confirmPw')}
                     </Typography.Subtitle2>
                     <DSecureTextInput
+                      inputRef={confirmPasswordRef}
                       onOuterFocus={() =>
                         setTimeout(
                           () =>
@@ -141,6 +145,7 @@ const PasswordManipulation = () => {
                       onChangeText={(value: string) =>
                         setFieldValue('confirmPassword', value, true)
                       }
+                      onSubmitEditing={() => handleSubmit(undefined)}
                       // error={!!errors.confirmPassword}
                     />
                     {errors.confirmPassword && (
