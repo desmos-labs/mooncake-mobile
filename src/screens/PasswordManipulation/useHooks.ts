@@ -78,7 +78,7 @@ const useHooks = () => {
         });
       }
     },
-    [mode],
+    [account, mode, navigate],
   );
 
   const mapPwStyle = React.useCallback((password: string) => {

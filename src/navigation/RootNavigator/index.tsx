@@ -429,13 +429,6 @@ const RootNavigator = () => {
         name={ROUTES.TEXTONLY_MODAL}
         component={TextOnlyModal}
       />
-      <Stack.Screen
-        initialParams={{
-          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
-        }}
-        name={ROUTES.PASSWORD_MANIPULATION}
-        component={ChangePassword}
-      />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.DISCONNECT_CHAIN_MODAL} */}

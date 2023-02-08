@@ -39,7 +39,7 @@ declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_ACC
  * Screen that allows the user to save an account inside the device local storage.
  * @constructor
  */
-const SaveAccount = () => {
+const SaveAccount = ({ navigation }: NavProps) => {
   const { reset } = useNavigation<NavProps['navigation']>();
   const {
     params: { account, wallet, password },
@@ -65,6 +65,7 @@ const SaveAccount = () => {
     (async () => {
       await saveAccount({ account, wallet }, password);
     })();
+
     // Disable the lint warning on the next line as we want this effect to be
     // called only one time when the user sees the saving account screen
     // eslint-disable-next-line
