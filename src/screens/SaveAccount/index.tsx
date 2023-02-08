@@ -49,6 +49,18 @@ const SaveAccount = () => {
   const theme = useTheme();
   const { saveAccount, savingAccount } = useSaveAccount();
 
+  // Hook to prevent the user to go back, just allow it in debug if we need
+  // to go back.
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        if (!__DEV__ && e.data.action.type !== 'RESET') {
+          e.preventDefault();
+        }
+      }),
+    [navigation],
+  );
+
   React.useEffect(() => {
     (async () => {
       await saveAccount({ account, wallet }, password);
@@ -70,7 +82,7 @@ const SaveAccount = () => {
   }, [reset]);
 
   return (
-    <DView style={styles.root} topBar={<TopBar />}>
+    <DView style={styles.root} topBar={<TopBar noBackButton={true} />}>
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <FastImage resizeMode="cover" source={modalSuccess} style={styles.image} />
         <Spacer paddingTop={60} />

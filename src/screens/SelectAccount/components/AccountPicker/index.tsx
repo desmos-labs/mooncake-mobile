@@ -53,10 +53,10 @@ const AccountPicker: React.FC<AccountPickerProps> = ({ onAccountSelected, params
       {/* Address picker */}
       <PaginatedFlatList
         loadPage={fetchWallets}
-        itemsPerPage={15}
+        itemsPerPage={10}
         renderItem={renderListItem}
         keyExtractor={listKeyExtractor}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         estimatedItemSize={89}
       />
     </View>

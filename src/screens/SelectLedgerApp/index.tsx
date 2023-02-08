@@ -2,52 +2,82 @@ import React from 'react';
 import DView from 'components/DView';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
-import { selectedChainState } from '@recoil/connectChainState';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'react-native-paper';
 import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
-import ROUTES from 'navigation/routes';
-import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { useTranslation } from 'react-i18next';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_LEDGER_APP>;
+import { LedgerApp } from 'types/ledger';
+import importAccountAppState from '@recoil/screens/importAccountState';
+import { CryptoDotOrgChain, DesmosChain } from 'config/LinkableChains';
+import { CosmosLedgerApp, CryptoOrgLedgerApp, DesmosLedgerApp } from 'config/LedgerApps';
+import useConnectToLedger from 'hooks/useConnectToLedger';
+import useSelectAccount from 'hooks/useSelectAccount';
+import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
 
 /**
  * A screen where users select a ledger app to connect chains with more than one
  * supported ledger app
  */
 const SelectLedgerApp = () => {
-  const selectedChain = useRecoilValue(selectedChainState);
+  const { ignoreAddresses, selectedChain, onSuccess } = useRecoilValue(importAccountAppState)!;
   const theme = useTheme();
-  const { navigate, replace } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('selectLedgerApp');
+  const connectToLedger = useConnectToLedger();
+  const selectAccount = useSelectAccount();
 
-  const renderItem = ({ item }: ListRenderItemInfo<LedgerApp>) => {
-    const handlePress = () => {
-      navigate(ROUTES.AUTHORIZE_WALLET, {
-        screen: ROUTES.AUTH_LOOKING_FOR_DEVICES,
-        params: {
-          ledgerApp: item,
-          autoClose: true,
-          onConnectionEstablished: transport => {
-            replace(ROUTES.CONNECT_ADDRESS_GENERAL, {
-              ledgerApp: item,
-              ledgerTransport: transport,
-            });
+  const ledgerApplications = React.useMemo(() => {
+    if (selectedChain!.name === CryptoDotOrgChain.name) {
+      return [CryptoOrgLedgerApp, CosmosLedgerApp];
+    }
+    if (selectedChain!.name === DesmosChain.name) {
+      return [DesmosLedgerApp, CosmosLedgerApp];
+    }
+    return [CosmosLedgerApp];
+  }, [selectedChain]);
+
+  const onLedgerAppSelected = React.useCallback(
+    async (ledgerApp: LedgerApp) => {
+      const transport = await connectToLedger(ledgerApp);
+      if (transport === undefined) {
+        return;
+      }
+
+      selectAccount(
+        {
+          mode: WalletPickerMode.Ledger,
+          ignoreAddresses,
+          ledgerApp,
+          transport,
+          addressPrefix: selectedChain!.prefix,
+          masterHdPath: ledgerApp.masterHdPath,
+        },
+        {
+          onSuccess: account => {
+            onSuccess({ account, chain: selectedChain! });
           },
         },
-      });
-    };
-    return <ChainItem chainName="" symbol={item.name} icon={item.icon} handlePress={handlePress} />;
-  };
+      );
+    },
+    [connectToLedger, selectAccount, ignoreAddresses, selectedChain, onSuccess],
+  );
+
+  const renderItem = React.useCallback(
+    ({ item }: ListRenderItemInfo<LedgerApp>) => {
+      const handlePress = () => {
+        onLedgerAppSelected(item);
+      };
+      return (
+        <ChainItem chainName="" symbol={item.name} icon={item.icon} handlePress={handlePress} />
+      );
+    },
+    [onLedgerAppSelected],
+  );
 
   const ItemSeparatorComponent = React.useCallback(() => {
     return <Spacer paddingVertical={theme.spacing.s} />;
-  }, []);
+  }, [theme.spacing.s]);
 
   return (
     <DView topBar={<TopBar />}>
@@ -72,7 +102,7 @@ const SelectLedgerApp = () => {
         contentContainerStyle={{
           paddingHorizontal: theme.spacing.m,
         }}
-        data={selectedChain.ledgerApps}
+        data={ledgerApplications}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />

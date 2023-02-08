@@ -5,7 +5,10 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import Button from 'components/Button';
-import { useImportAccountState, useSetImportAccountState } from '@recoil/importAccountState';
+import {
+  useImportAccountState,
+  useSetImportAccountState,
+} from '@recoil/screens/importAccountState';
 import { WalletType } from 'types/wallet';
 import { MNEMONIC_INPUT_MODE } from 'screens/MnemonicInput';
 import useOnBackAction from 'hooks/useOnBackAction';
@@ -28,12 +31,15 @@ const ImportAccountSelectMode = ({ navigation }: NavProps) => {
     navigation.navigate(ROUTES.MNEMONIC_INPUT, {
       mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
     });
-  }, [setImportAccountState]);
+  }, [navigation, setImportAccountState]);
 
   const onImportWithLedger = React.useCallback(() => {
-    // TODO: Implement import with Ledger.
-    console.warn('Implement import with Ledger');
-  }, [setImportAccountState]);
+    setImportAccountState(currVal => ({
+      ...currVal!,
+      importMode: WalletType.Ledger,
+    }));
+    navigation.navigate(ROUTES.SELECT_LEDGER_APP);
+  }, [navigation, setImportAccountState]);
 
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>

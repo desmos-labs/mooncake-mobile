@@ -2,7 +2,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { SupportedChain } from 'types/chains';
 import { WalletType } from 'types/wallet';
-import { useSetImportAccountState } from '@recoil/importAccountState';
+import { useSetImportAccountState } from '@recoil/screens/importAccountState';
 import { SelectedAccount } from 'types/account';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -83,8 +83,6 @@ const useImportAccount = (options: ImportAccountOptions) => {
       setImportAccountState({
         chains: options.chains,
         ignoreAddresses: options.ignoreAddresses ?? [],
-        showBalances: options.showBalances ?? false,
-        minAccountBalance: options.minAccountBalance,
         importMode: options.accountType,
         selectedChain,
         onSuccess: account => onSelect(account.account),
@@ -121,7 +119,7 @@ const useImportAccount = (options: ImportAccountOptions) => {
         }
       }
     },
-    [navigation, setImportAccountState],
+    [navigation, options, setImportAccountState],
   );
 };
 

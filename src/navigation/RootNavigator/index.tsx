@@ -27,6 +27,7 @@ import ChangePassword, {
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
+import SelectLedgerApp from 'screens/SelectLedgerApp';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -63,7 +64,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.NO_DTAG_FOUND]: undefined;
   // [ROUTES.BROADCAST_TX]: BroadcastTxParams;
   // [ROUTES.WELCOME_BACK]: undefined;
-  // [ROUTES.SELECT_LEDGER_APP]: undefined;
+  [ROUTES.SELECT_LEDGER_APP]: undefined;
   // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
   // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
@@ -86,7 +87,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
-  // [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
@@ -292,13 +293,13 @@ const RootNavigator = () => {
       {/*  name={ROUTES.CONNECT_TO_LEDGER} */}
       {/*  component={ConnectToLedger} */}
       {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD, */}
-      {/*  }} */}
-      {/*  name={ROUTES.PASSWORD_MANIPULATION} */}
-      {/*  component={ChangePassword} */}
-      {/* /> */}
+      <Stack.Screen
+        initialParams={{
+          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
+        }}
+        name={ROUTES.PASSWORD_MANIPULATION}
+        component={ChangePassword}
+      />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE} */}
       {/*  component={RevealRecoveryPhrase} */}
@@ -307,11 +308,7 @@ const RootNavigator = () => {
       {/*  name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE} */}
       {/*  component={ShowRecoveryPhrase} */}
       {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SELECT_LEDGER_APP} */}
-      {/*  component={SelectLedgerApp} */}
-      {/* /> */}
-
+      <Stack.Screen name={ROUTES.SELECT_LEDGER_APP} component={SelectLedgerApp} />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.CONNECT_ADDRESS_GENERAL} */}
       {/*  component={ConnectAddressGeneral} */}

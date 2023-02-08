@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
 import useSelectAccount from 'hooks/useSelectAccount';
 import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
-import { useImportAccountState } from '@recoil/importAccountState';
+import { useImportAccountState } from '@recoil/screens/importAccountState';
 
 export interface FormField {
   /**

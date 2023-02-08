@@ -2,7 +2,7 @@ import { WalletType } from 'types/wallet';
 import { AccountWithWallet } from 'types/account';
 import { SupportedChain } from 'types/chains';
 import { LedgerApp } from 'types/ledger';
-import { atom } from 'recoil';
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
 export interface ImportAccountState {
   /**
@@ -49,3 +49,13 @@ const importAccountAppState = atom<ImportAccountState | undefined>({
 });
 
 export default importAccountAppState;
+
+/**
+ * Hook that provides a function to update the import account state.
+ */
+export const useSetImportAccountState = () => useSetRecoilState(importAccountAppState);
+
+/**
+ * Hook that provides the import account state.
+ */
+export const useImportAccountState = () => useRecoilValue(importAccountAppState);

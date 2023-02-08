@@ -10,7 +10,7 @@ import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import ROUTES from 'navigation/routes';
 import { ConnectToLedgerStackParamList } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import { Image } from 'react-native';
-import { modalSuccess } from 'assets/images';
+import { errorImage, modalSuccess } from 'assets/images';
 import DView from 'components/DView';
 import { pairDevicesAnim } from 'assets/animations';
 import { useConnectToLedger } from './useHooks';
@@ -25,7 +25,7 @@ export interface ConnectToLedgerParams {
 export type Props = StackScreenProps<ConnectToLedgerStackParamList, ROUTES.CONNECT_TO_LEDGER>;
 
 const ConnectToLedger: React.FC<Props> = ({ navigation, route }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('connectToLedger');
   const styles = useStyles();
 
   const { bleLedger, ledgerApp, onConnect } = route.params;
@@ -34,12 +34,12 @@ const ConnectToLedger: React.FC<Props> = ({ navigation, route }) => {
     ledgerApp,
   );
 
-  const status = connected ? t('connected') : t('error');
-  const statusButton = connected ? t('next') : t('retry');
+  const status = connected ? t('connected') : t('sorryConnectionFailed');
+  const statusButton = connected ? t('common:next') : t('common:retry');
   const statusImage = connected ? (
     <Image style={styles.image} source={modalSuccess} />
   ) : (
-    <Image style={styles.image} source={modalSuccess} />
+    <Image style={styles.image} source={errorImage} />
   );
 
   useEffect(() => {
