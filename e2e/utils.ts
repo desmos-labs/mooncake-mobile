@@ -123,7 +123,7 @@ export const navigateToPost = async (index: number) => {
   //TODO check more strictly if we are navigating to the post. Will be possible with mocks
   await expect(element(by.id('homeView'))).toBeVisible();
   await expect(element(by.id('postCard')).atIndex(index)).toBeVisible();
-  // Workaround because detox is finding more elements
+  // Workaround because detox is finding multiple elements
   // TODO: figure this out, atIndex not working with getAttributes
   const multipleMatchedElements = await element(
     by.id('homePostText'),
