@@ -24,10 +24,7 @@ describe('Post navigation flow', () => {
     await expect(element(by.id('homeView'))).toBeVisible();
   });
 
-  // TODO:Not working cause reactions are not optimistic
   it('Navigate to a post', async () => {
     await navigateToPost(0);
   });
-
-  //TODO follow/unfollow tests
 });
