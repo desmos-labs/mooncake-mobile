@@ -24,9 +24,6 @@ export enum MMKVKEYS {
   // Transactions data
   PENDING_TRANSACTIONS = 'PENDING_TRANSACTIONS',
 
-  // REST APIs
-  REST_AUTH_TOKEN = 'REST_AUTH_TOKEN',
-
   // Key used to store the permissions request count.
   PERMISSIONS_REQUEST_COUNT = 'PERMISSIONS_REQUEST_COUNT',
 }

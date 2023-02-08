@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import React, { useState } from 'react';
 import { Dimensions, ImageStyle, StyleProp, StyleSheet } from 'react-native';
 import FastImage, { ResizeMode } from 'react-native-fast-image';
-import { PostAttachment } from 'types/posts';
+import { PostAttachment, PostAttachmentType } from 'types/posts';
 
 export interface MediaRenderOptions {
   readonly imageStyle?: StyleProp<ImageStyle>;
@@ -33,7 +32,7 @@ const useRenderMediaAttachment = (
 
     // Currently only render media attachments
     // TODO: Support the rendering of poll attachments too
-    if ('uri' in attachment.content) {
+    if (attachment.content.type === PostAttachmentType.MEDIA) {
       let imageHeight = 0;
       if (attachment.size) {
         const ratio =
@@ -47,9 +46,7 @@ const useRenderMediaAttachment = (
           resizeMode={resizeMode}
           onLoadStart={() => setLoading(true)}
           onLoadEnd={() => setLoading(false)}
-          source={{
-            uri: _.get(attachment, 'content.uri'),
-          }}
+          source={{ uri: attachment.content.uri }}
           // @ts-ignore
           style={
             useAutoSize
@@ -65,7 +62,7 @@ const useRenderMediaAttachment = (
         />
       );
     }
-  }, [attachments, useAutoSize, imageWidth, resizeMode, loading]);
+  }, [attachments, resizeMode, useAutoSize, imageWidth, imageStyle, horizontalPaddingWithAutoSize]);
 
   return {
     MediaAttachment,

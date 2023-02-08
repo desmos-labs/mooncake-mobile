@@ -17,7 +17,7 @@ import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { deleteAuthToken } from 'services/axios';
+import { useDeleteAuthToken } from 'services/axios';
 import { useNavigation } from '@react-navigation/native';
 import { AppSettings, BiometricAuthorizations } from 'types/settings';
 import { useSetSettings, useSettings } from '@recoil/settings';
@@ -98,7 +98,7 @@ const Settings: React.FC<NavProps> = props => {
   }, []);
 
   const handlePressSignOut = () => {
-    deleteAuthToken();
+    useDeleteAuthToken();
 
     // Home screen will request user to login if no bearer token is detected
     reset({

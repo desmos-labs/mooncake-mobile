@@ -2,11 +2,12 @@ import { OfflineDirectSigner } from '@cosmjs/proto-signing';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { getAccounts } from 'lib/SecureStorage';
 import React from 'react';
-import { updateAuthToken } from 'services/axios';
+import { useUpdateAuthToken } from 'services/axios';
 import Login from 'services/axios/requests/Login/index';
 import { generateLoginData } from 'services/axios/requests/Login/utils';
 
 const useLogin = () => {
+  const updateAuthToken = useUpdateAuthToken();
   const unlockWallet = useUnlockWallet();
 
   const login = React.useCallback(
@@ -50,7 +51,7 @@ const useLogin = () => {
         pubkeyBytes,
         signedBytes,
       });
-      updateAuthToken(token);
+      useUpdateAuthToken(token);
       return true;
     },
     [],

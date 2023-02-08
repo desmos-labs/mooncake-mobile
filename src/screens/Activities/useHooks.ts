@@ -3,7 +3,7 @@ import { differenceInCalendarDays, parseISO } from 'date-fns';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import client from 'services/graphql/client';
+import useClient from 'services/graphql/useClient';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
 import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
@@ -52,7 +52,7 @@ const useHooks = () => {
     try {
       const results = await Promise.all(
         data.notification.map(async (singleNot: any) => {
-          const { data: profileData } = await client.query({
+          const { data: profileData } = await useClient.query({
             query: GetProfileForAddress,
             variables: {
               address: getCorrectAddress(singleNot),
@@ -60,7 +60,7 @@ const useHooks = () => {
             fetchPolicy: 'no-cache',
           });
           if (singleNot?.data?.post_id) {
-            const { data: postData } = await client.query({
+            const { data: postData } = await useClient.query({
               query: GetPostBySubspaceIDandPostID,
               variables: {
                 postID: singleNot.data.post_id,

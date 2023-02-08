@@ -147,7 +147,7 @@ const PostCard = (props: PostCardProps) => {
     } else {
       return formattedDate;
     }
-  }, [post, t]);
+  }, [formattedDate, post.creationDate, t]);
 
   // --- Child components --- //
 
@@ -181,7 +181,14 @@ const PostCard = (props: PostCardProps) => {
         />
       );
     }
-  }, [isPending, isCurrentUserAuthor]);
+  }, [
+    isPending,
+    isCurrentUserAuthor,
+    styles.pendingIcon,
+    theme.colors.surfaceBlack,
+    theme.spacing.s,
+    theme.spacing.xs,
+  ]);
 
   const ProfileInfo = React.useMemo(() => {
     return (
@@ -192,7 +199,7 @@ const PostCard = (props: PostCardProps) => {
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
             <View style={{ flexDirection: 'row' }}>
               <Typography.Body6 style={{ color: theme.colors.midGrey }}>
-                @{post.author.dtag}
+                @{post.author.dTag}
               </Typography.Body6>
               <Typography.Body6
                 style={{
@@ -207,7 +214,19 @@ const PostCard = (props: PostCardProps) => {
         {PendingIndicator}
       </View>
     );
-  }, [onPressAuthor, post, isPending, calculatedCreationDate, PendingIndicator]);
+  }, [
+    styles.profileInfoView,
+    styles.profilePic,
+    onPressAuthor,
+    authorProfilePic,
+    post.author.nickname,
+    post.author.dTag,
+    theme.colors.midGrey,
+    theme.spacing.xs,
+    isPending,
+    calculatedCreationDate,
+    PendingIndicator,
+  ]);
 
   const BottomBar = React.useMemo(() => {
     return (
@@ -265,14 +284,22 @@ const PostCard = (props: PostCardProps) => {
       </View>
     );
   }, [
+    styles.bottomBarView,
+    styles.bottomBarInnerView,
+    styles.bottomBarIcon,
+    styles.commentButton,
     onPressLike,
     hasReacted,
+    theme.colors.butterOrange01,
+    theme.colors.grey02,
+    theme.spacing.s,
     reactionsCount,
     onPressComment,
     hasCommented,
     commentsCount,
     onPressTip,
     hasTipped,
+    t,
   ]);
 
   return (

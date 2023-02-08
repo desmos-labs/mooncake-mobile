@@ -1,7 +1,7 @@
 import axios from 'axios';
 import EnvConfig from 'config/EnvConfig';
-import { deleteMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
+import { useSetAppStateValue } from '@recoil/appState';
 
 const axiosInstance = axios.create({
   baseURL: EnvConfig.BUTTER_REST,
@@ -11,20 +11,27 @@ const axiosInstance = axios.create({
 /**
  * Updates the bearer token of the axios instance and also saves it to MMKV storage.
  */
-export const updateAuthToken = (newToken: string) => {
-  setMMKV(MMKVKEYS.REST_AUTH_TOKEN, newToken);
-
-  axiosInstance.defaults.headers.common = {
-    Authorization: `Bearer ${newToken}`,
-  };
+export const useUpdateAuthToken = () => {
+  const setToken = useSetAppStateValue('bearerToken');
+  return React.useCallback(
+    (newToken: string) => {
+      setToken(newToken);
+      axiosInstance.defaults.headers.common = {
+        Authorization: `Bearer ${newToken}`,
+      };
+    },
+    [setToken],
+  );
 };
 
-export const deleteAuthToken = () => {
-  deleteMMKV(MMKVKEYS.REST_AUTH_TOKEN);
-
-  axiosInstance.defaults.headers.common = {
-    Authorization: '',
-  };
+export const useDeleteAuthToken = () => {
+  const setToken = useSetAppStateValue('bearerToken');
+  return React.useCallback(() => {
+    setToken('');
+    axiosInstance.defaults.headers.common = {
+      Authorization: '',
+    };
+  }, [setToken]);
 };
 
 /**

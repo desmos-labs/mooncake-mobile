@@ -13,13 +13,11 @@ import { useAppStateValue } from '@recoil/appState';
  */
 const useFormatDateToTZ = (timeToFormat: string, formatString: string) => {
   const currentTimeZone = useAppStateValue('currentTimezone');
-
   return React.useMemo(() => {
     if (!timeToFormat) return '';
     // append a zone designator to timestamp if it is not present
     // this is for formatting the time to different timezones
     const parsedTime = parseISO(!timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat);
-
     return formatInTimeZone(parsedTime, currentTimeZone, formatString);
   }, [timeToFormat, currentTimeZone, formatString]);
 };

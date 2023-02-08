@@ -90,7 +90,14 @@ const useFollowUser = () => {
         });
       }
     },
-    [doesRelationshipExist, broadcastTx, addFollowedUser],
+    [
+      addFollowedUser,
+      doesRelationshipExist,
+      subspaceId,
+      broadcastTx,
+      setFollowedUserStatus,
+      removeFollowedUser,
+    ],
   );
 };
 
@@ -142,7 +149,7 @@ const useUnfollowUser = () => {
         });
       }
     },
-    [doesRelationshipExist, broadcastTx, removeFollowedUser],
+    [setFollowedUserStatus, doesRelationshipExist, subspaceId, broadcastTx, removeFollowedUser],
   );
 };
 
@@ -169,7 +176,7 @@ const useFollowOrUnfollowUser = () => {
         await followUser(activeAddress, counterparty);
       }
     },
-    [hasFollowedUser, followUser, unfollowUser],
+    [hasFollowedUser, activeAddress, unfollowUser, followUser],
   );
 };
 

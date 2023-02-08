@@ -47,7 +47,7 @@ export const useHandlePressReaction = () => {
       }
       await addOrRemoveReaction(post);
     },
-    [isPostPending, addOrRemoveReaction],
+    [addOrRemoveReaction],
   );
 };
 
@@ -66,7 +66,7 @@ export const useHandlePressReport = () => {
         post,
       });
     },
-    [isPostPending, navigate],
+    [navigate],
   );
 };
 
@@ -86,7 +86,7 @@ export const useHandlePressComments = () => {
         focusCommentBox: true,
       });
     },
-    [isPostPending, navigate],
+    [navigate],
   );
 };
 
@@ -105,6 +105,6 @@ export const useHandlePressTip = () => {
         post,
       });
     },
-    [isPostPending, navigate],
+    [navigate],
   );
 };

@@ -18,7 +18,11 @@ export interface AppState {
    */
   readonly appActiveState: AppStateStatus;
   /**
-   * Id of the subspace that the app is currently using.
+   * Token that should be used when authenticating the APIs calls.
+   */
+  readonly bearerToken: string;
+  /**
+   * ID of the subspace that the app is currently using.
    */
   readonly subspaceId: number;
   /**
@@ -44,11 +48,12 @@ export interface AppState {
 }
 
 const DefaultAppState: AppState = {
+  dataInitialized: false,
+  bearerToken: '',
   appActiveState: 'unknown',
   subspaceId: EnvConfig.APP_SUBSPACE_ID,
   consentGiven: false,
   inviteCode: undefined,
-  dataInitialized: false,
   currentTimezone: '',
   subspaceParams: {
     registeredReactions: [],

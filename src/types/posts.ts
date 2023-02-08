@@ -1,10 +1,10 @@
-import { Media, Poll } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import { DesmosProfile } from 'types/desmos';
 
 export enum PostStatus {
   SYNCED = 'synced',
-  CREATED_LOCALLY = 'created_locally',
-  DELETED_LOCALLY = 'deleted_locally',
+  CREATED_LOCALLY = 'created',
+  EDITED_LOCALLY = 'edited',
+  DELETED_LOCALLY = 'deleted',
 }
 
 export interface Post {
@@ -12,6 +12,11 @@ export interface Post {
    * Status of the post.
    */
   readonly status: PostStatus;
+
+  /**
+   * Last date in which the status of a post was updated.
+   */
+  readonly statusUpdateDate: string;
 
   /**
    * ID of the subspace inside which this post has been created.
@@ -62,9 +67,7 @@ export interface Post {
    * Transactions that are associated to this post.
    * This is a list because they could be either MsgCreatePost or MsgEditPost transactions.
    */
-  readonly transactions: {
-    readonly hash: string;
-  }[];
+  readonly transactions: PostTransaction[];
 }
 
 export const isPostPending = (post: Post): boolean => {
@@ -76,8 +79,26 @@ export interface PostAttachmentSize {
   readonly width: number;
 }
 
+export enum PostAttachmentType {
+  MEDIA,
+  POLL,
+}
+
+export interface PostMediaAttachment {
+  readonly type: PostAttachmentType.MEDIA;
+  readonly uri: string;
+  readonly mimeType: string;
+}
+
+// TODO: add the PostPollAttachment as well
+export type PostAttachmentContent = PostMediaAttachment;
+
 export interface PostAttachment {
   id: number;
-  content: Media | Poll;
+  content: PostAttachmentContent;
   size: PostAttachmentSize | undefined;
+}
+
+export interface PostTransaction {
+  readonly hash: string;
 }

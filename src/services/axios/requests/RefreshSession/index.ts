@@ -1,18 +1,16 @@
 import axiosInstance from 'services/axios';
+import { err, ok, Result } from 'neverthrow';
+import { HttpStatusCode } from 'axios';
 
 /**
  * Refresh the user's token validity
  */
-const RefreshSession = async () => {
-  const _response = await axiosInstance.post('/session');
-
-  if (_response.status !== 200) {
-    throw new Error(
-      `There was an issue refreshing the session:\n\n${JSON.stringify(_response.data)}`,
-    );
-  } else {
-    console.log('Session refreshed');
+const RefreshSession = async (): Promise<Result<void, Error>> => {
+  const response = await axiosInstance.post('/session');
+  if (response.status !== HttpStatusCode.Ok) {
+    return err(new Error(`Error while refreshing the session: ${response.data}`));
   }
+  return ok(undefined);
 };
 
 export default RefreshSession;

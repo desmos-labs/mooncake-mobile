@@ -11,6 +11,7 @@ import useAcceptInvite from 'hooks/useAcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { AccountWithWallet } from 'types/account';
 import useStoreAccount from 'hooks/useStoreAccount';
+import { useSetActiveAccountAddress } from '@recoil/accounts';
 import useSaveProfile from 'hooks/useSaveProfile';
 
 interface FormValues {
@@ -111,6 +112,7 @@ const usePerformSignUp = () => {
   const performLogin = usePerformLogin();
   const acceptInvite = useAcceptInvite();
   const storeAccount = useStoreAccount();
+  const setActiveAccountAddress = useSetActiveAccountAddress();
 
   const performSignUp = React.useCallback(
     async (values: FormValues): Promise<Result<SignUpSuccess, Error>> => {
@@ -139,20 +141,33 @@ const usePerformSignUp = () => {
 
       // Accept the invitation
       setStatus(SignUpStatus.ACCEPTING_INVITE);
-      const result = await acceptInvite(account.account.address, inviteCode);
-      if (result.isErr()) {
+      const inviteResult = await acceptInvite(account.account.address, inviteCode);
+      if (inviteResult.isErr()) {
         setStatus(SignUpStatus.DONE);
-        return err(result.error);
+        return err(inviteResult.error);
       }
 
       // Save the account locally
-      await storeAccount(account, values.newPassword);
+      const result = await storeAccount(account, values.newPassword);
+      if (result.isErr()) {
+        return err(result.error);
+      }
+
+      // Set the account as active
+      setActiveAccountAddress(account.account.address);
 
       // Return
       setStatus(SignUpStatus.DONE);
       return ok({ account } as SignUpSuccess);
     },
-    [acceptInvite, appInviteCode, generateRandomAccount, performLogin, storeAccount],
+    [
+      acceptInvite,
+      appInviteCode,
+      generateRandomAccount,
+      performLogin,
+      setActiveAccountAddress,
+      storeAccount,
+    ],
   );
 
   return {

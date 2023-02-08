@@ -11,7 +11,7 @@ import { toHex } from '@cosmjs/encoding';
 import { AccountWithWallet } from 'types/account';
 import { SignerData } from '@cosmjs/stargate';
 import Login, { LoginParams } from 'services/axios/requests/Login';
-import { updateAuthToken } from 'services/axios';
+import { useUpdateAuthToken } from 'services/axios';
 
 /**
  * Generate the params to be used when performing the login on the APIs.
@@ -47,17 +47,21 @@ const generateLoginParams = async (account: AccountWithWallet): Promise<LoginPar
  * used for future API requests.
  */
 const usePerformLogin = () => {
-  return React.useCallback(async (account: AccountWithWallet) => {
-    // Perform the login
-    const params = await generateLoginParams(account);
-    const { token } = await Login(params);
+  const updateAuthToken = useUpdateAuthToken();
+  return React.useCallback(
+    async (account: AccountWithWallet) => {
+      // Perform the login
+      const params = await generateLoginParams(account);
+      const { token } = await Login(params);
 
-    // Update the Axios auth token for future requests
-    updateAuthToken(token);
+      // Update the Axios auth token for future requests
+      updateAuthToken(token);
 
-    // Return the token for other usages
-    return token;
-  }, []);
+      // Return the token for other usages
+      return token;
+    },
+    [updateAuthToken],
+  );
 };
 
 export default usePerformLogin;

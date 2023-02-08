@@ -13,7 +13,7 @@ import { useRecoilValue } from 'recoil';
 import NotificationButton from 'screens/Activities/components/NotificationButton';
 import NotificationImage from 'screens/Activities/components/NotificationImage';
 import PostNotificationRead from 'services/axios/requests/PostNotificationRead';
-import client from 'services/graphql/client';
+import useClient from 'services/graphql/useClient';
 import NotificationReadFields from 'services/graphql/queries/fragments/NotificationReadFields';
 import { NotificationType } from 'types/notifications';
 import { CompleteNotification } from 'screens/Activities/types';
@@ -60,7 +60,7 @@ const NotificationComponent = (notification: CompleteNotification) => {
       try {
         const result = await PostNotificationRead(id);
         if (result) {
-          client.writeFragment({
+          useClient.writeFragment({
             fragment: NotificationReadFields,
             id: `notification:${id}`,
             data: {

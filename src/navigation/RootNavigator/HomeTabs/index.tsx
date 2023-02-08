@@ -30,6 +30,9 @@ const HomeTabs = () => {
   React.useEffect(() => {
     // TODO: This should be moved inside the RootNavigator
     refreshSession();
+    // Disable the inspection on the next line as we want to run this every
+    // time the user opens the Home page anyway
+    // eslint-disable-next-line
   }, []);
 
   const renderTabBar = React.useCallback(

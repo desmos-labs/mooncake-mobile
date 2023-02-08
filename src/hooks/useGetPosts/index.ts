@@ -2,10 +2,12 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { QueryOptions, useQuery } from '@apollo/client';
 import GetPosts from 'services/graphql/queries/GetPosts';
 import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowing';
-import { useStoredFollowingPosts, useStoredRootPosts } from '@recoil/posts';
-import EnvConfig from 'config/EnvConfig';
+import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useFollowingAddresses from 'hooks/useFollowingAddresses';
+import { convertGraphQLPost } from 'lib/GraphQLUtils';
+import { useAppStateValue } from '@recoil/appState';
+import { mergePosts } from 'lib/PostsUtils';
 
 /**
  * Increase this to get more posts per query.
@@ -57,7 +59,8 @@ const getQueryParams = (
  * Gets the query that should be used in order to get the posts
  * based on the given {@param params}.
  */
-const getQueryData = (params: PostsQueryParams): QueryOptions<any> => {
+const useQueryData = (params: PostsQueryParams): QueryOptions<any> => {
+  const subspaceId = useAppStateValue('subspaceId');
   switch (params.type) {
     case PostsQueryType.DISCOVERY:
       return {
@@ -65,7 +68,7 @@ const getQueryData = (params: PostsQueryParams): QueryOptions<any> => {
         variables: {
           offset: 0,
           limit: POSTS_PER_FETCH,
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          subspaceID: subspaceId,
           user: params.user,
           reaction: {
             '@type': '/desmos.reactions.v1.RegisteredReactionValue',
@@ -80,7 +83,7 @@ const getQueryData = (params: PostsQueryParams): QueryOptions<any> => {
         variables: {
           offset: 0,
           limit: POSTS_PER_FETCH,
-          subspaceID: EnvConfig.APP_SUBSPACE_ID,
+          subspaceID: subspaceId,
           following: Array.from(params.followedUsers),
           user: params.user,
           reaction: {
@@ -116,11 +119,12 @@ const useGetPosts = (queryType: PostsQueryType) => {
   // Cached values
   const discoveryPosts = useStoredRootPosts(activeAddress);
   const timelinePosts = useStoredFollowingPosts(activeAddress, followingAddresses);
+  const storePosts = useStorePosts(activeAddress);
 
   // The posts we should return are defined based on the query time we have been asked
   const posts = useMemo(
     () => (queryType === PostsQueryType.TIMELINE ? timelinePosts : discoveryPosts),
-    [timelinePosts, discoveryPosts],
+    [queryType, timelinePosts, discoveryPosts],
   );
 
   // Local state, used as returned values
@@ -130,19 +134,29 @@ const useGetPosts = (queryType: PostsQueryType) => {
 
   // Callback used when the query for the posts has completed.
   // It takes care of merging the results with the data stored
-  const onCompletedCallback = useCallback((data: any) => {
-    // TODO: Convert the GraphQL data, and merge it with the cached data
-    // TODO: Update the cache about the added reaction, comments and tips as well
-    // const { post } = data;
-    // setPosts(() => _.uniqBy([...post], 'id'));
-  }, []);
+  const onCompletedCallback = useCallback(
+    (data: any) => {
+      // If there is no data, just return
+      if (!data) return;
+
+      // Convert the GraphQL data to the in-app format
+      const graphQLPosts = (data.posts as any[]).map(convertGraphQLPost);
+
+      // Store the posts by merging the existing ones with the ones from the server
+      storePosts(cachedPosts => mergePosts(cachedPosts, graphQLPosts));
+
+      // TODO: Update the cache about the reactions, comments and tips added/deleted by the user
+    },
+    [storePosts],
+  );
 
   // Get the proper query to be executed
   const queryParams = getQueryParams(queryType, activeAddress, followingAddresses);
-  const queryData = getQueryData(queryParams);
+  const queryData = useQueryData(queryParams);
   const { refetch, loading, fetchMore } = useQuery(queryData.query, {
     variables: queryData.variables,
     onCompleted: onCompletedCallback,
+    refetchWritePolicy: 'overwrite',
   });
 
   // Callback that is used to refetch the next page of posts
@@ -181,19 +195,16 @@ const useGetPosts = (queryType: PostsQueryType) => {
       // (just like slot machines)
       await sleep(500);
 
-      await refetch({
-        ...queryData.variables,
-
-        // Reset the fetch offset to restart post fetching
-        offset: 0,
-      });
+      // Get the new data by resetting the fetch offset to restart post fetching
+      const { data } = await refetch({ ...queryData.variables, offset: 0 });
+      onCompletedCallback(data);
     } catch (e: any) {
       setError(e.toString());
     } finally {
       // Make sure to set the fetching to false in any case
       setRefreshing(false);
     }
-  }, [setError, setRefreshing, refetch, queryData]);
+  }, [refetch, queryData.variables, onCompletedCallback]);
 
   return {
     posts,

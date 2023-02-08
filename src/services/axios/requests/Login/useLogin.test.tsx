@@ -3,7 +3,7 @@ import useLogin from 'services/axios/requests/Login/useLogin';
 import GetNonce from 'services/axios/requests/GetNonce';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { generateLoginData } from 'services/axios/requests/Login/utils';
-import { updateAuthToken } from 'services/axios';
+import { useUpdateAuthToken } from 'services/axios';
 import Login from './index';
 
 jest.mock('./utils', () => {
@@ -64,7 +64,7 @@ describe('services/axios: useLogin', () => {
       });
     });
 
-    expect(updateAuthToken).toHaveBeenCalledWith(DUMMY_TOKEN);
+    expect(useUpdateAuthToken).toHaveBeenCalledWith(DUMMY_TOKEN);
   });
 
   it('login terminates early if error occurs during Login call', async () => {

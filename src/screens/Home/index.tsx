@@ -80,7 +80,10 @@ const Home = () => {
   // State to know whether the list end was reached during the momentum
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
+  // -------------------------------------------------------------------------------------
   // --- Actions ---
+  // -------------------------------------------------------------------------------------
+
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollow = useHandlePressFollow();
   const handlePressDetails = useHandlePressDetails();
@@ -89,7 +92,10 @@ const Home = () => {
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
 
+  // -------------------------------------------------------------------------------------
   // --- Data queries ---
+  // -------------------------------------------------------------------------------------
+
   const postsQueryType = useMemo(() => {
     return routeName === 'HOME_DISCOVER' ? PostsQueryType.DISCOVERY : PostsQueryType.TIMELINE;
   }, [routeName]);
@@ -103,7 +109,9 @@ const Home = () => {
     refreshing,
   } = useGetPosts(postsQueryType);
 
+  // -------------------------------------------------------------------------------------
   // --- Notifications ---
+  // -------------------------------------------------------------------------------------
 
   useWatchForNewPosts(
     useCallback(async () => {
@@ -117,7 +125,9 @@ const Home = () => {
     }, [postListRef, refreshPosts]),
   );
 
+  // -------------------------------------------------------------------------------------
   // --- Child components ---
+  // -------------------------------------------------------------------------------------
 
   const renderPost = React.useCallback(
     ({ item }: ListRenderItemInfo<Post>) => {
@@ -230,9 +240,11 @@ const Home = () => {
         </TouchableWithoutFeedback>
       )
     );
-  }, [postsListState, styles]);
+  }, [postsListState, setPostsListState, styles]);
 
+  // -------------------------------------------------------------------------------------
   // --- Component rendering ---
+  // -------------------------------------------------------------------------------------
 
   // Return the loading view if the posts are still loading
   // TODO: If the view is NOT loading, and there are no posts, we should return an empty view

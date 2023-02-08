@@ -48,16 +48,22 @@ export const useGetPostsToSync = () => {
 export const useStorePosts = (user: string) => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (posts: Post[]) => {
+    (valOrUpdater: ((currVal: Post[]) => Post[]) | Post[]) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
         };
-        updatedPosts[user] = posts;
+
+        if (typeof valOrUpdater === 'function') {
+          updatedPosts[user] = valOrUpdater(updatedPosts[user] ?? []);
+        } else {
+          updatedPosts[user] = valOrUpdater;
+        }
+
         return updatedPosts;
       });
     },
-    [setPosts],
+    [setPosts, user],
   );
 };
 

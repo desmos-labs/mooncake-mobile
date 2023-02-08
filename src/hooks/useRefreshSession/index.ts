@@ -1,54 +1,48 @@
 import messaging from '@react-native-firebase/messaging';
-import { useNavigation } from '@react-navigation/native';
-import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
-import ROUTES from 'navigation/routes';
 import { useCallback } from 'react';
 import axiosInstance from 'services/axios';
 import PostNotificationToken from 'services/axios/requests/PostNotificationToken';
 import RefreshSession from 'services/axios/requests/RefreshSession';
+import { useAppStateValue } from '@recoil/appState';
+import { err, ok, Result } from 'neverthrow';
 
 /**
  * A hook that restores axios bearer token and redirects the user to the login screen
  * if it is invalid or cannot be found.
  */
 const useRefreshSession = () => {
-  const { replace } = useNavigation<any>();
+  const bearerToken = useAppStateValue('bearerToken');
 
-  return useCallback(async () => {
-    const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
-
+  return useCallback(async (): Promise<Result<void, Error>> => {
     // Bearer token refresh
-    try {
-      if (bearerToken) {
-        console.log('Restoring bearer token');
-        axiosInstance.defaults.headers.common = {
-          Authorization: `Bearer ${bearerToken}`,
-        };
+    if (!bearerToken) {
+      // TODO: Probably, it's better to just do nothing here. We can always refresh later anyway
+      return err(new Error('No bearer token found'));
+    }
 
-        await RefreshSession();
+    console.log('Refreshing bearer token');
+    axiosInstance.defaults.headers.common = {
+      Authorization: `Bearer ${bearerToken}`,
+    };
 
-        const notificationsToken = await messaging().getToken();
-        if (notificationsToken) {
-          await PostNotificationToken(notificationsToken);
-        }
-      } else {
-        throw new Error('No bearer token found');
+    // Refresh the session
+    const refreshResult = await RefreshSession();
+    if (refreshResult.isErr()) {
+      return err(refreshResult.error);
+    }
+
+    // Refresh the notification token
+    const notificationsToken = await messaging().getToken();
+    if (notificationsToken) {
+      const postNotificationResult = await PostNotificationToken(notificationsToken);
+      if (postNotificationResult.isErr()) {
+        return err(postNotificationResult.error);
       }
-    } catch (err: any) {
-      console.error('REFRESH SESSION ERROR', err);
-      replace(ROUTES.LOGIN);
     }
 
-    // Notifications token refresh
-    try {
-      console.log('Obtaining notifications token');
-      const notificationsToken = await messaging().getToken();
-      await PostNotificationToken(notificationsToken.toString());
-      console.log('Posted notifications token');
-    } catch (err: any) {
-      console.error('NOTIFICATIONS TOKEN', err);
-    }
-  }, []);
+    // Return the ok result
+    return ok(undefined);
+  }, [bearerToken]);
 };
 
 export default useRefreshSession;

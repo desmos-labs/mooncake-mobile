@@ -8,9 +8,9 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { MultiAPILink } from '@habx/apollo-multi-endpoint-link';
 import EnvConfig from 'config/EnvConfig';
-import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import NotificationMergePolicy from 'services/graphql/queries/typePolicies/notification';
+import { useAppStateValue } from '@recoil/appState';
 
 const multiApiLink = ApolloLink.from([
   new MultiAPILink({
@@ -48,19 +48,31 @@ const cache = new InMemoryCache({
     }
   },
 });
-const authLink = setContext((_, { headers }) => {
-  const bearerToken = getMMKV(MMKVKEYS.REST_AUTH_TOKEN);
-  return {
-    headers: {
-      ...headers,
-      authorization: bearerToken ? `Bearer ${bearerToken}` : '',
-    },
-  };
-});
 
-const client = new ApolloClient({
-  cache,
-  link: authLink.concat(multiApiLink),
-});
+/**
+ * Hook that returns the authenticated link to be used for GraphQL requests.
+ */
+const useAuthLink = () => {
+  const authToken = useAppStateValue('bearerToken');
+  return setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        authorization: authToken ? `Bearer ${authToken}` : '',
+      },
+    };
+  });
+};
 
-export default client;
+/**
+ * Hook that allows to get the GraphQL client to be used for various requests.
+ */
+const useClient = () => {
+  const authLink = useAuthLink();
+  return new ApolloClient({
+    cache,
+    link: authLink.concat(multiApiLink),
+  });
+};
+
+export default useClient;
