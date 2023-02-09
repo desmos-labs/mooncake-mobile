@@ -3,6 +3,7 @@ import { passwordStrength } from 'check-password-strength';
 import { NavProps, PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
+import { changeWalletsPassword } from 'lib/SecureStorage';
 import useStyles from './useStyles';
 
 /**
@@ -24,7 +25,7 @@ const useHooks = () => {
     [],
   );
 
-  const { navigate } = useNavigation<NavProps['navigation']>();
+  const { navigate, goBack } = useNavigation<NavProps['navigation']>();
 
   const headerText = React.useMemo(() => {
     switch (mode) {
@@ -66,21 +67,6 @@ const useHooks = () => {
     }
   }, [mode]);
 
-  const handleFormSubmit = React.useCallback(
-    async (formValues: typeof initialFormValues) => {
-      if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
-      }
-      if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && account) {
-        navigate(ROUTES.SAVE_ACCOUNT, {
-          password: formValues.newPassword,
-          account: account.account,
-          wallet: account.wallet,
-        });
-      }
-    },
-    [account, mode, navigate],
-  );
-
   const mapPwStyle = React.useCallback((password: string) => {
     const { value } = passwordStrength(password);
 
@@ -93,6 +79,34 @@ const useHooks = () => {
         return styles.weakPw;
     }
   }, []);
+
+  const handleFormSubmit = React.useCallback(
+    async (formValues: typeof initialFormValues) => {
+      if (mode === PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD) {
+        setLoading(true);
+        const result = await changeWalletsPassword(
+          formValues.confirmPassword,
+          formValues.newPassword,
+        );
+        setLoading(false);
+        if (result.isErr()) {
+          // TODO: Show error on the UI.
+          console.error(result.error);
+        } else {
+          // TODO: Show success on the UI.
+          goBack();
+        }
+      }
+      if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && account) {
+        navigate(ROUTES.SAVE_ACCOUNT, {
+          password: formValues.newPassword,
+          account: account.account,
+          wallet: account.wallet,
+        });
+      }
+    },
+    [account, goBack, mode, navigate],
+  );
 
   return {
     loading,

@@ -1,5 +1,5 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps } from '@react-navigation/native';
+import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import Button from 'components/Button';
@@ -55,14 +55,27 @@ const PasswordManipulation = () => {
   const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const confirmPasswordRef = useRef<TextInput>(null);
+  const {
+    params: { mode },
+  } = useRoute<NavProps['route']>();
 
   const validationSchema = React.useMemo(() => {
-    return Yup.object().shape({
-      confirmPassword: Yup.string()
-        .required(t('error:required'))
-        .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
-    });
-  }, [t]);
+    switch (mode) {
+      case PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD:
+        return Yup.object().shape({
+          confirmPassword: Yup.string()
+            .required(t('error:required'))
+            .oneOf([Yup.ref('newPassword')], t('error:pwMustMatch')),
+        });
+      case PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD:
+        return Yup.object().shape({
+          confirmPassword: Yup.string().required(t('error:required')),
+        });
+      case PASSWORD_MANIPULATION_MODE.RESET_PASSWORD:
+        // TODO: Provide validation schema for reset password.
+        return null;
+    }
+  }, [mode, t]);
 
   const {
     loading,
