@@ -16,6 +16,7 @@ import { useTheme } from 'react-native-paper';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
+import usePerformLogin from 'hooks/usePerformLogin';
 import useSaveAccount from './hooks';
 import useStyles from './useStyles';
 
@@ -51,8 +52,11 @@ const SaveAccount = ({ navigation }: NavProps) => {
   const { t } = useTranslation('signup');
   const styles = useStyles();
   const theme = useTheme();
-  const { saveAccount, savingAccount } = useSaveAccount();
+  const [saving, setSaving] = React.useState(false);
+  const [error, setError] = React.useState<string>();
+  const { saveAccount } = useSaveAccount();
   const setActiveAccount = useSetActiveAccountAddress();
+  const performLogin = usePerformLogin();
 
   // Hook to prevent the user to go back, just allow it in debug if we need
   // to go back.
@@ -68,8 +72,23 @@ const SaveAccount = ({ navigation }: NavProps) => {
 
   React.useEffect(() => {
     (async () => {
-      await saveAccount({ account, wallet }, password);
-      setActiveAccount(account.address);
+      setSaving(true);
+      setError(undefined);
+      // Save the account.
+      const saveAccountResult = await saveAccount({ account, wallet }, password);
+      if (saveAccountResult.isOk()) {
+        // Try to perform the login.
+        const loginResult = await performLogin({ account, wallet });
+        if (loginResult.isOk()) {
+          // Login success, set the current account as active.
+          setActiveAccount(account.address);
+        } else {
+          setError(loginResult.error.message);
+        }
+      } else {
+        setError(saveAccountResult.error.message);
+      }
+      setSaving(false);
     })();
 
     // Disable the lint warning on the next line as we want this effect to be
@@ -94,16 +113,28 @@ const SaveAccount = ({ navigation }: NavProps) => {
         <FastImage resizeMode="cover" source={modalSuccess} style={styles.image} />
         <Spacer paddingTop={60} />
         <View style={{ alignItems: 'center' }}>
-          <Typography.H4>{t('congratulations')}</Typography.H4>
-          <Spacer paddingTop={theme.spacing.s} />
-          <Typography.Body6>{t('profile created')}</Typography.Body6>
+          {saving ? (
+            <Typography.H4>{t('saving account...')}</Typography.H4>
+          ) : error !== undefined ? (
+            <>
+              <Typography.H4>{t('error saving the account')}</Typography.H4>
+              <Spacer paddingTop={theme.spacing.s} />
+              <Typography.Body6>{error}</Typography.Body6>
+            </>
+          ) : (
+            <>
+              <Typography.H4>{t('congratulations')}</Typography.H4>
+              <Spacer paddingTop={theme.spacing.s} />
+              <Typography.Body6>{t('profile created')}</Typography.Body6>
+            </>
+          )}
         </View>
         <Spacer paddingTop={60} />
         <Button
           mode="contained"
           color={theme.colors.surfaceBlack}
           onPress={resetToHome}
-          disabled={savingAccount}>
+          disabled={saving}>
           <Typography.Button2 style={{ color: theme.colors.white }}>
             {t('welcome to butter')}
           </Typography.Button2>

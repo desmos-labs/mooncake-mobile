@@ -1,4 +1,5 @@
 import axiosInstance from 'services/axios';
+import { Result, ResultAsync } from 'neverthrow';
 
 type Response = {
   token: string;
@@ -34,15 +35,18 @@ const Login = async ({
   pubkeyBytes,
   signedBytes,
   signatureBytes,
-}: LoginParams): Promise<Response> => {
-  const _response = await axiosInstance.post('/login', {
-    desmos_address: address,
-    pubkey_bytes: pubkeyBytes,
-    signed_bytes: signedBytes,
-    signature_bytes: signatureBytes,
-  });
-
-  return _response.data;
+}: LoginParams): Promise<Result<Response, Error>> => {
+  return ResultAsync.fromPromise(
+    axiosInstance.post('/login', {
+      desmos_address: address,
+      pubkey_bytes: pubkeyBytes,
+      signed_bytes: signedBytes,
+      signature_bytes: signatureBytes,
+    }),
+    // Safe to ignore, axios will raise an Error in case the request fails.
+    // @ts-ignore
+    e => Error(e?.message ?? 'Error performing the login'),
+  ).map(response => response.data);
 };
 
 export default Login;

@@ -31,7 +31,11 @@ const generateLoginParams = async (account: AccountWithWallet): Promise<LoginPar
 
   // Pass an empty array as message, as we just need to sign something
   // to grab the SignatureResult
-  const result = await desmosClient.signTx(address, [], fee, nonce, signerData);
+  const result = await desmosClient.signTx(address, [], {
+    fee,
+    memo: nonce,
+    signerData,
+  });
 
   return {
     address: account.wallet.address,
@@ -52,13 +56,15 @@ const usePerformLogin = () => {
     async (account: AccountWithWallet) => {
       // Perform the login
       const params = await generateLoginParams(account);
-      const { token } = await Login(params);
+      const loginResult = await Login(params);
 
-      // Update the Axios auth token for future requests
-      updateAuthToken(token);
+      if (loginResult.isOk()) {
+        // Update the Axios auth token for future requests
+        updateAuthToken(loginResult.value.token);
+      }
 
       // Return the token for other usages
-      return token;
+      return loginResult;
     },
     [updateAuthToken],
   );

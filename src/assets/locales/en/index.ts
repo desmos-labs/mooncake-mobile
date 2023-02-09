@@ -51,6 +51,7 @@ import invites from "./invites.json";
 import onboarding from "./onboarding.json";
 import operations from "./operations.json";
 import ledgerScan from "./ledgerScan.json";
+import broadcastTxOnChain from "./broadcastTxOnChain.json";
 
 const en = {
   common,
@@ -106,6 +107,7 @@ const en = {
   onboarding,
   operations,
   ledgerScan,
+  broadcastTxOnChain,
 };
 
 export default en;

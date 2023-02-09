@@ -1,13 +1,14 @@
 import React from 'react';
 import ToastConfig from 'config/ToastConfig';
-import { encodeAndBroadcastTx } from 'services/axios/requests/CentralizedBroadcastTx';
 import { NotificationType, TransactionNotificationData } from 'types/notifications';
 import { useToast } from 'react-native-toast-notifications';
 import { useGetPendingTransaction } from '@recoil/transactions';
+import useBroadcastTxWithApi from 'hooks/useBroadcastTxWithApi';
 
 const useCreateTransactionSnackbar = () => {
   const toast = useToast();
   const getPendingTransaction = useGetPendingTransaction();
+  const broadcastTxWithApi = useBroadcastTxWithApi();
 
   return React.useCallback(
     async (data: TransactionNotificationData) => {
@@ -26,14 +27,14 @@ const useCreateTransactionSnackbar = () => {
               // Find the matching txHash and rebroadcast its message
               const pendingTx = getPendingTransaction(data.txHash);
               if (pendingTx) {
-                encodeAndBroadcastTx({ msgs: pendingTx.messages });
+                broadcastTxWithApi(pendingTx.messages);
               }
             },
           });
           break;
       }
     },
-    [toast],
+    [broadcastTxWithApi, getPendingTransaction, toast],
   );
 };
 

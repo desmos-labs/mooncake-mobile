@@ -11,6 +11,10 @@ import React, { FC, useCallback } from 'react';
 import { Alert, FlatList, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
+import { useActiveAccount } from '@recoil/accounts';
+import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
+import useBroadcastTx from 'hooks/useBroadcastTx';
+import Long from 'long';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
@@ -62,6 +66,40 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
   const toast = useToast();
+  const activeAccount = useActiveAccount();
+  const broadcastTx = useBroadcastTx();
+
+  const testBroadcastTx = React.useCallback(async () => {
+    if (activeAccount !== undefined) {
+      const result = await broadcastTx(
+        [
+          {
+            typeUrl: MsgCreatePostTypeUrl,
+            value: {
+              tags: [],
+              text: 'This is a test post',
+              author: activeAccount.address,
+              subspaceId: Long.fromNumber(5),
+              sectionId: 0,
+              externalId: '',
+              attachments: [],
+              conversationId: Long.fromNumber(0),
+              replySettings: 1,
+              referencedPosts: [],
+            },
+          } as MsgCreatePostEncodeObject,
+        ],
+        {
+          onChain: true,
+        },
+      );
+      if (result.isOk()) {
+        console.log('Tx hash', result.value.txHash);
+      } else {
+        console.error('Broadcast failed', result.error);
+      }
+    }
+  }, [activeAccount, broadcastTx]);
 
   const showToast = () => {
     toast.show('I am a toast', {
@@ -164,6 +202,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           }>
           Continue to Home screen
         </Button>
+        <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>
         <Spacer paddingVertical={8} />
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flexDirection: 'column', flex: 0.5 }}>

@@ -20,8 +20,8 @@ const useSaveAccount = () => {
       if (result.isErr()) {
         setError(result.error.message);
       }
-
       setSavingAccount(false);
+      return result;
     },
     [storeAccount],
   );

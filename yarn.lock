@@ -1358,10 +1358,8 @@
     long "^4.0.0"
     protobufjs "^7.1.2"
 
-"@desmoslabs/desmjs@4.7.6":
+"@desmoslabs/desmjs@file:../desmjs/packages/core":
   version "4.7.6"
-  resolved "https://registry.yarnpkg.com/@desmoslabs/desmjs/-/desmjs-4.7.6.tgz#741b41df9c41cc582cb36b61303d74c466722abc"
-  integrity sha512-EWMtia5rVhP2E3qoHfxCBuppBJynfq4y7E7v3zlKD/GNZr0kXvAXoTiukt7j3WQnB3uTP9QWGl3yzEqlYSK1EQ==
   dependencies:
     "@cosmjs/amino" "^0.29.5"
     "@cosmjs/cosmwasm-stargate" "^0.29.5"

@@ -30,8 +30,9 @@ import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
+import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
+import BroadcastTxOnChain, { BroadcastTxParams } from 'screens/BroadcastTxOnChain';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
-import { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomeBack from 'screens/WelcomeBack';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
@@ -68,7 +69,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
-  // [ROUTES.BROADCAST_TX]: BroadcastTxParams;
+  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
   [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.SELECT_LEDGER_APP]: undefined;
   // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
@@ -224,7 +225,7 @@ const RootNavigator = () => {
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
-      {/* <Stack.Screen name={ROUTES.BROADCAST_TX} component={GenerateAccount} /> */}
+      <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.FULLSCREEN_STATUS_SCREEN} */}
@@ -244,6 +245,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
       <Stack.Screen name={ROUTES.MNEMONIC_INPUT} component={MnemonicInput} />
+      <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />

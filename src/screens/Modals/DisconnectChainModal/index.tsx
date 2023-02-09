@@ -61,7 +61,7 @@ const DisconnectChainModal = () => {
       },
     ];
 
-    navigate(ROUTES.BROADCAST_TX, {
+    navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
       messages: msgs,
       offlineSigner: unlockResponse.wallet,
       successAction: () => {

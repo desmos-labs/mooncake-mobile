@@ -79,7 +79,7 @@ const useHooks = () => {
           },
         };
 
-        navigate(ROUTES.BROADCAST_TX, {
+        navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
           title: t('broadcastTx:linkApp') as string,
           messages: [msg],
           offlineSigner: unlockResult.wallet,

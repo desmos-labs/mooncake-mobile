@@ -1,12 +1,20 @@
 import React from 'react';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { ok, Result } from 'neverthrow';
+import useBroadcastTxOnChain from 'hooks/useBroadcastTxOnChain';
+import useBroadcastTxWithApi from 'hooks/useBroadcastTxWithApi';
+import { err, ok, Result } from 'neverthrow';
 
 export interface BroadcastOptions {
   /**
-   * Whether the transaction should be broadcast using the optimistic APIs or not.
+   * Whether the transaction should be broadcast using the optimistic APIs or not,
+   * if undefined will be considered false.
    */
   readonly optimistic?: boolean;
+  /**
+   * Whether the transaction should be broadcast directly on chain,
+   * if undefined will be considered false.
+   */
+  readonly onChain?: boolean;
   /**
    * Memo to be used when broadcasting the transaction.
    */
@@ -46,17 +54,50 @@ export const isCanceledBroadcastError = (e: Error): boolean => {
  * cancels the broadcasting, a {@link CanceledBroadcastError} will be returned.
  */
 const useBroadcastTx = () => {
-  // TODO: Create useUnlockWallet hook to unlock the wallet, if needed
+  const broadcastTxOnChain = useBroadcastTxOnChain();
+  const broadcastTxWithApi = useBroadcastTxWithApi();
 
   return React.useCallback(
     async (
       msgs: EncodeObject[],
       options?: BroadcastOptions,
     ): Promise<Result<SuccessfulBroadcast, Error>> => {
-      console.log('Implement useBroadcastTx', msgs, options);
-      return ok({ txHash: '' });
+      return new Promise(resolve => {
+        if (options?.onChain === true) {
+          broadcastTxOnChain(msgs, {
+            memo: options?.memo,
+            onSuccess: txResponse => {
+              resolve(
+                ok({
+                  txHash: txResponse.transactionHash,
+                }),
+              );
+            },
+            onCancel: () => {
+              resolve(err(new CanceledBroadcastError('Tx canceled from the user')));
+            },
+          });
+        } else {
+          broadcastTxWithApi(msgs, {
+            optimistic: options?.optimistic,
+            memo: options?.memo,
+          })
+            .then(result => {
+              if (result.isOk()) {
+                resolve(
+                  ok({
+                    txHash: result.value.txHash,
+                  }),
+                );
+              } else {
+                resolve(err(result.error));
+              }
+            })
+            .catch(e => resolve(err(Error(e?.message ?? 'Tx with api failed'))));
+        }
+      });
     },
-    [],
+    [broadcastTxOnChain, broadcastTxWithApi],
   );
 };
 

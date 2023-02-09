@@ -68,7 +68,7 @@ const ManageConnectedApps = () => {
               signer: accounts[0].address,
             },
           };
-          navigate(ROUTES.BROADCAST_TX, {
+          navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
             title: t('broadcastTx:unlinkApp') as string,
             messages: [msg],
             offlineSigner: result.wallet,
