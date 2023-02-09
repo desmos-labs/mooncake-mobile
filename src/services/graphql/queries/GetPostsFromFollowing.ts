@@ -29,16 +29,6 @@ const GetPostsFromFollowing = gql`
           count
         }
       }
-      tipPresence: tips_aggregate(where: { sender_address: { _eq: $user } }) {
-        aggregate {
-          count
-        }
-      }
-      commentPresence: comments_aggregate(where: { author_address: { _eq: $user } }) {
-        aggregate {
-          count
-        }
-      }
     }
   }
 `;

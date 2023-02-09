@@ -44,6 +44,17 @@ export const useHasPostReaction = () => {
   );
 };
 
+export const useGetPostReaction = () => {
+  const reactions = useRecoilValue(reactionsState);
+  return React.useCallback(
+    (user: string, post: Post) => {
+      const userReactions = reactions[user] ?? [];
+      return userReactions.get({ subspaceId: post.subspaceId, postId: post.id });
+    },
+    [reactions],
+  );
+};
+
 /**
  * Hook that allows to set the local status of a post reaction.
  */

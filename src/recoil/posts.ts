@@ -86,24 +86,3 @@ export const useStoredFollowingPosts = (user: string, followingAddresses: string
   const userPosts = posts[user] ?? [];
   return userPosts.filter(post => followingAddresses.includes(post.author.address));
 };
-
-/**
- * Hook that allows to check whether a given user has commented on the provided post.
- */
-export const useHasPostComment = () => {
-  const posts = useRecoilValue(postsState);
-  return React.useCallback(
-    (user: string, post: Post) => {
-      const userPosts = posts[user] ?? [];
-      return (
-        userPosts.find(
-          p =>
-            p.subspaceId === post.subspaceId &&
-            p.id === post.conversationId &&
-            p.status !== PostStatus.DELETED_LOCALLY,
-        ) !== undefined
-      );
-    },
-    [posts],
-  );
-};

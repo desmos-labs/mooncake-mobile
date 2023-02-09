@@ -5,9 +5,17 @@ import GetPostsFromFollowing from 'services/graphql/queries/GetPostsFromFollowin
 import { useStoredFollowingPosts, useStoredRootPosts, useStorePosts } from '@recoil/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useFollowingAddresses from 'hooks/useFollowingAddresses';
-import { convertGraphQLPost } from 'lib/GraphQLUtils';
+import { convertGraphQLPost, GraphQLPost } from 'lib/GraphQLUtils';
 import { useAppStateValue } from '@recoil/appState';
 import { mergePosts } from 'lib/PostsUtils';
+import {
+  useAddPostReaction,
+  useGetPostReaction,
+  useRemovePostReaction,
+  useSetPostReactionStatus,
+} from '@recoil/reactions';
+import { CacheableObject, DataStatus } from 'types/cache';
+import { getLikeReactionId } from 'types/desmos';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -57,6 +65,7 @@ const getQueryParams = (
  */
 const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
   const subspaceId = useAppStateValue('subspaceId');
+  const subspaceParams = useAppStateValue('subspaceParams');
   switch (params.type) {
     case PostsQueryType.DISCOVERY:
       return {
@@ -68,7 +77,7 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
           user: params.user,
           reaction: {
             '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-            registered_reaction_id: 9,
+            registered_reaction_id: getLikeReactionId(subspaceParams),
           },
         },
       };
@@ -84,7 +93,7 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
           user: params.user,
           reaction: {
             '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-            registered_reaction_id: 9,
+            registered_reaction_id: getLikeReactionId(subspaceParams),
           },
         },
       };
@@ -99,6 +108,99 @@ const sleep = (ms: number) =>
   new Promise(resolve => {
     setTimeout(resolve, ms);
   });
+
+/**
+ * Hook that is used in order to update a generic {@link CacheableObject} related status.
+ */
+const useUpdateCachedData = () => {
+  return useCallback(
+    (
+      cachedData: CacheableObject | undefined,
+      isOnChain: boolean,
+      onCreate: () => void,
+      onUpdateStatus: (status: DataStatus) => void,
+      onRemove: () => void,
+    ) => {
+      if (!isOnChain) {
+        if (cachedData?.status === DataStatus.CREATED_LOCALLY) {
+          // The data was created locally, and it's not (yet) on chain.
+          // To decide whether to delete it or keep it,
+          // we need to check the last update date
+          const elapsedTime = Date.now() - cachedData.lastEdited.getTime();
+          if (elapsedTime > 30 * 1000) {
+            // The data is not on-chain after 30 seconds, so we remove it from
+            // the local storage as we assume something went wrong
+            onRemove();
+          }
+        } else if (cachedData?.status === DataStatus.DELETED_LOCALLY) {
+          // The data was deleted locally, and now it's not on chain as well.
+          // This means we can safely remove it from the cache
+          onRemove();
+        } else if (cachedData?.status === DataStatus.SYNCED) {
+          // The data was in-sync with the chain, it's not been edited locally,
+          // but now it's no longer on-chain. This means it was deleted from another
+          // device. So we remove it from the cache as well.
+          onRemove();
+        }
+      } else {
+        if (cachedData === undefined) {
+          // The data is present on-chain, but it's not present locally.
+          // This means it was added from another device. So we just add it
+          onCreate();
+        } else if (cachedData?.status === DataStatus.CREATED_LOCALLY) {
+          // The data was created locally, and now it's on-chain as well.
+          // For this reason, we just update its status to be in-sync with the chain.
+          onUpdateStatus(DataStatus.SYNCED);
+        } else if (cachedData?.status === DataStatus.DELETED_LOCALLY) {
+          // The data was deleted locally, but it's still on-chain. To decide
+          // what to do, we should check the last update time
+          const elapsedTime = Date.now() - cachedData.lastEdited.getTime();
+          if (elapsedTime > 30 * 1000) {
+            // The data is on-chain after 30 seconds of the local deletion.
+            // We are going to switch back its status to SYNCED in order to
+            // revert the changes, as we assume something went wrong
+            onUpdateStatus(DataStatus.SYNCED);
+          }
+        }
+      }
+    },
+    [],
+  );
+};
+
+/**
+ * Hook that allows to update the cached data about the reaction that a user has added/removed from a post.
+ * @param activeAddress {string} - Address of the active account.
+ */
+const useUpdateUpdatePostReactionCache = (activeAddress: string) => {
+  const getPostReaction = useGetPostReaction();
+  const addPostReaction = useAddPostReaction();
+  const setPostReactionStatus = useSetPostReactionStatus();
+  const removePostReaction = useRemovePostReaction();
+
+  const updateCachedData = useUpdateCachedData();
+
+  return useCallback(
+    (post: GraphQLPost) => {
+      const cachedPostReaction = getPostReaction(activeAddress, post);
+      updateCachedData(
+        cachedPostReaction,
+        post.hasReacted,
+        () => addPostReaction(activeAddress, post),
+        (status: DataStatus) => setPostReactionStatus(activeAddress, post, status),
+        () => removePostReaction(activeAddress, post),
+      );
+    },
+    [
+      activeAddress,
+      addPostReaction,
+      getPostReaction,
+      removePostReaction,
+      setPostReactionStatus,
+      updateCachedData,
+    ],
+  );
+};
 
 /**
  * Hook that allows to get the posts of the given type, for the currently active user.
@@ -116,6 +218,7 @@ const useGetPosts = (queryType: PostsQueryType) => {
   const discoveryPosts = useStoredRootPosts(activeAddress);
   const timelinePosts = useStoredFollowingPosts(activeAddress, followingAddresses);
   const storePosts = useStorePosts(activeAddress);
+  const updatePostReactionData = useUpdateUpdatePostReactionCache(activeAddress);
 
   // The posts we should return are defined based on the query time we have been asked
   const posts = useMemo(
@@ -141,9 +244,12 @@ const useGetPosts = (queryType: PostsQueryType) => {
       // Store the posts by merging the existing ones with the ones from the server
       storePosts(cachedPosts => mergePosts(cachedPosts, graphQLPosts));
 
-      // TODO: Update the cache about the reactions, comments and tips added/deleted by the user
+      // Update the cache about the reactions
+      graphQLPosts.forEach(post => {
+        updatePostReactionData(post);
+      });
     },
-    [storePosts],
+    [storePosts, updatePostReactionData],
   );
 
   // Get the proper query to be executed

@@ -3,9 +3,7 @@ import {
   defaultProfilePic,
   followBlackIcon,
   moreBlackIcon,
-  postCommentedIcon,
   postLikedIcon,
-  postTippedIcon,
   postToCommentIcon,
   postToLikeIcon,
   postToTipIcon,
@@ -28,10 +26,8 @@ import { useTheme } from 'react-native-paper';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useHasCommented from 'hooks/useHasCommented';
 import useHasReacted from 'hooks/useHasReacted';
 import useReactionsCount from 'hooks/useReactionsCount';
-import useHasTipped from 'hooks/useHasTipped';
 import useCommentsCount from 'hooks/useCommentsCount';
 import useStyles from './useStyles';
 
@@ -106,9 +102,7 @@ const PostCard = (props: PostCardProps) => {
   const isFollowing = useIsFollowing(post.author.address);
   const hasReacted = useHasReacted(post);
   const { count: reactionsCount } = useReactionsCount(post);
-  const hasCommented = useHasCommented(post);
   const { count: commentsCount } = useCommentsCount(post);
-  const hasTipped = useHasTipped(post);
 
   // --- Formatted data --- //
   const isCurrentUserAuthor = useMemo(
@@ -244,24 +238,27 @@ const PostCard = (props: PostCardProps) => {
             }>
             {reactionsCount}
           </Typography.Subtitle3>
+          {/* I have completely removed the logic that changed the color of the button based on whether */}
+          {/* the user comment the post or not. This has been done for the following reasons: */}
+          {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
+          {/* 2. It's extremely hard to implement, and completely useless in the first place */}
           <TouchableOpacity onPress={onPressComment} style={styles.commentButton}>
             <FastImage
               resizeMode="cover"
-              tintColor={hasCommented ? theme.colors.butterOrange01 : theme.colors.grey02}
-              source={hasCommented ? postCommentedIcon : postToCommentIcon}
+              tintColor={theme.colors.grey02}
+              source={postToCommentIcon}
               style={styles.bottomBarIcon}
             />
-            <Typography.Subtitle3
-              style={
-                hasCommented
-                  ? { color: theme.colors.butterOrange01 }
-                  : { color: theme.colors.grey02 }
-              }>
+            <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
               {commentsCount}
             </Typography.Subtitle3>
           </TouchableOpacity>
         </View>
 
+        {/* I have completely removed the logic that changed the color of the button based on whether */}
+        {/* the user tipped the post or not. This has been done for the following reasons: */}
+        {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
+        {/* 2. It's extremely hard to implement, and completely useless in the first place */}
         <TouchableOpacity
           onPress={onPressTip}
           style={{
@@ -269,15 +266,8 @@ const PostCard = (props: PostCardProps) => {
             alignItems: 'center',
             marginHorizontal: theme.spacing.s,
           }}>
-          <FastImage
-            resizeMode="cover"
-            source={hasTipped ? postTippedIcon : postToTipIcon}
-            style={styles.bottomBarIcon}
-          />
-          <Typography.Subtitle3
-            style={
-              hasTipped ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }
-            }>
+          <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
+          <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}
           </Typography.Subtitle3>
         </TouchableOpacity>
@@ -295,10 +285,8 @@ const PostCard = (props: PostCardProps) => {
     theme.spacing.s,
     reactionsCount,
     onPressComment,
-    hasCommented,
     commentsCount,
     onPressTip,
-    hasTipped,
     t,
   ]);
 

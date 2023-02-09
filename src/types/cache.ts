@@ -87,6 +87,17 @@ class Cache<T extends CacheableObject, C extends Partial<T>> {
   }
 
   /**
+   * Returns the cached data that match the given one, or <code>undefined</code>
+   * if not found.
+   * @param data - Data to be searched for.
+   */
+  public get(data: C): T | undefined {
+    // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
+    // @ts-ignore
+    return this.values.find(value => this.areEquals(value as C, data));
+  }
+
+  /**
    * Returns all the cached values.
    */
   public readAll(): T[] {
