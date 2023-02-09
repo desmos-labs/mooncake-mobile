@@ -18,6 +18,10 @@ jobs:
         run: yarn lint
       - name: Run tests with coverage
         run: yarn test --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Run performance testing script
         run: bash ./reassure-tests.sh
       - name: Run Danger.js
