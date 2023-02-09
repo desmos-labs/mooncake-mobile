@@ -1,5 +1,6 @@
 import {by, device, element, expect} from 'detox';
 import launchAppConfig from '../config';
+import {navigateThroughOnboarding} from '../utils';
 
 describe('Onboarding flow', () => {
   beforeEach(async () => {
@@ -11,18 +12,10 @@ describe('Onboarding flow', () => {
   });
 
   it('Goes to landing page if the skip button is pressed', async () => {
-    await element(by.text('Skip')).tap();
-    await expect(element(by.text('Butter'))).toBeVisible();
-    await expect(
-      element(by.text('Your decentralized social network')),
-    ).toBeVisible();
-    await expect(element(by.text('Sign up'))).toBeVisible();
-    await expect(
-      element(by.text('Import Secret Recovery Phrase')),
-    ).toBeVisible();
+    await navigateThroughOnboarding();
   });
 
-  it('Goes to landing page if reached the last tab and Join Butter button is pressed', async () => {
+  it('Goes to the landing page if reached the last tab and the Join Butter button is pressed', async () => {
     await expect(element(by.text('Welcome to Butter'))).toBeVisible();
     await element(by.id('onboardingPagerView')).swipe('left');
     await expect(element(by.text('Privacy First'))).toBeVisible();

@@ -13,6 +13,9 @@ import {
 } from '../__mocks__/E2EVariableMocks';
 
 describe('Login flow', () => {
+  /**
+   * We need to make sure the app is cleaned before doing this test, otherwise it will fail
+   */
   beforeEach(async () => {
     await device.uninstallApp();
     await device.installApp();
