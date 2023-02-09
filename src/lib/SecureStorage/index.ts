@@ -207,8 +207,12 @@ export const checkUserPassword = async (password: string): Promise<Result<boolea
     password,
   });
 
-  if (value.isErr() || value.value === null) {
-    return err(new Error('Error while loading the password challenge from storage'));
+  if (value.isErr()) {
+    return err(value.error);
+  }
+
+  if (value.value === null) {
+    return err(new Error("Can't validate user password"));
   }
 
   return ok(value.value === passwordChallenge);
