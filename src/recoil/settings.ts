@@ -5,6 +5,8 @@ import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil'
 import { AppSettings } from 'types/settings';
 import EnvConfig from 'config/EnvConfig';
 import { DesmosMainnet } from '@desmoslabs/desmjs';
+import { findChainInfoByName } from 'lib/ChainsUtils';
+import { GasPrice } from '@cosmjs/stargate';
 
 /**
  * Default application settings
@@ -92,3 +94,28 @@ export const useSetSettings = () => useSetRecoilState(settingsAppState);
  * Hook that provides the application settings.
  */
 export const useSettings = () => useRecoilValue(settingsAppState);
+
+/**
+ * Hook that provide the informations of the current selected chain.
+ */
+export const useCurrentChainInfo = () => {
+  const settings = useSettings();
+  return React.useMemo(
+    () => findChainInfoByName(settings.currentChain.chainName)!,
+    [settings.currentChain],
+  );
+};
+
+/**
+ * Hook that provides the current chain gas price.
+ */
+export const useCurrentChainGasPrice = () => {
+  const currentChainInfo = useCurrentChainInfo();
+  return React.useMemo(() => {
+    if (currentChainInfo === undefined) {
+      return undefined;
+    }
+    // We support only Desmos at the moment so 0.1 is fine.
+    return GasPrice.fromString(`0.1${currentChainInfo.stakeCurrency.coinMinimalDenom}`);
+  }, [currentChainInfo]);
+};
