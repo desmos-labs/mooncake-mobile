@@ -6,9 +6,15 @@ import { useRoute } from '@react-navigation/native';
  * a ref to an InputField component.
  */
 const useFocusTextInputOnNavigate = () => {
+  const { params } = useRoute<any>();
   const textInputRef = useRef<any>(null);
 
-  const { params } = useRoute<any>();
+  /**
+   * Main keyboard focus callback for use when user presses the comment button
+   */
+  const focusTextInputRef = useCallback(() => {
+    textInputRef.current.focus();
+  }, [textInputRef]);
 
   /**
    * Open the comment text input if focusCommentBox is passed as nav param.
@@ -21,14 +27,7 @@ const useFocusTextInputOnNavigate = () => {
         }, 200);
       }
     }
-  }, [textInputRef]);
-
-  /**
-   * Main keyboard focus callback for use when user presses the comment button
-   */
-  const focusTextInputRef = useCallback(() => {
-    textInputRef.current.focus();
-  }, [textInputRef]);
+  }, [focusTextInputRef, params.focusCommentBox, textInputRef]);
 
   return {
     focusTextInputRef,

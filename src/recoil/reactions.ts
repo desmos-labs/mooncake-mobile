@@ -3,12 +3,10 @@ import { PostReaction } from 'types/desmos';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 import { Post } from 'types/posts';
-import Cache, { DataStatus } from 'types/cache';
-import { cacheToMMKV, mmkvValueToCache } from '@recoil/utils';
+import { DataStatus, MultipleUsersCache } from 'types/cache';
+import { mmkvValueToCache } from '@recoil/utils';
 
 type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
-
-type ReactionsCache = Cache<PostReaction, ComparableReaction>;
 
 const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction): boolean => {
   return first.subspaceId === second.subspaceId && first.postId === second.postId;
@@ -18,13 +16,13 @@ const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction
  * Recoil atom that holds all the post reactions that are cached within the application.
  * Each list of reaction is associated to the address of the user that has added them.
  */
-const reactionsState = atom<Record<string, ReactionsCache>>({
+const reactionsState = atom<MultipleUsersCache<PostReaction, ComparableReaction>>({
   key: 'reactionsState',
   default: mmkvValueToCache(MMKVKEYS.POST_REACTIONS, areReactionsEqual),
   effects: [
     ({ onSet }) => {
       onSet(reactions => {
-        setMMKV(MMKVKEYS.POST_REACTIONS, cacheToMMKV(reactions));
+        setMMKV(MMKVKEYS.POST_REACTIONS, reactions.serialize());
       });
     },
   ],
@@ -33,49 +31,85 @@ const reactionsState = atom<Record<string, ReactionsCache>>({
 /**
  * Hook that allows to easily know if a reaction for a given post existing for a given user.
  */
-export const useHasPostReaction = () => {
+export const useHasPostReaction = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (user: string, post: Post) => {
-      const userReactions = reactions[user] ?? [];
+    (post: Post) => {
+      const userReactions = reactions.get(user);
       return userReactions.has({ subspaceId: post.subspaceId, postId: post.id });
     },
-    [reactions],
+    [user, reactions],
   );
 };
 
-export const useGetPostReaction = () => {
+/**
+ * Hook that allows to get the cached reaction for a given post.
+ */
+export const useGetPostReaction = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (user: string, post: Post) => {
-      const userReactions = reactions[user] ?? [];
+    (post: Post) => {
+      const userReactions = reactions.get(user);
       return userReactions.get({ subspaceId: post.subspaceId, postId: post.id });
     },
-    [reactions],
+    [user, reactions],
+  );
+};
+
+/**
+ * Hook that allows to get a number representing the current difference of the reactions for the specified post.
+ * The difference is computed by considering:
+ * • each locally deleted reaction as <code>-1</code>
+ * • each locally added reaction as <code>+1</code>
+ *
+ * Here are some difference values examples:
+ * • a difference of -2 means that overall there are 2 locally deleted reactions
+ * • a difference of +1 means that overall there is 1 locally deleted reaction
+ *
+ * This difference can be used to show an updated reactions count compared to the current values on the server.
+ */
+export const useGetPostReactionsDifference = (user: string) => {
+  const reactions = useRecoilValue(reactionsState);
+  return React.useCallback(
+    (post: Post) => {
+      const userReactions = reactions.get(user);
+      return userReactions
+        .readAll()
+        .filter(reaction => reaction.subspaceId === post.subspaceId && reaction.postId === post.id)
+        .map(reaction => {
+          switch (reaction.status) {
+            case DataStatus.CREATED_LOCALLY:
+              return 1;
+            case DataStatus.DELETED_LOCALLY:
+              return -1;
+            default:
+              return 0;
+          }
+        })
+        .reduce((sum: number, value: number) => sum + value, 0);
+    },
+    [reactions, user],
   );
 };
 
 /**
  * Hook that allows to set the local status of a post reaction.
  */
-export const useSetPostReactionStatus = () => {
+export const useSetPostReactionStatus = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, post: Post, status: DataStatus) => {
+    (post: Post, status: DataStatus) => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
-        const existingReactions = currentReactions[user] ?? [];
-        existingReactions.updateStatus({ subspaceId: post.subspaceId, postId: post.id }, status);
-
-        // Store the new values
-        const newReactions: Record<string, ReactionsCache> = {
-          ...currentReactions,
-        };
-        newReactions[user] = existingReactions;
-        return newReactions;
+        const existingReactions = currentReactions.get(user);
+        const updatedReactions = existingReactions.updateStatus(
+          { subspaceId: post.subspaceId, postId: post.id },
+          status,
+        );
+        return currentReactions.update(user, updatedReactions);
       });
     },
-    [setReactions],
+    [user, setReactions],
   );
 };
 
@@ -83,26 +117,47 @@ export const useSetPostReactionStatus = () => {
  * Hook that allows to add a new reaction on behalf of the user having a provided address,
  * to a post with a given id.
  */
-export const useAddPostReaction = () => {
+export const useAddPostReaction = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, post: Post) => {
+    (post: Post) => {
       setReactions(currentReactions => {
-        // Add the reaction to the existing ones
-        const existingReactions = currentReactions[user] ?? [];
-        existingReactions.add({
+        const existingReactions = currentReactions.get(user);
+        const existingReaction = existingReactions.get({
           subspaceId: post.subspaceId,
           postId: post.id,
-        } as PostReaction);
+        });
+        switch (existingReaction?.status) {
+          case undefined:
+            // The reaction does not exist in the cache, so add it
+            return currentReactions.update(
+              user,
+              existingReactions.add({
+                subspaceId: post.subspaceId,
+                postId: post.id,
+              } as PostReaction),
+            );
 
-        const newReactions: Record<string, ReactionsCache> = {
-          ...currentReactions,
-        };
-        newReactions[user] = existingReactions;
-        return newReactions;
+          case DataStatus.DELETED_LOCALLY:
+            // The reaction was deleted locally. Bring it back to CREATED
+            return currentReactions.update(
+              user,
+              existingReactions.updateStatus(
+                {
+                  subspaceId: post.subspaceId,
+                  postId: post.id,
+                },
+                DataStatus.CREATED_LOCALLY,
+              ),
+            );
+
+          default:
+            // Do nothing in other cases
+            return currentReactions;
+        }
       });
     },
-    [setReactions],
+    [user, setReactions],
   );
 };
 
@@ -111,23 +166,19 @@ export const useAddPostReaction = () => {
  * <b>Note</b> By using this method, the reaction will be completely removed from the storage. If you want
  * to delete it only temporarily with the ability to revert it, please use {@link useSetPostReactionStatus} instead.
  */
-export const useRemovePostReaction = () => {
+export const useRemovePostReaction = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (user: string, post: Post) => {
+    (post: Post) => {
       setReactions(currentReactions => {
-        // Update the status of existing reaction
-        const existingReactions = currentReactions[user] ?? [];
-        existingReactions.remove({ subspaceId: post.subspaceId, postId: post.id });
-
-        // Store the new values
-        const newReactions: Record<string, ReactionsCache> = {
-          ...currentReactions,
-        };
-        newReactions[user] = existingReactions;
-        return newReactions;
+        const existingReactions = currentReactions.get(user);
+        const updatedReactions = existingReactions.remove({
+          subspaceId: post.subspaceId,
+          postId: post.id,
+        });
+        return currentReactions.update(user, updatedReactions);
       });
     },
-    [setReactions],
+    [user, setReactions],
   );
 };

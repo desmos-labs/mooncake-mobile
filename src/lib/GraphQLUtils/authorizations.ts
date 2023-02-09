@@ -7,7 +7,7 @@ const convertGrantInfo = (grant: any): Grant => ({
 
 export const convertFeeGrantInfo = (data: any): FeeGrantInfo =>
   ({
-    hasFeeGrant: (data?.grants.aggregate?.count ?? 0) > 0,
+    hasFeeGrant: (data?.grants?.aggregate?.count ?? 0) > 0,
   } as FeeGrantInfo);
 
 export const convertAuthzGrantsInfo = (data: any): AuthzGrantsInfo => {

@@ -12,8 +12,8 @@ import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
 const useFollowersCount = (address: string | undefined) => {
   const activeAddress = useActiveAccountAddress();
   const userAddress: string | undefined = useMemo(
-    () => address ?? userAddress,
-    [address, activeAddress],
+    () => address ?? activeAddress,
+    [activeAddress, address],
   );
   if (!userAddress) {
     throw new Error('Cannot get followers count for undefined users address');

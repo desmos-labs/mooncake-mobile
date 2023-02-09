@@ -20,28 +20,19 @@ import { useRecoilState } from 'recoil';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import { useTheme } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
-export type EnterCommentParams = {
+export type CreatePostParams = {
   /**
-   * The author of the original post.
+   * Parent of this post (i.e. if this post is a comment, or a reply to a comment).
    */
-  author?: PostAuthor;
-
-  /**
-   * The id of the post that the reply belongs to.
-   */
-  postId?: number;
-
-  /**
-   * Is the user creating a post instead of commenting?
-   */
-  isCreatePost?: boolean;
+  parent?: Post;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ENTER_COMMENT>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CREATE_POST>;
 
-const EnterComment = () => {
+const CreatePost = () => {
   const { t } = useTranslation('postInteraction');
 
   const styles = useStyles();
@@ -91,7 +82,7 @@ const EnterComment = () => {
         <Typography.Button3 style={styles.postButtonText}>{t('post')}</Typography.Button3>
       </Button>
     );
-  }, [commentAttachment, handlePress, loading]);
+  }, [handlePress, loading, styles.postButton, styles.postButtonText, t]);
 
   const TopBarCenterElement = React.useMemo(() => {
     if (!author) return undefined;
@@ -100,7 +91,7 @@ const EnterComment = () => {
         {t('replyTo', { replyTo: `@${author!.dtag}` })}
       </Typography.Body7>
     );
-  }, []);
+  }, [author, t]);
 
   return (
     <>
@@ -163,4 +154,4 @@ const EnterComment = () => {
   );
 };
 
-export default EnterComment;
+export default CreatePost;

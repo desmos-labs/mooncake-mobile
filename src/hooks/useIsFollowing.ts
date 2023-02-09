@@ -12,10 +12,10 @@ const useIsFollowing = (counterparty: string) => {
     );
   }
 
-  const hasFollowedUser = useHasFollowedUser();
+  const hasFollowedUser = useHasFollowedUser(activeAddress);
 
   // Do not perform the search if the active address and counterparty are the same
-  return activeAddress !== counterparty && hasFollowedUser(activeAddress, counterparty);
+  return activeAddress !== counterparty && hasFollowedUser(counterparty);
 };
 
 export default useIsFollowing;

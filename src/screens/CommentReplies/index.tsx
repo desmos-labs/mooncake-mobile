@@ -26,6 +26,7 @@ import CommentItem from 'screens/PostInteraction/PostComments/components/Comment
 import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import { FlashList } from '@shopify/flash-list';
+import { Post } from 'types/posts';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -36,13 +37,9 @@ export type NavProps = CompositeScreenProps<
 
 export type CommentRepliesParams = {
   /**
-   * Main comment ID, the one displayed on top of the screen, the id to use inside every query related to the main comment
+   * Main comment, the one displayed on top of the screen.
    */
-  commentId: number;
-  /**
-   * Subspace ID, the id of the subspace
-   */
-  subspaceId: number;
+  comment: Post;
   /**
    * focus the comment box when navigating to this screen
    */
@@ -205,7 +202,7 @@ const CommentReplies = () => {
           likesCounter={reactions.length}
           tipsCounter={tips.length}
           handlePressCounters={handlePressCounters}
-          accountsHighlitedPics={countersImages}
+          accountsHighlightedPics={countersImages}
         />
         <Divider style={styles.divider} />
       </>

@@ -1,27 +1,30 @@
 import React from 'react';
 import {
-  View,
-  ImageProps,
   Image,
-  TouchableOpacity,
-  StyleSheet,
+  ImageProps,
   KeyboardAvoidingView,
   Platform,
-  ImageSourcePropType,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { whiteCross } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'react-native-paper';
+import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {
-  handlePress: () => void;
-
-  source?: ImageSourcePropType;
+  source: UploadAssetType | undefined;
+  handlePress: (source: UploadAssetType) => void;
 }
 
 const COMPONENT_SIZE = 100;
 
+/**
+ * Component that represents a single image that was selected to be added to a comment.
+ * @constructor
+ */
 const SelectedCommentImage = (props: Props) => {
   const { handlePress, ...rest } = props;
   const styles = useStyles();
@@ -40,8 +43,8 @@ const SelectedCommentImage = (props: Props) => {
       {!rest.source ? (
         <View style={{ opacity: 0 }} />
       ) : (
-        <TouchableOpacity style={styles.container} onPress={handlePress}>
-          <Image style={styles.imageStyle} source={rest.source} {...rest} />
+        <TouchableOpacity style={styles.container} onPress={() => handlePress(rest.source!)}>
+          <Image {...rest} style={styles.imageStyle} source={rest.source} />
           <View style={styles.closeButtonContainer}>
             <Image style={styles.closeButton} source={whiteCross} />
           </View>

@@ -10,7 +10,6 @@ import {
   useSetImportAccountState,
 } from '@recoil/screens/importAccountState';
 import { WalletType } from 'types/wallet';
-import { MNEMONIC_INPUT_MODE } from 'screens/MnemonicInput';
 import useOnBackAction from 'hooks/useOnBackAction';
 import useStyles from './useStyles';
 
@@ -28,9 +27,7 @@ const ImportAccountSelectMode = ({ navigation }: NavProps) => {
       ...currVal!,
       importMode: WalletType.Mnemonic,
     }));
-    navigation.navigate(ROUTES.MNEMONIC_INPUT, {
-      mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
-    });
+    navigation.navigate(ROUTES.MNEMONIC_INPUT);
   }, [navigation, setImportAccountState]);
 
   const onImportWithLedger = React.useCallback(() => {

@@ -3,10 +3,12 @@ import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { useActiveAccountAddress } from '@recoil/accounts';
 
+/**
+ * Hook that allows to navigate to the profile of a user.
+ */
 const useNavigateToProfile = () => {
   const activeAddress = useActiveAccountAddress();
   const navigation = useNavigation<any>();
-
   return React.useCallback(
     (address: string, onBeforeNavigation?: () => void) => {
       onBeforeNavigation && onBeforeNavigation();
@@ -18,7 +20,7 @@ const useNavigateToProfile = () => {
         });
       }
     },
-    [activeAddress],
+    [activeAddress, navigation],
   );
 };
 

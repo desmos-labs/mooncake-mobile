@@ -1,4 +1,5 @@
 import { DesmosProfile } from 'types/desmos';
+import { PostReferenceType } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 export enum PostStatus {
   SYNCED = 'synced',
@@ -54,6 +55,11 @@ export interface Post {
   readonly attachments: PostAttachment[] | undefined;
 
   /**
+   * References to other posts.
+   */
+  readonly references: PostReference[];
+
+  /**
    * Date at which this post was created.
    */
   readonly creationDate: string;
@@ -69,6 +75,24 @@ export interface Post {
    */
   readonly transactions: PostTransaction[];
 }
+
+export interface PostReference {
+  readonly postId: number;
+  readonly position: number;
+  readonly type: PostReferenceType;
+}
+
+/**
+ * Tells whether the given {@param post} is a comment to the post with the provided {@param parentId}.
+ */
+export const isCommentTo = (post: Post, parentId: number): boolean => {
+  return (
+    post.conversationId === parentId &&
+    post.references.some(
+      r => r.postId === parentId && r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY,
+    )
+  );
+};
 
 export const isPostPending = (post: Post): boolean => {
   return post.status !== PostStatus.SYNCED;

@@ -12,8 +12,8 @@ const useHasReacted = (post: Post) => {
     throw new Error('Trying to know if the user has reacted to a post, without active user');
   }
 
-  const hasPostReaction = useHasPostReaction();
-  return hasPostReaction(activeAddress, post);
+  const hasPostReaction = useHasPostReaction(activeAddress);
+  return hasPostReaction(post);
 };
 
 export default useHasReacted;

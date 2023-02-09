@@ -6,10 +6,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import activeProfileState from '@recoil/activeProfileState';
-import { isFollowingAddr } from '@recoil/following';
 import {
-  defaultProfilePic,
   followBlackIcon,
   moreBlackIcon,
   reportIcon,
@@ -25,27 +22,49 @@ import PostComponent from 'components/PostComponent';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import useActiveAccount from 'hooks/useActiveAccount';
-import _ from 'lodash';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Dimensions, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { verticalScale } from 'react-native-size-matters';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import useFollowOrUnfollowUser from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
 import { FlashList } from '@shopify/flash-list';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
-import useHooks from './useHooks';
+import { isPostPending, Post } from 'types/posts';
+import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import { DesmosProfile } from 'types/desmos';
+import useGetPost from 'hooks/useGetPost';
+import useHasReacted from 'hooks/useHasReacted';
+import useGetPostComments from 'hooks/useGetPostComments';
+import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
+import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useIsFollowing from 'hooks/useIsFollowing';
+import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
+import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
+import { getProfileDisplayName } from 'lib/ProfileUtils';
+import { useActiveProfile } from '@recoil/profiles';
+import {
+  useHandleCreateComment,
+  useHandleExpandCommentView,
+  useHandlePressCounters,
+  useHandlePressFollowOrUnfollow,
+  useHandlePressReaction,
+  useHandlePressReportPost,
+  useHandlePressReportUser,
+  useHandlePressSendTips,
+  useHandlePressShowCommentDetails,
+  useReactorsAndTippersProfilePics,
+} from './hooks';
 import useStyles from './useStyles';
 
 export type NavProps = CompositeScreenProps<
@@ -53,215 +72,237 @@ export type NavProps = CompositeScreenProps<
   BottomTabScreenProps<BottomTabsParamList>
 >;
 
-export type PostDetailsParams = {
+export interface PostDetailsParams {
   /**
-   * id of the post
+   * Post that should be visualized.
    */
-  postId: number;
-  /**
-   * susbpace_id of the post
-   */
-  subspaceId: number;
+  readonly post: Post;
   /**
    * focus the comment box when navigating to this screen
    */
-  focusCommentBox?: boolean;
-};
+  readonly focusCommentBox?: boolean;
+}
 
 const PostDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('postDetails');
-  const { params } = useRoute<NavProps['route']>();
   const { goBack } = useNavigation<NavProps['navigation']>();
-  const [profileData] = useRecoilState(activeProfileState);
+
+  const { params } = useRoute<NavProps['route']>();
+  const { top } = useSafeAreaInsets();
+  const { post: givenPost } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Menus
+  // -------------------------------------------------------------------------------------
+
   const [menuVisible, setMenuVisible] = useState(false);
+
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
   const [profileMenuAnchor, setProfileMenuAnchor] = useState<{
     x: number;
     y: number;
   }>();
+
   const [anchor, setAnchor] = useState<{ x: number; y: number }>();
   const [popupMenuParams, setPopupMenuParams] = useState<{
-    postId: number;
-    subspaceId: number;
-    authorAddress: string;
+    post: Post;
+    user: DesmosProfile;
   }>();
-  const { activeAddress } = useActiveAccount();
-  const { followOrUnfollowUser } = useFollowOrUnfollowUser();
-  const scrollViewRef = useRef<any>(null);
 
+  // -------------------------------------------------------------------------------------
+  // --- Views references
+  // -------------------------------------------------------------------------------------
+
+  const scrollViewRef = useRef<any>(null);
   const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
+  // -------------------------------------------------------------------------------------
+  // --- Data hooks
+  // -------------------------------------------------------------------------------------
+  const activeAddress = useActiveAccountAddress();
+  const activeProfile = useActiveProfile();
+
   const {
-    profile,
-    post,
-    postLoading,
+    post: storedPost,
+    loading: refreshingPost,
+    refetch: refreshPost,
+  } = useGetPost(givenPost.subspaceId, givenPost.id);
+
+  // Get the post data based on the given post and the post from the chain
+  const post = useMemo(() => storedPost ?? givenPost, [givenPost, storedPost]);
+
+  const {
+    profilePics: reactorsAndTippersProfilesPic,
+    refetch: refreshReactorsAndTippersProfilesPic,
+  } = useReactorsAndTippersProfilePics(post);
+
+  // Reactions data
+  const {
+    count: reactionsCount,
+    loading: isReactionsCountLoading,
+    refetch: refreshReactionsCount,
+  } = useGetPostReactionsCount(post);
+  const hasReacted = useHasReacted(post);
+
+  // Comments data
+  const {
     comments,
-    reactions,
-    reactionsLoading,
-    tips,
-    tipsLoading,
-    formattedDate,
-    handlePressSelectedComment,
-    handleExpandComment,
-    handlePressCounters,
-    handlePressSendTips,
-    handlePostComment,
-    handleAddReaction,
-    postCommentLoading,
-    handlePressReport,
-    handleNavigateToProfile,
-    pageRefetch,
-  } = useHooks({
-    postID: params.postId,
-    subspaceID: params.subspaceId,
-  });
+    loading: areCommentsLoading,
+    refetch: refreshComments,
+    fetchMore: fetchMoreComments,
+  } = useGetPostComments(post);
+  const { count: commentsCount, refetch: refreshCommentsCount } = useGetPostCommentsCount(post);
 
-  const isFollowingAddress = useRecoilValue(isFollowingAddr(popupMenuParams?.authorAddress || ''));
+  // Tips data
+  const {
+    count: tipsCount,
+    loading: isTipsCountLoading,
+    refetch: refreshTipsCount,
+  } = useGetPostTipsCount(post);
 
-  const { top } = useSafeAreaInsets();
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setPopupMenuParams({
-        postId: post.id,
-        subspaceId: post.subspace_id,
-        authorAddress: post?.author?.address,
-      });
-      pageRefetch();
-    }, [post.id, post.subspace_id, post?.author?.address, pageRefetch]),
-  );
+  const handlePressReportUser = useHandlePressReportUser();
+  const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
 
-  const Avatar = React.useMemo(() => {
-    if (post?.author?.profile_pic) {
-      return (
-        <ProfileHeaderButton
-          imageSrc={{ uri: post?.author.profile_pic }}
-          onPress={() => handleNavigateToProfile(post?.author?.address)}
-        />
-      );
-    }
-    return (
-      <ProfileHeaderButton
-        imageSrc={defaultProfilePic}
-        onPress={() => handleNavigateToProfile(post?.author?.address)}
-      />
-    );
-  }, [post?.author?.profile_pic, post?.author?.address, handleNavigateToProfile]);
+  const handlePressCounters = useHandlePressCounters(post);
+  const { loading: creatingComment, handleCreateComment } = useHandleCreateComment(post);
 
+  const handleExpandCommentView = useHandleExpandCommentView();
+  const handlePressReaction = useHandlePressReaction();
+  const handlePressSendTips = useHandlePressSendTips();
+  const handlePressReportPost = useHandlePressReportPost();
+  const handleShowCommentDetails = useHandlePressShowCommentDetails();
+  const handleNavigateToProfile = useNavigateToProfile();
+
+  // Method used to refresh the post data
+  const refreshPage = useCallback(() => {
+    refreshPost();
+    refreshReactorsAndTippersProfilesPic();
+    refreshReactionsCount();
+    refreshComments();
+    refreshCommentsCount();
+    refreshTipsCount();
+  }, [
+    refreshComments,
+    refreshCommentsCount,
+    refreshPost,
+    refreshReactionsCount,
+    refreshReactorsAndTippersProfilesPic,
+    refreshTipsCount,
+  ]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Formatted data
+  // -------------------------------------------------------------------------------------
+
+  const formattedDate = useFormatTimeForPostDetails(post.creationDate);
+  const isFollowingAddress = useIsFollowing(popupMenuParams?.user?.address ?? '');
+
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  // Function uses to render the items inside the list of comments
   const renderItem = React.useCallback(
-    ({ item }: any) => {
-      const { isPending } = item;
-
+    (info: ListRenderItemInfo<Post>) => {
+      const { item } = info;
       return (
         <CommentItem
-          tipped={item?.tipPresence?.aggregate?.count > 0}
-          liked={item?.reactionPresence?.aggregate?.count > 0}
-          commented={item?.commentPresence?.aggregate?.count > 0}
-          repliesCounter={item?.repliesCount?.aggregate?.count || 0}
+          comment={item}
           handlePressMore={event => {
-            if (isPending) return;
+            if (isPostPending(item)) return;
             setAnchor({
               x: event.nativeEvent.pageX,
               y: event.nativeEvent.pageY,
             });
             setMenuVisible(true);
             setPopupMenuParams({
-              postId: item.id,
-              subspaceId: item.subspace_id,
-              authorAddress: item.author_address,
+              post,
+              user: post.author,
             });
           }}
           handlePressComment={() => {
-            handlePressSelectedComment({
-              postId: post.id,
-              commentId: item.id,
-              subspaceId: item.subspace_id,
-              focusCommentBox: true,
-            });
+            handleExpandCommentView(item);
           }}
-          handleProfilePicPress={() => handleNavigateToProfile(item.author_address)}
+          handleProfilePicPress={() => {
+            handleNavigateToProfile(item.author.address);
+          }}
           handlePressLike={() => {
-            if (isPending) return;
-            handleAddReaction(item.id);
+            if (isPostPending(item)) return;
+            handlePressReaction(item);
           }}
           handlePressTip={() => {
-            if (isPending) return;
-            handlePressSendTips(item?.author?.address, item.id);
+            if (isPostPending(item)) return;
+            handlePressSendTips(item);
           }}
           handlePress={() => {
-            if (isPending) return;
-            handlePressSelectedComment({
-              postId: post.id,
-              commentId: item.id,
-              subspaceId: item.subspace_id,
-            });
+            if (isPostPending(item)) return;
+            handleShowCommentDetails(item);
           }}
-          handleLongPress={() => console.log('longPress')}
-          text={item.text}
-          creation_date={item.creation_date}
-          isPending={isPending}
-          attachments={item.attachments}
-          reactions={item.reactions}
-          tips={item.tips}
-          author={isPending ? profileData || ({} as any) : item.author}
         />
       );
     },
-    [comments, profile?.address, popupMenuParams],
+    [
+      post,
+      handleExpandCommentView,
+      handleNavigateToProfile,
+      handlePressReaction,
+      handlePressSendTips,
+      handleShowCommentDetails,
+    ],
   );
 
+  // TODO: Move this in a custom component
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label="No comments yet" />;
   }, []);
 
-  const countersImages = useMemo(() => {
-    const reactionsImages = reactions.map((reaction: any) => {
-      if (reaction.author.profile_pic) {
-        return { uri: reaction.author.profile_pic };
-      } else {
-        return defaultProfilePic;
-      }
-    });
-    const tipsImages = tips.map((tip: any) => {
-      if (tip.sender.profile_pic) {
-        return { uri: tip.sender.profile_pic };
-      } else {
-        return defaultProfilePic;
-      }
-    });
-    return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
-  }, [reactions, tips]);
-
-  const headerComponent = useMemo(
+  // TODO: Move this in a custom component
+  const HeaderComponent = useMemo(
     () => (
       <>
-        <PostComponent postData={post} />
+        <PostComponent post={post} />
         <PostActionButtonsBar
-          postCommented={post?.commentPresence?.aggregate?.count > 0}
-          postTipped={post?.tipPresence?.aggregate?.count > 0}
-          postLiked={post?.reactionPresence?.aggregate?.count > 0}
-          handleLikePress={() => handleAddReaction(post.id)}
+          postLiked={hasReacted}
+          handleLikePress={() => handlePressReaction(post)}
           handleCommentPress={focusTextInputRef}
-          handleTipPress={() => handlePressSendTips(post?.author?.address, post.id)}
+          handleTipPress={() => handlePressSendTips(post)}
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={reactionsLoading && tipsLoading}
-            likesCounter={reactions.length}
-            tipsCounter={tips.length}
+            loading={isReactionsCountLoading || isTipsCountLoading}
+            likesCounter={reactionsCount}
+            tipsCounter={tipsCount}
             handlePressCounters={handlePressCounters}
-            accountsHighlitedPics={countersImages}
+            accountsHighlightedPics={reactorsAndTippersProfilesPic}
           />
         </Spacer>
         <Divider style={styles.divider} />
         <Spacer paddingBottom={16} />
       </>
     ),
-    [post, reactions, countersImages],
+    [
+      post,
+      hasReacted,
+      focusTextInputRef,
+      isReactionsCountLoading,
+      isTipsCountLoading,
+      reactionsCount,
+      tipsCount,
+      handlePressCounters,
+      reactorsAndTippersProfilesPic,
+      styles.divider,
+      handlePressReaction,
+      handlePressSendTips,
+    ],
   );
 
+  // TODO: Move this in a custom component
   const CustomTopBar = React.useMemo(() => {
     return (
       <View style={styles.customTopBarContainer}>
@@ -270,10 +311,13 @@ const PostDetails = () => {
 
           <Spacer paddingLeft={theme.spacing.m}>
             <View style={styles.rightContainer}>
-              {Avatar}
+              <ProfileHeaderButton
+                profile={post.author}
+                onPress={() => handleNavigateToProfile(post.author.address)}
+              />
               <View style={styles.middleTextContainer}>
                 <Typography.Subtitle3 numberOfLines={1}>
-                  {post?.author?.nickname || `@${post?.author?.dtag}`}
+                  {getProfileDisplayName(post.author)}
                 </Typography.Subtitle3>
                 <Typography.Body7>{formattedDate}</Typography.Body7>
               </View>
@@ -282,14 +326,12 @@ const PostDetails = () => {
         </View>
 
         <View style={styles.rightContainer}>
-          {activeAddress !== post?.author?.address && (
+          {activeAddress !== post.author.address && (
             <ImageButton
               style={[styles.followIcon]}
               image={isFollowingAddress ? unfollowBlackIcon : followBlackIcon}
-              onPress={async () => {
-                await followOrUnfollowUser({
-                  addrToFollow: post?.author?.address,
-                });
+              onPress={() => {
+                handlePressFollowOrUnfollow(post.author);
               }}
             />
           )}
@@ -307,83 +349,116 @@ const PostDetails = () => {
         </View>
       </View>
     );
-  }, [followOrUnfollowUser, activeAddress, Avatar, formattedDate, post?.author, popupMenuParams]);
+  }, [
+    styles.customTopBarContainer,
+    styles.customTopBarInnerContainer,
+    styles.rightContainer,
+    styles.middleTextContainer,
+    styles.followIcon,
+    styles.moreIcon,
+    goBack,
+    theme.spacing.m,
+    post.author,
+    formattedDate,
+    activeAddress,
+    isFollowingAddress,
+    handleNavigateToProfile,
+    handlePressFollowOrUnfollow,
+    top,
+  ]);
 
-  return postLoading || !post ? (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-      <ActivityIndicator color={theme.colors.surfaceBlack} />
-    </SafeAreaView>
-  ) : (
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Clean the popup params
+      setPopupMenuParams({ post, user: post.author });
+
+      // Refresh the data
+      refreshPage();
+    }, []),
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Rendering
+  // -------------------------------------------------------------------------------------
+
+  return (
     <DView
       disableHideKeyboardTouchable={true}
       backgroundColor={theme.colors.white}
       edges={['top']}
       style={styles.root}
       topBar={CustomTopBar}>
+      {/* List of comments */}
+      {/* TODO: Implement onReachEnd to fetch more comments here */}
       <FlashList
+        estimatedItemSize={160}
         ref={scrollViewRef}
         scrollEnabled={true}
-        refreshing={postLoading}
-        onRefresh={pageRefetch}
-        ListHeaderComponent={postLoading || !post ? <ActivityIndicator /> : headerComponent}
+        refreshing={refreshingPost}
+        onRefresh={refreshPage}
+        ListHeaderComponent={HeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         keyExtractor={item => String(item.id)}
-        estimatedItemSize={160}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
         ListEmptyComponent={ListEmptyComponent}
         keyboardDismissMode="on-drag"
       />
+
+      {/* Bottom bar allowing to create a new comment */}
       <EnterCommentBottomBar
-        loading={postCommentLoading}
-        handlePostComment={handlePostComment}
+        author={activeProfile}
+        loading={areCommentsLoading}
+        handlePostComment={handleCreateComment}
         textInputRef={textInputRef}
-        profileImage={
-          profileData?.profile_pic ? { uri: profileData?.profile_pic } : defaultProfilePic
-        }
-        onIconPress={() => handleExpandComment({ author: post.author, postId: post.id })}
+        onIconPress={() => handleExpandCommentView(post)}
       />
 
+      {/* Menu used to perform author-related operations */}
       <PopupMenu
         anchor={anchor}
         visible={menuVisible}
         closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
+            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
             label: isFollowingAddress ? t('unfollow') : t('follow'),
             onPress: () => {
-              if (popupMenuParams) {
-                followOrUnfollowUser({
-                  addrToFollow: popupMenuParams.authorAddress,
-                });
-              }
+              handlePressFollowOrUnfollow(popupMenuParams!.user);
             },
-            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
           },
           {
-            label: t('report'),
-            onPress: () =>
-              handlePressReport(popupMenuParams?.postId!, popupMenuParams?.subspaceId!),
             icon: reportIcon,
+            label: t('report'),
+            onPress: () => {
+              handlePressReportUser(popupMenuParams!.user);
+            },
           },
         ]}
       />
+
+      {/* Menu used to perform post-related operations */}
       <PopupMenu
         anchor={profileMenuAnchor}
         visible={profileMenuVisible}
         closeMenu={() => setProfileMenuVisible(false)}
         menuItems={[
           {
+            icon: shareBlackIcon,
             label: t('share'),
             onPress: () => console.log('share'),
-            icon: shareBlackIcon,
           },
           {
-            label: t('report'),
-            onPress: () =>
-              handlePressReport(popupMenuParams?.postId!, popupMenuParams?.subspaceId!),
             icon: reportIcon,
+            label: t('report'),
+            onPress: () => {
+              handlePressReportPost(popupMenuParams!.post);
+            },
           },
         ]}
       />

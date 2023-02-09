@@ -1,5 +1,3 @@
-import { useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -7,41 +5,31 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import EnvConfig from 'config/EnvConfig';
 import { Formik } from 'formik';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import useHooks from './useHooks';
+import { useInitialFormFields, useOnSubmit, useValidateForm } from './hooks';
 import useStyles from './useStyles';
 
-export enum MNEMONIC_INPUT_MODE {
-  RESET_PASSWORD,
-  IMPORT_RECOVERY_PHRASE,
-}
-
-export type MnemonicInputParams = {
-  mode: MNEMONIC_INPUT_MODE;
-};
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MNEMONIC_INPUT>;
-
+/**
+ * Screen that allows the user to input their account mnemonic phrase.
+ * @constructor
+ */
 const MnemonicInput = () => {
-  const {
-    params: { mode },
-  } = useRoute<NavProps['route']>();
-
   const styles = useStyles();
   const theme = useTheme();
   const { top } = useSafeAreaInsets();
   const { t } = useTranslation('mnemonicInput');
 
-  const { headerText, buttonText, onSubmit, validateForm, initialFormFields } = useHooks();
+  const initialFormFields = useInitialFormFields();
+  const validateForm = useValidateForm();
+  const onSubmit = useOnSubmit();
 
   return (
     <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.H3>{headerText}</Typography.H3>
+      <Typography.H3>{t('importMnemonic')}</Typography.H3>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 50 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -106,7 +94,7 @@ const MnemonicInput = () => {
                   mode="contained"
                   labelStyle={styles.labelStyle}
                   onPress={handleSubmit}>
-                  {buttonText}
+                  {t('common:confirm')}
                 </Button>
               </View>
             </>

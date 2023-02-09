@@ -190,5 +190,3 @@ const useCreatePost = () => {
 
   return { createPost, loading };
 };
-
-export default useCreatePost;

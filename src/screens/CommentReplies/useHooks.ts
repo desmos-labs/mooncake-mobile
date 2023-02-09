@@ -12,7 +12,7 @@ import { NavProps } from 'screens/CommentReplies/index';
 import useAddOrRemoveReaction from 'services/axios/requests/CentralizedBroadcastTx/useAddOrRemoveReaction';
 import useCreatePost from 'services/axios/requests/CentralizedBroadcastTx/useCreatePost';
 import { GetCommentReplies } from 'services/graphql/queries/GetComments';
-import GetPostDetailsAndUserActionsPresence from 'services/graphql/queries/GetPostDetailsAndUserActionsPresence';
+import GetPost from 'services/graphql/queries/GetPost';
 import { GetPostTips } from 'services/graphql/queries/GetPostTips';
 import { GetPostReactions } from 'services/graphql/queries/GetReactions';
 import useSubscribeToCommentReplies from 'hooks/subscriptions/useSubscribeToCommentReplies';
@@ -52,7 +52,7 @@ const useHooks = ({ subspaceID, commentID }: { subspaceID: number; commentID: nu
     data: originalComment,
     loading: mainCommentLoading,
     refetch: mainCommentRefetch,
-  } = useQuery(GetPostDetailsAndUserActionsPresence, {
+  } = useQuery(GetPost, {
     variables: {
       postID: commentID,
       subspaceID,
@@ -177,7 +177,7 @@ const useHooks = ({ subspaceID, commentID }: { subspaceID: number; commentID: nu
   };
 
   const handleExpandComment = ({ author, postId }: { author: PostAuthor; postId: number }) => {
-    navigate(ROUTES.ENTER_COMMENT, {
+    navigate(ROUTES.CREATE_POST, {
       author,
       postId,
     });

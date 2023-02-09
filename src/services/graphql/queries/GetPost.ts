@@ -1,16 +1,11 @@
 import { gql } from '@apollo/client';
 import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
 
-const GetPosts = gql`
+const GetPost = gql`
   ${POST_FIELDS}
-  query GetPosts($offset: Int, $limit: Int, $subspaceID: bigint, $user: String, $reaction: jsonb!)
+  query GetPost($subspaceID: bigint!, $postID: bigint!, $user: String, $reaction: jsonb!)
   @api(name: butter) {
-    posts: post(
-      offset: $offset
-      limit: $limit
-      order_by: { creation_date: desc }
-      where: { subspace_id: { _eq: $subspaceID }, _not: { conversation: {} } }
-    ) {
+    posts: post(where: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } }) {
       ...PostFields
       reactionPresence: reactions_aggregate(
         where: { author_address: { _eq: $user }, value: { _contains: $reaction } }
@@ -23,4 +18,4 @@ const GetPosts = gql`
   }
 `;
 
-export default GetPosts;
+export default GetPost;

@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { DesmosProfile } from 'types/desmos';
+import { getProfilePicture } from 'lib/ProfileUtils';
 
 type Props = {
   /**
-   * The source of the avatar.
+   * Profile for which to show the header button.
    */
-  imageSrc: React.ComponentProps<typeof FastImage>['source'];
+  profile: DesmosProfile;
 
   /**
    * What to do when the button is pressed.
@@ -25,12 +27,14 @@ type Props = {
   tintColor?: string;
 };
 
-const ProfileHeaderButton = ({ imageSrc, onPress, style, containerStyle, tintColor }: Props) => {
+const ProfileHeaderButton = (props: Props) => {
+  const { profile, onPress, style, containerStyle, tintColor } = props;
+
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <FastImage
         resizeMode="cover"
-        source={imageSrc}
+        source={getProfilePicture(profile)}
         style={style || styles.defaultStyle}
         tintColor={tintColor}
       />

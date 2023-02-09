@@ -8,7 +8,7 @@ import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
-  accountsHighlitedPics: Source[];
+  accountsHighlightedPics: Source[];
   tipsCounter: number;
   likesCounter: number;
   handlePressCounters: () => void;
@@ -16,7 +16,7 @@ type Props = {
 
 const InteractionCountersBar = ({
   loading,
-  accountsHighlitedPics,
+  accountsHighlightedPics,
   tipsCounter,
   likesCounter,
   handlePressCounters,
@@ -26,23 +26,23 @@ const InteractionCountersBar = ({
   const { t } = useTranslation('postDetails');
   // TODO i dont like this but i had not found any better idea
   const calculatedWidth =
-    accountsHighlitedPics.length === 1 ? 30 : accountsHighlitedPics.length === 2 ? 50 : 70;
+    accountsHighlightedPics.length === 1 ? 30 : accountsHighlightedPics.length === 2 ? 50 : 70;
 
   return loading ? (
     <ActivityIndicator color={theme.colors.surfaceBlack} />
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
-        {accountsHighlitedPics[0] && (
+        {accountsHighlightedPics[0] && (
           <View style={{ width: calculatedWidth, height: 30 }}>
-            {accountsHighlitedPics[0] && (
-              <FastImage source={accountsHighlitedPics[0]} style={styles.icon1} />
+            {accountsHighlightedPics[0] && (
+              <FastImage source={accountsHighlightedPics[0]} style={styles.icon1} />
             )}
-            {accountsHighlitedPics[1] && (
-              <FastImage source={accountsHighlitedPics[1]} style={styles.icon2} />
+            {accountsHighlightedPics[1] && (
+              <FastImage source={accountsHighlightedPics[1]} style={styles.icon2} />
             )}
-            {accountsHighlitedPics[2] && (
-              <FastImage source={accountsHighlitedPics[2]} style={styles.icon3} />
+            {accountsHighlightedPics[2] && (
+              <FastImage source={accountsHighlightedPics[2]} style={styles.icon3} />
             )}
           </View>
         )}

@@ -13,7 +13,7 @@ import { useGetFollowageDifference } from '@recoil/relationships';
 const useFollowageCount = (address: string | undefined) => {
   const activeAddress = useActiveAccountAddress();
   const userAddress: string | undefined = useMemo(
-    () => address ?? userAddress,
+    () => address ?? activeAddress,
     [address, activeAddress],
   );
   if (!userAddress) {
@@ -27,15 +27,12 @@ const useFollowageCount = (address: string | undefined) => {
   const serverFollowageCount = useMemo(() => data?.followers?.aggregate?.count ?? 0, [data]);
 
   // Get the followage difference that is stored locally
-  const getFollowageDifference = useGetFollowageDifference();
-  const followageDifference = useMemo(
-    () => getFollowageDifference(userAddress),
-    [getFollowageDifference, userAddress],
-  );
+  const getFollowageDifference = useGetFollowageDifference(userAddress);
+  const followageDifference = useMemo(() => getFollowageDifference(), [getFollowageDifference]);
 
   // Computed the overall followage count by adding to the server count the local difference
   const followageCount = useMemo(
-    () => serverFollowageCount + followageDifference,
+    () => Math.max(0, serverFollowageCount + followageDifference),
     [serverFollowageCount, followageDifference],
   );
 

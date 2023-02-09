@@ -50,7 +50,7 @@ const useGetGrantsInformation = () => {
         authz: authzGrantsData ? convertAuthzGrantsInfo(authzGrantsData) : currentValue.authz,
       };
     });
-  }, [feeGrantData, authzGrantsData]);
+  }, [feeGrantData, authzGrantsData, setAuthorizationInfo]);
 
   // Combine the two refetch functions together
   const refetch = React.useCallback(() => {

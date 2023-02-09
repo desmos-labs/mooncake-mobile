@@ -15,9 +15,9 @@ import {
   MsgDeleteRelationshipTypeUrl,
 } from '@desmoslabs/desmjs';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { DataStatus } from 'types/desmos';
 import { useAppStateValue } from '@recoil/appState';
 import Long from 'long';
+import { DataStatus } from 'types/cache';
 
 /**
  * Hook to know if a relationship exists on the GraphQL server (and hence on the chain) or not.
@@ -44,22 +44,22 @@ const useDoesRelationshipExistRemotely = () => {
 /**
  * Hook that allows to follow a user both remotely and locally.
  */
-const useFollowUser = () => {
+const useFollowUser = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const addFollowedUser = useAddFollowedUser();
-  const setFollowedUserStatus = useSetFollowedUserStatus();
-  const removeFollowedUser = useRemoveFollowedUser();
+  const addFollowedUser = useAddFollowedUser(activeAddress);
+  const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
+  const removeFollowedUser = useRemoveFollowedUser(activeAddress);
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
 
   return React.useCallback(
-    async (address: string, counterparty: string) => {
+    async (counterparty: string) => {
       // Add the relationships locally
-      addFollowedUser(address, counterparty);
+      addFollowedUser(counterparty);
 
-      const existsRemotely = await doesRelationshipExist(address, counterparty);
+      const existsRemotely = await doesRelationshipExist(activeAddress, counterparty);
       if (!existsRemotely) {
         // If the relationship does not exist on the server, create it
         const messageCreateRelationship: MsgCreateRelationshipEncodeObject = {
@@ -67,18 +67,18 @@ const useFollowUser = () => {
           value: {
             subspaceId: Long.fromNumber(subspaceId),
             counterparty,
-            signer: address,
+            signer: activeAddress,
           },
         };
 
         // If the transaction succeeds, set it as synced.
         const onSuccess = () => {
-          setFollowedUserStatus(address, counterparty, DataStatus.SYNCED);
+          setFollowedUserStatus(counterparty, DataStatus.SYNCED);
         };
 
         // If the transaction is canceled or errors, remove the added relationship
         const onCancelOrError = () => {
-          removeFollowedUser(address, counterparty);
+          removeFollowedUser(counterparty);
         };
 
         // Broadcast the transaction
@@ -93,6 +93,7 @@ const useFollowUser = () => {
     [
       addFollowedUser,
       doesRelationshipExist,
+      activeAddress,
       subspaceId,
       broadcastTx,
       setFollowedUserStatus,
@@ -104,21 +105,21 @@ const useFollowUser = () => {
 /**
  * Hook that allows to unfollow a user, both locally and remotely.
  */
-const useUnfollowUser = () => {
+const useUnfollowUser = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const setFollowedUserStatus = useSetFollowedUserStatus();
-  const removeFollowedUser = useRemoveFollowedUser();
+  const setFollowedUserStatus = useSetFollowedUserStatus(activeAddress);
+  const removeFollowedUser = useRemoveFollowedUser(activeAddress);
 
   const doesRelationshipExist = useDoesRelationshipExistRemotely();
 
   return React.useCallback(
-    async (address: string, counterparty: string) => {
+    async (counterparty: string) => {
       // Delete the relationship locally
-      setFollowedUserStatus(address, counterparty, DataStatus.DELETED_LOCALLY);
+      setFollowedUserStatus(counterparty, DataStatus.DELETED_LOCALLY);
 
-      const existsRemotely = await doesRelationshipExist(address, counterparty);
+      const existsRemotely = await doesRelationshipExist(activeAddress, counterparty);
       if (existsRemotely) {
         // If the relationship exists remotely, remote it from the server
         const messageDeleteRelationship: MsgDeleteRelationshipEncodeObject = {
@@ -126,18 +127,18 @@ const useUnfollowUser = () => {
           value: {
             subspaceId: Long.fromNumber(subspaceId),
             counterparty,
-            signer: address,
+            signer: activeAddress,
           },
         };
 
         // If the transaction succeeds, delete the relationship locally as well
         const onSuccess = () => {
-          removeFollowedUser(address, counterparty);
+          removeFollowedUser(counterparty);
         };
 
         // If the transaction is canceled or errors, re-add the removed relationship
         const onCancelOrError = () => {
-          setFollowedUserStatus(address, counterparty, DataStatus.SYNCED);
+          setFollowedUserStatus(counterparty, DataStatus.SYNCED);
         };
 
         // Broadcasts the transaction
@@ -149,7 +150,14 @@ const useUnfollowUser = () => {
         });
       }
     },
-    [setFollowedUserStatus, doesRelationshipExist, subspaceId, broadcastTx, removeFollowedUser],
+    [
+      setFollowedUserStatus,
+      doesRelationshipExist,
+      activeAddress,
+      subspaceId,
+      broadcastTx,
+      removeFollowedUser,
+    ],
   );
 };
 
@@ -163,20 +171,20 @@ const useFollowOrUnfollowUser = () => {
     throw new Error('Trying to follow or unfollow a user, without active user');
   }
 
-  const hasFollowedUser = useHasFollowedUser();
-  const followUser = useFollowUser();
-  const unfollowUser = useUnfollowUser();
+  const hasFollowedUser = useHasFollowedUser(activeAddress);
+  const followUser = useFollowUser(activeAddress);
+  const unfollowUser = useUnfollowUser(activeAddress);
 
   return React.useCallback(
     async (counterparty: string) => {
-      const isFollowing = hasFollowedUser(activeAddress, counterparty);
+      const isFollowing = hasFollowedUser(counterparty);
       if (isFollowing) {
-        await unfollowUser(activeAddress, counterparty);
+        await unfollowUser(counterparty);
       } else {
-        await followUser(activeAddress, counterparty);
+        await followUser(counterparty);
       }
     },
-    [hasFollowedUser, activeAddress, unfollowUser, followUser],
+    [hasFollowedUser, unfollowUser, followUser],
   );
 };
 

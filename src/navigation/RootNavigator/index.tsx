@@ -3,9 +3,8 @@ import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import DevScreen from 'screens/DEV';
-import MnemonicInput, { MNEMONIC_INPUT_MODE, MnemonicInputParams } from 'screens/MnemonicInput';
+import MnemonicInput from 'screens/MnemonicInput';
 import useInitializeAppData from 'hooks/useInitializeAppData';
-import { useTranslation } from 'react-i18next';
 import useInitializeNotifications from 'hooks/useInitializeNotifications';
 import useInitializeDynamicLinks from 'hooks/useInitializeDynamicLinks';
 import TextOnlyModal, { TextOnlyModalParams } from 'screens/Modals/TextOnlyModal';
@@ -31,6 +30,7 @@ import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
+import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 
 export type RootNavigatorParamList = {
@@ -55,7 +55,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
   // [ROUTES.SETTINGS_COMMUNITY]: undefined;
-  [ROUTES.MNEMONIC_INPUT]: MnemonicInputParams;
+  [ROUTES.MNEMONIC_INPUT]: undefined;
   // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SELECT_ACCOUNT]: SelectAccountParamList;
@@ -77,8 +77,8 @@ export type RootNavigatorParamList = {
   // [ROUTES.REPORT_POST]: ReportPostParams;
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
-  // [ROUTES.POST_DETAILS]: PostDetailsParams;
-  // [ROUTES.ENTER_COMMENT]: EnterCommentParams;
+  [ROUTES.POST_DETAILS]: PostDetailsParams;
+  // [ROUTES.CREATE_POST]: CreatePostParams;
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
   // [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
@@ -168,7 +168,6 @@ const RootNavigator = () => {
   useInitializeNotifications();
   useInitializeDynamicLinks();
 
-  const { t } = useTranslation();
   // const theme = useTheme();
 
   /**
@@ -241,24 +240,11 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
-      <Stack.Screen
-        initialParams={{
-          mode: MNEMONIC_INPUT_MODE.IMPORT_RECOVERY_PHRASE,
-        }}
-        name={ROUTES.MNEMONIC_INPUT}
-        component={MnemonicInput}
-      />
-      <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
+      <Stack.Screen name={ROUTES.MNEMONIC_INPUT} component={MnemonicInput} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    postId: 1, */}
-      {/*  }} */}
-      {/*  name={ROUTES.POST_DETAILS} */}
-      {/*  component={PostDetails} */}
-      {/* /> */}
+      <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
       {/* <Stack.Screen */}
       {/*  initialParams={{ */}
       {/*    commentId: 1, */}
@@ -344,12 +330,7 @@ const RootNavigator = () => {
       {/*  component={ConnectChainMethod} */}
       {/* /> */}
 
-      {/* <Stack.Screen name={ROUTES.ENTER_COMMENT} component={EnterComment} /> */}
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SELECT_POST_TYPE} */}
-      {/*  component={PostTypeSelection} */}
-      {/* /> */}
+      {/* <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} /> */}
 
       {/* <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} /> */}
 
@@ -367,11 +348,7 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} /> */}
 
-      <Stack.Screen
-        name={ROUTES.ONBOARDING}
-        component={Onboarding}
-        initialParams={{ invited: false }}
-      />
+      <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
 
@@ -421,14 +398,7 @@ const RootNavigator = () => {
       {/*  /> */}
 
       <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
-      <Stack.Screen
-        initialParams={{
-          title: t('signup:profile dtag'),
-          body: t('signup:dtag info'),
-        }}
-        name={ROUTES.TEXTONLY_MODAL}
-        component={TextOnlyModal}
-      />
+      <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.DISCONNECT_CHAIN_MODAL} */}

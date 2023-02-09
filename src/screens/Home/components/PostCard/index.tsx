@@ -1,6 +1,5 @@
 import { loadingOrange } from 'assets/animations';
 import {
-  defaultProfilePic,
   followBlackIcon,
   moreBlackIcon,
   postLikedIcon,
@@ -27,8 +26,9 @@ import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useHasReacted from 'hooks/useHasReacted';
-import useReactionsCount from 'hooks/useReactionsCount';
-import useCommentsCount from 'hooks/useCommentsCount';
+import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
+import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -90,29 +90,34 @@ const PostCard = (props: PostCardProps) => {
     onPressDetails,
   } = props;
 
-  // --- Menu visibility --- //
+  // -------------------------------------------------------------------------------------
+  // --- Menu visibility
+  // -------------------------------------------------------------------------------------
+
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<{
     x: number;
     y: number;
   }>();
 
-  // --- Utility hooks --- //
+  // -------------------------------------------------------------------------------------
+  // --- Utility hooks
+  // -------------------------------------------------------------------------------------
+
   const activeAddress = useActiveAccountAddress();
   const isFollowing = useIsFollowing(post.author.address);
   const hasReacted = useHasReacted(post);
-  const { count: reactionsCount } = useReactionsCount(post);
-  const { count: commentsCount } = useCommentsCount(post);
+  const { count: reactionsCount } = useGetPostReactionsCount(post);
+  const { count: commentsCount } = useGetPostCommentsCount(post);
 
-  // --- Formatted data --- //
+  // -------------------------------------------------------------------------------------
+  // --- Formatted data
+  // -------------------------------------------------------------------------------------
+
   const isCurrentUserAuthor = useMemo(
     () => post.author.address === activeAddress,
     [post, activeAddress],
   );
-
-  const authorProfilePic = useMemo(() => {
-    return post.author.profilePicture ? { uri: post.author.profilePicture } : defaultProfilePic;
-  }, [post]);
 
   const isPending = useMemo(() => isPostPending(post), [post]);
 
@@ -143,7 +148,9 @@ const PostCard = (props: PostCardProps) => {
     }
   }, [formattedDate, post.creationDate, t]);
 
-  // --- Child components --- //
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
 
   const { MediaAttachment } = useRenderMediaAttachment(post.attachments, {
     useAutoSize: true,
@@ -188,7 +195,7 @@ const PostCard = (props: PostCardProps) => {
     return (
       <View style={styles.profileInfoView}>
         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
-          <FastImage source={authorProfilePic} style={styles.profilePic} />
+          <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
           <View style={{ flexDirection: 'column' }}>
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
             <View style={{ flexDirection: 'row' }}>
@@ -212,9 +219,7 @@ const PostCard = (props: PostCardProps) => {
     styles.profileInfoView,
     styles.profilePic,
     onPressAuthor,
-    authorProfilePic,
-    post.author.nickname,
-    post.author.dTag,
+    post.author,
     theme.colors.midGrey,
     theme.spacing.xs,
     isPending,

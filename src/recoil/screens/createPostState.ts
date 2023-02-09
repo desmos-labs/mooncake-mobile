@@ -75,6 +75,48 @@ export const useSetCreatePostValue = <K extends keyof CreatePostState>(valueKey:
 };
 
 /**
+ * Hook that allows to add a post attachments to the create post state.
+ */
+export const useAddCreatePostAttachment = () => {
+  const setCreatePostState = useSetRecoilState(createPostState);
+  return React.useCallback(
+    (attachment: UploadAssetType) => {
+      setCreatePostState(state => {
+        const attachments = state.attachments ?? [];
+        if (!attachments.some(a => a === attachment)) {
+          attachments.push(attachment);
+        }
+
+        return {
+          ...state,
+          attachments,
+        };
+      });
+    },
+    [setCreatePostState],
+  );
+};
+
+/**
+ * Hook that allows to remove an attachment from the create post state.
+ */
+export const useRemoveCreatePostAttachment = () => {
+  const setCreatePostState = useSetRecoilState(createPostState);
+  return React.useCallback(
+    (attachment: UploadAssetType) => {
+      setCreatePostState(state => {
+        const attachments = state.attachments?.filter(a => a !== attachment);
+        return {
+          ...state,
+          attachments,
+        };
+      });
+    },
+    [setCreatePostState],
+  );
+};
+
+/**
  * Hook that allows to reset the current state of the post creation screen.
  */
 export const useResetCreatePostState = () => {

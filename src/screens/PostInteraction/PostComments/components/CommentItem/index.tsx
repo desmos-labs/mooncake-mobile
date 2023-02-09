@@ -19,39 +19,19 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Post } from 'types/posts';
 import useStyles from './useStyles';
 
-// note: props are not final
-interface Props
-  extends Pick<PostItem, 'author' | 'text' | 'creation_date' | 'isPending' | 'attachments'> {
-  disableInnerComment?: boolean;
-
-  handlePressMore: (event: GestureResponderEvent) => void;
-
-  handlePressComment: () => void;
-
-  handlePressLike: () => void;
-
-  handlePressTip: () => void;
-
-  handlePress?: () => void;
-
-  handleProfilePicPress?: () => void;
-
-  handleLongPress?: (event: GestureResponderEvent) => void;
-
-  repliesCounter: number;
-
-  // not final
-  reactions: {}[];
-
-  tips: {}[];
-
-  liked?: boolean;
-
-  tipped?: boolean;
-
-  commented?: boolean;
+export interface Props {
+  readonly comment: Post;
+  readonly handlePressMore: (event: GestureResponderEvent) => void;
+  readonly handlePressComment: () => void;
+  readonly handlePressLike: () => void;
+  readonly handlePressTip: () => void;
+  readonly handlePress?: () => void;
+  readonly handleProfilePicPress?: () => void;
+  readonly handleLongPress?: (event: GestureResponderEvent) => void;
+  readonly disableInnerComment?: boolean;
 }
 
 const CommentItem = ({

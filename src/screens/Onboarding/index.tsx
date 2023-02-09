@@ -20,7 +20,7 @@ import useStyles from './useStyles';
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);
 
 export interface OnboardingParams {
-  invited: boolean;
+  invited?: boolean;
 }
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.ONBOARDING>;
@@ -34,9 +34,11 @@ interface OnboardingData {
 const Onboarding = () => {
   const { t } = useTranslation('onboarding');
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const {
-    params: { invited },
-  } = useRoute<NavProps['route']>();
+
+  // Unwrap the params
+  const { params } = useRoute<NavProps['route']>();
+  const isInvited = params?.invited ?? false;
+
   const styles = useStyles();
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
@@ -91,29 +93,32 @@ const Onboarding = () => {
           useNativeDriver: false,
         },
       ),
-    [],
+    [positionAnimatedValue, scrollOffsetAnimatedValue],
   );
 
   const navigateToCorrectScreen = useCallback(() => {
-    if (invited) {
+    if (isInvited) {
       navigate(ROUTES.SIGNUP);
     } else {
       navigate(ROUTES.LANDING);
     }
-  }, [invited]);
+  }, [isInvited, navigate]);
 
-  const renderItem = useCallback((item: OnboardingData) => {
-    return (
-      <View key={item.title} style={styles.itemView}>
-        <Spacer paddingTop={50} paddingBottom={30}>
-          <FastImage source={item.imageSrc} style={styles.image} resizeMode="cover" />
-        </Spacer>
-        <Typography.H3>{item.title}</Typography.H3>
-        <Spacer paddingVertical={theme.spacing.s} />
-        <Typography.Body6 style={{ textAlign: 'center' }}>{item.subtitle}</Typography.Body6>
-      </View>
-    );
-  }, []);
+  const renderItem = useCallback(
+    (item: OnboardingData) => {
+      return (
+        <View key={item.title} style={styles.itemView}>
+          <Spacer paddingTop={50} paddingBottom={30}>
+            <FastImage source={item.imageSrc} style={styles.image} resizeMode="cover" />
+          </Spacer>
+          <Typography.H3>{item.title}</Typography.H3>
+          <Spacer paddingVertical={theme.spacing.s} />
+          <Typography.Body6 style={{ textAlign: 'center' }}>{item.subtitle}</Typography.Body6>
+        </View>
+      );
+    },
+    [styles.image, styles.itemView, theme.spacing.s],
+  );
 
   return (
     <DView

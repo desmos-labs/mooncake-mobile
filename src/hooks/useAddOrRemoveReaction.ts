@@ -6,7 +6,7 @@ import {
   useRemovePostReaction,
   useSetPostReactionStatus,
 } from '@recoil/reactions';
-import { DataStatus, getLikeReactionId } from 'types/desmos';
+import { getLikeReactionId } from 'types/desmos';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import {
   MsgAddReactionEncodeObject,
@@ -16,37 +16,38 @@ import {
 } from '@desmoslabs/desmjs';
 import Long from 'long';
 import { useLazyQuery } from '@apollo/client';
-import GetPostReactionForAddress from 'services/graphql/queries/GetPostReactionForAddress';
+import GetPostReaction from 'services/graphql/queries/GetPostReaction';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
 import { registeredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
+import { DataStatus } from 'types/cache';
 
 /**
  * Hook that allows to add a reaction both remotely and locally.
  */
-const useAddReaction = () => {
+const useAddReaction = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const subspaceParams = useAppStateValue('subspaceParams');
   const broadcastTx = useBroadcastTx();
 
-  const addPostReaction = useAddPostReaction();
-  const setPostReactionStatus = useSetPostReactionStatus();
-  const removePostReaction = useRemovePostReaction();
+  const addPostReaction = useAddPostReaction(activeAddress);
+  const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
+  const removePostReaction = useRemovePostReaction(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
+  const [getReaction] = useLazyQuery(GetPostReaction, {
     fetchPolicy: 'network-only',
   });
 
   return React.useCallback(
-    async (post: Post, address: string) => {
+    async (post: Post) => {
       // Add the reaction locally
-      addPostReaction(address, post);
+      addPostReaction(post);
 
       // Check if the reaction exists on the server
       const { data } = await getReaction({
         variables: {
           postId: post.id,
-          userAddress: address,
+          userAddress: activeAddress,
         },
       });
 
@@ -61,18 +62,18 @@ const useAddReaction = () => {
             value: registeredReactionValueToAny({
               registeredReactionId: getLikeReactionId(subspaceParams),
             }),
-            user: address,
+            user: activeAddress,
           },
         };
 
         // If the transaction is successful, set the reaction as synced with the chain
         const onSuccess = () => {
-          setPostReactionStatus(address, post, DataStatus.SYNCED);
+          setPostReactionStatus(post, DataStatus.SYNCED);
         };
 
         // If the transaction is canceled or errors, revert the addition of the reaction.
         const onCancelOrError = () => {
-          removePostReaction(address, post);
+          removePostReaction(post);
         };
 
         // Broadcast the transaction
@@ -84,34 +85,43 @@ const useAddReaction = () => {
         });
       }
     },
-    [subspaceId, subspaceParams, getReaction, broadcastTx, addPostReaction],
+    [
+      addPostReaction,
+      getReaction,
+      activeAddress,
+      subspaceId,
+      subspaceParams,
+      broadcastTx,
+      setPostReactionStatus,
+      removePostReaction,
+    ],
   );
 };
 
 /**
  * Hook that allows to remove a reaction both remotely (if present) and locally.
  */
-const useRemoveReaction = () => {
+const useRemoveReaction = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const setPostReactionStatus = useSetPostReactionStatus();
-  const removePostReaction = useRemovePostReaction();
+  const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
+  const removePostReaction = useRemovePostReaction(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReactionForAddress, {
+  const [getReaction] = useLazyQuery(GetPostReaction, {
     fetchPolicy: 'network-only',
   });
 
   return React.useCallback(
-    async (post: Post, address: string) => {
+    async (post: Post) => {
       // Remove the reaction locally
-      setPostReactionStatus(address, post, DataStatus.DELETED_LOCALLY);
+      setPostReactionStatus(post, DataStatus.DELETED_LOCALLY);
 
       // Get the reaction id from the server
       const { data } = await getReaction({
         variables: {
           postId: post.id,
-          userAddress: address,
+          userAddress: activeAddress,
         },
       });
 
@@ -126,18 +136,18 @@ const useRemoveReaction = () => {
             subspaceId: Long.fromNumber(subspaceId),
             postId: Long.fromNumber(post.id),
             reactionId,
-            user: address,
+            user: activeAddress,
           },
         };
 
         // If the transaction is successful, remove the reaction from the local storage as well
         const onSuccess = () => {
-          removePostReaction(address, post);
+          removePostReaction(post);
         };
 
         // If the transaction is canceled or errors, revert the removal of the reaction.
         const onCancelOrError = () => {
-          setPostReactionStatus(address, post, DataStatus.SYNCED);
+          setPostReactionStatus(post, DataStatus.SYNCED);
         };
 
         // Broadcast the transaction
@@ -149,7 +159,14 @@ const useRemoveReaction = () => {
         });
       }
     },
-    [subspaceId, getReaction, broadcastTx, removePostReaction],
+    [
+      setPostReactionStatus,
+      getReaction,
+      activeAddress,
+      subspaceId,
+      broadcastTx,
+      removePostReaction,
+    ],
   );
 };
 
@@ -162,20 +179,20 @@ const useAddOrRemoveReaction = () => {
     throw new Error('Trying to know add or remove a reaction, without active user');
   }
 
-  const hasPostReaction = useHasPostReaction();
-  const addReaction = useAddReaction();
-  const removeReaction = useRemoveReaction();
+  const hasPostReaction = useHasPostReaction(activeAddress);
+  const addReaction = useAddReaction(activeAddress);
+  const removeReaction = useRemoveReaction(activeAddress);
 
   return React.useCallback(
     async (post: Post) => {
-      const doesReactionExist = hasPostReaction(activeAddress, post);
+      const doesReactionExist = hasPostReaction(post);
       if (doesReactionExist) {
-        await removeReaction(post, activeAddress);
+        await removeReaction(post);
       } else {
-        await addReaction(post, activeAddress);
+        await addReaction(post);
       }
     },
-    [hasPostReaction, addReaction, removeReaction],
+    [hasPostReaction, removeReaction, addReaction],
   );
 };
 

@@ -6,7 +6,7 @@ import useSignAndBroadcastTx, { SignAndBroadcastSuccess } from 'hooks/useSignAnd
 import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
 import { err, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
-import { Asset } from 'react-native-image-picker';
+import { isPictureAsset } from 'lib/ProfileUtils';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -22,17 +22,6 @@ export enum SaveProfileStatus {
   BROADCASTING_TX,
   DONE,
 }
-
-/**
- * Tells whether the given picture is a valid {@link Asset} or not.
- */
-const isPictureAsset = (picture: Asset | string | undefined): picture is Asset => {
-  if (picture === undefined) {
-    return false;
-  }
-  const { uri } = picture as Asset;
-  return uri !== undefined;
-};
 
 /**
  * Hook that allows to save a Desmos profile on-chain.

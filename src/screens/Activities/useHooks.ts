@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useClient from 'services/graphql/useClient';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
-import GetPostBySubspaceIDandPostID from 'services/graphql/queries/GetPostBySubspaceIDandPostID';
+import GetPost from 'services/graphql/queries/GetPost';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import NotificationTypesEnum from 'types/notificationTypes';
 
@@ -61,7 +61,7 @@ const useHooks = () => {
           });
           if (singleNot?.data?.post_id) {
             const { data: postData } = await useClient.query({
-              query: GetPostBySubspaceIDandPostID,
+              query: GetPost,
               variables: {
                 postID: singleNot.data.post_id,
                 subspaceID: singleNot.data.subspace_id,
