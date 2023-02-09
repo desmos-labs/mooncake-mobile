@@ -34,7 +34,7 @@ export interface ImportAccountOptions {
    * List of addresses that will be ignored during the generation to prevent the
    * import of a duplicate addresses.
    */
-  ignoreAddresses?: [];
+  ignoreAddresses?: string[];
 }
 
 export interface ImportAccountCallbacks {
