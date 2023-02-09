@@ -35,6 +35,8 @@ enum ROUTES {
   SETTINGS_SHOW_SECRET_PHRASE = 'SETTINGS_SHOW_SECRET_PHRASE',
 
   LOOKING_FOR_DEVICES = 'LOOKING_FOR_DEVICES',
+
+  UNLOCK_WALLET = 'UNLOCK_WALLET',
   /**
    * Navigate to the stack that allow the user to connect to a ledger device.
    */
@@ -162,19 +164,9 @@ enum ROUTES {
 
   CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
 
-  OPERATIONS = 'OPERATIONS',
-
   // Root navigation end
 
-  // Authorize wallet stack start
-  AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
-
-  AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
-
-  AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
-
-  AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
-  // Authorize wallet stack end
+  OPERATIONS = 'OPERATIONS',
 
   // Post Interaction start
   POST_INTERACTION = 'POST_INTERACTION',

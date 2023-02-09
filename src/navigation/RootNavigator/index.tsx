@@ -31,6 +31,7 @@ import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
+import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -44,6 +45,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SIGNUP]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
   [ROUTES.SAVE_ACCOUNT]: SaveAccountParams;
+  [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   // [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
@@ -59,7 +61,6 @@ export type RootNavigatorParamList = {
   [ROUTES.SELECT_ACCOUNT]: SelectAccountParamList;
   // [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
-  // [ROUTES.WELCOME_PAGE]: undefined;
   // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
@@ -247,6 +248,7 @@ const RootNavigator = () => {
         name={ROUTES.MNEMONIC_INPUT}
         component={MnemonicInput}
       />
+      <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />

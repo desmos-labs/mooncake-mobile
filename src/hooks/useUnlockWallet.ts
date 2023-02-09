@@ -1,13 +1,47 @@
-import React from 'react';
-import { AccountWithWallet } from 'types/account';
+import useReturnToCurrentScreen from 'hooks/useReturnToCurrentScreen';
+import { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Wallet } from 'types/wallet';
+import ROUTES from 'navigation/routes';
+import { useActiveAccount } from '@recoil/accounts';
+import { SigningMode } from '@desmoslabs/desmjs';
+import { err, ok, Result } from 'neverthrow';
 
 /**
- * Hooks that allows to unlock and retrieve the current user's wallet.
+ * Hooks that provides a function to unlock and access a user wallet.
  */
 const useUnlockWallet = () => {
-  return React.useCallback(async (): Promise<AccountWithWallet> => {
-    return {} as AccountWithWallet;
-  }, []);
+  const returnToCurrentScreen = useReturnToCurrentScreen();
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const activeAccount = useActiveAccount();
+
+  return useCallback(
+    (toUnlockAddress?: string, signingMode?: SigningMode) => {
+      const address = toUnlockAddress ?? activeAccount!.address;
+
+      if (address === undefined) {
+        return Promise.resolve(err(new Error('no account selected')));
+      }
+
+      return new Promise<Result<Wallet | undefined, Error>>(resolve => {
+        navigator.navigate(ROUTES.UNLOCK_WALLET, {
+          address,
+          onSuccess: wallet => {
+            resolve(ok(wallet));
+            returnToCurrentScreen();
+          },
+          onCancel: () => {
+            resolve(ok(undefined));
+            returnToCurrentScreen();
+          },
+          signingMode,
+        });
+      });
+    },
+    [activeAccount, navigator, returnToCurrentScreen],
+  );
 };
 
 export default useUnlockWallet;
