@@ -231,7 +231,7 @@ export const changeWalletsPassword = async (
   newPassword: string,
 ): Promise<Result<boolean, Error>> => {
   const isPasswordValid = await checkUserPassword(oldPassword);
-  if (!isPasswordValid) {
+  if (isPasswordValid.isErr()) {
     return ok(false);
   }
 
@@ -244,7 +244,7 @@ export const changeWalletsPassword = async (
   // We need to disable the no-restricted-syntax and the no-await-in-loop lints
   // in the following lines so that this code is easier to read.
   // eslint-disable-next-line no-restricted-syntax
-  for (const walletAddress in walletAddresses) {
+  for (const walletAddress of walletAddresses) {
     // Read the wallet with the current password
     // eslint-disable-next-line no-await-in-loop
     const walletResult = await getWallet(walletAddress, oldPassword);
