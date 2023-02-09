@@ -9,7 +9,7 @@ import { SerializableWallet, Wallet } from 'types/wallet';
 import { serializeWallet } from 'lib/WalletUtils/serialize';
 import { deserializeWallet } from 'lib/WalletUtils/deserialize';
 import { BiometricAuthorizations } from 'types/settings';
-import { err, ok, Result } from 'neverthrow';
+import { err, ok, Result, ResultAsync } from 'neverthrow';
 
 export enum SecureStorageKeys {
   /**
@@ -71,8 +71,12 @@ export async function getItem<T>(
     return err(Error('Invalid encrypted data'));
   }
 
-  const jsonSerialized = await decryptData(jsonValueNew as EncryptedData, options.password);
-  return ok(JSON.parse(jsonSerialized));
+  const jsonSerialized = await ResultAsync.fromPromise(
+    decryptData(jsonValueNew as EncryptedData, options.password),
+    () => new Error('Invalid password'),
+  );
+
+  return jsonSerialized.map(JSON.parse);
 }
 
 /**
