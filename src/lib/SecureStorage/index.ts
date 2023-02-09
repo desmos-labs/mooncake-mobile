@@ -332,9 +332,6 @@ export const getBiometricPassword = async (
       biometrics: true,
     },
   );
-  if (password.isErr()) {
-    return err(password.error);
-  }
 
-  return ok(password.value ?? undefined);
+  return password.map(value => value ?? undefined);
 };
