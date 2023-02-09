@@ -62,6 +62,8 @@ export const selectProfile = async () => {
   await expect(element(by.text('Select a Profile'))).toBeVisible();
   await expect(element(by.text(DETOX_DEV_ACCOUNT_NICKNAME))).toBeVisible();
   await element(by.text(DETOX_DEV_ACCOUNT_NICKNAME)).tap();
+  // Expect to be inside the homescreen
+  await expect(element(by.id('homeView'))).toBeVisible();
 };
 
 /**
@@ -71,6 +73,7 @@ export const createTextPost = async () => {
   // Random text
   const postText = `Automated post creation with Detox + ${Math.random()}`;
   // Expect to be inside the homescreen
+  await expect(element(by.id('homeView'))).toBeVisible();
   await element(by.id('createPostButton')).tap();
   await element(by.id('postText')).tap();
   await element(by.id('postText')).typeText(postText);
@@ -88,6 +91,7 @@ export const createTextPost = async () => {
  * @param index the index of the post
  */
 export const likeHomeTextPost = async (index: number) => {
+  // Expect to be inside the homescreen
   await expect(element(by.id('homeView'))).toBeVisible();
   await expect(element(by.id('postCard')).atIndex(0)).toBeVisible();
   await element(by.id('postcardAddLikeButton').withAncestor(by.id('postCard')))
@@ -103,6 +107,7 @@ export const likeHomeTextPost = async (index: number) => {
  * @param index the index of the post
  */
 export const unlikeHomeTextPost = async (index: number) => {
+  // Expect to be inside the homescreen
   await expect(element(by.id('homeView'))).toBeVisible();
   await expect(element(by.id('postCard')).atIndex(0)).toBeVisible();
   await element(
@@ -120,7 +125,9 @@ export const unlikeHomeTextPost = async (index: number) => {
  * @param index the index of the post
  */
 export const navigateToPost = async (index: number) => {
-  //TODO check more strictly if we are navigating to the post. Will be possible with mocks
+  // TODO check more strictly if we are navigating to the post. Will be possible with mocks
+
+  // Expect to be inside the homescreen
   await expect(element(by.id('homeView'))).toBeVisible();
   await expect(element(by.id('postCard')).atIndex(index)).toBeVisible();
   // Workaround because detox is finding multiple elements

@@ -1,4 +1,4 @@
-import {by, device, element, expect} from 'detox';
+import {device} from 'detox';
 import {DETOX_DEV_MNEMONIC} from '../__mocks__/E2EVariableMocks';
 import {
   navigateThroughOnboarding,
@@ -20,8 +20,6 @@ describe('Post navigation flow', () => {
     await selectAndConfirmPassword();
     // Select profile
     await selectProfile();
-    // Expect to be inside the homescreen
-    await expect(element(by.id('homeView'))).toBeVisible();
   });
 
   it('Navigate to a post with index 0', async () => {

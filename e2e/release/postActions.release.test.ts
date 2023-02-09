@@ -35,5 +35,5 @@ describe('Post actions flow', () => {
     await unlikeHomeTextPost(0);
   });
 
-  //TODO follow/unfollow tests
+  // TODO follow/unfollow tests
 });
