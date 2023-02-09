@@ -1,6 +1,5 @@
 // @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { NativeModules } from 'react-native';
+
 import Aes from 'react-native-aes-crypto';
 
 export interface EncryptedData {
@@ -39,5 +38,6 @@ export const encryptData = async (text: string, password: string): Promise<Encry
  * @param password The password used to generate the cipher key.
  */
 export const decryptData = async (data: EncryptedData, password: string): Promise<string> => {
-  return Aes.decrypt(data.cipher, password, data.iv, 'aes-256-cbc');
+  const securePassword: string = await deriveSecurePassword(password);
+  return Aes.decrypt(data.cipher, securePassword, data.iv, 'aes-256-cbc');
 };
