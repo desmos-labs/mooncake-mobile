@@ -30,11 +30,12 @@ import ConnectToLedgerStack, {
 import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import SelectLedgerApp from 'screens/SelectLedgerApp';
 import Settings from 'screens/Settings';
+import ManageConnectedChains from 'screens/ManageConnectedChains';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   // [ROUTES.LOGIN]: LoginParams | undefined;
-  // [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
+  [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
   // [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
@@ -48,8 +49,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
-  // [ROUTES.LOOKING_FOR_DEVICES]: undefined;
-  // [ROUTES.CONNECT_TO_LEDGER]: ConnectToLedgerParams;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
   // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
@@ -266,10 +265,7 @@ const RootNavigator = () => {
       {/*  name={ROUTES.COMMENT_REPLIES} */}
       {/*  component={CommentReplies} */}
       {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.MANAGE_CONNECTED_CHAINS} */}
-      {/*  component={ManageConnectedChains} */}
-      {/* /> */}
+      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.MANAGE_CONNECTED_APPS} */}
       {/*  component={ManageConnectedApps} */}

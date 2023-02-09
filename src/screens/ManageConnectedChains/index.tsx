@@ -6,19 +6,18 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
 import { Snackbar, useTheme } from 'react-native-paper';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import { ChainLink } from 'types/desmos';
 import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
-import useActiveAccount from 'hooks/useActiveAccount';
 import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
-import { useChainLinks } from '@recoil/chainLinks';
+import useChainLinksGivenAddress from 'hooks/useChainLinksGivenAddress';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -28,22 +27,24 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-
   const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const { chainLinks, loading, refetch } = useChainLinksGivenAddress();
 
-  const { chainAccount, activeAddress } = useActiveAccount();
+  useEffect(() => {
+    refetch();
 
-  const { chainLinks } = useChainLinks(activeAddress!);
+    // Safe to ignore, we need to fetch the chain link just the first time that
+    // we enter this screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePressDisconnectChainLink = React.useCallback(
     (chainLink: ChainLink) => async () => {
-      if (!chainAccount) return;
-
       navigate(ROUTES.DISCONNECT_CHAIN_MODAL, {
         chainLink,
       });
     },
-    [chainAccount],
+    [navigate],
   );
 
   const renderChainLinks = React.useCallback(
@@ -108,14 +109,18 @@ const ManageConnectedChains = () => {
         <GradientBorder height={5} />
       </View>
 
-      <FlatList
-        data={chainLinks}
-        renderItem={renderChainLinks}
-        ListEmptyComponent={ListEmptyComponent}
-        contentContainerStyle={styles.flatListContainer}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        style={{ overflow: 'visible' }}
-      />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={chainLinks}
+          renderItem={renderChainLinks}
+          ListEmptyComponent={ListEmptyComponent}
+          contentContainerStyle={styles.flatListContainer}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          style={{ overflow: 'visible' }}
+        />
+      )}
       <Snackbar
         visible={showSnackbar}
         style={styles.snackbar}
