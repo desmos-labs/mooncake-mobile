@@ -1,15 +1,28 @@
 import React from 'react';
-import { DataStatus, FollowedUser } from 'types/desmos';
+import { FollowedUser } from 'types/desmos';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import Cache, { DataStatus } from 'types/cache';
+import { cacheToMMKV, mmkvValueToCache } from '@recoil/utils';
 
-const followageState = atom<Record<string, FollowedUser[]>>({
+type ComparableFollowedUser = Pick<FollowedUser, 'address'>;
+
+type FollowedUserCache = Cache<FollowedUser, ComparableFollowedUser>;
+
+const areFollowedUsersEqual = (
+  first: ComparableFollowedUser,
+  second: ComparableFollowedUser,
+): boolean => {
+  return first.address === second.address;
+};
+
+const followageState = atom<Record<string, FollowedUserCache>>({
   key: 'followageState',
-  default: getMMKV(MMKVKEYS.FOLLOWAGE) || {},
+  default: mmkvValueToCache(MMKVKEYS.FOLLOWAGE, areFollowedUsersEqual),
   effects: [
     ({ onSet }) => {
       onSet(followage => {
-        setMMKV(MMKVKEYS.FOLLOWAGE, followage);
+        setMMKV(MMKVKEYS.FOLLOWAGE, cacheToMMKV(followage));
       });
     },
   ],
@@ -21,12 +34,9 @@ const followageState = atom<Record<string, FollowedUser[]>>({
 export const useHasFollowedUser = () => {
   const followage = useRecoilValue(followageState);
   return React.useCallback(
-    (user: string, address: string) => {
-      const userFollowage = followage[user] ?? [];
-      const followedUser = userFollowage.find(
-        f => f.address === address && f.status !== DataStatus.DELETED_LOCALLY,
-      );
-      return followedUser !== undefined;
+    (user: string, counterparty: string) => {
+      const userFollowage = followage[user];
+      return userFollowage.has({ address: counterparty });
     },
     [followage],
   );
@@ -48,8 +58,9 @@ export const useGetFollowageDifference = () => {
   const followage = useRecoilValue(followageState);
   return React.useCallback(
     (user: string) => {
-      const userFollowage = followage[user] ?? [];
+      const userFollowage = followage[user];
       return userFollowage
+        .readAll()
         .map(followedUser => {
           switch (followedUser.status) {
             case DataStatus.CREATED_LOCALLY:
@@ -75,21 +86,14 @@ export const useSetFollowedUserStatus = () => {
     (user: string, counterparty: string, status: DataStatus) => {
       setFollowage(currentFollowage => {
         // Update the status of existing followed user
-        const existingFollowage = currentFollowage[user] ?? [];
-        const updateFollowage = existingFollowage.map(followedUser =>
-          followedUser.address === counterparty
-            ? ({
-                address: followedUser.address,
-                status,
-              } as FollowedUser)
-            : followedUser,
-        );
+        const existingFollowage = currentFollowage[user];
+        existingFollowage.updateStatus({ address: counterparty }, status);
 
         // Store the new values
-        const newFollowage: Record<string, FollowedUser[]> = {
+        const newFollowage: Record<string, FollowedUserCache> = {
           ...currentFollowage,
         };
-        newFollowage[user] = updateFollowage;
+        newFollowage[user] = existingFollowage;
         return newFollowage;
       });
     },
@@ -103,16 +107,13 @@ export const useSetFollowedUserStatus = () => {
 export const useAddFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
-    (user: string, address: string) => {
+    (user: string, counterparty: string) => {
       setFollowage(currentFollowage => {
         // Add the new followed user
-        const existingFollowage = currentFollowage[user] ?? [];
-        existingFollowage.push({
-          address,
-          status: DataStatus.CREATED_LOCALLY,
-        } as FollowedUser);
+        const existingFollowage = currentFollowage[user];
+        existingFollowage.add({ address: counterparty });
 
-        const newFollowage: Record<string, FollowedUser[]> = {
+        const newFollowage: Record<string, FollowedUserCache> = {
           ...currentFollowage,
         };
         newFollowage[user] = existingFollowage;
@@ -129,16 +130,16 @@ export const useAddFollowedUser = () => {
 export const useRemoveFollowedUser = () => {
   const setFollowage = useSetRecoilState(followageState);
   return React.useCallback(
-    (user: string, address: string) => {
+    (user: string, counterparty: string) => {
       setFollowage(currentFollowage => {
         // Add the new followed user
-        const existingFollowage = currentFollowage[user] ?? [];
-        const filteredFollowage = existingFollowage.filter(f => f.address !== address);
+        const existingFollowage = currentFollowage[user];
+        existingFollowage.remove({ address: counterparty });
 
-        const newFollowage: Record<string, FollowedUser[]> = {
+        const newFollowage: Record<string, FollowedUserCache> = {
           ...currentFollowage,
         };
-        newFollowage[user] = filteredFollowage;
+        newFollowage[user] = existingFollowage;
         return newFollowage;
       });
     },

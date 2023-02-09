@@ -1,20 +1,30 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DataStatus, PostReaction } from 'types/desmos';
-import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
+import { PostReaction } from 'types/desmos';
+import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 import { Post } from 'types/posts';
+import Cache, { DataStatus } from 'types/cache';
+import { cacheToMMKV, mmkvValueToCache } from '@recoil/utils';
+
+type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
+
+type ReactionsCache = Cache<PostReaction, ComparableReaction>;
+
+const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction): boolean => {
+  return first.subspaceId === second.subspaceId && first.postId === second.postId;
+};
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
  * Each list of reaction is associated to the address of the user that has added them.
  */
-const reactionsState = atom<Record<string, PostReaction[]>>({
+const reactionsState = atom<Record<string, ReactionsCache>>({
   key: 'reactionsState',
-  default: getMMKV(MMKVKEYS.POST_REACTIONS) || {},
+  default: mmkvValueToCache(MMKVKEYS.POST_REACTIONS, areReactionsEqual),
   effects: [
     ({ onSet }) => {
       onSet(reactions => {
-        setMMKV(MMKVKEYS.POST_REACTIONS, reactions);
+        setMMKV(MMKVKEYS.POST_REACTIONS, cacheToMMKV(reactions));
       });
     },
   ],
@@ -28,13 +38,7 @@ export const useHasPostReaction = () => {
   return React.useCallback(
     (user: string, post: Post) => {
       const userReactions = reactions[user] ?? [];
-      const postReaction = userReactions.find(
-        r =>
-          r.subspaceId === post.subspaceId &&
-          r.postId === post.id &&
-          r.status !== DataStatus.DELETED_LOCALLY,
-      );
-      return postReaction !== undefined;
+      return userReactions.has({ subspaceId: post.subspaceId, postId: post.id });
     },
     [reactions],
   );
@@ -50,21 +54,13 @@ export const useSetPostReactionStatus = () => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions[user] ?? [];
-        const updatedReactions = existingReactions.map(reaction =>
-          reaction.subspaceId === post.subspaceId && reaction.postId === post.id
-            ? ({
-                ...reaction,
-                status,
-                editedDate: new Date(Date.now()),
-              } as PostReaction)
-            : reaction,
-        );
+        existingReactions.updateStatus({ subspaceId: post.subspaceId, postId: post.id }, status);
 
         // Store the new values
-        const newReactions: Record<string, PostReaction[]> = {
+        const newReactions: Record<string, ReactionsCache> = {
           ...currentReactions,
         };
-        newReactions[user] = updatedReactions;
+        newReactions[user] = existingReactions;
         return newReactions;
       });
     },
@@ -83,14 +79,12 @@ export const useAddPostReaction = () => {
       setReactions(currentReactions => {
         // Add the reaction to the existing ones
         const existingReactions = currentReactions[user] ?? [];
-        existingReactions.push({
+        existingReactions.add({
           subspaceId: post.subspaceId,
           postId: post.id,
-          status: DataStatus.CREATED_LOCALLY,
-          editedDate: new Date(Date.now()),
         } as PostReaction);
 
-        const newReactions: Record<string, PostReaction[]> = {
+        const newReactions: Record<string, ReactionsCache> = {
           ...currentReactions,
         };
         newReactions[user] = existingReactions;
@@ -113,15 +107,13 @@ export const useRemovePostReaction = () => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions[user] ?? [];
-        const filteredReactions = existingReactions.filter(
-          reaction => reaction.subspaceId !== post.subspaceId || reaction.postId !== post.id,
-        );
+        existingReactions.remove({ subspaceId: post.subspaceId, postId: post.id });
 
         // Store the new values
-        const newReactions: Record<string, PostReaction[]> = {
+        const newReactions: Record<string, ReactionsCache> = {
           ...currentReactions,
         };
-        newReactions[user] = filteredReactions;
+        newReactions[user] = existingReactions;
         return newReactions;
       });
     },

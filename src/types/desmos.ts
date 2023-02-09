@@ -1,5 +1,6 @@
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 import { Asset } from 'react-native-image-picker';
+import { CacheableObject } from 'types/cache';
 
 /**
  * Represents a reaction that is registered on the subspace and can be used.
@@ -167,44 +168,16 @@ export interface ApplicationLink {
   readonly creationTime: Date;
 }
 
-/**
- * Represents the different status that the data can have within the application.
- */
-export enum DataStatus {
-  /**
-   * The data is synced with the chain.
-   */
-  SYNCED = 'SYNCED',
-  /**
-   * The data has been created only locally, but has yet to be synced with the chain.
-   */
-  CREATED_LOCALLY = 'CREATED_LOCALLY',
-  /**
-   * The data has been deleted only locally, but has yet to be synced with the chain.
-   */
-  DELETED_LOCALLY = 'DELETED_LOCALLY',
-}
-
-export interface FollowedUser {
+export interface FollowedUser extends CacheableObject {
   /**
    * Address of the followed user.
    */
   readonly address: string;
-  /**
-   * Identifies the status of this relationship user.
-   */
-  readonly status: DataStatus;
-  /**
-   * Date in which the relationship was lastly edited.
-   * This is used in order to merge relationships from the server and stored locally,
-   * to avoid having the local storage going too much off-sync with the server.
-   */
-  readonly editedDate: Date;
 }
 
 export type PostID = number;
 
-export interface PostReaction {
+export interface PostReaction extends CacheableObject {
   /**
    * ID of the subspace of the post related to this reaction.
    */
@@ -213,19 +186,9 @@ export interface PostReaction {
    * ID of the post related to this reaction.
    */
   readonly postId: PostID;
-  /**
-   * Identifies the status of this reaction.
-   */
-  readonly status: DataStatus;
-  /**
-   * Date in which the reaction was lastly edited.
-   * This is used in order to merge reactions from the server and stored locally,
-   * to avoid having the local storage going too much off-sync with the server.
-   */
-  readonly editedDate: Date;
 }
 
-export interface PostTip {
+export interface PostTip extends CacheableObject {
   /**
    * ID of the subspace of the post related to this tip.
    */
@@ -234,14 +197,4 @@ export interface PostTip {
    * ID of the post related to this tip.
    */
   readonly postId: PostID;
-  /**
-   * Identifies the status of this tip.
-   */
-  readonly status: DataStatus;
-  /**
-   * Date in which the tip was lastly edited.
-   * This is used in order to merge tips from the server and stored locally,
-   * to avoid having the local storage going too much off-sync with the server.
-   */
-  readonly editedDate: Date;
 }

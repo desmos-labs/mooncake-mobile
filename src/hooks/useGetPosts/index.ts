@@ -9,11 +9,6 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { useAppStateValue } from '@recoil/appState';
 import { mergePosts } from 'lib/PostsUtils';
 
-/**
- * Increase this to get more posts per query.
- */
-const POSTS_PER_FETCH = 10;
-
 export enum PostsQueryType {
   TIMELINE,
   DISCOVERY,
@@ -56,10 +51,11 @@ const getQueryParams = (
 };
 
 /**
- * Gets the query that should be used in order to get the posts
- * based on the given {@param params}.
+ * Gets the query that should be used in order to get the posts from the server.
+ * @param params {PostsQueryParams} - Parameters to be used for the posts query.
+ * @param postsPerPage {number} - Number of posts that should be fetched per each page.
  */
-const useQueryData = (params: PostsQueryParams): QueryOptions<any> => {
+const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
   const subspaceId = useAppStateValue('subspaceId');
   switch (params.type) {
     case PostsQueryType.DISCOVERY:
@@ -67,7 +63,7 @@ const useQueryData = (params: PostsQueryParams): QueryOptions<any> => {
         query: GetPosts,
         variables: {
           offset: 0,
-          limit: POSTS_PER_FETCH,
+          limit: postsPerPage,
           subspaceID: subspaceId,
           user: params.user,
           reaction: {
@@ -82,7 +78,7 @@ const useQueryData = (params: PostsQueryParams): QueryOptions<any> => {
         query: GetPostsFromFollowing,
         variables: {
           offset: 0,
-          limit: POSTS_PER_FETCH,
+          limit: postsPerPage,
           subspaceID: subspaceId,
           following: Array.from(params.followedUsers),
           user: params.user,
