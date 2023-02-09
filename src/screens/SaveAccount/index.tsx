@@ -15,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
+import { useSetActiveAccountAddress } from '@recoil/accounts';
 import useSaveAccount from './hooks';
 import useStyles from './useStyles';
 
@@ -48,6 +49,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
   const styles = useStyles();
   const theme = useTheme();
   const { saveAccount, savingAccount } = useSaveAccount();
+  const setActiveAccount = useSetActiveAccountAddress();
 
   // Hook to prevent the user to go back, just allow it in debug if we need
   // to go back.
@@ -64,6 +66,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
   React.useEffect(() => {
     (async () => {
       await saveAccount({ account, wallet }, password);
+      setActiveAccount(account.address);
     })();
 
     // Disable the lint warning on the next line as we want this effect to be
