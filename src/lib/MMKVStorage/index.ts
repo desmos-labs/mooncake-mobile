@@ -1,5 +1,6 @@
 import { MMKV, useMMKVObject } from 'react-native-mmkv';
 import EnvConfig from 'config/EnvConfig';
+import { deserializeObject, serializeObject } from './encoding';
 
 export enum MMKVKEYS {
   // Application data
@@ -41,7 +42,7 @@ export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
 
   if (!mmkvValue) return undefined;
   try {
-    return JSON.parse(mmkvValue);
+    return deserializeObject(mmkvValue);
   } catch (err: any) {
     console.log(err);
     throw new Error(err.message);
@@ -51,7 +52,7 @@ export const getMMKV = <T>(key: MMKVKEYS): T | undefined => {
 /**
  * Stringifies a value and writes it to a given MMKV key
  */
-export const setMMKV = (key: MMKVKEYS, value: any) => MMKVStorage.set(key, JSON.stringify(value));
+export const setMMKV = (key: MMKVKEYS, value: any) => MMKVStorage.set(key, serializeObject(value));
 
 /**
  * Clear the whole MMKV storage
