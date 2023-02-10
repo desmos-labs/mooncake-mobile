@@ -1,5 +1,8 @@
 import {device} from 'detox';
-import {DETOX_DEV_MNEMONIC} from '../__mocks__/E2EVariableMocks';
+import {
+  DETOX_DEV_ACCOUNT_NICKNAME,
+  DETOX_DEV_MNEMONIC,
+} from '../__mocks__/E2EVariableMocks';
 import {
   navigateThroughOnboarding,
   navigateToPost,
@@ -19,7 +22,7 @@ describe('Post navigation flow', () => {
     // Password
     await selectAndConfirmPassword();
     // Select profile
-    await selectProfile();
+    await selectProfile(DETOX_DEV_ACCOUNT_NICKNAME);
   });
 
   it('Navigate to a post with index 0', async () => {

@@ -1,5 +1,16 @@
 import {by, element, expect} from 'detox';
-import {DETOX_DEV_ACCOUNT_NICKNAME} from './__mocks__/E2EVariableMocks';
+
+/**
+ * Utility function to add a delay between actions
+ * @param ms time to wait in milliseconds
+ */
+const delay = (ms: number) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
+  });
+};
 
 /**
  * Utility function to test the onboarding screens
@@ -58,10 +69,10 @@ export const selectAndConfirmPassword = async () => {
 /**
  * Utility function to select a profile inside the import flow
  */
-export const selectProfile = async () => {
+export const selectProfile = async (profileNickname: string) => {
   await expect(element(by.text('Select a Profile'))).toBeVisible();
-  await expect(element(by.text(DETOX_DEV_ACCOUNT_NICKNAME))).toBeVisible();
-  await element(by.text(DETOX_DEV_ACCOUNT_NICKNAME)).tap();
+  await expect(element(by.text(profileNickname))).toBeVisible();
+  await element(by.text(profileNickname)).tap();
   // Expect to be inside the homescreen
   await expect(element(by.id('homeView'))).toBeVisible();
 };

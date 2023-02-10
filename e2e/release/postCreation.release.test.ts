@@ -1,5 +1,8 @@
 import {by, device, element, expect} from 'detox';
-import {DETOX_DEV_MNEMONIC} from '../__mocks__/E2EVariableMocks';
+import {
+  DETOX_DEV_ACCOUNT_NICKNAME,
+  DETOX_DEV_MNEMONIC,
+} from '../__mocks__/E2EVariableMocks';
 import {
   createTextPost,
   navigateThroughOnboarding,
@@ -19,7 +22,7 @@ describe('Post creation flow', () => {
     // Password
     await selectAndConfirmPassword();
     // Select profile
-    await selectProfile();
+    await selectProfile(DETOX_DEV_ACCOUNT_NICKNAME);
     // Expect to be inside the homescreen
     await expect(element(by.id('homeView'))).toBeVisible();
   });
