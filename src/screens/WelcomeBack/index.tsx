@@ -10,10 +10,13 @@ import { Image, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
+/**
+ * Screen that is shown to the user when they come back to the application.
+ * @constructor
+ */
 const WelcomeBack = () => {
   const theme = useTheme();
   const { t } = useTranslation('welcomeBack');
-
   const styles = useStyles();
 
   const [password, setPassword] = React.useState('');

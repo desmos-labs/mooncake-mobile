@@ -31,7 +31,8 @@ import SelectLedgerApp from 'screens/SelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
-import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
+import { UnlockWalletParams } from 'screens/UnlockWallet';
+import WelcomeBack from 'screens/WelcomeBack';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -65,7 +66,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
   // [ROUTES.BROADCAST_TX]: BroadcastTxParams;
-  // [ROUTES.WELCOME_BACK]: undefined;
+  [ROUTES.WELCOME_BACK]: undefined;
   [ROUTES.SELECT_LEDGER_APP]: undefined;
   // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
   // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
@@ -215,7 +216,7 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
 
-      {/* <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} /> */}
+      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
       <Stack.Screen name={ROUTES.SELECT_ACCOUNT} component={SelectAccount} />
 
