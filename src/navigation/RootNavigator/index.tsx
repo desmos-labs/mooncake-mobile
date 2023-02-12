@@ -45,7 +45,7 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   [ROUTES.SIGNUP]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
-  [ROUTES.SAVE_ACCOUNT]: SaveAccountParams;
+  [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -59,7 +59,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MNEMONIC_INPUT]: undefined;
   // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
-  [ROUTES.SELECT_ACCOUNT]: SelectAccountParamList;
+  [ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT]: SelectAccountParamList;
   // [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
@@ -217,7 +217,7 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
-      <Stack.Screen name={ROUTES.SELECT_ACCOUNT} component={SelectAccount} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT} component={SelectAccount} />
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
@@ -238,7 +238,7 @@ const RootNavigator = () => {
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.SAVE_ACCOUNT} component={SaveAccount} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
       <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
       <Stack.Screen name={ROUTES.MNEMONIC_INPUT} component={MnemonicInput} />
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />

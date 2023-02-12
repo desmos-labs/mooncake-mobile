@@ -19,13 +19,20 @@ import { ScanErrorType, useBleScan, useRequestEnableBt } from './useHooks';
 
 export type NavProps = StackScreenProps<ConnectToLedgerStackParamList, ROUTES.PERFORM_LEDGER_SCAN>;
 
-const PerformLedgerScan: React.FC<NavProps> = ({ route }) => {
-  const { ledgerApp, onConnect, onCancel } = route.params;
+/**
+ * Screen that performs a bluetooth scan in order to find a Ledger device.
+ */
+const PerformLedgerScan = (props: NavProps) => {
   const styles = useStyles();
   const { t } = useTranslation('ledgerScan');
-  const { scan, scanning, devices, scanError } = useBleScan();
+
+  const { route } = props;
+  const { ledgerApp, onConnect, onCancel } = route.params;
+
   const [authorized, setAuthorized] = useState(false);
   const [doFirstScan, setDoFirstScan] = useState(true);
+
+  const { scan, scanning, devices, scanError } = useBleScan();
   const requestEnableBt = useRequestEnableBt();
   const { checkPermission: checkBtPermissions, requestPermission: requestBluetoothPermissions } =
     usePermissions(AppPermissions.Bluetooth);

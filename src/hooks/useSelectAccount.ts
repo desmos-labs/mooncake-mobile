@@ -17,7 +17,7 @@ const useSelectAccount = () => {
   return useCallback(
     (accountPickerParams: AccountPickerParams, callbacks: ResultCallbacks): void =>
       navigator.navigate({
-        name: ROUTES.SELECT_ACCOUNT,
+        name: ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT,
         params: {
           accountPickerParams,
           onSelect: callbacks.onSuccess,

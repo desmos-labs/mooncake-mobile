@@ -34,7 +34,10 @@ export interface SaveAccountParams {
   password: string;
 }
 
-declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SAVE_ACCOUNT>;
+declare type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT
+>;
 
 /**
  * Screen that allows the user to save an account inside the device local storage.

@@ -17,9 +17,12 @@ export interface SelectAccountParamList {
   onCancel?: () => any;
 }
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_ACCOUNT>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT>;
 
-const SelectDtag = ({ route: { params }, navigation }: NavProps) => {
+/**
+ * Screen that allows the user select an account to import.
+ */
+const SelectAccount = ({ route: { params }, navigation }: NavProps) => {
   const { accountPickerParams, onSelect, onCancel } = params;
   const { t } = useTranslation('selectDtag');
 
@@ -44,4 +47,4 @@ const SelectDtag = ({ route: { params }, navigation }: NavProps) => {
   );
 };
 
-export default SelectDtag;
+export default SelectAccount;

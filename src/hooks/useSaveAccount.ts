@@ -28,7 +28,7 @@ const useSaveAccount = () => {
           account,
         });
       } else {
-        navigation.navigate(ROUTES.SAVE_ACCOUNT, {
+        navigation.navigate(ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT, {
           account: account.account,
           wallet: account.wallet,
           password,

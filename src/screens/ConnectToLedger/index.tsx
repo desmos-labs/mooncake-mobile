@@ -24,10 +24,14 @@ export interface ConnectToLedgerParams {
 
 export type Props = StackScreenProps<ConnectToLedgerStackParamList, ROUTES.CONNECT_TO_LEDGER>;
 
-const ConnectToLedger: React.FC<Props> = ({ navigation, route }) => {
+/**
+ * Screen that performs a Bluetooth scan in order to find a Ledger device.
+ */
+const ConnectToLedger = (props: Props) => {
   const { t } = useTranslation('connectToLedger');
   const styles = useStyles();
 
+  const { navigation, route } = props;
   const { bleLedger, ledgerApp, onConnect } = route.params;
   const { connecting, connected, connectionError, transport, retry } = useConnectToLedger(
     bleLedger,

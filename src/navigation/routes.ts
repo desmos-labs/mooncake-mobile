@@ -1,16 +1,129 @@
 enum ROUTES {
-  // Root Navigator start
+  // -------------------------------------------------------------------------------------
+  // --- INITIAL SCREENS
+  // -------------------------------------------------------------------------------------
+
   LANDING = 'LANDING',
-
   LOGIN = 'LOGIN',
-
   SIGNUP = 'SIGNUP',
-  /**
-   * Route that let the user select how an account should be imported.
-   */
-  IMPORT_ACCOUNT_SELECT_MODE = 'IMPORT_ACCOUNT_SELECT_MODE',
 
-  SAVE_ACCOUNT = 'SAVE_ACCOUNT',
+  // -------------------------------------------------------------------------------------
+  // --- ACCOUNTS SCREENS
+  // -------------------------------------------------------------------------------------
+
+  // Import account
+  IMPORT_ACCOUNT_SELECT_MODE = 'IMPORT_ACCOUNT_SELECT_MODE',
+  IMPORT_ACCOUNT_SELECT_ACCOUNT = 'IMPORT_ACCOUNT_SELECT_ACCOUNT',
+  IMPORT_ACCOUNT_SAVE_ACCOUNT = 'IMPORT_ACCOUNT_SAVE_ACCOUNT',
+
+  // -------------------------------------------------------------------------------------
+  // --- HOME SCREENS
+  // -------------------------------------------------------------------------------------
+
+  // Bottom tabs
+  BOTTOM_TABS = 'BOTTOM_TABS',
+  CREATE_BUTTON = 'CREATE_BUTTON',
+  USER_PROFILE = 'USER_PROFILE',
+  COMMUNITIES = 'COMMUNITIES',
+  ACTIVITIES = 'ACTIVITIES',
+
+  // Home pages
+  HOME_TABS = 'HOME_TABS',
+  HOME_DISCOVER = 'HOME_DISCOVER',
+  HOME_FOLLOWING = 'HOME_FOLLOWING',
+
+  // -------------------------------------------------------------------------------------
+  // --- POST SCREENS
+  // -------------------------------------------------------------------------------------
+
+  CREATE_POST = 'CREATE_POST',
+  POST_DETAILS = 'POST_DETAILS',
+  REPORT_POST = 'REPORT_POST',
+
+  // Post interactions
+  POST_INTERACTION = 'POST_INTERACTION',
+  POST_REACTIONS = 'POST_REACTIONS',
+  POST_TIPS = 'POST_TIPS',
+
+  // -------------------------------------------------------------------------------------
+  // --- SETTINGS SCREENS
+  // -------------------------------------------------------------------------------------
+
+  SETTINGS = 'SETTINGS',
+  SETTINGS_PROFILES = 'SETTINGS_PROFILES',
+  SETTINGS_COMMUNITY = 'SETTINGS_COMMUNITY',
+  SETTINGS_REVEAL_SECRET_PHRASE = 'SETTINGS_REVEAL_SECRET_PHRASE',
+  SETTINGS_SHOW_SECRET_PHRASE = 'SETTINGS_SHOW_SECRET_PHRASE',
+  UNLOCK_WALLET = 'UNLOCK_WALLET',
+
+  // -------------------------------------------------------------------------------------
+  // --- AUTHORIZE WALLET SCREENS
+  // -------------------------------------------------------------------------------------
+
+  AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
+  AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
+  AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
+  AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
+
+  // -------------------------------------------------------------------------------------
+  // --- CONNECT TO LEDGER SCREENS
+  // -------------------------------------------------------------------------------------
+
+  CONNECT_TO_LEDGER_STACK = 'CONNECT_TO_LEDGER_STACK',
+  PERFORM_LEDGER_SCAN = 'PERFORM_LEDGER_SCAN',
+  CONNECT_TO_LEDGER = 'CONNECT_TO_LEDGER',
+
+  // -------------------------------------------------------------------------------------
+  // --- CHAIN LINKS SCREEN
+  // -------------------------------------------------------------------------------------
+
+  // Connect chain
+  CONNECT_ADDRESS_GENERAL = 'CONNECT_ADDRESS_GENERAL',
+  CONNECT_ADDRESS_ADVANCED = 'CONNECT_ADDRESS_ADVANCED',
+  CONNECT_CHAIN_METHOD = 'CONNECT_CHAIN_METHOD',
+  CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
+
+  // Disconnect chain
+  DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
+  DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
+
+  // -------------------------------------------------------------------------------------
+  // --- PROFILE SCREEN
+  // -------------------------------------------------------------------------------------
+
+  // Profile addition
+  ADD_PROFILE = 'ADD_PROFILE',
+  ADD_PROFILE_SELECT_ADDRESS_GENERAL = 'ADD_PROFILE_SELECT_ADDRESS_GENERAL',
+  ADD_PROFILE_SELECT_ADDRESS_ADVANCED = 'ADD_PROFILE_SELECT_ADDRESS_ADVANCED',
+  ADD_PROFILE_MODAL = 'ADD_PROFILE_MODAL',
+
+  // Profile creation/saving
+  SAVE_PROFILE = 'SAVE_PROFILE',
+
+  // Profile posts
+  PROFILE_POSTS = 'PROFILE_POSTS',
+  PROFILE_POSTS_POSTS = 'PROFILE_POSTS_POSTS',
+  PROFILE_POSTS_LIKED = 'PROFILE_POSTS_LIKED',
+  PROFILE_POSTS_TIPPED = 'PROFILE_POSTS_TIPPED',
+
+  // Profile followage
+  FOLLOWING_AND_FOLLOWERS = 'FOLLOWING_AND_FOLLOWERS',
+  FOLLOWING = 'FOLLOWING',
+  FOLLOWERS = 'FOLLOWERS',
+
+  // -------------------------------------------------------------------------------------
+  // --- APPLICATION LINKS SCREEN
+  // -------------------------------------------------------------------------------------
+
+  CONNECT_APP = 'CONNECT_APP',
+
+  // Twitter connection
+  SELECT_TWEET = 'SELECT_TWEET',
+
+  // -------------------------------------------------------------------------------------
+  // --- OTHER SCREENS
+  // --- TODO: Categorize them as well
+  // -------------------------------------------------------------------------------------
 
   BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
 
@@ -24,39 +137,7 @@ enum ROUTES {
 
   TEXTONLY_MODAL = 'TEXTONLY_MODAL',
 
-  SETTINGS = 'SETTINGS',
-
-  SETTINGS_PROFILES = 'SETTINGS_PROFILES',
-
-  SETTINGS_COMMUNITY = 'SETTINGS_COMMUNITY',
-
-  SETTINGS_REVEAL_SECRET_PHRASE = 'SETTINGS_REVEAL_SECRET_PHRASE',
-
-  SETTINGS_SHOW_SECRET_PHRASE = 'SETTINGS_SHOW_SECRET_PHRASE',
-
-  LOOKING_FOR_DEVICES = 'LOOKING_FOR_DEVICES',
-
-  UNLOCK_WALLET = 'UNLOCK_WALLET',
-  /**
-   * Navigate to the stack that allow the user to connect to a ledger device.
-   */
-  CONNECT_TO_LEDGER_STACK = 'CONNECT_TO_LEDGER_STACK',
-  /**
-   * Screen that performs a bluetooth scan in order to find a Ledger device.
-   */
-  PERFORM_LEDGER_SCAN = 'PERFORM_LEDGER_SCAN',
-  /**
-   * Screen that performs a bluetooth scan in order to find a Ledger device.
-   */
-  CONNECT_TO_LEDGER = 'CONNECT_TO_LEDGER',
-
-  GUEST_PROFILE = 'GUEST_PROFILE',
-
   MNEMONIC_INPUT = 'MNEMONIC_INPUT',
-  /**
-   * Screen that let the user select an account to import.
-   */
-  SELECT_ACCOUNT = 'SELECT_ACCOUNT',
 
   CHECK_MNEMONIC = 'CHECK_MNEMONIC',
 
@@ -67,8 +148,6 @@ enum ROUTES {
   CONSENT_AGREEMENT = 'CONSENT_AGREEMENT',
 
   SEND_TIPS = 'SEND_TIPS',
-
-  REPORT_POST = 'REPORT_POST',
 
   BOTTOM_MODAL = 'BOTTOM_MODAL',
 
@@ -86,45 +165,13 @@ enum ROUTES {
 
   SELECT_LEDGER_APP = 'SELECT_LEDGER_APP',
 
-  // Connect chain
-  CONNECT_ADDRESS_GENERAL = 'CONNECT_ADDRESS_GENERAL',
-  CONNECT_ADDRESS_ADVANCED = 'CONNECT_ADDRESS_ADVANCED',
-  CONNECT_CHAIN_METHOD = 'CONNECT_CHAIN_METHOD',
-  CONNECT_CHAIN_TX_DETAIL = 'CONNECT_CHAIN_TX_DETAIL',
-
-  // Disconnect chain
-  DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
-  DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
-
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
-
-  // Post creation
-  CREATE_POST = 'CREATE_POST',
 
   PROFILE_NFTS = 'PROFILE_NFTS',
 
   NFT_DETAILS = 'NFT_DETAILS',
 
-  SAVE_PROFILE = 'SAVE_PROFILE',
-
-  // Post details
-  POST_DETAILS = 'POST_DETAILS',
-
-  // Profile posts
-  PROFILE_POSTS = 'PROFILE_POSTS',
-  PROFILE_POSTS_POSTS = 'PROFILE_POSTS_POSTS',
-  PROFILE_POSTS_LIKED = 'PROFILE_POSTS_LIKED',
-  PROFILE_POSTS_TIPPED = 'PROFILE_POSTS_TIPPED',
-
-  // Profile addition
-  ADD_PROFILE = 'ADD_PROFILE',
-  ADD_PROFILE_SELECT_ADDRESS_GENERAL = 'ADD_PROFILE_SELECT_ADDRESS_GENERAL',
-  ADD_PROFILE_SELECT_ADDRESS_ADVANCED = 'ADD_PROFILE_SELECT_ADDRESS_ADVANCED',
-  ADD_PROFILE_MODAL = 'ADD_PROFILE_MODAL',
-
-  // Twitter connection
-  CONNECT_APP = 'CONNECT_APP',
-  SELECT_TWEET = 'SELECT_TWEET',
+  GUEST_PROFILE = 'GUEST_PROFILE',
 
   // Grants
   GRANTS = 'GRANTS',
@@ -146,34 +193,6 @@ enum ROUTES {
   CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
 
   OPERATIONS = 'OPERATIONS',
-
-  // Authorize wallet stack
-  AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
-  AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
-  AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
-  AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
-
-  // Post interaction
-  POST_INTERACTION = 'POST_INTERACTION',
-  POST_REACTIONS = 'POST_REACTIONS',
-  POST_TIPS = 'POST_TIPS',
-
-  // Followage
-  FOLLOWING_AND_FOLLOWERS = 'FOLLOWING_AND_FOLLOWERS',
-  FOLLOWING = 'FOLLOWING',
-  FOLLOWERS = 'FOLLOWERS',
-
-  // Bottom tabs
-  BOTTOM_TABS = 'BOTTOM_TABS',
-  CREATE_BUTTON = 'CREATE_BUTTON',
-  USER_PROFILE = 'USER_PROFILE',
-  COMMUNITIES = 'COMMUNITIES',
-  ACTIVITIES = 'ACTIVITIES',
-
-  // Home pages
-  HOME_TABS = 'HOME_TABS',
-  HOME_DISCOVER = 'HOME_DISCOVER',
-  HOME_FOLLOWING = 'HOME_FOLLOWING',
 }
 
 export default ROUTES;

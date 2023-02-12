@@ -98,7 +98,7 @@ const useHooks = () => {
         }
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && account) {
-        navigate(ROUTES.SAVE_ACCOUNT, {
+        navigate(ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT, {
           password: formValues.newPassword,
           account: account.account,
           wallet: account.wallet,

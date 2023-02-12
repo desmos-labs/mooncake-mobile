@@ -15,8 +15,13 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_MODE>;
 
-const ImportAccountSelectMode = ({ navigation }: NavProps) => {
+/**
+ * Screen that allows the user select how an account should be imported.
+ */
+const ImportAccountSelectMode = (props: NavProps) => {
   const styles = useStyles();
+  const { navigation } = props;
+
   const setImportAccountState = useSetImportAccountState();
   const importAccountState = useImportAccountState()!;
 
