@@ -109,7 +109,6 @@ enum ROUTES {
 
   // Post details
   POST_DETAILS = 'POST_DETAILS',
-  COMMENT_REPLIES = 'COMMENT_REPLIES',
 
   // Profile posts
   PROFILE_POSTS = 'PROFILE_POSTS',

@@ -38,7 +38,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
-import { isPostPending, Post } from 'types/posts';
+import { isCommentReply, isPostPending, Post } from 'types/posts';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
 import useGetPost from 'hooks/useGetPost';
@@ -53,6 +53,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
+import TopBar from 'components/TopBar';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
@@ -304,6 +305,22 @@ const PostDetails = () => {
 
   // TODO: Move this in a custom component
   const CustomTopBar = React.useMemo(() => {
+    if (isCommentReply(post)) {
+      return (
+        <TopBar
+          style={styles.topBar}
+          centerElement={
+            <View style={styles.rightContainer}>
+              <Typography.Subtitle3 numberOfLines={1}>
+                {commentsCount} {t('replies')}
+              </Typography.Subtitle3>
+            </View>
+          }
+        />
+      );
+    }
+
+    // Custom top bar for comments
     return (
       <View style={styles.customTopBarContainer}>
         <View style={styles.customTopBarInnerContainer}>
@@ -350,18 +367,21 @@ const PostDetails = () => {
       </View>
     );
   }, [
+    post,
     styles.customTopBarContainer,
     styles.customTopBarInnerContainer,
     styles.rightContainer,
     styles.middleTextContainer,
     styles.followIcon,
     styles.moreIcon,
+    styles.topBar,
     goBack,
     theme.spacing.m,
-    post.author,
     formattedDate,
     activeAddress,
     isFollowingAddress,
+    commentsCount,
+    t,
     handleNavigateToProfile,
     handlePressFollowOrUnfollow,
     top,
@@ -378,7 +398,7 @@ const PostDetails = () => {
 
       // Refresh the data
       refreshPage();
-    }, []),
+    }, [post, refreshPage]),
   );
 
   // -------------------------------------------------------------------------------------
@@ -393,7 +413,6 @@ const PostDetails = () => {
       style={styles.root}
       topBar={CustomTopBar}>
       {/* List of comments */}
-      {/* TODO: Implement onReachEnd to fetch more comments here */}
       <FlashList
         estimatedItemSize={160}
         ref={scrollViewRef}
@@ -408,6 +427,7 @@ const PostDetails = () => {
         data={comments}
         ListEmptyComponent={ListEmptyComponent}
         keyboardDismissMode="on-drag"
+        onEndReached={fetchMoreComments}
       />
 
       {/* Bottom bar allowing to create a new comment */}

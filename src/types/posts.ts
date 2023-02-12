@@ -82,16 +82,33 @@ export interface PostReference {
   readonly type: PostReferenceType;
 }
 
+const getReplyId = (post: Post): number | undefined => {
+  return post.references.find(r => r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY)?.postId;
+};
+
+const hasReplyToPostWithId = (post: Post, id: number) => {
+  return getReplyId(post) === id;
+};
+
+/**
+ * Tells whether the given {@param post} is a comment or not.
+ */
+export const isComment = (post: Post): boolean => {
+  return post.conversationId !== 0 && hasReplyToPostWithId(post, post.conversationId);
+};
+
 /**
  * Tells whether the given {@param post} is a comment to the post with the provided {@param parentId}.
  */
 export const isCommentTo = (post: Post, parentId: number): boolean => {
-  return (
-    post.conversationId === parentId &&
-    post.references.some(
-      r => r.postId === parentId && r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY,
-    )
-  );
+  return post.conversationId === parentId && hasReplyToPostWithId(post, parentId);
+};
+
+/**
+ * Tells whether the given {@param post} is a reply to a comment.
+ */
+export const isCommentReply = (post: Post): boolean => {
+  return post.conversationId !== getReplyId(post);
 };
 
 export const isPostPending = (post: Post): boolean => {

@@ -35,6 +35,7 @@ export interface Props {
 }
 
 const CommentItem = ({
+  comment,
   disableInnerComment,
   handlePressComment,
   handlePressLike,
@@ -43,17 +44,6 @@ const CommentItem = ({
   handlePress,
   handleLongPress,
   handleProfilePicPress,
-  author,
-  reactions,
-  tips,
-  creation_date,
-  text,
-  attachments,
-  liked,
-  tipped,
-  commented,
-  repliesCounter,
-  isPending,
 }: Props) => {
   const styles = useStyles(disableInnerComment);
   const { t } = useTranslation();

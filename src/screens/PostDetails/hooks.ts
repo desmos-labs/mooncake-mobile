@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
-import { Post } from 'types/posts';
+import { isCommentReply, Post } from 'types/posts';
 import useCreatePost from 'hooks/useCreatePost';
 import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
@@ -15,7 +15,9 @@ import { Source } from 'react-native-fast-image';
  * TODO: Implement this
  */
 export const useHandlePressReportUser = () => {
-  return React.useCallback((user: DesmosProfile) => {}, []);
+  return React.useCallback((user: DesmosProfile) => {
+    console.log('useHandlePressReportUser', user);
+  }, []);
 };
 
 /**
@@ -38,7 +40,13 @@ export const useHandlePressShowCommentDetails = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (comment: Post) => {
-      navigate(ROUTES.COMMENT_REPLIES, { comment });
+      if (isCommentReply(comment)) {
+        // If the post is a reply to a comment, do nothing
+        return;
+      }
+
+      // If the post is a comment to a post, navigate to its details
+      navigate(ROUTES.POST_DETAILS, { post: comment });
     },
     [navigate],
   );

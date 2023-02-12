@@ -82,7 +82,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.CREATE_POST]: CreatePostParams;
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
-  // [ROUTES.COMMENT_REPLIES]: CommentRepliesParams;
   [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
   [ROUTES.MANAGE_BIOMETRICS]: undefined;
 
@@ -246,14 +245,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    commentId: 1, */}
-      {/*    subspaceId: EnvConfig.APP_SUBSPACE_ID, */}
-      {/*  }} */}
-      {/*  name={ROUTES.COMMENT_REPLIES} */}
-      {/*  component={CommentReplies} */}
-      {/* /> */}
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.MANAGE_CONNECTED_APPS} */}
