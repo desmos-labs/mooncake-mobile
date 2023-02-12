@@ -1,5 +1,5 @@
 import Typography from 'components/Typography';
-import React from 'react';
+import React, { useState } from 'react';
 import DView from 'components/DView';
 import { Platform, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
@@ -11,7 +11,7 @@ import SelectedCommentImage from 'components/SelectedCommentImage';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import { useTheme } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
@@ -45,13 +45,13 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CREATE_POST>;
  * The pots is later created using {@link useCreatePost}.
  * @constructor
  */
-const CreatePost = (props: NavProps) => {
-  const { goBack } = useNavigation<NavProps['navigation']>();
+const CreatePost = () => {
   const { t } = useTranslation('postInteraction');
   const styles = useStyles();
   const theme = useTheme();
-  const { route } = props;
-  const { params } = route;
+
+  const { goBack } = useNavigation<NavProps['navigation']>();
+  const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
 
   // -------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ const CreatePost = (props: NavProps) => {
   // -------------------------------------------------------------------------------------
 
   const author = useActiveProfile();
-  const { loading, createPost } = useCreatePost(parent);
+  const createPost = useCreatePost(parent);
 
   // -------------------------------------------------------------------------------------
   // --- Post state
@@ -75,19 +75,25 @@ const CreatePost = (props: NavProps) => {
     onImageSelected: addPostAttachment,
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   // Callback used when the user wants to create the post
   const handleCreatePost = React.useCallback(async () => {
+    setLoading(true);
     const result = await createPost();
+    setLoading(false);
+
     if (result.isErr()) {
       // TODO: Show the error somewhat
       console.log('Error while creating post', result.error.message);
-    } else {
-      goBack();
+      return;
     }
+
+    goBack();
   }, [createPost, goBack]);
 
   // -------------------------------------------------------------------------------------

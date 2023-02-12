@@ -34,6 +34,7 @@ import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
 import { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomeBack from 'screens/WelcomeBack';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
+import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -76,8 +77,8 @@ export type RootNavigatorParamList = {
   // [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   // [ROUTES.SELECT_CHAIN]: undefined;
   // [ROUTES.SEND_TIPS]: SendTipsParams;
-  // [ROUTES.REPORT_POST]: ReportPostParams;
-  // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
+  [ROUTES.REPORT_POST]: ReportPostParams;
+  // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
   [ROUTES.CREATE_POST]: CreatePostParams | undefined;
@@ -371,7 +372,7 @@ const RootNavigator = () => {
       {/*    // }} */}
       {/*  /> */}
       {/*  <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} /> */}
-      {/*  <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} /> */}
+      <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.MANAGE_CONNECTIONS_MODAL} */}

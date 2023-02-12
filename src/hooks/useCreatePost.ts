@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Post } from 'types/posts';
 import { ok, Result } from 'neverthrow';
+import { SuccessfulBroadcast } from 'hooks/useBroadcastTx';
 
 /**
  * Hook that allows to create a post.
@@ -8,15 +9,10 @@ import { ok, Result } from 'neverthrow';
  * TODO: Implement this
  */
 const useCreatePost = (parent?: Post) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const createPost = React.useCallback(async (): Promise<Result<void, Error>> => {
+  return React.useCallback(async (): Promise<Result<SuccessfulBroadcast, Error>> => {
     console.log('Implement useCreatePost');
-    return ok(undefined);
+    return ok({ txHash: '' });
   }, []);
-  return {
-    loading,
-    createPost,
-  };
 };
 
 export default useCreatePost;
