@@ -6,14 +6,14 @@ import { bech32AddressToAny } from '@desmoslabs/desmjs/build/aminomessages/profi
 import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 
 export const findChainInfoByName = (chainName: string) =>
-  SupportedChains.flatMap((chain) => chain.chainInfo).find((info) => info?.chainName === chainName);
+  SupportedChains.flatMap(chain => chain.chainInfo).find(info => info?.chainName === chainName);
 
 /**
  * Finds the details regarding a linkable chain from its chain name.
  */
 export const getLinkableChainInfoByName = (chainName: string): SupportedChain | undefined => {
   const lowerCase = chainName.toLowerCase();
-  return SupportedChains.find((linkableChain) => {
+  return SupportedChains.find(linkableChain => {
     const { name } = linkableChain.chainConfig;
     // Special case to handle both crypto.org and crypto.com
     if (name === 'crypto.org') {
@@ -39,7 +39,7 @@ export const getAddress = (chain: SupportedChain, account: AccountWithWallet) =>
  * Return the supported types of wallet that can be created for a chain.
  * @param chain - The chain of interest.
  */
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getChainSupportedWalletTypes = (chain: SupportedChain): WalletType[] =>
   // Return all since at the moment all the chains support those methods.
   [WalletType.Mnemonic, WalletType.Ledger];

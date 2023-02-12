@@ -7,9 +7,9 @@ import { ok, Result } from 'neverthrow';
  * The details to create the post will be taken from the Recoil atom that is holding the createPostState.
  * TODO: Implement this
  */
-const useCreatePost = () => {
+const useCreatePost = (parent?: Post) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const createPost = React.useCallback(async (parent?: Post): Promise<Result<void, Error>> => {
+  const createPost = React.useCallback(async (): Promise<Result<void, Error>> => {
     console.log('Implement useCreatePost');
     return ok(undefined);
   }, []);

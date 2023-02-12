@@ -33,6 +33,7 @@ import ManageConnectedChains from 'screens/ManageConnectedChains';
 import PostDetails, { PostDetailsParams } from 'screens/PostDetails';
 import { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomeBack from 'screens/WelcomeBack';
+import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -79,7 +80,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
-  // [ROUTES.CREATE_POST]: CreatePostParams;
+  [ROUTES.CREATE_POST]: CreatePostParams | undefined;
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
   [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
@@ -322,7 +323,7 @@ const RootNavigator = () => {
       {/*  component={ConnectChainMethod} */}
       {/* /> */}
 
-      {/* <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} /> */}
+      <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} />
 
       {/* <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} /> */}
 

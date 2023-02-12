@@ -90,6 +90,10 @@ const hasReplyToPostWithId = (post: Post, id: number) => {
   return getReplyId(post) === id;
 };
 
+export const isRootPost = (post: Post): boolean => {
+  return post.conversationId === 0;
+};
+
 /**
  * Tells whether the given {@param post} is a comment or not.
  */

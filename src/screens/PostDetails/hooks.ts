@@ -72,11 +72,15 @@ export const useHandleExpandCommentView = () => {
  * @param post {Post} - Parent of the comment that will be created.
  */
 export const useHandleCreateComment = (post: Post) => {
-  const { createPost, loading } = useCreatePost();
+  const { createPost, loading } = useCreatePost(post);
   const handleCreateComment = React.useCallback(async () => {
-    await createPost(post);
+    const result = await createPost();
+    if (result.isErr()) {
+      // TODO: Show the error somewhat
+      console.log('Error inside useHandleCreateComment', result.error.message);
+    }
     Keyboard.dismiss();
-  }, [createPost, post]);
+  }, [createPost]);
 
   return {
     loading,

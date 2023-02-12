@@ -13,7 +13,7 @@ export interface CreatePostState {
   /**
    * Any attachment (video, image, etc) associated to the post.
    */
-  readonly attachments: UploadAssetType[] | undefined;
+  readonly attachments: UploadAssetType[];
 }
 
 /**
@@ -21,7 +21,7 @@ export interface CreatePostState {
  */
 const DefaultCreatePostState: CreatePostState = {
   text: '',
-  attachments: undefined,
+  attachments: [],
 };
 
 /**
