@@ -3,9 +3,10 @@
  */
 import { HdPath } from 'types/hdpath';
 import { Slip10RawIndex } from '@cosmjs/crypto';
-import { StdFee } from '@cosmjs/amino';
-import LinkableChains from 'config/LinkableChains';
-import _ from 'lodash';
+import { SupportedChains } from 'config/LinkableChains';
+import { convertCoin, Currency } from '@desmoslabs/desmjs';
+import { Coin } from '@cosmjs/stargate';
+import numbro from 'numbro';
 
 /**
  * Very naive way to format interactionCount into something like 5000 > 5k
@@ -39,46 +40,74 @@ export const toCosmjsHdPath = (hdPath: HdPath) => {
 };
 
 /**
- * Removes all non number characters from a string
+ * Gets the decimal separator used on the provided locale.
+ * @param locale - The locale to us, if empty use the current one.
  */
-export const removeNonNumbers = (value: string) => value.replace(/[^0-9.]/g, '');
+export const getDecimalSeparator = (locale?: string) => {
+  // Get the thousands and decimal separator characters used in the locale.
+  const [, separator] = (1.1).toLocaleString(locale);
+  return separator;
+};
 
 /**
- * Format an estimated fee from its base denoms.
- *
- * @param fee The estimated fee, preferably one of the outputs computeTxFees
+ * Parse a number using the current locale or the provided one.
+ * @param value - Value to be parsed
+ * @param locale - The locale to us, if empty use the current one.
  */
-export const formatFeeWithDenoms = (fee: StdFee) => {
-  const { amount } = fee;
+export const safeParseFloat = (value: string | undefined, locale?: string) => {
+  const separator = getDecimalSeparator(locale);
 
-  const [_fee] = amount;
-
-  const { amount: feeAmount, denom } = _fee;
-
-  // Find matching denom data based on stored ChainAsset data and the denom
-  // from fee estimation
-  const flattenedChainAssets = _.flatten(LinkableChains.map(x => x.assets));
-  const flattenedDenomUnits = _.flatten(flattenedChainAssets.map(x => x && x.denom_units));
-
-  // This relies on chains using a u-prefix for their base denoms, otherwise
-  // special handling will need to be added
-  const matchingDenoms: { denom: string; exponent: number } | undefined = flattenedDenomUnits.find(
-    x => x && x.denom === denom.replace('u', ''),
-  );
-
-  if (!matchingDenoms) {
-    throw new Error(`No matching denoms found for denom: ${denom}`);
-  }
-  const { exponent, denom: matchingDenom } = matchingDenoms;
-
-  const formattedAmount = parseFloat(feeAmount) / 10 ** exponent;
-
-  return {
-    formattedAmount,
-    denom: matchingDenom,
-    formattedString: `${formattedAmount} ${matchingDenom.toUpperCase()}`,
-  };
+  // Remove thousands separators, and put a point where the decimal separator occurs
+  const string = Array.from(value || '0', c => (c === separator ? '.' : c)).join('');
+  const parsed = parseFloat(string);
+  return Number.isNaN(parsed) ? 0 : parsed;
 };
+
+/**
+ * Safely parse the given value as an integer, returning 0 if malformed.
+ * @param value - Value to be parsed.
+ */
+export const safeParseInt = (value: string): number => {
+  const number = parseInt(value, 10);
+  if (Number.isNaN(number)) {
+    return 0;
+  }
+  return number;
+};
+
+const getChainCurrencies = (): Currency[] => {
+  return SupportedChains.flatMap(chain => chain.chainInfo || []).flatMap(info => info.currencies);
+};
+
+/**
+ * Formats the given value into a human-readable string.
+ * @param value - Value to be formatted
+ */
+export const formatNumber = (value: number): string =>
+  numbro(value).format({
+    thousandSeparated: true,
+  });
+
+/**
+ * Formats the given amount into a human-readable value.
+ * @param amount - Coin that should be formatted.
+ */
+export const formatCoin = (amount: Coin): string => {
+  const currencies = getChainCurrencies();
+  const convertedAmount = convertCoin(amount, 6, currencies) || amount;
+  const humanReadableAmount = formatNumber(safeParseFloat(convertedAmount.amount));
+  return `${humanReadableAmount} ${convertedAmount.denom.toUpperCase()}`;
+};
+
+/**
+ * Formats the given coins and returns a string representing the overall amount.
+ * @param amount - Amount to be formatted.
+ * @param separator - Optional separator to be used.
+ */
+export const formatCoins = (
+  amount: readonly Coin[] | undefined,
+  separator: string = '\n',
+): string => (amount || []).map(formatCoin).join(separator);
 
 export const mapPostFontSize = (numChars: number) => {
   let fontSize = 14;

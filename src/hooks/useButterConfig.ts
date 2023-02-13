@@ -1,8 +1,8 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import GetButterConfig from 'services/graphql/queries/GetButterConfig';
-import { useSetButterConfig, useStoredButterConfig } from '@recoil/butterConfig';
 import { convertGraphQLButterConfig } from 'lib/GraphQLUtils';
+import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that allows to get the Butter config and also refresh its value if needed.
@@ -10,8 +10,8 @@ import { convertGraphQLButterConfig } from 'lib/GraphQLUtils';
 const useButterConfig = () => {
   const { data, refetch } = useQuery(GetButterConfig);
 
-  const config = useStoredButterConfig();
-  const setButterConfig = useSetButterConfig();
+  const config = useAppStateValue('butterConfig');
+  const setButterConfig = useSetAppStateValue('butterConfig');
 
   // Use the effect in order to update the cached version when the server data changes
   React.useEffect(() => {

@@ -9,11 +9,7 @@ import { AcceptInviteSuccess } from 'hooks/useAcceptInvite';
  * @param data {any} - Data retrieved from the GraphQL APIs.
  */
 const hasBalance = (data: any | undefined): boolean => {
-  return (
-    data &&
-    data?.action_account_balance?.coins?.length > 0 &&
-    data?.action_account_balance?.coins[0]?.amount !== 0
-  );
+  return data && data?.balance?.coins?.length > 0 && data?.balance?.coins[0]?.amount !== 0;
 };
 
 /**

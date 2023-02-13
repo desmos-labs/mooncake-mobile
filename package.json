@@ -58,6 +58,7 @@
     "lottie-ios": "3.4.0",
     "lottie-react-native": "5.1.4",
     "neverthrow": "^6.0.0",
+    "numbro": "^2.3.6",
     "patch-package": "^6.4.7",
     "path-browserify": "^0.0.0",
     "react": "18.2.0",

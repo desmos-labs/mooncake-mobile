@@ -6,35 +6,108 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { Formik } from 'formik';
 import _ from 'lodash';
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import useHooks, { TIP_AMOUNTS } from './useHooks';
+import { Post } from 'types/posts';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import useAccountBalance from 'hooks/useAccountBalance';
+import { formatCoins } from 'lib/FormatUtils';
 import useStyles from './useStyles';
+import {
+  FormValues,
+  useDefaultTipsAmounts,
+  useInitialFormValues,
+  useSendPostTip,
+  useShouldDisableTipButton,
+  useTipFeePercentage,
+  useValidateForm,
+} from './hooks';
 
 export type SendTipsParams = {
-  postAuthor: string;
-  postId?: number;
+  post: Post;
 };
 
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
+
+/**
+ * Screen that allows the user to tip a given post.
+ * @constructor
+ */
 const SendTips = () => {
-  const [message, setMessage] = React.useState<string>('');
+  const { goBack, pop } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('sendTips');
   const styles = useStyles();
   const theme = useTheme();
-  const {
-    loading,
-    editable,
-    sendTipLoading,
-    goBack,
-    initialFormValues,
-    validateForm,
-    convertedBalance,
-    shouldDisableTipButton,
-    tipFee,
-    handlePressConfirm,
-  } = useHooks();
+
+  const { params } = useNavigation<NavProps['route']>();
+  const { post } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Tip config
+  // -------------------------------------------------------------------------------------
+
+  const defaultTipsAmounts = useDefaultTipsAmounts();
+  const tipFee = useTipFeePercentage();
+
+  // -------------------------------------------------------------------------------------
+  // --- User balance
+  // -------------------------------------------------------------------------------------
+
+  const { balance, refetch: refetchBalance, loading: loadingBalance } = useAccountBalance();
+  const shouldDisableTipButton = useShouldDisableTipButton(balance);
+
+  // -------------------------------------------------------------------------------------
+  // --- Form config
+  // -------------------------------------------------------------------------------------
+
+  const initialFormValues = useInitialFormValues();
+  const validateForm = useValidateForm(balance);
+  const canEdit = useMemo(
+    () => !loadingBalance && balance.length > 0,
+    [loadingBalance, balance.length],
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Form submission
+  // -------------------------------------------------------------------------------------
+
+  const sendTip = useSendPostTip(post);
+
+  const [message, setMessage] = useState<string>('');
+  const [sendingTip, setSendingTip] = useState<boolean>(false);
+  const handleSubmitForm = useCallback(
+    async (values: FormValues) => {
+      setSendingTip(true);
+      const result = await sendTip(values);
+      if (result.isErr()) {
+        // TODO: Do something with this error
+        console.log('Error while sending post tip', result.error.message);
+      }
+
+      setSendingTip(false);
+      pop();
+    },
+    [pop, sendTip],
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchBalance();
+    }, [refetchBalance]),
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <KeyboardAvoidingView
@@ -43,7 +116,7 @@ const SendTips = () => {
       <BottomUpModalWrapper goBack={goBack} paddingHorizontal={0.1} paddingBottom={0.1}>
         <Formik
           initialValues={initialFormValues}
-          onSubmit={handlePressConfirm}
+          onSubmit={handleSubmitForm}
           validate={validateForm}>
           {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
@@ -53,17 +126,17 @@ const SendTips = () => {
                 <Typography.Subtitle3>{t('subtitle')}</Typography.Subtitle3>
                 <Spacer paddingBottom={14} />
                 <View style={styles.buttonGroup}>
-                  {TIP_AMOUNTS.map(value => {
+                  {defaultTipsAmounts.map(value => {
                     return (
                       <Button
                         key={String(value)}
-                        disabled={!editable || shouldDisableTipButton[String(value)]}
+                        disabled={!canEdit || shouldDisableTipButton(value)}
                         mode={values.amount === String(value) ? 'contained' : 'outlined'}
                         style={[
                           {
                             minWidth: 106,
                           },
-                          shouldDisableTipButton[String(value)]
+                          shouldDisableTipButton(value)
                             ? {
                                 borderColor: theme.colors.tabIconGrey,
                               }
@@ -73,7 +146,7 @@ const SendTips = () => {
                         ]}
                         contentStyle={[
                           { height: 42 },
-                          shouldDisableTipButton[String(value)]
+                          shouldDisableTipButton(value)
                             ? {
                                 backgroundColor: theme.colors.tabIconGrey,
                               }
@@ -87,7 +160,7 @@ const SendTips = () => {
                         }}>
                         <Typography.Subtitle3
                           style={
-                            shouldDisableTipButton[String(value)]
+                            shouldDisableTipButton(value)
                               ? {
                                   color: theme.colors.white,
                                   textTransform: 'uppercase',
@@ -108,7 +181,7 @@ const SendTips = () => {
                 </View>
                 <Spacer paddingBottom={20} />
                 <DTextInput
-                  editable={editable}
+                  editable={canEdit}
                   value={values.amount}
                   onChangeText={(value: string) => {
                     setFieldValue('amount', value, true);
@@ -126,8 +199,8 @@ const SendTips = () => {
                 )}
                 <Spacer paddingBottom={10} />
 
-                {/* when we will have the selected account properties we will show the available balance and disable the buttons accordingly */}
-                {loading ? (
+                {/* When we have the selected account properties, we will show the available balance and disable the buttons accordingly */}
+                {loadingBalance ? (
                   <ActivityIndicator
                     style={{ left: 0, marginRight: 'auto' }}
                     size={16}
@@ -135,9 +208,7 @@ const SendTips = () => {
                   />
                 ) : (
                   <Typography.Body7 style={{ color: theme.colors.accentGreen01 }}>
-                    {/* we will need to format accordingly this number */}
-                    {t('available')} {convertedBalance?.amount}{' '}
-                    {convertedBalance?.denom.toUpperCase()}
+                    {formatCoins(balance)}
                   </Typography.Body7>
                 )}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -147,9 +218,7 @@ const SendTips = () => {
                       color: theme.colors.surfaceBlack,
                       marginVertical: theme.spacing.s,
                     }}>
-                    {t('warning fee', {
-                      fee: tipFee,
-                    })}
+                    {t('warning fee', { fee: tipFee })}
                   </Typography.Body7>
                 </View>
 
@@ -157,17 +226,17 @@ const SendTips = () => {
                   <Typography.Subtitle3>{t('message')}</Typography.Subtitle3>
                 </Spacer>
                 <DTextInput
-                  editable={editable}
+                  multiline
+                  editable={canEdit}
                   inputStyle={styles.messageInput}
                   value={message}
                   onChangeText={text => setMessage(text)}
                   style={styles.textInput}
-                  multiline
                   placeholder={t('message')}
                 />
                 <Spacer paddingVertical={30}>
                   <Button
-                    loading={sendTipLoading}
+                    loading={sendingTip}
                     mode="contained"
                     color={theme.colors.surfaceBlack}
                     onPress={handleSubmit}

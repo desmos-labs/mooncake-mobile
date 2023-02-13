@@ -21,6 +21,7 @@ export interface ReportReason {
 }
 
 export interface TipsContractConfig {
+  readonly address: string;
   readonly serviceFeePercentage: number;
 }
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { SubspaceParams } from 'types/desmos';
 import EnvConfig from 'config/EnvConfig';
 import { AppStateStatus } from 'react-native';
+import { ButterConfig } from 'types/butter';
 
 /**
  * Contains the overall state of the application.
@@ -42,6 +43,10 @@ export interface AppState {
    */
   readonly subspaceParams: SubspaceParams;
   /**
+   * Configuration fetched from the GraphQL APIs.
+   */
+  readonly butterConfig: ButterConfig | undefined;
+  /**
    * Overall count of the notifications sent to the application.
    */
   readonly notificationsCount: number;
@@ -58,10 +63,9 @@ const DefaultAppState: AppState = {
   subspaceParams: {
     registeredReactions: [],
     reportReasons: [],
-    tipsContractConfig: {
-      serviceFeePercentage: 0.0,
-    },
+    tipsContractConfig: undefined,
   },
+  butterConfig: undefined,
   notificationsCount: 0,
 };
 

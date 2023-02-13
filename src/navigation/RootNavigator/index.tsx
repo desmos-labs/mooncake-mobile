@@ -35,6 +35,7 @@ import { UnlockWalletParams } from 'screens/UnlockWallet';
 import WelcomeBack from 'screens/WelcomeBack';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
+import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -76,7 +77,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   // [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   // [ROUTES.SELECT_CHAIN]: undefined;
-  // [ROUTES.SEND_TIPS]: SendTipsParams;
+  [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
   // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
@@ -371,7 +372,7 @@ const RootNavigator = () => {
       {/*    //   image: modalSuccess, */}
       {/*    // }} */}
       {/*  /> */}
-      {/*  <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} /> */}
+      <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
       <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
       {/*  <Stack.Screen */}

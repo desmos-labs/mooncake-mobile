@@ -1,11 +1,11 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useButterConfig from 'hooks/useButterConfig';
 import React from 'react';
 import GetFeeGrantCount from 'services/graphql/GetFeeGrantCount';
 import GetAuthzGrants from 'services/graphql/queries/GetAuthzGrants';
 import { useQuery } from '@apollo/client';
 import { convertAuthzGrantsInfo, convertFeeGrantInfo } from 'lib/GraphQLUtils/authorizations';
 import { useStoreAuthorizationsInfo, useStoredAuthorizationInfo } from '@recoil/authorizations';
+import { useAppStateValue } from '@recoil/appState';
 
 /**
  * Hook that allows to get the information about the fee and authz grants
@@ -14,7 +14,7 @@ import { useStoreAuthorizationsInfo, useStoredAuthorizationInfo } from '@recoil/
 const useGetGrantsInformation = () => {
   const activeAddress = useActiveAccountAddress();
 
-  const { config: butterConfig } = useButterConfig();
+  const butterConfig = useAppStateValue('butterConfig');
   const apisAddress = butterConfig?.desmosAddress;
   if (!apisAddress) {
     throw new Error('Cannot get the grants information without the API address');

@@ -4,9 +4,17 @@ import { WalletType } from 'types/wallet';
 import { AccountWithWallet } from 'types/account';
 import { bech32AddressToAny } from '@desmoslabs/desmjs/build/aminomessages/profiles';
 import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
+import { Coin } from '@cosmjs/stargate';
 
-export const findChainInfoByName = (chainName: string) =>
-  SupportedChains.flatMap(chain => chain.chainInfo).find(info => info?.chainName === chainName);
+export const findChainInfoByName = (chainName: string) => {
+  return SupportedChains.flatMap(chain => chain.chainInfo).find(
+    info => info?.chainName === chainName,
+  );
+};
+
+export const findCoinByDenom = (coins: Coin[], denom: string) => {
+  return coins.find(coin => coin.denom === denom);
+};
 
 /**
  * Finds the details regarding a linkable chain from its chain name.

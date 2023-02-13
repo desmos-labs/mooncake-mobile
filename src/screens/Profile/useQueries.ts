@@ -6,7 +6,7 @@ import appSettingsState from '@recoil/settings';
 import EnvConfig from 'config/EnvConfig';
 import React, { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import GetAccountBalanceAndTokenPrice from 'services/graphql/queries/GetAccountBalanceAndTokenPrice';
+import GetTokenPrice from 'services/graphql/queries/GetTokenPrice';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetPostsForAddressWithLimit from 'services/graphql/queries/GetPostsForAddressWithLimit';
 import GetPostsNumberForAddress from 'services/graphql/queries/GetPostsNumberForAddress';
@@ -35,7 +35,7 @@ const useQueries = (address?: string) => {
     data: balanceData,
     loading: balanceLoading,
     refetch: refetchBalance,
-  } = useQuery(GetAccountBalanceAndTokenPrice, {
+  } = useQuery(GetTokenPrice, {
     variables: {
       address: address!,
       tokenName: currentChain.stakeCurrency.coinDenom,
