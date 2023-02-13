@@ -114,7 +114,6 @@ const ManageConnectedChains = () => {
               onPress={handleConnectChain}
               image={addButton}
               style={styles.addConnectionButton}
-              disabled={false}
             />
           </View>
 
