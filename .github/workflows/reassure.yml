@@ -9,7 +9,6 @@ on:
 jobs:
   tests:
     if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
-    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
