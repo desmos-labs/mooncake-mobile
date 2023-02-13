@@ -52,7 +52,7 @@ export const useStoreProfile = () => {
             break;
           default:
             // If the profile is not undefined, store it inside the cache
-            profiles[profile.address] = profile;
+            profiles[address] = profile;
             break;
         }
 
