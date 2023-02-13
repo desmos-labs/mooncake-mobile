@@ -35,7 +35,7 @@ import {useTheme} from 'react-native-paper';
 import {useToast} from 'react-native-toast-notifications';
 import {useRecoilValue} from 'recoil';
 import useLogin from 'services/axios/requests/Login/useLogin';
-import useAutoLoginFromSignUp from 'screens/Login/useAutoLoginFromSignUp';
+import useAutoLoginFromSignUp from 'hooks/useAutoLoginFromSignUp';
 import ThemedLottieView from 'components/ThemedLottieView';
 import {broadcastAnim} from 'assets/animations';
 import useStyles from './useStyles';

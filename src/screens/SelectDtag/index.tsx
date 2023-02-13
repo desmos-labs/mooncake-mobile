@@ -12,13 +12,9 @@ import Spacer from 'components/Spacer';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootNavigatorParamList} from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {saveLocalWallet, saveMnemonic, saveNewAccount} from 'lib/SecureStorage';
+import {useRoute} from '@react-navigation/native';
 import {ChainAccount} from 'types/chains';
-import LocalWallet from 'lib/LocalWallet';
-import {useRecoilValue, useResetRecoilState} from 'recoil';
-import createLocalWalletState from '@recoil/createLocalWalletState';
-import useActiveAccount from 'hooks/useActiveAccount';
+import useHooks from './useHooks';
 
 export type SelectDtagParamList = {
   accountsWithWalletData: {
@@ -32,22 +28,20 @@ export type SelectDtagParamList = {
   password?: string;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SELECT_DTAG>;
+export type NavProps = StackScreenProps<
+  RootNavigatorParamList,
+  ROUTES.SELECT_DTAG
+>;
 
 const SelectDtag = () => {
   const {t} = useTranslation('selectDtag');
   const theme = useTheme();
-  const {reset} = useNavigation<NavProps['navigation']>();
-  const {setActiveAddress} = useActiveAccount();
+
+  const {handlePressProfileItem} = useHooks();
 
   const {
-    params: {accountsWithWalletData, password},
+    params: {accountsWithWalletData},
   } = useRoute<NavProps['route']>();
-
-  const createLocalWalletValues = useRecoilValue(createLocalWalletState);
-  const resetCreateLocalWalletAtom = useResetRecoilState(
-    createLocalWalletState,
-  );
 
   const {loading, data} = useQuery(GetProfileSummaryForAddresses, {
     variables: {
@@ -56,43 +50,6 @@ const SelectDtag = () => {
       ),
     },
   });
-
-  const handlePressProfileItem = React.useCallback(async (address: string) => {
-    // implementation
-    const walletData = accountsWithWalletData.find(
-      x => x.chainAccount.address === address,
-    );
-    if (!walletData) return;
-    const {wallet, chainAccount} = walletData;
-
-    // ledger accounts won't have wallet data
-    // if a wallet is passed, then there will be a password as well
-    if (wallet) {
-      const deserializedWallet = await LocalWallet.deserialize(wallet);
-
-      await saveLocalWallet(deserializedWallet, password!);
-      await saveMnemonic(
-        deserializedWallet.bech32Address,
-        createLocalWalletValues.mnemonic!,
-        password!,
-      );
-    }
-    await saveNewAccount(chainAccount);
-
-    setActiveAddress(address);
-    // setMMKV(MMKVKEYS.ACTIVE_ACCOUNT_ADDR, address);
-
-    resetCreateLocalWalletAtom();
-
-    reset({
-      index: 0,
-      routes: [
-        {
-          name: ROUTES.BOTTOM_TABS,
-        },
-      ],
-    });
-  }, []);
 
   const renderItem = ({item}: ListRenderItemInfo<ProfileSummary>) => {
     return (

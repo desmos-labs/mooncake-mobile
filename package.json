@@ -16,7 +16,8 @@
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
     "deploy:iosInternal": "fastlane ios closed_beta",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
-    "detox:build-ios": "IS_E2E=true detox build -c ios.sim.release",
+    "detox:rn-start": "npx react-native start --sourceExts e2e.js,e2e.jsx,e2e.ts,e2e.ts,e2e.tsx,js,jsx,ts,tsx,json",
+    "detox:build-ios": "export IS_E2E=true && detox build -c ios.sim.release",
     "detox:test-ios": "detox test -c ios.sim.release"
   },
   "dependencies": {
@@ -113,9 +114,9 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@faker-js/faker": "^7.6.0",
     "@graphql-tools/mock": "^8.7.18",
     "@graphql-tools/schema": "^9.0.16",
-    "@faker-js/faker": "^7.6.0",
     "@react-native-community/eslint-config": "^3.0.0",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-knobs": "^6.4.0",
