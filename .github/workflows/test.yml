@@ -1,0 +1,48 @@
+name: Tests
+# Tests runs unit tests over the entire repository.
+# This workflow is run on every pull request and push to main.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Compute diff 📜
+        uses: technote-space/get-diff-action@v6.1.2
+        id: git_diff
+        with:
+          PATTERNS: +(src|__tests__)/**/*.+(js|jsx|ts|tsx)
+          FILES: |
+            package.json
+            yarn.lock
+
+      - name: Install 🔨
+        if: env.GIT_DIFF
+        run: yarn install --immutable
+
+      - name: Run unit tests 🧪
+        if: env.GIT_DIFF
+        run: yarn test --coverage
+
+      - name: Upload coverage to Codecov 📤
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run Reassure
+        run: bash ./reassure-tests.sh
+
+      - name: Run Danger.js
+        run: yarn danger ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
