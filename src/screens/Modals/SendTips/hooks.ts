@@ -5,8 +5,8 @@ import { useAppStateValue } from '@recoil/appState';
 import { Coin } from '@cosmjs/stargate';
 import { findCoinByDenom } from 'lib/ChainsUtils';
 import { safeParseFloat } from 'lib/FormatUtils';
-import useSendTip, { PostTipTarget, TipTargetType } from 'hooks/useSendTip';
-import { Post } from 'types/posts';
+import useSendTip from 'hooks/useSendTip';
+import { TipTarget } from 'types/tips';
 
 /**
  * Hook that allows to get the tip fee percentage to be considered when sending tips.
@@ -107,9 +107,9 @@ export const useValidateForm = (accountBalance: Coin[]) => {
 
 /**
  * Hook that allows to send a tip to the given post.
- * @param post {Post} - Post to which to send the tip.
+ * @param target {TipTarget} - Target to which to send the tip.
  */
-export const useSendPostTip = (post: Post) => {
+export const useSendTipToTarget = (target: TipTarget) => {
   const tipCurrency = useTipCurrency();
   const sendTip = useSendTip();
 
@@ -121,16 +121,12 @@ export const useSendPostTip = (post: Post) => {
         amount: (safeParseFloat(values.amount) * 10 ** tipCurrency.coinDecimals).toString(),
       };
 
-      // Build the tip target
-      const target: PostTipTarget = {
-        type: TipTargetType.POST,
-        amount: [tipAmount],
-        postId: post.id,
-      };
-
       // Send the tip
-      return sendTip(target);
+      return sendTip({
+        target,
+        amount: [tipAmount],
+      });
     },
-    [post.id, sendTip, tipCurrency.coinDecimals, tipCurrency.coinMinimalDenom],
+    [sendTip, target, tipCurrency.coinDecimals, tipCurrency.coinMinimalDenom],
   );
 };

@@ -1,13 +1,16 @@
-import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  CompositeScreenProps,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { defaultProfilePic } from 'assets/images';
 import Typography from 'components/Typography';
 import { formatNumShorthand } from 'lib/FormatUtils';
-import { MMKVKEYS, useMMKVStorage } from 'lib/MMKVStorage';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import { useTheme } from 'react-native-paper';
@@ -15,45 +18,50 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import useHooks from './useHooks';
+import { PostTipTarget, Tip, TipTargetType } from 'types/tips';
+import useGetPostTips from 'hooks/useGetPostTips';
 
 type NavProps = CompositeScreenProps<
   StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
   StackScreenProps<RootNavigatorParamList>
 >;
 
+/**
+ * Screen that allows the user to see all the tips that have been sent to a given post.
+ * @constructor
+ */
 const PostTips = () => {
+  const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('postInteraction');
   const theme = useTheme();
-  const {
-    params: { postId, subspaceId },
-  } = useRoute<NavProps['route']>();
-  const { navigate } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
-  const [activeAddress] = useMMKVStorage<string | undefined>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
-  const { tips, tipsLoading, tipsRefetch } = useHooks({
-    postId,
-    subspaceId,
-  });
 
-  const renderItem = React.useCallback(
-    ({ item }: ListRenderItemInfo<any>) => {
-      return (
-        <TipItem
-          address={item.sender?.address}
-          tipAmount={item.amount[0]}
-          avatar={item.sender.profile_pic ? { uri: item.sender.profile_pic } : defaultProfilePic}
-          nickname={item.sender.nickname}
-          dTag={item.sender.dtag}
-        />
-      );
-    },
-    [tips],
-  );
+  const { params } = useRoute<NavProps['route']>();
+  const { post } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const { tips, loading: areTipsLoading, refetch: refetchTips, fetchMore } = useGetPostTips(post);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
   const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS, { postAuthor: activeAddress! });
-  }, [activeAddress]);
+    navigate(ROUTES.SEND_TIPS, {
+      target: { type: TipTargetType.POST, post } as PostTipTarget,
+    });
+  }, [navigate, post]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  const renderItem = React.useCallback(({ item }: ListRenderItemInfo<Tip>) => {
+    return <TipItem tip={item} />;
+  }, []);
 
   const ListEmptyComponent = React.useCallback(() => {
     return (
@@ -65,7 +73,21 @@ const PostTips = () => {
         additionalButtonStyle={{ backgroundColor: theme.colors.black }}
       />
     );
-  }, []);
+  }, [handlePressSendTips, t, theme.colors.black]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchTips();
+    }, [refetchTips]),
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <>
@@ -77,16 +99,15 @@ const PostTips = () => {
         </Typography.Body6>
       )}
       <FlatList
-        refreshing={tipsLoading}
-        onRefresh={tipsRefetch}
         data={tips}
+        refreshing={areTipsLoading}
+        onRefresh={refetchTips}
         renderItem={renderItem}
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         contentContainerStyle={styles.contentContainerStyle}
-        ListFooterComponentStyle={{
-          marginTop: theme.spacing.xl,
-        }}
+        ListFooterComponentStyle={{ marginTop: theme.spacing.xl }}
+        onEndReached={fetchMore}
       />
     </>
   );

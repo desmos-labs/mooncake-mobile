@@ -10,26 +10,26 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { Post } from 'types/posts';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAccountBalance from 'hooks/useAccountBalance';
 import { formatCoins } from 'lib/FormatUtils';
+import { TipTarget } from 'types/tips';
 import useStyles from './useStyles';
 import {
   FormValues,
   useDefaultTipsAmounts,
   useInitialFormValues,
-  useSendPostTip,
+  useSendTipToTarget,
   useShouldDisableTipButton,
   useTipFeePercentage,
   useValidateForm,
 } from './hooks';
 
 export type SendTipsParams = {
-  post: Post;
+  target: TipTarget;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
@@ -45,7 +45,7 @@ const SendTips = () => {
   const theme = useTheme();
 
   const { params } = useNavigation<NavProps['route']>();
-  const { post } = params;
+  const { target } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Tip config
@@ -76,7 +76,7 @@ const SendTips = () => {
   // --- Form submission
   // -------------------------------------------------------------------------------------
 
-  const sendTip = useSendPostTip(post);
+  const sendTip = useSendTipToTarget(target);
 
   const [message, setMessage] = useState<string>('');
   const [sendingTip, setSendingTip] = useState<boolean>(false);

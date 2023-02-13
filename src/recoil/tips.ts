@@ -1,18 +1,12 @@
 import React from 'react';
-import { PostTip } from 'types/desmos';
 import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mmkvValueToCache } from '@recoil/utils';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { Post } from 'types/posts';
+import { areTipsEqual, ComparableTip, Tip, TipTargetType } from 'types/tips';
 
-type ComparableTip = Pick<PostTip, 'subspaceId' | 'postId'>;
-
-const areTipsEqual = (first: ComparableTip, second: ComparableTip): boolean => {
-  return first.subspaceId === second.subspaceId && first.postId === second.postId;
-};
-
-const tipsState = atom<MultipleUsersCache<PostTip, ComparableTip>>({
+const tipsState = atom<MultipleUsersCache<Tip, ComparableTip>>({
   key: 'tipsState',
   default: mmkvValueToCache(MMKVKEYS.TIPS, areTipsEqual),
   effects: [
@@ -25,15 +19,36 @@ const tipsState = atom<MultipleUsersCache<PostTip, ComparableTip>>({
 });
 
 /**
- * Hook that allows to know if the user has tipped a given post or not.
- * @param user {string} - Address of the user for which to check if the tips exists or not.
+ * Hook that allows to store a new user tip.
+ * @param user {string} - Address of the user for which to add the tip.
  */
-export const useHasTippedPost = (user: string) => {
+export const useStoreTip = (user: string) => {
+  const setTips = useSetRecoilState(tipsState);
+  return React.useCallback(
+    (tip: Tip) => {
+      setTips(tips => {
+        const userTips = tips.get(user);
+        const updatedTips = userTips.add(tip);
+        return tips.update(user, updatedTips);
+      });
+    },
+    [setTips, user],
+  );
+};
+
+export const useGetPostTipsToSync = (user: string) => {
   const tips = useRecoilValue(tipsState);
   return React.useCallback(
     (post: Post) => {
       const userTips = tips.get(user);
-      return userTips.has({ subspaceId: post.subspaceId, postId: post.id });
+      return userTips
+        .readAll()
+        .filter(
+          tip =>
+            tip.target.type === TipTargetType.POST &&
+            tip.target.post.subspaceId === post.subspaceId &&
+            tip.target.post.id === post.id,
+        );
     },
     [tips, user],
   );
@@ -63,7 +78,13 @@ export const useGetPostTipsDifference = (user: string) => {
     (post: Post) => {
       const userTips = tips.get(user);
       return userTips
-        .filter({ subspaceId: post.subspaceId, postId: post.id })
+        .readAll()
+        .filter(
+          tip =>
+            tip.target.type === TipTargetType.POST &&
+            tip.target.post.subspaceId === post.subspaceId &&
+            tip.target.post.id === post.id,
+        )
         .map(followedUser => {
           switch (followedUser.status) {
             case DataStatus.CREATED_LOCALLY:
@@ -81,20 +102,57 @@ export const useGetPostTipsDifference = (user: string) => {
 };
 
 /**
- * Hook that allows to add a tip to a given post from a given user.
- * @param user {String} - Address of the user that is adding the tip.
+ * Hook that allows to update a stored pending tips for a given post.
+ * @param user {string} - Address of the user for which to update the tip.
  */
-export const useStoreUserTip = (user: string) => {
+export const useUpdatePendingPostTip = (user: string) => {
   const setTips = useSetRecoilState(tipsState);
   return React.useCallback(
-    (post: Post) => {
-      setTips(currentTips => {
-        const userTips = currentTips.get(user);
-        const updatedTips = userTips.add({
-          subspaceId: post.subspaceId,
-          postId: post.id,
-        } as PostTip);
-        return currentTips.update(user, updatedTips);
+    (original: Tip, update: Tip) => {
+      setTips(tips => {
+        const existingTips = tips.get(user);
+        const updatedTips = existingTips
+          .readAll()
+          .map(t => (areTipsEqual(t, original) && t.status !== DataStatus.SYNCED ? update : t));
+        return tips.update(user, existingTips.set(updatedTips));
+      });
+    },
+    [user, setTips],
+  );
+};
+
+/**
+ * Hook that allows to delete a stored pending tip for a given user.
+ * @param user {string} - Address of the user for which to delete the tip.
+ */
+export const useRemovePendingPostTip = (user: string) => {
+  const setTips = useSetRecoilState(tipsState);
+  return React.useCallback(
+    (tip: Tip) => {
+      setTips(tips => {
+        const existingTips = tips.get(user);
+        const updatedTips = existingTips
+          .readAll()
+          .filter(t => !areTipsEqual(t, tip) || t.status !== DataStatus.SYNCED);
+        return tips.update(user, existingTips.set(updatedTips));
+      });
+    },
+    [user, setTips],
+  );
+};
+
+/**
+ * Hook that allows to delete a tip from the stored cache.
+ * @param user {string} - Address of the user for which to delete the stored tip.
+ */
+export const useDeleteStoredTip = (user: string) => {
+  const setTips = useSetRecoilState(tipsState);
+  return React.useCallback(
+    (tip: Tip) => {
+      setTips(tips => {
+        const userTips = tips.get(user);
+        const updatedTips = userTips.remove(tip);
+        return tips.update(user, updatedTips);
       });
     },
     [setTips, user],

@@ -208,14 +208,3 @@ export type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
 export const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction) => {
   return first.subspaceId === second.subspaceId && first.postId === second.postId;
 };
-
-export interface PostTip extends CacheableObject {
-  /**
-   * ID of the subspace of the post related to this tip.
-   */
-  readonly subspaceId: number;
-  /**
-   * ID of the post related to this tip.
-   */
-  readonly postId: PostID;
-}

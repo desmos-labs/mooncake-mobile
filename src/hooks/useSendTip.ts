@@ -6,27 +6,10 @@ import { Coin } from '@cosmjs/stargate';
 import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
 import { toUtf8 } from '@cosmjs/encoding';
 import useBroadcastTx from 'hooks/useBroadcastTx';
-
-interface Tip {
-  readonly amount: Coin[];
-}
-
-export enum TipTargetType {
-  POST,
-  USER,
-}
-
-export interface PostTipTarget extends Tip {
-  readonly type: TipTargetType.POST;
-  readonly postId: number;
-}
-
-export interface UserTipTarget extends Tip {
-  readonly type: TipTargetType.USER;
-  readonly address: string;
-}
-
-export type TipTarget = PostTipTarget | UserTipTarget;
+import { Tip, TipTarget, TipTargetType } from 'types/tips';
+import { useDeleteStoredTip, useStoreTip } from '@recoil/tips';
+import { DataStatus } from 'types/cache';
+import { useActiveProfile } from '@recoil/profiles';
 
 /**
  * Returns the target to be used within a <code>MsgExecuteContract</code> when sending a tip.
@@ -37,14 +20,14 @@ export const getMsgTipTarget = (target: TipTarget): any => {
     case TipTargetType.POST:
       return {
         content_target: {
-          post_id: target.postId.toString(),
+          post_id: target.post.id.toString(),
         },
       };
 
     case TipTargetType.USER:
       return {
         user_target: {
-          receiver: target.address,
+          receiver: target.user.address,
         },
       };
   }
@@ -59,16 +42,37 @@ const useSendTip = () => {
     throw new Error('Trying to send a tip without having an active account');
   }
 
+  const activeProfile = useActiveProfile();
+  if (!activeProfile) {
+    throw new Error('Trying to send a tip without having an active profile');
+  }
+
   const subspaceParams = useAppStateValue('subspaceParams');
   const tipsContractAddress = subspaceParams.tipsContractConfig?.address ?? '';
   const tipPercentage = subspaceParams.tipsContractConfig?.serviceFeePercentage ?? 0;
 
+  const storeTip = useStoreTip(activeAddress);
+  const deleteStoredTip = useDeleteStoredTip(activeAddress);
+
   const broadcastTx = useBroadcastTx();
 
   return useCallback(
-    (target: TipTarget) => {
+    async (tipData: Pick<Tip, 'target' | 'amount'>) => {
+      // Build the tip
+      const tip: Tip = {
+        target: tipData.target,
+        amount: tipData.amount,
+        sender: activeProfile,
+        status: DataStatus.CREATED_LOCALLY,
+        creationDate: new Date(Date.now()).toISOString(),
+        lastEdited: new Date(Date.now()).toISOString(),
+      };
+
+      // Store the tip locally
+      storeTip(tip);
+
       // Compute the fee amount
-      const fees = target.amount.map(
+      const fees = tip.amount.map(
         coin =>
           ({
             denom: coin.denom,
@@ -86,8 +90,8 @@ const useSendTip = () => {
           msg: toUtf8(
             JSON.stringify({
               send_tip: {
-                amount: target.amount,
-                target: getMsgTipTarget(target),
+                amount: tip.amount,
+                target: getMsgTipTarget(tip.target),
               },
             }),
           ),
@@ -95,9 +99,23 @@ const useSendTip = () => {
       };
 
       // Send the transaction
-      return broadcastTx([msg]);
+      const result = await broadcastTx([msg]);
+      if (result.isErr()) {
+        // If the sending was not successful, delete the tip
+        deleteStoredTip(tip);
+      }
+
+      return result;
     },
-    [activeAddress, broadcastTx, tipPercentage, tipsContractAddress],
+    [
+      activeAddress,
+      activeProfile,
+      broadcastTx,
+      deleteStoredTip,
+      storeTip,
+      tipPercentage,
+      tipsContractAddress,
+    ],
   );
 };
 

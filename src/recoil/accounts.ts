@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { Account } from 'types/account';
 import { deserializeAccounts } from 'lib/AccountUtils/deserialize';
@@ -28,7 +28,7 @@ export const accountsAppState = atom<Record<string, Account>>({
  * Hook that allows to store a new account inside the app state.
  */
 export const useStoreAccount = () => {
-  const [, setAccounts] = useRecoilState(accountsAppState);
+  const setAccounts = useSetRecoilState(accountsAppState);
   return React.useCallback(
     (account: Account) => {
       setAccounts(curValue => {

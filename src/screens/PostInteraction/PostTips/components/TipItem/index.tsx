@@ -1,43 +1,37 @@
-import { Coin } from '@cosmjs/stargate';
-import { convertCoin } from '@desmoslabs/desmjs';
-import appSettingsState from '@recoil/settings';
-import { defaultProfilePic } from 'assets/images';
 import Typography from 'components/Typography';
-import React, { useMemo } from 'react';
-import { ImageSourcePropType, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useRecoilState } from 'recoil';
+import { PostTip } from 'types/desmos';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import { formatCoins } from 'lib/FormatUtils';
 import useStyles from './useStyles';
 
 type Props = {
-  tipAmount: Coin;
-  avatar?: ImageSourcePropType;
-  address: string;
-  nickname?: string;
-  dTag?: string;
+  tip: PostTip;
 };
 
-const TipItem = ({ tipAmount, avatar, address, nickname, dTag }: Props) => {
-  const [settings] = useRecoilState(appSettingsState);
+/**
+ * Component that represents a single post tip inside a list.
+ * @constructor
+ */
+const TipItem = (props: Props) => {
   const styles = useStyles();
-
-  const convertedAmount = useMemo(() => {
-    return convertCoin(tipAmount, 6, settings.currentChain.currencies);
-  }, [tipAmount, settings]);
+  const { tip } = props;
 
   return (
     <View style={styles.container} onStartShouldSetResponder={() => true}>
-      <FastImage source={avatar || defaultProfilePic} style={styles.avatarStyle} />
+      <FastImage source={getProfilePicture(tip.sender)} style={styles.avatarStyle} />
 
       <View style={styles.textGroup}>
         <Typography.Subtitle3 style={styles.textStyle} numberOfLines={1}>
-          {nickname || address}
+          {tip.sender.nickname || tip.sender.address}
         </Typography.Subtitle3>
-        <Typography.Body7 style={styles.subTextStyle}>@{dTag || 'no-dtag'}</Typography.Body7>
+        <Typography.Body7 style={styles.subTextStyle}>@{tip.sender.dTag}</Typography.Body7>
       </View>
 
       <Typography.Subtitle3 style={styles.textStyle}>
-        {convertedAmount?.amount} {convertedAmount?.denom.toUpperCase()}
+        {formatCoins(tip.amount, ', ')}
       </Typography.Subtitle3>
     </View>
   );

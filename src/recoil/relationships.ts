@@ -108,10 +108,7 @@ export const useAddFollowedUser = (user: string) => {
         switch (existingRelationship?.status) {
           case undefined:
             // The relationship does not exist in the cache, so add it
-            return currentFollowage.update(
-              user,
-              existingFollowage.add({ address: counterparty } as FollowedUser),
-            );
+            return currentFollowage.update(user, existingFollowage.add({ address: counterparty }));
 
           case DataStatus.DELETED_LOCALLY:
             // The relationship was deleted locally. Bring it back to CREATED

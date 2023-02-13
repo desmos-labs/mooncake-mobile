@@ -3,8 +3,14 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostComments = gql`
   ${PostFields}
-  query PostComments($subspaceID: bigint, $postID: bigint, $user: String, $reaction: jsonb!)
-  @api(name: butter) {
+  query PostComments(
+    $subspaceID: bigint
+    $postID: bigint
+    $user: String
+    $reaction: jsonb!
+    $offset: int
+    $limit: int
+  ) @api(name: butter) {
     posts: post(
       order_by: { creation_date: asc }
       where: {
@@ -15,6 +21,8 @@ const GetPostComments = gql`
           reference: { id: { _eq: $postID } }
         }
       }
+      offset: $offset
+      limit: $limit
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(

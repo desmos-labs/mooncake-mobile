@@ -5,6 +5,7 @@ import React from 'react';
 import { Post } from 'types/posts';
 import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { mmkvValueToCache } from '@recoil/utils';
+import { useStoredProfile } from '@recoil/profiles';
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
@@ -21,6 +22,61 @@ const reactionsState = atom<MultipleUsersCache<PostReaction, ComparableReaction>
     },
   ],
 });
+
+/**
+ * Hook that allows to add a new reaction on behalf of the user having a provided address,
+ * to a post with a given id.
+ */
+export const useAddPostReaction = (user: string) => {
+  const profile = useStoredProfile(user);
+  if (!profile) {
+    throw new Error('Cannot add reaction to post for user without profile');
+  }
+
+  const setReactions = useSetRecoilState(reactionsState);
+  return React.useCallback(
+    (post: Post) => {
+      setReactions(currentReactions => {
+        const existingReactions = currentReactions.get(user);
+        const existingReaction = existingReactions.get({
+          subspaceId: post.subspaceId,
+          postId: post.id,
+        });
+        switch (existingReaction?.status) {
+          case undefined:
+            // The reaction does not exist in the cache, so add it
+            return currentReactions.update(
+              user,
+              existingReactions.add({
+                subspaceId: post.subspaceId,
+                postId: post.id,
+                id: undefined,
+                author: profile,
+              }),
+            );
+
+          case DataStatus.DELETED_LOCALLY:
+            // The reaction was deleted locally. Bring it back to CREATED
+            return currentReactions.update(
+              user,
+              existingReactions.updateStatus(
+                {
+                  subspaceId: post.subspaceId,
+                  postId: post.id,
+                },
+                DataStatus.CREATED_LOCALLY,
+              ),
+            );
+
+          default:
+            // Do nothing in other cases
+            return currentReactions;
+        }
+      });
+    },
+    [profile, setReactions, user],
+  );
+};
 
 /**
  * Hook that allows to easily know if a reaction for a given post existing for a given user.
@@ -108,54 +164,6 @@ export const useGetPostReactionsToSync = (user: string) => {
 };
 
 /**
- * Hook that allows to add a new reaction on behalf of the user having a provided address,
- * to a post with a given id.
- */
-export const useAddPostReaction = (user: string) => {
-  const setReactions = useSetRecoilState(reactionsState);
-  return React.useCallback(
-    (post: Post) => {
-      setReactions(currentReactions => {
-        const existingReactions = currentReactions.get(user);
-        const existingReaction = existingReactions.get({
-          subspaceId: post.subspaceId,
-          postId: post.id,
-        });
-        switch (existingReaction?.status) {
-          case undefined:
-            // The reaction does not exist in the cache, so add it
-            return currentReactions.update(
-              user,
-              existingReactions.add({
-                subspaceId: post.subspaceId,
-                postId: post.id,
-              } as PostReaction),
-            );
-
-          case DataStatus.DELETED_LOCALLY:
-            // The reaction was deleted locally. Bring it back to CREATED
-            return currentReactions.update(
-              user,
-              existingReactions.updateStatus(
-                {
-                  subspaceId: post.subspaceId,
-                  postId: post.id,
-                },
-                DataStatus.CREATED_LOCALLY,
-              ),
-            );
-
-          default:
-            // Do nothing in other cases
-            return currentReactions;
-        }
-      });
-    },
-    [user, setReactions],
-  );
-};
-
-/**
  * Hook that allows to set the local status of a post reaction.
  */
 export const useUpdatePostReactionStatus = (user: string) => {
@@ -180,7 +188,7 @@ export const useUpdatePostReactionStatus = (user: string) => {
  * Hook that allows to update a stored pending reaction for a given post.
  * @param user {string} - Address of the user for which to update the reaction.
  */
-export const useUpdateStoredPendingPostReaction = (user: string) => {
+export const useUpdatePendingPostReaction = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
     (subspaceId: number, postId: number, update: PostReaction) => {
@@ -206,7 +214,7 @@ export const useUpdateStoredPendingPostReaction = (user: string) => {
  * Hook that allows to delete a stored pending reaction for a given user.
  * @param user {string} - Address of the user for which to delete the reaction.
  */
-export const useRemoveStoredPendingPostReaction = (user: string) => {
+export const useRemovePendingPostReaction = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
     (subspaceId: number, postId: number) => {

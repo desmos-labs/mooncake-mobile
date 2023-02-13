@@ -1,5 +1,5 @@
 import React from 'react';
-import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { activeAccountAddressState } from '@recoil/accounts';
 import { DesmosProfile } from 'types/desmos';
@@ -19,6 +19,15 @@ const profilesState = atom<Record<string, DesmosProfile>>({
   ],
 });
 
+/** ]
+ * Hook that allows to get the profile for the given user.
+ * @param user {string} - Address of the user for which to get the profile.
+ */
+export const useStoredProfile = (user: string) => {
+  const profiles = useRecoilValue(profilesState);
+  return profiles[user];
+};
+
 /**
  * Hook that allows to get the profiles stored on the device.
  */
@@ -28,7 +37,7 @@ export const useStoredProfiles = () => useRecoilValue(profilesState);
  * Hook that allows to easily store a new profile inside the profilesState Atom.
  */
 export const useStoreProfile = () => {
-  const [, setProfiles] = useRecoilState(profilesState);
+  const setProfiles = useSetRecoilState(profilesState);
   return React.useCallback(
     (address: string, profile: DesmosProfile | undefined) => {
       setProfiles(exitingProfiles => {

@@ -61,7 +61,7 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
    * as per {@link areEquals}, then the existing value is replaced with the given one.
    * @param data - Data to be inserted.
    */
-  public add(data: C): Cache<T, C> {
+  public add(data: Omit<T, 'status' | 'lastEdited'>): Cache<T, C> {
     const updatedValues = [...this.values];
 
     // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
