@@ -10,6 +10,7 @@ on:
 jobs:
   lint-pr:
     if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
+    name: Lint PR
     runs-on: ubuntu-latest
     steps:
       - name: Run lint ✅
