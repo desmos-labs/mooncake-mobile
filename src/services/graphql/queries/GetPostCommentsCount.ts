@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
+import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostCommentsCount = gql`
-  ${POST_FIELDS}
+  ${PostFields}
   query PostCommentsCount($subspaceId: bigint!, $postId: bigint!) @api(name: butter) {
     comments: post_aggregate(
       where: {

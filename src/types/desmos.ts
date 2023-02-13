@@ -187,6 +187,14 @@ export interface PostReaction extends CacheableObject {
    * ID of the post related to this reaction.
    */
   readonly postId: PostID;
+  /**
+   * ID of the reaction.
+   */
+  readonly id: number | undefined;
+  /**
+   * Author of the reaction.
+   */
+  readonly author: DesmosProfile;
 }
 
 export interface PostTip extends CacheableObject {

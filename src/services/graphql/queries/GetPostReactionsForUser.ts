@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const GetPostReaction = gql`
+const GetPostReactionsForUser = gql`
   query Reaction($subspaceId: bigint!, $postId: bigint!, $userAddress: String!) @api(name: butter) {
     reactions: reaction(
       where: {
@@ -14,4 +14,4 @@ const GetPostReaction = gql`
   }
 `;
 
-export default GetPostReaction;
+export default GetPostReactionsForUser;

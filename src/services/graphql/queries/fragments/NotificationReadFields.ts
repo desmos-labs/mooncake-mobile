@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const NOTIFICATION_READ_FIELDS = gql`
+const NotificationReadFields = gql`
   fragment NotificationReadFields on notification {
     read_receipts {
       read_time
@@ -8,4 +8,4 @@ const NOTIFICATION_READ_FIELDS = gql`
   }
 `;
 
-export default NOTIFICATION_READ_FIELDS;
+export default NotificationReadFields;

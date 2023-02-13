@@ -113,6 +113,16 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
   }
 
   /**
+   * Allows to filter the current cached data.
+   * @param data : Filter to be applied.
+   */
+  public filter(data: C): T[] {
+    // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
+    // @ts-ignore
+    return this.values.filter(value => this.areEquals(value as C, data));
+  }
+
+  /**
    * Allows to update the status of all the values that match the given search.
    * @param data - Value which status should be updated. If not found, nothing will happen.
    * @param status {DataStatus} - Status that should be set to all the values that match the given search

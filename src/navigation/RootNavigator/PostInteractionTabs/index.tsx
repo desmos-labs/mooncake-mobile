@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated';
 import PostReactions from 'screens/PostInteraction/PostReactions';
 import PostTips from 'screens/PostInteraction/PostTips';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Post } from 'types/posts';
 import useAnimations from './useAnimations';
 import useStyles from './useStyles';
 
@@ -21,11 +22,14 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_INTERACTION
 
 export type PostInteractionTabsParamList = {
   [ROUTES.POST_TIPS]: PostInteractionReactionsTabParams;
-
   [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
 };
 
 export type PostInteractionReactionsTabParams = {
+  /**
+   * Post for which to show the interactions.
+   */
+  post: Post;
   /**
    * Fully expand the post interaction tab window on open
    */
@@ -35,10 +39,12 @@ export type PostInteractionReactionsTabParams = {
    * Should the user be able to drag the tab window in and out?
    */
   allowPanning: boolean;
-  postId: number;
-  subspaceId: number;
 };
 
+/**
+ * Tabs that allow to show the list of various interactions a post had.
+ * @constructor
+ */
 const PostInteractionTabs = () => {
   const { params } = useRoute<NavProps['route']>();
   const { goBack } = useNavigation<NavProps['navigation']>();
@@ -51,7 +57,7 @@ const PostInteractionTabs = () => {
       {/* This padding controls the distance from the top of the screen */}
       <Spacer paddingTop={30} />
       <Animated.View style={[animatedStyle, styles.animatedContainer]}>
-        {/* wrap the inner content container with a safeAreaView as a safety net to */}
+        {/* Wrap the inner content container with a safeAreaView as a safety net to */}
         {/* prevent contents from being rendered offscreen on devices that need a */}
         {/* bottom safeArea */}
         <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>

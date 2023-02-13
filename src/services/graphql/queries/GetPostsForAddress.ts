@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
+import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsForAddress = gql`
-  ${POST_FIELDS}
+  ${PostFields}
   query GetPostsForAddress($subspaceID: bigint!, $address: String) @api(name: butter) {
     post(
       order_by: { creation_date: desc }

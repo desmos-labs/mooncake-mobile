@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import GetPostReaction from 'services/graphql/queries/GetPostReaction';
+import GetPostReactionsForUser from 'services/graphql/queries/GetPostReactionsForUser';
 import { useMemo } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { Post } from 'types/posts';
@@ -15,7 +15,7 @@ const useIsReactionOnServer = (post: Post) => {
     throw new Error('Trying to know if a post reaction is stored remotely, without active user');
   }
 
-  const { data, refetch } = useQuery(GetPostReaction, {
+  const { data, refetch } = useQuery(GetPostReactionsForUser, {
     fetchPolicy: 'cache-and-network',
     variables: {
       subspaceId: post.subspaceId,

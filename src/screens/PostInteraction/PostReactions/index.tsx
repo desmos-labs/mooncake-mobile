@@ -4,27 +4,44 @@ import Typography from 'components/Typography';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInteractionTabs';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
+import useGetPostReactions from 'hooks/useGetPostReactions';
+import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
-import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_REACTIONS>;
 
+/**
+ * Screen that allows to display the list of reactions related to a post.
+ * @constructor
+ */
 const PostReactions = () => {
   const { t } = useTranslation('postInteraction');
   const styles = useStyles();
-  const {
-    params: { postId, subspaceId },
-  } = useRoute<NavProps['route']>();
-  const { reactions, reactionsLoading, reactionsRefetch } = useHooks({
-    postId,
-    subspaceId,
-  });
+
+  const { params } = useRoute<NavProps['route']>();
+  const { post } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const { count, refetch: refetchCount } = useGetPostReactionsCount(post);
+  const { reactions, loading, refetch: refetchReactions, fetchMore } = useGetPostReactions(post);
+
+  const refetch = useCallback(() => {
+    refetchCount();
+    refetchReactions();
+  }, [refetchCount, refetchReactions]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
 
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<any>) => {
     return <ReactionItem reaction={item} />;
@@ -32,26 +49,25 @@ const PostReactions = () => {
 
   const ListEmptyComponent = React.useMemo(() => {
     return <EmptyListComponent label={t('noReactions')} />;
-  }, []);
+  }, [t]);
 
   return (
     <>
-      {reactions.length > 0 && (
+      {count > 0 && (
         <Typography.Body6 style={styles.countText}>
-          {t('totalReactions', {
-            numReactions: formatNumShorthand(reactions.length),
-          })}
+          {t('totalReactions', { numReactions: formatNumShorthand(count) })}
         </Typography.Body6>
       )}
       <FlatList
-        refreshing={reactionsLoading}
-        onRefresh={() => reactionsRefetch({ postID: postId, subspaceID: subspaceId })}
-        keyExtractor={item => item.id}
+        refreshing={loading}
+        onRefresh={refetch}
+        keyExtractor={item => item.id?.toString() ?? ''}
         data={reactions}
         renderItem={renderItem}
         contentContainerStyle={styles.contentContainerStyle}
         ItemSeparatorComponent={ItemSeparatorComponent}
         ListEmptyComponent={ListEmptyComponent}
+        onEndReached={fetchMore}
       />
     </>
   );

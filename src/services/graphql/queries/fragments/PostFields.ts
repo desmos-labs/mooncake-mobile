@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const POST_FIELDS = gql`
+const PostFields = gql`
   fragment PostFields on post {
     id
     creation_date
@@ -59,4 +59,4 @@ const POST_FIELDS = gql`
   }
 `;
 
-export default POST_FIELDS;
+export default PostFields;

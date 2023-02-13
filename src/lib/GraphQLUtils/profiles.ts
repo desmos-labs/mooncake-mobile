@@ -24,7 +24,7 @@ export const convertGraphQLProfileParams = (params: any) =>
 /**
  * Format an incoming profile data from the server into a format that is easier to parse by the app.
  * @param {any} profile - Desmos Profile data fetched from the server.
- * @returns {ProfileParams} - A formatted DesmosProfile object
+ * @returns {DesmosProfile} - A formatted DesmosProfile object
  */
 export const convertGraphQLProfile = (profile: any) =>
   ({

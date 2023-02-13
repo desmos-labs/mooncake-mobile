@@ -16,7 +16,7 @@ import {
 } from '@desmoslabs/desmjs';
 import Long from 'long';
 import { useLazyQuery } from '@apollo/client';
-import GetPostReaction from 'services/graphql/queries/GetPostReaction';
+import GetPostReactionsForUser from 'services/graphql/queries/GetPostReactionsForUser';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
 import { registeredReactionValueToAny } from '@desmoslabs/desmjs/build/aminomessages/reactions';
@@ -34,7 +34,7 @@ const useAddReaction = (activeAddress: string) => {
   const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReaction, {
+  const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
     fetchPolicy: 'network-only',
   });
 
@@ -108,7 +108,7 @@ const useRemoveReaction = (activeAddress: string) => {
   const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReaction, {
+  const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
     fetchPolicy: 'network-only',
   });
 

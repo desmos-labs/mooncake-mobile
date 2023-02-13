@@ -51,10 +51,10 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
       // Update the comments
       setComments(currentComments => mergePosts(currentComments, onChainComments));
 
-      // Update the pending posts
-      updatePendingPosts(postsToSync, onChainComments);
+      // Update the pending comments by deleting the ones that are now on-chain or are expired
+      updatePendingPosts(commentsToSync, onChainComments);
     },
-    [postsToSync, updatePendingPosts],
+    [commentsToSync, updatePendingPosts],
   );
 
   // Query used to get the comments

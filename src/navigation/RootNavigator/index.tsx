@@ -37,6 +37,10 @@ import WelcomeBack from 'screens/WelcomeBack';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
+import PostInteractionTabs, {
+  PostInteractionReactionsTabParams,
+  PostInteractionTabsParamList,
+} from 'navigation/RootNavigator/PostInteractionTabs';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
 import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
@@ -98,7 +102,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
   // Post interaction tabs
-  // [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
@@ -117,7 +121,7 @@ export type RootNavigatorParamList = {
 
   // Counters Params
   // marked for deletion (unused/belongs under ROUTES.POST_INTERACTION
-  // [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabsParams;
+  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
   // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
 
   // Profile posts
@@ -396,10 +400,7 @@ const RootNavigator = () => {
       {/*    component={ActionAuthorization} */}
       {/*  /> */}
 
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.POST_INTERACTION} */}
-      {/*    component={PostInteractionTabs} */}
-      {/*  /> */}
+      <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
       {/* </Stack.Group> */}
 
       {/* /!* modals end *!/ */}

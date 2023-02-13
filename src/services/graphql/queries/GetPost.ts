@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
+import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPost = gql`
-  ${POST_FIELDS}
+  ${PostFields}
   query GetPost($subspaceID: bigint!, $postID: bigint!, $user: String, $reaction: jsonb!)
   @api(name: butter) {
     posts: post(where: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } }) {

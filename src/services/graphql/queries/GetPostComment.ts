@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import POST_FIELDS from 'services/graphql/queries/fragments/PostFields';
+import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostReaction = gql`
-  ${POST_FIELDS}
+  ${PostFields}
   query Reaction($subspaceId: bigint!, $postId: bigint!, $commentExternalId: String!)
   @api(name: butter) {
     comments: post(

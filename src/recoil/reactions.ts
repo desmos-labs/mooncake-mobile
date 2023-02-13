@@ -74,8 +74,7 @@ export const useGetPostReactionsDifference = (user: string) => {
     (post: Post) => {
       const userReactions = reactions.get(user);
       return userReactions
-        .readAll()
-        .filter(reaction => reaction.subspaceId === post.subspaceId && reaction.postId === post.id)
+        .filter({ subspaceId: post.subspaceId, postId: post.id })
         .map(reaction => {
           switch (reaction.status) {
             case DataStatus.CREATED_LOCALLY:
@@ -90,6 +89,19 @@ export const useGetPostReactionsDifference = (user: string) => {
     },
     [reactions, user],
   );
+};
+
+/**
+ * Hook that allows to get the reactions to be synced for a given post.
+ * @param user {string} - Address of the user for which to get the reactions.
+ * @param post {Post} - Post for which to get the reactions.
+ */
+export const usePostReactionsToSync = (user: string, post: Post) => {
+  const reactions = useRecoilValue(reactionsState);
+  const userReactions = reactions.get(user);
+  return userReactions
+    .filter({ subspaceId: post.subspaceId, postId: post.id })
+    .filter(reaction => reaction.status !== DataStatus.SYNCED);
 };
 
 /**

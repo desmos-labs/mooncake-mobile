@@ -63,8 +63,7 @@ export const useGetPostTipsDifference = (user: string) => {
     (post: Post) => {
       const userTips = tips.get(user);
       return userTips
-        .readAll()
-        .filter(tip => tip.subspaceId === post.subspaceId && tip.postId === post.id)
+        .filter({ subspaceId: post.subspaceId, postId: post.id })
         .map(followedUser => {
           switch (followedUser.status) {
             case DataStatus.CREATED_LOCALLY:
