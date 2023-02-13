@@ -3,6 +3,7 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import useBroadcastTxOnChain from 'hooks/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
+import { CanceledOperationError } from 'types/error';
 
 export interface BroadcastOptions {
   /**
@@ -25,20 +26,6 @@ export interface SuccessfulBroadcast {
   readonly txHash: string;
 }
 
-export class CanceledBroadcastError extends Error {
-  readonly type: 'CanceledBroadcastError';
-
-  constructor(message: string) {
-    super(message);
-    this.type = 'CanceledBroadcastError';
-  }
-}
-
-export const isCanceledBroadcastError = (e: Error): boolean => {
-  const { type } = e as CanceledBroadcastError;
-  return type === 'CanceledBroadcastError';
-};
-
 /**
  * Hook that allows to broadcast a transaction by going through the various UI based on the user's wallet type.
  *
@@ -51,7 +38,7 @@ export const isCanceledBroadcastError = (e: Error): boolean => {
  * transaction. This flow will vary based on the wallet type the user is using (mnemonic, Ledger, Web3Auth, etc).
  *
  * @return a {@link Result} that can either be a {@link SuccessfulBroadcast} or an {@link Error}. If the user
- * cancels the broadcasting, a {@link CanceledBroadcastError} will be returned.
+ * cancels the broadcasting, a {@link CanceledOperationError} will be returned.
  */
 const useBroadcastTx = () => {
   const broadcastTxOnChain = useBroadcastTxOnChain();
@@ -74,7 +61,7 @@ const useBroadcastTx = () => {
               );
             },
             onCancel: () => {
-              resolve(err(new CanceledBroadcastError('Tx canceled from the user')));
+              resolve(err(new CanceledOperationError()));
             },
           });
         } else {

@@ -153,7 +153,6 @@ const useSaveChainLinkAccount = () => {
 
 /**
  * Hook used to start the connection to an external chain.
- * @param onSuccess - Callback used when the entire process end successfully.
  * @param userChainLinks - Current user's chain links.
  */
 export const useConnectChain = (userChainLinks: ChainLink[]) => {

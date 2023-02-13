@@ -11,9 +11,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChainLink } from 'types/desmos';
 import LinkableChains from 'config/LinkableChains';
 import { MsgUnlinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
-import useBroadcastTx, { isCanceledBroadcastError } from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/useBroadcastTx';
 import { useActiveAccount } from '@recoil/accounts';
 import { MsgUnlinkChainAccountTypeUrl } from '@desmoslabs/desmjs';
+import { isCanceledOperationError } from 'types/error';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.DISCONNECT_CHAIN_MODAL>;
@@ -68,7 +69,7 @@ const DisconnectChainModal = () => {
             screen: ROUTES.USER_PROFILE,
           }),
       });
-    } else if (!isCanceledBroadcastError(broadcastResult.error)) {
+    } else if (!isCanceledOperationError(broadcastResult.error)) {
       navigate(ROUTES.CONFIRM_MODAL, {
         title: t('common:failed'),
         image: errorImage,
