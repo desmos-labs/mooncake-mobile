@@ -1,0 +1,25 @@
+name: Reassure
+# Runs reassure performance tests and danger.js to prepare a human readable report
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Run Reassure
+        run: bash ./reassure-tests.sh
+
+      - name: Run Danger.js
+        run: yarn danger ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
