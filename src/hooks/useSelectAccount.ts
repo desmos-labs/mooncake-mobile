@@ -4,10 +4,10 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useCallback } from 'react';
 import { AccountPickerParams } from 'screens/SelectAccount/components/AccountPicker/types';
-import { AccountWithWallet } from 'types/account';
+import { SelectedAccount } from 'types/account';
 
 export interface ResultCallbacks {
-  onSuccess: (account: AccountWithWallet) => any;
+  onSuccess: (account: SelectedAccount) => any;
   onCancel?: () => any;
 }
 

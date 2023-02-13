@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import SbContainer from 'storybook/decorators/SbContainer';
-import ChainItem from 'screens/SelectChainConnection/components/ChainItem/index';
+import ChainItem from 'screens/ImportAccountSelectChain/components/ChainItem/index';
 import { desmosIcon } from 'assets/images';
 import { action } from '@storybook/addon-actions';
 

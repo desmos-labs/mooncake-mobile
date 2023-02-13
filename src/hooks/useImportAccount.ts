@@ -6,7 +6,6 @@ import { useSetImportAccountState } from '@recoil/screens/importAccountState';
 import { SelectedAccount } from 'types/account';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import { MNEMONIC_INPUT_MODE } from 'screens/MnemonicInput';
 
 export interface ImportAccountOptions {
   /**
@@ -38,7 +37,7 @@ export interface ImportAccountOptions {
 }
 
 export interface ImportAccountCallbacks {
-  onSelect: (account: SelectedAccount) => any;
+  onSelect: (account: SelectedAccount, chain: SupportedChain) => any;
   onCancel?: () => any;
 }
 
@@ -85,14 +84,12 @@ const useImportAccount = (options: ImportAccountOptions) => {
         ignoreAddresses: options.ignoreAddresses ?? [],
         importMode: options.accountType,
         selectedChain,
-        onSuccess: account => onSelect(account.account),
+        onSuccess: account => onSelect(account.account, account.chain),
         onCancel: onCancelFunction,
       });
 
       if (selectedChain === undefined) {
-        // TODO: Implement navigate to chain selection.
-        console.warn('Chain selection is not supported');
-        onCancelFunction();
+        navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN);
         return;
       }
 
@@ -102,9 +99,7 @@ const useImportAccount = (options: ImportAccountOptions) => {
         switch (options.accountType) {
           case WalletType.Mnemonic:
             console.warn('Import with Mnemonic not supported');
-            navigation.navigate(ROUTES.MNEMONIC_INPUT, {
-              mode: MNEMONIC_INPUT_MODE.RESET_PASSWORD,
-            });
+            navigation.navigate(ROUTES.MNEMONIC_INPUT);
             break;
           case WalletType.Ledger:
             // TODO: Implement navigation to Ledger connect flow.

@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/useChainLinksGivenAddress';
+import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -29,6 +30,7 @@ const ManageConnectedChains = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const { chainLinks, loading, refetch } = useChainLinksGivenAddress();
+  const connectChain = useConnectChain(chainLinks);
 
   useEffect(() => {
     refetch();
@@ -46,6 +48,14 @@ const ManageConnectedChains = () => {
     },
     [navigate],
   );
+
+  const handleConnectChain = React.useCallback(async () => {
+    const result = await connectChain();
+    if (result.isErr()) {
+      // TODO: handle chain link result
+      console.error(result.error);
+    }
+  }, [connectChain]);
 
   const renderChainLinks = React.useCallback(
     (info: ListRenderItemInfo<ChainLink>) => {
@@ -69,7 +79,7 @@ const ManageConnectedChains = () => {
         <View style={styles.buttonContainer}>
           <Button
             color={theme.colors.surfaceBlack}
-            onPress={() => navigate(ROUTES.SELECT_CHAIN)}
+            onPress={handleConnectChain}
             mode="contained"
             labelStyle={styles.buttonStyle}>
             {t('profile:connectAddress')}
@@ -77,11 +87,17 @@ const ManageConnectedChains = () => {
         </View>
       </Spacer>
     );
-  }, []);
+  }, [
+    handleConnectChain,
+    styles.buttonContainer,
+    styles.buttonStyle,
+    t,
+    theme.colors.surfaceBlack,
+  ]);
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,
-    [],
+    [theme.spacing.s],
   );
 
   // This screen usings a combination of GradientBorder and zIndexWrapper to create
@@ -95,11 +111,10 @@ const ManageConnectedChains = () => {
             <Typography.H4 style={{ flex: 1 }}>{t('connectedAddresses')}</Typography.H4>
 
             <ImageButton
-              onPress={() => {
-                navigate(ROUTES.SELECT_CHAIN);
-              }}
+              onPress={handleConnectChain}
               image={addButton}
               style={styles.addConnectionButton}
+              disabled={false}
             />
           </View>
 

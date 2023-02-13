@@ -37,6 +37,7 @@ import WelcomeBack from 'screens/WelcomeBack';
 import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
+import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -46,6 +47,7 @@ export type RootNavigatorParamList = {
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
+  [ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   [ROUTES.SIGNUP]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
@@ -77,7 +79,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   // [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
-  // [ROUTES.SELECT_CHAIN]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
   // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
@@ -215,6 +216,10 @@ const RootNavigator = () => {
       }}>
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+      <Stack.Screen
+        name={ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN}
+        component={ImportAccountSelectChain}
+      />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
 
       {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
@@ -310,11 +315,6 @@ const RootNavigator = () => {
       {/*  }} */}
       {/*  name={ROUTES.CONFIRM_ADDRESS} */}
       {/*  component={ConfirmAddress} */}
-      {/* /> */}
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SELECT_CHAIN} */}
-      {/*  component={SelectChainConnection} */}
       {/* /> */}
 
       {/* <Stack.Screen */}

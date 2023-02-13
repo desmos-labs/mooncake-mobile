@@ -4,7 +4,7 @@ import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'react-native-paper';
-import ChainItem from 'screens/SelectChainConnection/components/ChainItem';
+import ChainItem from 'screens/ImportAccountSelectChain/components/ChainItem';
 import { useTranslation } from 'react-i18next';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';

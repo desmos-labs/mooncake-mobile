@@ -41,7 +41,7 @@ const ManageConnectionsModal = () => {
 
   const onPressSecondButton = useCallback(() => {
     goBack();
-    setTimeout(() => navigate(ROUTES.SELECT_CHAIN), 200);
+    setTimeout(() => navigate(ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN), 200);
   }, []);
 
   const onPressThirdButton = useCallback(() => {
