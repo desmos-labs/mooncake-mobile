@@ -3,6 +3,8 @@ set -e
 
 BASELINE_BRANCH=${BASELINE_BRANCH:="main"}
 
+git config checkout.defaultRemote=origin
+
 # Required for `git switch` on CI
 git fetch origin
 
