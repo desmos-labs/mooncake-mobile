@@ -11,8 +11,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChainLink } from 'types/desmos';
 import LinkableChains from 'config/LinkableChains';
 import { MsgUnlinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
-import useUnlockWallet from 'hooks/useUnlockWallet';
-import useActiveAccount from 'hooks/useActiveAccount';
+import useBroadcastTx, { isCanceledBroadcastError } from 'hooks/useBroadcastTx';
+import { useActiveAccount } from '@recoil/accounts';
+import { MsgUnlinkChainAccountTypeUrl } from '@desmoslabs/desmjs';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.DISCONNECT_CHAIN_MODAL>;
@@ -23,80 +24,68 @@ export type DisconnectChainParams = {
 
 const DisconnectChainModal = () => {
   const styles = useStyles();
-
   const { goBack, navigate } = useNavigation<NavProps['navigation']>();
+  const broadcastTx = useBroadcastTx();
 
   const {
     params: { chainLink },
   } = useRoute<NavProps['route']>();
 
   const { t } = useTranslation('disconnectChain');
-  const { chainAccount } = useActiveAccount();
-
-  const unlockWallet = useUnlockWallet();
+  const activeAccount = useActiveAccount();
 
   const chain = React.useMemo(() => {
     return LinkableChains.find(x => x.name.toLowerCase() === chainLink.chainName.toLowerCase());
   }, [chainLink]);
 
   const handlePressYes = React.useCallback(async () => {
-    if (!chainAccount) return;
-
-    const unlockResponse = await unlockWallet({ chainAccount });
-
-    if (!unlockResponse || !unlockResponse.wallet) return;
-
-    const { wallet } = unlockResponse;
-
-    const accounts = await wallet.getAccounts();
-
-    const msgs = [
+    if (!activeAccount) return;
+    const msgUnlinkChainAccount = [
       {
-        typeUrl: '/desmos.profiles.v3.MsgUnlinkChainAccount',
+        typeUrl: MsgUnlinkChainAccountTypeUrl,
         value: MsgUnlinkChainAccount.fromPartial({
           chainName: chainLink.chainName,
-          owner: accounts[0].address,
+          owner: activeAccount!.address,
           target: chainLink.externalAddress,
         }),
       },
     ];
 
-    navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
-      messages: msgs,
-      offlineSigner: unlockResponse.wallet,
-      successAction: () => {
-        navigate(ROUTES.CONFIRM_MODAL, {
-          image: modalSuccess,
-          title: t('common:success'),
-          subtitle: t('resultModal:yourChainLinkDisconnected', {
-            chainLink: chainLink.chainName.toUpperCase(),
-          }),
-          primaryButtonLabel: t('resultModal:goToProfile') as string,
-          onPressPrimary: () =>
-            navigate(ROUTES.BOTTOM_TABS, {
-              screen: ROUTES.USER_PROFILE,
-            }),
-        });
-      },
-      failureAction: () => {
-        navigate(ROUTES.CONFIRM_MODAL, {
-          title: t('common:failed'),
-          image: errorImage,
-          subtitle: t('resultModal:yourChainLinkDisconnected', {
-            chainLink: chainLink.chainName.toUpperCase(),
-          }),
-          primaryButtonLabel: t('common:retry') as string,
-          onPressPrimary: () => handlePressYes(),
-          secondaryButtonMode: 'outlined',
-          secondaryButtonLabel: t('resultModal:goToProfile') as string,
-          onPressSecondary: () =>
-            navigate(ROUTES.BOTTOM_TABS, {
-              screen: ROUTES.USER_PROFILE,
-            }),
-        });
-      },
+    const broadcastResult = await broadcastTx(msgUnlinkChainAccount, {
+      onChain: true,
     });
-  }, [chainAccount]);
+
+    if (broadcastResult.isOk()) {
+      navigate(ROUTES.CONFIRM_MODAL, {
+        image: modalSuccess,
+        title: t('common:success'),
+        subtitle: t('resultModal:yourChainLinkDisconnected', {
+          chainLink: chainLink.chainName.toUpperCase(),
+        }),
+        primaryButtonLabel: t('resultModal:goToProfile') as string,
+        onPressPrimary: () =>
+          navigate(ROUTES.BOTTOM_TABS, {
+            screen: ROUTES.USER_PROFILE,
+          }),
+      });
+    } else if (!isCanceledBroadcastError(broadcastResult.error)) {
+      navigate(ROUTES.CONFIRM_MODAL, {
+        title: t('common:failed'),
+        image: errorImage,
+        subtitle: t('resultModal:yourChainLinkDisconnected', {
+          chainLink: chainLink.chainName.toUpperCase(),
+        }),
+        primaryButtonLabel: t('common:retry') as string,
+        onPressPrimary: () => handlePressYes(),
+        secondaryButtonMode: 'outlined',
+        secondaryButtonLabel: t('resultModal:goToProfile') as string,
+        onPressSecondary: () =>
+          navigate(ROUTES.BOTTOM_TABS, {
+            screen: ROUTES.USER_PROFILE,
+          }),
+      });
+    }
+  }, [activeAccount, broadcastTx, chainLink.chainName, chainLink.externalAddress, navigate, t]);
 
   return (
     <View style={styles.container}>

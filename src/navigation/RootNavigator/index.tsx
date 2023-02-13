@@ -38,6 +38,8 @@ import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
+import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
+import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -55,7 +57,7 @@ export type RootNavigatorParamList = {
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
   [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
-  // [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
+  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
@@ -78,7 +80,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
   // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
-  // [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+  [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   [ROUTES.REPORT_POST]: ReportPostParams;
   // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
@@ -363,17 +365,7 @@ const RootNavigator = () => {
       {/*    name={ROUTES.CONSENT_AGREEMENT} */}
       {/*    component={ConsentAgreement} */}
       {/*  /> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.CONFIRM_MODAL} */}
-      {/*    component={ConfirmModal} */}
-      {/*    // initialParams={{ */}
-      {/*    //   title: 'Success', */}
-      {/*    //   subtitle: 'Your Twitter account is successfully connected', */}
-      {/*    //   primaryButtonLabel: 'Go to Profile', */}
-      {/*    //   // secondaryButtonLabel: 'Go to Profile', */}
-      {/*    //   image: modalSuccess, */}
-      {/*    // }} */}
-      {/*  /> */}
+      <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
       <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
       <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
@@ -397,22 +389,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
       <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.DISCONNECT_CHAIN_MODAL} */}
-      {/*    component={DisconnectChainModal} */}
-      {/*    initialParams={{ */}
-      {/*      chainLink: { */}
-      {/*        userAddress: 'userAddress', */}
-      {/*        chainName: 'Cosmos Hub', */}
-      {/*        creationTime: new Date(), */}
-      {/*        externalAddress: 'externalAddress', */}
-      {/*        proof: { */}
-      {/*          plainText: 'proof_plain_test', */}
-      {/*          signature: 'proof_signature', */}
-      {/*        }, */}
-      {/*      }, */}
-      {/*    }} */}
-      {/*  /> */}
+      <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
 
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.DISCONNECT_APP_MODAL} */}
