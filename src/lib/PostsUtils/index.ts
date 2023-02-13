@@ -18,19 +18,49 @@ import { Post, PostStatus } from 'types/posts';
 export const findSamePost = (posts: Post[], post: Post): number =>
   posts.findIndex(p => p.subspaceId === post.subspaceId && p.externalId === post.externalId);
 
+export enum PostUpdateType {
+  CREATE,
+  REPLACE,
+  DELETE,
+}
+
+export interface PostCreatedUpdate {
+  readonly type: PostUpdateType.CREATE;
+  readonly post: Post;
+}
+
+export interface PostUpdatedUpdate {
+  readonly type: PostUpdateType.REPLACE;
+  readonly original: Post;
+  readonly updated: Post;
+}
+
+export interface PostDeletedUpdate {
+  readonly type: PostUpdateType.DELETE;
+  readonly post: Post;
+}
+
+export type PostUpdate = PostCreatedUpdate | PostUpdatedUpdate | PostDeletedUpdate;
+
 /**
  * Allows to merge two lists of posts together.
  * @param existingPosts {Post[]} - List of posts that already exist.
  * @param externalPosts {Post[]} - List of posts that are coming from an external source.
+ * @return A tuple of <code>[]Post</code> representing the new merged posts, and <code>[]PostUpdate</code>
+ * representing how the {@param existingPosts} should be updated.
  */
-export const mergePosts = (existingPosts: Post[], externalPosts: Post[]): Post[] => {
+export const mergePosts = (
+  existingPosts: Post[],
+  externalPosts: Post[],
+): [Post[], PostUpdate[]] => {
   if (existingPosts.length === 0) {
-    return externalPosts;
+    return [externalPosts, []];
   }
 
   // Create the array to be stored.
   // This is copied so that if the object is frozen by someone (i.e. Recoil), we can still edit it
   let postsToStore = [...existingPosts];
+  const postsUpdates: PostUpdate[] = [];
 
   // First of all, update all the posts that have either been edited or created
   externalPosts.forEach(post => {
@@ -38,6 +68,10 @@ export const mergePosts = (existingPosts: Post[], externalPosts: Post[]): Post[]
     if (cachedPostIndex === -1) {
       // The post was not cached locally, it means it was created by another user.
       // For this reason, just add it to the list of posts to store
+      postsUpdates.push({
+        type: PostUpdateType.CREATE,
+        post,
+      });
       postsToStore.push(post);
     } else {
       // The post was cached locally. We now need to act differently based on the
@@ -47,6 +81,11 @@ export const mergePosts = (existingPosts: Post[], externalPosts: Post[]): Post[]
         case PostStatus.CREATED_LOCALLY:
           // The post was created locally, and now it's on-chain.
           // Replace the local post data with the new one from the chain
+          postsUpdates.push({
+            type: PostUpdateType.REPLACE,
+            original: postsToStore[cachedPostIndex],
+            updated: post,
+          });
           postsToStore[cachedPostIndex] = post;
           break;
 
@@ -76,14 +115,23 @@ export const mergePosts = (existingPosts: Post[], externalPosts: Post[]): Post[]
     switch (onChainIndex) {
       case -1:
         // The post is not found on chain: we can now safely remove it from the cache as well
+        postsUpdates.push({
+          type: PostUpdateType.DELETE,
+          post: deletedPost,
+        });
         postsToStore = postsToStore.splice(index, 1);
         break;
 
       default:
         // The post is found on chain: we can revert the local changes by overriding them
+        postsUpdates.push({
+          type: PostUpdateType.REPLACE,
+          original: postsToStore[index],
+          updated: externalPosts[onChainIndex],
+        });
         postsToStore[index] = externalPosts[onChainIndex];
     }
   });
 
-  return postsToStore;
+  return [postsToStore, postsUpdates];
 };

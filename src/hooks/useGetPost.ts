@@ -48,7 +48,7 @@ const useGetPost = (subspaceId: number, postId: number) => {
     const externalPosts = onChainPost === undefined ? [] : [onChainPost];
 
     // Merge the posts data
-    const result = mergePosts(existingPosts, externalPosts);
+    const [result] = mergePosts(existingPosts, externalPosts);
 
     // Get the post to store
     const postToStore = result.length > 0 ? result[0] : undefined;

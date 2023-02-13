@@ -1,16 +1,10 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { PostReaction } from 'types/desmos';
+import { areReactionsEqual, ComparableReaction, PostReaction } from 'types/desmos';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 import { Post } from 'types/posts';
 import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { mmkvValueToCache } from '@recoil/utils';
-
-type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
-
-const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction): boolean => {
-  return first.subspaceId === second.subspaceId && first.postId === second.postId;
-};
 
 /**
  * Recoil atom that holds all the post reactions that are cached within the application.
@@ -94,34 +88,22 @@ export const useGetPostReactionsDifference = (user: string) => {
 /**
  * Hook that allows to get the reactions to be synced for a given post.
  * @param user {string} - Address of the user for which to get the reactions.
- * @param post {Post} - Post for which to get the reactions.
  */
-export const usePostReactionsToSync = (user: string, post: Post) => {
+export const useGetPostReactionsToSync = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
-  const userReactions = reactions.get(user);
-  return userReactions
-    .filter({ subspaceId: post.subspaceId, postId: post.id })
-    .filter(reaction => reaction.status !== DataStatus.SYNCED);
-};
-
-/**
- * Hook that allows to set the local status of a post reaction.
- */
-export const useSetPostReactionStatus = (user: string) => {
-  const setReactions = useSetRecoilState(reactionsState);
   return React.useCallback(
-    (post: Post, status: DataStatus) => {
-      setReactions(currentReactions => {
-        // Update the status of existing reaction
-        const existingReactions = currentReactions.get(user);
-        const updatedReactions = existingReactions.updateStatus(
-          { subspaceId: post.subspaceId, postId: post.id },
-          status,
+    (post: Post) => {
+      const userReactions = reactions.get(user);
+      return userReactions
+        .readAll()
+        .filter(
+          reaction =>
+            reaction.subspaceId === post.subspaceId &&
+            reaction.postId === post.id &&
+            reaction.status !== DataStatus.SYNCED,
         );
-        return currentReactions.update(user, updatedReactions);
-      });
     },
-    [user, setReactions],
+    [reactions, user],
   );
 };
 
@@ -174,9 +156,79 @@ export const useAddPostReaction = (user: string) => {
 };
 
 /**
+ * Hook that allows to set the local status of a post reaction.
+ */
+export const useUpdatePostReactionStatus = (user: string) => {
+  const setReactions = useSetRecoilState(reactionsState);
+  return React.useCallback(
+    (post: Post, status: DataStatus) => {
+      setReactions(currentReactions => {
+        // Update the status of existing reaction
+        const existingReactions = currentReactions.get(user);
+        const updatedReactions = existingReactions.updateStatus(
+          { subspaceId: post.subspaceId, postId: post.id },
+          status,
+        );
+        return currentReactions.update(user, updatedReactions);
+      });
+    },
+    [user, setReactions],
+  );
+};
+
+/**
+ * Hook that allows to update a stored pending reaction for a given post.
+ * @param user {string} - Address of the user for which to update the reaction.
+ */
+export const useUpdateStoredPendingPostReaction = (user: string) => {
+  const setReactions = useSetRecoilState(reactionsState);
+  return React.useCallback(
+    (subspaceId: number, postId: number, update: PostReaction) => {
+      setReactions(currentReactions => {
+        const existingReactions = currentReactions.get(user);
+        const updatedReactions = existingReactions
+          .readAll()
+          .map(reaction =>
+            reaction.subspaceId === subspaceId &&
+            reaction.postId === postId &&
+            reaction.status !== DataStatus.SYNCED
+              ? update
+              : reaction,
+          );
+        return currentReactions.update(user, existingReactions.set(updatedReactions));
+      });
+    },
+    [user, setReactions],
+  );
+};
+
+/**
+ * Hook that allows to delete a stored pending reaction for a given user.
+ * @param user {string} - Address of the user for which to delete the reaction.
+ */
+export const useRemoveStoredPendingPostReaction = (user: string) => {
+  const setReactions = useSetRecoilState(reactionsState);
+  return React.useCallback(
+    (subspaceId: number, postId: number) => {
+      setReactions(currentReactions => {
+        const existingReactions = currentReactions.get(user);
+        const updatedReactions = existingReactions
+          .readAll()
+          .filter(
+            r =>
+              r.subspaceId !== subspaceId || r.postId !== postId || r.status !== DataStatus.SYNCED,
+          );
+        return currentReactions.update(user, existingReactions.set(updatedReactions));
+      });
+    },
+    [user, setReactions],
+  );
+};
+
+/**
  * Hook that allows to permanently delete the reaction to the post having the given id from the local storage.
  * <b>Note</b> By using this method, the reaction will be completely removed from the storage. If you want
- * to delete it only temporarily with the ability to revert it, please use {@link useSetPostReactionStatus} instead.
+ * to delete it only temporarily with the ability to revert it, please use {@link useUpdatePostReactionStatus} instead.
  */
 export const useRemovePostReaction = (user: string) => {
   const setReactions = useSetRecoilState(reactionsState);

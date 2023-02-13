@@ -4,7 +4,7 @@ import {
   useAddPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
-  useSetPostReactionStatus,
+  useUpdatePostReactionStatus,
 } from '@recoil/reactions';
 import { getLikeReactionId } from 'types/desmos';
 import useBroadcastTx from 'hooks/useBroadcastTx';
@@ -31,7 +31,7 @@ const useAddReaction = (activeAddress: string) => {
   const broadcastTx = useBroadcastTx();
 
   const addPostReaction = useAddPostReaction(activeAddress);
-  const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
+  const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
   const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
@@ -105,7 +105,7 @@ const useRemoveReaction = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const setPostReactionStatus = useSetPostReactionStatus(activeAddress);
+  const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
   const [getReaction] = useLazyQuery(GetPostReactionsForUser, {

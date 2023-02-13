@@ -49,12 +49,18 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
       const onChainComments = data.posts.map(convertGraphQLPost);
 
       // Update the comments
-      setComments(currentComments => mergePosts(currentComments, onChainComments));
+      setComments(currentComments => {
+        const [merged, updates] = mergePosts(currentComments, onChainComments);
 
-      // Update the pending comments by deleting the ones that are now on-chain or are expired
-      updatePendingPosts(commentsToSync, onChainComments);
+        // Update the pending comments by deleting the ones that are now on-chain or are expired
+        // This is done because comments are not cached inside the local storage of the device, and
+        // they are not handled by the optimistic APIs
+        updatePendingPosts(updates);
+
+        return merged;
+      });
     },
-    [commentsToSync, updatePendingPosts],
+    [updatePendingPosts],
   );
 
   // Query used to get the comments

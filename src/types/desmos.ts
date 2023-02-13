@@ -197,6 +197,18 @@ export interface PostReaction extends CacheableObject {
   readonly author: DesmosProfile;
 }
 
+/**
+ * Represents a comparable {@link PostReaction}.
+ */
+export type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
+
+/**
+ * Allows to determine whether the two given reactions are equals or not.
+ */
+export const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction) => {
+  return first.subspaceId === second.subspaceId && first.postId === second.postId;
+};
+
 export interface PostTip extends CacheableObject {
   /**
    * ID of the subspace of the post related to this tip.

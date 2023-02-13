@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { PostReaction } from 'types/desmos';
+import { areReactionsEqual, PostReaction } from 'types/desmos';
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useQuery } from '@apollo/client';
 import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
-import { usePostReactionsToSync } from '@recoil/reactions';
+import { useGetPostReactionsToSync } from '@recoil/reactions';
+import { mergeCacheableData } from 'lib/CacheUtils';
+import useUpdatePendingReactions from 'hooks/useUpdatePendingReactions';
 
 /**
  * Hook that allows to get the reactions for the given post.
@@ -20,7 +22,9 @@ const useGetPostReactions = (post: Post, reactionsPerPage = 50) => {
   }
 
   // Get the reactions to be synced
-  const postReactionsToSync = usePostReactionsToSync(activeAccountAddress, post);
+  const getPostReactionsToSync = useGetPostReactionsToSync(activeAccountAddress);
+  const postReactionsToSync = getPostReactionsToSync(post);
+  const updatePendingReactions = useUpdatePendingReactions(activeAccountAddress);
 
   // Set the initial reactions state to be the reactions to sync.
   // This will later be merged with reactions from the chain at the first fetch.
@@ -37,13 +41,21 @@ const useGetPostReactions = (post: Post, reactionsPerPage = 50) => {
       const onChainReactions = data.reactions.map(convertGraphQLReaction);
 
       // Update the reactions
-      // TODO: Instead of using mergeReactions, do a more generic mergeCacheableData function that also works for the followage, tips, etc
-      setReactions(currentReactions => mergeReactions(currentReactions, onChainReactions));
+      setReactions(currentReactions => {
+        // Merge the existing reactions with the new one
+        const [merged, updates] = mergeCacheableData(
+          currentReactions,
+          onChainReactions,
+          areReactionsEqual,
+        );
 
-      // Update the pending reactions (delete the ones that have been sent or are expired)
-      updatePendingReactions(postsToSync, onChainComments);
+        // Update the pending reactions (delete the ones that have been sent or are expired)
+        updatePendingReactions(updates);
+
+        return merged;
+      });
     },
-    [setReactions],
+    [updatePendingReactions],
   );
 
   // Query used to get the comments

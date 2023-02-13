@@ -144,7 +144,10 @@ const useGetPosts = (queryType: PostsQueryType) => {
       const graphQLPosts = (data.posts as any[]).map(convertGraphQLPost);
 
       // Store the posts by merging the existing ones with the ones from the server
-      storePosts(cachedPosts => mergePosts(cachedPosts, graphQLPosts));
+      storePosts(cachedPosts => {
+        const [merged] = mergePosts(cachedPosts, graphQLPosts);
+        return merged;
+      });
 
       // Update the cache about the reactions
       graphQLPosts.forEach(post => {

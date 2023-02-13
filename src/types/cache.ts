@@ -27,7 +27,7 @@ export interface CacheableObject {
    * This is used in order to merge data from the server and stored locally,
    * to avoid having the local storage going too much off-sync with the server.
    */
-  readonly lastEdited: Date;
+  readonly lastEdited: string;
 }
 
 export type Comparator<T> = (first: T, second: T) => boolean;
@@ -73,6 +73,10 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
     } as T);
 
     return new Cache<T, C>(updatedValues, this.areEquals);
+  }
+
+  public set(data: T[]): Cache<T, C> {
+    return new Cache<T, C>(data, this.areEquals);
   }
 
   /**

@@ -2,7 +2,7 @@ import {
   useAddPostReaction,
   useGetPostReaction,
   useRemovePostReaction,
-  useSetPostReactionStatus,
+  useUpdatePostReactionStatus,
 } from '@recoil/reactions';
 import { useCallback } from 'react';
 import { GraphQLPost } from 'lib/GraphQLUtils';
@@ -16,7 +16,7 @@ import useUpdateCachedData from 'hooks/useUpdateCachedData';
 const useUpdatePostReactionCache = (activeAddress: string) => {
   const getPostReaction = useGetPostReaction();
   const addPostReaction = useAddPostReaction();
-  const setPostReactionStatus = useSetPostReactionStatus();
+  const setPostReactionStatus = useUpdatePostReactionStatus();
   const removePostReaction = useRemovePostReaction();
 
   const updateCachedData = useUpdateCachedData();
