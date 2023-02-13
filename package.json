@@ -16,7 +16,7 @@
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
     "deploy:iosInternal": "fastlane ios closed_beta",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
-    "detox:build-ios": "detox build -c ios.sim.release",
+    "detox:build-ios": "IS_E2E=true detox build -c ios.sim.release",
     "detox:test-ios": "detox test -c ios.sim.release"
   },
   "dependencies": {
