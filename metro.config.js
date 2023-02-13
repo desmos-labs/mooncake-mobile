@@ -7,11 +7,13 @@
 const defaultSourceExts =
   require('metro-config/src/defaults/defaults').sourceExts;
 
+const mockSourceExts = ['mock.js', 'mock.jsx', 'mock.ts', 'mock.tsx'];
+
 module.exports = {
   resolver: {
     sourceExts:
       process.env.IS_E2E === 'mocked'
-        ? ['mock.js', ...defaultSourceExts]
+        ? [...mockSourceExts, ...defaultSourceExts]
         : defaultSourceExts,
   },
   transformer: {
