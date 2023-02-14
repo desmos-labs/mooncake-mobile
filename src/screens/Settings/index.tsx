@@ -38,7 +38,7 @@ const Settings: React.FC<NavProps> = props => {
   const styles = useStyles();
   const { reset } = useNavigation<NavProps['navigation']>();
   const activeAccount = useActiveAccount()!;
-  const { haveAllPermissions } = useUserApplicationGrants(activeAccount.address);
+  const { haveAllPermissions, authorizationInfo } = useUserApplicationGrants(activeAccount.address);
   const steUserApplicationGrants = useSetUserApplicationGrants(activeAccount.address);
 
   const formattedAccountCreationDate = useFormatDateToTZ(
@@ -142,6 +142,13 @@ const Settings: React.FC<NavProps> = props => {
     // });
   }, []);
 
+  const handlePermissionsToggle = React.useCallback(async () => {
+    const result = await steUserApplicationGrants(!haveAllPermissions, authorizationInfo);
+    if (result.isErr()) {
+      console.error(result.error);
+    }
+  }, [authorizationInfo, haveAllPermissions, steUserApplicationGrants]);
+
   const sendFeedback = useCallback(async () => {
     Linking.openURL('mailto:dev@forbole.com').catch(err =>
       console.error("Couldn't open email application", err),
@@ -171,7 +178,7 @@ const Settings: React.FC<NavProps> = props => {
       <Section style={styles.spacer} title={t('security')}>
         <SectionSwitch
           label={t('permissions')}
-          onValueChange={() => steUserApplicationGrants(!haveAllPermissions)}
+          onValueChange={handlePermissionsToggle}
           value={haveAllPermissions}
         />
         <SectionButton
