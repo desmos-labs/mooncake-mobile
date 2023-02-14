@@ -104,12 +104,15 @@ const BroadcastTxOnChain: React.FC = () => {
           <>
             {/* TODO: Create a proper UI to display the tx messages */}
             <Typography.Body1>{JSON.stringify(messages)}</Typography.Body1>
-            {estimatingFees ? (
+            {estimatingFees || feesResult === undefined ? (
               /* TODO: Create a proper UI with a spinner or something else */
               <Typography.Body1>Estimating fees...</Typography.Body1>
             ) : (
               /* TODO: Create a proper UI to render the fee result */
-              <Typography.Body1>Fees: {JSON.stringify(feesResult)}</Typography.Body1>
+              <Typography.Body1>
+                Fees:{' '}
+                {feesResult.isOk() ? JSON.stringify(feesResult.value) : feesResult.error.message}
+              </Typography.Body1>
             )}
             <Typography.Body1>
               {t('memo')}: {memo ?? 'N/A'}
@@ -118,6 +121,7 @@ const BroadcastTxOnChain: React.FC = () => {
         )}
       </View>
       <Button
+        style={{ zIndex: 99 }}
         onPress={handleBroadcastTx}
         loading={broadcastingTx}
         disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>

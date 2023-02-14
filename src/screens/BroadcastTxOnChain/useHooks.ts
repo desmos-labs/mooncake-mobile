@@ -67,15 +67,16 @@ export const useEstimateFees = () => {
         return err(clientResult.error);
       }
 
-      const fees = await clientResult.value.estimateTxFee(accountAddress, messages, {
-        memo,
-        publicKey: {
-          algo: account.algo,
-          bytes: account.pubKey,
-        },
-      });
-
-      return ok(fees);
+      return ResultAsync.fromPromise(
+        clientResult.value.estimateTxFee(accountAddress, messages, {
+          memo,
+          publicKey: {
+            algo: account.algo,
+            bytes: account.pubKey,
+          },
+        }),
+        e => Error((<Partial<Error>>e)?.message ?? "Can't estimate fees"),
+      );
     },
     [accounts, rpcUrl, gasPrice],
   );
