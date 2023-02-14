@@ -1,4 +1,3 @@
-import { useActiveAccountAddress } from '@recoil/accounts';
 import React from 'react';
 import GetFeeGrantCount from 'services/graphql/GetFeeGrantCount';
 import GetAuthzGrants from 'services/graphql/queries/GetAuthzGrants';
@@ -11,9 +10,7 @@ import { useAppStateValue } from '@recoil/appState';
  * Hook that allows to get the information about the fee and authz grants
  * that the current user has on-chain.
  */
-const useGetGrantsInformation = () => {
-  const activeAddress = useActiveAccountAddress();
-
+const useGetGrantsInformation = (accountAddress: string) => {
   const butterConfig = useAppStateValue('butterConfig');
   const apisAddress = butterConfig?.desmosAddress;
   if (!apisAddress) {
@@ -30,14 +27,14 @@ const useGetGrantsInformation = () => {
     fetchPolicy: 'no-cache',
     variables: {
       userAddress: apisAddress,
-      granterAddress: activeAddress,
+      granterAddress: accountAddress,
     },
   });
   const { data: authzGrantsData, refetch: refetchAuthzGrantsData } = useQuery(GetAuthzGrants, {
     fetchPolicy: 'no-cache',
     variables: {
       userAddress: apisAddress,
-      granterAddress: activeAddress,
+      granterAddress: accountAddress,
     },
   });
 

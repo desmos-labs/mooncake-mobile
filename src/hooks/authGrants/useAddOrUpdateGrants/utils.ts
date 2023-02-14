@@ -42,21 +42,16 @@ export const buildRevokeAllowanceEncode = ({
 /**
  * Build a MsgGrantAllowanceEncode
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#Authorizing-the-payment-of-fees
- * @param {Object} Object - An object containing the grants to build, a grantee, and granter
  * @param {GrantEnums[]} grants - An array of grants to build allowance grants for
- * @param {string} Object.grantee - The address of the grantee.
- * @param {string} Object.granter - The address of the granter.
+ * @param {string} grantee - The address of the grantee.
+ * @param {string} granter - The address of the granter.
  * @returns {MsgGrantAllowanceEncodeObject} An encode object that gives the grantee an allowance to use a granter's funds to conduct transactions
  */
-export const buildGrantAllowanceEncode = ({
-  grants,
-  grantee,
-  granter,
-}: {
-  grants: GrantEnums[];
-  grantee: string;
-  granter: string;
-}): MsgGrantAllowanceEncodeObject => {
+export const buildGrantAllowanceEncode = (
+  grants: string[],
+  grantee: string,
+  granter: string,
+): MsgGrantAllowanceEncodeObject => {
   const basicAllowance: BasicAllowance = {
     spendLimit: [], // This is empty so that there are no limits
     expiration: undefined,
@@ -86,21 +81,16 @@ export const buildGrantAllowanceEncode = ({
 /**
  * Build the MsgGrantEncodeObjects from an array of grants.
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-grant-an-authorization
- * @param {Object} Object - An object containing an array of grants, a grantee, and granter
- * @param {GrantEnums[]} grants - An array of grants to build MsgGrantEncodeObjects for.
- * @param {string} Object.grantee - The address of the grantee.
- * @param {string} Object.granter - The address of the granter.
+ * @param grants - An array of grants to build MsgGrantEncodeObjects for.
+ * @param grantee - The address of the grantee.
+ * @param granter - The address of the granter.
  * @returns {MsgGrantEncodeObject[]} An array of Encode Objects that authorizes a grantee to conduct {grants} type transactions onbehalf of the granter.
  */
-export const buildGrantMsgEncodes = ({
-  grants,
-  grantee,
-  granter,
-}: {
-  grants: GrantEnums[];
-  grantee: string;
-  granter: string;
-}): MsgGrantEncodeObject[] => {
+export const buildGrantMsgEncodes = (
+  grants: string[],
+  grantee: string,
+  granter: string,
+): MsgGrantEncodeObject[] => {
   return grants.map(grant => {
     const content =
       grant === GrantEnums.MsgExecuteContract || grant === GrantEnums.MsgSaveProfile
@@ -136,22 +126,17 @@ export const buildGrantMsgEncodes = ({
 /**
  * The opposite of buildGrantMsgEncodes, this function will build an array
  * of revoking grants.
- * @param {Object} Object
- * @param {GrantEnums[]} Object.grants - An array of grants to build MsgRevokeEncodeObjects for.
- * @param {string} Object.grantee - The address of the grantee.
- * @param {string} Object.granter - The address of the granter.
+ * @param {GrantEnums[]} grants - An array of grants to build MsgRevokeEncodeObjects for.
+ * @param {string} grantee - The address of the grantee.
+ * @param {string} granter - The address of the granter.
  * @returns {MsgRevokeEncodeObject[]} - An array of MsgRevokeEncodeObjects that represent the grants that {granter} wants
  *                                      to revoke from the {grantee}
  */
-export const buildRevokeGrantMsgEncodes = ({
-  grants,
-  grantee,
-  granter,
-}: {
-  grants: GrantEnums[];
-  grantee: string;
-  granter: string;
-}): MsgRevokeEncodeObject[] => {
+export const buildRevokeGrantMsgEncodes = (
+  grants: string[],
+  grantee: string,
+  granter: string,
+): MsgRevokeEncodeObject[] => {
   return grants.map(grant => {
     return {
       typeUrl: '/cosmos.authz.v1beta1.MsgRevoke',

@@ -10,7 +10,7 @@ export interface Grant {
   /**
    * Date at which the grant will expire.
    */
-  readonly expiration: string;
+  readonly expiration: Date;
 }
 
 export interface FeeGrantInfo {

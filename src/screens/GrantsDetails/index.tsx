@@ -27,7 +27,7 @@ export type GrantsDetailsParams = {
   section: GrantsSection;
 };
 
-declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GRANTS_DETAILS>;
+declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_GRANTS_DETAILS>;
 
 const GrantsDetails: React.FC<NavProps> = () => {
   const [initialLoading, setInitialLoading] = useState<boolean>(false);

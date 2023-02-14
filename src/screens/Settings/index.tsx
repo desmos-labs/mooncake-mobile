@@ -22,6 +22,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AppSettings, BiometricAuthorizations } from 'types/settings';
 import { useSetSettings, useSettings } from '@recoil/settings';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
+import { useSetUserApplicationGrants, useUserApplicationGrants } from 'screens/Settings/hooks';
+import { useActiveAccount } from '@recoil/accounts';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -35,6 +37,9 @@ const Settings: React.FC<NavProps> = props => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const { reset } = useNavigation<NavProps['navigation']>();
+  const activeAccount = useActiveAccount()!;
+  const { haveAllPermissions } = useUserApplicationGrants(activeAccount.address);
+  const steUserApplicationGrants = useSetUserApplicationGrants(activeAccount.address);
 
   const formattedAccountCreationDate = useFormatDateToTZ(
     // TODO: Get the proper profile creation time.
@@ -164,7 +169,11 @@ const Settings: React.FC<NavProps> = props => {
         />
       </Section>
       <Section style={styles.spacer} title={t('security')}>
-        <SectionButton label={t('permissions')} onPress={() => navigate(ROUTES.GRANTS)} />
+        <SectionSwitch
+          label={t('permissions')}
+          onValueChange={() => steUserApplicationGrants(!haveAllPermissions)}
+          value={haveAllPermissions}
+        />
         <SectionButton
           label={t('reveal secret phrase')}
           onPress={() => navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)}

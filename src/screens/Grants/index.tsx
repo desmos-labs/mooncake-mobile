@@ -24,7 +24,7 @@ import GrantSection from 'screens/Grants/components/GrantSection';
 import { useGetAuthzGrants } from 'services/graphql/queries/GetAuthGrants';
 import useStyles from './useStyles';
 
-declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GRANTS>;
+declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_GRANTS>;
 
 const Grants: React.FC<NavProps> = props => {
   const {
@@ -108,7 +108,7 @@ const Grants: React.FC<NavProps> = props => {
   );
 
   const navigateToSection = useCallback(async (section: { name: string }) => {
-    navigate(ROUTES.GRANTS_DETAILS, { section });
+    navigate(ROUTES.SETTINGS_GRANTS_DETAILS, { section });
   }, []);
 
   if (fetchingGrants) {
