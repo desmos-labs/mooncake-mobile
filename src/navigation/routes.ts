@@ -78,12 +78,22 @@ enum ROUTES {
   // --- CHAIN LINKS SCREEN
   // -------------------------------------------------------------------------------------
 
+  MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',
+
   // Connect chain
   CONNECT_ADDRESS_GENERAL = 'CONNECT_ADDRESS_GENERAL',
   CONNECT_ADDRESS_ADVANCED = 'CONNECT_ADDRESS_ADVANCED',
 
   // Disconnect chain
   DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
+
+  // -------------------------------------------------------------------------------------
+  // --- APP LINKS SCREEN
+  // -------------------------------------------------------------------------------------
+
+  MANAGE_CONNECTED_APPS = 'MANAGE_CONNECTED_APPS',
+
+  // Disconnect app modal
   DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
 
   // -------------------------------------------------------------------------------------
@@ -125,10 +135,6 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
-
-  MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',
-
-  MANAGE_CONNECTED_APPS = 'MANAGE_CONNECTED_APPS',
 
   PASSWORD_MANIPULATION = 'PASSWORD_MANIPULATION',
 

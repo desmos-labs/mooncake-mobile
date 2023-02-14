@@ -147,3 +147,11 @@ export const formatMsToHumanReadable = (
  */
 export const slip10IndexToBaseNumber = (index: Slip10RawIndex): number =>
   index.isHardened() ? index.toNumber() - 2 ** 31 : index.toNumber();
+
+/**
+ * Capitalize the provided word.
+ * @param word - The word to capitalize.
+ */
+export function capitalize(word: string) {
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
+}

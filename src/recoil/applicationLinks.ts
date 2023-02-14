@@ -39,16 +39,18 @@ const mergeApplicationLinks = (
 export const useStoreUserApplicationLinks = () => {
   const setApplicationsLinks = useSetRecoilState(applicationLinksState);
   return React.useCallback(
-    (user: string, applicationLinks: ApplicationLink[]) => {
+    (user: string, applicationLinks: ApplicationLink[], merge?: boolean) => {
       setApplicationsLinks(currentApplicationLinks => {
         // Merge the new links with the existing ones
         const exitingApplicationLinks = currentApplicationLinks[user] ?? [];
-        const mergedLinks = mergeApplicationLinks(exitingApplicationLinks, applicationLinks);
+        const newUserApplicationLinks = merge
+          ? mergeApplicationLinks(exitingApplicationLinks, applicationLinks)
+          : applicationLinks;
 
         const newApplicationLinks: Record<string, ApplicationLink[]> = {
           ...currentApplicationLinks,
         };
-        newApplicationLinks[user] = mergedLinks;
+        newApplicationLinks[user] = newUserApplicationLinks;
         return newApplicationLinks;
       });
     },

@@ -40,12 +40,14 @@ import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
 import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/DisconnectChainModal';
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
+import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
+import ManageConnectedApps from 'screens/ManageConnectedApps';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
   // [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
-  // [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
+  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
   [ROUTES.LANDING]: undefined;
   [ROUTES.SIGNUP]: undefined;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -137,7 +139,7 @@ export type RootNavigatorParamList = {
   // Apps and Twitter
   // [ROUTES.CONNECT_APP]: ConnectAppParams;
   // [ROUTES.SELECT_TWEET]: SelectTweetParams;
-  // [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
   // Activities
   // [ROUTES.ACTIVITIES]: undefined;
@@ -258,10 +260,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.MANAGE_CONNECTED_APPS} */}
-      {/*  component={ManageConnectedApps} */}
-      {/* /> */}
+      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.MANAGE_BIOMETRICS} */}
       {/*  component={ManageBiometrics} */}
@@ -390,11 +389,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
       <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
-
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.DISCONNECT_APP_MODAL} */}
-      {/*    component={DisconnectAppModal} */}
-      {/*  /> */}
+      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
 
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.ACTION_AUTHORIZATION} */}
