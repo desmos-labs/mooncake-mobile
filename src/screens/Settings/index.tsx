@@ -9,21 +9,21 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { InteractionManager, Linking } from 'react-native';
-import { getSupportedBiometryType } from 'react-native-keychain';
+import { Linking } from 'react-native';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useDeleteAuthToken } from 'services/axios';
 import { useNavigation } from '@react-navigation/native';
-import { AppSettings, BiometricAuthorizations } from 'types/settings';
 import { useSetSettings, useSettings } from '@recoil/settings';
-import { deleteBiometricAuthorization } from 'lib/SecureStorage';
-import { useSetUserApplicationGrants, useUserApplicationGrants } from 'screens/Settings/hooks';
-import { useActiveAccount } from '@recoil/accounts';
+import {
+  useSetUserApplicationGrants,
+  useToggleBiometrics,
+  useUserApplicationGrants,
+} from 'screens/Settings/hooks';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -33,46 +33,18 @@ const Settings: React.FC<NavProps> = props => {
   } = props;
   const settings = useSettings();
   const setSettings = useSetSettings();
-  const [biometricsSupported, setBiometricsSupported] = useState<boolean>();
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const { reset } = useNavigation<NavProps['navigation']>();
-  const activeAccount = useActiveAccount()!;
-  const { haveAllPermissions, authorizationInfo } = useUserApplicationGrants(activeAccount.address);
-  const steUserApplicationGrants = useSetUserApplicationGrants(activeAccount.address);
+  const { haveAllPermissions, authorizationInfo } = useUserApplicationGrants();
+  const steUserApplicationGrants = useSetUserApplicationGrants();
+  const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
 
   const formattedAccountCreationDate = useFormatDateToTZ(
     // TODO: Get the proper profile creation time.
     new Date().toISOString() || '',
     'MMM dd yyyy',
   );
-
-  const areBiometricsSupported = useCallback(async () => {
-    try {
-      const supported = await getSupportedBiometryType();
-      if (supported) {
-        setBiometricsSupported(true);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  const manageBiometrics = useCallback(async () => {
-    if (settings.biometrics) {
-      const result = await deleteBiometricAuthorization(BiometricAuthorizations.UnlockWallet);
-      if (result) {
-        setSettings((oldState: AppSettings) => {
-          return {
-            ...oldState,
-            biometrics: !oldState.biometrics,
-          };
-        });
-      }
-    } else {
-      navigate(ROUTES.MANAGE_BIOMETRICS);
-    }
-  }, [settings.biometrics, navigate, setSettings]);
 
   const manageNewPostNotif = useCallback(
     (type: 'discover' | 'following') => () => {
@@ -90,17 +62,6 @@ const Settings: React.FC<NavProps> = props => {
     },
     [setSettings],
   );
-
-  useEffect(() => {
-    const interactionPromise = InteractionManager.runAfterInteractions(() => {
-      areBiometricsSupported();
-    });
-    return () => interactionPromise.cancel();
-
-    // We need to check the biometric support just when we open this screen
-    // it's safe to ignore the hooks lint error here.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handlePressSignOut = () => {
     useDeleteAuthToken();
@@ -189,8 +150,8 @@ const Settings: React.FC<NavProps> = props => {
         {biometricsSupported && (
           <SectionSwitch
             label={t('enable biometrics')}
-            value={settings.biometrics}
-            onValueChange={manageBiometrics}
+            value={biometricsEnabled}
+            onValueChange={toggleBiometrics}
           />
         )}
       </Section>

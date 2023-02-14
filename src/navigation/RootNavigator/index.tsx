@@ -46,6 +46,7 @@ import DisconnectChainModal, { DisconnectChainParams } from 'screens/Modals/Disc
 import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
+import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -66,6 +67,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.SETTINGS]: undefined;
+  [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
   // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
@@ -96,8 +98,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
   [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
-  [ROUTES.MANAGE_BIOMETRICS]: undefined;
-
   // Nested navigators
   // [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
 
@@ -265,10 +265,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.MANAGE_BIOMETRICS} */}
-      {/*  component={ManageBiometrics} */}
-      {/* /> */}
+      <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       {/* <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} /> */}
       {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
       {/* <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} /> */}

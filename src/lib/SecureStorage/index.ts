@@ -10,6 +10,12 @@ import { serializeWallet } from 'lib/WalletUtils/serialize';
 import { deserializeWallet } from 'lib/WalletUtils/deserialize';
 import { BiometricAuthorizations } from 'types/settings';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
+import {
+  CorruptedDataError,
+  SecureStorageError,
+  UnknownError,
+  WrongPasswordError,
+} from 'lib/SecureStorage/errors';
 
 export enum SecureStorageKeys {
   /**
@@ -53,14 +59,25 @@ export interface StoreOptions {
 export async function getItem<T>(
   key: string,
   options: StoreOptions | undefined = undefined,
-): Promise<Result<T | null, Error>> {
+): Promise<Result<T | null, SecureStorageError>> {
   const moreOptions = options?.biometrics === true ? { ...defaultOptions } : null;
 
-  const data = await Keychain.getGenericPassword({
-    service: key,
-    ...moreOptions,
-  });
+  const getDataResult = await ResultAsync.fromPromise(
+    Keychain.getGenericPassword({
+      service: key,
+      ...moreOptions,
+    }),
+    // Safe to ignore this promise will raise an Error, and in such case
+    // we just wrap the error in our custom error type.
+    // @ts-ignore
+    e => new UnknownError(e?.message ?? 'Error while loading the data from Keychain'),
+  );
 
+  if (getDataResult.isErr()) {
+    return err(getDataResult.error);
+  }
+
+  const data = getDataResult.value;
   if (!data || options?.password === undefined) {
     return ok(null);
   }
@@ -68,12 +85,13 @@ export async function getItem<T>(
   // Password provided, decrypt the data
   const jsonValueNew = JSON.parse(data.password);
   if (typeof jsonValueNew.iv !== 'string' && typeof jsonValueNew.cipher !== 'string') {
-    return err(Error('Invalid encrypted data'));
+    return err(new CorruptedDataError());
   }
 
   const jsonSerialized = await ResultAsync.fromPromise(
     decryptData(jsonValueNew as EncryptedData, options.password),
-    () => new Error('Invalid password'),
+    // @ts-ignore
+    e => new WrongPasswordError(e?.message ?? 'Invalid password'),
   );
 
   return jsonSerialized.map(JSON.parse);
@@ -118,13 +136,13 @@ export async function resetSecureStorage(): Promise<void> {
 async function storeWallet(
   wallet: SerializableWallet,
   password: string,
-): Promise<Result<void, Error>> {
+): Promise<Result<void, SecureStorageError>> {
   const result = await setItem(`${wallet.address}${SecureStorageKeys.WALLET_SUFFIX}`, wallet, {
     password,
   });
 
   if (!result) {
-    return err(new Error(`Error while saving wallet ${wallet.address}`));
+    return err(new UnknownError(`Error while saving wallet ${wallet.address}`));
   }
 
   return ok(undefined);
@@ -138,7 +156,7 @@ async function storeWallet(
 export const saveWallet = async (
   wallet: Wallet,
   password: string,
-): Promise<Result<void, Error>> => {
+): Promise<Result<void, SecureStorageError>> => {
   const serializableWallet = serializeWallet(wallet);
   return storeWallet(serializableWallet, password);
 };
@@ -158,7 +176,7 @@ export const deleteWallet = async (address: string) =>
 export const getWallet = async (
   address: string,
   password: string,
-): Promise<Result<SerializableWallet, Error>> => {
+): Promise<Result<SerializableWallet, SecureStorageError>> => {
   const loadedValue = await getItem<Partial<SerializableWallet>>(
     `${address}${SecureStorageKeys.WALLET_SUFFIX}`,
     {
@@ -172,8 +190,9 @@ export const getWallet = async (
 
   const serializedWallet = loadedValue.value;
   if (serializedWallet === null) {
-    return err(new Error(`Can't find wallet for address: ${address}`));
+    return err(new UnknownError(`Can't find wallet for address: ${address}`));
   }
+
   return ok(deserializeWallet(serializedWallet));
 };
 
@@ -183,13 +202,15 @@ export const getWallet = async (
  * @param password {string} - Value of the password to be set.
  * @throws Error if for some reason the encryption operations fail.
  */
-export const setUserPassword = async (password: string): Promise<Result<void, Error>> => {
+export const setUserPassword = async (
+  password: string,
+): Promise<Result<void, SecureStorageError>> => {
   const result = await setItem<string>(SecureStorageKeys.PASSWORD_CHALLENGE, passwordChallenge, {
     password,
   });
 
   if (!result) {
-    return err(new Error('error while storing the user password challenge'));
+    return err(new UnknownError('error while storing the user password challenge'));
   }
 
   return ok(undefined);
@@ -202,7 +223,9 @@ export const setUserPassword = async (password: string): Promise<Result<void, Er
  * @return {true} if the password matches the previous one, or {false} otherwise.
  * @throws Error if for some reason the decryption operations fail.
  */
-export const checkUserPassword = async (password: string): Promise<Result<boolean, Error>> => {
+export const checkUserPassword = async (
+  password: string,
+): Promise<Result<boolean, SecureStorageError>> => {
   const value = await getItem<string>(SecureStorageKeys.PASSWORD_CHALLENGE, {
     password,
   });
@@ -212,7 +235,7 @@ export const checkUserPassword = async (password: string): Promise<Result<boolea
   }
 
   if (value.value === null) {
-    return err(new Error("Can't validate user password"));
+    return err(new UnknownError("Can't validate user password"));
   }
 
   return ok(value.value === passwordChallenge);
@@ -229,7 +252,7 @@ export const checkUserPassword = async (password: string): Promise<Result<boolea
 export const changeWalletsPassword = async (
   oldPassword: string,
   newPassword: string,
-): Promise<Result<boolean, Error>> => {
+): Promise<Result<boolean, SecureStorageError>> => {
   const isPasswordValid = await checkUserPassword(oldPassword);
   if (isPasswordValid.isErr()) {
     return ok(false);
@@ -289,15 +312,13 @@ export const storeBiometricAuthorization = async (
 ) => {
   const isPasswordValid = await checkUserPassword(password);
   if (!isPasswordValid) {
-    throw new Error('invalid user password');
+    return err(new WrongPasswordError());
   }
 
-  await setItem(
-    `${authorizationType}${SecureStorageKeys.BIOMETRIC_AUTHORIZATION_SUFFIX}`,
-    password,
-    {
+  return ResultAsync.fromSafePromise(
+    setItem(`${authorizationType}${SecureStorageKeys.BIOMETRIC_AUTHORIZATION_SUFFIX}`, password, {
       biometrics: true,
-    },
+    }),
   );
 };
 
@@ -306,7 +327,7 @@ export const storeBiometricAuthorization = async (
  */
 export const deleteBiometricAuthorization = async (
   authorizationType: BiometricAuthorizations,
-): Promise<Result<boolean, Error>> => {
+): Promise<Result<boolean, SecureStorageError>> => {
   const key = `${authorizationType}${SecureStorageKeys.BIOMETRIC_AUTHORIZATION_SUFFIX}`;
 
   // Get the item first to force the user to authenticate before delete.
@@ -325,7 +346,7 @@ export const deleteBiometricAuthorization = async (
  */
 export const getBiometricPassword = async (
   authorizationType: BiometricAuthorizations,
-): Promise<Result<string | undefined, Error>> => {
+): Promise<Result<string | undefined, SecureStorageError>> => {
   const password = await getItem<string>(
     `${authorizationType}${SecureStorageKeys.BIOMETRIC_AUTHORIZATION_SUFFIX}`,
     {
