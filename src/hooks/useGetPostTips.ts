@@ -57,10 +57,10 @@ const useGetPostTips = (post: Post, tipsPerPage: number = 50) => {
   // Query used to get the comments
   const { refetch, loading, fetchMore } = useQuery(GetPostTips, {
     variables: {
-      offset: 0,
-      limit: tipsPerPage,
       subspaceId: post.subspaceId,
       postId: post.id,
+      offset: 0,
+      limit: tipsPerPage,
     },
     onCompleted: onCompletedCallback,
     refetchWritePolicy: 'overwrite',
@@ -75,7 +75,7 @@ const useGetPostTips = (post: Post, tipsPerPage: number = 50) => {
       await fetchMore({
         variables: { offset: tips.length },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          posts: fetchMoreResult ? [...prev.tips, ...fetchMoreResult.tips] : prev,
+          tips: fetchMoreResult ? [...prev.tips, ...fetchMoreResult.tips] : prev,
         }),
       });
     } catch (e: any) {

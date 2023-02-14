@@ -37,9 +37,9 @@ const cache = new InMemoryCache({
       case 'post_attachment':
         // @ts-ignore
         return `post_attachment:${object.content.uri}`;
-      case 'djuno_profile':
+      case 'profile':
         // @ts-ignore
-        return `djuno_profile:${object.address}`;
+        return `profile:${object.address}`;
       case 'user_relationship':
         // @ts-ignore
         return `user_relationship:${object.content.counterparty_address}`;

@@ -1,13 +1,10 @@
 import { loadingOrange } from 'assets/animations';
 import {
   commentIcon,
-  commentIconCommented,
   commentLiked,
   commentLikeEmptyIcon,
   commentMore,
-  defaultProfilePic,
   tipIcon,
-  tipIconTipped,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
@@ -19,10 +16,15 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Post } from 'types/posts';
+import { isPostPending, Post } from 'types/posts';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
+import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
+import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
+import useHasReacted from 'hooks/useHasReacted';
 import useStyles from './useStyles';
 
-export interface Props {
+export interface CommentItemProps {
   readonly comment: Post;
   readonly handlePressMore: (event: GestureResponderEvent) => void;
   readonly handlePressComment: () => void;
@@ -34,24 +36,46 @@ export interface Props {
   readonly disableInnerComment?: boolean;
 }
 
-const CommentItem = ({
-  comment,
-  disableInnerComment,
-  handlePressComment,
-  handlePressLike,
-  handlePressMore,
-  handlePressTip,
-  handlePress,
-  handleLongPress,
-  handleProfilePicPress,
-}: Props) => {
-  const styles = useStyles(disableInnerComment);
+/**
+ * Component that allows to display a single comment inside the list.
+ * @constructor
+ */
+const CommentItem = (props: CommentItemProps) => {
+  const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const formattedDate = useFormatTimeForPostDetails(creation_date);
+  const {
+    comment,
+    disableInnerComment,
+    handlePressComment,
+    handlePressLike,
+    handlePressMore,
+    handlePressTip,
+    handlePress,
+    handleLongPress,
+    handleProfilePicPress,
+  } = props;
 
-  const { MediaAttachment } = useRenderMediaAttachment({
-    attachments,
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const { count: commentsCount } = useGetPostCommentsCount(comment);
+  const hasReacted = useHasReacted(comment);
+  const { count: reactionsCount } = useGetPostReactionsCount(comment);
+  const { count: tipsCount } = useGetPostTipsCount(comment);
+
+  // -------------------------------------------------------------------------------------
+  // --- Formatted data
+  // -------------------------------------------------------------------------------------
+
+  const formattedDate = useFormatTimeForPostDetails(comment.creationDate);
+
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  const { MediaAttachment } = useRenderMediaAttachment(comment.attachments, {
     imageStyle: {
       marginTop: 8,
       width: '100%',
@@ -62,13 +86,14 @@ const CommentItem = ({
     resizeMode: 'cover',
   });
 
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
+
   return (
     <View style={[styles.container, styles.flexRow]}>
       <TouchableOpacity onPress={handleProfilePicPress}>
-        <FastImage
-          source={author?.profile_pic ? { uri: author.profile_pic } : defaultProfilePic}
-          style={styles.avatar}
-        />
+        <FastImage source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -80,69 +105,57 @@ const CommentItem = ({
           <TouchableOpacity style={styles.flexRow} onPress={handleProfilePicPress}>
             <View>
               <Typography.Subtitle3 style={styles.textStyle}>
-                {author?.nickname ? author.nickname : t('no nickname')}
+                {comment.author.nickname ? comment.author.nickname : t('no nickname')}
               </Typography.Subtitle3>
-              <Typography.Body7 style={styles.subTextStyle}>@{author?.dtag}</Typography.Body7>
+              <Typography.Body7 style={styles.subTextStyle}>
+                @{comment.author.dTag}
+              </Typography.Body7>
             </View>
           </TouchableOpacity>
 
-          {isPending ? (
+          {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={loadingOrange} style={styles.loadingAnim} />
           ) : (
             <ImageButton onPress={handlePressMore} image={commentMore} style={styles.buttonImage} />
           )}
         </View>
         {MediaAttachment}
-        <Typography.Body6 style={styles.contentText}>{text}</Typography.Body6>
+        <Typography.Body6 style={styles.contentText}>{comment.text}</Typography.Body6>
         <View style={styles.bottomGroup}>
           <View>
             <Typography.Body7 style={styles.subTextStyle}>
-              {isPending ? t('common:broadcasting') : formattedDate}
+              {isPostPending(comment) ? t('common:broadcasting') : formattedDate}
             </Typography.Body7>
           </View>
 
           <View style={styles.interactionButtonGroup}>
             {!disableInnerComment && (
               <TouchableOpacity onPress={handlePressComment} style={styles.interactionButton}>
-                <Image
-                  source={commented ? commentIconCommented : commentIcon}
-                  style={[
-                    styles.buttonImage,
-                    styles.interactionImage,
-                    commented ? styles.orangeIconAndText : {},
-                  ]}
-                />
-                <Typography.Subtitle3
-                  style={commented ? styles.orangeIconAndText : styles.textStyle}>
-                  {formatNumShorthand(repliesCounter)}
+                <Image source={commentIcon} style={[styles.buttonImage, styles.interactionImage]} />
+                <Typography.Subtitle3 style={styles.textStyle}>
+                  {formatNumShorthand(commentsCount)}
                 </Typography.Subtitle3>
               </TouchableOpacity>
             )}
             <TouchableOpacity onPress={handlePressLike} style={styles.interactionButton}>
               <Image
-                source={liked ? commentLiked : commentLikeEmptyIcon}
+                source={hasReacted ? commentLiked : commentLikeEmptyIcon}
                 style={[
                   styles.buttonImage,
-                  liked ? styles.orangeIconAndText : {},
+                  hasReacted ? styles.orangeIconAndText : {},
                   styles.interactionImage,
                 ]}
               />
-              <Typography.Subtitle3 style={liked ? styles.orangeIconAndText : styles.textStyle}>
-                {reactions ? formatNumShorthand(reactions.length) : 0}
+              <Typography.Subtitle3
+                style={hasReacted ? styles.orangeIconAndText : styles.textStyle}>
+                {formatNumShorthand(reactionsCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={handlePressTip} style={styles.interactionButton}>
-              <Image
-                source={tipped ? tipIconTipped : tipIcon}
-                style={[
-                  styles.buttonImage,
-                  styles.interactionImage,
-                  tipped && styles.orangeIconAndText,
-                ]}
-              />
-              <Typography.Subtitle3 style={tipped ? styles.orangeIconAndText : styles.textStyle}>
-                {tips ? formatNumShorthand(tips.length) : 0}
+              <Image source={tipIcon} style={[styles.buttonImage, styles.interactionImage]} />
+              <Typography.Subtitle3 style={styles.textStyle}>
+                {formatNumShorthand(tipsCount)}
               </Typography.Subtitle3>
             </TouchableOpacity>
           </View>

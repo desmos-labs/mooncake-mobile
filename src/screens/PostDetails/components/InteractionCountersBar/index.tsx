@@ -1,49 +1,57 @@
 import Typography from 'components/Typography';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import FastImage, { Source } from 'react-native-fast-image';
+import FastImage from 'react-native-fast-image';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { DesmosProfile } from 'types/desmos';
+import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
 
 type Props = {
   loading: boolean;
-  accountsHighlightedPics: Source[];
+  interactionAuthors: DesmosProfile[];
   tipsCounter: number;
   likesCounter: number;
   handlePressCounters: () => void;
 };
 
-const InteractionCountersBar = ({
-  loading,
-  accountsHighlightedPics,
-  tipsCounter,
-  likesCounter,
-  handlePressCounters,
-}: Props) => {
+/**
+ * Component that allows to show the number and authors of a post interactions (i.e. reactions, tips).
+ * @constructor
+ */
+const InteractionCountersBar = (props: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('postDetails');
-  // TODO i dont like this but i had not found any better idea
-  const calculatedWidth =
-    accountsHighlightedPics.length === 1 ? 30 : accountsHighlightedPics.length === 2 ? 50 : 70;
+
+  const { loading, interactionAuthors, tipsCounter, likesCounter, handlePressCounters } = props;
+
+  const calculatedWidth = useMemo(() => {
+    switch (interactionAuthors.length) {
+      case 0:
+        return 0;
+      default:
+        return 30 + (interactionAuthors.length - 1) * 20;
+    }
+  }, [interactionAuthors.length]);
 
   return loading ? (
     <ActivityIndicator color={theme.colors.surfaceBlack} />
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
-        {accountsHighlightedPics[0] && (
+        {interactionAuthors[0] && (
           <View style={{ width: calculatedWidth, height: 30 }}>
-            {accountsHighlightedPics[0] && (
-              <FastImage source={accountsHighlightedPics[0]} style={styles.icon1} />
-            )}
-            {accountsHighlightedPics[1] && (
-              <FastImage source={accountsHighlightedPics[1]} style={styles.icon2} />
-            )}
-            {accountsHighlightedPics[2] && (
-              <FastImage source={accountsHighlightedPics[2]} style={styles.icon3} />
-            )}
+            {interactionAuthors.map((value, index) => {
+              return (
+                <FastImage
+                  key={value.address}
+                  source={getProfilePicture(value)}
+                  style={[styles.icon, { transform: [{ translateX: 21 * index }] }]}
+                />
+              );
+            })}
           </View>
         )}
         <Typography.Button2 style={styles.text}>

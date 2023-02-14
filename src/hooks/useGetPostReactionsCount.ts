@@ -22,6 +22,7 @@ const useGetPostReactionsCount = (post: Post) => {
       postId: post.id,
     },
   });
+
   const serverReactionsCount = useMemo(() => data?.reactions?.aggregate?.count ?? 0, [data]);
 
   // Get the reactions difference that is stored locally

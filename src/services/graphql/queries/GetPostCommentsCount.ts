@@ -6,11 +6,10 @@ const GetPostCommentsCount = gql`
   query PostCommentsCount($subspaceId: bigint!, $postId: bigint!) @api(name: butter) {
     comments: post_aggregate(
       where: {
-        post: { subspace_id: { _eq: $subspaceID }, external_id: { _eq: $commentExternalId } }
-        conversation: { id: { _eq: $postID } }
+        subspace_id: { _eq: $subspaceId }
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }
-          reference: { id: { _eq: $postID } }
+          reference: { id: { _eq: $postId } }
         }
       }
     ) {

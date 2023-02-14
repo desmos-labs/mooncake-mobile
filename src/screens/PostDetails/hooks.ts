@@ -8,7 +8,6 @@ import useCreatePost from 'hooks/useCreatePost';
 import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
-import { Source } from 'react-native-fast-image';
 import { TipTargetType } from 'types/tips';
 
 /**
@@ -156,35 +155,4 @@ export const useHandlePressCounters = (post: Post) => {
       },
     });
   }, [navigate, post]);
-};
-
-export const useReactorsAndTippersProfilePics = (post: Post) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [profilePics, setProfilePics] = useState<Source[]>([]);
-
-  const refetch = React.useCallback(() => {
-    // const countersImages = useMemo(() => {
-    //   const reactionsImages = reactions.map((reaction: any) => {
-    //     if (reaction.author.profile_pic) {
-    //       return { uri: reaction.author.profile_pic };
-    //     } else {
-    //       return defaultProfilePic;
-    //     }
-    //   });
-    //   const tipsImages = tips.map((tip: any) => {
-    //     if (tip.sender.profile_pic) {
-    //       return { uri: tip.sender.profile_pic };
-    //     } else {
-    //       return defaultProfilePic;
-    //     }
-    //   });
-    //   return _.unionBy(reactionsImages, tipsImages, 'uri') as any[];
-    // }, [reactions, tips]);
-  }, []);
-
-  return {
-    loading,
-    profilePics,
-    refetch,
-  };
 };

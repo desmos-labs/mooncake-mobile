@@ -54,6 +54,7 @@ import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
 import TopBar from 'components/TopBar';
+import usePostInteractionsAuthors from 'hooks/usePostInteractionsAuthors';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
@@ -64,7 +65,6 @@ import {
   useHandlePressReportUser,
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
-  useReactorsAndTippersProfilePics,
 } from './hooks';
 import useStyles from './useStyles';
 
@@ -134,11 +134,6 @@ const PostDetails = () => {
   // Get the post data based on the given post and the post from the chain
   const post = useMemo(() => storedPost ?? givenPost, [givenPost, storedPost]);
 
-  const {
-    profilePics: reactorsAndTippersProfilesPic,
-    refetch: refreshReactorsAndTippersProfilesPic,
-  } = useReactorsAndTippersProfilePics(post);
-
   // Reactions data
   const {
     count: reactionsCount,
@@ -163,6 +158,13 @@ const PostDetails = () => {
     refetch: refreshTipsCount,
   } = useGetPostTipsCount(post);
 
+  // Interactions data
+  const {
+    authors: interactionsAuthors,
+    loading: areInteractionsAuthorsLoading,
+    refetch: refreshInteractionsAuthors,
+  } = usePostInteractionsAuthors(post, 3);
+
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
@@ -183,17 +185,17 @@ const PostDetails = () => {
   // Method used to refresh the post data
   const refreshPage = useCallback(() => {
     refreshPost();
-    refreshReactorsAndTippersProfilesPic();
     refreshReactionsCount();
     refreshComments();
     refreshCommentsCount();
     refreshTipsCount();
+    refreshInteractionsAuthors();
   }, [
     refreshComments,
     refreshCommentsCount,
+    refreshInteractionsAuthors,
     refreshPost,
     refreshReactionsCount,
-    refreshReactorsAndTippersProfilesPic,
     refreshTipsCount,
   ]);
 
@@ -276,11 +278,11 @@ const PostDetails = () => {
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
-            loading={isReactionsCountLoading || isTipsCountLoading}
+            loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
             likesCounter={reactionsCount}
             tipsCounter={tipsCount}
             handlePressCounters={handlePressCounters}
-            accountsHighlightedPics={reactorsAndTippersProfilesPic}
+            interactionAuthors={interactionsAuthors}
           />
         </Spacer>
         <Divider style={styles.divider} />
@@ -293,10 +295,11 @@ const PostDetails = () => {
       focusTextInputRef,
       isReactionsCountLoading,
       isTipsCountLoading,
+      areInteractionsAuthorsLoading,
       reactionsCount,
       tipsCount,
       handlePressCounters,
-      reactorsAndTippersProfilesPic,
+      interactionsAuthors,
       styles.divider,
       handlePressReaction,
       handlePressSendTips,
@@ -398,7 +401,7 @@ const PostDetails = () => {
 
       // Refresh the data
       refreshPage();
-    }, [post, refreshPage]),
+    }, []),
   );
 
   // -------------------------------------------------------------------------------------

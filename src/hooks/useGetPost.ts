@@ -7,6 +7,7 @@ import { getLikeReactionId } from 'types/desmos';
 import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
+import useUpdatePostReactionCache from 'hooks/useUpdatePostReactionsCache';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -21,14 +22,17 @@ const useGetPost = (subspaceId: number, postId: number) => {
   const storePost = useStorePost(activeAddress);
   const deletePost = useRemovePost(activeAddress);
 
+  const updatePostReactionCache = useUpdatePostReactionCache(activeAddress);
+
   // Use the cached post value as the single source of truth
   const post = usePostByID(activeAddress, subspaceId, postId);
 
   // Query the post from the GraphQL server
   const { data, refetch, loading } = useQuery(GetPost, {
+    refetchWritePolicy: 'overwrite',
     variables: {
-      subspaceID: subspaceId,
-      postID: postId,
+      subspaceId,
+      postId,
       user: activeAddress,
       reaction: {
         '@type': '/desmos.reactions.v1.RegisteredReactionValue',
@@ -42,6 +46,9 @@ const useGetPost = (subspaceId: number, postId: number) => {
 
     const { posts } = data;
     const onChainPost = posts.length > 0 ? convertGraphQLPost(posts[0]) : undefined;
+    if (onChainPost) {
+      updatePostReactionCache(onChainPost);
+    }
 
     // Build the variables to merge the posts accordingly
     const existingPosts = post === undefined ? [] : [post];
@@ -59,7 +66,7 @@ const useGetPost = (subspaceId: number, postId: number) => {
     } else if (postToStore !== undefined) {
       storePost(postToStore);
     }
-  }, [data, deletePost, post, storePost]);
+  }, [data, deletePost, post, storePost, updatePostReactionCache]);
 
   return {
     loading,

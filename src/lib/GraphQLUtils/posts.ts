@@ -59,14 +59,6 @@ export interface GraphQLPost extends Post {
    * Identifies whether the current application user has reacted to this post or not.
    */
   readonly hasReacted: boolean;
-  /**
-   * Identifies whether the current application user has commented this post or not.
-   */
-  readonly hasCommented: boolean;
-  /**
-   * Identifies whether the current application user has tipped this post or not.
-   */
-  readonly hasTipped: boolean;
 }
 
 /**
@@ -87,9 +79,7 @@ export const convertGraphQLPost = (post: any): GraphQLPost => ({
   transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
 
   // Extension fields
-  hasCommented: post.commentPresence?.aggregate?.count > 0,
   hasReacted: post.reactionPresence?.aggregate?.count > 0,
-  hasTipped: post.tipPresence?.aggregate?.count > 0,
 
   // TODO: Implement this
   references: [],

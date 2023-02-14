@@ -66,14 +66,15 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
   // Query used to get the comments
   const { refetch, loading, fetchMore } = useQuery(GetPostComments, {
     variables: {
-      offset: 0,
-      limit: commentsPerPage,
-      subspaceID: subspaceId,
+      subspaceId: post.subspaceId,
+      postId: post.id,
       user: activeAccountAddress,
       reaction: {
         '@type': RegisteredReactionValueTypeUrl,
         registered_reaction_id: getLikeReactionId(subspaceParams),
       },
+      offset: 0,
+      limit: commentsPerPage,
     },
     onCompleted: onCompletedCallback,
     refetchWritePolicy: 'overwrite',
@@ -88,7 +89,7 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
       await fetchMore({
         variables: { offset: comments.length },
         updateQuery: (prev, { fetchMoreResult }) => ({
-          posts: fetchMoreResult ? [...prev.comments, ...fetchMoreResult.comments] : prev,
+          comments: fetchMoreResult ? [...prev.comments, ...fetchMoreResult.comments] : prev,
         }),
       });
     } catch (e: any) {

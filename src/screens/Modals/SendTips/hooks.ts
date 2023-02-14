@@ -18,10 +18,10 @@ export const useTipFeePercentage = () => {
 
 /**
  * Returns the currency that should be used to tip the post.
- * TODO: allow the user to select which coin he wants to use as the tip, instead of forcing the staking currency
  */
 const useTipCurrency = () => {
   const chainConfig = useSetting('currentChain');
+  // TODO: allow the user to select which coin he wants to use as the tip, instead of forcing the staking currency
   return chainConfig.stakeCurrency;
 };
 

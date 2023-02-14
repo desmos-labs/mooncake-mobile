@@ -4,21 +4,21 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 const GetPostComments = gql`
   ${PostFields}
   query PostComments(
-    $subspaceID: bigint
-    $postID: bigint
+    $subspaceId: bigint
+    $postId: bigint
     $user: String
     $reaction: jsonb!
-    $offset: int
-    $limit: int
+    $offset: Int
+    $limit: Int
   ) @api(name: butter) {
-    posts: post(
+    comments: post(
       order_by: { creation_date: asc }
       where: {
-        subspace_id: { _eq: $subspaceID }
-        conversation: { id: { _eq: $postID } }
+        subspace_id: { _eq: $subspaceId }
+        conversation: { id: { _eq: $postId } }
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }
-          reference: { id: { _eq: $postID } }
+          reference: { id: { _eq: $postId } }
         }
       }
       offset: $offset
