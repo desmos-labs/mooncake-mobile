@@ -5,6 +5,7 @@ import { NavProps } from 'screens/Home';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { isPostPending, Post } from 'types/posts';
+import { TipTargetType } from 'types/tips';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -102,7 +103,10 @@ export const useHandlePressTip = () => {
         return;
       }
       navigate(ROUTES.SEND_TIPS, {
-        post,
+        target: {
+          type: TipTargetType.POST,
+          post,
+        },
       });
     },
     [navigate],

@@ -147,10 +147,9 @@ const SaveProfile = (props: NavProps) => {
       backgroundImage={coverPictureBackground}
       backgroundColor={theme.colors.white}>
       <View style={styles.headerButtonGroup}>
-        <ProfileHeaderButton imageSrc={backButton} style={styles.topButton} onPress={goBack} />
-
+        <ProfileHeaderButton image={backButton} style={styles.topButton} onPress={goBack} />
         <ProfileHeaderButton
-          imageSrc={cameraButton}
+          image={cameraButton}
           style={styles.topButton}
           onPress={selectCoverPicture}
         />

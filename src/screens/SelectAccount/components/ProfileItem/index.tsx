@@ -2,11 +2,11 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useFetchProfile } from 'screens/SelectAccount/components/ProfileItem/useHooks';
-import ProfileImage from 'components/ProfileImage';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { DesmosProfile } from 'types/desmos';
+import { useFetchProfile } from './hooks';
 import useStyles from './useStyles';
+import ProfileImage from '../ProfileImage';
 
 type Props = {
   address: string;
@@ -24,7 +24,7 @@ const ProfileItem = ({ address, handlePress }: Props) => {
     if (!profileLoading) {
       handlePress(profile);
     }
-  }, [profile, profileLoading]);
+  }, [handlePress, profile, profileLoading]);
 
   return (
     <DropShadowWrapper
@@ -35,10 +35,8 @@ const ProfileItem = ({ address, handlePress }: Props) => {
       }}>
       <TouchableOpacity onPress={onPress} style={styles.container}>
         <ProfileImage style={styles.avatar} profile={profile} size={46} loading={profileLoading} />
-
         <View>
           {profile && <Typography.H5>{getProfileDisplayName(profile)}</Typography.H5>}
-
           <Typography.Body6 ellipsizeMode="middle" numberOfLines={1}>
             {address}
           </Typography.Body6>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoTypes } from '@cosmjs/stargate';
-import { createDesmosTypes } from '@desmoslabs/desmjs/src/aminomessages';
+import { createDesmosTypes } from '@desmoslabs/desmjs';
 import axiosInstance from 'services/axios';
 import { Result, ResultAsync } from 'neverthrow';
 import { useAppStateValue } from '@recoil/appState';

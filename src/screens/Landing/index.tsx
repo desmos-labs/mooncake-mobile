@@ -12,32 +12,37 @@ import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import { useAppStateValue } from '@recoil/appState';
-import useImportAccount from 'hooks/useImportAccount';
-import { DesmosChain } from 'config/LinkableChains';
-import useSaveAccount from 'hooks/useSaveAccount';
-import useSaveProfile from 'hooks/useSaveProfile';
+import { usePerformImportAccount } from 'screens/Landing/hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LANDING>;
 
+/**
+ * Screen that is shown to the user when they open the application for the first time.
+ * From here, they can decide to create a new account, or import an existing one.
+ * @constructor
+ */
 const Landing = () => {
   const theme = useTheme();
   const { t } = useTranslation('landing');
   const { navigate, replace } = useNavigation<NavProps['navigation']>();
   const styles = useStyles();
-  const importAccount = useImportAccount({
-    chains: [DesmosChain],
-    showBalances: true,
-    minAccountBalance: 0.1,
-  });
-  const saveAccount = useSaveAccount();
-  const saveProfile = useSaveProfile();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const performImportAccount = usePerformImportAccount();
 
   // Tells whether the user has previously given consent to the Butter ToS and Privacy policies
   const consentGiven = useAppStateValue('consentGiven');
 
   // Ask the user the permission to access the device notification
   useRequestNotificationsPermission();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
   const onSignUp = React.useCallback(() => {
     if (!consentGiven) {
@@ -50,24 +55,6 @@ const Landing = () => {
   }, [consentGiven, navigate, replace]);
 
   const onSignUpWithWallet = React.useCallback(() => {
-    const performImportAccount = () => {
-      importAccount({
-        onSelect: account => {
-          if (account.profile === undefined) {
-            saveProfile({
-              storeOnChain: false,
-              profile: {
-                address: account.account.address,
-              },
-              onSuccess: () => saveAccount(account),
-            });
-          } else {
-            saveAccount(account);
-          }
-        },
-      });
-    };
-
     if (!consentGiven) {
       navigate(ROUTES.CONSENT_AGREEMENT, {
         onConsentAgree: performImportAccount,
@@ -75,7 +62,11 @@ const Landing = () => {
     } else {
       performImportAccount();
     }
-  }, [consentGiven, saveProfile, importAccount, navigate, saveAccount]);
+  }, [consentGiven, navigate, performImportAccount]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView backgroundImage={landingBG} backgroundFillScreen style={styles.container}>

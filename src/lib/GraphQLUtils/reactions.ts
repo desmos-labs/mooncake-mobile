@@ -16,6 +16,6 @@ export const convertGraphQLReaction = (reaction: any): PostReaction => {
     id: reaction.id,
     author: convertGraphQLProfile(reaction.author),
     status: DataStatus.SYNCED,
-    lastEdited: new Date(Date.now()),
+    lastEdited: new Date(Date.now()).toISOString(),
   };
 };

@@ -7,16 +7,17 @@ const useReturnToCurrentScreen = () => {
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   const startingScreenNavigateParams = useMemo(() => {
+    if (!navigator.getState()) return undefined;
     const { routes } = navigator.getState();
     const currentRoute = routes[routes.length - 1];
     return { key: currentRoute.key, params: currentRoute.params };
   }, [navigator]);
 
   return useCallback(() => {
-    const canNavigate =
-      navigator.getState().routes.find(r => r.key === startingScreenNavigateParams.key) !==
-      undefined;
-    if (canNavigate) {
+    const canNavigate = navigator
+      .getState()
+      ?.routes?.some(r => r.key === startingScreenNavigateParams?.key);
+    if (startingScreenNavigateParams && canNavigate) {
       navigator.navigate(startingScreenNavigateParams);
     }
   }, [navigator, startingScreenNavigateParams]);

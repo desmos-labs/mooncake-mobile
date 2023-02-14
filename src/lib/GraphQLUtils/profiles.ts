@@ -34,4 +34,5 @@ export const convertGraphQLProfile = (profile: any) =>
     profilePicture: profile.profile_picture,
     coverPicture: profile.cover_picture,
     nickname: profile.nickname,
+    creationTime: profile.creation_time,
   } as DesmosProfile);

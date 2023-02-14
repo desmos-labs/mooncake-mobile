@@ -11,18 +11,18 @@ export interface ResultCallbacks {
   onCancel?: () => any;
 }
 
+/**
+ * Hook that allows to show the user a list of accounts from which they will need to pick one.
+ */
 const useSelectAccount = () => {
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   return useCallback(
     (accountPickerParams: AccountPickerParams, callbacks: ResultCallbacks): void =>
-      navigator.navigate({
-        name: ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT,
-        params: {
-          accountPickerParams,
-          onSelect: callbacks.onSuccess,
-          onCancel: callbacks.onCancel,
-        },
+      navigator.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT, {
+        accountPickerParams,
+        onSelect: callbacks.onSuccess,
+        onCancel: callbacks.onCancel,
       }),
     [navigator],
   );

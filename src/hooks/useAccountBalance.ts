@@ -18,7 +18,7 @@ const useAccountBalance = (address?: string) => {
 
   const [balance, setBalance] = useState<Coin[]>([]);
   const { refetch, loading, data } = useQuery(GetAccountBalance, {
-    variables: { address, tokenName: '' },
+    variables: { address: userAddress },
   });
 
   // Update the balance based on when the data from the server changes

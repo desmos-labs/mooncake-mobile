@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { DesmosProfile } from 'types/desmos';
 import AvatarImageProps from 'components/AvatarImage/props';
 import AvatarImage from 'components/AvatarImage';
-import { defaultProfilePic } from 'assets/images';
 
 export interface ProfileImageProps extends Omit<AvatarImageProps, 'source'> {
+  /**
+   * Profile associated with the avatar image to be displayed.
+   */
   readonly profile: DesmosProfile | undefined;
   /**
    * True if we should display an activity indicator over the profile image.
@@ -12,15 +14,14 @@ export interface ProfileImageProps extends Omit<AvatarImageProps, 'source'> {
   readonly loading?: boolean;
 }
 
+/**
+ * Component that allows displaying a lazy loading Desmos profile picture.
+ * @param props
+ * @constructor
+ */
 const ProfileImage = (props: ProfileImageProps) => {
   const { profile, loading, ...rest } = props;
-
-  const profileImage = useMemo(
-    () => (profile?.profilePicture ? { uri: profile.profilePicture } : defaultProfilePic),
-    [profile],
-  );
-
-  return <AvatarImage source={profileImage} {...rest} loading={loading} />;
+  return <AvatarImage profile={profile} {...rest} loading={loading} />;
 };
 
 export default ProfileImage;

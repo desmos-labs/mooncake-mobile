@@ -110,6 +110,10 @@ export interface DesmosProfile {
    * Url to the user cover picture
    */
   readonly coverPicture?: Asset | string;
+  /**
+   * Date in which the profile was created.
+   */
+  readonly creationTime: string;
 }
 
 export interface ChainLink {

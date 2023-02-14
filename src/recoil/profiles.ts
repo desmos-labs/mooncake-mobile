@@ -19,7 +19,7 @@ const profilesState = atom<Record<string, DesmosProfile>>({
   ],
 });
 
-/** ]
+/**
  * Hook that allows to get the profile for the given user.
  * @param user {string} - Address of the user for which to get the profile.
  */

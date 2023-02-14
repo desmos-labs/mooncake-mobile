@@ -5,7 +5,7 @@
   "insert amount": "Insert amount",
   "message": "Message for the author",
   "oops": "Oops!",
-  "warning fee": "a {{fee}} % fee is included with the tip",
+  "warning fee": "a {{fee}}% fee is included with the tip",
   "no dsm": "You don’t have DSM",
   "too much": "The amount is too much",
   "too few": "The amount is too low",

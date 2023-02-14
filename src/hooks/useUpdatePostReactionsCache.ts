@@ -14,32 +14,25 @@ import useUpdateCachedData from 'hooks/useUpdateCachedData';
  * @param activeAddress {string} - Address of the active account.
  */
 const useUpdatePostReactionCache = (activeAddress: string) => {
-  const getPostReaction = useGetPostReaction();
-  const addPostReaction = useAddPostReaction();
-  const setPostReactionStatus = useUpdatePostReactionStatus();
-  const removePostReaction = useRemovePostReaction();
+  const getPostReaction = useGetPostReaction(activeAddress);
+  const addPostReaction = useAddPostReaction(activeAddress);
+  const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
+  const removePostReaction = useRemovePostReaction(activeAddress);
 
   const updateCachedData = useUpdateCachedData();
 
   return useCallback(
     (post: GraphQLPost) => {
-      const cachedPostReaction = getPostReaction(activeAddress, post);
+      const cachedPostReaction = getPostReaction(post);
       updateCachedData(
         cachedPostReaction,
         post.hasReacted,
-        () => addPostReaction(activeAddress, post),
-        (status: DataStatus) => setPostReactionStatus(activeAddress, post, status),
-        () => removePostReaction(activeAddress, post),
+        () => addPostReaction(post),
+        (status: DataStatus) => setPostReactionStatus(post, status),
+        () => removePostReaction(post),
       );
     },
-    [
-      activeAddress,
-      addPostReaction,
-      getPostReaction,
-      removePostReaction,
-      setPostReactionStatus,
-      updateCachedData,
-    ],
+    [addPostReaction, getPostReaction, removePostReaction, setPostReactionStatus, updateCachedData],
   );
 };
 

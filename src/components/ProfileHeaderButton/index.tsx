@@ -8,7 +8,12 @@ type Props = {
   /**
    * Profile for which to show the header button.
    */
-  profile: DesmosProfile;
+  profile?: DesmosProfile | undefined;
+
+  /**
+   * Custom image to be shown instead of the profile picture.
+   */
+  image?: number;
 
   /**
    * What to do when the button is pressed.
@@ -28,13 +33,18 @@ type Props = {
 };
 
 const ProfileHeaderButton = (props: Props) => {
-  const { profile, onPress, style, containerStyle, tintColor } = props;
+  const { profile, image, onPress, style, containerStyle, tintColor } = props;
+
+  const source = profile ? getProfilePicture(profile) : image;
+  if (!source) {
+    throw new Error('Cannot show ProfileHeaderButton without image source');
+  }
 
   return (
     <TouchableOpacity style={containerStyle} onPress={onPress}>
       <FastImage
         resizeMode="cover"
-        source={getProfilePicture(profile)}
+        source={source}
         style={style || styles.defaultStyle}
         tintColor={tintColor}
       />

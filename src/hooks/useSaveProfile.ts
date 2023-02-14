@@ -7,7 +7,7 @@ import { SaveProfileParams } from 'screens/SaveProfile';
 
 /**
  * Hooks that provide a function that start a flow that allow the user
- * to save a profile.
+ * to create or edit a profile.
  */
 const useSaveProfile = () => {
   const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();

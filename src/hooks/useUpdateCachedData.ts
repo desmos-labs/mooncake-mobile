@@ -18,7 +18,7 @@ const useUpdateCachedData = () => {
           // The data was created locally, and it's not (yet) on chain.
           // To decide whether to delete it or keep it,
           // we need to check the last update date
-          const elapsedTime = Date.now() - cachedData.lastEdited.getTime();
+          const elapsedTime = Date.now() - Date.parse(cachedData.lastEdited);
           if (elapsedTime > 30 * 1000) {
             // The data is not on-chain after 30 seconds, so we remove it from
             // the local storage as we assume something went wrong
@@ -46,7 +46,7 @@ const useUpdateCachedData = () => {
         } else if (cachedData?.status === DataStatus.DELETED_LOCALLY) {
           // The data was deleted locally, but it's still on-chain. To decide
           // what to do, we should check the last update time
-          const elapsedTime = Date.now() - cachedData.lastEdited.getTime();
+          const elapsedTime = Date.now() - Date.parse(cachedData.lastEdited);
           if (elapsedTime > 30 * 1000) {
             // The data is on-chain after 30 seconds of the local deletion.
             // We are going to switch back its status to SYNCED in order to

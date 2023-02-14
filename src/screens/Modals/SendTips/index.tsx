@@ -38,13 +38,14 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
  * Screen that allows the user to tip a given post.
  * @constructor
  */
-const SendTips = () => {
+const SendTips = (props: NavProps) => {
   const { goBack, pop } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('sendTips');
   const styles = useStyles();
   const theme = useTheme();
 
-  const { params } = useNavigation<NavProps['route']>();
+  const { route } = props;
+  const { params } = route;
   const { target } = params;
 
   // -------------------------------------------------------------------------------------

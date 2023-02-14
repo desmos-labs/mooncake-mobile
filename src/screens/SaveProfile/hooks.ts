@@ -180,6 +180,7 @@ export const useSubmitForm = (
         profilePicture: profilePic,
         coverPicture: coverPic,
         address: profileAddress,
+        creationTime: new Date(Date.now()).toISOString(),
       };
 
       // Store the profile locally

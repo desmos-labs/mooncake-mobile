@@ -9,6 +9,7 @@ import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import { Source } from 'react-native-fast-image';
+import { TipTargetType } from 'types/tips';
 
 /**
  * Hook that allows to report a user.
@@ -128,7 +129,12 @@ export const useHandlePressSendTips = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (post: Post) => {
-      navigate(ROUTES.SEND_TIPS, { post });
+      navigate(ROUTES.SEND_TIPS, {
+        target: {
+          type: TipTargetType.POST,
+          post,
+        },
+      });
     },
     [navigate],
   );

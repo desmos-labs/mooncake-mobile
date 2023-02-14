@@ -1,11 +1,12 @@
-import { ImageStyle, Source } from 'react-native-fast-image';
+import { ImageStyle } from 'react-native-fast-image';
 import { StyleProp } from 'react-native';
+import { DesmosProfile } from 'types/desmos';
 
 interface AvatarImageProps {
   /**
-   * Image to display for the `Avatar`.
+   * Profile for which to display the image.
    */
-  source: Source;
+  profile: DesmosProfile | undefined;
   /**
    * Size of the avatar.
    */

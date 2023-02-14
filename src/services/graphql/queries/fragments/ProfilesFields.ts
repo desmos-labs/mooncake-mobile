@@ -5,10 +5,10 @@ const ProfileFields = gql`
     address
     bio
     dtag
-    creationTime: creation_time
-    coverPicture: cover_pic
+    creation_time
+    cover_picture: cover_pic
     nickname
-    profilePicture: profile_pic
+    profile_picture: profile_pic
   }
 `;
 

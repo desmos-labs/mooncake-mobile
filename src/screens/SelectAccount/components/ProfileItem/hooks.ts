@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { DesmosProfile } from 'types/desmos';
 import { useLazyQuery } from '@apollo/client';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 
+/**
+ * Hook that allows to fetch a profile given an address.
+ * @param address {string} - Address of the user for which to get the profile.
+ * @param fetchDelay
+ */
 export const useFetchProfile = (address: string, fetchDelay: number) => {
   const [profileLoading, setProfileLoading] = useState(false);
   const [profile, setProfile] = useState<DesmosProfile>();
@@ -25,7 +31,7 @@ export const useFetchProfile = (address: string, fetchDelay: number) => {
             },
           },
         });
-        setProfile(data.profile[0]);
+        setProfile(convertGraphQLProfile(data.profile[0]));
       } catch (e) {
         // Ignore fetch error.
       } finally {
@@ -37,7 +43,7 @@ export const useFetchProfile = (address: string, fetchDelay: number) => {
       clearTimeout(timeout);
       setProfile(undefined);
     };
-  }, [lazyFetchProfile, address]);
+  }, [lazyFetchProfile, address, fetchDelay]);
 
   return {
     profile,
