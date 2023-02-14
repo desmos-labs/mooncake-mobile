@@ -24,6 +24,7 @@ import {
   useToggleBiometrics,
   useUserApplicationGrants,
 } from 'screens/Settings/hooks';
+import { useTheme } from 'react-native-paper';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -31,6 +32,7 @@ const Settings: React.FC<NavProps> = props => {
   const {
     navigation: { navigate },
   } = props;
+  const theme = useTheme();
   const settings = useSettings();
   const setSettings = useSetSettings();
   const { t } = useTranslation('settings');
@@ -39,6 +41,7 @@ const Settings: React.FC<NavProps> = props => {
   const { haveAllPermissions, authorizationInfo } = useUserApplicationGrants();
   const steUserApplicationGrants = useSetUserApplicationGrants();
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
+  const deleteAuthToken = useDeleteAuthToken();
 
   const formattedAccountCreationDate = useFormatDateToTZ(
     // TODO: Get the proper profile creation time.
@@ -63,9 +66,21 @@ const Settings: React.FC<NavProps> = props => {
     [setSettings],
   );
 
-  const handlePressSignOut = () => {
-    useDeleteAuthToken();
+  const handleChangePassword = useCallback(async () => {
+    navigate(ROUTES.PASSWORD_MANIPULATION, {
+      mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+    });
+  }, [navigate]);
 
+  const handlePermissionsToggle = React.useCallback(async () => {
+    const result = await steUserApplicationGrants(!haveAllPermissions, authorizationInfo);
+    if (result.isErr()) {
+      console.error(result.error);
+    }
+  }, [authorizationInfo, haveAllPermissions, steUserApplicationGrants]);
+
+  const handlePressSignOut = useCallback(() => {
+    deleteAuthToken();
     // Home screen will request user to login if no bearer token is detected
     reset({
       index: 0,
@@ -75,40 +90,26 @@ const Settings: React.FC<NavProps> = props => {
         },
       ],
     });
-  };
-
-  const handleChangePassword = useCallback(async () => {
-    navigate(ROUTES.PASSWORD_MANIPULATION, {
-      mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
-    });
-  }, [navigate]);
+  }, [reset, deleteAuthToken]);
 
   const confirmSignOut = useCallback(() => {
-    // TODO: Enable sign out.
-    // navigate({
-    //   name: ROUTES.CONFIRM_MODAL,
-    //   params: {
-    //     title: t('confirmModal:signout'),
-    //     subtitle: (
-    //       <Trans
-    //         i18nKey="confirmModal:backupSeedphrase"
-    //         components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
-    //       />
-    //     ),
-    //     primaryButtonLabel: t('confirmModal:goToBackup'),
-    //     secondaryButtonLabel: t('confirmModal:signout'),
-    //     onPressPrimary: () => console.log('primary'),
-    //     onPressSecondary: handlePressSignOut,
-    //   },
-    // });
-  }, []);
-
-  const handlePermissionsToggle = React.useCallback(async () => {
-    const result = await steUserApplicationGrants(!haveAllPermissions, authorizationInfo);
-    if (result.isErr()) {
-      console.error(result.error);
-    }
-  }, [authorizationInfo, haveAllPermissions, steUserApplicationGrants]);
+    navigate({
+      name: ROUTES.CONFIRM_MODAL,
+      params: {
+        title: t('confirmModal:signout'),
+        subtitle: (
+          <Trans
+            i18nKey="confirmModal:backupSeedphrase"
+            components={[<Typography.Subtitle2 style={{ color: theme.colors.butterOrange01 }} />]}
+          />
+        ),
+        primaryButtonLabel: t('confirmModal:goToBackup'),
+        secondaryButtonLabel: t('confirmModal:signout'),
+        onPressPrimary: () => console.log('primary'),
+        onPressSecondary: handlePressSignOut,
+      },
+    });
+  }, [handlePressSignOut, navigate, t, theme.colors.butterOrange01]);
 
   const sendFeedback = useCallback(async () => {
     Linking.openURL('mailto:dev@forbole.com').catch(err =>
@@ -121,10 +122,6 @@ const Settings: React.FC<NavProps> = props => {
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
       <Section style={styles.spacer} title={t('account')}>
-        {/*        <SectionButton
-          label={t('profiles')}
-          onPress={() => navigate(ROUTES.SETTINGS_PROFILES)}
-        /> */}
         <SectionButton
           label={t('manage connected addresses')}
           onPress={() => {
@@ -167,8 +164,6 @@ const Settings: React.FC<NavProps> = props => {
           value={settings.newFollowPostNotification}
           onValueChange={manageNewPostNotif('following')}
         />
-        {/* removed as of Sept 23, DFP-497 */}
-        {/* <SectionButton label={t('faq')} onPress={() => console.log('faq')} /> */}
         <SectionButton label={t('invites:invites')} onPress={() => navigate(ROUTES.INVITES)} />
         <SectionButton label={t('community')} onPress={() => navigate(ROUTES.SETTINGS_COMMUNITY)} />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
@@ -176,7 +171,9 @@ const Settings: React.FC<NavProps> = props => {
       </Section>
       <Spacer paddingVertical={12} />
       <Button mode="outlined" style={styles.signOutButton} onPress={confirmSignOut}>
-        <Typography.Button1>{t('confirmModal:signout')}</Typography.Button1>
+        <Typography.Button1 onPress={handlePressSignOut}>
+          {t('confirmModal:signout')}
+        </Typography.Button1>
       </Button>
 
       <Typography.Body7 style={styles.bottomText}>
