@@ -10,24 +10,43 @@ import {
   ListRenderItemInfo,
   SafeAreaView,
   SectionList,
+  SectionListData,
   View,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import InviteComponent, { Invite } from 'screens/ManageInvites/components/InviteComponent';
-import useHooks from '../../useHooks';
+import InviteComponent from 'screens/ManageInvites/components/InviteComponent';
+import { Invite } from 'types/invites';
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { NavProps } from 'screens/ManageInvites';
 import useStyles from './useStyles';
 
 interface Props {
-  navigate: (args: any) => void;
+  loading: boolean;
+  pendingInvites: Invite[];
+  claimedInvites: Invite[];
+  maxInvitations: number;
+  refetchInvites: () => any;
 }
 
-const InvitesList = ({ navigate }: Props) => {
+const InvitesList = ({
+  loading,
+  pendingInvites,
+  claimedInvites,
+  maxInvitations,
+  refetchInvites,
+}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
-  const { invitesSectioned, filteredInvites, loading, refetch, t } = useHooks();
+  const { t } = useTranslation('invites');
+  const { navigate } = useNavigation<NavProps['navigation']>();
 
-  const renderInvite = React.useCallback(({ item }: ListRenderItemInfo<Invite>) => {
-    return <InviteComponent {...item} />;
+  const totalInvites = React.useMemo(() => {
+    return pendingInvites.length + claimedInvites.length;
+  }, [pendingInvites, claimedInvites]);
+
+  const renderInvite = React.useCallback(({ item, index }: ListRenderItemInfo<Invite>) => {
+    return <InviteComponent invite={item} index={index + 1} />;
   }, []);
 
   const EmptyInvites = useMemo(() => {
@@ -38,7 +57,8 @@ const InvitesList = ({ navigate }: Props) => {
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
         </View>
 
-        <Spacer paddingVertical={theme.spacing.l} />
+        <Spacer paddingVertical="l" />
+
         <Button
           mode="contained"
           color={theme.colors.surfaceBlack}
@@ -47,10 +67,26 @@ const InvitesList = ({ navigate }: Props) => {
         </Button>
       </View>
     );
-  }, [filteredInvites]);
+  }, [navigate, styles.container, styles.emptyImage, t, theme.colors.surfaceBlack]);
+
+  const inviteSections = React.useMemo(() => {
+    const sections: SectionListData<Invite>[] = [];
+    if (loading) {
+      return sections;
+    }
+
+    if (pendingInvites.length > 0) {
+      sections.push({ section: t('pending invites'), data: pendingInvites });
+    }
+    if (claimedInvites.length > 0) {
+      sections.push({ section: t('successful invites'), data: claimedInvites });
+    }
+
+    return sections;
+  }, [claimedInvites, loading, pendingInvites, t]);
 
   const bottomComponent = useMemo(() => {
-    return filteredInvites?.length === 3 ? (
+    return totalInvites === maxInvitations ? (
       <Typography.Body6
         style={{
           color: theme.colors.grey01,
@@ -68,11 +104,19 @@ const InvitesList = ({ navigate }: Props) => {
         {t('invite more')}
       </Button>
     );
-  }, [filteredInvites]);
+  }, [
+    maxInvitations,
+    navigate,
+    t,
+    theme.colors.grey01,
+    theme.colors.surfaceBlack,
+    theme.spacing.m,
+    totalInvites,
+  ]);
 
   return (
     <View style={{ flex: 1 }}>
-      {!filteredInvites && loading ? (
+      {loading ? (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </SafeAreaView>
@@ -81,7 +125,7 @@ const InvitesList = ({ navigate }: Props) => {
           <SectionList
             keyExtractor={(item, index) => item.code.toString() + index}
             refreshing={loading}
-            onRefresh={refetch}
+            onRefresh={refetchInvites}
             style={{ flex: 1 }}
             contentContainerStyle={{
               flexGrow: 1,
@@ -89,7 +133,7 @@ const InvitesList = ({ navigate }: Props) => {
             }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={EmptyInvites}
-            sections={invitesSectioned}
+            sections={inviteSections}
             renderItem={renderInvite}
             renderSectionHeader={({ section: { section } }) => (
               <View style={styles.header}>
@@ -97,7 +141,7 @@ const InvitesList = ({ navigate }: Props) => {
               </View>
             )}
           />
-          {filteredInvites?.length !== 0 && bottomComponent}
+          {totalInvites !== 0 && bottomComponent}
         </>
       )}
     </View>

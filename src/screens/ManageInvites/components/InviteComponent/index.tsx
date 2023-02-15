@@ -1,50 +1,33 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import { copyIcon, defaultProfilePic } from 'assets/images';
+import { copyIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import React, { useEffect, useMemo } from 'react';
+import { getProfilePicture } from 'lib/ProfileUtils';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
+import { Invite } from 'types/invites';
 import useStyles from './useStyles';
 
-export interface Invite {
-  code: number;
-  link: string;
-  claimer: ProfileData;
-  creation_time: string;
-  expiration_time: string;
-  index: number;
+export interface InviteComponentProps {
+  readonly invite: Invite;
+  readonly index: number;
 }
 
-const InviteComponent = ({
-  code,
-  link,
-  claimer,
-  creation_time,
-  expiration_time,
-  index,
-}: Invite) => {
+const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('invites');
-  const creationDate = useFormatTimeForPostDetails(creation_time);
-  const expirationDate = useFormatTimeForPostDetails(expiration_time);
-
-  useEffect(() => {
-    console.log('Invite number', index);
-    console.log('Invite code', code);
-    console.log('Creation date', creationDate);
-    console.log('Expiration date', expirationDate);
-  }, [creationDate, expirationDate]);
+  const creationDate = useFormatTimeForPostDetails(invite.creationTime.toISOString());
 
   const content = useMemo(() => {
     return (
       <View style={styles.flexRowView}>
-        {claimer ? (
+        {invite.claimer ? (
           <View style={{ flexDirection: 'column', flex: 1 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Typography.Body5>
@@ -60,15 +43,14 @@ const InviteComponent = ({
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <FastImage
-                style={styles.avatar}
-                source={claimer.profile_pic ? { uri: claimer.profile_pic } : defaultProfilePic}
-              />
+              <FastImage style={styles.avatar} source={getProfilePicture(invite.claimer)} />
               <View style={styles.profileView}>
                 <Typography.Subtitle2 numberOfLines={1}>
-                  {claimer.nickname.trimStart() || 'no-nickname'}
+                  {invite.claimer?.nickname?.trimStart() || 'no-nickname'}
                 </Typography.Subtitle2>
-                <Typography.Body7>@{claimer.dtag.trimStart() || 'no-dtag'}</Typography.Body7>
+                <Typography.Body7>
+                  @{invite.claimer?.dTag?.trimStart() || 'no-dtag'}
+                </Typography.Body7>
               </View>
             </View>
           </View>
@@ -84,19 +66,32 @@ const InviteComponent = ({
             </View>
             <Spacer paddingBottom={theme.spacing.s} />
             <View style={{ flexDirection: 'row' }}>
-              <Typography.Body7 style={{ color: theme.colors.midGrey }}>{link}</Typography.Body7>
+              <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+                {invite.link}
+              </Typography.Body7>
               <ImageButton
                 buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
                 image={copyIcon}
                 style={{ width: 16, height: 16 }}
-                onPress={() => Clipboard.setString(link)}
+                onPress={() => Clipboard.setString(invite.link)}
               />
             </View>
           </View>
         )}
       </View>
     );
-  }, [link, claimer, creation_time, expiration_time, index]);
+  }, [
+    creationDate,
+    index,
+    invite.claimer,
+    invite.link,
+    styles.avatar,
+    styles.flexRowView,
+    styles.profileView,
+    t,
+    theme.colors.midGrey,
+    theme.spacing.s,
+  ]);
 
   return <View style={styles.container}>{content}</View>;
 };

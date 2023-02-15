@@ -6,9 +6,10 @@ const GetInvites = gql`
       claimer {
         address
         dtag
-        address
         nickname
         profile_pic
+        cover_pic
+        creation_time
       }
       code
       link
@@ -19,5 +20,29 @@ const GetInvites = gql`
     }
   }
 `;
+
+export interface GqlInvite {
+  claimer: {
+    address: string;
+    dtag: string;
+    nickname: string;
+    profile_pic: string | null;
+    cover_pic: string | null;
+    creation_time: string;
+  } | null;
+  code: string;
+  link: string;
+  /**
+   * Invite creation time in iso string.
+   */
+  creation_time: string;
+  expiration_time: string | null;
+  inviter_address: string;
+  claimer_address: string;
+}
+
+export interface GqlInvites {
+  invite: GqlInvite[];
+}
 
 export default GetInvites;

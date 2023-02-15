@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { invitesBanner2 } from 'assets/images';
 import DView from 'components/DView';
@@ -12,7 +11,8 @@ import { ActivityIndicator, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import InvitesList from 'screens/ManageInvites/components/InvitesList';
-import useHooks from 'screens/ManageInvites/useHooks';
+import { useTranslation } from 'react-i18next';
+import { useGetSectionedInvites } from './hooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_INVITES>;
@@ -20,8 +20,9 @@ export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_IN
 const ManageInvites = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const { navigate } = useNavigation<NavProps['navigation']>();
-  const { rewardBalance, t } = useHooks();
+  const { t } = useTranslation('invites');
+  const { rewardBalance, claimedInvites, pendingInvites, maxInvitations, loading, refetch } =
+    useGetSectionedInvites();
 
   return (
     <DView
@@ -43,7 +44,13 @@ const ManageInvites = () => {
         </View>
         <FastImage resizeMode="cover" source={invitesBanner2} style={styles.banner} />
       </View>
-      <InvitesList navigate={navigate} />
+      <InvitesList
+        loading={loading}
+        maxInvitations={maxInvitations}
+        claimedInvites={claimedInvites}
+        pendingInvites={pendingInvites}
+        refetchInvites={refetch}
+      />
     </DView>
   );
 };

@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import React, { useCallback } from 'react';
-import GetInvites from 'services/graphql/queries/GetInvites';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useButterConfig from 'hooks/useButterConfig';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import { ResultAsync } from 'neverthrow';
+import useGetActiveAccountInvites from 'hooks/gql/useGetInvites';
 
 export interface InvitesInfo {
   /**
@@ -39,12 +39,10 @@ export const useGetActiveAccountInvitesInfo = () => {
     refetch: refetchButterConfig,
   } = useButterConfig();
   const {
-    data: invitesData,
+    invites: invitesData,
     loading: loadingInvites,
     refetch: refetchInvites,
-  } = useQuery(GetInvites, {
-    fetchPolicy: 'no-cache',
-  });
+  } = useGetActiveAccountInvites();
   const {
     data: impactPointsData,
     loading: loadingImpactPoints,
@@ -74,8 +72,8 @@ export const useGetActiveAccountInvitesInfo = () => {
     const userImpactPoints = impactPointsData.impact_record_aggregate.aggregate.sum.rewarded_points;
 
     // Computes the number of invites generated from the user.
-    const generatedInvites = invitesData.invite.filter(
-      (invite: any) => invite.claimer_address !== activeAddress,
+    const generatedInvites = invitesData!.filter(
+      invite => invite.claimerAddress !== activeAddress,
     ).length;
 
     // Compute the number of invites that this user can generate.
