@@ -1,3 +1,7 @@
+/**
+ * e2e mocks for EncryptionUtils.
+ */
+
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {NativeModules} from 'react-native';
@@ -45,6 +49,7 @@ export const encryptData = async (
   };
 };
 
+// Mocked for e2e
 /**
  * Decrypts data with the provided password.
  * @param data The data to be decrypted.

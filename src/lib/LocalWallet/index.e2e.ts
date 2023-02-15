@@ -17,6 +17,7 @@ import * as bip39 from 'bip39';
 import {SignDoc} from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import {CryptoUtils} from 'types/cryptoUtils';
 import {DesmosHdPath, HdPath} from 'types/hdpath';
+import {DETOX_MOCK_ACCOUNT} from '../../../e2e/__mocks__/E2EVariableMocks';
 
 /**
  * E2E mocks for the LocalWallet class
@@ -59,7 +60,12 @@ export default class LocalWallet
     this.prefix = prefix;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
-    this._address = 'desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9';
+    // mocked for e2e
+    // This is the same value as the address of DETOX_MOCK_ACCOUNT found in e2e/__mocks__/E2EVariableMocks.ts
+    // It is hardcoded here as importing the value would cause issues if trying to run the detox build on debug
+    // (i.e when building mocks for tests), due to the detox builds using dotenv to load environment variables.
+    // this._address = 'desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9';
+    this._address = DETOX_MOCK_ACCOUNT.address;
   }
 
   static async fromMnemonic(
@@ -103,6 +109,7 @@ export default class LocalWallet
     return JSON.stringify(json);
   }
 
+  // mocked for e2e
   public static async deserialize(_: string): Promise<LocalWallet> {
     return new LocalWallet(
       'desmos',

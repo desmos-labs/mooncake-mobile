@@ -16,7 +16,9 @@ import ToastConfig from 'config/ToastConfig';
 import {useLazyQuery} from '@apollo/client';
 import GetProfileSummaryForAddresses from 'services/graphql/queries/GetProfileSummaryForAddresses';
 import useStyles from './useStyles';
+import {DETOX_MOCK_ACCOUNT} from '../../../e2e/__mocks__/E2EVariableMocks';
 
+// Mocked wallet data which will be passed into the SelectDTag screen.
 const mockWalletData = [
   {
     chainAccount: {
@@ -161,7 +163,11 @@ const useHooks = () => {
         setLoading(false);
         const existingAccounts = await getProfileSummaryForAddresses({
           variables: {
-            addresses: ['desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9'],
+            // replace the address variable with the line below if you encounter a
+            // crash due to dotenv requiring the os package.
+            // The hardcoded value should be the same as the addresses of DETOX_MOCK_ACCOUNT
+            // address: ['desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9]
+            addresses: [DETOX_MOCK_ACCOUNT.address],
           },
         });
 

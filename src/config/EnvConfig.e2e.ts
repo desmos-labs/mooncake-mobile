@@ -1,5 +1,8 @@
 import Config from 'react-native-config';
 
+/**
+ * EnvConfigs for detox e2e builds.
+ */
 declare module 'react-native-config' {
   interface NativeConfig {
     MMKV_ID: string;

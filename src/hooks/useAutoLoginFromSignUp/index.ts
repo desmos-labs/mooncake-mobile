@@ -7,6 +7,7 @@ import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import ROUTES from 'navigation/routes';
 import {useNavigation} from '@react-navigation/native';
+import {NavProps} from 'screens/Login';
 
 /**
  * A hook that will auto-login the user if they have entered a password during the signup/import account screen.
@@ -17,7 +18,7 @@ const useAutoLoginFromSignUp = () => {
   const {activeAddress} = useActiveAccount();
   const {login} = useLogin();
   const toast = useToast();
-  const {reset} = useNavigation<any>();
+  const {reset} = useNavigation<NavProps['navigation']>();
 
   React.useEffect(() => {
     if (!signUpPassword || !activeAddress) return;

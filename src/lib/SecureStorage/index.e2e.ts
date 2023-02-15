@@ -111,6 +111,7 @@ export async function resetSecureStorage(): Promise<void> {
   );
 }
 
+// mocked for e2e
 export const saveNewAccount = async (_account: ChainAccount) => {
   console.log('mocked saveNewAccount', _account);
   return true;
