@@ -12,4 +12,14 @@ const GetImpactPoints = gql`
   }
 `;
 
+export interface GQLImpactPoints {
+  impact_record_aggregate: {
+    aggregate: {
+      sum: {
+        rewarded_points: number;
+      };
+    };
+  };
+}
+
 export default GetImpactPoints;
