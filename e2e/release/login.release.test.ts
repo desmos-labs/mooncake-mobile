@@ -44,6 +44,10 @@ describe('Login flow', () => {
     await device.launchApp(launchAppConfig);
   });
 
+  /**
+   * Reusable flow that carries out the following flow:
+   * OnBoarding -> SignUp -> MnemonicInput
+   */
   const goToImportRecoveryPhraseScreen = async () => {
     await element(by.text('Skip')).tap();
     await expect(element(by.text('Butter'))).toBeVisible();
