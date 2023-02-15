@@ -36,6 +36,25 @@ export const useStoreTip = (user: string) => {
   );
 };
 
+export const useHasPostTip = (user: string) => {
+  const tips = useRecoilValue(tipsState);
+  return React.useCallback(
+    (post: Post) => {
+      const userTips = tips.get(user);
+      return userTips
+        .readAll()
+        .some(
+          tip =>
+            tip.target.type === TipTargetType.POST &&
+            tip.target.post.subspaceId === post.subspaceId &&
+            tip.target.post.id === post.id &&
+            tip.status !== DataStatus.DELETED_LOCALLY,
+        );
+    },
+    [tips, user],
+  );
+};
+
 export const useGetPostTipsToSync = (user: string) => {
   const tips = useRecoilValue(tipsState);
   return React.useCallback(

@@ -4,6 +4,9 @@ import { useQuery } from '@apollo/client';
 import GetPostInteractionsAuthors from 'services/graphql/queries/GetPostInteractionsAuthors';
 import { DesmosProfile } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import useHasReacted from 'hooks/useHasReacted';
+import useHasTipped from 'hooks/useHasTipped';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Hook that allows to get the list of users that have interacted with a post.
@@ -11,7 +14,15 @@ import { convertGraphQLProfile } from 'lib/GraphQLUtils';
  * @param numberOfAuthors {number} - Max number of authors returned.
  */
 const usePostInteractionsAuthors = (post: Post, numberOfAuthors: number) => {
+  const activeAddress = useActiveAccountAddress();
+  if (!activeAddress) {
+    throw new Error('Trying to get post interactions authors without active address');
+  }
+
   const [authors, setAuthors] = useState<DesmosProfile[]>([]);
+
+  const hasReacted = useHasReacted(post);
+  const hasTipped = useHasTipped(post);
 
   const { data, loading, refetch } = useQuery(GetPostInteractionsAuthors, {
     variables: {
@@ -27,8 +38,17 @@ const usePostInteractionsAuthors = (post: Post, numberOfAuthors: number) => {
     }
 
     const { reactions, tips } = data;
-    const reactionsAuthors = (reactions as any[]).map(r => r.author).map(convertGraphQLProfile);
-    const tipsAuthors = (tips as any[]).map(t => t.author).map(convertGraphQLProfile);
+
+    const reactionsAuthors = (reactions as any[])
+      .map(r => r.author)
+      .map(convertGraphQLProfile)
+      .filter(author => hasReacted || author.address !== activeAddress);
+
+    const tipsAuthors = (tips as any[])
+      .map(t => t.author)
+      .map(convertGraphQLProfile)
+      .filter(author => hasTipped || author.address !== activeAddress);
+
     const fetchedAuthors = [...reactionsAuthors, ...tipsAuthors];
 
     // Returns the first X unique authors
@@ -36,7 +56,7 @@ const usePostInteractionsAuthors = (post: Post, numberOfAuthors: number) => {
       .filter((value, index) => fetchedAuthors.indexOf(value) === index)
       .slice(0, 4);
     setAuthors(uniqueAuthors);
-  }, [data, setAuthors]);
+  }, [activeAddress, data, hasReacted, hasTipped, setAuthors]);
 
   return {
     authors,

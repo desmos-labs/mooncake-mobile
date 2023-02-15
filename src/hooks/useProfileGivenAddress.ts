@@ -15,6 +15,9 @@ const useProfileGivenAddress = (address?: string) => {
   const activeAccountAddress = useActiveAccountAddress();
   const userAddress = address || activeAccountAddress;
   const isForActiveUser = activeAccountAddress === userAddress;
+  if (!userAddress) {
+    throw new Error('Cannot get profile for undefined address');
+  }
 
   const [fetchedProfile, setFetchedProfile] = useState<DesmosProfile | undefined>();
 
@@ -43,7 +46,7 @@ const useProfileGivenAddress = (address?: string) => {
     switch (isForActiveUser) {
       case true:
         // Cache the profile of the active user
-        storeProfile(userAddress!, firstProfile);
+        storeProfile(userAddress, firstProfile);
         break;
 
       default:

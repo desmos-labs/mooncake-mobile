@@ -23,7 +23,6 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
     throw new Error('Trying to get post comments without active user');
   }
 
-  const subspaceId = useAppStateValue('subspaceId');
   const subspaceParams = useAppStateValue('subspaceParams');
   const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress);
 
@@ -46,7 +45,8 @@ const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
   const onCompletedCallback = React.useCallback(
     (data: any) => {
       if (!data) return;
-      const onChainComments = data.posts.map(convertGraphQLPost);
+
+      const onChainComments = data.comments.map(convertGraphQLPost);
 
       // Update the comments
       setComments(currentComments => {
