@@ -2,21 +2,11 @@ import {addMocksToSchema, IMocks} from '@graphql-tools/mock';
 import {buildClientSchema} from 'graphql/utilities';
 import {createYoga} from 'graphql-yoga';
 import {createServer} from 'node:http';
-
 // suppress false positive
 // eslint-disable-next-line import/no-unresolved
 import {YogaSchemaDefinition} from 'graphql-yoga/typings/plugins/useSchema';
-
-/**
- * Default mocks for custom scalar types. These are arbitrary values meant to
- * suppress graphql errors during e2e testing, and can be overwritten by passing
- * the relevant key value in the mocks value during server creation.
- */
-const DEFAULT_CUSTOM_SCALAR_MOCKS = {
-  bigint: () => 1,
-  timestamp: () => '2023-02-13T10:26:48Z',
-  jsonb: () => {},
-};
+import baseSchema from './schema.json';
+import DEFAULT_GRAPHQL_MOCKS from './DefaultMocks';
 
 /**
  *  The port that the mock graphql server will live on
@@ -47,12 +37,12 @@ export class MockGraphQLServer {
    */
   static createServerWithMocks(mocks: IMocks<any>) {
     // @ts-ignore
-    const graphqlSchemaObj = buildClientSchema(_schema);
+    const graphqlSchemaObj = buildClientSchema(baseSchema);
 
     const schemaWithMocks = addMocksToSchema({
       schema: graphqlSchemaObj,
       mocks: {
-        ...DEFAULT_CUSTOM_SCALAR_MOCKS,
+        ...DEFAULT_GRAPHQL_MOCKS,
         ...mocks,
       },
     });

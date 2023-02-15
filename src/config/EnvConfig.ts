@@ -15,6 +15,8 @@ declare module 'react-native-config' {
   }
 }
 
+console.log(Config);
+
 const EnvConfig = {
   MMKV_ID: Config.MMKV_ID,
   GQL_ENDPOINT: {
