@@ -8,7 +8,7 @@ import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
  * Hook that allows to get the Butter config and also refresh its value if needed.
  */
 const useButterConfig = () => {
-  const { data, refetch } = useQuery(GetButterConfig);
+  const { data, refetch, loading } = useQuery(GetButterConfig);
 
   const config = useAppStateValue('butterConfig');
   const setButterConfig = useSetAppStateValue('butterConfig');
@@ -23,6 +23,7 @@ const useButterConfig = () => {
 
   return {
     config,
+    loading,
     refetch,
   };
 };
