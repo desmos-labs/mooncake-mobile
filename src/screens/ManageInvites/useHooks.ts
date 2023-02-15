@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client';
-import useActiveAccount from 'hooks/useActiveAccount';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import GetInvites from 'services/graphql/queries/GetInvites';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 const useHooks = () => {
-  const { activeAddress } = useActiveAccount();
+  const activeAddress = useActiveAccountAddress();
   const { t } = useTranslation('invites');
   const [rewardBalance, setRewardBalance] = useState<number>();
   const [filteredInvites, setFilteredInvites] = useState<any[]>();
@@ -57,7 +57,7 @@ const useHooks = () => {
     } else {
       return [];
     }
-  }, [data, activeAddress]);
+  }, [data.invite, activeAddress, t]);
 
   return {
     invitesSectioned,

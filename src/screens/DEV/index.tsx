@@ -53,6 +53,7 @@ const routesToRender = [
   // ROUTES.NO_DTAG_FOUND,
   // ROUTES.ADD_PROFILE,
   ROUTES.SETTINGS,
+  ROUTES.SETTINGS_INVITES,
 ];
 
 const styles: { [styleName: string]: ViewStyle | TextStyle } = {

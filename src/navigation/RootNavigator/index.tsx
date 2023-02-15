@@ -48,6 +48,7 @@ import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/Disconne
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import Invites from 'screens/Invites';
+import ManageInvites from 'screens/ManageInvites';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
 
   // -------------------------------------------------------------------------------------
-  // --- CHAIN LINKS SCREEN
+  // --- CHAIN LINKS SCREENS
   // -------------------------------------------------------------------------------------
 
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
@@ -132,7 +133,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
 
   // -------------------------------------------------------------------------------------
-  // --- APP LINKS SCREEN
+  // --- APP LINKS SCREENS
   // -------------------------------------------------------------------------------------
 
   [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
@@ -145,7 +146,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.SELECT_TWEET]: SelectTweetParams;
 
   // -------------------------------------------------------------------------------------
-  // --- PROFILE SCREEN
+  // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
 
   // [ROUTES.ADD_PROFILE]: AddProfileParams;
@@ -166,6 +167,12 @@ export type RootNavigatorParamList = {
   // [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
   // [ROUTES.FOLLOWING]: FollowingParams;
   // [ROUTES.FOLLOWERS]: FollowingParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- INVITE SCREENS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.MANAGE_INVITES]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -206,7 +213,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.GRANTS]: undefined;
   // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 
-  // [ROUTES.MANAGE_INVITES]: undefined;
   // [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // Onboarding
@@ -391,6 +397,11 @@ const RootNavigator = () => {
       {/*  }} */}
       {/* /> */}
 
+      {/* ---------------------- */}
+      {/* --- INVITE SCREENS --- */}
+      {/* ---------------------- */}
+      <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
+
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
@@ -463,9 +474,6 @@ const RootNavigator = () => {
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
 
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
-
-      {/* <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} /> */}
-
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}

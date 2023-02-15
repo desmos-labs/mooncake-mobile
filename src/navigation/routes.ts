@@ -72,7 +72,7 @@ enum ROUTES {
   CONNECT_TO_LEDGER = 'CONNECT_TO_LEDGER',
 
   // -------------------------------------------------------------------------------------
-  // --- CHAIN LINKS SCREEN
+  // --- CHAIN LINKS SCREENS
   // -------------------------------------------------------------------------------------
 
   MANAGE_CONNECTED_CHAINS = 'MANAGE_CONNECTED_CHAINS',
@@ -85,7 +85,7 @@ enum ROUTES {
   DISCONNECT_CHAIN_MODAL = 'DISCONNECT_CHAIN_MODAL',
 
   // -------------------------------------------------------------------------------------
-  // --- APP LINKS SCREEN
+  // --- APP LINKS SCREENS
   // -------------------------------------------------------------------------------------
 
   MANAGE_CONNECTED_APPS = 'MANAGE_CONNECTED_APPS',
@@ -98,7 +98,7 @@ enum ROUTES {
   SELECT_TWEET = 'SELECT_TWEET',
 
   // -------------------------------------------------------------------------------------
-  // --- PROFILE SCREEN
+  // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
 
   // Profile addition
@@ -120,6 +120,11 @@ enum ROUTES {
   FOLLOWING_AND_FOLLOWERS = 'FOLLOWING_AND_FOLLOWERS',
   FOLLOWING = 'FOLLOWING',
   FOLLOWERS = 'FOLLOWERS',
+
+  // -------------------------------------------------------------------------------------
+  // --- INVITE SCREENS
+  // -------------------------------------------------------------------------------------
+  MANAGE_INVITES = 'MANAGE_INVITES',
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -163,8 +168,6 @@ enum ROUTES {
   NFT_DETAILS = 'NFT_DETAILS',
 
   GUEST_PROFILE = 'GUEST_PROFILE',
-
-  MANAGE_INVITES = 'MANAGE_INVITES',
 
   IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
 
