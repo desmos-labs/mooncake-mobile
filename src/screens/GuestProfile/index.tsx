@@ -45,6 +45,7 @@ import UserBio from 'screens/Profile/components/UserBio';
 import useQueries from 'screens/Profile/useQueries';
 import { mapConnectedChainImages } from 'screens/Profile/utils';
 import useFollowOrUnfollow from 'services/axios/requests/CentralizedBroadcastTx/useFollowOrUnfollow';
+import { DesmosProfile } from 'types/desmos';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GUEST_PROFILE>;
@@ -52,9 +53,22 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.GUEST_PROFILE>;
 const HEADER_HEIGHT_COMPACT = 95;
 const HEADER_HEIGHT_EXPANDED = 60;
 
-export interface GuestProfileParams {
-  address: string;
+export enum GuestProfileParamsTypes {
+  COMPLETE,
+  ADDRESS,
 }
+
+export interface GuestProfileCompleteParams {
+  readonly type: GuestProfileParamsTypes.COMPLETE;
+  readonly profile: DesmosProfile;
+}
+
+export interface GuestProfileAddressParams {
+  readonly type: GuestProfileParamsTypes.ADDRESS;
+  readonly address: string;
+}
+
+export type GuestProfileParams = GuestProfileCompleteParams | GuestProfileAddressParams;
 
 const GuestProfile = () => {
   const theme = useTheme();

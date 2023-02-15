@@ -54,6 +54,7 @@ import ManageInvites from 'screens/ManageInvites';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Community from 'screens/Community';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
+import Activities from 'screens/Activities';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -308,7 +309,7 @@ const RootNavigator = () => {
       {/* -------------------- */}
 
       <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
-      {/* <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
+      <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} />
       <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
 
       {/* -------------------- */}
@@ -433,8 +434,6 @@ const RootNavigator = () => {
       {/*  name={ROUTES.CONNECT_CHAIN_METHOD} */}
       {/*  component={ConnectChainMethod} */}
       {/* /> */}
-
-      {/* <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} /> */}
 
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
 

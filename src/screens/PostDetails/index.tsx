@@ -55,6 +55,7 @@ import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
 import TopBar from 'components/TopBar';
 import usePostInteractionsAuthors from 'hooks/usePostInteractionsAuthors';
+import { GuestProfileParamsTypes } from 'screens/GuestProfile';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
@@ -333,7 +334,12 @@ const PostDetails = () => {
             <View style={styles.rightContainer}>
               <ProfileHeaderButton
                 profile={post.author}
-                onPress={() => handleNavigateToProfile(post.author.address)}
+                onPress={() =>
+                  handleNavigateToProfile({
+                    type: GuestProfileParamsTypes.COMPLETE,
+                    profile: post.author.address,
+                  })
+                }
               />
               <View style={styles.middleTextContainer}>
                 <Typography.Subtitle3 numberOfLines={1}>

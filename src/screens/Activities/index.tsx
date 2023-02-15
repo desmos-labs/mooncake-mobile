@@ -12,24 +12,41 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
-import NotificationComponent from 'screens/Activities/components/NotificationComponent';
-import useHooks from './useHooks';
+import NotificationComponent from 'screens/Activities/components/NotificationItem';
+import useNotificationsHistory from 'hooks/useNotificationsHistory';
+import { CompleteNotification } from 'types/notifications';
 import useStyles from './useStyles';
 
+/**
+ * Screen that allows the user to view their past notifications and interact with them.
+ * @constructor
+ */
 const Activities = () => {
   const { t } = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
   const {
-    data,
-    notificationsData,
+    notifications,
+    loading: areNotificationsLoading,
     fetchMore,
-    refetch,
-    refetching,
     fetchingMore,
-    notificationsLoading,
-  } = useHooks();
+    refresh: refreshNotifications,
+    refreshing,
+  } = useNotificationsHistory();
 
+  // Function that is used to get the key for each item inside the list
+  const keyExtractor = useCallback((item: string | CompleteNotification, index) => {
+    switch (typeof item) {
+      case 'string':
+        return `sectionHeader${index}`;
+      default: {
+        const { id, timestamp } = item as CompleteNotification;
+        return `row${id}${timestamp}`;
+      }
+    }
+  }, []);
+
+  // Indexes of the headers that should stick within the list
   const stickyHeaderIndices = notificationsData
     ?.map((item, index) => {
       if (typeof item === 'string') {
@@ -40,48 +57,52 @@ const Activities = () => {
     })
     .filter(item => item !== null) as number[];
 
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  // Component shown if there are no past activities
   const EmptyActivities = useMemo(() => {
-    if (data && data.notification.length === 0 && !notificationsLoading) {
-      return (
-        <View style={styles.emptyView}>
-          <Image source={errorImage} style={styles.errorImage} />
-          <Typography.Body5>{t('no activities')}</Typography.Body5>
-        </View>
-      );
+    if (notificationsLoading || notifications.length > 0) {
+      return;
     }
+    return (
+      <View style={styles.emptyView}>
+        <Image source={errorImage} style={styles.errorImage} />
+        <Typography.Body5>{t('no activities')}</Typography.Body5>
+      </View>
+    );
+  }, [notifications.length, styles.emptyView, styles.errorImage, t]);
 
-    return null;
-  }, [data, notificationsLoading]);
+  // Function that is used in order to render each item within the list
+  const renderItem = useCallback(
+    ({ item }: string | CompleteNotification) => {
+      if (typeof item === 'string') {
+        // Render a divider
+        if (item === 'divider') {
+          return (
+            <View style={styles.divider}>
+              <Divider />
+            </View>
+          );
+        }
 
-  const renderNotification = useCallback(({ item }: string | any) => {
-    if (typeof item === 'string') {
-      if (item === 'divider') {
+        // Render a section header
         return (
-          <View style={styles.divider}>
-            <Divider />
+          <View style={styles.sectionHeader}>
+            <Typography.Button2>{item}</Typography.Button2>
           </View>
         );
       }
-      return (
-        <View style={styles.sectionHeader}>
-          <Typography.Button2>{item}</Typography.Button2>
-        </View>
-      );
-    } else {
-      return (
-        <NotificationComponent
-          id={item.id}
-          profile={item.profile}
-          post={item.post}
-          timestamp={item.timestamp}
-          data={item.data}
-          read_receipts={item.read_receipts}
-        />
-      );
-    }
-  }, []);
 
-  const footerComponent = useMemo(() => {
+      // Render a notification
+      return <NotificationComponent notification={item} />;
+    },
+    [styles.divider, styles.sectionHeader],
+  );
+
+  // Component shown at the bottom tof the page
+  const FooterComponent = useMemo(() => {
     if (fetchingMore) {
       return (
         <View style={{ padding: theme.spacing.m }}>
@@ -91,7 +112,11 @@ const Activities = () => {
     } else {
       return null;
     }
-  }, [fetchingMore]);
+  }, [fetchingMore, theme.colors.surfaceBlack, theme.spacing.m]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
 
   const resetNotificationsCounter = useCallback(async () => {
     await notifee.setBadgeCount(0);
@@ -103,6 +128,10 @@ const Activities = () => {
       resetNotificationsCounter();
     }, [resetNotificationsCounter]),
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView
@@ -117,29 +146,26 @@ const Activities = () => {
         }}>
         <Typography.H3>{t('activities')}</Typography.H3>
       </View>
-      {!notificationsLoading &&
-      data?.notification.length > 0 &&
-      notificationsData &&
-      notificationsData.length > 0 ? (
+
+      {/* Notifications list */}
+      {!areNotificationsLoading && notifications.length > 0 ? (
         <FlashList
-          keyExtractor={(item, index) =>
-            typeof item === 'string' ? `sectionHeader${index}` : `row${item.id}${item.timestamp}`
-          }
+          keyExtractor={keyExtractor}
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.surfaceBlack}
               colors={[AndroidColor.BLACK]}
               enabled
-              onRefresh={refetch}
-              refreshing={refetching}
+              onRefresh={refreshNotifications}
+              refreshing={refreshing}
               progressViewOffset={Platform.OS === 'android' ? 80 : 0}
             />
           }
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={EmptyActivities}
-          data={notificationsData}
-          renderItem={renderNotification}
-          ListFooterComponent={footerComponent}
+          data={notifications}
+          renderItem={renderItem}
+          ListFooterComponent={FooterComponent}
           estimatedItemSize={90}
           stickyHeaderIndices={stickyHeaderIndices}
           onEndReachedThreshold={0.5}

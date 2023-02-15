@@ -8,28 +8,25 @@ import {
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import LoadingOverlay from 'components/LoadingOverlay';
-import ToastConfig from 'config/ToastConfig';
-import useCheckAndUpdateGrants from 'hooks/authGrants/useCheckAndUpdateGrants';
-import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useToast } from 'react-native-toast-notifications';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
 import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import Communities from 'screens/Communities';
+import Activities from 'screens/Activities';
 import useStyles from './useStyles';
 
-export interface Props extends BottomTabBarProps {
-  setLoading: (_value: boolean) => void;
-}
+export interface Props extends BottomTabBarProps {}
 
+/**
+ * Navigation bottom tabs
+ */
 export type BottomTabsParamList = {
   [ROUTES.HOME_TABS]: HomeTabsParamList;
   [ROUTES.COMMUNITIES]: undefined;
@@ -40,15 +37,14 @@ export type BottomTabsParamList = {
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
 
-/**
- * Navigation bottom tabs
- */
-
 // Fake component to have a button inside the navigation bar
 const MiddleFakeComponent = () => {
   return null;
 };
 
+/**
+ * Returns the correct button image to be used based on the given {@param routeName}.
+ */
 const getCorrectImage = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
@@ -62,42 +58,50 @@ const getCorrectImage = (routeName: string) => {
   }
 };
 
-const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
+/**
+ * Component that represents the bottom tabs of the application.
+ * @constructor
+ */
+const BottomTabBar = (props: Props) => {
   const styles = useStyles();
-  const { navigate } = navigation;
   const theme = useTheme();
-  const toast = useToast();
 
-  // Useful application state values
+  const { state, navigation } = props;
+  const { navigate } = navigation;
+
+  // -------------------------------------------------------------------------------------
+  // --- Application state
+  // -------------------------------------------------------------------------------------
+
   const activeAddress = useActiveAccountAddress();
   const notificationsCount = useAppStateValue('notificationsCount');
   const setNotificationsCount = useSetAppStateValue('notificationsCount');
 
-  // Allows to reset the post creation state to delete any draft when needed
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
   const resetCreatePostState = useResetCreatePostState();
 
-  // Allows to check and update the grants if necessary
-  const { checkAndUpdateGrants } = useCheckAndUpdateGrants();
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
   const handlePressCreatePost = React.useCallback(async () => {
     if (!activeAddress) return;
+
+    // Reset the post creation state to clean any previous post/comment data
     resetCreatePostState();
 
-    setLoading(true);
-    const grantsToRequest: GrantEnums[] = [GrantEnums.MsgCreatePost];
-    const success = await checkAndUpdateGrants({ grantsToRequest });
-    if (success) {
-      navigate(ROUTES.CREATE_TEXT_POST);
-    } else {
-      // TODO: Edit this placeholder
-      toast.show('[PLACEHOLDER] Authorization is required.', {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
-    }
-    setLoading(false);
-  }, [activeAddress, checkAndUpdateGrants, navigate, resetCreatePostState, setLoading, toast]);
+    // Go to the screen to create a post
+    navigate(ROUTES.CREATE_POST);
+  }, [activeAddress, navigate, resetCreatePostState]);
 
-  const overlayComponent = useMemo(() => {
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  const OverlayComponent = useMemo(() => {
     if (notificationsCount && notificationsCount > 0) {
       return <PingAnimation size={8} color={theme.colors.butterOrange01} />;
     }
@@ -141,7 +145,7 @@ const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
         return (
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
-              overlayComponent={route.name === ROUTES.ACTIVITIES && overlayComponent}
+              overlayComponent={route.name === ROUTES.ACTIVITIES && OverlayComponent}
               overlayPosition={{ left: 18, top: 2 }}
               onPress={onPress}
               tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
@@ -160,12 +164,9 @@ const BottomTabBar = ({ state, navigation, setLoading }: Props) => {
  * @constructor
  */
 const BottomTabsNavigator = () => {
-  const [loading, setLoading] = React.useState(false);
   const theme = useTheme();
-  const renderTabBar = useCallback(
-    (props: BottomTabBarProps) => <BottomTabBar {...props} setLoading={setLoading} />,
-    [setLoading],
-  );
+
+  const renderTabBar = useCallback((props: BottomTabBarProps) => <BottomTabBar {...props} />, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.white }}>
@@ -177,11 +178,10 @@ const BottomTabsNavigator = () => {
 
         {/* TODO: Re-add these */}
         <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
-        {/* <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} /> */}
-        {/* <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
+        <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
+        <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         {/* <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} /> */}
       </Tab.Navigator>
-      <LoadingOverlay isVisible={loading} />
     </View>
   );
 };

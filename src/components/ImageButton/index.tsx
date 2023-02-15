@@ -1,11 +1,11 @@
 import { placeholderIcon } from 'assets/images';
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
-  View,
-  StyleProp,
   TouchableOpacityProps,
+  View,
   ViewStyle,
 } from 'react-native';
 import FastImage, { ImageStyle, Source } from 'react-native-fast-image';
@@ -14,7 +14,7 @@ interface Props extends TouchableOpacityProps {
   /**
    * The source of the image.
    */
-  image: Source;
+  image: Source | number;
 
   /**
    * The image's style.

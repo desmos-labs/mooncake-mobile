@@ -1,18 +1,16 @@
 import { gql } from '@apollo/client';
 import ReactionFields from 'services/graphql/queries/fragments/ReactionFields';
 
-const GetPostReactions = gql`
+const GetPostReaction = gql`
   ${ReactionFields}
-  query Reaction($subspaceId: bigint!, $postId: bigint!, $offset: Int, $limit: Int)
-  @api(name: butter) {
+  query Reaction($subspaceId: bigint!, $postId: bigint!, $reactionId: Int!) @api(name: butter) {
     reactions: reaction(
       where: { post: { subspace_id: { _eq: $subspaceId }, id: { _eq: $postId } } }
-      offset: $offset
-      limit: $limit
+      id: { _eq: $reactionId }
     ) {
       ...ReactionFields
     }
   }
 `;
 
-export default GetPostReactions;
+export default GetPostReaction;

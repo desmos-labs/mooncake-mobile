@@ -19,7 +19,7 @@ import Long from 'long';
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
   ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
-  // ROUTES.ACTIVITIES,
+  ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
   // ROUTES.LOGIN,
   // ROUTES.USER_PROFILE,
@@ -27,7 +27,6 @@ const routesToRender = [
   // ROUTES.CONFIRM_MODAL,
   ROUTES.SIGNUP,
   // ROUTES.ACTION_AUTHORIZATION,
-  // ROUTES.CREATE_TEXT_POST,
   // ROUTES.SELECT_POST_TYPE,
   // ROUTES.ENTER_COMMENT,
   // ROUTES.ACTION_AUTHORIZATION,

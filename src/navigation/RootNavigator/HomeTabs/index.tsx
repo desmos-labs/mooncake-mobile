@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import useRefreshSession from 'hooks/useRefreshSession';
+import useRefreshSession from 'hooks';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';
@@ -30,9 +30,10 @@ const HomeTabs = () => {
   React.useEffect(() => {
     // TODO: This should be moved inside the RootNavigator
     refreshSession();
+
     // Disable the inspection on the next line as we want to run this every
     // time the user opens the Home page anyway
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderTabBar = React.useCallback(

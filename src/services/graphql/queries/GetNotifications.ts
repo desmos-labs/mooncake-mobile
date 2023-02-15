@@ -4,7 +4,7 @@ import NotificationReadFields from 'services/graphql/queries/fragments/Notificat
 const GetNotifications = gql`
   ${NotificationReadFields}
   query UserNotifications($limit: Int!, $offset: Int!) @api(name: butter) {
-    notification(
+    notifications: notification(
       where: { _not: { data: { _contains: { type: "transaction_success" } } } }
       limit: $limit
       offset: $offset

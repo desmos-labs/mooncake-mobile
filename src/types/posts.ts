@@ -52,7 +52,7 @@ export interface Post {
   /**
    * Attachments associated to this post, if any.
    */
-  readonly attachments: PostAttachment[] | undefined;
+  readonly attachments: PostAttachment[];
 
   /**
    * References to other posts.

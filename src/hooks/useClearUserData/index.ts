@@ -26,7 +26,7 @@ const useClearUserData = () => {
         },
       ],
     });
-  }, []);
+  }, [reset]);
 
   return React.useCallback(() => {
     navigate(ROUTES.CONFIRM_MODAL, {
@@ -37,7 +37,7 @@ const useClearUserData = () => {
       onPressPrimary: handleConfirmReset,
       onPressSecondary: pop,
     });
-  }, []);
+  }, [handleConfirmReset, navigate, pop, t]);
 };
 
 export default useClearUserData;

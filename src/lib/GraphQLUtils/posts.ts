@@ -73,7 +73,7 @@ export const convertGraphQLPost = (post: any): GraphQLPost => ({
   externalId: post.external_id,
   conversationId: post.conversation_id ?? 0,
   text: post.text,
-  attachments: post.attachments?.map(convertGraphQLPostAttachment),
+  attachments: (post.attachments ?? []).map(convertGraphQLPostAttachment),
   creationDate: post.creation_date,
   author: convertGraphQLProfile(post.author),
   transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),

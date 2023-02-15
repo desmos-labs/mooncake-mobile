@@ -19,6 +19,9 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'flex-start',
   },
   flexRowView: { flexDirection: 'row' },
+  date: {
+    color: theme.colors.grey02,
+  },
 }));
 
 export default useStyles;
