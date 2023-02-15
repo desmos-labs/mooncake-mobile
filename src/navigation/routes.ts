@@ -14,6 +14,8 @@ enum ROUTES {
   // Import account
   IMPORT_ACCOUNT_SELECT_CHAIN = 'IMPORT_ACCOUNT_SELECT_CHAIN',
   IMPORT_ACCOUNT_SELECT_MODE = 'IMPORT_ACCOUNT_SELECT_MODE',
+  IMPORT_ACCOUNT_SELECT_LEDGER_APP = 'IMPORT_ACCOUNT_SELECT_LEDGER_APP',
+  IMPORT_ACCOUNT_MNEMONIC_INPUT = 'IMPORT_ACCOUNT_MNEMONIC_INPUT',
   IMPORT_ACCOUNT_SELECT_ACCOUNT = 'IMPORT_ACCOUNT_SELECT_ACCOUNT',
   IMPORT_ACCOUNT_SAVE_ACCOUNT = 'IMPORT_ACCOUNT_SAVE_ACCOUNT',
 
@@ -62,15 +64,6 @@ enum ROUTES {
   UNLOCK_WALLET = 'UNLOCK_WALLET',
 
   // -------------------------------------------------------------------------------------
-  // --- AUTHORIZE WALLET SCREENS
-  // -------------------------------------------------------------------------------------
-
-  AUTHORIZE_WALLET = 'AUTHORIZE_WALLET',
-  AUTH_LOOKING_FOR_DEVICES = 'AUTH_LOOKING_FOR_DEVICES',
-  AUTH_CONNECT_TO_LEDGER = 'AUTH_CONNECT_TO_LEDGER',
-  AUTH_UNLOCK_LOCAL_WALLET = 'AUTH_UNLOCK_LOCAL_WALLET',
-
-  // -------------------------------------------------------------------------------------
   // --- CONNECT TO LEDGER SCREENS
   // -------------------------------------------------------------------------------------
 
@@ -96,9 +89,13 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   MANAGE_CONNECTED_APPS = 'MANAGE_CONNECTED_APPS',
+  CONNECT_APP = 'CONNECT_APP',
 
   // Disconnect app modal
   DISCONNECT_APP_MODAL = 'DISCONNECT_APP_MODAL',
+
+  // Twitter connection
+  SELECT_TWEET = 'SELECT_TWEET',
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREEN
@@ -125,15 +122,6 @@ enum ROUTES {
   FOLLOWERS = 'FOLLOWERS',
 
   // -------------------------------------------------------------------------------------
-  // --- APPLICATION LINKS SCREEN
-  // -------------------------------------------------------------------------------------
-
-  CONNECT_APP = 'CONNECT_APP',
-
-  // Twitter connection
-  SELECT_TWEET = 'SELECT_TWEET',
-
-  // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
@@ -145,8 +133,6 @@ enum ROUTES {
   CONFIRM_MODAL = 'CONFIRM_MODAL',
 
   TEXTONLY_MODAL = 'TEXTONLY_MODAL',
-
-  MNEMONIC_INPUT = 'MNEMONIC_INPUT',
 
   CHECK_MNEMONIC = 'CHECK_MNEMONIC',
 
@@ -169,8 +155,6 @@ enum ROUTES {
   CONFIRM_ADDRESS = 'CONFIRM_ADDRESS',
 
   WELCOME_BACK = 'WELCOME_BACK',
-
-  SELECT_LEDGER_APP = 'SELECT_LEDGER_APP',
 
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 

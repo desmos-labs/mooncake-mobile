@@ -32,7 +32,7 @@ const ImportAccountSelectMode = (props: NavProps) => {
       ...currVal!,
       importMode: WalletType.Mnemonic,
     }));
-    navigation.navigate(ROUTES.MNEMONIC_INPUT);
+    navigation.navigate(ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT);
   }, [navigation, setImportAccountState]);
 
   const onImportWithLedger = React.useCallback(() => {
@@ -40,7 +40,7 @@ const ImportAccountSelectMode = (props: NavProps) => {
       ...currVal!,
       importMode: WalletType.Ledger,
     }));
-    navigation.navigate(ROUTES.SELECT_LEDGER_APP);
+    navigation.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP);
   }, [navigation, setImportAccountState]);
 
   return (

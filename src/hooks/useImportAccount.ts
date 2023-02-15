@@ -99,7 +99,7 @@ const useImportAccount = (options: ImportAccountOptions) => {
         switch (options.accountType) {
           case WalletType.Mnemonic:
             console.warn('Import with Mnemonic not supported');
-            navigation.navigate(ROUTES.MNEMONIC_INPUT);
+            navigation.navigate(ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT);
             break;
           case WalletType.Ledger:
             // TODO: Implement navigation to Ledger connect flow.

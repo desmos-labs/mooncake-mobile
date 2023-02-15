@@ -50,80 +50,111 @@ import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import Invites from 'screens/Invites';
 
 export type RootNavigatorParamList = {
-  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  // [ROUTES.LOGIN]: LoginParams | undefined;
-  [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
-  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
+  // -------------------------------------------------------------------------------------
+  // --- DEV SCREENS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.DEV_SCREEN]: undefined;
+
+  // -------------------------------------------------------------------------------------
+  // --- INITIAL SCREENS
+  // -------------------------------------------------------------------------------------
+
   [ROUTES.LANDING]: undefined;
+  // [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.SIGNUP]: undefined;
-  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
+
+  // -------------------------------------------------------------------------------------
+  // --- ACCOUNTS SCREENS
+  // -------------------------------------------------------------------------------------
+
   [ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
-  [ROUTES.SIGNUP]: undefined;
-  // [ROUTES.SIGNUP_RESULT]: undefined;
-  [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
-  [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
-  [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
-  // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
-  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
-  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  [ROUTES.SETTINGS]: undefined;
-  [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
-  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
-  // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
-  // [ROUTES.SETTINGS_PROFILES]: undefined;
-  // [ROUTES.SETTINGS_COMMUNITY]: undefined;
-  [ROUTES.MNEMONIC_INPUT]: undefined;
-  // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
-  // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
+  [ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP]: undefined;
+  [ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT]: SelectAccountParamList;
-  // [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
-  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
-  // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
-  // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
-  // [ROUTES.NO_DTAG_FOUND]: undefined;
-  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
-  [ROUTES.WELCOME_BACK]: undefined;
-  [ROUTES.SELECT_LEDGER_APP]: undefined;
-  // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
-  // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
-  // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
-  // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
-  [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
-  [ROUTES.SEND_TIPS]: SendTipsParams;
-  [ROUTES.REPORT_POST]: ReportPostParams;
-  // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
-  // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
-  [ROUTES.POST_DETAILS]: PostDetailsParams;
-  [ROUTES.CREATE_POST]: CreatePostParams | undefined;
-  // [ROUTES.SELECT_POST_TYPE]: undefined;
-  // [ROUTES.CREATE_TEXT_POST]: undefined;
-  [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
-  // Nested navigators
-  // [ROUTES.AUTHORIZE_WALLET]: NavigatorScreenParams<AuthorizeWalletParamList>;
+  [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
 
-  // Post interaction tabs
-  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
+  // -------------------------------------------------------------------------------------
+  // --- HOME SCREENS
+  // -------------------------------------------------------------------------------------
 
   // Bottom tabs
   [ROUTES.BOTTOM_TABS]: NavigatorScreenParams<BottomTabsParamList>;
+  [ROUTES.ACTIVITIES]: undefined;
 
-  // only for dev
-  [ROUTES.DEV_SCREEN]: undefined;
+  // Home page
+  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
 
-  // Following and followers route.
-  // [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
+  // -------------------------------------------------------------------------------------
+  // --- POST SCREENS
+  // -------------------------------------------------------------------------------------
 
-  // Following tab route.
-  // [ROUTES.FOLLOWING]: FollowingParams;
+  [ROUTES.CREATE_POST]: CreatePostParams | undefined;
+  [ROUTES.POST_DETAILS]: PostDetailsParams;
+  [ROUTES.REPORT_POST]: ReportPostParams;
 
-  // Followers tab route.
-  // [ROUTES.FOLLOWERS]: FollowingParams;
-
-  // Counters Params
-  // marked for deletion (unused/belongs under ROUTES.POST_INTERACTION
+  // Post interactions
+  [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
   [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
   // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- SETTINGS SCREENS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.SETTINGS]: undefined;
+  // [ROUTES.SETTINGS_PROFILES]: undefined;
+  // [ROUTES.SETTINGS_COMMUNITY]: undefined;
+  // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
+  // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
+  [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
+  [ROUTES.SETTINGS_INVITES]: undefined;
+  [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- CONNECT TO LEDGER SCREENS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.CONNECT_TO_LEDGER_STACK]: ConnectToLedgerStackParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- CHAIN LINKS SCREEN
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
+
+  // Connect chain
+  // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
+  // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
+
+  // Disconnect chain
+  [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- APP LINKS SCREEN
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.MANAGE_CONNECTED_APPS]: undefined;
+  // [ROUTES.CONNECT_APP]: ConnectAppParams;
+
+  // Disconnect app modal
+  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
+
+  // Twitter connection
+  // [ROUTES.SELECT_TWEET]: SelectTweetParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- PROFILE SCREEN
+  // -------------------------------------------------------------------------------------
+
+  // [ROUTES.ADD_PROFILE]: AddProfileParams;
+  // [ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL]: AddProfileSelectAddressGeneralParams;
+  // [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
+  // [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
+
+  // Profile creation/saving
+  [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
 
   // Profile posts
   // [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
@@ -131,30 +162,50 @@ export type RootNavigatorParamList = {
   // [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
   // [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
+  // Profile followage
+  // [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
+  // [ROUTES.FOLLOWING]: FollowingParams;
+  // [ROUTES.FOLLOWERS]: FollowingParams;
+
+  // -------------------------------------------------------------------------------------
+  // --- OTHER SCREENS
+  // --- TODO: Categorize them as well
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
+  [ROUTES.SIGNUP]: undefined;
+  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
+  // [ROUTES.SIGNUP_RESULT]: undefined;
+  // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
+  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
+  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
+  // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
+  // [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
+  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
+  // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
+  // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
+  // [ROUTES.NO_DTAG_FOUND]: undefined;
+  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
+  [ROUTES.WELCOME_BACK]: undefined; // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
+  // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
+  [ROUTES.SEND_TIPS]: SendTipsParams;
+  // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
+  // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
+  // [ROUTES.SELECT_POST_TYPE]: undefined;
+  // [ROUTES.CREATE_TEXT_POST]: undefined;
+  // Nested navigators
+
   // Nfts
   // [ROUTES.PROFILE_NFTS]: undefined;
   // [ROUTES.NFT_DETAILS]: NftDetailsParams;
 
-  // Add profile
-  // [ROUTES.ADD_PROFILE]: AddProfileParams;
-  // [ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL]: AddProfileSelectAddressGeneralParams;
-  // [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
-  // [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
-
   // Apps and Twitter
-  // [ROUTES.CONNECT_APP]: ConnectAppParams;
-  // [ROUTES.SELECT_TWEET]: SelectTweetParams;
-  [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
-
-  // Activities
-  // [ROUTES.ACTIVITIES]: undefined;
+  // [ROUTES.APP_DETAILS]: AppDetailsParams;
 
   // Grants
   // [ROUTES.GRANTS]: undefined;
   // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 
-  // Invites
-  [ROUTES.SETTINGS_INVITES]: undefined;
   // [ROUTES.MANAGE_INVITES]: undefined;
   // [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
@@ -223,19 +274,129 @@ const RootNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      {/* ------------------- */}
+      {/* --- DEV SCREENS --- */}
+      {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
+
+      {/* --- INITIAL SCREENS --- */}
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
+      {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
+      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+
+      {/* ------------------------ */}
+      {/* --- ACCOUNTS SCREENS --- */}
+      {/* ------------------------ */}
+
       <Stack.Screen
         name={ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN}
         component={ImportAccountSelectChain}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP} component={SelectLedgerApp} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT} component={MnemonicInput} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT} component={SelectAccount} />
+      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
 
-      {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
+      {/* -------------------- */}
+      {/* --- HOME SCREENS --- */}
+      {/* -------------------- */}
+
+      <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
+      {/* <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
+      <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
+
+      {/* -------------------- */}
+      {/* --- POST SCREENS --- */}
+      {/* -------------------- */}
+
+      <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} />
+      <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
+      <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
+      <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
+
+      {/* ------------------------ */}
+      {/* --- SETTINGS SCREENS --- */}
+      {/* ------------------------ */}
+
+      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
+      {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
+      {/* <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} /> */}
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE} */}
+      {/*  component={RevealRecoveryPhrase} */}
+      {/* /> */}
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE} */}
+      {/*  component={ShowRecoveryPhrase} */}
+      {/* /> */}
+      <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
+      <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
+      <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
+
+      {/* --------------------------------- */}
+      {/* --- CONNECT TO LEDGER SCREENS --- */}
+      {/* --------------------------------- */}
+
+      <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
+
+      {/* --------------------------- */}
+      {/* --- CHAIN LINKS SCREENS --- */}
+      {/* --------------------------- */}
+
+      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.CONNECT_ADDRESS_GENERAL} */}
+      {/*  component={ConnectAddressGeneral} */}
+      {/* /> */}
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.CONNECT_ADDRESS_ADVANCED} */}
+      {/*  component={ConnectAddressAdvanced} */}
+      {/* /> */}
+      <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
+
+      {/* ------------------------- */}
+      {/* --- APP LINKS SCREENS --- */}
+      {/* ------------------------- */}
+
+      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
+      {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
+      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
+      {/* <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} /> */}
+
+      {/* ----------------------- */}
+      {/* --- PROFILE SCREENS --- */}
+      {/* ----------------------- */}
+
+      {/* <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} /> */}
+      {/* <Stack.Screen name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL} component={AddProfileSelectAddressGeneral} */}
+      {/* <Stack.Screen name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED} component={AddProfileSelectAddressAdvanced} */}
+      {/* <Stack.Screen  name={ROUTES.ADD_PROFILE_MODAL} component={AddProfileModal} /> */}
+      <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
+
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.FOLLOWING_AND_FOLLOWERS} */}
+      {/*  component={FollowingAndFollowers} */}
+      {/*  options={{ */}
+      {/*    gestureResponseDistance, */}
+      {/*    cardStyle: styles.followingAndFollowers, */}
+      {/*  }} */}
+      {/* /> */}
+
+      {/* <Stack.Screen */}
+      {/*  name={ROUTES.PROFILE_POSTS} */}
+      {/*  component={ProfilePosts} */}
+      {/*  options={{ */}
+      {/*    gestureResponseDistance, */}
+      {/*  }} */}
+      {/* /> */}
+
+      {/* ------------------------------ */}
+      {/* TODO: Categorize these screens */}
+      {/* ------------------------------ */}
 
       <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT} component={SelectAccount} />
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
@@ -255,21 +416,8 @@ const RootNavigator = () => {
       {/*  component={CheckMnemonic} */}
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
-      <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
-      <Stack.Screen name={ROUTES.CONNECT_TO_LEDGER_STACK} component={ConnectToLedgerStack} />
-      <Stack.Screen name={ROUTES.MNEMONIC_INPUT} component={MnemonicInput} />
-      <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />
-      <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      <Stack.Screen name={ROUTES.BOTTOM_TABS} component={BottomTabs} />
-      <Stack.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-      <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
-      <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
-      <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       {/* <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} /> */}
-      {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
-      {/* <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} /> */}
+
       {/* <Stack.Screen */}
       {/*  name={ROUTES.LOOKING_FOR_DEVICES} */}
       {/*  component={LookingForDevices} */}
@@ -291,26 +439,6 @@ const RootNavigator = () => {
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
       />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE} */}
-      {/*  component={RevealRecoveryPhrase} */}
-      {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE} */}
-      {/*  component={ShowRecoveryPhrase} */}
-      {/* /> */}
-      <Stack.Screen name={ROUTES.SELECT_LEDGER_APP} component={SelectLedgerApp} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.CONNECT_ADDRESS_GENERAL} */}
-      {/*  component={ConnectAddressGeneral} */}
-      {/* /> */}
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.CONNECT_ADDRESS_ADVANCED} */}
-      {/*  component={ConnectAddressAdvanced} */}
-      {/* /> */}
-
-      {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
 
       {/* <Stack.Screen */}
       {/*  initialParams={{ */}
@@ -330,21 +458,11 @@ const RootNavigator = () => {
       {/*  component={ConnectChainMethod} */}
       {/* /> */}
 
-      <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} />
-
       {/* <Stack.Screen name={ROUTES.CREATE_TEXT_POST} component={CreateTextPost} /> */}
-
-      {/* <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} /> */}
-
-      <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
 
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
 
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
-
-      {/* <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
-
-      <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
 
       {/* <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} /> */}
 
@@ -368,7 +486,6 @@ const RootNavigator = () => {
       {/*  /> */}
       <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
       <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
-      <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.MANAGE_CONNECTIONS_MODAL} */}
@@ -382,23 +499,16 @@ const RootNavigator = () => {
       {/*    name={ROUTES.CONVERTIBLE_POINTS_MODAL} */}
       {/*    component={ConvertiblePointsModal} */}
       {/*  /> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.ADD_PROFILE_MODAL} */}
-      {/*    component={AddProfileModal} */}
-      {/*  /> */}
 
       <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
       <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
-      <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
-      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
 
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.ACTION_AUTHORIZATION} */}
       {/*    component={ActionAuthorization} */}
       {/*  /> */}
 
-      <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
       {/* </Stack.Group> */}
 
       {/* /!* modals end *!/ */}
@@ -408,35 +518,9 @@ const RootNavigator = () => {
       {/*  component={AuthorizeWalletStack} */}
       {/* /> */}
 
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.FOLLOWING_AND_FOLLOWERS} */}
-      {/*  component={FollowingAndFollowers} */}
-      {/*  options={{ */}
-      {/*    gestureResponseDistance, */}
-      {/*    cardStyle: styles.followingAndFollowers, */}
-      {/*  }} */}
-      {/* /> */}
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.PROFILE_POSTS} */}
-      {/*  component={ProfilePosts} */}
-      {/*  options={{ */}
-      {/*    gestureResponseDistance, */}
-      {/*  }} */}
-      {/* /> */}
-
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
       {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
-
-      {/* <Stack.Screen name={ROUTES.ADD_PROFILE} component={AddProfile} /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_GENERAL} */}
-      {/*  component={AddProfileSelectAddressGeneral} */}
-      {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED} */}
-      {/*  component={AddProfileSelectAddressAdvanced} */}
-      {/* /> */}
+      {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
     </Stack.Navigator>
   );
 };

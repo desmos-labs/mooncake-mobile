@@ -4,7 +4,6 @@ import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'react-native-paper';
-import ChainItem from 'screens/ImportAccountSelectChain/components/ChainItem';
 import { useTranslation } from 'react-i18next';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -15,6 +14,7 @@ import { CosmosLedgerApp, CryptoOrgLedgerApp, DesmosLedgerApp } from 'config/Led
 import useConnectToLedger from 'hooks/useConnectToLedger';
 import useSelectAccount from 'hooks/useSelectAccount';
 import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
+import LedgerAppItem from './components/LedgerAppItem';
 
 /**
  * A screen where users select a ledger app to connect chains with more than one
@@ -68,9 +68,7 @@ const SelectLedgerApp = () => {
       const handlePress = () => {
         onLedgerAppSelected(item);
       };
-      return (
-        <ChainItem chainName="" symbol={item.name} icon={item.icon} handlePress={handlePress} />
-      );
+      return <LedgerAppItem app={item} handlePress={handlePress} />;
     },
     [onLedgerAppSelected],
   );
