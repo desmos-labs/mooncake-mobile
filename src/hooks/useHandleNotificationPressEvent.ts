@@ -73,7 +73,7 @@ const useHandleNotificationPressEvent = () => {
           break;
 
         case NotificationType.InviteUnlocked:
-          navigate(ROUTES.INVITES);
+          navigate(ROUTES.SETTINGS_INVITES);
           break;
 
         default:

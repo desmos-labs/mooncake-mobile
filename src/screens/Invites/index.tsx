@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useButterConfig } from '@recoil/butterConfigState';
 import {
   copyIcon,
   infoIcon,
@@ -20,7 +19,6 @@ import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -33,13 +31,15 @@ import StepComponent from 'screens/Invites/components/StepComponent';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import GetImpactPoints from 'services/graphql/queries/GetImpactPoints';
 import GetInvites from 'services/graphql/queries/GetInvites';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import useButterConfig from 'hooks/useButterConfig';
 import useStyles from './useStyles';
 
-export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.INVITES>;
+export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_INVITES>;
 
 const Invites = () => {
-  const { activeAddress } = useActiveAccount();
-  const { butterConfig } = useButterConfig();
+  const activeAddress = useActiveAccountAddress();
+  const { config: butterConfig } = useButterConfig();
   const [inviteGenerated, setInviteGenerated] = useState<boolean>();
   const [generationLoading, setGenerationLoading] = useState<boolean>(false);
   const [inviteLink, setInviteLink] = useState<string>('');
@@ -75,10 +75,9 @@ const Invites = () => {
     if (numInvitesGenerated === undefined) {
       return undefined;
     }
-    const maxInvitesNumber = butterConfig?.invites?.required_impact_points.length;
+    const maxInvitesNumber = butterConfig?.invites?.requiredImpactPoints.length ?? 0;
     const required =
-      parseInt(butterConfig?.invites?.required_impact_points[numInvitesGenerated], 10) -
-      impactPoints;
+      (butterConfig?.invites?.requiredImpactPoints[numInvitesGenerated] ?? 0) - impactPoints;
     if (numInvitesGenerated >= maxInvitesNumber) {
       return 0;
     }

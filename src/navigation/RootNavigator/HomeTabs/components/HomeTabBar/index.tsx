@@ -97,7 +97,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             <ImageButton
               style={styles.rightButton}
               image={homeInviteIcon}
-              onPress={() => navigate(ROUTES.INVITES)}
+              onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
             />
           </Animated.View>
         ) : (

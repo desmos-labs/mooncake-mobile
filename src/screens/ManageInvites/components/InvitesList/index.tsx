@@ -42,7 +42,7 @@ const InvitesList = ({ navigate }: Props) => {
         <Button
           mode="contained"
           color={theme.colors.surfaceBlack}
-          onPress={() => navigate(ROUTES.INVITES)}>
+          onPress={() => navigate(ROUTES.SETTINGS_INVITES)}>
           {t('invite friends now')}
         </Button>
       </View>
@@ -61,7 +61,7 @@ const InvitesList = ({ navigate }: Props) => {
       </Typography.Body6>
     ) : (
       <Button
-        onPress={() => navigate(ROUTES.INVITES)}
+        onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
         mode="contained"
         color={theme.colors.surfaceBlack}
         style={{ marginHorizontal: theme.spacing.m }}>

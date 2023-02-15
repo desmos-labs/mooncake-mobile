@@ -47,6 +47,7 @@ import ConfirmModal, { ConfirmModalParams } from 'screens/Modals/ConfirmModal';
 import DisconnectAppModal, { DisconnectAppParams } from 'screens/Modals/DisconnectAppModal';
 import ManageConnectedApps from 'screens/ManageConnectedApps';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
+import Invites from 'screens/Invites';
 
 export type RootNavigatorParamList = {
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -153,7 +154,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 
   // Invites
-  // [ROUTES.INVITES]: undefined;
+  [ROUTES.SETTINGS_INVITES]: undefined;
   // [ROUTES.MANAGE_INVITES]: undefined;
   // [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
@@ -343,7 +344,7 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.ACTIVITIES} component={Activities} /> */}
 
-      {/* <Stack.Screen name={ROUTES.INVITES} component={Invites} /> */}
+      <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
 
       {/* <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} /> */}
 

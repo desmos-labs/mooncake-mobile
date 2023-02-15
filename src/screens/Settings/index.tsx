@@ -139,10 +139,6 @@ const Settings: React.FC<NavProps> = props => {
           onValueChange={handlePermissionsToggle}
           value={haveAllPermissions}
         />
-        <SectionButton
-          label={t('reveal secret phrase')}
-          onPress={() => navigate(ROUTES.SETTINGS_REVEAL_SECRET_PHRASE)}
-        />
         <SectionButton label={t('change password')} onPress={handleChangePassword} />
         {biometricsSupported && (
           <SectionSwitch
@@ -164,7 +160,10 @@ const Settings: React.FC<NavProps> = props => {
           value={settings.newFollowPostNotification}
           onValueChange={manageNewPostNotif('following')}
         />
-        <SectionButton label={t('invites:invites')} onPress={() => navigate(ROUTES.INVITES)} />
+        <SectionButton
+          label={t('invites:invites')}
+          onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
+        />
         <SectionButton label={t('community')} onPress={() => navigate(ROUTES.SETTINGS_COMMUNITY)} />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton label={t('about')} onPress={() => console.log('about')} />
