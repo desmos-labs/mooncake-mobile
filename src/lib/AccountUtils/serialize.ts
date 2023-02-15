@@ -22,6 +22,7 @@ export const serializeMnemonicAccount = (
   algo: account.algo,
   hdPath: pathToString(account.hdPath),
   pubKey: toHex(account.pubKey),
+  creationDate: account.creationDate,
 });
 
 export const serializeLedgerAccount = (account: LedgerAccount): SerializableLedgerAccount => ({
@@ -32,6 +33,7 @@ export const serializeLedgerAccount = (account: LedgerAccount): SerializableLedg
   hdPath: pathToString(account.hdPath),
   pubKey: toHex(account.pubKey),
   ledgerAppName: account.ledgerAppName,
+  creationDate: account.creationDate,
 });
 
 export const serializeWeb3AuthAccount = (
@@ -43,6 +45,7 @@ export const serializeWeb3AuthAccount = (
   algo: account.algo,
   pubKey: toHex(account.pubKey),
   loginProvider: account.loginProvider,
+  creationDate: account.creationDate,
 });
 
 export const serializeAccount = (account: Account): SerializableAccount => {

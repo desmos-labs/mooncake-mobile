@@ -51,6 +51,7 @@ export const generateLedgerAccountWallets = async (
       algo: account.algo,
       pubKey: account.pubkey,
       ledgerAppName: app.name,
+      creationDate: new Date(),
     },
   }));
 };
@@ -97,6 +98,7 @@ export const generateMnemonicWallet = async (
       hdPath,
       algo: accountData.algo,
       pubKey: accountData.pubkey,
+      creationDate: new Date(),
     },
   } as AccountWithWallet;
 };
@@ -148,6 +150,7 @@ export const generateWeb3AuthWallet = async (
       pubKey: accountData.pubkey,
       algo: accountData.algo,
       loginProvider,
+      creationDate: new Date(),
     },
   };
 };

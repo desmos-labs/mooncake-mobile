@@ -24,7 +24,8 @@ export const deserializeMnemonicAccount = (
     account.hdPath === undefined ||
     account.walletType === undefined ||
     account.algo === undefined ||
-    account.pubKey === undefined
+    account.pubKey === undefined ||
+    account.creationDate === undefined
   ) {
     throw new Error('invalid mnemonic account');
   }
@@ -50,6 +51,7 @@ export const deserializeMnemonicAccount = (
     algo: account.algo,
     hdPath,
     pubKey,
+    creationDate: account.creationDate,
   };
 };
 
@@ -63,7 +65,8 @@ export const deserializeLedgerAccount = (
     account.walletType === undefined ||
     account.algo === undefined ||
     account.pubKey === undefined ||
-    account.ledgerAppName === undefined
+    account.ledgerAppName === undefined ||
+    account.creationDate === undefined
   ) {
     throw new Error('invalid ledger account');
   }
@@ -90,6 +93,7 @@ export const deserializeLedgerAccount = (
     hdPath,
     pubKey,
     ledgerAppName: account.ledgerAppName,
+    creationDate: account.creationDate,
   };
 };
 
@@ -102,7 +106,8 @@ export const deserializeWeb3AuthAccount = (
     account.walletType === undefined ||
     account.algo === undefined ||
     account.pubKey === undefined ||
-    account.loginProvider === undefined
+    account.loginProvider === undefined ||
+    account.creationDate === undefined
   ) {
     throw new Error('invalid web3auth account');
   }
@@ -127,6 +132,7 @@ export const deserializeWeb3AuthAccount = (
     algo: account.algo,
     pubKey,
     loginProvider: account.loginProvider,
+    creationDate: account.creationDate,
   };
 };
 

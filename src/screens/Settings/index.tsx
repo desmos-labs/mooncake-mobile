@@ -25,6 +25,7 @@ import {
   useUserApplicationGrants,
 } from 'screens/Settings/hooks';
 import { useTheme } from 'react-native-paper';
+import { useActiveAccount } from '@recoil/accounts';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -32,6 +33,7 @@ const Settings: React.FC<NavProps> = props => {
   const {
     navigation: { navigate },
   } = props;
+  const activeAccount = useActiveAccount()!;
   const theme = useTheme();
   const settings = useSettings();
   const setSettings = useSetSettings();
@@ -45,7 +47,7 @@ const Settings: React.FC<NavProps> = props => {
 
   const formattedAccountCreationDate = useFormatDateToTZ(
     // TODO: Get the proper profile creation time.
-    new Date().toISOString() || '',
+    activeAccount.creationDate.toISOString(),
     'MMM dd yyyy',
   );
 
@@ -121,6 +123,7 @@ const Settings: React.FC<NavProps> = props => {
     <DView scrollable style={styles.root} topBar={<TopBar />}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
+      {/* Account section */}
       <Section style={styles.spacer} title={t('account')}>
         <SectionButton
           label={t('manage connected addresses')}
@@ -133,6 +136,8 @@ const Settings: React.FC<NavProps> = props => {
           onPress={() => navigate(ROUTES.MANAGE_CONNECTED_APPS)}
         />
       </Section>
+
+      {/* Security section */}
       <Section style={styles.spacer} title={t('security')}>
         <SectionSwitch
           label={t('permissions')}
@@ -148,6 +153,8 @@ const Settings: React.FC<NavProps> = props => {
           />
         )}
       </Section>
+
+      {/* Other section */}
       <Section style={styles.spacer} title={t('others')}>
         <SectionButton label={t('notifications')} onPress={() => Linking.openSettings()} />
         <SectionSwitch
