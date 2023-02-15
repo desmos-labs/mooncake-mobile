@@ -16,9 +16,11 @@
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
     "deploy:iosInternal": "fastlane ios closed_beta",
     "deploy:copyDevEnv": "cp .env.dev.sample .env",
+    "detox:start-server": "npx react-native start --sourceExts e2e.js,e2e.jsx,e2e.ts,e2e.tsx,js,json,ts,tsx",
     "detox:rn-start": "npx react-native start --sourceExts e2e.js,e2e.jsx,e2e.ts,e2e.ts,e2e.tsx,js,jsx,ts,tsx,json",
     "detox:build-ios": "export IS_E2E=true && detox build -c ios.sim.release",
-    "detox:test-ios": "detox test -c ios.sim.release"
+    "detox:test-ios": "detox test -c ios.sim.release",
+    "detox:build-and-test": "yarn detox:build-ios && yarn detox:test-ios"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
@@ -159,6 +161,7 @@
     "jest": "^29.2.1",
     "lint-staged": ">=10",
     "metro-react-native-babel-preset": "0.73.7",
+    "mockttp": "^3.6.3",
     "prettier": "^2.4.1",
     "react-dom": "18.0.0",
     "react-native-flipper-performance-plugin": "^0.3.1",

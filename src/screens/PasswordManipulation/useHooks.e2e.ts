@@ -13,26 +13,26 @@ import useChangePassword from 'hooks/useChangePassword';
 import signUpPasswordState from '@recoil/signUpPasswordState';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import {useLazyQuery} from '@apollo/client';
+import GetProfileSummaryForAddresses from 'services/graphql/queries/GetProfileSummaryForAddresses';
 import useStyles from './useStyles';
 
-const mockAccountsOnChain: any[] = [
+const mockWalletData = [
   {
-    wallet:
-      '{"version":3,"privateKey":"a_private_key","publicKey":"a_public_key","prefix":"desmos"}',
     chainAccount: {
-      address: 'desmos123',
-      type: 0,
-      pubKey: 'a_pub_key',
-      hdPath: {coinType: 852, change: 0, account: 0, addressIndex: 0},
+      address: 'desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9',
+      hdPath: [{}],
+      pubKey: 'pubKey',
       signAlgorithm: 'secp256k1',
+      type: 0,
     },
+    wallet:
+      '{"version":3,"privateKey":"privateKey","publicKey":"pubKey","prefix":"desmos"}',
   },
 ];
 
 /**
- * Mock Hooks for the PasswordManipulation screen
- * The contents of this file should be considered temporary, as the logic refactor
- * will likely affect how this flow works.
+ * Mock hooks for the PasswordManipulation screen
  */
 const useHooks = () => {
   const styles = useStyles();
@@ -47,6 +47,10 @@ const useHooks = () => {
   const {
     params: {mode, mnemonic, oldPassword},
   } = useRoute<NavProps['route']>();
+
+  const [getProfileSummaryForAddresses] = useLazyQuery(
+    GetProfileSummaryForAddresses,
+  );
 
   const {reset} = useNavigation<NavProps['navigation']>();
 
@@ -142,8 +146,8 @@ const useHooks = () => {
         }
       }
       if (mode === PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD && mnemonic) {
-        // MOCK: navigate directly to select dtag screen with mocked data
         setLoading(true);
+        // perhaps move this into global config
 
         const {confirmPassword} = formValues;
 
@@ -155,10 +159,31 @@ const useHooks = () => {
         setSignUpPassword(confirmPassword);
 
         setLoading(false);
-        navigate(ROUTES.SELECT_DTAG, {
-          accountsWithWalletData: mockAccountsOnChain,
+        const existingAccounts = await getProfileSummaryForAddresses({
+          variables: {
+            addresses: ['desmos1qp3733x370mtx6e4ppfgn96u6049kk89krv7q9'],
+          },
+        });
+
+        setCreateLocalWalletState({
+          mnemonic,
           password: confirmPassword,
         });
+
+        setSignUpPassword(confirmPassword);
+
+        if (
+          existingAccounts.data &&
+          existingAccounts.data.profile.length === 0
+        ) {
+          setLoading(false);
+          navigate(ROUTES.NO_DTAG_FOUND);
+        } else {
+          navigate(ROUTES.SELECT_DTAG, {
+            accountsWithWalletData: mockWalletData as any[],
+            password: confirmPassword,
+          });
+        }
       }
     },
     [mode],

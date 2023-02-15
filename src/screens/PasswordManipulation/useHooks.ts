@@ -15,11 +15,11 @@ import {toBase64} from '@cosmjs/encoding';
 import {useSetRecoilState} from 'recoil';
 import createLocalWalletState from '@recoil/createLocalWalletState';
 import {useLazyQuery} from '@apollo/client';
-import GetProfileForAddresses from 'services/graphql/queries/GetProfileForAddresses';
 import useChangePassword from 'hooks/useChangePassword';
 import signUpPasswordState from '@recoil/signUpPasswordState';
 import {useToast} from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import GetProfileSummaryForAddresses from 'services/graphql/queries/GetProfileSummaryForAddresses';
 import useStyles from './useStyles';
 
 /**
@@ -33,7 +33,9 @@ const useHooks = () => {
   const setSignUpPassword = useSetRecoilState(signUpPasswordState);
 
   const {changePassword} = useChangePassword();
-  const [getProfileForAddresses] = useLazyQuery(GetProfileForAddresses);
+  const [getProfileSummaryForAddresses] = useLazyQuery(
+    GetProfileSummaryForAddresses,
+  );
   const toast = useToast();
 
   const {
@@ -185,7 +187,7 @@ const useHooks = () => {
           x => x.chainAccount.address,
         );
 
-        const existingAccounts = await getProfileForAddresses({
+        const existingAccounts = await getProfileSummaryForAddresses({
           variables: {
             addresses: addressesOfAccounts,
           },
@@ -197,6 +199,8 @@ const useHooks = () => {
         });
 
         setSignUpPassword(confirmPassword);
+
+        console.log(accountsOnChain);
 
         if (
           existingAccounts.data &&

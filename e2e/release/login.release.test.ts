@@ -1,29 +1,40 @@
 import {by, device, element, expect} from 'detox';
+import {getLocal} from 'mockttp';
 import {
-  DETOX_DEV_BLANK_MNEMONIC,
   DETOX_DEV_MNEMONIC,
   DETOX_MOCK_ACCOUNT,
 } from '../__mocks__/E2EVariableMocks';
 import launchAppConfig from '../config';
 import {MockGraphQLServer} from '../__mocks__/MockGraphQLServer';
 
-const mocks = {
-  query_root: () => ({
-    profile: () => [DETOX_MOCK_ACCOUNT],
-  }),
-  bigint: () => 1,
-  timestamp: () => '2023-02-13T10:26:48Z',
-};
-
-const server = MockGraphQLServer.createServerWithMocks(mocks);
+const mockRESTServer = getLocal();
 
 describe('Login flow', () => {
-  beforeAll(() => {
-    server.startServer();
+  beforeAll(async () => {
+    // mock all the REST resources the test scenario needs
+    // These REST resources will not change for all test scenarios, so it is okay
+    // to put them in beforeAll and afterAll
+    await mockRESTServer
+      .forGet('http://localhost:4001/nonce/desmos123')
+      .thenJson(200, {nonce: '123123123'});
+
+    await mockRESTServer
+      .forPost('http://localhost:4001/login')
+      .thenJson(200, {token: 'i-am-a-token'});
+
+    await mockRESTServer
+      .forPost('http://localhost:4001/session')
+      .thenReply(200);
+
+    await mockRESTServer
+      .forPost('http://localhost:4001/notifications/tokens')
+      .thenReply(200);
+
+    await mockRESTServer.start(4001);
   });
 
   afterAll(() => {
-    server.stopServer();
+    mockRESTServer.stop();
   });
 
   beforeEach(async () => {
@@ -33,12 +44,7 @@ describe('Login flow', () => {
     await device.launchApp(launchAppConfig);
   });
 
-  it('Goes through the login flow, inserting a mnemonic and a password, selecting a profile, reaching the home screen correctly', async () => {
-    // e2e test will try to find this nickname on the SelectDTag screen
-    const {nickname} = DETOX_MOCK_ACCOUNT;
-    const mockPassword = 'this is my password';
-
-    // Onboarding
+  const goToImportRecoveryPhraseScreen = async () => {
     await element(by.text('Skip')).tap();
     await expect(element(by.text('Butter'))).toBeVisible();
     await expect(
@@ -52,12 +58,27 @@ describe('Login flow', () => {
     // Mnemonic
     await expect(element(by.text('Recovery Phrase'))).toBeVisible();
     await expect(element(by.id('mnemonicInput'))).toBeVisible();
-    // await element(by.id('mnemonicInput')).tap();
-    // await element(by.id('mnemonicInput')).typeText('i must not work');
-    // await element(by.id('loginCheckbox')).tap();
-    // await element(by.text('Next')).tap();
-    // await expect(element(by.text('Clear all'))).toBeVisible();
-    // await element(by.text('Clear all')).tap();
+  };
+
+  it('Goes through the login flow, inserting a mnemonic and a password, selecting a profile, reaching the home screen correctly', async () => {
+    // setup graphql mocks for this test instance
+    const mocks = {
+      query_root: () => ({
+        profile: () => [DETOX_MOCK_ACCOUNT],
+      }),
+    };
+
+    const mockGraphQLServer = MockGraphQLServer.createServerWithMocks(mocks);
+
+    await mockGraphQLServer.startServer();
+
+    // e2e test will try to find this nickname on the SelectDTag screen
+    const {nickname} = DETOX_MOCK_ACCOUNT;
+    const mockPassword = 'this is my password';
+
+    // Onboarding
+    await goToImportRecoveryPhraseScreen();
+
     await element(by.id('mnemonicInput')).tap();
     await element(by.id('mnemonicInput')).typeText(DETOX_DEV_MNEMONIC);
     await element(by.id('loginCheckbox')).tap();
@@ -77,25 +98,28 @@ describe('Login flow', () => {
     await element(by.text(nickname)).tap();
     // Expect to be inside the homescreen
     await expect(element(by.id('homeView'))).toBeVisible();
+
+    // stop all server mocks
+    await mockGraphQLServer.stopServer();
   });
 
   it('Goes through the login flow, inserting a mnemonic and a password, expecting no profiles available', async () => {
+    // setup graphql mocks for this test instance
+    const mocks = {
+      query_root: () => ({
+        profile: () => [],
+      }),
+    };
+
+    const mockGraphQLServer = MockGraphQLServer.createServerWithMocks(mocks);
+
+    await mockGraphQLServer.startServer();
+
     // Onboarding
-    await element(by.text('Skip')).tap();
-    await expect(element(by.text('Butter'))).toBeVisible();
-    await expect(
-      element(by.text('Your decentralized social network')),
-    ).toBeVisible();
-    await expect(element(by.text('Sign up'))).toBeVisible();
-    await expect(
-      element(by.text('Import Secret Recovery Phrase')),
-    ).toBeVisible();
-    await element(by.text('Import Secret Recovery Phrase')).tap();
-    // Mnemonic
-    await expect(element(by.text('Recovery Phrase'))).toBeVisible();
-    await expect(element(by.id('mnemonicInput'))).toBeVisible();
+    await goToImportRecoveryPhraseScreen();
+
     await element(by.id('mnemonicInput')).tap();
-    await element(by.id('mnemonicInput')).typeText(DETOX_DEV_BLANK_MNEMONIC);
+    await element(by.id('mnemonicInput')).typeText(DETOX_DEV_MNEMONIC);
     await element(by.id('loginCheckbox')).tap();
     await element(by.text('Next')).tap();
     // Password
@@ -111,6 +135,8 @@ describe('Login flow', () => {
     await element(by.text('Next')).tap();
     // Expect no profiles are available
     await expect(element(by.text('Create a Desmos Profile'))).toBeVisible();
-    // TODO add more cases
+
+    // stop all mock servers
+    await mockGraphQLServer.stopServer();
   });
 });

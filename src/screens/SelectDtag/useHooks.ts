@@ -26,10 +26,17 @@ const useHooks = () => {
   );
 
   const handlePressProfileItem = React.useCallback(async (address: string) => {
+    console.log('hello world');
+
+    console.log(accountsWithWalletData, address);
+
     // implementation
     const walletData = accountsWithWalletData.find(
       x => x.chainAccount.address === address,
     );
+
+    console.log(walletData);
+
     if (!walletData) return;
     const {wallet, chainAccount} = walletData;
 

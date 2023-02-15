@@ -28,7 +28,7 @@ const EnvConfig = {
   // desmos chain
   BASE_DENOM: Config.BASE_DENOM,
   MAX_COMMENT_LENGTH: 500,
-  BUTTER_REST: Config.BUTTER_REST,
+  BUTTER_REST: 'http://localhost:4001',
   APP_SUBSPACE_ID: 5,
   POLLING_INTERVAL: 2000,
   DEV_MNEMONIC: Config.DEV_MNEMONIC,
