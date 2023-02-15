@@ -49,6 +49,7 @@ import ManageConnectedApps from 'screens/ManageConnectedApps';
 import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import Invites from 'screens/Invites';
 import ManageInvites from 'screens/ManageInvites';
+import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -173,6 +174,7 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.MANAGE_INVITES]: undefined;
+  [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -212,8 +214,6 @@ export type RootNavigatorParamList = {
   // Grants
   // [ROUTES.GRANTS]: undefined;
   // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
-
-  // [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // Onboarding
   [ROUTES.ONBOARDING]: OnboardingParams;
@@ -401,6 +401,7 @@ const RootNavigator = () => {
       {/* --- INVITE SCREENS --- */}
       {/* ---------------------- */}
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
+      <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
 
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
@@ -498,10 +499,6 @@ const RootNavigator = () => {
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.MANAGE_CONNECTIONS_MODAL} */}
       {/*    component={ManageConnectionsModal} */}
-      {/*  /> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.IMPACT_POINTS_MODAL} */}
-      {/*    component={ImpactPointsModal} */}
       {/*  /> */}
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.CONVERTIBLE_POINTS_MODAL} */}

@@ -125,6 +125,7 @@ enum ROUTES {
   // --- INVITE SCREENS
   // -------------------------------------------------------------------------------------
   MANAGE_INVITES = 'MANAGE_INVITES',
+  IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -168,9 +169,6 @@ enum ROUTES {
   NFT_DETAILS = 'NFT_DETAILS',
 
   GUEST_PROFILE = 'GUEST_PROFILE',
-
-  IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
-
   ONBOARDING = 'ONBOARDING',
 
   MANAGE_CONNECTIONS_MODAL = 'MANAGE_CONNECTIONS_MODAL',
