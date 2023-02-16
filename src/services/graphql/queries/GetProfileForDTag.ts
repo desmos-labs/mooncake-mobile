@@ -1,9 +1,11 @@
 import { gql } from '@apollo/client';
+import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
 
 const GetProfileForDTag = gql`
-  query DTagAvailability($dTag: String) @api(name: desmos) {
+  ${ProfileFields}
+  query GetProfileForDTag($dTag: String) @api(name: desmos) {
     profile(where: { dtag: { _ilike: $dTag } }) {
-      dtag
+      ...ProfileFields
     }
   }
 `;

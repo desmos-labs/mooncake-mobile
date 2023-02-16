@@ -3,10 +3,10 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetCommentReplies = gql`
   ${PostFields}
-  query PostComments($postID: bigint, $subspaceID: bigint, $user: String, $reaction: jsonb!)
+  query GetCommentReplies($postID: bigint, $subspaceId: bigint, $user: String, $reaction: jsonb!)
   @api(name: butter) {
     post_reference(
-      where: { reference: { subspace_id: { _eq: $subspaceID }, id: { _eq: $postID } } }
+      where: { reference: { subspace_id: { _eq: $subspaceId }, id: { _eq: $postID } } }
     ) {
       reference {
         id

@@ -3,7 +3,7 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostCommentsCount = gql`
   ${PostFields}
-  query PostCommentsCount($subspaceId: bigint!, $postId: bigint!) @api(name: butter) {
+  query GetPostCommentsCount($subspaceId: bigint!, $postId: bigint!) @api(name: butter) {
     comments: post_aggregate(
       where: {
         subspace_id: { _eq: $subspaceId }

@@ -55,6 +55,13 @@ import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Community from 'screens/Community';
 import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
 import Activities from 'screens/Activities';
+import ConvertiblePointsModal from 'screens/Modals/ConvertiblePointsModal';
+import ManageConnectionsModal, {
+  ManageConnectionsModalParams,
+} from 'screens/Profile/components/ManageConnectionsModal';
+import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
+import Profile, { ProfileParams } from 'screens/Profile';
+import { Dimensions } from 'react-native';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -154,11 +161,15 @@ export type RootNavigatorParamList = {
   // Profile creation/saving
   [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
 
+  // Profile view
+  [ROUTES.PROFILE]: undefined;
+  [ROUTES.GUEST_PROFILE]: ProfileParams;
+
   // Profile posts
-  // [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
-  // [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
-  // [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
-  // [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
+  [ROUTES.PROFILE_POSTS]: ProfilePostsTabsParams;
+  [ROUTES.PROFILE_POSTS_POSTS]: PostsTabParams;
+  [ROUTES.PROFILE_POSTS_LIKED]: PostsTabParams;
+  [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   // Profile followage
   // [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
@@ -173,6 +184,13 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPACT_POINTS_MODAL]: undefined;
 
   // -------------------------------------------------------------------------------------
+  // --- MODALS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
+  [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
+
+  // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
@@ -183,7 +201,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
@@ -213,8 +230,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ONBOARDING]: OnboardingParams;
 
   // New profile
-  // [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
-  // [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
+
   // [ROUTES.OPERATIONS]: OperationsParams;
 };
 
@@ -233,14 +249,9 @@ const RootNavigator = () => {
   useInitializeNotifications();
   useInitializeDynamicLinks();
 
-  // const theme = useTheme();
-
-  /**
-   * This need to be removed
-   */
-  /* To allow going back to previous screen via swipe left. */
-  // const {height, width} = Dimensions.get('window');
-  // const gestureResponseDistance = Math.max(height, width);
+  //  To allow going back to previous screen via swipe left.
+  const { height, width } = Dimensions.get('window');
+  const gestureResponseDistance = Math.max(height, width);
 
   /* const styles: {[key: string]: ViewStyle | TextStyle} = {
     followingAndFollowers: {
@@ -361,6 +372,29 @@ const RootNavigator = () => {
       {/* <Stack.Screen  name={ROUTES.ADD_PROFILE_MODAL} component={AddProfileModal} /> */}
       <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
 
+      {/* Profile visualization */}
+      <Stack.Screen
+        name={ROUTES.PROFILE}
+        component={Profile}
+        options={{
+          gestureResponseDistance,
+        }}
+      />
+      <Stack.Screen
+        name={ROUTES.GUEST_PROFILE}
+        component={Profile}
+        options={{
+          gestureResponseDistance,
+        }}
+      />
+      <Stack.Screen
+        name={ROUTES.PROFILE_POSTS}
+        component={ProfilePosts}
+        options={{
+          gestureResponseDistance,
+        }}
+      />
+
       {/* <Stack.Screen */}
       {/*  name={ROUTES.FOLLOWING_AND_FOLLOWERS} */}
       {/*  component={FollowingAndFollowers} */}
@@ -370,13 +404,14 @@ const RootNavigator = () => {
       {/*  }} */}
       {/* /> */}
 
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.PROFILE_POSTS} */}
-      {/*  component={ProfilePosts} */}
-      {/*  options={{ */}
-      {/*    gestureResponseDistance, */}
-      {/*  }} */}
-      {/* /> */}
+      {/* -------------- */}
+      {/* --- MODALS --- */}
+      {/* -------------- */}
+
+      <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+      <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
+      <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
+      <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
 
       {/* ---------------------- */}
       {/* --- INVITE SCREENS --- */}
@@ -401,7 +436,6 @@ const RootNavigator = () => {
       {/*  options={{cardStyle: styles.statusScreen}} */}
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
-      {/* <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} /> */}
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.LOOKING_FOR_DEVICES} */}
@@ -456,20 +490,11 @@ const RootNavigator = () => {
       {/*    name={ROUTES.CONSENT_AGREEMENT} */}
       {/*    component={ConsentAgreement} */}
       {/*  /> */}
-      <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+
       <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.MANAGE_CONNECTIONS_MODAL} */}
-      {/*    component={ManageConnectionsModal} */}
-      {/*  /> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.CONVERTIBLE_POINTS_MODAL} */}
-      {/*    component={ConvertiblePointsModal} */}
-      {/*  /> */}
 
       <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
-      <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
       {/*  <Stack.Screen */}

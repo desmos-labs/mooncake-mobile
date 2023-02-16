@@ -81,10 +81,10 @@ export const useGetPostToSync = (user: string) => {
 export const useGetPostCommentsDifference = (user: string) => {
   const posts = useRecoilValue(postsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userPosts = posts[user] ?? [];
       return userPosts
-        .filter(p => isCommentTo(p, post.id))
+        .filter(p => p.subspaceId === subspaceId && isCommentTo(p, postId))
         .map(p => {
           switch (p.status) {
             case PostStatus.CREATED_LOCALLY:

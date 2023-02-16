@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetPostsParams = gql`
-  query ProfileParams @api(name: desmos) {
+  query GetPostsParams @api(name: desmos) {
     params: posts_params {
       params
     }

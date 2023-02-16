@@ -6,7 +6,6 @@ import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { DesmosProfile } from 'types/desmos';
 import useIsFollowing from 'hooks/useIsFollowing';
-import { GuestProfileParamsTypes } from 'screens/GuestProfile';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
 import useStyles from './useStyles';
 
@@ -30,11 +29,8 @@ const ToggleFollowageButton = (props: NotificationButtonProps) => {
   const navigateToProfile = useNavigateToProfile();
 
   const handleButtonPress = useCallback(() => {
-    navigateToProfile({
-      type: GuestProfileParamsTypes.COMPLETE,
-      profile: user,
-    });
-  }, [navigateToProfile, user]);
+    navigateToProfile(user.address);
+  }, [navigateToProfile, user.address]);
 
   return (
     <View style={styles.buttonView}>

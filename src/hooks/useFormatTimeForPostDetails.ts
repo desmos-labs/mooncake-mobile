@@ -5,15 +5,18 @@ import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 /**
  * A hook that formats an ISO 8601 timestamp into the user's local timezone
  */
-const useFormatTimeForPostDetails = (timeToFormat: string) => {
-  const shouldRenderDetailedTime = React.useMemo(() => {
-    const parsedTime = parseISO(`${timeToFormat}Z`);
-    return differenceInYears(new Date(parsedTime), Date.now()) === 0;
-  }, [timeToFormat]);
-
-  return useFormatDateToTZ(
-    timeToFormat,
-    shouldRenderDetailedTime ? 'dd MMM, HH:mm' : 'ccc MMM dd yyyy',
+const useFormatTimeForPostDetails = () => {
+  const formatDateToTZ = useFormatDateToTZ();
+  return React.useCallback(
+    (timeToFormat: string) => {
+      const parsedTime = parseISO(`${timeToFormat}Z`);
+      const shouldRenderDetailedTime = differenceInYears(new Date(parsedTime), Date.now()) === 0;
+      return formatDateToTZ(
+        timeToFormat,
+        shouldRenderDetailedTime ? 'dd MMM, HH:mm' : 'ccc MMM dd yyyy',
+      );
+    },
+    [formatDateToTZ],
   );
 };
 

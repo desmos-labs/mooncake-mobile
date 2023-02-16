@@ -8,8 +8,8 @@ import { SuccessfulBroadcast } from 'hooks/useBroadcastTx';
  * The details to create the post will be taken from the Recoil atom that is holding the createPostState.
  * TODO: Implement this
  */
-const useCreatePost = (parent?: Post) => {
-  return React.useCallback(async (): Promise<Result<SuccessfulBroadcast, Error>> => {
+const useCreatePost = () => {
+  return React.useCallback(async (parent?: Post): Promise<Result<SuccessfulBroadcast, Error>> => {
     console.log('Implement useCreatePost');
     return ok({ txHash: '' });
   }, []);

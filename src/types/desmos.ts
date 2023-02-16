@@ -1,6 +1,7 @@
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 import { Asset } from 'react-native-image-picker';
 import { CacheableObject } from 'types/cache';
+import { Post } from 'types/posts';
 
 /**
  * Represents a reaction that is registered on the subspace and can be used.
@@ -184,13 +185,9 @@ export type PostID = number;
 
 export interface PostReaction extends CacheableObject {
   /**
-   * ID of the subspace of the post related to this reaction.
+   * Post associated with the reaction.
    */
-  readonly subspaceId: number;
-  /**
-   * ID of the post related to this reaction.
-   */
-  readonly postId: PostID;
+  readonly post: Post;
   /**
    * ID of the reaction.
    */
@@ -204,11 +201,11 @@ export interface PostReaction extends CacheableObject {
 /**
  * Represents a comparable {@link PostReaction}.
  */
-export type ComparableReaction = Pick<PostReaction, 'subspaceId' | 'postId'>;
+export type ComparableReaction = Pick<PostReaction, 'post'>;
 
 /**
  * Allows to determine whether the two given reactions are equals or not.
  */
 export const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction) => {
-  return first.subspaceId === second.subspaceId && first.postId === second.postId;
+  return first.post.subspaceId === second.post.subspaceId && first.post.id === second.post.id;
 };

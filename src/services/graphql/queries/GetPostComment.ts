@@ -3,11 +3,11 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostReaction = gql`
   ${PostFields}
-  query Reaction($subspaceId: bigint!, $postId: bigint!, $commentExternalId: String!)
+  query GetPostReaction($subspaceId: bigint!, $postId: bigint!, $commentExternalId: String!)
   @api(name: butter) {
     comments: post(
       where: {
-        post: { subspace_id: { _eq: $subspaceID }, external_id: { _eq: $commentExternalId } }
+        post: { subspace_id: { _eq: $subspaceId }, external_id: { _eq: $commentExternalId } }
         conversation: { id: { _eq: $postID } }
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }

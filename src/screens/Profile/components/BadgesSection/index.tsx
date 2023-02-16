@@ -6,11 +6,12 @@ import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { verticalScale } from 'react-native-size-matters';
 
+/**
+ * A component that displays the user's badges.
+ * @constructor
+ */
 const BadgesSection = () => {
   const theme = useTheme();
-  /*
-  const styles = useStyles();
-*/
   const { t } = useTranslation('profile');
 
   return (

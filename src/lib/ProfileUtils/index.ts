@@ -1,8 +1,17 @@
-import { DesmosProfile } from 'types/desmos';
+import { ApplicationLink, ChainLink, DesmosProfile } from 'types/desmos';
 import { Source } from 'react-native-fast-image';
-import { ImageRequireSource } from 'react-native';
-import { defaultProfilePic } from 'assets/images';
+import { ImageRequireSource, ImageURISource } from 'react-native';
+import { defaultBanner, defaultProfilePic, twitterIcon } from 'assets/images';
 import { Asset } from 'react-native-image-picker';
+import LinkableChains from 'config/LinkableChains';
+
+/**
+ * Tells whether the given picture is a valid URI or not.
+ * @param picture {Asset | string | undefined} - Picture to check.
+ */
+export const isPictureUri = (picture: Asset | string | undefined): picture is string => {
+  return picture !== undefined && typeof picture === 'string';
+};
 
 /**
  * Tells whether the given picture is a valid {@link Asset} or not.
@@ -15,6 +24,16 @@ export const isPictureAsset = (picture: Asset | string | undefined): picture is 
   return uri !== undefined;
 };
 
+const getPictureData = (picture: Asset | string | undefined, defaultImage: ImageRequireSource) => {
+  if (isPictureUri(picture)) {
+    const trimmedUri = picture.trim();
+    return trimmedUri.length > 0 ? { uri: trimmedUri } : defaultImage;
+  } else if (isPictureAsset(picture)) {
+    return { uri: picture.uri };
+  }
+  return defaultImage;
+};
+
 /**
  * Returns the source that should be used to display the profile picture of the given profile.
  * @param profile {DesmosProfile} - Profile for which to display the profile picture.
@@ -22,13 +41,17 @@ export const isPictureAsset = (picture: Asset | string | undefined): picture is 
 export const getProfilePicture = (
   profile: DesmosProfile | undefined,
 ): Source | ImageRequireSource => {
-  const profilePicture = profile?.profilePicture;
-  if (profilePicture === undefined) {
-    return defaultProfilePic;
-  } else if (isPictureAsset(profilePicture)) {
-    return { uri: profilePicture.uri } as Source;
-  }
-  return { uri: profilePicture };
+  return getPictureData(profile?.profilePicture, defaultProfilePic);
+};
+
+/**
+ * Returns the source that should be used to display the cover picture of the given profile.
+ * @param profile {DesmosProfile} - Profile for which to display the cover picture.
+ */
+export const getCoverPicture = (
+  profile: DesmosProfile | undefined,
+): ImageURISource | ImageRequireSource => {
+  return getPictureData(profile?.coverPicture, defaultBanner);
 };
 
 /**
@@ -44,5 +67,28 @@ export const getProfileDisplayName = (profile: DesmosProfile): string | undefine
       return `@${profile.dTag}`;
     default:
       return undefined;
+  }
+};
+
+/**
+ * Returns the source that should be used to display the image of the given chain link.
+ * @param chain {ChainLink} - Chain link for which to display the image.
+ */
+export const getChainLinkImage = (chain: ChainLink): Source => {
+  return (
+    LinkableChains.find(y => y.chainConfig.name === chain.chainName)?.icon || defaultProfilePic
+  );
+};
+
+/**
+ * Returns the source that should be used to display the image of the given application link.
+ * @param app {ApplicationLink} - Application link for which to display the image.
+ */
+export const getAppLinkImage = (app: ApplicationLink): Source => {
+  switch (app.application.toLowerCase()) {
+    case 'twitter':
+      return twitterIcon;
+    default:
+      return defaultProfilePic;
   }
 };

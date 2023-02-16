@@ -3,91 +3,141 @@ import { emptyPostsIcon } from 'assets/images';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  ListRenderItemInfo,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
+import { Post } from 'types/posts';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useStyles from './useStyles';
 
-interface Props {
-  onPress: () => void;
-  posts: any[];
-  postsData: any[];
-  postsLoading: boolean;
-  guestProfile?: boolean;
+export interface PostsSectionProps {
+  /**
+   * Address of the profile related to the posts that will be displayed.
+   */
+  readonly address: string;
+  /**
+   * Posts to be displayed.
+   */
+  readonly posts: Post[];
+  /**
+   * Flag that indicates if the posts are being loaded.
+   */
+  readonly loading: boolean;
+  /**
+   * Action to be executed when the user presses this section.
+   */
+  readonly onPress: () => void;
 }
 
-const PostsSection = ({ onPress, postsData, postsLoading, posts, guestProfile }: Props) => {
+/**
+ * Component that renders the posts section.
+ * @constructor
+ */
+const PostsSection = (props: PostsSectionProps) => {
+  const { t } = useTranslation('profile');
   const theme = useTheme();
   const styles = useStyles();
   const { navigate } = useNavigation<any>();
-  const { t } = useTranslation('profile');
 
+  const { address, onPress, posts, loading: isLoading } = props;
+
+  const activeAddress = useActiveAccountAddress();
+  const isGuestProfile = useMemo(() => address === activeAddress, [activeAddress, address]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  // Callback used to navigate to the post details screen
   const handlePostPressed = React.useCallback(
-    ({ subspaceID, id }: { subspaceID: number; id: number }) => {
+    (post: Post) => {
       navigate(ROUTES.POST_DETAILS, {
-        subspaceID,
-        postId: id,
+        subspaceId: post.subspaceId,
+        postId: post.id,
         focusCommentBox: false,
       });
     },
-    [],
+    [navigate],
   );
 
-  const renderPosts = ({ item }: any) => (
-    <ProfilePostCard
-      postsMargin={2}
-      postsSize={104}
-      postData={item}
-      onPress={() =>
-        handlePostPressed({
-          subspaceID: item.subspace_id,
-          id: item.id,
-        })
-      }
-    />
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  // Callback used to render a post within the list
+  const renderPost = useCallback(
+    ({ item }: ListRenderItemInfo<Post>) => (
+      <ProfilePostCard
+        post={item}
+        postsMargin={2}
+        postsSize={104}
+        onPress={() => handlePostPressed(item)}
+      />
+    ),
+    [handlePostPressed],
   );
 
-  const emptyComponent = () => (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
-      <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
-    </View>
+  // Component to be rendered when the list is empty
+  const EmptyComponent = useMemo(
+    () => (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyImage} />
+        <Typography.Body7 style={{ color: theme.colors.midGrey }}>{t('no posts')}</Typography.Body7>
+      </View>
+    ),
+    [styles.emptyImage, t, theme.colors.midGrey],
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <View style={styles.container}>
       <Typography.Subtitle2>{t('posts')}</Typography.Subtitle2>
+
       <Spacer paddingBottom={theme.spacing.m} paddingTop={theme.spacing.xs}>
-        {posts.length !== 0 && !postsLoading && !guestProfile && (
+        {/* Subtitle of the section */}
+        {posts.length !== 0 && !isLoading && !isGuestProfile && (
           <Typography.Body7 style={{ color: theme.colors.midGrey }}>
             {t('created liked tipped')}
           </Typography.Body7>
         )}
       </Spacer>
-      {postsData && !postsLoading ? (
+
+      {/* Posts list, or loading indicator */}
+      {!isLoading ? (
         <FlatList
           contentContainerStyle={styles.flatlistContainer}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={posts}
-          renderItem={renderPosts}
-          ListEmptyComponent={emptyComponent}
+          renderItem={renderPost}
+          ListEmptyComponent={EmptyComponent}
         />
       ) : (
         <View style={styles.activityIndicatorView}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       )}
-      {posts.length !== 0 && !postsLoading && (
+
+      {/* See more button */}
+      {!isLoading && posts.length > 0 && (
         <TouchableOpacity style={styles.button} onPress={onPress}>
           <Typography.Body6
             style={{

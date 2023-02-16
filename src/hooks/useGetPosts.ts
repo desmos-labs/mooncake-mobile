@@ -66,14 +66,14 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
       return {
         query: GetPosts,
         variables: {
-          offset: 0,
-          limit: postsPerPage,
-          subspaceID: subspaceId,
+          subspaceId,
           user: params.user,
           reaction: {
             '@type': RegisteredReactionValueTypeUrl,
             registered_reaction_id: getLikeReactionId(subspaceParams),
           },
+          offset: 0,
+          limit: postsPerPage,
         },
       };
 
@@ -81,15 +81,15 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
       return {
         query: GetPostsFromFollowing,
         variables: {
-          offset: 0,
-          limit: postsPerPage,
-          subspaceID: subspaceId,
+          subspaceId,
           following: Array.from(params.followedUsers),
           user: params.user,
           reaction: {
             '@type': RegisteredReactionValueTypeUrl,
             registered_reaction_id: getLikeReactionId(subspaceParams),
           },
+          offset: 0,
+          limit: postsPerPage,
         },
       };
   }

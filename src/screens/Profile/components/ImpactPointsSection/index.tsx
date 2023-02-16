@@ -1,77 +1,102 @@
 import { useNavigation } from '@react-navigation/native';
-import appSettingsState from '@recoil/settings';
 import { infoIcon } from 'assets/images';
 import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
-import { useRecoilValue } from 'recoil';
+import useAccountImpactPoints from 'hooks/useAccountImpactPoints';
 import useStyles from './useStyles';
 
-const ImpactPointsSection = ({
-  impactPoints,
-  impactPointsLoading,
-}: {
-  impactPoints: number;
-  impactPointsLoading: boolean;
-}) => {
+/**
+ * Component that renders the section showing the number of impact points of the profile.
+ * @constructor
+ */
+const ImpactPointsSection = () => {
   const theme = useTheme();
   const styles = useStyles();
   const { t } = useTranslation('profile');
   const { navigate } = useNavigation<any>();
-  const { currentChain } = useRecoilValue(appSettingsState);
+
+  const {
+    impactPoints,
+    loading: areImpactPointsLoading,
+    refetch: refreshImpactPoints,
+  } = useAccountImpactPoints();
+
+  useEffect(() => {
+    refreshImpactPoints();
+  }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const handleInfoPress = useCallback(() => {
+    navigate(ROUTES.CONVERTIBLE_POINTS_MODAL);
+  }, [navigate]);
+
+  const handleHowToEarnPoints = useCallback(() => {
+    navigate(ROUTES.IMPACT_POINTS_MODAL);
+  }, [navigate]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
+
+  if (areImpactPointsLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
+      </View>
+    );
+  }
+
   return (
     <View>
-      {!impactPointsLoading ? (
-        <View style={styles.container}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TouchableOpacity
-              onPress={() => navigate(ROUTES.CONVERTIBLE_POINTS_MODAL)}
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Typography.Body6
-                style={{
-                  color: theme.colors.surfaceBlack,
-                  marginRight: 4,
-                }}>
-                {t('convertible points')}
-              </Typography.Body6>
-              <FastImage source={infoIcon} style={{ width: 22, height: 22 }} />
-            </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          {/* Title with an info icon */}
+          <TouchableOpacity
+            onPress={handleInfoPress}
+            style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Typography.Body6
+              style={{
+                color: theme.colors.surfaceBlack,
+                marginRight: 4,
+              }}>
+              {t('convertible points')}
+            </Typography.Body6>
+            <FastImage source={infoIcon} style={{ width: 22, height: 22 }} />
+          </TouchableOpacity>
 
-            <Button mode="text" onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}>
-              <Typography.Body7
-                style={{
-                  textTransform: 'none',
-                  color: theme.colors.butterOrange01,
-                }}>
-                {t('how to earn points')}
-              </Typography.Body7>
-            </Button>
-          </View>
-          <Spacer paddingVertical={theme.spacing.s} />
-          <Typography.H3
-            style={{
-              color: theme.colors.surfaceBlack,
-            }}>
-            {impactPoints} {t('points')}
-          </Typography.H3>
-          <Typography.Subtitle2
-            style={{
-              color: theme.colors.surfaceBlack,
-            }}>
-            0 {currentChain.currencies[0].coinDenom.toUpperCase()}
-          </Typography.Subtitle2>
+          {/* Link to know how to earn impact points */}
+          <Button mode="text" onPress={handleHowToEarnPoints}>
+            <Typography.Body7
+              style={{
+                textTransform: 'none',
+                color: theme.colors.butterOrange01,
+              }}>
+              {t('how to earn points')}
+            </Typography.Body7>
+          </Button>
         </View>
-      ) : (
-        <View style={styles.container}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
-        </View>
-      )}
+
+        {/* Margin */}
+        <Spacer paddingVertical={theme.spacing.s} />
+
+        {/* Number of impact points */}
+        <Typography.H3
+          style={{
+            color: theme.colors.surfaceBlack,
+          }}>
+          {impactPoints} {t('points')}
+        </Typography.H3>
+      </View>
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetTransactionsByAddress = gql`
-  query Transactions(
+  query GetTransactionsByAddress(
     $address: _text
     $limit: bigint = 20
     $offset: bigint = 0

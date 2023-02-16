@@ -27,7 +27,7 @@ import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, View } from 'react-native';
+import { ActivityIndicator, Dimensions, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { verticalScale } from 'react-native-size-matters';
@@ -55,7 +55,6 @@ import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
 import TopBar from 'components/TopBar';
 import usePostInteractionsAuthors from 'hooks/usePostInteractionsAuthors';
-import { GuestProfileParamsTypes } from 'screens/GuestProfile';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
@@ -76,13 +75,23 @@ export type NavProps = CompositeScreenProps<
 
 export interface PostDetailsParams {
   /**
-   * Post that should be visualized.
+   * Subspace ID the post that should be visualized.
    */
-  readonly post: Post;
+  readonly subspaceId: number;
+
+  /**
+   * ID of the post that should be visualized.
+   */
+  readonly postId: number;
   /**
    * focus the comment box when navigating to this screen
    */
   readonly focusCommentBox?: boolean;
+  /**
+   * ID of the post to be focused within the list of comments.
+   * TODO: Implement the scrolling of the list to this post
+   */
+  readonly focusPostId?: number;
 }
 
 const PostDetails = () => {
@@ -93,7 +102,8 @@ const PostDetails = () => {
 
   const { params } = useRoute<NavProps['route']>();
   const { top } = useSafeAreaInsets();
-  const { post: givenPost } = params;
+  const { subspaceId, postId } = params;
+  const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
   // --- Menus
@@ -121,27 +131,23 @@ const PostDetails = () => {
   const { textInputRef, focusTextInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
-  // --- Data hooks
+  // --- Hooks
   // -------------------------------------------------------------------------------------
+
+  const formatDate = useFormatTimeForPostDetails();
   const activeAddress = useActiveAccountAddress();
   const activeProfile = useActiveProfile();
 
-  const {
-    post: storedPost,
-    loading: refreshingPost,
-    refetch: refreshPost,
-  } = useGetPost(givenPost.subspaceId, givenPost.id);
-
-  // Get the post data based on the given post and the post from the chain
-  const post = useMemo(() => storedPost ?? givenPost, [givenPost, storedPost]);
+  // Post data
+  const { post, loading: isPostLoading, refetch: refreshPost } = useGetPost(subspaceId, postId);
 
   // Reactions data
   const {
     count: reactionsCount,
     loading: isReactionsCountLoading,
     refetch: refreshReactionsCount,
-  } = useGetPostReactionsCount(post);
-  const hasReacted = useHasReacted(post);
+  } = useGetPostReactionsCount(postData);
+  const hasReacted = useHasReacted(postData);
 
   // Comments data
   const {
@@ -149,22 +155,22 @@ const PostDetails = () => {
     loading: areCommentsLoading,
     refetch: refreshComments,
     fetchMore: fetchMoreComments,
-  } = useGetPostComments(post);
-  const { count: commentsCount, refetch: refreshCommentsCount } = useGetPostCommentsCount(post);
+  } = useGetPostComments(postData);
+  const { count: commentsCount, refetch: refreshCommentsCount } = useGetPostCommentsCount(postData);
 
   // Tips data
   const {
     count: tipsCount,
     loading: isTipsCountLoading,
     refetch: refreshTipsCount,
-  } = useGetPostTipsCount(post);
+  } = useGetPostTipsCount(postData);
 
   // Interactions data
   const {
     authors: interactionsAuthors,
     loading: areInteractionsAuthorsLoading,
     refetch: refreshInteractionsAuthors,
-  } = usePostInteractionsAuthors(post, 3);
+  } = usePostInteractionsAuthors(postData, 3);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -173,8 +179,8 @@ const PostDetails = () => {
   const handlePressReportUser = useHandlePressReportUser();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
 
-  const handlePressCounters = useHandlePressCounters(post);
-  const { loading: creatingComment, handleCreateComment } = useHandleCreateComment(post);
+  const handlePressCounters = useHandlePressCounters(postData);
+  const { handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
   const handlePressReaction = useHandlePressReaction();
@@ -204,8 +210,21 @@ const PostDetails = () => {
   // --- Formatted data
   // -------------------------------------------------------------------------------------
 
-  const formattedDate = useFormatTimeForPostDetails(post.creationDate);
   const isFollowingAddress = useIsFollowing(popupMenuParams?.user?.address ?? '');
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useFocusEffect(
+    useCallback(() => {
+      // Clean the popup params
+      setPopupMenuParams(undefined);
+
+      // Refresh the data
+      refreshPage();
+    }, []),
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -226,8 +245,8 @@ const PostDetails = () => {
             });
             setMenuVisible(true);
             setPopupMenuParams({
-              post,
-              user: post.author,
+              post: item,
+              user: item.author,
             });
           }}
           handlePressComment={() => {
@@ -252,7 +271,6 @@ const PostDetails = () => {
       );
     },
     [
-      post,
       handleExpandCommentView,
       handleNavigateToProfile,
       handlePressReaction,
@@ -270,12 +288,12 @@ const PostDetails = () => {
   const HeaderComponent = useMemo(
     () => (
       <>
-        <PostComponent post={post} />
+        <PostComponent post={post!} />
         <PostActionButtonsBar
           postLiked={hasReacted}
-          handleLikePress={() => handlePressReaction(post)}
+          handleLikePress={() => handlePressReaction(post!)}
           handleCommentPress={focusTextInputRef}
-          handleTipPress={() => handlePressSendTips(post)}
+          handleTipPress={() => handlePressSendTips(post!)}
         />
         <Spacer paddingVertical={16}>
           <InteractionCountersBar
@@ -309,7 +327,7 @@ const PostDetails = () => {
 
   // TODO: Move this in a custom component
   const CustomTopBar = React.useMemo(() => {
-    if (isCommentReply(post)) {
+    if (isCommentReply(post!)) {
       return (
         <TopBar
           style={styles.topBar}
@@ -333,31 +351,26 @@ const PostDetails = () => {
           <Spacer paddingLeft={theme.spacing.m}>
             <View style={styles.rightContainer}>
               <ProfileHeaderButton
-                profile={post.author}
-                onPress={() =>
-                  handleNavigateToProfile({
-                    type: GuestProfileParamsTypes.COMPLETE,
-                    profile: post.author.address,
-                  })
-                }
+                profile={post!.author}
+                onPress={() => handleNavigateToProfile(post!.author.address)}
               />
               <View style={styles.middleTextContainer}>
                 <Typography.Subtitle3 numberOfLines={1}>
-                  {getProfileDisplayName(post.author)}
+                  {getProfileDisplayName(post!.author)}
                 </Typography.Subtitle3>
-                <Typography.Body7>{formattedDate}</Typography.Body7>
+                <Typography.Body7>{formatDate(post!.creationDate)}</Typography.Body7>
               </View>
             </View>
           </Spacer>
         </View>
 
         <View style={styles.rightContainer}>
-          {activeAddress !== post.author.address && (
+          {activeAddress !== post!.author.address && (
             <ImageButton
               style={[styles.followIcon]}
               image={isFollowingAddress ? unfollowBlackIcon : followBlackIcon}
               onPress={() => {
-                handlePressFollowOrUnfollow(post.author);
+                handlePressFollowOrUnfollow(post!.author);
               }}
             />
           )}
@@ -386,7 +399,7 @@ const PostDetails = () => {
     styles.topBar,
     goBack,
     theme.spacing.m,
-    formattedDate,
+    formatDate,
     activeAddress,
     isFollowingAddress,
     commentsCount,
@@ -397,18 +410,20 @@ const PostDetails = () => {
   ]);
 
   // -------------------------------------------------------------------------------------
-  // --- Effects
+  // --- Conditional rendering
   // -------------------------------------------------------------------------------------
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Clean the popup params
-      setPopupMenuParams({ post, user: post.author });
+  if (!post) {
+    // If the post is loading, show the loading screen
+    if (isPostLoading) {
+      // TODO: Improve this in order to show the proper loading screen
+      return <ActivityIndicator />;
+    }
 
-      // Refresh the data
-      refreshPage();
-    }, []),
-  );
+    // TODO: It's best to show an error here or something, as it means the post does not exist anymore
+    goBack();
+    return null;
+  }
 
   // -------------------------------------------------------------------------------------
   // --- Rendering
@@ -426,7 +441,7 @@ const PostDetails = () => {
         estimatedItemSize={160}
         ref={scrollViewRef}
         scrollEnabled={true}
-        refreshing={refreshingPost}
+        refreshing={isPostLoading}
         onRefresh={refreshPage}
         ListHeaderComponent={HeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
@@ -443,7 +458,7 @@ const PostDetails = () => {
       <EnterCommentBottomBar
         author={activeProfile}
         loading={areCommentsLoading}
-        handlePostComment={handleCreateComment}
+        handlePostComment={() => handleCreateComment(post)}
         textInputRef={textInputRef}
         onIconPress={() => handleExpandCommentView(post)}
       />

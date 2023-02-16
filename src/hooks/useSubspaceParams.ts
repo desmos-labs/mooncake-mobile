@@ -8,12 +8,12 @@ import { convertGraphQLSubspaceParams } from 'lib/GraphQLUtils';
  * Hook that allows to get the current subspace config, and refresh it if necessary.
  */
 const useSubspaceParams = () => {
-  const subspaceID = useAppStateValue('subspaceId');
+  const subspaceId = useAppStateValue('subspaceId');
   const subspaceParams = useAppStateValue('subspaceParams');
   const setSubspaceParams = useSetAppStateValue('subspaceParams');
 
   const { data, refetch } = useQuery(GetSubspaceConfig, {
-    variables: { subspaceID },
+    variables: { subspaceId },
     fetchPolicy: 'no-cache',
   });
 

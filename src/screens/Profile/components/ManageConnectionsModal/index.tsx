@@ -16,47 +16,59 @@ import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Divider, useTheme } from 'react-native-paper';
+import { ApplicationLink, ChainLink } from 'types/desmos';
 import useStyles from './useStyles';
 
-export type ManageConnectionsModalParams = {
-  appsConnected: boolean;
-  chainsConnected: boolean;
-};
+export interface ManageConnectionsModalParams {
+  readonly appLinks: ApplicationLink[];
+  readonly chainLinks: ChainLink[];
+}
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTIONS_MODAL>;
 
+/**
+ * Modal that allows to manage the connected external applications and wallets.
+ * @constructor
+ */
 const ManageConnectionsModal = () => {
-  const {
-    params: { appsConnected, chainsConnected },
-  } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('profile');
+
   const { goBack, navigate } = useNavigation<NavProps['navigation']>();
+  const { params } = useRoute<NavProps['route']>();
+  const { appLinks, chainLinks } = params;
 
-  const onPressFirstButton = useCallback(() => {
+  const onPressConnectTwitter = useCallback(() => {
     goBack();
-    setTimeout(() => navigate(ROUTES.CONNECT_APP, { mode: 'connect' }), 200);
-  }, []);
+    setTimeout(
+      () =>
+        navigate(ROUTES.CONNECT_APP, {
+          mode: 'connect',
+        }),
+      200,
+    );
+  }, [goBack, navigate]);
 
-  const onPressSecondButton = useCallback(() => {
+  const onPressConnectWallet = useCallback(() => {
     goBack();
     setTimeout(() => navigate(ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN), 200);
-  }, []);
+  }, [goBack, navigate]);
 
-  const onPressThirdButton = useCallback(() => {
+  const onPressManageConnectedTwitter = useCallback(() => {
     goBack();
     setTimeout(() => navigate(ROUTES.MANAGE_CONNECTED_APPS), 200);
-  }, []);
+  }, [goBack, navigate]);
 
-  const onPressFourthButton = useCallback(() => {
+  const onPressManageConnectedWallets = useCallback(() => {
     goBack();
     setTimeout(() => navigate(ROUTES.MANAGE_CONNECTED_CHAINS), 200);
-  }, []);
+  }, [goBack, navigate]);
 
   return (
     <BottomUpModalWrapper goBack={goBack}>
-      <TouchableOpacity style={styles.button} onPress={onPressFirstButton}>
+      {/* Button to connect Twitter */}
+      <TouchableOpacity style={styles.button} onPress={onPressConnectTwitter}>
         <FastImage
           source={connectTwitterProfileIcon}
           style={styles.image}
@@ -65,7 +77,9 @@ const ManageConnectionsModal = () => {
         <Typography.Body6>{t('connectTwitter')}</Typography.Body6>
       </TouchableOpacity>
       <Divider style={styles.divider} />
-      <TouchableOpacity style={styles.button} onPress={onPressSecondButton}>
+
+      {/* Button to connect an external wallet */}
+      <TouchableOpacity style={styles.button} onPress={onPressConnectWallet}>
         <FastImage
           source={connectWalletProfileIcon}
           style={styles.image}
@@ -73,10 +87,14 @@ const ManageConnectionsModal = () => {
         />
         <Typography.Body6>{t('connectWallet')}</Typography.Body6>
       </TouchableOpacity>
+
+      {/* Spacer */}
       <Divider style={styles.divider} />
-      {appsConnected && (
+
+      {/* Buttons to manage the connected applications */}
+      {appLinks.length > 0 && (
         <>
-          <TouchableOpacity style={styles.button} onPress={onPressThirdButton}>
+          <TouchableOpacity style={styles.button} onPress={onPressManageConnectedTwitter}>
             <FastImage
               source={manageConnectedTwitterProfileIcon}
               style={styles.image}
@@ -87,9 +105,11 @@ const ManageConnectionsModal = () => {
           <Divider style={styles.divider} />
         </>
       )}
-      {chainsConnected && (
+
+      {/* Button to manage connected wallets */}
+      {chainLinks.length > 0 && (
         <>
-          <TouchableOpacity style={styles.button} onPress={onPressFourthButton}>
+          <TouchableOpacity style={styles.button} onPress={onPressManageConnectedWallets}>
             <FastImage source={manageConnectedWalletsProfileIcon} style={styles.image} />
             <Typography.Body6>{t('manageConnectedWallets')}</Typography.Body6>
           </TouchableOpacity>

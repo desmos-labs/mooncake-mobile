@@ -5,6 +5,8 @@ import { ChainLink } from 'types/desmos';
  * @param {any} chainLink - Chain link data retrieved from the server.
  * @returns {ChainLink} - A formatted ChainLink object
  */
+// It's fine to ignore the default export warning here since we might add other functions in the future
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLChainLink = (chainLink: any) =>
   ({
     chainName: chainLink.chainConfig.name,

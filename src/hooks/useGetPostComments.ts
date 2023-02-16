@@ -17,7 +17,10 @@ import useUpdatePendingPosts from 'hooks/useUpdatePendingPosts';
  * @param post - Post for which to get the comments.
  * @param commentsPerPage - Number of comments to get per page.
  */
-const useGetPostComments = (post: Post, commentsPerPage: number = 50) => {
+const useGetPostComments = (
+  post: Pick<Post, 'subspaceId' | 'id'>,
+  commentsPerPage: number = 50,
+) => {
   const activeAccountAddress = useActiveAccountAddress();
   if (!activeAccountAddress) {
     throw new Error('Trying to get post comments without active user');

@@ -9,7 +9,7 @@ import { useGetPostCommentsDifference } from '@recoil/posts';
  * Hook that allows to get the count of the comments of a post.
  * @param post {Post} - The post for which to get the count of the comments.
  * */
-const useGetPostCommentsCount = (post: Post) => {
+const useGetPostCommentsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   const address = useActiveAccountAddress();
   if (!address) {
     throw new Error("Trying to get a post's comments count, without an active address");
@@ -27,7 +27,7 @@ const useGetPostCommentsCount = (post: Post) => {
   // Get the comments difference that is stored locally
   const getCommentsDifference = useGetPostCommentsDifference(address);
   const commentsDifference = useMemo(
-    () => getCommentsDifference(post),
+    () => getCommentsDifference(post.subspaceId, post.id),
     [getCommentsDifference, post],
   );
 

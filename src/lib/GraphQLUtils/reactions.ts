@@ -1,6 +1,7 @@
 import { PostReaction } from 'types/desmos';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
 import { DataStatus } from 'types/cache';
+import { convertGraphQLPost } from 'lib/GraphQLUtils/posts';
 
 /**
  * Format an incoming reaction data from the server into a format that is easier to parse by the app.
@@ -11,8 +12,7 @@ import { DataStatus } from 'types/cache';
 // eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLReaction = (reaction: any): PostReaction => {
   return {
-    subspaceId: reaction.post.subspace_id,
-    postId: reaction.post.id,
+    post: convertGraphQLPost(reaction.post),
     id: reaction.id,
     author: convertGraphQLProfile(reaction.author),
     status: DataStatus.SYNCED,

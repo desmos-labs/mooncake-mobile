@@ -66,7 +66,7 @@ const DisconnectChainModal = () => {
         primaryButtonLabel: t('resultModal:goToProfile') as string,
         onPressPrimary: () =>
           navigate(ROUTES.BOTTOM_TABS, {
-            screen: ROUTES.USER_PROFILE,
+            screen: ROUTES.PROFILE,
           }),
       });
     } else if (!isCanceledOperationError(broadcastResult.error)) {
@@ -82,7 +82,7 @@ const DisconnectChainModal = () => {
         secondaryButtonLabel: t('resultModal:goToProfile') as string,
         onPressSecondary: () =>
           navigate(ROUTES.BOTTOM_TABS, {
-            screen: ROUTES.USER_PROFILE,
+            screen: ROUTES.PROFILE,
           }),
       });
     }

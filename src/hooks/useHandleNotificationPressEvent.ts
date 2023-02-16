@@ -6,6 +6,8 @@ import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { NotificationData, NotificationType } from 'types/notifications';
 import { useActiveProfile } from '@recoil/profiles';
+import useNavigateToPost from 'hooks/useNavigateToPost';
+import useNavigateToFollowageScreen from 'hooks/useNavigateToFollowageScreen';
 
 /**
  * Hook that allows handling the navigation to the proper screen when the user
@@ -16,56 +18,46 @@ const useHandleNotificationPressEvent = () => {
 
   const profile = useActiveProfile();
 
+  // Navigation hooks
+  const navigateToPost = useNavigateToPost();
+  const navigateToFollowage = useNavigateToFollowageScreen();
+
   // Return a callback that allows to navigate to the proper screen
   // given a ReceivedNotificationData instance that is retrieved from
   // the server
   return useCallback(
-    (data: NotificationData | undefined) => {
+    <T extends NotificationData>(data: T | undefined) => {
       if (!profile) {
         return;
       }
 
       switch (data?.type) {
         case NotificationType.Comment:
-          navigate(ROUTES.POST_DETAILS, {
-            postId: data.postId,
-            subspaceId: data.subspaceId,
-            focusCommentBox: false,
-          });
+          navigateToPost(data.subspaceId, data.postId);
           break;
 
         case NotificationType.Reply:
-          navigate(ROUTES.COMMENT_REPLIES, {
-            commentId: data.commentId,
-            subspaceId: data.subspaceId,
+          navigateToPost(data.subspaceId, data.commentId, {
+            focusPostId: data.replyId,
           });
           break;
 
         case NotificationType.ReactionPost:
-          navigate(ROUTES.POST_DETAILS, {
-            subspaceId: data.subspaceId,
-            postId: data.postId,
-            focusCommentBox: false,
-          });
+          navigateToPost(data.subspaceId, data.postId);
           break;
 
         case NotificationType.ReactionComment:
+          navigateToPost(data.subspaceId, data.commentId);
+          break;
+
         case NotificationType.ReactionReply:
-          navigate(ROUTES.COMMENT_REPLIES, {
-            commentId: data.commentId,
-            subspaceId: data.subspaceId,
+          navigateToPost(data.subspaceId, data.commentId, {
+            focusPostId: data.replyId,
           });
           break;
 
         case NotificationType.Follow:
-          navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-            screen: ROUTES.FOLLOWING,
-            params: {
-              subspaceID: data.subspaceId,
-              userAddress: profile.address,
-              headerTitle: profile.nickname?.trim() || `@${profile.dtag}`,
-            },
-          });
+          navigateToFollowage(ROUTES.FOLLOWING, data.follower);
           break;
 
         case NotificationType.InviteClaimed:
@@ -80,7 +72,7 @@ const useHandleNotificationPressEvent = () => {
           Alert.alert('Unmapped notification handling');
       }
     },
-    [profile],
+    [navigate, navigateToFollowage, navigateToPost, profile],
   );
 };
 

@@ -6,6 +6,8 @@ import { ApplicationLink } from 'types/desmos';
  * @param {any} applicationLink - Application link data retrieved from the server.
  * @return {ApplicationLink} - A formatted ApplicationLink object.
  */
+// It's fine to ignore the default export warning here since we might add other functions in the future
+// eslint-disable-next-line import/prefer-default-export
 export const convertGraphQLApplicationLink = (applicationLink: any) =>
   ({
     application: applicationLink.application,

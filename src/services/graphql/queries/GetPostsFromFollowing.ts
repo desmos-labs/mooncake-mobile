@@ -3,20 +3,20 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostsFromFollowing = gql`
   ${PostFields}
-  query GetPostsBetweenDates(
-    $offset: Int
-    $limit: Int
-    $subspaceID: bigint
+  query GetPostsFromFollowing(
+    $subspaceId: bigint
     $following: [String!]
     $user: String
     $reaction: jsonb!
+    $offset: Int
+    $limit: Int
   ) @api(name: butter) {
     posts: post(
       offset: $offset
       limit: $limit
       order_by: { creation_date: desc }
       where: {
-        subspace_id: { _eq: $subspaceID }
+        subspace_id: { _eq: $subspaceId }
         _not: { conversation: {} }
         author_address: { _in: $following }
       }

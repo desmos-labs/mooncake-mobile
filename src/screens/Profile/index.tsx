@@ -1,20 +1,17 @@
 import { BlurView } from '@react-native-community/blur';
-import { CompositeScreenProps, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { connectIcon, defaultBanner, profileScan, profileSettings } from 'assets/images';
+import { profileBack, profileScan, profileSettings } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import EnvConfig from 'config/EnvConfig';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   ImageBackground,
-  InteractionManager,
   RefreshControl,
   SafeAreaView,
   StatusBar,
@@ -36,84 +33,156 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BadgesSection from 'screens/Profile/components/BadgesSection';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
-import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
-import NftsSection from 'screens/Profile/components/NftsSection';
+import NFTsSection from 'screens/Profile/components/NFTsSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile/components/UserBio';
-import useProfileDataQueries from 'screens/Profile/useProfileDataQueries';
-import useQueries from 'screens/Profile/useQueries';
-import { mapConnectedChainImages } from 'screens/Profile/utils';
+import useProfileGivenAddress from 'hooks/useProfileGivenAddress';
+import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
+import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
+import useNavigateToFollowageScreen from 'hooks/useNavigateToFollowageScreen';
+import useFollowersCount from 'hooks/useFollowersCount';
+import useFollowageCount from 'hooks/useFollowageCount';
+import useAccountBalance from 'hooks/useAccountBalance';
+import useIsFollowing from 'hooks/useIsFollowing';
+import useAppLinksGivenAddress from 'hooks/useAppLinksGivenAddress';
+import useChainLinksGivenAddress from 'hooks/useChainLinksGivenAddress';
+import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import FollowUnfollowButton from 'screens/Profile/components/FollowUnfollowButton';
+import EditProfileSection from 'screens/Profile/components/EditProfileSection';
+import usePostsByAddress from 'hooks/usePostsByAddress';
+import usePostsCountByAddress from 'hooks/usePostsCountByAddress';
 import useStyles from './useStyles';
 
-type NavProps = CompositeScreenProps<
-  StackScreenProps<BottomTabsParamList, ROUTES.USER_PROFILE>,
-  StackScreenProps<RootNavigatorParamList>
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
 
 const HEADER_HEIGHT_COMPACT = 95;
 const HEADER_HEIGHT_EXPANDED = 60;
 
+export interface ProfileParams {
+  /**
+   * Address of the profile to display.
+   */
+  readonly address: string;
+}
+
+/**
+ * Screen that allows to display the details of a user profile.
+ * @constructor
+ */
 const Profile = () => {
-  const theme = useTheme();
   const { t } = useTranslation('profile');
-  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+  const styles = useStyles({ insets: useSafeAreaInsets() });
+
+  const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
+  const { navigate, goBack } = navigation;
+
+  const { params } = route;
+  const givenAddress = params?.address;
+
   const [initialLoading, setInitialLoading] = useState(true);
-  const [userDataLoading, setUserDataLoading] = useState(false);
-  const styles = useStyles({ insets });
-  const { navigate } = navigation;
 
-  const {
-    profileLoading,
-    nickname,
-    dtag,
-    bio,
-    address,
-    profile_pic,
-    cover_pic,
-    refetchProfileData,
-    numRelationships,
-    numRelationshipsLoading,
-    refreshNumRelationships,
-  } = useProfileDataQueries();
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
 
-  // refresh number of followers on screen focus
-  useFocusEffect(
-    React.useCallback(() => {
-      const task = InteractionManager.runAfterInteractions(() => {
-        // Only refresh following list on focus
-        refreshNumRelationships();
-      });
-      return () => task.cancel();
-    }, [refreshNumRelationships]),
+  const activeAccountAddress = useActiveAccountAddress();
+  const address = useMemo(
+    () => givenAddress ?? activeAccountAddress ?? '',
+    [activeAccountAddress, givenAddress],
+  );
+
+  const isActiveAccount = useMemo(
+    () => address === activeAccountAddress,
+    [activeAccountAddress, address],
   );
 
   const {
-    posts,
-    postsData,
-    postsLoading,
-    convertedBalance,
-    balanceData,
-    balanceLoading,
-    appLinks,
-    chainLinks,
-    appLinksLoading,
-    chainLinksLoading,
-    refetchAppLinks,
-    refetchChainLinks,
-    refetchBalance,
-    refetchPosts,
-    impactPoints,
-    impactPointsLoading,
-    refetchImpactPoints,
-    postsCounter,
-    refetchPostsCounter,
-  } = useQueries(address);
+    profile,
+    loading: isProfileLoading,
+    refetch: refreshProfile,
+  } = useProfileGivenAddress(address);
 
-  /**
-   * Animations
-   */
+  const {
+    count: followersCount,
+    loading: isFollowersCountLoading,
+    refetch: refreshFollowersCount,
+  } = useFollowersCount(address);
+
+  const {
+    count: followageCount,
+    loading: isFollowageCountLoading,
+    refetch: refreshFollowageCount,
+  } = useFollowageCount(address);
+
+  const {
+    balance,
+    loading: isBalanceLoading,
+    refetch: refreshBalance,
+  } = useAccountBalance(address);
+
+  const {
+    appLinks,
+    loading: areAppLinksLoading,
+    refetch: refreshAppLinks,
+  } = useAppLinksGivenAddress(address);
+
+  const {
+    chainLinks,
+    loading: areChainLinksLoading,
+    refetch: refreshChainLinks,
+  } = useChainLinksGivenAddress(address);
+
+  const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
+  const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
+
+  // Relationships data
+  const isFollowing = useIsFollowing(address);
+  const followOrUnfollowUser = useFollowOrUnfollowUser();
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  // Callback to refresh the data
+  const refreshPage = useCallback(async () => {
+    await refreshProfile();
+    await refreshFollowageCount();
+    await refreshFollowersCount();
+    await refreshChainLinks();
+    await refreshAppLinks();
+    await refreshBalance();
+    await refreshPosts();
+    await refreshPostsCount();
+  }, [
+    refreshAppLinks,
+    refreshBalance,
+    refreshChainLinks,
+    refreshFollowageCount,
+    refreshFollowersCount,
+    refreshPosts,
+    refreshPostsCount,
+    refreshProfile,
+  ]);
+
+  const userDataLoading = useMemo(() => {
+    return isProfileLoading;
+  }, [isProfileLoading]);
+
+  // Refresh the data on the focus of the screen
+  useEffect(() => {
+    setInitialLoading(true);
+    refreshPage().finally(() => setInitialLoading(false));
+    // Suppress the warning of the next line in order to update the data only on the first render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- Animations
+  // -------------------------------------------------------------------------------------
 
   const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
   // @ts-ignore
@@ -123,7 +192,7 @@ const Profile = () => {
   const scrollY = useSharedValue(0);
   const scrollOffset = useSharedValue(45 + HEADER_HEIGHT_EXPANDED);
 
-  const animatedDtagStyle = useAnimatedStyle(() => {
+  const animatedDTagStyle = useAnimatedStyle(() => {
     const opacity = interpolate(scrollY.value, [160, 200], [0, 1]);
 
     const translateY = interpolate(scrollY.value, [140, 200], [30, 0], {
@@ -188,129 +257,78 @@ const Profile = () => {
     },
   });
 
-  /**
-   * Handlers
-   */
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const navigateToFollowageScreen = useNavigateToFollowageScreen();
 
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
-      userAddress: address!,
+      userAddress: address,
       initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
     });
   };
 
-  const handleConnectionButtonPressed = useCallback(() => {
-    navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
-      appsConnected: true,
-      chainsConnected: true,
-    });
-  }, []);
+  const handleFollowingPressed = useCallback(() => {
+    navigateToFollowageScreen(ROUTES.FOLLOWING, profile?.address ?? '');
+  }, [navigateToFollowageScreen, profile?.address]);
 
-  const refetchUserData = React.useCallback(async () => {
-    await Promise.all([
-      refetchProfileData(),
-      refetchChainLinks(),
-      refetchAppLinks(),
-      refetchBalance(),
-      refetchImpactPoints(),
-      refetchPosts(),
-      refetchPostsCounter(),
-      refreshNumRelationships(),
-    ]);
-  }, [
-    refetchProfileData,
-    refetchChainLinks,
-    refetchAppLinks,
-    refetchBalance,
-    refetchImpactPoints,
-    refetchPosts,
-    refetchPostsCounter,
-    refreshNumRelationships,
-  ]);
+  const handleFollowersPressed = useCallback(() => {
+    navigateToFollowageScreen(ROUTES.FOLLOWERS, profile?.address ?? '');
+  }, [navigateToFollowageScreen, profile?.address]);
 
-  const handleFollowingPressed = () =>
-    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-      screen: ROUTES.FOLLOWING,
-      params: {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        userAddress: address,
-        headerTitle: nickname.trim() || `@${dtag}`,
-      },
-    });
+  const handlePressFollow = useCallback(async () => {
+    await followOrUnfollowUser(profile?.address ?? '');
+  }, [followOrUnfollowUser, profile?.address]);
 
-  const handleFollowersPressed = () =>
-    navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
-      screen: ROUTES.FOLLOWERS,
-      params: {
-        subspaceID: EnvConfig.APP_SUBSPACE_ID,
-        userAddress: address,
-        headerTitle: nickname.trim() || `@${dtag}`,
-      },
-    });
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (userDataLoading) {
-        InteractionManager.runAfterInteractions(() => {
-          refetchUserData().then(() => setTimeout(() => setUserDataLoading(false), 500));
-        });
-      }
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [userDataLoading, refetchUserData]);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (!profileLoading && !appLinksLoading && !chainLinksLoading) {
-      timeout = setTimeout(() => setInitialLoading(false), 500);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [profileLoading, appLinksLoading, chainLinksLoading]);
-
-  /**
-   * Memoized components
-   */
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
 
   const ConnectedChains = React.useMemo(() => {
-    const images = [...mapConnectedChainImages(chainLinks)];
-
-    if (images.length > 3) images.length = 3;
-    if (chainLinks.length !== 0 || appLinks.length !== 0) {
-      return (
-        <View>
-          <SocialAndWalletsCountersBar
-            visitingProfile={false}
-            loading={appLinksLoading && chainLinksLoading}
-            connectedChainsCounter={chainLinks.length}
-            twitterUsername={appLinks[0]?.username}
-            connectedChainsImages={images}
-            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
-          />
-        </View>
-      );
-    } else if (
-      chainLinks.length !== 0 ||
-      appLinks.length !== 0 ||
-      appLinksLoading ||
-      chainLinksLoading
-    ) {
+    // Show the loading indicator
+    if (areAppLinksLoading || areChainLinksLoading) {
       return (
         <View style={{ alignSelf: 'flex-start' }}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
     }
-    return undefined;
-  }, [chainLinks, appLinks, appLinksLoading && chainLinksLoading]);
 
+    // Show the various app links and chain links
+    if (chainLinks.length > 0 || appLinks.length > 0) {
+      return (
+        <View>
+          <SocialAndWalletsCountersBar
+            loading={areAppLinksLoading || areChainLinksLoading}
+            address={profile?.address ?? ''}
+            chainLinks={chainLinks}
+            appLinks={appLinks}
+            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
+          />
+        </View>
+      );
+    }
+
+    // Nothing to show
+    return undefined;
+  }, [
+    areAppLinksLoading,
+    areChainLinksLoading,
+    chainLinks,
+    appLinks,
+    theme.colors.surfaceBlack,
+    profile?.address,
+    navigate,
+  ]);
+
+  // TODO: Move the styles into useStyles
   const Banner = useMemo(() => {
     return (
       <AnimatedImageBackground
         resizeMode="cover"
-        source={cover_pic !== '' ? { uri: cover_pic } : defaultBanner}
+        source={getCoverPicture(profile)}
         style={[
           {
             position: 'absolute',
@@ -334,12 +352,83 @@ const Profile = () => {
         />
       </AnimatedImageBackground>
     );
-  }, [cover_pic]);
+  }, [AnimatedBlurView, AnimatedImageBackground, animatedBlurStyle, animatedImageBGStyle, profile]);
 
-  const Avatar = useMemo(() => {
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
+
+  if (initialLoading) {
     return (
+      <SafeAreaView style={styles.flexCenter}>
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
+      </SafeAreaView>
+    );
+  }
+
+  if (!profile) {
+    if (isProfileLoading) {
+      return (
+        <SafeAreaView style={styles.flexCenter}>
+          <ActivityIndicator color={theme.colors.surfaceBlack} />
+        </SafeAreaView>
+      );
+    }
+
+    // TODO: Show an error here as the profile no longer exists
+    goBack();
+    return null;
+  }
+
+  return (
+    <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+
+      {/* Back button */}
+      {!isActiveAccount && (
+        <ImageButton
+          image={profileBack}
+          buttonStyle={styles.buttonStyleLeft}
+          style={styles.topBarImage}
+          onPress={goBack}
+        />
+      )}
+
+      {/* Edit and scan buttons */}
+      {isActiveAccount && (
+        <>
+          <ImageButton
+            image={profileSettings}
+            buttonStyle={[styles.buttonStyleRight, { right: 20 }]}
+            style={styles.topBarImage}
+            onPress={() => navigate(ROUTES.SETTINGS)}
+          />
+          <ImageButton
+            image={profileScan}
+            buttonStyle={[styles.buttonStyleRight, { right: 60 }]}
+            style={styles.topBarImage}
+          />
+        </>
+      )}
+
+      {/* DTag */}
+      <Animated.View style={[styles.animatedDtag, animatedDTagStyle]}>
+        <View
+          style={{
+            paddingTop: theme.spacing.s,
+          }}>
+          <Typography.Subtitle3 numberOfLines={1} style={styles.dtag}>
+            @{profile.dTag}
+          </Typography.Subtitle3>
+        </View>
+      </Animated.View>
+
+      {/* Banner */}
+      {Banner}
+
+      {/* Profile image */}
       <AnimatedFastImage
-        source={profile_pic !== '' ? { uri: profile_pic } : defaultBanner}
+        source={getProfilePicture(profile)}
         style={[
           {
             zIndex: 2,
@@ -355,51 +444,7 @@ const Profile = () => {
           animatedProfilePicStyle,
         ]}
       />
-    );
-  }, [profile_pic]);
 
-  /**
-   * Render section
-   */
-
-  if (initialLoading) {
-    return (
-      <SafeAreaView style={styles.flexCenter}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
-      </SafeAreaView>
-    );
-  }
-
-  return (
-    <Animated.View style={styles.container} entering={FadeIn.duration(300)}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <ImageButton
-        image={profileSettings}
-        buttonStyle={[styles.buttonStyleRight, { right: 20 }]}
-        style={styles.topBarImage}
-        onPress={() => navigate(ROUTES.SETTINGS)}
-      />
-      <ImageButton
-        image={profileScan}
-        buttonStyle={[styles.buttonStyleRight, { right: 60 }]}
-        style={styles.topBarImage}
-      />
-      {/* Dtag */}
-      <Animated.View style={[styles.animatedDtag, animatedDtagStyle]}>
-        <View
-          style={{
-            paddingTop: theme.spacing.s,
-          }}>
-          <Typography.Subtitle3 numberOfLines={1} style={styles.dtag}>
-            @{dtag}
-          </Typography.Subtitle3>
-        </View>
-      </Animated.View>
-
-      {/* Banner */}
-      {Banner}
-      {/* Profile image */}
-      {Avatar}
       <Animated.ScrollView
         overScrollMode="never"
         pinchGestureEnabled={false}
@@ -408,7 +453,7 @@ const Profile = () => {
         refreshControl={
           <RefreshControl
             enabled={true}
-            onRefresh={() => setUserDataLoading(true)}
+            onRefresh={refreshPage}
             refreshing={userDataLoading}
             tintColor={theme.colors.white}
           />
@@ -419,107 +464,115 @@ const Profile = () => {
           paddingTop: HEADER_HEIGHT_EXPANDED,
         }}>
         <View style={styles.contentContainer}>
+          {/* Posts, following and followers counters */}
           <View style={{ flexDirection: 'row' }}>
             <View style={{ flexDirection: 'row', right: 0, marginLeft: 'auto' }}>
+              {/* Posts count */}
               <View
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Typography.Subtitle3>{postsCounter || 0}</Typography.Subtitle3>
+                <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
+
+              {/* Followage count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
-                {numRelationshipsLoading ? (
+                {isFollowageCountLoading ? (
                   <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
                 ) : (
-                  <Typography.Subtitle3>{numRelationships?.numFollowing}</Typography.Subtitle3>
+                  <Typography.Subtitle3>{followageCount}</Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('following')}</Typography.Caption1>
               </TouchableOpacity>
+
+              {/* Followers count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowersPressed}>
-                {numRelationshipsLoading ? (
+                {isFollowersCountLoading ? (
                   <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
                 ) : (
-                  <Typography.Subtitle3>{numRelationships?.numFollowers}</Typography.Subtitle3>
+                  <Typography.Subtitle3>{followersCount}</Typography.Subtitle3>
                 )}
                 <Typography.Caption1>{t('followers')}</Typography.Caption1>
               </TouchableOpacity>
             </View>
           </View>
+
+          {/* Profile nickname */}
           <Typography.H5
             style={{
               marginTop: 10,
             }}
             numberOfLines={1}>
-            {nickname}
+            {profile.nickname}
           </Typography.H5>
 
+          {/* Profile DTag */}
           <Typography.Body7
             style={{
               marginVertical: 4,
               color: theme.colors.darkGrey,
             }}
             numberOfLines={1}>
-            @{dtag}
+            @{profile.dTag}
           </Typography.Body7>
 
+          {/* Profile address */}
           <AddressCopy address={address} />
 
-          <Spacer paddingVertical={theme.spacing.m}>
-            <UserBio content={bio} />
-            {ConnectedChains}
-          </Spacer>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => navigate(ROUTES.SAVE_PROFILE)}>
-              <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleConnectionButtonPressed}
-              style={{
-                backgroundColor: theme.colors.surfaceGrey,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 8,
-                height: 35,
-                width: 40,
-              }}>
-              <FastImage
-                source={connectIcon}
-                style={{ height: 22, width: 22 }}
-                tintColor={theme.colors.surfaceBlack}
-              />
-            </TouchableOpacity>
-          </View>
+          {/* Profile biography */}
+          {profile?.bio && (
+            <Spacer paddingVertical={theme.spacing.m}>
+              <UserBio content={profile.bio} />
+              {ConnectedChains}
+            </Spacer>
+          )}
+
+          {/* Section to edit the profile */}
+          {isActiveAccount && (
+            <EditProfileSection profile={profile!} chainLinks={chainLinks} appLinks={appLinks} />
+          )}
+
+          {/* Follow/Unfollow button */}
+          {!isActiveAccount && (
+            <FollowUnfollowButton isFollowing={isFollowing} onPress={handlePressFollow} />
+          )}
 
           <Spacer paddingVertical={theme.spacing.s} />
           <Divider style={styles.divider} />
+
+          {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
-            <>
-              <ImpactPointsSection
-                impactPoints={impactPoints}
-                impactPointsLoading={impactPointsLoading}
-              />
-              <Divider style={styles.divider} />
-            </>
-            <BalanceSection
-              address={address!}
-              balanceData={balanceData}
-              balanceLoading={balanceLoading}
-              convertedBalance={convertedBalance}
-            />
+            {/* Impact points */}
+            {isActiveAccount && (
+              <>
+                <ImpactPointsSection />
+                <Divider style={styles.divider} />
+              </>
+            )}
+
+            {/* Balance */}
+            <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
+            {/* TODO: Add the operations section if the active user */}
+
             <Divider style={styles.divider} />
+
+            {/* Posts */}
             <PostsSection
-              onPress={handlePostsSectionPressed}
+              address={address}
               posts={posts}
-              postsData={postsData}
-              postsLoading={postsLoading}
+              loading={arePostsLoading}
+              onPress={handlePostsSectionPressed}
             />
             <Divider style={styles.divider} />
-            <NftsSection />
+
+            {/* NFTs */}
+            <NFTsSection />
+
             <Divider style={styles.divider} />
+
+            {/* Badges */}
             <BadgesSection />
           </View>
         </View>

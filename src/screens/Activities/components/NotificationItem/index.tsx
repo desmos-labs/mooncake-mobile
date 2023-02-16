@@ -10,7 +10,8 @@ import { CompleteNotification, NotificationType } from 'types/notifications';
 import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
 import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import { GuestProfileParamsTypes } from 'screens/GuestProfile';
+import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
+import useSetNotificationAsRead from 'hooks/useSetNotificationAsRead';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {
@@ -33,41 +34,8 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   const { timestamp } = notification;
-  const formattedDate = useFormatTimeForPostDetails(timestamp);
-
-  //
-  // const handleNavigateToNotification = useCallback(async () => {
-  //   navigateToCorrectScreen({
-  //     type,
-  //     post_id,
-  //     comment_id,
-  //     reply_id,
-  //     subspace_id,
-  //   });
-  //   // Save the value inside GQL
-  //   // Modify the cache to reflect the value change without re-fetching it
-  //   if (id && read_receipts.length === 0) {
-  //     try {
-  //       const result = await PostNotificationRead(id);
-  //       if (result) {
-  //         useClient.writeFragment({
-  //           fragment: NotificationReadFields,
-  //           id: `notification:${id}`,
-  //           data: {
-  //             read_receipts: [
-  //               {
-  //                 __typename: 'notification_read',
-  //                 read_time: Date.now(),
-  //               },
-  //             ],
-  //           },
-  //         });
-  //       }
-  //     } catch (e) {
-  //       console.error('Mark notification read error', e);
-  //     }
-  //   }
-  // }, [read_receipts, navigateToCorrectScreen]);
+  const formatDate = useFormatTimeForPostDetails();
+  const formattedDate = formatDate(timestamp);
 
   const profile = useMemo(() => {
     switch (notification.type) {
@@ -116,6 +84,8 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   const navigateToProfile = useNavigateToProfile();
+  const setNotificationAsRead = useSetNotificationAsRead();
+  const handleNotificationPressEvent = useHandleNotificationPressEvent();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -123,11 +93,14 @@ const NotificationItem = (props: NotificationComponentProps) => {
 
   const handleNavigateToProfile = useCallback(() => {
     if (!profile) return;
-    navigateToProfile({
-      type: GuestProfileParamsTypes.COMPLETE,
-      profile,
-    });
+    navigateToProfile(profile.address);
   }, [navigateToProfile, profile]);
+
+  const handleNavigateToNotification = useCallback(() => {
+    // TODO: Probably we should handle the error somehow
+    setNotificationAsRead(notification);
+    handleNotificationPressEvent(notification);
+  }, [handleNotificationPressEvent, notification, setNotificationAsRead]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components

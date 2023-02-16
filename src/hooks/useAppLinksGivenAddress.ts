@@ -10,7 +10,7 @@ import GetAccountApplicationLinks from 'services/graphql/queries/GetAccountAppli
  * Hook to retrieve the chain links for a user having a given address.
  * @param address {string} - Address of the user for which to get the chain links.
  */
-const useChainLinksGivenAddress = (address?: string | undefined) => {
+const useAppLinksGivenAddress = (address?: string | undefined) => {
   const activeAccountAddress = useActiveAccountAddress()!;
   const userAddress = address || activeAccountAddress;
   const isForActiveUser = activeAccountAddress === userAddress;
@@ -42,7 +42,7 @@ const useChainLinksGivenAddress = (address?: string | undefined) => {
       return;
     }
 
-    const { chainLinks: appLinks } = data;
+    const { applicationLinks: appLinks } = data;
     const retrievedApplicationLink = appLinks.map(convertGraphQLApplicationLink);
 
     switch (isForActiveUser) {
@@ -64,4 +64,4 @@ const useChainLinksGivenAddress = (address?: string | undefined) => {
   };
 };
 
-export default useChainLinksGivenAddress;
+export default useAppLinksGivenAddress;

@@ -11,15 +11,18 @@ import { useAppStateValue } from '@recoil/appState';
  * @param {string} formatString The specified date-fns to format the time into
  *                              See {https://date-fns.org/v2.29.3/docs/format}
  */
-const useFormatDateToTZ = (timeToFormat: string, formatString: string) => {
+const useFormatDateToTZ = () => {
   const currentTimeZone = useAppStateValue('currentTimezone');
-  return React.useMemo(() => {
-    if (!timeToFormat) return '';
-    // append a zone designator to timestamp if it is not present
-    // this is for formatting the time to different timezones
-    const parsedTime = parseISO(!timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat);
-    return formatInTimeZone(parsedTime, currentTimeZone, formatString);
-  }, [timeToFormat, currentTimeZone, formatString]);
+  return React.useCallback(
+    (timeToFormat: string, formatString: string) => {
+      if (!timeToFormat) return '';
+      // append a zone designator to timestamp if it is not present
+      // this is for formatting the time to different timezones
+      const parsedTime = parseISO(!timeToFormat.includes('Z') ? `${timeToFormat}Z` : timeToFormat);
+      return formatInTimeZone(parsedTime, currentTimeZone, formatString);
+    },
+    [currentTimeZone],
+  );
 };
 
 export default useFormatDateToTZ;

@@ -9,8 +9,9 @@ import { useGetPostReactionsDifference } from '@recoil/reactions';
  * Hook that allows to get the count of reactions of a given post.
  * @param post {Post} - Post for which to get the reactions count.
  */
-const useGetPostReactionsCount = (post: Post) => {
+const useGetPostReactionsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   const address = useActiveAccountAddress();
+
   if (!address) {
     throw new Error("Trying to get a post's reactions count, without an active address");
   }
@@ -28,7 +29,7 @@ const useGetPostReactionsCount = (post: Post) => {
   // Get the reactions difference that is stored locally
   const getReactionsDifference = useGetPostReactionsDifference(address);
   const reactionsDifference = useMemo(
-    () => getReactionsDifference(post),
+    () => getReactionsDifference(post.subspaceId, post.id),
     [getReactionsDifference, post],
   );
 

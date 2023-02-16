@@ -20,6 +20,7 @@ import { useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import Communities from 'screens/Communities';
 import Activities from 'screens/Activities';
+import Profile from 'screens/Profile';
 import useStyles from './useStyles';
 
 export interface Props extends BottomTabBarProps {}
@@ -32,7 +33,7 @@ export type BottomTabsParamList = {
   [ROUTES.COMMUNITIES]: undefined;
   [ROUTES.ACTIVITIES]: undefined;
   [ROUTES.CREATE_BUTTON]: undefined;
-  [ROUTES.USER_PROFILE]: undefined;
+  [ROUTES.PROFILE]: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
@@ -49,7 +50,7 @@ const getCorrectImage = (routeName: string) => {
   switch (routeName) {
     case ROUTES.HOME_TABS:
       return bottomHomeIcon;
-    case ROUTES.USER_PROFILE:
+    case ROUTES.PROFILE:
       return bottomProfileIcon;
     case ROUTES.ACTIVITIES:
       return bottomActivitiesIcon;
@@ -175,12 +176,10 @@ const BottomTabsNavigator = () => {
         initialRouteName={ROUTES.HOME_TABS}
         screenOptions={{ headerShown: false }}>
         <Tab.Screen name={ROUTES.HOME_TABS} component={HomeTabs} />
-
-        {/* TODO: Re-add these */}
         <Tab.Screen name={ROUTES.COMMUNITIES} component={Communities} />
         <Tab.Screen name={ROUTES.CREATE_BUTTON} component={MiddleFakeComponent} />
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
-        {/* <Tab.Screen name={ROUTES.USER_PROFILE} component={Profile} /> */}
+        <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
     </View>
   );

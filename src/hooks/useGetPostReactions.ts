@@ -15,7 +15,7 @@ import useUpdatePendingReactions from 'hooks/useUpdatePendingReactions';
  * @param post - Post for which to get the reactions.
  * @param reactionsPerPage {number} - Number of reactions to be fetched per page
  */
-const useGetPostReactions = (post: Post, reactionsPerPage = 50) => {
+const useGetPostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPage = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
   if (!activeAccountAddress) {
     throw new Error('Trying to get post reactions without active user');
@@ -23,7 +23,7 @@ const useGetPostReactions = (post: Post, reactionsPerPage = 50) => {
 
   // Get the reactions to be synced
   const getPostReactionsToSync = useGetPostReactionsToSync(activeAccountAddress);
-  const postReactionsToSync = getPostReactionsToSync(post);
+  const postReactionsToSync = getPostReactionsToSync(post.subspaceId, post.id);
   const updatePendingReactions = useUpdatePendingReactions(activeAccountAddress);
 
   // Set the initial reactions state to be the reactions to sync.

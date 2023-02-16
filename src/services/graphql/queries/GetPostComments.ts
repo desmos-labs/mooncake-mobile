@@ -3,7 +3,7 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPostComments = gql`
   ${PostFields}
-  query PostComments(
+  query GetPostComments(
     $subspaceId: bigint
     $postId: bigint
     $user: String

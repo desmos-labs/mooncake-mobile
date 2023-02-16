@@ -89,7 +89,7 @@ export interface FollowNotificationData extends SocialNotificationData {
 
 export interface InviteClaimedNotificationData extends SocialNotificationData {
   readonly type: NotificationType.InviteClaimed;
-  readonly claimer: string;
+  readonly claimerAddress: string;
 }
 
 export interface InviteUnlockedNotificationData extends SocialNotificationData {
@@ -137,7 +137,9 @@ export interface CompleteNotificationData extends BaseNotificationData {
   readonly isRead: boolean;
 }
 
-export interface CompleteCommentNotification extends CompleteNotificationData {
+export interface CompleteCommentNotification
+  extends CompleteNotificationData,
+    CommentNotificationData {
   type: NotificationType.Comment;
   /**
    * Post that has been commented
@@ -149,7 +151,7 @@ export interface CompleteCommentNotification extends CompleteNotificationData {
   comment: Post;
 }
 
-export interface CompleteReplyNotification extends CompleteNotificationData {
+export interface CompleteReplyNotification extends CompleteNotificationData, ReplyNotificationData {
   type: NotificationType.Reply;
   /**
    * Comment that has been replied to.
@@ -161,7 +163,9 @@ export interface CompleteReplyNotification extends CompleteNotificationData {
   reply: Post;
 }
 
-export interface CompletePostReactionNotification extends CompleteNotificationData {
+export interface CompletePostReactionNotification
+  extends CompleteNotificationData,
+    PostReactionNotificationData {
   type: NotificationType.ReactionPost;
   /**
    * Post that has been reacted to.
@@ -173,7 +177,9 @@ export interface CompletePostReactionNotification extends CompleteNotificationDa
   reaction: PostReaction;
 }
 
-export interface CompleteCommentReactionNotification extends CompleteNotificationData {
+export interface CompleteCommentReactionNotification
+  extends CompleteNotificationData,
+    CommentReactionNotificationData {
   type: NotificationType.ReactionComment;
   /**
    * Conversation inside which the comment is.
@@ -189,7 +195,9 @@ export interface CompleteCommentReactionNotification extends CompleteNotificatio
   reaction: PostReaction;
 }
 
-export interface CompleteReplyReactionNotification extends CompleteNotificationData {
+export interface CompleteReplyReactionNotification
+  extends CompleteNotificationData,
+    ReplyReactionNotificationData {
   type: NotificationType.ReactionReply;
   /**
    * Conversation inside which the comment is.
@@ -209,7 +217,9 @@ export interface CompleteReplyReactionNotification extends CompleteNotificationD
   reaction: PostReaction;
 }
 
-export interface CompleteFollowNotification extends CompleteNotificationData {
+export interface CompleteFollowNotification
+  extends CompleteNotificationData,
+    FollowNotificationData {
   type: NotificationType.Follow;
   /**
    * User that started following the user.
@@ -217,7 +227,9 @@ export interface CompleteFollowNotification extends CompleteNotificationData {
   user: DesmosProfile;
 }
 
-export interface CompleteInviteClaimedNotification extends CompleteNotificationData {
+export interface CompleteInviteClaimedNotification
+  extends CompleteNotificationData,
+    InviteClaimedNotificationData {
   type: NotificationType.InviteClaimed;
   /**
    * Address of the user that has claimed the invite.
@@ -225,7 +237,9 @@ export interface CompleteInviteClaimedNotification extends CompleteNotificationD
   claimer: DesmosProfile;
 }
 
-export interface CompleteInviteUnlockedNotification extends CompleteNotificationData {
+export interface CompleteInviteUnlockedNotification
+  extends CompleteNotificationData,
+    InviteUnlockedNotificationData {
   type: NotificationType.InviteUnlocked;
 }
 

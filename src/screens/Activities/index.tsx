@@ -1,13 +1,12 @@
 import notifee, { AndroidColor } from '@notifee/react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { errorImage } from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
 import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
@@ -15,6 +14,8 @@ import { Divider, useTheme } from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
 import useNotificationsHistory from 'hooks/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';
+import { useSetAppStateValue } from '@recoil/appState';
+import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';
 import useStyles from './useStyles';
 
 /**
@@ -25,6 +26,11 @@ const Activities = () => {
   const { t } = useTranslation('activities');
   const theme = useTheme();
   const styles = useStyles();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
   const {
     notifications,
     loading: areNotificationsLoading,
@@ -34,28 +40,30 @@ const Activities = () => {
     refreshing,
   } = useNotificationsHistory();
 
-  // Function that is used to get the key for each item inside the list
-  const keyExtractor = useCallback((item: string | CompleteNotification, index) => {
-    switch (typeof item) {
-      case 'string':
-        return `sectionHeader${index}`;
-      default: {
-        const { id, timestamp } = item as CompleteNotification;
-        return `row${id}${timestamp}`;
-      }
-    }
-  }, []);
+  const splitNotificationsByWeek = useSplitNotificationsByWeek();
+  const keyExtractor = useKeyExtractor();
+
+  // -------------------------------------------------------------------------------------
+  // --- Formatted data
+  // -------------------------------------------------------------------------------------
+
+  const items = useMemo(
+    () => splitNotificationsByWeek(notifications),
+    [notifications, splitNotificationsByWeek],
+  );
 
   // Indexes of the headers that should stick within the list
-  const stickyHeaderIndices = notificationsData
-    ?.map((item, index) => {
-      if (typeof item === 'string') {
-        return index;
-      } else {
-        return null;
-      }
-    })
-    .filter(item => item !== null) as number[];
+  const stickyHeaderIndices = useMemo(() => {
+    return items
+      ?.map((item, index) => {
+        if (typeof item === 'string') {
+          return index;
+        } else {
+          return null;
+        }
+      })
+      .filter(item => item !== null) as number[];
+  }, [items]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -63,7 +71,7 @@ const Activities = () => {
 
   // Component shown if there are no past activities
   const EmptyActivities = useMemo(() => {
-    if (notificationsLoading || notifications.length > 0) {
+    if (areNotificationsLoading || notifications.length > 0) {
       return;
     }
     return (
@@ -72,11 +80,12 @@ const Activities = () => {
         <Typography.Body5>{t('no activities')}</Typography.Body5>
       </View>
     );
-  }, [notifications.length, styles.emptyView, styles.errorImage, t]);
+  }, [areNotificationsLoading, notifications.length, styles.emptyView, styles.errorImage, t]);
 
   // Function that is used in order to render each item within the list
   const renderItem = useCallback(
-    ({ item }: string | CompleteNotification) => {
+    (info: ListRenderItemInfo<CompleteNotification | string>) => {
+      const { item } = info;
       if (typeof item === 'string') {
         // Render a divider
         if (item === 'divider') {
@@ -118,10 +127,11 @@ const Activities = () => {
   // --- Effects
   // -------------------------------------------------------------------------------------
 
+  const setNotificationsCount = useSetAppStateValue('notificationsCount');
   const resetNotificationsCounter = useCallback(async () => {
+    setNotificationsCount(0);
     await notifee.setBadgeCount(0);
-    setMMKV(MMKVKEYS.NOTIFICATIONS_COUNT, 0);
-  }, []);
+  }, [setNotificationsCount]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -163,7 +173,7 @@ const Activities = () => {
           }
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={EmptyActivities}
-          data={notifications}
+          data={items}
           renderItem={renderItem}
           ListFooterComponent={FooterComponent}
           estimatedItemSize={90}

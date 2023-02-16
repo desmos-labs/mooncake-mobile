@@ -77,7 +77,7 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   usePostsCountSubscription(
     DiscoveryPostsCount,
     {
-      subspaceID: subspaceId,
+      subspaceId,
       userAddress: activeAddress,
     },
     onNewDiscoveryPosts,
@@ -109,7 +109,7 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   usePostsCountSubscription(
     FollowingPostsCount,
     {
-      subspaceID: subspaceId,
+      subspaceId,
       userAddress: followingAddresses,
     },
     onNewFollowingPosts,

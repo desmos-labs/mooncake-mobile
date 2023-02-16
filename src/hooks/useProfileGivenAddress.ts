@@ -4,6 +4,7 @@ import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress'
 import { DesmosProfile } from 'types/desmos';
 import { useStoredProfiles, useStoreProfile } from '@recoil/profiles';
 import { useActiveAccountAddress } from '@recoil/accounts';
+import { convertGraphQLProfile } from 'lib/GraphQLUtils';
 
 /**
  * Hook to retrieve the Desmos profile of the user having the given address.
@@ -43,15 +44,17 @@ const useProfileGivenAddress = (address?: string) => {
 
     const { profile } = data;
     const [firstProfile] = profile;
+    const onChainProfile = convertGraphQLProfile(firstProfile);
+
     switch (isForActiveUser) {
       case true:
         // Cache the profile of the active user
-        storeProfile(userAddress, firstProfile);
+        storeProfile(userAddress, onChainProfile);
         break;
 
       default:
         // Set the fetched profile if the queried user is not the active user
-        setFetchedProfile(firstProfile);
+        setFetchedProfile(onChainProfile);
     }
   }, [data, isForActiveUser, storeProfile, userAddress]);
 

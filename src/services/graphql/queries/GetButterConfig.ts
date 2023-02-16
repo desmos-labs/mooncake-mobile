@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetButterConfig = gql`
-  query Config @api(name: butter) {
+  query GetButterConfig @api(name: butter) {
     config {
       desmos_address
       ibc {

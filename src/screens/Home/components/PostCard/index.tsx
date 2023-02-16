@@ -121,7 +121,8 @@ const PostCard = (props: PostCardProps) => {
 
   const isPending = useMemo(() => isPostPending(post), [post]);
 
-  const formattedDate = useFormatTimeForPostDetails(post.creationDate);
+  const formatDate = useFormatTimeForPostDetails();
+  const formattedDate = formatDate(post.creationDate);
   const calculatedCreationDate = useMemo(() => {
     const parsedTime = parseISO(`${post.creationDate}Z`);
     const now = new Date();

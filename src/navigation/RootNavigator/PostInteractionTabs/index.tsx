@@ -27,7 +27,7 @@ export type PostInteractionTabsParamList = {
 
 export type PostInteractionReactionsTabParams = {
   /**
-   * Post for which to show the interactions.
+   * The post to show the interactions for.
    */
   post: Post;
   /**

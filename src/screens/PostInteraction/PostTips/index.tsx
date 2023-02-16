@@ -18,7 +18,7 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
-import { PostTipTarget, Tip, TipTargetType } from 'types/tips';
+import { Tip, TipTargetType } from 'types/tips';
 import useGetPostTips from 'hooks/useGetPostTips';
 
 type NavProps = CompositeScreenProps<
@@ -51,7 +51,10 @@ const PostTips = () => {
 
   const handlePressSendTips = React.useCallback(() => {
     navigate(ROUTES.SEND_TIPS, {
-      target: { type: TipTargetType.POST, post } as PostTipTarget,
+      target: {
+        type: TipTargetType.POST,
+        post,
+      },
     });
   }, [navigate, post]);
 

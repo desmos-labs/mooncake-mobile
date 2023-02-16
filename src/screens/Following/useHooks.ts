@@ -21,7 +21,7 @@ export type PaginatedData<T> = {
 };
 
 /**
- * @param {number} subspaceID - number - The ID of the subspace you want to get the followers of.
+ * @param {number} subspaceId - number - The ID of the subspace you want to get the followers of.
  * @param {string} userAddress - string
  * @returns An object with the following properties:
  * - loading: boolean
@@ -30,13 +30,13 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) => {
+const useHooks = (subspaceId: number, userAddress: string, query: DocumentNode) => {
   const [paginatedData, setPaginatedData] = useState<ProfileSummary[]>([]);
 
   /* It's making a GraphQL query to the server. */
   const { loading, error, data, fetchMore, refetch, variables } = useQuery<QueueData>(query, {
     variables: {
-      subspaceID,
+      subspaceId,
       userAddress,
       limit: ITEMS_PER_FETCH,
       offset: 0,
@@ -62,7 +62,7 @@ const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) 
 
   const count = data?.paginatedFollowers?.length ?? 0;
   const setNumOfFollowers = useSetRecoilState(
-    numOfFollowerState({ type: 'following', subspaceID, userAddress }),
+    numOfFollowerState({ type: 'following', subspaceId, userAddress }),
   );
   useEffect(() => setNumOfFollowers(count), [count]);
 
@@ -74,13 +74,13 @@ const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) 
         offset: nextOffset,
       },
     });
-  }, [subspaceID, userAddress, nextOffset]);
+  }, [subspaceId, userAddress, nextOffset]);
 
   const refetchCallback = useCallback(() => {
-    refetch({ subspaceID, userAddress, offset: 0 });
-  }, [subspaceID, userAddress]);
+    refetch({ subspaceId, userAddress, offset: 0 });
+  }, [subspaceId, userAddress]);
 
-  /* Refetch when subspaceID, userAddress changed. */
+  /* Refetch when subspaceId, userAddress changed. */
   const called = useRef(false);
   useEffect(() => {
     if (called.current) {
@@ -88,7 +88,7 @@ const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) 
     } else {
       called.current = true;
     }
-  }, [subspaceID, userAddress]);
+  }, [subspaceId, userAddress]);
 
   return {
     loading,

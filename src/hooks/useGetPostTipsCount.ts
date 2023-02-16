@@ -9,7 +9,7 @@ import { useGetPostTipsDifference } from '@recoil/tips';
  * Hook that allows to get the count of the tips of a post.
  * @param post {Post} - The post for which to get the count of the tips.
  */
-const useGetPostTipsCount = (post: Post) => {
+const useGetPostTipsCount = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   const address = useActiveAccountAddress();
   if (!address) {
     throw new Error("Trying to get a post's tips count, without an active address");

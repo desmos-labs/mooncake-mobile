@@ -10,6 +10,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import useGetPostReactions from 'hooks/useGetPostReactions';
 import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
+import { Post } from 'types/posts';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -25,14 +26,20 @@ const PostReactions = () => {
   const styles = useStyles();
 
   const { params } = useRoute<NavProps['route']>();
-  const { post } = params;
+  const { subspaceId, postId } = params;
+  const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { count, refetch: refetchCount } = useGetPostReactionsCount(post);
-  const { reactions, loading, refetch: refetchReactions, fetchMore } = useGetPostReactions(post);
+  const { count, refetch: refetchCount } = useGetPostReactionsCount(postData);
+  const {
+    reactions,
+    loading,
+    refetch: refetchReactions,
+    fetchMore,
+  } = useGetPostReactions(postData);
 
   const refetch = useCallback(() => {
     refetchCount();

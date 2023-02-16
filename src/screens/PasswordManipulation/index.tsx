@@ -46,7 +46,7 @@ export type PasswordManipulationParams = {
 
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.PASSWORD_MANIPULATION>,
-  BottomTabScreenProps<BottomTabsParamList, ROUTES.USER_PROFILE>
+  BottomTabScreenProps<BottomTabsParamList, ROUTES.PROFILE>
 >;
 
 const PasswordManipulation = () => {

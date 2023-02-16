@@ -72,7 +72,7 @@ export type PaginatedData<T> = {
 };
 
 /**
- * @param {number} subspaceID - number - The ID of the subspace you want to get the followers of.
+ * @param {number} subspaceId - number - The ID of the subspace you want to get the followers of.
  * @param {string} userAddress - string
  * @returns An object with the following properties:
  * - loading: boolean
@@ -81,8 +81,8 @@ export type PaginatedData<T> = {
  * - fetchMore: () => void
  * - refetch: () => void
  */
-const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) => {
-  console.log('useHooks', { subspaceID, userAddress, query });
+const useHooks = (subspaceId: number, userAddress: string, query: DocumentNode) => {
+  console.log('useHooks', { subspaceId, userAddress, query });
 
   // START debug
   const paginatedFollowers = useRef<ProfileSummary[]>([]);
@@ -120,7 +120,7 @@ const useHooks = (subspaceID: number, userAddress: string, query: DocumentNode) 
   // END debug
 
   const setNumOfFollowers = useSetRecoilState(
-    numOfFollowerState({ type: 'following', subspaceID, userAddress }),
+    numOfFollowerState({ type: 'following', subspaceId, userAddress }),
   );
   useEffect(() => setNumOfFollowers(MAX_MOCK_FOLLOWERS), [data]);
 

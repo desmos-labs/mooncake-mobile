@@ -38,18 +38,14 @@ export const useAddPostReaction = (user: string) => {
     (post: Post) => {
       setReactions(currentReactions => {
         const existingReactions = currentReactions.get(user);
-        const existingReaction = existingReactions.get({
-          subspaceId: post.subspaceId,
-          postId: post.id,
-        });
+        const existingReaction = existingReactions.get({ post });
         switch (existingReaction?.status) {
           case undefined:
             // The reaction does not exist in the cache, so add it
             return currentReactions.update(
               user,
               existingReactions.add({
-                subspaceId: post.subspaceId,
-                postId: post.id,
+                post,
                 id: undefined,
                 author: profile,
               }),
@@ -59,13 +55,7 @@ export const useAddPostReaction = (user: string) => {
             // The reaction was deleted locally. Bring it back to CREATED
             return currentReactions.update(
               user,
-              existingReactions.updateStatus(
-                {
-                  subspaceId: post.subspaceId,
-                  postId: post.id,
-                },
-                DataStatus.CREATED_LOCALLY,
-              ),
+              existingReactions.updateStatus({ post }, DataStatus.CREATED_LOCALLY),
             );
 
           default:
@@ -84,9 +74,11 @@ export const useAddPostReaction = (user: string) => {
 export const useHasPostReaction = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userReactions = reactions.get(user);
-      return userReactions.has({ subspaceId: post.subspaceId, postId: post.id });
+      return userReactions
+        .readAll()
+        .some(reaction => reaction.post.subspaceId === subspaceId && reaction.post.id === postId);
     },
     [user, reactions],
   );
@@ -100,7 +92,7 @@ export const useGetPostReaction = (user: string) => {
   return React.useCallback(
     (post: Post) => {
       const userReactions = reactions.get(user);
-      return userReactions.get({ subspaceId: post.subspaceId, postId: post.id });
+      return userReactions.get({ post });
     },
     [user, reactions],
   );
@@ -121,10 +113,11 @@ export const useGetPostReaction = (user: string) => {
 export const useGetPostReactionsDifference = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userReactions = reactions.get(user);
       return userReactions
-        .filter({ subspaceId: post.subspaceId, postId: post.id })
+        .readAll()
+        .filter(reaction => reaction.post.subspaceId === subspaceId && reaction.post.id === postId)
         .map(reaction => {
           switch (reaction.status) {
             case DataStatus.CREATED_LOCALLY:
@@ -142,20 +135,30 @@ export const useGetPostReactionsDifference = (user: string) => {
 };
 
 /**
+ * Hook that allows to get all the reactions that are stored locally and not yet synced.
+ * @param user {string} - Address of the user for which to get the reactions.
+ */
+export const useReactionsToSync = (user: string) => {
+  const reactions = useRecoilValue(reactionsState);
+  const userReactions = reactions.get(user);
+  return userReactions.readAll().filter(reaction => reaction.status !== DataStatus.SYNCED);
+};
+
+/**
  * Hook that allows to get the reactions to be synced for a given post.
  * @param user {string} - Address of the user for which to get the reactions.
  */
 export const useGetPostReactionsToSync = (user: string) => {
   const reactions = useRecoilValue(reactionsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userReactions = reactions.get(user);
       return userReactions
         .readAll()
         .filter(
           reaction =>
-            reaction.subspaceId === post.subspaceId &&
-            reaction.postId === post.id &&
+            reaction.post.subspaceId === subspaceId &&
+            reaction.post.id === postId &&
             reaction.status !== DataStatus.SYNCED,
         );
     },
@@ -173,10 +176,7 @@ export const useUpdatePostReactionStatus = (user: string) => {
       setReactions(currentReactions => {
         // Update the status of existing reaction
         const existingReactions = currentReactions.get(user);
-        const updatedReactions = existingReactions.updateStatus(
-          { subspaceId: post.subspaceId, postId: post.id },
-          status,
-        );
+        const updatedReactions = existingReactions.updateStatus({ post }, status);
         return currentReactions.update(user, updatedReactions);
       });
     },
@@ -197,8 +197,8 @@ export const useUpdatePendingPostReaction = (user: string) => {
         const updatedReactions = existingReactions
           .readAll()
           .map(reaction =>
-            reaction.subspaceId === subspaceId &&
-            reaction.postId === postId &&
+            reaction.post.subspaceId === subspaceId &&
+            reaction.post.id === postId &&
             reaction.status !== DataStatus.SYNCED
               ? update
               : reaction,
@@ -224,7 +224,9 @@ export const useRemovePendingPostReaction = (user: string) => {
           .readAll()
           .filter(
             r =>
-              r.subspaceId !== subspaceId || r.postId !== postId || r.status !== DataStatus.SYNCED,
+              r.post.subspaceId !== subspaceId ||
+              r.post.id !== postId ||
+              r.status !== DataStatus.SYNCED,
           );
         return currentReactions.update(user, existingReactions.set(updatedReactions));
       });
@@ -244,10 +246,7 @@ export const useRemovePostReaction = (user: string) => {
     (post: Post) => {
       setReactions(currentReactions => {
         const existingReactions = currentReactions.get(user);
-        const updatedReactions = existingReactions.remove({
-          subspaceId: post.subspaceId,
-          postId: post.id,
-        });
+        const updatedReactions = existingReactions.remove({ post });
         return currentReactions.update(user, updatedReactions);
       });
     },

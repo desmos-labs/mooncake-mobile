@@ -3,13 +3,13 @@ import PostFields from 'services/graphql/queries/fragments/PostFields';
 
 const GetPosts = gql`
   ${PostFields}
-  query GetPosts($offset: Int, $limit: Int, $subspaceID: bigint, $user: String, $reaction: jsonb!)
+  query GetPosts($subspaceId: bigint, $user: String, $reaction: jsonb!, $offset: Int, $limit: Int)
   @api(name: butter) {
     posts: post(
       offset: $offset
       limit: $limit
       order_by: { creation_date: desc }
-      where: { subspace_id: { _eq: $subspaceID }, _not: { conversation: {} } }
+      where: { subspace_id: { _eq: $subspaceId }, _not: { conversation: {} } }
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(

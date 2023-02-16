@@ -9,6 +9,7 @@ import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import { TipTargetType } from 'types/tips';
+import useNavigateToPost from 'hooks/useNavigateToPost';
 
 /**
  * Hook that allows to report a user.
@@ -37,18 +38,19 @@ export const useHandlePressFollowOrUnfollow = () => {
  * Hook that allows to handle the action performed when the user clicks on a comment.
  */
 export const useHandlePressShowCommentDetails = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
+  const navigateToPost = useNavigateToPost();
   return React.useCallback(
     (comment: Post) => {
-      if (isCommentReply(comment)) {
-        // If the post is a reply to a comment, do nothing
-        return;
+      switch (isCommentReply(comment)) {
+        case true:
+          // If the post is a reply to a comment, do nothing
+          return;
+        default:
+          // If the post is a comment to a post, navigate to its details
+          navigateToPost(comment.subspaceId, comment.id);
       }
-
-      // If the post is a comment to a post, navigate to its details
-      navigate(ROUTES.POST_DETAILS, { post: comment });
     },
-    [navigate],
+    [navigateToPost],
   );
 };
 
@@ -69,25 +71,27 @@ export const useHandleExpandCommentView = () => {
 
 /**
  * Hook that allows to handle the creation of a comment.
- * @param post {Post} - Parent of the comment that will be created.
  */
-export const useHandleCreateComment = (post: Post) => {
-  const createPost = useCreatePost(post);
+export const useHandleCreateComment = () => {
+  const createPost = useCreatePost();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleCreateComment = React.useCallback(async () => {
-    setLoading(true);
-    const result = await createPost();
-    setLoading(false);
+  const handleCreateComment = React.useCallback(
+    async (post: Post) => {
+      setLoading(true);
+      const result = await createPost(post);
+      setLoading(false);
 
-    if (result.isErr()) {
-      // TODO: Show the error somewhat
-      console.log('Error inside useHandleCreateComment', result.error.message);
-      return;
-    }
+      if (result.isErr()) {
+        // TODO: Show the error somewhat
+        console.log('Error inside useHandleCreateComment', result.error.message);
+        return;
+      }
 
-    Keyboard.dismiss();
-  }, [createPost]);
+      Keyboard.dismiss();
+    },
+    [createPost],
+  );
 
   return {
     loading,
@@ -141,18 +145,20 @@ export const useHandlePressSendTips = () => {
 
 /**
  * Hook that allows to handle the press of the post counters.
- * @param post {Post} - Post of which the counters' are pressed.
  */
-export const useHandlePressCounters = (post: Post) => {
+export const useHandlePressCounters = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
-  return React.useCallback(() => {
-    navigate(ROUTES.POST_INTERACTION, {
-      screen: ROUTES.POST_REACTIONS,
-      params: {
-        post,
-        expandOnOpen: true,
-        allowPanning: true,
-      },
-    });
-  }, [navigate, post]);
+  return React.useCallback(
+    (post: Post) => {
+      navigate(ROUTES.POST_INTERACTION, {
+        screen: ROUTES.POST_REACTIONS,
+        params: {
+          post,
+          expandOnOpen: true,
+          allowPanning: true,
+        },
+      });
+    },
+    [navigate],
+  );
 };

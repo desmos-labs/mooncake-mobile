@@ -6,13 +6,18 @@ import React from 'react';
 import { Image, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-interface Props {
-  textLabel: string;
-  buttonLabel: string;
+export interface EmptyPostComponentProps {
+  readonly textLabel: string;
+  readonly buttonLabel: string;
 }
 
-const EmptyPostComponent = ({ textLabel, buttonLabel }: Props) => {
+/**
+ * A component that displays an empty post.
+ * @constructor
+ */
+const EmptyPostComponent = (props: EmptyPostComponentProps) => {
   const theme = useTheme();
+  const { textLabel, buttonLabel } = props;
 
   return (
     <View style={{ flex: 1 }}>

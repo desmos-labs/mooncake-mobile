@@ -26,7 +26,6 @@ enum ROUTES {
   // Bottom tabs
   BOTTOM_TABS = 'BOTTOM_TABS',
   CREATE_BUTTON = 'CREATE_BUTTON',
-  USER_PROFILE = 'USER_PROFILE',
   COMMUNITIES = 'COMMUNITIES',
   ACTIVITIES = 'ACTIVITIES',
 
@@ -95,6 +94,10 @@ enum ROUTES {
   // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
 
+  // Profile visualization
+  PROFILE = 'PROFILE',
+  GUEST_PROFILE = 'GUEST_PROFILE',
+
   // Profile addition
   ADD_PROFILE = 'ADD_PROFILE',
   ADD_PROFILE_SELECT_ADDRESS_GENERAL = 'ADD_PROFILE_SELECT_ADDRESS_GENERAL',
@@ -158,7 +161,6 @@ enum ROUTES {
 
   NFT_DETAILS = 'NFT_DETAILS',
 
-  GUEST_PROFILE = 'GUEST_PROFILE',
   ONBOARDING = 'ONBOARDING',
 
   MANAGE_CONNECTIONS_MODAL = 'MANAGE_CONNECTIONS_MODAL',

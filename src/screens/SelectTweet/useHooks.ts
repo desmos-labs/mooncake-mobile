@@ -87,7 +87,7 @@ const useHooks = () => {
             navigate(ROUTES.CONFIRM_MODAL, {
               onPressPrimary: () =>
                 navigate(ROUTES.BOTTOM_TABS, {
-                  screen: ROUTES.USER_PROFILE,
+                  screen: ROUTES.PROFILE,
                 }),
               title: t('common:success'),
               subtitle: t('connected'),
@@ -107,7 +107,7 @@ const useHooks = () => {
               secondaryButtonMode: 'outlined',
               onPressSecondary: () =>
                 navigate(ROUTES.BOTTOM_TABS, {
-                  screen: ROUTES.USER_PROFILE,
+                  screen: ROUTES.PROFILE,
                 }),
             }),
         });

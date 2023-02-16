@@ -11,12 +11,16 @@ export type QueueData = {
 
 /* A GraphQL query. */
 const GetPaginatedFollowers = gql`
-  query GetFollowers($subspaceID: bigint!, $userAddress: String!, $limit: Int!, $offset: Int!)
-  @api(name: butter) {
+  query GetPaginatedFollowers(
+    $subspaceId: bigint!
+    $userAddress: String!
+    $limit: Int!
+    $offset: Int!
+  ) @api(name: butter) {
     paginatedFollowers: user_relationship(
       limit: $limit
       offset: $offset
-      where: { subspace_id: { _eq: $subspaceID }, counterparty_address: { _eq: $userAddress } }
+      where: { subspace_id: { _eq: $subspaceId }, counterparty_address: { _eq: $userAddress } }
     ) {
       _: creator {
         address
@@ -26,7 +30,7 @@ const GetPaginatedFollowers = gql`
       }
     }
     user_relationship_aggregate(
-      where: { subspace_id: { _eq: $subspaceID }, counterparty_address: { _eq: $userAddress } }
+      where: { subspace_id: { _eq: $subspaceId }, counterparty_address: { _eq: $userAddress } }
     ) {
       aggregate {
         count

@@ -6,11 +6,12 @@ import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { verticalScale } from 'react-native-size-matters';
 
-const NftsSection = () => {
+/**
+ * A component that displays the user's NFTs.
+ * @constructor
+ */
+const NFTsSection = () => {
   const theme = useTheme();
-  /*
-  const styles = useStyles();
-*/
   const { t } = useTranslation('profile');
 
   return (
@@ -30,4 +31,4 @@ const NftsSection = () => {
   );
 };
 
-export default NftsSection;
+export default NFTsSection;

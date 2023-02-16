@@ -41,7 +41,7 @@ const useInitializeNotifications = () => {
       const { notification } = initialNotification;
       handleNotificationPressEvent(parseRemoteNotification(notification.data));
     }
-  }, [handleNotificationPressEvent]);
+  }, [handleNotificationPressEvent, setNotificationsCount]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -55,7 +55,7 @@ const useInitializeNotifications = () => {
 
     // Unsubscribe the listener when the effect is destroyed
     return () => subscription.remove();
-  }, [manageInitialNotifications]);
+  }, [manageInitialNotifications, setAppState, setNotificationsCount]);
 
   useEffect(() => {
     // Checking if the app is active, if so we do not want to send the user notifications

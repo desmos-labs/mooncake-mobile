@@ -20,21 +20,38 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import LikedTab from 'screens/ProfilePosts/LikedTab';
-import PostsTab from 'screens/ProfilePosts/PostsTab';
-import TippedTab from 'screens/ProfilePosts/TippedTab';
+import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
+import UserPostsTab from 'screens/ProfilePosts/UserCreatedPostsTab';
+import UserTippedPostsTab from 'screens/ProfilePosts/UserTippedPostsData';
 import useStyles from './useStyles';
 
-export type ProfilePostsTabsParams = {
-  initialTabsRouteName: string;
+// -------------------------------------------------------------------------------------
+// --- TAB DATA
+// -------------------------------------------------------------------------------------
+
+const numOfTabs = 3;
+const Tab = createMaterialTopTabNavigator();
+
+export type PostsTabParams = {
   userAddress: string;
 };
 
-const Tab = createMaterialTopTabNavigator();
-const numOfTabs = 3;
+// -------------------------------------------------------------------------------------
+// --- SCREEN DATA
+// -------------------------------------------------------------------------------------
+
+export interface ProfilePostsTabsParams {
+  readonly userAddress: string;
+  readonly initialTabsRouteName: string;
+}
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS>;
 
+/**
+ * Screen that allows the user to view all the posts related to a given user.
+ * The posts that are shown here will be divided into tabs: all posts, liked posts, and tipped posts.
+ * @constructor
+ */
 const ProfilePosts = () => {
   const route = useRoute<NavProps['route']>();
   const styles = useStyles(numOfTabs);
@@ -52,14 +69,14 @@ const ProfilePosts = () => {
     swipeEnabled,
   };
 
-  /* A callback function that is called when the user touches the screen.
-   It enables the swipe handler of tab view, and prevent the swipe event from bubbling to parent. */
+  // A callback function that is called when the user touches the screen.
+  // It enables the swipe handler of tab view, and prevent the swipe event from bubbling to parent.
   const disableParentSwipeLeft = useCallback(() => setSwipeEnabled(true), []);
 
-  /* create a pan responder for the root container. */
+  // Create a pan responder for the root container.
   const panResponder = useMemo(() => {
-    /* A callback function that is called when the user start to swipe left.
-     It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent. */
+    // A callback function that is called when the user start to swipe left.
+    // It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent
     const enableParentSwipeLeft = (
       _: GestureResponderEvent,
       gestureState: PanResponderGestureState,
@@ -92,19 +109,19 @@ const ProfilePosts = () => {
         initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_POSTS}
-          component={PostsTab}
+          component={UserPostsTab}
           options={{ tabBarLabel: t('posts') }}
           initialParams={{ userAddress: route.params.userAddress, type: 'posts' }}
         />
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_LIKED}
-          component={LikedTab}
+          component={UserLikedPostsTab}
           options={{ tabBarLabel: t('liked') }}
           initialParams={{ userAddress: route.params.userAddress, type: 'liked' }}
         />
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_TIPPED}
-          component={TippedTab}
+          component={UserTippedPostsTab}
           options={{ tabBarLabel: t('tipped') }}
           initialParams={{
             userAddress: route.params.userAddress,

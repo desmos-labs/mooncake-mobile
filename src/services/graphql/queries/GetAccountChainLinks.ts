@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const GetAccountChainLinks = gql`
-  query GetChainLinks($address: String) @api(name: desmos) {
+  query GetAccountChainLinks($address: String) @api(name: desmos) {
     chainLinks: chain_link(
       where: { user_address: { _eq: $address }, proof: {} }
       order_by: { chain_config: { name: asc } }

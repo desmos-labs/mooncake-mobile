@@ -1,6 +1,25 @@
 import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((props: any, theme) => ({
+  buttonStyleLeft: {
+    zIndex: 3,
+    position: 'absolute',
+    top: props.insets.top + 6,
+    left: 20,
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonStyleRight: {
+    zIndex: 3,
+    position: 'absolute',
+    top: props.insets.top + 6,
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
@@ -15,26 +34,13 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
   profileTopBarContainer: {
     flex: 1,
   },
-  buttonStyleRight: {
-    zIndex: 3,
-    position: 'absolute',
-    top: props.insets.top + 6,
-    height: 32,
-    width: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   topBarImage: { height: 32, width: 32 },
   divider: {
     marginHorizontal: -theme.spacing.m,
     height: 8,
     backgroundColor: theme.colors.surfaceGrey,
   },
-  flexCenter: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: theme.colors.white,
-  },
+  flexCenter: { flex: 1, justifyContent: 'center' },
   arrowView: {
     zIndex: 2,
     position: 'absolute',
@@ -59,14 +65,6 @@ const useStyles = makeStyleWithProps((props: any, theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: theme.spacing.m,
-  },
-  editButton: {
-    backgroundColor: theme.colors.surfaceGrey,
-    height: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    flex: 0.95,
   },
 }));
 

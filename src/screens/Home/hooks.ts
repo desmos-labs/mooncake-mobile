@@ -6,6 +6,7 @@ import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
 import { isPostPending, Post } from 'types/posts';
 import { TipTargetType } from 'types/tips';
+import useNavigateToPost from 'hooks/useNavigateToPost';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.
@@ -19,19 +20,16 @@ export const useHandlePressFollow = () => {
  * Hook that is called when the user presses a single post in order to view its details.
  */
 export const useHandlePressDetails = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
+  const navigateToPost = useNavigateToPost();
   return React.useCallback(
     (post: Post) => {
       if (isPostPending(post)) {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigate(ROUTES.POST_DETAILS, {
-        focusCommentBox: false,
-        post,
-      });
+      navigateToPost(post.subspaceId, post.id);
     },
-    [isPostPending, navigate],
+    [navigateToPost],
   );
 };
 
@@ -75,19 +73,16 @@ export const useHandlePressReport = () => {
  * Hook that allows to handle the press of the comments button of a post.
  */
 export const useHandlePressComments = () => {
-  const { navigate } = useNavigation<NavProps['navigation']>();
+  const navigateToPost = useNavigateToPost();
   return React.useCallback(
     (post: Post) => {
       if (isPostPending(post)) {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigate(ROUTES.POST_DETAILS, {
-        post,
-        focusCommentBox: true,
-      });
+      navigateToPost(post.subspaceId, post.id, { focusCommentBox: true });
     },
-    [navigate],
+    [navigateToPost],
   );
 };
 

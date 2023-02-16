@@ -3,7 +3,6 @@ import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mmkvValueToCache } from '@recoil/utils';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { Post } from 'types/posts';
 import { areTipsEqual, ComparableTip, Tip, TipTargetType } from 'types/tips';
 
 const tipsState = atom<MultipleUsersCache<Tip, ComparableTip>>({
@@ -36,18 +35,22 @@ export const useStoreTip = (user: string) => {
   );
 };
 
+/**
+ * Hook that allows to know whether a user has tipped a post.
+ * @param user {string} - Address of the user for which to check the tip.
+ */
 export const useHasPostTip = (user: string) => {
   const tips = useRecoilValue(tipsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
       return userTips
         .readAll()
         .some(
           tip =>
             tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === post.subspaceId &&
-            tip.target.post.id === post.id &&
+            tip.target.post.subspaceId === subspaceId &&
+            tip.target.post.id === postId &&
             tip.status !== DataStatus.DELETED_LOCALLY,
         );
     },
@@ -55,18 +58,32 @@ export const useHasPostTip = (user: string) => {
   );
 };
 
+/**
+ * Hook that returns all the tips created by a given user, and that need to be synced with the server.
+ * @param user {string} - Address of the user for which to get the tips.
+ */
+export const useTipsToBeSynced = (user: string) => {
+  const tips = useRecoilValue(tipsState);
+  const userTips = tips.get(user);
+  return userTips.readAll().filter(tip => tip.status !== DataStatus.SYNCED);
+};
+
+/**
+ * Hook that returns the posts tips that are stored locally and that need to be synced with the server.
+ * @param user {string} - Address of the user for which to get the tips.
+ */
 export const useGetPostTipsToSync = (user: string) => {
   const tips = useRecoilValue(tipsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
       return userTips
         .readAll()
         .filter(
           tip =>
             tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === post.subspaceId &&
-            tip.target.post.id === post.id,
+            tip.target.post.subspaceId === subspaceId &&
+            tip.target.post.id === postId,
         );
     },
     [tips, user],
@@ -94,15 +111,15 @@ export const useGetPostTipsToSync = (user: string) => {
 export const useGetPostTipsDifference = (user: string) => {
   const tips = useRecoilValue(tipsState);
   return React.useCallback(
-    (post: Post) => {
+    (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
       return userTips
         .readAll()
         .filter(
           tip =>
             tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === post.subspaceId &&
-            tip.target.post.id === post.id,
+            tip.target.post.subspaceId === subspaceId &&
+            tip.target.post.id === postId,
         )
         .map(followedUser => {
           switch (followedUser.status) {

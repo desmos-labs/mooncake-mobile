@@ -15,7 +15,7 @@ import useUpdatePendingTips from 'hooks/useUpdatePendingTips';
  * @param post - Post for which to get the tips.
  * @param tipsPerPage - Number of tips to get per each request
  */
-const useGetPostTips = (post: Post, tipsPerPage: number = 50) => {
+const useGetPostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number = 50) => {
   const activeAccountAddress = useActiveAccountAddress();
   if (!activeAccountAddress) {
     throw new Error('Trying to get post tips without active user');
@@ -23,7 +23,7 @@ const useGetPostTips = (post: Post, tipsPerPage: number = 50) => {
 
   // Get the tips to be synced
   const getPostTipsToSync = useGetPostTipsToSync(activeAccountAddress);
-  const postTipsToSync = getPostTipsToSync(post);
+  const postTipsToSync = getPostTipsToSync(post.subspaceId, post.id);
   const updatePendingTips = useUpdatePendingTips(activeAccountAddress);
 
   // Set the initial tips state to be the tips to sync.

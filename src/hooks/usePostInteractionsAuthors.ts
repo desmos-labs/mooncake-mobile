@@ -13,7 +13,10 @@ import { useActiveAccountAddress } from '@recoil/accounts';
  * @param post {Post} - Post for which to get the list of interactions authors.
  * @param numberOfAuthors {number} - Max number of authors returned.
  */
-const usePostInteractionsAuthors = (post: Post, numberOfAuthors: number) => {
+const usePostInteractionsAuthors = (
+  post: Pick<Post, 'subspaceId' | 'id'>,
+  numberOfAuthors: number,
+) => {
   const activeAddress = useActiveAccountAddress();
   if (!activeAddress) {
     throw new Error('Trying to get post interactions authors without active address');

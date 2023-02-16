@@ -2,7 +2,7 @@ import React from 'react';
 import { ColorValue, View } from 'react-native';
 import AnimatedRing from './AnimatedRing';
 
-type Props = {
+export interface PingAnimationProps {
   /**
    * The size of the ping.
    */
@@ -12,9 +12,13 @@ type Props = {
    * The color of the ping.
    */
   color: ColorValue;
-};
+}
 
-const PingAnimation = (props: Props) => {
+/**
+ * A component that displays a ping animation.
+ * @constructor
+ */
+const PingAnimation = (props: PingAnimationProps) => {
   const { size, color } = props;
 
   return (
