@@ -7,7 +7,7 @@ export const UnsupportedMsgAllowanceTypeUrl = 'butter.v1.UnsupportedMsgAllowance
  * Contains the information about a single message authorization grant
  * the user has granted to the centralized APIs.
  */
-export interface Grant {
+export interface AuthzGrant {
   /**
    * Type url of the message this grant referes to.
    */
@@ -16,13 +16,6 @@ export interface Grant {
    * Date at which the grant will expire.
    */
   readonly expiration: Date;
-}
-
-export interface FeeGrantInfo {
-  /**
-   * Whether the user has granted the fee grant or not.
-   */
-  readonly hasFeeGrant: boolean;
 }
 
 export interface BasicAllowance {
@@ -76,28 +69,31 @@ export interface FeeGrant {
   allowance: Allowance;
 }
 
-export interface AuthzGrantsInfo {
-  /**
-   * List of message execution grants the user has granted.
-   */
-  readonly grants: Grant[];
-}
-
 /**
  * Contains the information about all kind of grants the user has
  * granted to the centralized APIs.
  */
 export interface AuthorizationsInformation {
   readonly feeGrants: FeeGrant[];
-  readonly authz: AuthzGrantsInfo;
+  readonly authzGrants: AuthzGrant[];
+}
+
+/**
+ * Interface that represents the missing authorizations
+ * that the user need to have to be able to broadcast a transaction
+ * with the centralized API.
+ */
+export interface AuthorizationsStatus {
   /**
-   * List of message type that the user has not granted a
-   * fee grant allowance.
+   * List of message types that don't have a fee grant allowance.
    */
-  readonly missingFeeGrantPermissions: string[];
+  readonly missingFeeGrant: string[];
   /**
-   * List of message type that the user has not granted an
-   * authz permission.
+   * List of message types that don't have the authz authorization.
    */
-  readonly missingAuthzPermissions: string[];
+  readonly missingAuthz: string[];
+  /**
+   * Tells if all the permissions are granted.
+   */
+  readonly haveAllPermissions: boolean;
 }

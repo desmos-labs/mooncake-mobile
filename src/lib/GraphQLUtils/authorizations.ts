@@ -1,29 +1,19 @@
 import {
   Allowance,
-  AuthzGrantsInfo,
+  AuthzGrant,
   BasicAllowance,
   FeeGrant,
-  FeeGrantInfo,
-  Grant,
   UnsupportedMsgAllowanceTypeUrl,
 } from 'types/authorizations';
 import { GqlAllowance, GqlFeeGrant } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 import { coin } from '@cosmjs/stargate';
 import { AllowedMsgAllowanceTypeUrl, BasicAllowanceTypeUrl } from '@desmoslabs/desmjs';
+import { GQLAuthzGrant } from 'services/graphql/queries/GetAccountAuthzGrants';
 
-const convertGrantInfo = (grant: any): Grant => ({
-  expiration: grant.expiration,
-  msgTypeUrl: grant.msg_type_url,
-});
-
-export const convertFeeGrantInfo = (data: any): FeeGrantInfo =>
-  ({
-    hasFeeGrant: (data?.grants?.aggregate?.count ?? 0) > 0,
-  } as FeeGrantInfo);
-
-export const convertAuthzGrantsInfo = (data: any): AuthzGrantsInfo => {
+export const convertGraphQLAuthzGrant = (grant: GQLAuthzGrant): AuthzGrant => {
   return {
-    grants: data.grants ? data.grants.map(convertGrantInfo) : [],
+    msgTypeUrl: grant.msg_type_url,
+    expiration: new Date(`${grant.expiration}Z`),
   };
 };
 

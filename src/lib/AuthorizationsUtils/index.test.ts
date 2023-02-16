@@ -4,7 +4,7 @@ import {
   buildGrantMsgEncodes,
   buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
-} from './utils';
+} from './index';
 
 describe('hooks: useAddOrUpdateGrants utils', () => {
   const grantee = 'i-am-a-grantee';
@@ -22,7 +22,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
   describe('buildRevokeAllowanceEncode', () => {
     it('properly builds a MsgRevokeAllowanceEncodeObject', () => {
       // msgEncodeObject
-      const msgEO = buildRevokeAllowanceEncode({ grantee, granter });
+      const msgEO = buildRevokeAllowanceEncode(grantee, granter);
 
       expect(msgEO).toEqual({
         typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
@@ -33,7 +33,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
 
   describe('buildGrantAllowanceEncode', () => {
     it('properly builds a MsgGrantAllowanceEncodeObject', () => {
-      const msgEO = buildGrantAllowanceEncode({ grantee, granter, grants });
+      const msgEO = buildGrantAllowanceEncode(grants, grantee, granter);
 
       expect(JSON.stringify(msgEO)).toEqual(
         JSON.stringify({
@@ -65,7 +65,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
 
   describe('buildGrantMsgEncodes', () => {
     it('properly builds an array of MsgGRantEncodeObjects', () => {
-      const msgEO = buildGrantMsgEncodes({ grantee, granter, grants });
+      const msgEO = buildGrantMsgEncodes(grants, grantee, granter);
 
       expect(JSON.stringify(msgEO)).toEqual(
         JSON.stringify([
@@ -125,7 +125,7 @@ describe('hooks: useAddOrUpdateGrants utils', () => {
 
   describe('buildRevokeGrantMsgEncodes', () => {
     it('properly builds an array og MsgRevokeEncodeObjects', () => {
-      const msgEO = buildRevokeGrantMsgEncodes({ grants, grantee, granter });
+      const msgEO = buildRevokeGrantMsgEncodes(grants, grantee, granter);
 
       expect(msgEO).toEqual([
         {

@@ -12,7 +12,7 @@ import {
 
 export const MsgExecuteContractTypeUrl = '/cosmwasm.wasm.v1.MsgExecuteContract';
 
-export const RequiredAuthzGrants = [
+export const RequiredMessageTypesGrant = [
   // Editing profile permission
   MsgSaveProfileTypeUrl,
   // Post permissions

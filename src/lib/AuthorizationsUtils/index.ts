@@ -1,21 +1,69 @@
+import { AuthzGrant, FeeGrant } from 'types/authorizations';
 import {
+  AllowedMsgAllowanceTypeUrl,
+  BasicAllowanceTypeUrl,
   MsgGrantAllowanceEncodeObject,
+  MsgGrantAllowanceTypeUrl,
   MsgGrantEncodeObject,
   MsgRevokeAllowanceEncodeObject,
   MsgRevokeEncodeObject,
   timestampFromDate,
 } from '@desmoslabs/desmjs';
-import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
-import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
-import { genericAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
-import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
-import EnvConfig from 'config/EnvConfig';
-import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
-import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
-import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
 import { MsgGrantAllowance, MsgRevokeAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/tx';
+import { AllowedMsgAllowance, BasicAllowance } from 'cosmjs-types/cosmos/feegrant/v1beta1/feegrant';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
+import { genericAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/cosmos/authz/authorizations';
+import { GenericAuthorization, Grant } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import { genericSubspaceAuthorizationToAny } from '@desmoslabs/desmjs/build/aminomessages/subspaces/authorizations';
+import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/subspaces/v3/authz/authz';
 import Long from 'long';
+import EnvConfig from 'config/EnvConfig';
+import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+
+/**
+ * Computes the list of missing messages grant.
+ * @param requiredMessageTypes - The list of required message types.
+ * @param userGrants - List of user's grants.
+ */
+export function getMissingAuthzPermissions(
+  requiredMessageTypes: string[],
+  userGrants: AuthzGrant[],
+): string[] {
+  return requiredMessageTypes.filter(
+    msgType => userGrants.find(grant => grant.msgTypeUrl === msgType) === undefined,
+  );
+}
+
+/**
+ * Computes the list of missing messages grant.
+ * @param requiredMessageTypes - The list of required message types.
+ * @param feeGrants - List of user's fee grants.
+ */
+export function getMissingFeeGrantPermissions(
+  requiredMessageTypes: string[],
+  feeGrants: FeeGrant[],
+): string[] {
+  const today = new Date();
+  const msgsWithFeeGrant = feeGrants
+    .filter(feeGrant => {
+      // Keep the one without expiration date.
+      if (feeGrant.expirationDate === undefined) {
+        return true;
+      }
+      // Keep the one that are still valid right now.
+      return feeGrant.expirationDate >= today;
+    })
+    .flatMap(feeGrant => {
+      if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
+        return feeGrant.allowance.allowedMessages;
+      } else {
+        return [];
+      }
+    });
+
+  return requiredMessageTypes.filter(msgType => msgsWithFeeGrant.indexOf(msgType) === -1);
+}
 
 /**
  * Build a MsgRevokeAllowanceEncode object.
@@ -55,19 +103,19 @@ export const buildGrantAllowanceEncode = (
 
   const allowance: AllowedMsgAllowance = {
     allowance: Any.fromPartial({
-      typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
+      typeUrl: BasicAllowanceTypeUrl,
       value: BasicAllowance.encode(basicAllowance).finish(),
     }),
     allowedMessages: grants,
   };
 
   return {
-    typeUrl: '/cosmos.feegrant.v1beta1.MsgGrantAllowance',
+    typeUrl: MsgGrantAllowanceTypeUrl,
     value: MsgGrantAllowance.fromPartial({
       grantee,
       granter,
       allowance: Any.fromPartial({
-        typeUrl: '/cosmos.feegrant.v1beta1.AllowedMsgAllowance',
+        typeUrl: AllowedMsgAllowanceTypeUrl,
         value: AllowedMsgAllowance.encode(allowance).finish(),
       }),
     }),
