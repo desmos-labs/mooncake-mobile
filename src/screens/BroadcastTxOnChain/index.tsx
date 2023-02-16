@@ -6,7 +6,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import ROUTES from 'navigation/routes';
 import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
@@ -103,7 +103,9 @@ const BroadcastTxOnChain: React.FC = () => {
         {!broadcastingTx && (
           <>
             {/* TODO: Create a proper UI to display the tx messages */}
-            <Typography.Body1>{JSON.stringify(messages)}</Typography.Body1>
+            <ScrollView style={{ minHeight: '80%', flex: 1 }}>
+              <Typography.Body1>{JSON.stringify(messages)}</Typography.Body1>
+            </ScrollView>
             {estimatingFees || feesResult === undefined ? (
               /* TODO: Create a proper UI with a spinner or something else */
               <Typography.Body1>Estimating fees...</Typography.Body1>

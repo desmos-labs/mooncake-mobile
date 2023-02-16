@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import useGetGrantsInformation from 'hooks/useGetGrantsInformation';
 import { RequiredAuthzGrants } from 'config/AutzGrants';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import { EncodeObject } from '@cosmjs/proto-signing';
@@ -7,9 +6,10 @@ import { useAppStateValue } from '@recoil/appState';
 import {
   buildGrantAllowanceEncode,
   buildGrantMsgEncodes,
+  buildRevokeAllowanceEncode,
   buildRevokeGrantMsgEncodes,
 } from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import { AuthorizationsInformation, Grant } from 'types/authorizations';
+import { AuthorizationsInformation } from 'types/authorizations';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
@@ -19,35 +19,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { getSupportedBiometryType } from 'react-native-keychain';
-
-/**
- * Computes the list of missing messages grant.
- * @param userGrants - List of user's grants.
- */
-function getMissingGrants(userGrants: Grant[]): string[] {
-  return RequiredAuthzGrants.filter(
-    msgType => userGrants.find(grant => grant.msgTypeUrl === msgType) === undefined,
-  );
-}
-
-/**
- * Hook that provide the grant information of the current active user.
- */
-export const useUserApplicationGrants = () => {
-  const activeAccountAddress = useActiveAccountAddress()!;
-  const { info } = useGetGrantsInformation(activeAccountAddress);
-
-  const haveAllPermissions = React.useMemo(() => {
-    const missingPermissions = getMissingGrants(info.authz.grants);
-
-    return info.feeGrant.hasFeeGrant && missingPermissions.length === 0;
-  }, [info]);
-
-  return {
-    haveAllPermissions,
-    authorizationInfo: info,
-  };
-};
 
 /**
  * Hook that provides a function to give or remove to the current user the grants
@@ -60,25 +31,36 @@ export const useSetUserApplicationGrants = () => {
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
-    async (newState: boolean, currentAuthorizations: AuthorizationsInformation) => {
+    async (newState: boolean, authInfo: AuthorizationsInformation) => {
       const msgs: EncodeObject[] = [];
       if (newState) {
-        const missingPermissions = getMissingGrants(currentAuthorizations.authz.grants);
-        if (!currentAuthorizations.feeGrant.hasFeeGrant) {
+        if (authInfo.missingFeeGrantPermissions.length > 0) {
           msgs.push(
-            buildGrantAllowanceEncode(missingPermissions, apisAddress, activeAccountAddress),
+            buildGrantAllowanceEncode(
+              authInfo.missingFeeGrantPermissions,
+              apisAddress,
+              activeAccountAddress,
+            ),
           );
         }
-        msgs.push(...buildGrantMsgEncodes(missingPermissions, apisAddress, activeAccountAddress));
+        if (authInfo.missingAuthzPermissions.length > 0) {
+          msgs.push(
+            ...buildGrantMsgEncodes(
+              authInfo.missingAuthzPermissions,
+              apisAddress,
+              activeAccountAddress,
+            ),
+          );
+        }
       } else {
+        msgs.push(buildRevokeAllowanceEncode(apisAddress, activeAccountAddress));
         msgs.push(
           ...buildRevokeGrantMsgEncodes(RequiredAuthzGrants, apisAddress, activeAccountAddress),
         );
       }
 
-      // TODO: Investigate why with the centralized API this doesn't work.
       return broadcastTx(msgs, {
-        onChain: newState,
+        onChain: true,
       });
     },
     [activeAccountAddress, apisAddress, broadcastTx],

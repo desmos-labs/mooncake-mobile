@@ -19,13 +19,10 @@ import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useDeleteAuthToken } from 'services/axios';
 import { useNavigation } from '@react-navigation/native';
 import { useSetSettings, useSettings } from '@recoil/settings';
-import {
-  useSetUserApplicationGrants,
-  useToggleBiometrics,
-  useUserApplicationGrants,
-} from 'screens/Settings/hooks';
+import { useSetUserApplicationGrants, useToggleBiometrics } from 'screens/Settings/hooks';
 import { useTheme } from 'react-native-paper';
 import { useActiveAccount } from '@recoil/accounts';
+import useGetGrantsInformation from 'hooks/useGetGrantsInformation';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -40,13 +37,16 @@ const Settings: React.FC<NavProps> = props => {
   const { t } = useTranslation('settings');
   const styles = useStyles();
   const { reset } = useNavigation<NavProps['navigation']>();
-  const { haveAllPermissions, authorizationInfo } = useUserApplicationGrants();
+  const {
+    info: grantsInfo,
+    haveAllPermissions,
+    refetch: refetchPermissions,
+  } = useGetGrantsInformation(activeAccount.address);
   const steUserApplicationGrants = useSetUserApplicationGrants();
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
   const deleteAuthToken = useDeleteAuthToken();
 
   const formattedAccountCreationDate = useFormatDateToTZ(
-    // TODO: Get the proper profile creation time.
     activeAccount.creationDate.toISOString(),
     'MMM dd yyyy',
   );
@@ -75,11 +75,13 @@ const Settings: React.FC<NavProps> = props => {
   }, [navigate]);
 
   const handlePermissionsToggle = React.useCallback(async () => {
-    const result = await steUserApplicationGrants(!haveAllPermissions, authorizationInfo);
+    const result = await steUserApplicationGrants(!haveAllPermissions, grantsInfo);
     if (result.isErr()) {
       console.error(result.error);
+    } else {
+      refetchPermissions();
     }
-  }, [authorizationInfo, haveAllPermissions, steUserApplicationGrants]);
+  }, [grantsInfo, haveAllPermissions, refetchPermissions, steUserApplicationGrants]);
 
   const handlePressSignOut = useCallback(() => {
     deleteAuthToken();

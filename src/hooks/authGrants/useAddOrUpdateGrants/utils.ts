@@ -20,18 +20,14 @@ import Long from 'long';
 /**
  * Build a MsgRevokeAllowanceEncode object.
  * @link https://forbole.atlassian.net/wiki/spaces/DOG/pages/29786120/Managing+actions+authorizations#How-to-revoke-an-allowance
- * @param {Object} Object - An object containing a grantee and granter string
- * @param {string} Object.grantee - The address of the grantee.
- * @param {string} Object.granter - The address of the granter.
+ * @param grantee - The address of the grantee.
+ * @param granter - The address of the granter.
  * @returns {MsgRevokeAllowanceEncodeObject} An encode object the revokes a previously granted allowance
  */
-export const buildRevokeAllowanceEncode = ({
-  grantee,
-  granter,
-}: {
-  grantee: string;
-  granter: string;
-}): MsgRevokeAllowanceEncodeObject => ({
+export const buildRevokeAllowanceEncode = (
+  grantee: string,
+  granter: string,
+): MsgRevokeAllowanceEncodeObject => ({
   typeUrl: '/cosmos.feegrant.v1beta1.MsgRevokeAllowance',
   value: MsgRevokeAllowance.fromPartial({
     grantee,
