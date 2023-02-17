@@ -173,7 +173,7 @@ export const useManageInvites = () => {
   }, [navigator]);
 };
 
-export const useManageCommunity = () => {
+export const useShowCommunities = () => {
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   return React.useCallback(() => {

@@ -21,11 +21,11 @@ import {
   useChangePassword,
   useManageAppLinks,
   useManageChainLinks,
-  useManageCommunity,
   useManageInvites,
   useOpenNotificationsSettings,
   useSendFeedback,
   useShowAboutInfo,
+  useShowCommunities,
   useSignOut,
   useToggleBiometrics,
   useToggleNotifications,
@@ -63,7 +63,7 @@ const Settings: React.FC<NavProps> = props => {
   const { value: notifyOnNewFollowerPost, toggle: toggleNotifyOnNewFollowerPost } =
     useToggleNotifications('newFollowPostNotification');
   const manageInvites = useManageInvites();
-  const manageCommunity = useManageCommunity();
+  const showCommunities = useShowCommunities();
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
   const signOut = useSignOut();
@@ -134,7 +134,7 @@ const Settings: React.FC<NavProps> = props => {
           onValueChange={toggleNotifyOnNewFollowerPost}
         />
         <SectionButton label={t('invites:invites')} onPress={manageInvites} />
-        <SectionButton label={t('community')} onPress={manageCommunity} />
+        <SectionButton label={t('community')} onPress={showCommunities} />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton label={t('about')} onPress={showAboutInfo} />
       </Section>

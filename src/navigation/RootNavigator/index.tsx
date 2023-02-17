@@ -50,6 +50,7 @@ import SettingsEnableBiometrics from 'screens/SettingsEnableBiometrics';
 import Invites from 'screens/Invites';
 import ManageInvites from 'screens/ManageInvites';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
+import Community from 'screens/Community';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -107,7 +108,7 @@ export type RootNavigatorParamList = {
 
   [ROUTES.SETTINGS]: undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
-  // [ROUTES.SETTINGS_COMMUNITY]: undefined;
+  [ROUTES.SETTINGS_COMMUNITY]: undefined;
   // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
@@ -327,7 +328,7 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
-      {/* <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} /> */}
+      <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       {/* <Stack.Screen */}
       {/*  name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE} */}
       {/*  component={RevealRecoveryPhrase} */}
