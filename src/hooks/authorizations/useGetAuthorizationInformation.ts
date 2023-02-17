@@ -9,6 +9,7 @@ import {
   GetAccountFeeGrantAllowance,
   GqlGetAccountFeeGrantAllowance,
 } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
+import { err, ok, ResultAsync } from 'neverthrow';
 
 /**
  * Hook to get the fee grants and authz grants of a user's account.
@@ -68,15 +69,26 @@ const useGetAuthorizationInformation = (accountAddress: string, lazy?: boolean) 
 
   // Combine the two refetch functions together
   const refetch = React.useCallback(async () => {
-    const feeGrantQueryResult = await refetchAccuntFeeGrants();
-    const authzQueryResult = await refetchAccountAuthzGrants();
+    const feeGrantQueryResult = await ResultAsync.fromPromise(
+      refetchAccuntFeeGrants(),
+      e => new Error((<Partial<Error> | undefined>e)?.message ?? 'Failed to load fee grants'),
+    );
+    if (feeGrantQueryResult.isErr()) {
+      return err(feeGrantQueryResult.error);
+    }
 
-    return {
-      error: feeGrantQueryResult.error ?? authzQueryResult?.error,
-      loading: feeGrantQueryResult.loading || authzQueryResult.loading,
-      feeGrants: feeGrantQueryResult.data.fee_grant.map(convertGraphQLFeeGrant),
-      authzGrants: authzQueryResult.data.grants.map(convertGraphQLAuthzGrant),
-    };
+    const authzQueryResult = await ResultAsync.fromPromise(
+      refetchAccountAuthzGrants(),
+      e => new Error((<Partial<Error> | undefined>e)?.message ?? 'Failed to load authz grants'),
+    );
+    if (authzQueryResult.isErr()) {
+      return err(authzQueryResult.error);
+    }
+
+    return ok({
+      feeGrants: feeGrantQueryResult.value.data.fee_grant.map(convertGraphQLFeeGrant),
+      authzGrants: authzQueryResult.value.data.grants.map(convertGraphQLAuthzGrant),
+    });
   }, [refetchAccuntFeeGrants, refetchAccountAuthzGrants]);
 
   // Convert the fee grants received from graph ql.

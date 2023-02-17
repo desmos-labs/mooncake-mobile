@@ -27,7 +27,11 @@ const useRemoveAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const { feeGrants } = await refetch();
+      const fetchAuthorizationsResult = await refetch();
+      if (fetchAuthorizationsResult.isErr()) {
+        return err(fetchAuthorizationsResult.error);
+      }
+      const { feeGrants } = fetchAuthorizationsResult.value;
       const msgs: EncodeObject[] = [];
 
       // The fee grant module don't support the update, we need to remove it

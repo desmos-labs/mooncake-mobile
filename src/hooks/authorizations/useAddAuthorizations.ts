@@ -34,7 +34,11 @@ const useAddAuthorizations = (accountAddress: string) => {
       }
 
       // Fetch the current configurations.
-      const { feeGrants, authzGrants } = await refetch();
+      const fetchAuthorizationsResult = await refetch();
+      if (fetchAuthorizationsResult.isErr()) {
+        return err(fetchAuthorizationsResult.error);
+      }
+      const { feeGrants, authzGrants } = fetchAuthorizationsResult.value;
       // Compute the missing permissions from the current one.
       const missingFeeGrants = getMissingFeeGrantPermissions(authorizations, feeGrants);
       const missingAuthzGrants = getMissingAuthzPermissions(authorizations, authzGrants);
