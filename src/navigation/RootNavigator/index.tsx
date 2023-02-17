@@ -191,7 +191,7 @@ export type RootNavigatorParamList = {
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
-  [ROUTES.WELCOME_BACK]: undefined; // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
+  [ROUTES.WELCOME_BACK]: undefined;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
@@ -429,14 +429,6 @@ const RootNavigator = () => {
         name={ROUTES.PASSWORD_MANIPULATION}
         component={ChangePassword}
       />
-
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    address: 'testAddress123123', */}
-      {/*  }} */}
-      {/*  name={ROUTES.CONFIRM_ADDRESS} */}
-      {/*  component={ConfirmAddress} */}
-      {/* /> */}
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.CONNECT_CHAIN_TX_DETAIL} */}
