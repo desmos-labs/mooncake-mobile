@@ -51,6 +51,7 @@ import Invites from 'screens/Invites';
 import ManageInvites from 'screens/ManageInvites';
 import ImpactPointsModal from 'screens/Modals/ImpactPointsModal';
 import Community from 'screens/Community';
+import ShowPrivateKey, { ShowPrivateKeyScreenParams } from 'screens/ShowPrivateKey';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -109,7 +110,7 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS]: undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
-  // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
+  [ROUTES.SETTINGS_SHOW_PRIVATE_KEY]: ShowPrivateKeyScreenParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.SETTINGS_INVITES]: undefined;
   [ROUTES.UNLOCK_WALLET]: UnlockWalletParams;
@@ -327,10 +328,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE} */}
-      {/*  component={ShowRecoveryPhrase} */}
-      {/* /> */}
+      <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />
       <Stack.Screen name={ROUTES.SETTINGS_INVITES} component={Invites} />
       <Stack.Screen name={ROUTES.UNLOCK_WALLET} component={UnlockWallet} />

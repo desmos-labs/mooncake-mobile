@@ -1,5 +1,5 @@
 import React from 'react';
-import { useActiveAccountAddress } from '@recoil/accounts';
+import { useActiveAccount, useActiveAccountAddress } from '@recoil/accounts';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
 import ROUTES from 'navigation/routes';
@@ -15,6 +15,45 @@ import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/A
 import { useDeleteAuthToken } from 'services/axios';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import { Linking } from 'react-native';
+import useUnlockWallet from 'hooks/useUnlockWallet';
+import { isAccountWithPrivateKey } from 'lib/AccountUtils/type';
+import { WalletWithPrivateKey } from 'types/wallet';
+import { toHex } from '@cosmjs/encoding';
+
+/**
+ * Hook that provides a function to reveal the current active user private key
+ * and a flag that tells if we can show it..
+ */
+export const useShowPrivateKey = () => {
+  const activeAccount = useActiveAccount();
+  const unlockWallet = useUnlockWallet();
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  const canShowPrivateKey = React.useMemo(() => {
+    return activeAccount !== undefined && isAccountWithPrivateKey(activeAccount);
+  }, [activeAccount]);
+
+  const showPrivateKey = React.useCallback(async () => {
+    if (activeAccount === undefined) {
+      return;
+    }
+
+    if (isAccountWithPrivateKey(activeAccount)) {
+      const wallet = await unlockWallet();
+      if (wallet.isOk()) {
+        const hexEncodedPrivateKey = toHex((<WalletWithPrivateKey>wallet.value).privateKey);
+        navigator.navigate(ROUTES.SETTINGS_SHOW_PRIVATE_KEY, {
+          hexEncodedPrivateKey,
+        });
+      }
+    }
+  }, [activeAccount, navigator, unlockWallet]);
+
+  return {
+    canShowPrivateKey,
+    showPrivateKey,
+  };
+};
 
 export const useManageChainLinks = () => {
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();

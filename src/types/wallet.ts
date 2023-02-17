@@ -141,6 +141,11 @@ export type SerializableWeb3AuthWallet = Omit<Web3AuthWallet, 'signer' | 'privat
 export type Wallet = MnemonicWallet | LedgerWallet | Web3AuthWallet;
 
 /**
+ * Type that represents a wallet that have a private key.
+ */
+export type WalletWithPrivateKey = MnemonicWallet | Web3AuthWallet;
+
+/**
  * Type representing a wallet that can be serialized to JSON and
  * stored in the device storage.
  */

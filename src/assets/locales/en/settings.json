@@ -17,6 +17,7 @@
   "profile": "Profile",
   "profiles": "Profiles",
   "remove": "Remove",
+  "show private key": "Show private key",
   "reveal secret phrase": "Reveal Secret Recovery Phrase",
   "secret recovery phrase": "Secret recovery phrase",
   "firstRow": "The secret recovery phrase is used to recover your wallet, funds, and accounts.",

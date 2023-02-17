@@ -26,6 +26,7 @@ import {
   useSendFeedback,
   useShowAboutInfo,
   useShowCommunities,
+  useShowPrivateKey,
   useSignOut,
   useToggleBiometrics,
   useToggleNotifications,
@@ -44,6 +45,7 @@ const Settings: React.FC<NavProps> = props => {
   const styles = useStyles();
 
   // Account section hooks
+  const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
   const manageChainLinks = useManageChainLinks();
   const manageAppLinks = useManageAppLinks();
 
@@ -98,6 +100,9 @@ const Settings: React.FC<NavProps> = props => {
 
       {/* Account section */}
       <Section style={styles.spacer} title={t('account')}>
+        {canShowPrivateKey && (
+          <SectionButton label={t('show private key')} onPress={showPrivateKey} />
+        )}
         <SectionButton label={t('manage connected addresses')} onPress={manageChainLinks} />
         <SectionButton label={t('manage connected apps')} onPress={manageAppLinks} />
       </Section>
