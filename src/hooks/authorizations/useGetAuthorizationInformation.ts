@@ -2,7 +2,7 @@ import React from 'react';
 import GetAccountAuthzGrants, {
   GQLGetAccountAuthzGrants,
 } from 'services/graphql/queries/GetAccountAuthzGrants';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { convertGraphQLAuthzGrant, convertGraphQLFeeGrant } from 'lib/GraphQLUtils/authorizations';
 import { useAppStateValue } from '@recoil/appState';
 import {
@@ -11,10 +11,11 @@ import {
 } from 'services/graphql/queries/GetAccountFeeGrantAllowance';
 
 /**
- * Hook that allows to get the information about the fee and authz grants
- * that the current user has on-chain.
+ * Hook to get the fee grants and authz grants of a user's account.
+ * @param accountAddress - Address of the account of interest.
+ * @param lazy - Whether to use lazy loading.
  */
-const useGetAuthorizationInformation = (accountAddress: string) => {
+const useGetAuthorizationInformation = (accountAddress: string, lazy?: boolean) => {
   const butterConfig = useAppStateValue('butterConfig');
   const apisAddress = butterConfig?.desmosAddress;
   if (!apisAddress) {
@@ -22,12 +23,15 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
   }
 
   // Get the queries to get the proper data
-  const {
-    data: feeGrantData,
-    loading: loadingFeeGrant,
-    refetch: refetchAccuntFeeGrants,
-    error: feeGrantError,
-  } = useQuery<GqlGetAccountFeeGrantAllowance>(GetAccountFeeGrantAllowance, {
+  const [
+    fetchFeeGrants,
+    {
+      data: feeGrantData,
+      loading: loadingFeeGrant,
+      refetch: refetchAccuntFeeGrants,
+      error: feeGrantError,
+    },
+  ] = useLazyQuery<GqlGetAccountFeeGrantAllowance>(GetAccountFeeGrantAllowance, {
     fetchPolicy: 'no-cache',
     variables: {
       granteeAddress: apisAddress,
@@ -35,18 +39,32 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
     },
   });
 
-  const {
-    data: authzGrantsData,
-    loading: loadingAuthz,
-    refetch: refetchAccountAuthzGrants,
-    error: authzGrantsError,
-  } = useQuery<GQLGetAccountAuthzGrants>(GetAccountAuthzGrants, {
+  const [
+    fetchAuthzGrants,
+    {
+      data: authzGrantsData,
+      loading: loadingAuthz,
+      refetch: refetchAccountAuthzGrants,
+      error: authzGrantsError,
+    },
+  ] = useLazyQuery<GQLGetAccountAuthzGrants>(GetAccountAuthzGrants, {
     fetchPolicy: 'no-cache',
     variables: {
       granteeAddress: apisAddress,
       granterAddress: accountAddress,
     },
   });
+
+  React.useEffect(() => {
+    if (lazy !== true) {
+      fetchFeeGrants();
+      fetchAuthzGrants();
+    }
+
+    // Safe to ignore, we want to execute this hook just once if the
+    // user didn't set lazy to true.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lazy]);
 
   // Combine the two refetch functions together
   const refetch = React.useCallback(async () => {
@@ -56,19 +74,19 @@ const useGetAuthorizationInformation = (accountAddress: string) => {
     return {
       error: feeGrantQueryResult.error ?? authzQueryResult?.error,
       loading: feeGrantQueryResult.loading || authzQueryResult.loading,
-      feeGrants: feeGrantQueryResult?.data.fee_grant.map(convertGraphQLFeeGrant) ?? [],
-      authzGrants: authzQueryResult?.data.grants.map(convertGraphQLAuthzGrant) ?? [],
+      feeGrants: feeGrantQueryResult.data.fee_grant.map(convertGraphQLFeeGrant),
+      authzGrants: authzQueryResult.data.grants.map(convertGraphQLAuthzGrant),
     };
   }, [refetchAccuntFeeGrants, refetchAccountAuthzGrants]);
 
   // Convert the fee grants received from graph ql.
   const feeGrants = React.useMemo(() => {
-    return feeGrantData?.fee_grant.map(convertGraphQLFeeGrant) ?? [];
+    return feeGrantData?.fee_grant.map(convertGraphQLFeeGrant);
   }, [feeGrantData?.fee_grant]);
 
   // Convert the authz grants received from graph ql.
   const authzGrants = React.useMemo(() => {
-    return authzGrantsData?.grants.map(convertGraphQLAuthzGrant) ?? [];
+    return authzGrantsData?.grants.map(convertGraphQLAuthzGrant);
   }, [authzGrantsData?.grants]);
 
   // Combine the two loading flags.

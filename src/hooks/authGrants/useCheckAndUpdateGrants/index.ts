@@ -4,7 +4,7 @@ import { GrantEnums } from 'lib/DesmosUtils/msgtypes';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
-import useGetGrantsInformation from 'hooks/useGetGrantsInformation';
+import useGetGrantsInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 
 /**
  * @typedef CheckAndUpdateGrantsArgs

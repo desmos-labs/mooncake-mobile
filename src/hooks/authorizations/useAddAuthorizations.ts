@@ -13,13 +13,22 @@ import { err } from 'neverthrow';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import React from 'react';
 
+/**
+ * Hook to add the necessary fee grant and authz grant so that
+ * the user can use the centralized API to perform such actions.
+ * @param accountAddress - User's account address.
+ */
 const useAddAuthorizations = (accountAddress: string) => {
-  const { refetch } = useGetAuthorizations(accountAddress);
+  const { refetch } = useGetAuthorizations(accountAddress, true);
   const { config: butterConfig } = useButterConfig();
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
     async (authorizations: string[]) => {
+      if (authorizations.length === 0) {
+        return err(Error('No authorizations to add'));
+      }
+
       if (butterConfig?.desmosAddress === undefined) {
         return err(Error('Butter config is not set'));
       }
@@ -36,7 +45,9 @@ const useAddAuthorizations = (accountAddress: string) => {
         // The fee grant module don't support the update, we need to remove it
         // and then add it back with the current user's fee grants plus the
         // new ones.
-        msgs.push(buildRevokeAllowanceEncode(butterConfig.desmosAddress, accountAddress));
+        if (feeGrants.length > 0) {
+          msgs.push(buildRevokeAllowanceEncode(butterConfig.desmosAddress, accountAddress));
+        }
 
         // Get the list of the current messages that have a fee grant.
         const newAuthorizations = feeGrants.flatMap(feeGrant => {

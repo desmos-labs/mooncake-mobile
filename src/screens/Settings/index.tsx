@@ -19,10 +19,10 @@ import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
 import { useDeleteAuthToken } from 'services/axios';
 import { useNavigation } from '@react-navigation/native';
 import { useSetSettings, useSettings } from '@recoil/settings';
-import { useSetUserApplicationGrants, useToggleBiometrics } from 'screens/Settings/hooks';
+import { useToggleBiometrics, useToggleSimplifiedTxBroadcast } from 'screens/Settings/hooks';
 import { useTheme } from 'react-native-paper';
 import { useActiveAccount } from '@recoil/accounts';
-import useGetGrantsInformation from 'hooks/useGetGrantsInformation';
+import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 
 declare type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS>;
 
@@ -38,11 +38,10 @@ const Settings: React.FC<NavProps> = props => {
   const styles = useStyles();
   const { reset } = useNavigation<NavProps['navigation']>();
   const {
-    info: grantsInfo,
-    haveAllPermissions,
-    refetch: refetchPermissions,
-  } = useGetGrantsInformation(activeAccount.address);
-  const steUserApplicationGrants = useSetUserApplicationGrants();
+    loading: loadingSimplifiedTxBroadcast,
+    state: simplifiedTxBroadcast,
+    toggleSimplifiedTxBroadcast,
+  } = useToggleSimplifiedTxBroadcast(RequiredMessageTypesGrant);
   const { biometricsSupported, biometricsEnabled, toggleBiometrics } = useToggleBiometrics();
   const deleteAuthToken = useDeleteAuthToken();
 
@@ -73,15 +72,6 @@ const Settings: React.FC<NavProps> = props => {
       mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
     });
   }, [navigate]);
-
-  const handlePermissionsToggle = React.useCallback(async () => {
-    const result = await steUserApplicationGrants(!haveAllPermissions, grantsInfo);
-    if (result.isErr()) {
-      console.error(result.error);
-    } else {
-      refetchPermissions();
-    }
-  }, [grantsInfo, haveAllPermissions, refetchPermissions, steUserApplicationGrants]);
 
   const handlePressSignOut = useCallback(() => {
     deleteAuthToken();
@@ -143,8 +133,9 @@ const Settings: React.FC<NavProps> = props => {
       <Section style={styles.spacer} title={t('security')}>
         <SectionSwitch
           label={t('permissions')}
-          onValueChange={handlePermissionsToggle}
-          value={haveAllPermissions}
+          onValueChange={toggleSimplifiedTxBroadcast}
+          value={simplifiedTxBroadcast}
+          disabled={loadingSimplifiedTxBroadcast}
         />
         <SectionButton label={t('change password')} onPress={handleChangePassword} />
         {biometricsSupported && (

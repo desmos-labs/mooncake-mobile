@@ -1,15 +1,4 @@
 import React, { useCallback } from 'react';
-import { RequiredAuthzGrants } from 'config/AutzGrants';
-import useBroadcastTx from 'hooks/useBroadcastTx';
-import { EncodeObject } from '@cosmjs/proto-signing';
-import { useAppStateValue } from '@recoil/appState';
-import {
-  buildGrantAllowanceEncode,
-  buildGrantMsgEncodes,
-  buildRevokeAllowanceEncode,
-  buildRevokeGrantMsgEncodes,
-} from 'hooks/authGrants/useAddOrUpdateGrants/utils';
-import { AuthorizationsInformation } from 'types/authorizations';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
@@ -19,52 +8,52 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { getSupportedBiometryType } from 'react-native-keychain';
+import useAddAuthorizations from 'hooks/authorizations/useAddAuthorizations';
+import useRemoveAuthorizations from 'hooks/authorizations/useRemoveAuthorizations';
+import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
+import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
 
 /**
  * Hook that provides a function to give or remove to the current user the grants
  * necessary to execute operations on behalf of the user.
+ * @param requiredPermissions - List of messages types to which the user needs to
+ * have access to use the simplified tx broadcasting logic.
  */
-export const useSetUserApplicationGrants = () => {
+export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) => {
   const activeAccountAddress = useActiveAccountAddress()!;
-  const butterConfig = useAppStateValue('butterConfig');
-  const apisAddress = butterConfig!.desmosAddress;
-  const broadcastTx = useBroadcastTx();
+  const [state, setState] = React.useState(false);
+  const { feeGrants, authzGrants, loading } = useGetAuthorizationInformation(activeAccountAddress);
+  const addAuthorizations = useAddAuthorizations(activeAccountAddress);
+  const removeAuthorizations = useRemoveAuthorizations(activeAccountAddress);
 
-  return React.useCallback(
-    async (newState: boolean, authInfo: AuthorizationsInformation) => {
-      const msgs: EncodeObject[] = [];
-      if (newState) {
-        if (authInfo.missingFeeGrantPermissions.length > 0) {
-          msgs.push(
-            buildGrantAllowanceEncode(
-              authInfo.missingFeeGrantPermissions,
-              apisAddress,
-              activeAccountAddress,
-            ),
-          );
-        }
-        if (authInfo.missingAuthzPermissions.length > 0) {
-          msgs.push(
-            ...buildGrantMsgEncodes(
-              authInfo.missingAuthzPermissions,
-              apisAddress,
-              activeAccountAddress,
-            ),
-          );
-        }
-      } else {
-        msgs.push(buildRevokeAllowanceEncode(apisAddress, activeAccountAddress));
-        msgs.push(
-          ...buildRevokeGrantMsgEncodes(RequiredAuthzGrants, apisAddress, activeAccountAddress),
-        );
-      }
+  React.useEffect(() => {
+    if (!loading && feeGrants !== undefined && authzGrants !== undefined) {
+      const missingFeeGrants = getMissingFeeGrantPermissions(requiredPermissions, feeGrants);
+      const missingAuthzGrants = getMissingAuthzPermissions(requiredPermissions, authzGrants);
+      setState(missingFeeGrants.length === 0 && missingAuthzGrants.length === 0);
+    }
+  }, [authzGrants, feeGrants, loading, requiredPermissions]);
 
-      return broadcastTx(msgs, {
-        onChain: true,
-      });
-    },
-    [activeAccountAddress, apisAddress, broadcastTx],
-  );
+  const toggleSimplifiedTxBroadcast = React.useCallback(async () => {
+    const newState = !state;
+
+    const result = newState
+      ? await addAuthorizations(requiredPermissions)
+      : await removeAuthorizations(requiredPermissions);
+
+    // TX ok, toggle the state.
+    if (result.isOk()) {
+      setState(newState);
+    }
+
+    return result;
+  }, [state, addAuthorizations, removeAuthorizations, requiredPermissions]);
+
+  return {
+    loading,
+    toggleSimplifiedTxBroadcast,
+    state,
+  };
 };
 
 /**
