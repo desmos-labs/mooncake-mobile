@@ -108,7 +108,6 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.SETTINGS]: undefined;
-  // [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
   [ROUTES.SETTINGS_SHOW_PRIVATE_KEY]: ShowPrivateKeyScreenParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
@@ -318,7 +317,6 @@ const RootNavigator = () => {
       {/* ------------------------ */}
 
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
-      {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
       <Stack.Screen name={ROUTES.SETTINGS_SHOW_PRIVATE_KEY} component={ShowPrivateKey} />
       <Stack.Screen name={ROUTES.SETTINGS_ENABLE_BIOMETRICS} component={SettingsEnableBiometrics} />

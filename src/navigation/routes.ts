@@ -53,7 +53,6 @@ enum ROUTES {
   // -------------------------------------------------------------------------------------
 
   SETTINGS = 'SETTINGS',
-  SETTINGS_PROFILES = 'SETTINGS_PROFILES',
   SETTINGS_COMMUNITY = 'SETTINGS_COMMUNITY',
   SETTINGS_SHOW_PRIVATE_KEY = 'SETTINGS_SHOW_PRIVATE_KEY',
   SETTINGS_GRANTS = 'SETTINGS_GRANTS',
