@@ -68,13 +68,16 @@ export const useSetting = <K extends keyof AppSettings>(settingKey: K) =>
 export const useSetSetting = <K extends keyof AppSettings>(settingKey: K) => {
   const setSettings = useSetSettings();
   return React.useCallback(
-    (setting: AppSettings[K]) => {
+    (setting: AppSettings[K] | ((value: AppSettings[K]) => AppSettings[K])) => {
       setSettings(currentValue => {
-        const settings: AppSettings = {
-          ...currentValue,
-        };
-        settings[settingKey] = setting;
-        return settings;
+        const newValue =
+          typeof setting === 'function' ? setting(currentValue[settingKey]) : setting;
+
+        if (newValue !== currentValue[settingKey]) {
+          return currentValue;
+        }
+
+        return { ...currentValue, [settingKey]: newValue };
       });
     },
     [settingKey, setSettings],
