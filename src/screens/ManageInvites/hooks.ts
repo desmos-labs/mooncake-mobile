@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useGetActiveAccountInvites from 'hooks/gql/useGetInvites';
+import useGetActiveAccountInvites from 'hooks/useGetInvites';
 import useButterConfig from 'hooks/useButterConfig';
 
 export const useGetSectionedInvites = () => {

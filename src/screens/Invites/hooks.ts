@@ -3,8 +3,8 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import useButterConfig from 'hooks/useButterConfig';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import { ResultAsync } from 'neverthrow';
-import useGetActiveAccountInvites from 'hooks/gql/useGetInvites';
-import useGetActiveAccountImpactPoints from 'hooks/gql/useGetImpactPoints';
+import useGetActiveAccountInvites from 'hooks/useGetInvites';
+import useAccountImpactPoints from 'hooks/useAccountImpactPoints';
 
 export interface InvitesInfo {
   /**
@@ -46,7 +46,7 @@ export const useGetActiveAccountInvitesInfo = () => {
     impactPoints,
     loading: loadingImpactPoints,
     refetch: refetchImpactPoints,
-  } = useGetActiveAccountImpactPoints();
+  } = useAccountImpactPoints();
 
   // Merge the refetch functions.
   const refetch = React.useCallback(() => {
