@@ -127,10 +127,6 @@ export type RootNavigatorParamList = {
 
   [ROUTES.MANAGE_CONNECTED_CHAINS]: undefined;
 
-  // Connect chain
-  // [ROUTES.CONNECT_ADDRESS_GENERAL]: ConnectAddressGeneralParams | undefined;
-  // [ROUTES.CONNECT_ADDRESS_ADVANCED]: ConnectAddressAdvancedParams | undefined;
-
   // Disconnect chain
   [ROUTES.DISCONNECT_CHAIN_MODAL]: DisconnectChainParams;
 
@@ -340,14 +336,6 @@ const RootNavigator = () => {
       {/* --------------------------- */}
 
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_CHAINS} component={ManageConnectedChains} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.CONNECT_ADDRESS_GENERAL} */}
-      {/*  component={ConnectAddressGeneral} */}
-      {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.CONNECT_ADDRESS_ADVANCED} */}
-      {/*  component={ConnectAddressAdvanced} */}
-      {/* /> */}
       <Stack.Screen name={ROUTES.DISCONNECT_CHAIN_MODAL} component={DisconnectChainModal} />
 
       {/* ------------------------- */}
