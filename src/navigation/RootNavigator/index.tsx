@@ -186,7 +186,6 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   // [ROUTES.GUEST_PROFILE]: GuestProfileParams | undefined;
-  // [ROUTES.CHECK_MNEMONIC]: CheckMnemonicParams;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
@@ -405,14 +404,6 @@ const RootNavigator = () => {
       {/*  name={ROUTES.FULLSCREEN_STATUS_SCREEN} */}
       {/*  component={FullscreenStatusScreen} */}
       {/*  options={{cardStyle: styles.statusScreen}} */}
-      {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    mnemonic: */}
-      {/*      'test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo test this mnemo', */}
-      {/*  }} */}
-      {/*  name={ROUTES.CHECK_MNEMONIC} */}
-      {/*  component={CheckMnemonic} */}
       {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
       {/* <Stack.Screen name={ROUTES.GUEST_PROFILE} component={GuestProfile} /> */}
