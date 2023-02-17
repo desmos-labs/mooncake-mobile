@@ -11,6 +11,10 @@ import { err } from 'neverthrow';
 import useBroadcastTx from 'hooks/useBroadcastTx';
 import React from 'react';
 
+/**
+ * Hook that provide a function to revoke some fee grants and authzs grants.
+ * @param accountAddress - User's account address.
+ */
 const useRemoveAuthorizations = (accountAddress: string) => {
   const { refetch } = useGetAuthorizations(accountAddress, true);
   const { config: butterConfig } = useButterConfig();

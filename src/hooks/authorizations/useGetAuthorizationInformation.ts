@@ -14,7 +14,8 @@ import { err, ok, ResultAsync } from 'neverthrow';
 /**
  * Hook to get the fee grants and authz grants of a user's account.
  * @param accountAddress - Address of the account of interest.
- * @param lazy - Whether to use lazy loading.
+ * @param lazy - Whether to use lazy loading, if this is set to true the data
+ * must be fetched using the refetch function.
  */
 const useGetAuthorizationInformation = (accountAddress: string, lazy?: boolean) => {
   const butterConfig = useAppStateValue('butterConfig');

@@ -14,8 +14,8 @@ import useBroadcastTx from 'hooks/useBroadcastTx';
 import React from 'react';
 
 /**
- * Hook to add the necessary fee grant and authz grant so that
- * the user can use the centralized API to perform such actions.
+ * Hook that provides a function to add the necessary fee grants and authzs grant
+ * so that the user can use the centralized API to perform such actions.
  * @param accountAddress - User's account address.
  */
 const useAddAuthorizations = (accountAddress: string) => {
