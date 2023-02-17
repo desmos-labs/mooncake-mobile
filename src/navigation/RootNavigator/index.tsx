@@ -109,7 +109,6 @@ export type RootNavigatorParamList = {
   [ROUTES.SETTINGS]: undefined;
   // [ROUTES.SETTINGS_PROFILES]: undefined;
   [ROUTES.SETTINGS_COMMUNITY]: undefined;
-  // [ROUTES.SETTINGS_REVEAL_SECRET_PHRASE]: undefined;
   // [ROUTES.SETTINGS_SHOW_SECRET_PHRASE]: ShowSecretPhraseParams;
   [ROUTES.SETTINGS_ENABLE_BIOMETRICS]: undefined;
   [ROUTES.SETTINGS_INVITES]: undefined;
@@ -183,7 +182,6 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.SIGNUP]: undefined;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -199,7 +197,7 @@ export type RootNavigatorParamList = {
   [ROUTES.WELCOME_BACK]: undefined; // [ROUTES.CONFIRM_ADDRESS]: ConfirmAddressParams;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   [ROUTES.SEND_TIPS]: SendTipsParams;
-  // [ROUT     ES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
+  // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   // [ROUTES.SELECT_POST_TYPE]: undefined;
   // [ROUTES.CREATE_TEXT_POST]: undefined;
@@ -329,10 +327,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.SETTINGS} component={Settings} />
       {/* <Stack.Screen name={ROUTES.SETTINGS_PROFILES} component={Profiles} /> */}
       <Stack.Screen name={ROUTES.SETTINGS_COMMUNITY} component={Community} />
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.SETTINGS_REVEAL_SECRET_PHRASE} */}
-      {/*  component={RevealRecoveryPhrase} */}
-      {/* /> */}
       {/* <Stack.Screen */}
       {/*  name={ROUTES.SETTINGS_SHOW_SECRET_PHRASE} */}
       {/*  component={ShowRecoveryPhrase} */}
