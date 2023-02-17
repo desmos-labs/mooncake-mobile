@@ -29,7 +29,7 @@ import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
-import SelectLedgerApp from 'screens/SelectLedgerApp';
+import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
 import UnlockWallet, { UnlockWalletParams } from 'screens/UnlockWallet';
@@ -292,7 +292,10 @@ const RootNavigator = () => {
         component={ImportAccountSelectChain}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP} component={SelectLedgerApp} />
+      <Stack.Screen
+        name={ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP}
+        component={ImportAccountSelectLedgerApp}
+      />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT} component={MnemonicInput} />
       <Stack.Screen
         name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT}

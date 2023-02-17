@@ -20,7 +20,7 @@ import LedgerAppItem from './components/LedgerAppItem';
  * A screen where users select a ledger app to connect chains with more than one
  * supported ledger app
  */
-const SelectLedgerApp = () => {
+const ImportAccountSelectLedgerApp = () => {
   const { ignoreAddresses, selectedChain, onSuccess } = useRecoilValue(importAccountAppState)!;
   const theme = useTheme();
   const { t } = useTranslation('selectLedgerApp');
@@ -108,4 +108,4 @@ const SelectLedgerApp = () => {
   );
 };
 
-export default SelectLedgerApp;
+export default ImportAccountSelectLedgerApp;
