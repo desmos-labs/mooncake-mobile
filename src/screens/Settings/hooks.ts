@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { deleteBiometricAuthorization } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
@@ -12,6 +12,25 @@ import useAddAuthorizations from 'hooks/authorizations/useAddAuthorizations';
 import useRemoveAuthorizations from 'hooks/authorizations/useRemoveAuthorizations';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
+import { useDeleteAuthToken } from 'services/axios';
+import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
+import { Linking } from 'react-native';
+
+export const useManageChainLinks = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(() => {
+    navigator.navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
+  }, [navigator]);
+};
+
+export const useManageAppLinks = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(() => {
+    navigator.navigate(ROUTES.MANAGE_CONNECTED_APPS);
+  }, [navigator]);
+};
 
 /**
  * Hook that provides a function to give or remove to the current user the grants
@@ -57,7 +76,22 @@ export const useToggleSimplifiedTxBroadcast = (requiredPermissions: string[]) =>
 };
 
 /**
- * Hook to enable/disable the biometrics authentication.
+ * Hook that provide a function to initiate the password change procedure.
+ */
+export const useChangePassword = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(async () => {
+    navigator.navigate(ROUTES.PASSWORD_MANIPULATION, {
+      mode: PASSWORD_MANIPULATION_MODE.CHANGE_PASSWORD,
+    });
+  }, [navigator]);
+};
+
+/**
+ * Hook that provides a function to enable or disable the biometric
+ * authentication, its current state and if the device supports the
+ * biometrics.
  */
 export const useToggleBiometrics = () => {
   const biometricsSetting = useSetting('biometrics');
@@ -79,7 +113,7 @@ export const useToggleBiometrics = () => {
     })();
   }, []);
 
-  const toggleBiometrics = useCallback(async () => {
+  const toggleBiometrics = React.useCallback(async () => {
     setBiometricsError(undefined);
     if (biometricsSetting) {
       const result = await deleteBiometricAuthorization(BiometricAuthorizations.UnlockWallet);
@@ -100,4 +134,89 @@ export const useToggleBiometrics = () => {
     biometricsError,
     toggleBiometrics,
   };
+};
+
+export const useOpenNotificationsSettings = () => {
+  return React.useCallback(() => {
+    Linking.openSettings();
+  }, []);
+};
+
+/**
+ * Hook that provides a function to enable/disable a notification
+ * and its current state.
+ * @param notificationType - Type of the notification of interest.
+ */
+export const useToggleNotifications = (
+  notificationType: 'newDiscPostNotification' | 'newFollowPostNotification',
+) => {
+  const setSetting = useSetSetting(notificationType);
+  const settingValue = useSetting(notificationType);
+
+  const toggleSetting = React.useCallback(() => {
+    setSetting(currentValue => {
+      return !currentValue;
+    });
+  }, [setSetting]);
+
+  return {
+    value: settingValue,
+    toggle: toggleSetting,
+  };
+};
+
+export const useManageInvites = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(() => {
+    navigator.navigate(ROUTES.SETTINGS_INVITES);
+  }, [navigator]);
+};
+
+export const useManageCommunity = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(() => {
+    navigator.navigate(ROUTES.SETTINGS_COMMUNITY);
+  }, [navigator]);
+};
+
+/**
+ * Hook that provides a function that allow the user to send us
+ * a feedback about the application.
+ */
+export const useSendFeedback = () => {
+  return React.useCallback(async () => {
+    Linking.openURL('mailto:dev@forbole.com').catch(err =>
+      console.error("Couldn't open email application", err),
+    );
+  }, []);
+};
+
+export const useShowAboutInfo = () => {
+  return React.useCallback(() => {
+    // TODO: Implement this.
+    console.warn('Implement show about info');
+  }, []);
+};
+
+/**
+ * Hook that provide a function to sign out the current active account.
+ */
+export const useSignOut = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const deleteAuthToken = useDeleteAuthToken();
+
+  return React.useCallback(() => {
+    deleteAuthToken();
+    // Home screen will request user to login if no bearer token is detected
+    navigator.reset({
+      index: 0,
+      routes: [
+        {
+          name: ROUTES.HOME_TABS,
+        },
+      ],
+    });
+  }, [navigator, deleteAuthToken]);
 };
