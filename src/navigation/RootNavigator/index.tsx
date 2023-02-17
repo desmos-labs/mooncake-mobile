@@ -15,7 +15,9 @@ import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import Onboarding, { OnboardingParams } from 'screens/Onboarding';
-import SelectAccount, { SelectAccountParamList } from 'screens/SelectAccount';
+import ImportAccountSelectAccount, {
+  SelectAccountParamList,
+} from 'screens/ImportAccountSelectAccount';
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
@@ -292,7 +294,10 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_MODE} component={ImportAccountSelectMode} />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP} component={SelectLedgerApp} />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT} component={MnemonicInput} />
-      <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT} component={SelectAccount} />
+      <Stack.Screen
+        name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT}
+        component={ImportAccountSelectAccount}
+      />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
 
       {/* -------------------- */}

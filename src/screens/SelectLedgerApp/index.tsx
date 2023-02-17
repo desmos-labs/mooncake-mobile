@@ -13,7 +13,7 @@ import { CryptoDotOrgChain, DesmosChain } from 'config/LinkableChains';
 import { CosmosLedgerApp, CryptoOrgLedgerApp, DesmosLedgerApp } from 'config/LedgerApps';
 import useConnectToLedger from 'hooks/useConnectToLedger';
 import useSelectAccount from 'hooks/useSelectAccount';
-import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
+import { WalletPickerMode } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
 import LedgerAppItem from './components/LedgerAppItem';
 
 /**

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { useFetchWallets } from 'screens/SelectAccount/components/AccountPicker/useHooks';
+import { useFetchWallets } from 'screens/ImportAccountSelectAccount/components/AccountPicker/useHooks';
 import { AccountWithWallet, SelectedAccount } from 'types/account';
 import PaginatedFlatList, { ListRenderItemInfo } from 'components/PaginatedFlatList';
 import ProfileItem from '../ProfileItem';

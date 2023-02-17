@@ -8,7 +8,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { SelectedAccount } from 'types/account';
-import AccountPicker from 'screens/SelectAccount/components/AccountPicker';
+import AccountPicker from 'screens/ImportAccountSelectAccount/components/AccountPicker';
 import { AccountPickerParams } from './components/AccountPicker/types';
 
 export interface SelectAccountParamList {
@@ -22,7 +22,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_S
 /**
  * Screen that allows the user select an account to import.
  */
-const SelectAccount = ({ route: { params }, navigation }: NavProps) => {
+const ImportAccountSelectAccount = ({ route: { params }, navigation }: NavProps) => {
   const { accountPickerParams, onSelect, onCancel } = params;
   const { t } = useTranslation('selectDtag');
 
@@ -47,4 +47,4 @@ const SelectAccount = ({ route: { params }, navigation }: NavProps) => {
   );
 };
 
-export default SelectAccount;
+export default ImportAccountSelectAccount;

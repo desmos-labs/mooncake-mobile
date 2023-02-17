@@ -3,7 +3,7 @@ import { validateMnemonic } from 'lib/ValidationUtils';
 import { sanitizeMnemonic } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import useSelectAccount from 'hooks/useSelectAccount';
-import { WalletPickerMode } from 'screens/SelectAccount/components/AccountPicker/types';
+import { WalletPickerMode } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
 import { useImportAccountState } from '@recoil/screens/importAccountState';
 
 export interface FormField {
