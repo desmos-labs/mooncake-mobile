@@ -4,6 +4,9 @@ import useBroadcastTxOnChain from 'hooks/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
+import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
 
 export interface BroadcastOptions {
   /**
@@ -41,16 +44,37 @@ export interface SuccessfulBroadcast {
  * cancels the broadcasting, a {@link CanceledOperationError} will be returned.
  */
 const useBroadcastTx = () => {
+  const activeAccountAddress = useActiveAccountAddress()!;
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
+  const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
+    activeAccountAddress,
+    true,
+  );
 
   return React.useCallback(
     async (
       msgs: EncodeObject[],
       options?: BroadcastOptions,
     ): Promise<Result<SuccessfulBroadcast, Error>> => {
+      let broadcastOnChain = options?.onChain === true;
+
+      // Don't check the permissions if the user forced the
+      // transaction to be on chain.
+      if (!broadcastOnChain) {
+        const fetchAuthorizationsResult = await fetchAuthorizations();
+        if (fetchAuthorizationsResult.isOk()) {
+          const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
+          const msgsTypes = msgs.map(msg => msg.typeUrl);
+          const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
+          const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
+          broadcastOnChain =
+            missingAuthzPermissions.length !== 0 || missingFeeGrantsPermissions.length !== 0;
+        }
+      }
+
       return new Promise(resolve => {
-        if (options?.onChain === true) {
+        if (broadcastOnChain) {
           broadcastTxOnChain(msgs, {
             memo: options?.memo,
             onSuccess: txResponse => {
@@ -84,7 +108,7 @@ const useBroadcastTx = () => {
         }
       });
     },
-    [broadcastTxOnChain, broadcastTxWithApi],
+    [broadcastTxOnChain, broadcastTxWithApi, fetchAuthorizations],
   );
 };
 
