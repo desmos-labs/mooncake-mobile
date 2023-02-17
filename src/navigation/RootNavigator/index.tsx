@@ -151,7 +151,6 @@ export type RootNavigatorParamList = {
   // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
 
-  // [ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED]: AddProfileSelectAddressAdvancedParams;
   // [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
 
   // Profile creation/saving
@@ -365,7 +364,6 @@ const RootNavigator = () => {
       {/* --- PROFILE SCREENS --- */}
       {/* ----------------------- */}
 
-      {/* <Stack.Screen name={ROUTES.ADD_PROFILE_SELECT_ADDRESS_ADVANCED} component={AddProfileSelectAddressAdvanced} */}
       {/* <Stack.Screen  name={ROUTES.ADD_PROFILE_MODAL} component={AddProfileModal} /> */}
       <Stack.Screen name={ROUTES.SAVE_PROFILE} component={SaveProfile} />
 
