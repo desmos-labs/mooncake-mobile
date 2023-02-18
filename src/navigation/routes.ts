@@ -5,9 +5,11 @@ enum ROUTES {
 
   ONBOARDING = 'ONBOARDING',
   LANDING = 'LANDING',
+  CONSENT_AGREEMENT = 'CONSENT_AGREEMENT',
   LOGIN = 'LOGIN',
   SIGNUP = 'SIGNUP',
-  CONSENT_AGREEMENT = 'CONSENT_AGREEMENT',
+  WELCOME = 'WELCOME',
+  WELCOME_BACK = 'WELCOME',
 
   // Development
   DEV_SCREEN = 'DEV_SCREEN',
@@ -29,6 +31,9 @@ enum ROUTES {
   IMPORT_ACCOUNT_MNEMONIC_INPUT = 'IMPORT_ACCOUNT_MNEMONIC_INPUT',
   IMPORT_ACCOUNT_SELECT_ACCOUNT = 'IMPORT_ACCOUNT_SELECT_ACCOUNT',
   IMPORT_ACCOUNT_SAVE_ACCOUNT = 'IMPORT_ACCOUNT_SAVE_ACCOUNT',
+
+  // Account password
+  PASSWORD_MANIPULATION = 'PASSWORD_MANIPULATION',
 
   // -------------------------------------------------------------------------------------
   // --- HOME SCREENS
@@ -159,13 +164,7 @@ enum ROUTES {
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
 
-  PASSWORD_MANIPULATION = 'PASSWORD_MANIPULATION',
-
-  WELCOME_PAGE = 'WELCOME_PAGE',
-
   NO_DTAG_FOUND = 'NO_DTAG_FOUND',
-
-  WELCOME_BACK = 'WELCOME_BACK',
 
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 

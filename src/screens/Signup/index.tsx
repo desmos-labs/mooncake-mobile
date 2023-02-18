@@ -75,17 +75,7 @@ const Signup = () => {
 
   // Callback that is used when the signup completes properly
   const onSuccess = useCallback(() => {
-    navigate(ROUTES.BOTTOM_TABS, {
-      screen: ROUTES.HOME_TABS,
-      params: {
-        HOME_DISCOVER: {
-          type: 'discover',
-        },
-        HOME_FOLLOWING: {
-          type: 'following',
-        },
-      },
-    });
+    navigate(ROUTES.BOTTOM_TABS, ROUTES.WELCOME);
   }, [navigate]);
 
   // Callback that is used when the signup procedure raises any error
@@ -114,7 +104,7 @@ const Signup = () => {
     resetSignUpInfo();
     // Disable the lint on the next line in order to have this being called only
     // the first time that the user enters this screen (to avoid reset on goBack)
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const scrollViewRef = useRef<ScrollView>(null);

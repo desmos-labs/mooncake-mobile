@@ -37,7 +37,7 @@ import CreatePost, { CreatePostParams } from 'screens/CreatePost';
 import ReportPost, { ReportPostParams } from 'screens/Modals/ReportPost';
 import SendTips, { SendTipsParams } from 'screens/Modals/SendTips';
 import PostInteractionTabs, {
-  PostInteractionReactionsTabParams,
+  PostInteractionTabParams,
   PostInteractionTabsParamList,
 } from 'navigation/RootNavigator/PostInteractionTabs';
 import ImportAccountSelectChain from 'screens/ImportAccountSelectChain';
@@ -59,6 +59,7 @@ import ManageConnectionsModal, {
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions } from 'react-native';
+import WelcomePage from 'screens/WelcomePage';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -72,8 +73,10 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.LANDING]: undefined;
-  // [ROUTES.LOGIN]: LoginParams | undefined;
+  [ROUTES.ONBOARDING]: OnboardingParams;
+  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   [ROUTES.SIGNUP]: undefined;
+  [ROUTES.WELCOME]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -85,6 +88,8 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT]: SelectAccountParamList;
   [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
+
+  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
 
   // -------------------------------------------------------------------------------------
   // --- HOME SCREENS
@@ -98,17 +103,27 @@ export type RootNavigatorParamList = {
   [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
 
   // -------------------------------------------------------------------------------------
+  // --- BROADCAST TRANSACTION SCREENS
+  // -------------------------------------------------------------------------------------
+
+  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
+
+  // -------------------------------------------------------------------------------------
   // --- POST SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.POST_CREATE]: CreatePostParams | undefined;
+  // Post view
   [ROUTES.POST_DETAILS]: PostDetailsParams;
+
+  // Post actions
+  [ROUTES.POST_CREATE]: CreatePostParams | undefined;
   [ROUTES.POST_REPORT]: ReportPostParams;
+  [ROUTES.POST_SEND_TIPS]: SendTipsParams;
 
   // Post interactions
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
-  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
-  // [ROUTES.POST_TIPS]: PostInteractionTipsTabsParams;
+  [ROUTES.POST_REACTIONS]: PostInteractionTabParams;
+  [ROUTES.POST_TIPS]: PostInteractionTabParams;
 
   // -------------------------------------------------------------------------------------
   // --- SETTINGS SCREENS
@@ -185,31 +200,24 @@ export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
 
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
+  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
+  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
+  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
-  [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   // [ROUTES.SIGNUP_RESULT]: undefined;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
-  [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
-  [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
+
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
-  [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
-  [ROUTES.WELCOME_BACK]: undefined;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
-  [ROUTES.POST_SEND_TIPS]: SendTipsParams;
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
-  // [ROUTES.SELECT_POST_TYPE]: undefined;
-  // [ROUTES.CREATE_TEXT_POST]: undefined;
-  // Nested navigators
 
   // Nfts
   // [ROUTES.PROFILE_NFTS]: undefined;
@@ -223,7 +231,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.GRANTS_DETAILS]: GrantsDetailsParams;
 
   // Onboarding
-  [ROUTES.ONBOARDING]: OnboardingParams;
 
   // New profile
 
@@ -292,12 +299,11 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
       <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
-      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
+      <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
+      <Stack.Screen name={ROUTES.WELCOME} component={WelcomePage} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
-      <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
@@ -318,6 +324,8 @@ const RootNavigator = () => {
         component={ImportAccountSelectAccount}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
+
+      <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
 
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
@@ -435,8 +443,6 @@ const RootNavigator = () => {
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
-
-      {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.LOOKING_FOR_DEVICES} */}

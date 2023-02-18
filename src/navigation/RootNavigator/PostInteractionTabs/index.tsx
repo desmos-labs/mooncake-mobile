@@ -21,11 +21,11 @@ const Tab = createMaterialTopTabNavigator();
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_INTERACTION>;
 
 export type PostInteractionTabsParamList = {
-  [ROUTES.POST_TIPS]: PostInteractionReactionsTabParams;
-  [ROUTES.POST_REACTIONS]: PostInteractionReactionsTabParams;
+  [ROUTES.POST_TIPS]: PostInteractionTabParams;
+  [ROUTES.POST_REACTIONS]: PostInteractionTabParams;
 };
 
-export type PostInteractionReactionsTabParams = {
+export type PostInteractionTabParams = {
   /**
    * The post to show the interactions for.
    */
@@ -34,7 +34,6 @@ export type PostInteractionReactionsTabParams = {
    * Fully expand the post interaction tab window on open
    */
   expandOnOpen: boolean;
-
   /**
    * Should the user be able to drag the tab window in and out?
    */

@@ -15,6 +15,11 @@ import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
 
+/**
+ * Screen that is displayed to the user after signing up for a new account.
+ * It contains the options to immediately back-up their secret phrase
+ * @constructor
+ */
 const WelcomePage: React.FC<Props> = () => {
   const { t } = useTranslation('common');
   const { navigate } = useNavigation<Props['navigation']>();
