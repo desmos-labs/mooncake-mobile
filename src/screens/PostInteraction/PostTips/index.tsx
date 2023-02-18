@@ -50,7 +50,7 @@ const PostTips = () => {
   // -------------------------------------------------------------------------------------
 
   const handlePressSendTips = React.useCallback(() => {
-    navigate(ROUTES.SEND_TIPS, {
+    navigate(ROUTES.POST_SEND_TIPS, {
       target: {
         type: TipTargetType.POST,
         post,

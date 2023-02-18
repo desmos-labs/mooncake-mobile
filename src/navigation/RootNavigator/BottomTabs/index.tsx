@@ -95,7 +95,7 @@ const BottomTabBar = (props: Props) => {
     resetCreatePostState();
 
     // Go to the screen to create a post
-    navigate(ROUTES.CREATE_POST);
+    navigate(ROUTES.POST_CREATE);
   }, [activeAddress, navigate, resetCreatePostState]);
 
   // -------------------------------------------------------------------------------------

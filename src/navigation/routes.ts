@@ -3,9 +3,20 @@ enum ROUTES {
   // --- INITIAL SCREENS
   // -------------------------------------------------------------------------------------
 
+  ONBOARDING = 'ONBOARDING',
   LANDING = 'LANDING',
   LOGIN = 'LOGIN',
   SIGNUP = 'SIGNUP',
+  CONSENT_AGREEMENT = 'CONSENT_AGREEMENT',
+
+  // Development
+  DEV_SCREEN = 'DEV_SCREEN',
+
+  // -------------------------------------------------------------------------------------
+  // --- BROADCAST TRANSACTION SCREENS
+  // -------------------------------------------------------------------------------------
+
+  BROADCAST_TX_ON_CHAIN = 'BROADCAST_TX_ON_CHAIN',
 
   // -------------------------------------------------------------------------------------
   // --- ACCOUNTS SCREENS
@@ -38,9 +49,10 @@ enum ROUTES {
   // --- POST SCREENS
   // -------------------------------------------------------------------------------------
 
-  CREATE_POST = 'CREATE_POST',
+  POST_CREATE = 'POST_CREATE',
   POST_DETAILS = 'POST_DETAILS',
-  REPORT_POST = 'REPORT_POST',
+  POST_REPORT = 'POST_REPORT',
+  POST_SEND_TIPS = 'POST_SEND_TIPS',
 
   // Post interactions
   POST_INTERACTION = 'POST_INTERACTION',
@@ -114,42 +126,44 @@ enum ROUTES {
   PROFILE_POSTS_TIPPED = 'PROFILE_POSTS_TIPPED',
 
   // Profile followage
-  FOLLOWING_AND_FOLLOWERS = 'FOLLOWING_AND_FOLLOWERS',
-  FOLLOWING = 'FOLLOWING',
-  FOLLOWERS = 'FOLLOWERS',
+  PROFILE_FOLLOWING_AND_FOLLOWERS = 'PROFILE_FOLLOWING_AND_FOLLOWERS',
+  PROFILE_FOLLOWING = 'PROFILE_FOLLOWING',
+  PROFILE_FOLLOWERS = 'PROFILE_FOLLOWERS',
+
+  // Profile operations
+  PROFILE_OPERATIONS = 'PROFILE_OPERATIONS',
+
+  // Profile NFTs
+  PROFILE_NFTS = 'PROFILE_NFTS',
 
   // -------------------------------------------------------------------------------------
   // --- INVITE SCREENS
   // -------------------------------------------------------------------------------------
+
   MANAGE_INVITES = 'MANAGE_INVITES',
   IMPACT_POINTS_MODAL = 'IMPACT_POINTS_MODAL',
+  MANAGE_CONNECTIONS_MODAL = 'MANAGE_CONNECTIONS_MODAL',
+
+  // -------------------------------------------------------------------------------------
+  // --- MODALS
+  // -------------------------------------------------------------------------------------
+
+  TEXTONLY_MODAL = 'TEXTONLY_MODAL',
+  CONFIRM_MODAL = 'CONFIRM_MODAL',
+  BOTTOM_MODAL = 'BOTTOM_MODAL',
+  BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
+  CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
 
-  BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
-
   PASSWORD_MANIPULATION = 'PASSWORD_MANIPULATION',
-
-  CONFIRM_MODAL = 'CONFIRM_MODAL',
-
-  TEXTONLY_MODAL = 'TEXTONLY_MODAL',
 
   WELCOME_PAGE = 'WELCOME_PAGE',
 
   FULLSCREEN_STATUS_SCREEN = 'FULLSCREEN_STATUS_SCREEN',
-
-  CONSENT_AGREEMENT = 'CONSENT_AGREEMENT',
-
-  SEND_TIPS = 'SEND_TIPS',
-
-  BOTTOM_MODAL = 'BOTTOM_MODAL',
-
-  DEV_SCREEN = 'DEV_SCREEN',
-
-  BROADCAST_TX_ON_CHAIN = 'BROADCAST_TX_ON_CHAIN',
 
   NO_DTAG_FOUND = 'NO_DTAG_FOUND',
 
@@ -157,17 +171,7 @@ enum ROUTES {
 
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 
-  PROFILE_NFTS = 'PROFILE_NFTS',
-
   NFT_DETAILS = 'NFT_DETAILS',
-
-  ONBOARDING = 'ONBOARDING',
-
-  MANAGE_CONNECTIONS_MODAL = 'MANAGE_CONNECTIONS_MODAL',
-
-  CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
-
-  OPERATIONS = 'OPERATIONS',
 }
 
 export default ROUTES;

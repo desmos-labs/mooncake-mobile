@@ -13,8 +13,8 @@ const useNavigateToFollowageScreen = () => {
   const { navigate } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
 
   return React.useCallback(
-    (route: ROUTES.FOLLOWING | ROUTES.FOLLOWERS, userAddress: string) => {
-      navigate(ROUTES.FOLLOWING_AND_FOLLOWERS, {
+    (route: ROUTES.PROFILE_FOLLOWING | ROUTES.PROFILE_FOLLOWERS, userAddress: string) => {
+      navigate(ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS, {
         screen: route,
         params: {
           subspaceId,

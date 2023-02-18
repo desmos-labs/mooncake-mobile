@@ -19,7 +19,7 @@ import useHooks from './useHooks';
 import useStyles from './useStyles';
 
 type NavProps = CompositeScreenProps<
-  MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING>,
+  MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING>,
   StackScreenProps<RootNavigatorParamList>
 >;
 
@@ -44,7 +44,7 @@ export const Following: FC<NavProps> = ({ route }) => {
   const styles = useStyles();
   const { t } = useTranslation('common');
 
-  const isFollowing = route.name === (ROUTES.FOLLOWING as string);
+  const isFollowing = route.name === (ROUTES.PROFILE_FOLLOWING as string);
 
   const { loading, error, data, fetchMore, refetch } = useHooks(
     subspaceID,

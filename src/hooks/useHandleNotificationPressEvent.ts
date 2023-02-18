@@ -57,7 +57,7 @@ const useHandleNotificationPressEvent = () => {
           break;
 
         case NotificationType.Follow:
-          navigateToFollowage(ROUTES.FOLLOWING, data.follower);
+          navigateToFollowage(ROUTES.PROFILE_FOLLOWING, data.follower);
           break;
 
         case NotificationType.InviteClaimed:

@@ -21,10 +21,7 @@ import ImportAccountSelectAccount, {
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
-import ChangePassword, {
-  PASSWORD_MANIPULATION_MODE,
-  PasswordManipulationParams,
-} from 'screens/PasswordManipulation';
+import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordManipulation';
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
@@ -104,9 +101,9 @@ export type RootNavigatorParamList = {
   // --- POST SCREENS
   // -------------------------------------------------------------------------------------
 
-  [ROUTES.CREATE_POST]: CreatePostParams | undefined;
+  [ROUTES.POST_CREATE]: CreatePostParams | undefined;
   [ROUTES.POST_DETAILS]: PostDetailsParams;
-  [ROUTES.REPORT_POST]: ReportPostParams;
+  [ROUTES.POST_REPORT]: ReportPostParams;
 
   // Post interactions
   [ROUTES.POST_INTERACTION]: NavigatorScreenParams<PostInteractionTabsParamList>;
@@ -208,7 +205,7 @@ export type RootNavigatorParamList = {
   [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
   [ROUTES.WELCOME_BACK]: undefined;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
-  [ROUTES.SEND_TIPS]: SendTipsParams;
+  [ROUTES.POST_SEND_TIPS]: SendTipsParams;
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
   // [ROUTES.SELECT_POST_TYPE]: undefined;
@@ -290,10 +287,18 @@ const RootNavigator = () => {
       {/* ------------------- */}
       {__DEV__ && <Stack.Screen name={ROUTES.DEV_SCREEN} component={DevScreen} />}
 
+      {/* ----------------------- */}
       {/* --- INITIAL SCREENS --- */}
+      {/* ----------------------- */}
+
       <Stack.Screen name={ROUTES.LANDING} component={Landing} />
-      {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
+      <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
+      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
+
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+      {/* <Stack.Screen name={ROUTES.LOGIN} component={Login} /> */}
+      <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
+      <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
@@ -327,9 +332,10 @@ const RootNavigator = () => {
       {/* --- POST SCREENS --- */}
       {/* -------------------- */}
 
-      <Stack.Screen name={ROUTES.CREATE_POST} component={CreatePost} />
+      <Stack.Screen name={ROUTES.POST_CREATE} component={CreatePost} />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-      <Stack.Screen name={ROUTES.REPORT_POST} component={ReportPost} />
+      <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
+      <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
       <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
 
       {/* ------------------------ */}
@@ -412,10 +418,12 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
       <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
       <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
+      <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
 
       {/* ---------------------- */}
       {/* --- INVITE SCREENS --- */}
       {/* ---------------------- */}
+
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
       <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
 
@@ -423,7 +431,6 @@ const RootNavigator = () => {
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
 
-      <Stack.Screen name={ROUTES.WELCOME_BACK} component={WelcomeBack} />
       {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
@@ -451,13 +458,6 @@ const RootNavigator = () => {
       {/*  name={ROUTES.CONNECT_TO_LEDGER} */}
       {/*  component={ConnectToLedger} */}
       {/* /> */}
-      <Stack.Screen
-        initialParams={{
-          mode: PASSWORD_MANIPULATION_MODE.SETUP_PASSWORD,
-        }}
-        name={ROUTES.PASSWORD_MANIPULATION}
-        component={ChangePassword}
-      />
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.CONNECT_CHAIN_TX_DETAIL} */}
@@ -472,7 +472,6 @@ const RootNavigator = () => {
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
 
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
-      <Stack.Screen name={ROUTES.ONBOARDING} component={Onboarding} />
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
 
@@ -491,11 +490,7 @@ const RootNavigator = () => {
       {/*    component={ConsentAgreement} */}
       {/*  /> */}
 
-      <Stack.Screen name={ROUTES.SEND_TIPS} component={SendTips} />
       {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
-
-      <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
-      <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.ACTION_AUTHORIZATION} */}

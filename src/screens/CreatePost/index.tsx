@@ -34,7 +34,7 @@ export type CreatePostParams = {
   parent?: Post;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CREATE_POST>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_CREATE>;
 
 /**
  * Screen that allows to create a new post.

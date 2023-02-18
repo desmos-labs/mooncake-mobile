@@ -39,7 +39,7 @@ export interface OperationsParams {
   address: string;
 }
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.OPERATIONS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_OPERATIONS>;
 
 const Operations = () => {
   const { t } = useTranslation('operations');

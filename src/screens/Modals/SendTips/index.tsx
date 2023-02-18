@@ -32,7 +32,7 @@ export type SendTipsParams = {
   target: TipTarget;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SEND_TIPS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_SEND_TIPS>;
 
 /**
  * Screen that allows the user to tip a given post.

@@ -26,15 +26,15 @@ import FollowingTab, { FollowingParams } from '../Following';
 import useStyles from './useStyles';
 
 export type FollowingAndFollowersParams = {
-  [ROUTES.FOLLOWING]: FollowingParams;
-  [ROUTES.FOLLOWERS]: FollowingParams;
+  [ROUTES.PROFILE_FOLLOWING]: FollowingParams;
+  [ROUTES.PROFILE_FOLLOWERS]: FollowingParams;
 };
 
 /* Creating a new React component that is a tab navigator. */
 const Tab = createMaterialTopTabNavigator();
 const numOfTabs = 2;
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.FOLLOWING_AND_FOLLOWERS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS>;
 
 /* A React component for the following and followers screen. */
 const FollowingAndFollowers = () => {
@@ -77,7 +77,7 @@ const FollowingAndFollowers = () => {
     ) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
       const focusedRouteName = getFocusedRouteNameFromRoute(route);
-      setSwipeEnabled(focusedRouteName !== ROUTES.FOLLOWING || diffX < 0);
+      setSwipeEnabled(focusedRouteName !== ROUTES.PROFILE_FOLLOWING || diffX < 0);
       return false;
     };
     return PanResponder.create({
@@ -114,13 +114,13 @@ const FollowingAndFollowers = () => {
         tabBar={MaterialTopTabBar}
         sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
-          name={ROUTES.FOLLOWING}
+          name={ROUTES.PROFILE_FOLLOWING}
           component={FollowingTab}
           options={{ tabBarLabel: followingTabName }}
           initialParams={params}
         />
         <Tab.Screen
-          name={ROUTES.FOLLOWERS}
+          name={ROUTES.PROFILE_FOLLOWERS}
           component={FollowingTab}
           options={{ tabBarLabel: followersTabName }}
           initialParams={params}

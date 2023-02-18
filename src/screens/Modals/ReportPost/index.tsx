@@ -21,7 +21,7 @@ export type ReportPostParams = {
   post: Post;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.REPORT_POST>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.POST_REPORT>;
 
 /**
  * Screen that allows to report a post.

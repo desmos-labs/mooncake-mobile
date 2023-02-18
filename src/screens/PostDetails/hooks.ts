@@ -61,7 +61,7 @@ export const useHandleExpandCommentView = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (post: Post) => {
-      navigate(ROUTES.CREATE_POST, {
+      navigate(ROUTES.POST_CREATE, {
         parent: post,
       });
     },
@@ -119,7 +119,7 @@ export const useHandlePressReportPost = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (post: Post) => {
-      navigate(ROUTES.REPORT_POST, { post });
+      navigate(ROUTES.POST_REPORT, { post });
     },
     [navigate],
   );
@@ -132,7 +132,7 @@ export const useHandlePressSendTips = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   return React.useCallback(
     (post: Post) => {
-      navigate(ROUTES.SEND_TIPS, {
+      navigate(ROUTES.POST_SEND_TIPS, {
         target: {
           type: TipTargetType.POST,
           post,

@@ -61,7 +61,7 @@ export const useHandlePressReport = () => {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigate(ROUTES.REPORT_POST, {
+      navigate(ROUTES.POST_REPORT, {
         post,
       });
     },
@@ -97,7 +97,7 @@ export const useHandlePressTip = () => {
         // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
         return;
       }
-      navigate(ROUTES.SEND_TIPS, {
+      navigate(ROUTES.POST_SEND_TIPS, {
         target: {
           type: TipTargetType.POST,
           post,

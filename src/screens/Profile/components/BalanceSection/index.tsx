@@ -85,7 +85,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
               <Divider style={styles.divider} />
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigate(ROUTES.OPERATIONS, { address })}>
+                onPress={() => navigate(ROUTES.PROFILE_OPERATIONS, { address })}>
                 <Typography.Body6
                   style={{
                     marginRight: theme.spacing.s,

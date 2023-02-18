@@ -47,7 +47,7 @@ const routesToRender = [
   // ROUTES.CONNECT_CHAIN_METHOD,
   // ROUTES.DISCONNECT_CHAIN_MODAL,
   // ROUTES.POST_DETAILS,
-  ROUTES.REPORT_POST,
+  ROUTES.POST_REPORT,
   // ROUTES.FOLLOWING_AND_FOLLOWERS,
   // ROUTES.NO_DTAG_FOUND,
   // ROUTES.ADD_PROFILE,
@@ -144,10 +144,10 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           switch (item) {
-            case ROUTES.FOLLOWING_AND_FOLLOWERS:
+            case ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS:
               navigate(item, {
                 headerTitle: '@Raffaello',
-                initialTabRouteName: ROUTES.FOLLOWING,
+                initialTabRouteName: ROUTES.PROFILE_FOLLOWING,
                 subspaceID: 5,
                 userAddress: '',
                 username: '@Raffaello',

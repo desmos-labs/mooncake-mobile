@@ -271,11 +271,11 @@ const Profile = () => {
   };
 
   const handleFollowingPressed = useCallback(() => {
-    navigateToFollowageScreen(ROUTES.FOLLOWING, profile?.address ?? '');
+    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWING, profile?.address ?? '');
   }, [navigateToFollowageScreen, profile?.address]);
 
   const handleFollowersPressed = useCallback(() => {
-    navigateToFollowageScreen(ROUTES.FOLLOWERS, profile?.address ?? '');
+    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWERS, profile?.address ?? '');
   }, [navigateToFollowageScreen, profile?.address]);
 
   const handlePressFollow = useCallback(async () => {
