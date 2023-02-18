@@ -20,9 +20,6 @@ import { err, ok, ResultAsync } from 'neverthrow';
 const useGetAuthorizationInformation = (accountAddress: string, lazy?: boolean) => {
   const butterConfig = useAppStateValue('butterConfig');
   const apisAddress = butterConfig?.desmosAddress;
-  if (!apisAddress) {
-    throw new Error('Cannot get the grants information without the API address');
-  }
 
   // Get the queries to get the proper data
   const [
