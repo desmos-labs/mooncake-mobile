@@ -60,6 +60,7 @@ import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/Pr
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions } from 'react-native';
 import WelcomePage from 'screens/WelcomePage';
+import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -201,6 +202,7 @@ export type RootNavigatorParamList = {
 
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
+  [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -213,7 +215,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.SIGNUP_RESULT]: undefined;
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
 
-  // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
 
   // Nfts
@@ -325,6 +326,12 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.PASSWORD_MANIPULATION} component={ChangePassword} />
 
+      {/* ------------------------------------ */}
+      {/* --- BROADCAST TRANSACTION SCREEN --- */}
+      {/* ------------------------------------ */}
+
+      <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
+
       {/* -------------------- */}
       {/* --- HOME SCREENS --- */}
       {/* -------------------- */}
@@ -415,12 +422,16 @@ const RootNavigator = () => {
       {/*  }} */}
       {/* /> */}
 
+      {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
+
       {/* -------------- */}
       {/* --- MODALS --- */}
       {/* -------------- */}
 
       <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
       <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
+      <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
+
       <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
       <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
       <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
@@ -436,17 +447,11 @@ const RootNavigator = () => {
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
 
-      {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
-      {/* navigates away once the tx is finished broadcasting */}
-      <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
-
       {/* <Stack.Screen name={ROUTES.GRANTS} component={Grants} /> */}
-
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
 
-      {/* modals */}
       {/* <Stack.Group */}
       {/*  screenOptions={{ */}
       {/*    cardStyle: { */}
@@ -456,12 +461,6 @@ const RootNavigator = () => {
       {/*    cardOverlayEnabled: true, */}
       {/*    ...NativeTransition, */}
       {/*  }}> */}
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.CONSENT_AGREEMENT} */}
-      {/*    component={ConsentAgreement} */}
-      {/*  /> */}
-
-      {/*  <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} /> */}
 
       {/*  <Stack.Screen */}
       {/*    name={ROUTES.ACTION_AUTHORIZATION} */}
@@ -470,15 +469,6 @@ const RootNavigator = () => {
 
       {/* </Stack.Group> */}
 
-      {/* /!* modals end *!/ */}
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.AUTHORIZE_WALLET} */}
-      {/*  component={AuthorizeWalletStack} */}
-      {/* /> */}
-
-      {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
-      {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
       {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
     </Stack.Navigator>
   );

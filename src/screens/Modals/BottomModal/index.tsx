@@ -26,7 +26,7 @@ export type BottomModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel: string;
+  primaryButtonLabel: string | ReactNode;
   /**
    * What to do when the user presses the primary (main) modal button.
    */
@@ -35,20 +35,32 @@ export type BottomModalParams = {
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BOTTOM_MODAL>;
 
+/**
+ * A modal that slides up from the bottom of the screen.
+ * @constructor
+ */
 const BottomModal = () => {
-  const {
-    params: { title, body, primaryButtonLabel, onPressPrimary },
-  } = useRoute<NavProps['route']>();
   const styles = useStyles();
   const theme = useTheme();
   const { panGesture, animatedStyle } = useModalAnimations();
 
   const { goBack } = useNavigation<NavProps['navigation']>();
 
+  const { params } = useRoute<NavProps['route']>();
+  const { title, body, primaryButtonLabel, onPressPrimary } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const onPressButton = useCallback(() => {
     onPressPrimary && onPressPrimary();
     goBack();
-  }, []);
+  }, [goBack, onPressPrimary]);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <GestureDetector gesture={panGesture}>

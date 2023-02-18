@@ -9,7 +9,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, View } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
@@ -17,34 +17,42 @@ declare type Props = StackScreenProps<RootNavigatorParamList>;
 
 /**
  * Screen that is displayed to the user after signing up for a new account.
- * It contains the options to immediately back-up their secret phrase
+ * It contains the options to immediately back up their secret phrase
  * @constructor
  */
 const WelcomePage: React.FC<Props> = () => {
   const { t } = useTranslation('common');
-  const { navigate } = useNavigation<Props['navigation']>();
   const styles = useStyles();
   const theme = useTheme();
 
+  const { navigate } = useNavigation<Props['navigation']>();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const navigateToHome = useCallback(() => {
-    console.log('navToHome');
+    // TODO: Implement this
+    Alert.alert('Implement navigation to Home screen');
   }, []);
 
   const navigateToBackupPhrase = useCallback(() => {
-    console.log('navToBackup');
+    // TODO: Implement this
+    Alert.alert('Implement navigation to Back Up screen');
   }, []);
 
   const navigateToBackupPhraseExplanation = useCallback(() => {
-    navigate({
-      name: ROUTES.BOTTOM_MODAL,
-      params: {
-        title: t('welcomePage:why backup'),
-        body: t('welcomePage:backup explanation'),
-        primaryButtonLabel: t('common:i understand'),
-        onPressPrimary: () => console.log('primary'),
-      },
+    navigate(ROUTES.BOTTOM_MODAL, {
+      title: t('welcomePage:why backup'),
+      body: t('welcomePage:backup explanation'),
+      primaryButtonLabel: t('common:i understand'),
+      onPressPrimary: () => console.log('primary'),
     });
-  }, []);
+  }, [navigate, t]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView style={[styles.root]} topBar={<TopBar />}>
