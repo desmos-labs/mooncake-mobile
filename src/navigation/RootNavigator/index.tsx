@@ -184,9 +184,9 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   // Profile followage
-  // [ROUTES.FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
-  // [ROUTES.FOLLOWING]: FollowingParams;
-  // [ROUTES.FOLLOWERS]: FollowingParams;
+  // [ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
+  // [ROUTES.PROFILE_FOLLOWING]: FollowingParams;
+  // [ROUTES.PROFILE_FOLLOWERS]: FollowingParams;
 
   // -------------------------------------------------------------------------------------
   // --- INVITE SCREENS
@@ -253,17 +253,18 @@ const RootNavigator = () => {
   const { height, width } = Dimensions.get('window');
   const gestureResponseDistance = Math.max(height, width);
 
-  /* const styles: {[key: string]: ViewStyle | TextStyle} = {
-    followingAndFollowers: {
-      backgroundColor: theme.colors.white,
-    },
-    addProfileCard: {
-      backgroundColor: 'rgb(245,246,249)',
-    },
-    statusScreen: {
-      backgroundColor: 'rgb(175,175,175)',
-    },
-  }; */
+  // const theme = useTheme();
+  // const styles: { [key: string]: ViewStyle | TextStyle } = {
+  //   followingAndFollowers: {
+  //     backgroundColor: theme.colors.white,
+  //   },
+  //   addProfileCard: {
+  //     backgroundColor: 'rgb(245,246,249)',
+  //   },
+  //   statusScreen: {
+  //     backgroundColor: 'rgb(175,175,175)',
+  //   },
+  // };
 
   /**
    * End
@@ -406,7 +407,7 @@ const RootNavigator = () => {
       />
 
       {/* <Stack.Screen */}
-      {/*  name={ROUTES.FOLLOWING_AND_FOLLOWERS} */}
+      {/*  name={ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS} */}
       {/*  component={FollowingAndFollowers} */}
       {/*  options={{ */}
       {/*    gestureResponseDistance, */}

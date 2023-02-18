@@ -75,7 +75,7 @@ const Signup = () => {
 
   // Callback that is used when the signup completes properly
   const onSuccess = useCallback(() => {
-    navigate(ROUTES.BOTTOM_TABS, ROUTES.WELCOME);
+    navigate(ROUTES.WELCOME);
   }, [navigate]);
 
   // Callback that is used when the signup procedure raises any error
