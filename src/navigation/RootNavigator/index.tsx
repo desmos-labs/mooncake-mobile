@@ -199,7 +199,6 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
-  // [ROUTES.FULLSCREEN_STATUS_SCREEN]: FullscreenStatusScreenParams;
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.NO_DTAG_FOUND]: undefined;
   [ROUTES.BROADCAST_TX_ON_CHAIN]: BroadcastTxParams;
@@ -437,11 +436,6 @@ const RootNavigator = () => {
       {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
 
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.FULLSCREEN_STATUS_SCREEN} */}
-      {/*  component={FullscreenStatusScreen} */}
-      {/*  options={{cardStyle: styles.statusScreen}} */}
-      {/* /> */}
       {/* <Stack.Screen name={ROUTES.WELCOME_PAGE} component={WelcomePage} /> */}
 
       {/* <Stack.Screen */}
