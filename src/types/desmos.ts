@@ -181,8 +181,6 @@ export interface FollowedUser extends CacheableObject {
   readonly address: string;
 }
 
-export type PostID = number;
-
 export interface PostReaction extends CacheableObject {
   /**
    * Post associated with the reaction.

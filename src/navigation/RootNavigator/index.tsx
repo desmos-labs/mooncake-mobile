@@ -62,6 +62,7 @@ import { Dimensions } from 'react-native';
 import WelcomePage from 'screens/WelcomePage';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
+import { ProfileOperationsParams } from 'screens/ProfileOperations';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -170,8 +171,6 @@ export type RootNavigatorParamList = {
   // --- PROFILE SCREENS
   // -------------------------------------------------------------------------------------
 
-  // [ROUTES.ADD_PROFILE_MODAL]: AddProfileModalParams;
-
   // Profile creation/saving
   [ROUTES.SAVE_PROFILE]: SaveProfileParams | undefined;
 
@@ -189,6 +188,9 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_CONNECTIONS]: ProfileConnectionsParams;
   [ROUTES.PROFILE_FOLLOWING]: ProfileConnectionsTabParams;
   [ROUTES.PROFILE_FOLLOWERS]: ProfileConnectionsTabParams;
+
+  // Profile past operations
+  [ROUTES.PROFILE_OPERATIONS]: ProfileOperationsParams;
 
   // -------------------------------------------------------------------------------------
   // --- INVITE SCREENS

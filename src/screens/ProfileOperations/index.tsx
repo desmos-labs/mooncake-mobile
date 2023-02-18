@@ -1,0 +1,274 @@
+import {
+  MsgAddReactionTypeUrl,
+  MsgCreatePostTypeUrl,
+  MsgCreateRelationshipTypeUrl,
+  MsgCreateReportTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+  MsgRemoveReactionTypeUrl,
+  MsgSaveProfileTypeUrl,
+} from '@desmoslabs/desmjs';
+import { useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import {
+  addReactionTxIcon,
+  createPostTxIcon,
+  editProfileTxIcon,
+  emptyPostsIcon,
+  sendReportTxIcon,
+} from 'assets/images';
+import DView from 'components/DView';
+import OperationContentLoader from 'components/Loaders/OperationContentLoader';
+import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
+import Spacer from 'components/Spacer';
+import TopBar from 'components/TopBar';
+import Typography from 'components/Typography';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  ActivityIndicator,
+  ListRenderItemInfo,
+  SectionList,
+  SectionListData,
+  View,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import { useTheme } from 'react-native-paper';
+import { PastTransactionMessage } from 'types/transactions';
+import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
+import useAccountBalance from 'hooks/useAccountBalance';
+import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
+import { useGetBalanceFiatAmount } from 'hooks/useGetBalanceFiatAmount';
+import useStyles from './useStyles';
+import MessageListItem from './components/MessageListItem';
+
+export interface ProfileOperationsParams {
+  /**
+   * Address of the user for which to display the past activities.
+   */
+  userAddress: string;
+}
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_OPERATIONS>;
+
+/**
+ * Screen that allows to display the pat activities (transactions) made from a given user.
+ * @constructor
+ */
+const ProfileOperations = () => {
+  const { t } = useTranslation('operations');
+  const theme = useTheme();
+  const styles = useStyles();
+
+  const { params } = useRoute<NavProps['route']>();
+  const { userAddress } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const { balance, refetch: refreshBalance } = useAccountBalance(userAddress);
+  const {
+    symbol,
+    amount: fiatAmount,
+    refetch: refreshFiatAmount,
+  } = useGetBalanceFiatAmount(balance);
+
+  const {
+    sections,
+    loading: isDataLoading,
+    fetchMore,
+    fetchingMore,
+    refetch: refreshActions,
+    refreshing,
+  } = usePastActionsSections(userAddress);
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    refreshBalance();
+    refreshFiatAmount();
+    refreshActions();
+
+    // It's fine to disable the exhaustive-deps warning on the next line as we want to run this effect only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // -------------------------------------------------------------------------------------
+  // --- Utility methods
+  // -------------------------------------------------------------------------------------
+
+  const getImage = useCallback((messageType: string) => {
+    switch (messageType) {
+      case MsgCreatePostTypeUrl:
+        return createPostTxIcon;
+      case MsgCreateRelationshipTypeUrl:
+        return editProfileTxIcon;
+      case MsgDeleteRelationshipTypeUrl:
+        return editProfileTxIcon;
+      case MsgAddReactionTypeUrl:
+        return addReactionTxIcon;
+      case MsgRemoveReactionTypeUrl:
+        return addReactionTxIcon;
+      case MsgSaveProfileTypeUrl:
+        return editProfileTxIcon;
+      case MsgCreateReportTypeUrl:
+        return sendReportTxIcon;
+      default:
+        return undefined;
+    }
+  }, []);
+
+  const getTitle = useCallback(
+    (messageType: string) => {
+      switch (messageType) {
+        case MsgCreatePostTypeUrl:
+          return t('create comment post');
+        case MsgCreateRelationshipTypeUrl:
+          return t('follow user');
+        case MsgDeleteRelationshipTypeUrl:
+          return t('unfollow user');
+        case MsgAddReactionTypeUrl:
+          return t('add reaction');
+        case MsgRemoveReactionTypeUrl:
+          return t('remove reaction');
+        case MsgSaveProfileTypeUrl:
+          return t('edit profile');
+        case MsgCreateReportTypeUrl:
+          return t('create report');
+        default:
+          return '';
+      }
+    },
+    [t],
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Child components
+  // -------------------------------------------------------------------------------------
+
+  const keyExtractor = useCallback((item: PastTransactionMessage, index: number) => {
+    return String(`messageKey${index}-${item.timestamp}`);
+  }, []);
+
+  const renderSectionHeader = useCallback(
+    (info: { section: SectionListData<PastTransactionMessage> }) => {
+      return (
+        <View style={styles.sectionHeader}>
+          <Typography.Button2>{info.section.title}</Typography.Button2>
+        </View>
+      );
+    },
+    [styles.sectionHeader],
+  );
+
+  // Callback used to render the items of the list
+  const renderItem = React.useCallback(
+    ({ item }: ListRenderItemInfo<PastTransactionMessage>) => {
+      return (
+        <MessageListItem
+          timestamp={item.timestamp}
+          fees={item.fees}
+          title={getTitle(item.type)}
+          image={getImage(item.type)}
+        />
+      );
+    },
+    [getImage, getTitle],
+  );
+
+  // Component used to render an empty list
+  const EmptyOperations = useMemo(() => {
+    if (isDataLoading) {
+      return undefined;
+    }
+
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyIcon} />
+        <Typography.Body5>{t('no operations')}</Typography.Body5>
+      </View>
+    );
+  }, [isDataLoading, styles.emptyIcon, t]);
+
+  // Component displayed at the bottom of the list
+  const FooterComponent = useMemo(() => {
+    if (!fetchingMore) {
+      return undefined;
+    }
+
+    return (
+      <View style={{ padding: theme.spacing.m }}>
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
+      </View>
+    );
+  }, [fetchingMore, theme.colors.surfaceBlack, theme.spacing.m]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
+
+  return (
+    <DView
+      topBar={<TopBar />}
+      disableHideKeyboardTouchable={true}
+      backgroundColor={theme.colors.white}
+      style={styles.container}>
+      {/* Balance section title */}
+      <Typography.Body5>{t('balance')}</Typography.Body5>
+
+      {/* Balance amount (in coins) */}
+      {/* TODO: Show something if the balance is still loading */}
+      <Typography.H2>{formatCoins(balance, ', ')}</Typography.H2>
+
+      {/* Balance amount (in fiat) */}
+      {/* TODO: Show something if the balance is still loading */}
+      <Typography.H3>
+        {symbol} {formatNumShorthand(fiatAmount)}
+      </Typography.H3>
+
+      <Spacer paddingVertical={theme.spacing.s} />
+
+      {/* Past operations section title */}
+      <Typography.H5>{t('operations')}</Typography.H5>
+
+      {/* Loading indicator */}
+      {isDataLoading && (
+        <View style={{ marginVertical: theme.spacing.m }}>
+          <TextRowContentLoader width="120" />
+          <Spacer paddingVertical={theme.spacing.s} />
+          <OperationContentLoader />
+        </View>
+      )}
+
+      {/* Messages list */}
+      {!isDataLoading && (
+        <SectionList
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          refreshing={refreshing}
+          onRefresh={refreshActions}
+          keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
+          sections={sections}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          ListEmptyComponent={EmptyOperations}
+          ListFooterComponent={FooterComponent}
+          onEndReached={fetchMore}
+          onEndReachedThreshold={0.5}
+        />
+      )}
+    </DView>
+  );
+};
+
+export default ProfileOperations;

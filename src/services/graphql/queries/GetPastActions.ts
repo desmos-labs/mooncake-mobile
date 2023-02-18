@@ -7,10 +7,10 @@ const GetPastActions = gql`
       order_by: { height: desc }
     ) {
       transaction_hash
+      height
       index
       type
       value
-      involved_accounts_addresses
       fees
       timestamp
     }
