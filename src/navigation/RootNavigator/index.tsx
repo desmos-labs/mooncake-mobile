@@ -442,21 +442,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
 
       {/* <Stack.Screen */}
-      {/*  name={ROUTES.LOOKING_FOR_DEVICES} */}
-      {/*  component={LookingForDevices} */}
-      {/* /> */}
-      {/* <Stack.Screen */}
-      {/*  initialParams={{ */}
-      {/*    bleLedger: { */}
-      {/*      id: '123', */}
-      {/*      name: 'hello world', */}
-      {/*    }, */}
-      {/*  }} */}
-      {/*  name={ROUTES.CONNECT_TO_LEDGER} */}
-      {/*  component={ConnectToLedger} */}
-      {/* /> */}
-
-      {/* <Stack.Screen */}
       {/*  name={ROUTES.CONNECT_CHAIN_TX_DETAIL} */}
       {/*  component={ConnectChainTxDetail} */}
       {/* /> */}
