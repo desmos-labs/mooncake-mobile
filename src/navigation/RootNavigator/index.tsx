@@ -215,7 +215,6 @@ export type RootNavigatorParamList = {
 
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
-  // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
 
   // Nfts
@@ -440,11 +439,6 @@ const RootNavigator = () => {
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}
       <Stack.Screen name={ROUTES.BROADCAST_TX_ON_CHAIN} component={BroadcastTxOnChain} />
-
-      {/* <Stack.Screen */}
-      {/*  name={ROUTES.CONNECT_CHAIN_TX_DETAIL} */}
-      {/*  component={ConnectChainTxDetail} */}
-      {/* /> */}
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.CONNECT_CHAIN_METHOD} */}
