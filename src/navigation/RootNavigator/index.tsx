@@ -186,7 +186,7 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   // Profile followage
-  [ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS]: ProfileConnectionsParams;
+  [ROUTES.PROFILE_CONNECTIONS]: ProfileConnectionsParams;
   [ROUTES.PROFILE_FOLLOWING]: ProfileConnectionsTabParams;
   [ROUTES.PROFILE_FOLLOWERS]: ProfileConnectionsTabParams;
 

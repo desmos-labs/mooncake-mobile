@@ -7,7 +7,7 @@ import { Alert } from 'react-native';
 import { NotificationData, NotificationType } from 'types/notifications';
 import { useActiveProfile } from '@recoil/profiles';
 import useNavigateToPost from 'hooks/useNavigateToPost';
-import useNavigateToFollowageScreen from 'hooks/useNavigateToFollowageScreen';
+import useNavigateToProfileConnections from 'hooks/useNavigateToProfileConnections';
 
 /**
  * Hook that allows handling the navigation to the proper screen when the user
@@ -20,7 +20,7 @@ const useHandleNotificationPressEvent = () => {
 
   // Navigation hooks
   const navigateToPost = useNavigateToPost();
-  const navigateToFollowage = useNavigateToFollowageScreen();
+  const navigateToFollowage = useNavigateToProfileConnections();
 
   // Return a callback that allows to navigate to the proper screen
   // given a ReceivedNotificationData instance that is retrieved from

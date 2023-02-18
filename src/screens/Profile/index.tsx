@@ -40,7 +40,7 @@ import UserBio from 'screens/Profile/components/UserBio';
 import useProfileGivenAddress from 'hooks/useProfileGivenAddress';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
-import useNavigateToFollowageScreen from 'hooks/useNavigateToFollowageScreen';
+import useNavigateToProfileConnections from 'hooks/useNavigateToProfileConnections';
 import useFollowersCount from 'hooks/useFollowersCount';
 import useFollowingCount from 'hooks/useFollowingCount';
 import useAccountBalance from 'hooks/useAccountBalance';
@@ -261,7 +261,7 @@ const Profile = () => {
   // --- Actions
   // -------------------------------------------------------------------------------------
 
-  const navigateToFollowageScreen = useNavigateToFollowageScreen();
+  const navigateToFollowageScreen = useNavigateToProfileConnections();
 
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {

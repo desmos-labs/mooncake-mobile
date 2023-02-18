@@ -139,7 +139,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           switch (item) {
-            case ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS:
+            case ROUTES.PROFILE_CONNECTIONS:
               navigate(item, {
                 headerTitle: '@Raffaello',
                 initialTabRouteName: ROUTES.PROFILE_FOLLOWING,

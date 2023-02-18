@@ -4,17 +4,25 @@ import Typography from 'components/Typography';
 import FastImage from 'react-native-fast-image';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import useIsFollowing from 'hooks/useIsFollowing';
+import FollowButton from 'components/FollowButton';
+import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import useStyles from './useStyles';
 
 interface UserListItemProps {
   /**
-   *
+   * Address of the user for which the list is being rendered.
    */
-  user: DesmosProfile;
+  readonly profileAddress: string;
+  /**
+   * User to be rendered.
+   */
+  readonly user: DesmosProfile;
   /**
    * Action to be performed when the user clicks on an item.
    */
-  onPress: () => void;
+  readonly onPress: () => void;
 }
 
 /**
@@ -24,11 +32,20 @@ interface UserListItemProps {
 const UserListItem = (props: UserListItemProps) => {
   const styles = useStyles();
 
-  const { user, onPress } = props;
+  const { profileAddress, user, onPress } = props;
+
+  const activeAccountAddress = useActiveAccountAddress();
+  const isActiveAccount = activeAccountAddress === profileAddress;
+
+  const isFollowing = useIsFollowing(user.address);
+  const followOrUnfollowUser = useFollowOrUnfollowUser();
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
+      {/* Profile picture */}
       <FastImage source={getProfilePicture(user)} style={styles.pic} />
+
+      {/* Profile DTag and nickname */}
       <View style={styles.names}>
         <Typography.Subtitle3 numberOfLines={1} ellipsizeMode="tail">
           {user.nickname}
@@ -38,16 +55,13 @@ const UserListItem = (props: UserListItemProps) => {
         </Typography.Body7>
       </View>
 
-      {/* don't show follow button if its the user */}
-      {/* [Kevin-17-01-2023]-Temporarily disabled until fixed */}
-      {/* {activeAddress !== counterParty.address && ( */}
-      {/*  <FollowButton */}
-      {/*    onPress={() => */}
-      {/*      followOrUnfollowUser({addrToFollow: counterParty.address}) */}
-      {/*    } */}
-      {/*    type={isFollowing ? 'unfollow' : 'follow'} */}
-      {/*  /> */}
-      {/* )} */}
+      {/* Button to follow or unfollow a user */}
+      {!isActiveAccount && (
+        <FollowButton
+          onPress={() => followOrUnfollowUser(user.address)}
+          type={isFollowing ? 'unfollow' : 'follow'}
+        />
+      )}
     </TouchableOpacity>
   );
 };

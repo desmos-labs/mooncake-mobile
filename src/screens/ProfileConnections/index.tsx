@@ -46,7 +46,7 @@ export type ProfileConnectionsParams = {
   readonly initialTabRouteName: string;
 };
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_CONNECTIONS>;
 
 /**
  * Screen that displays the connections (followers and following) of a given account.

@@ -7,11 +7,11 @@ import ROUTES from 'navigation/routes';
 /**
  * Hook that allows to navigate either to the following or to the followers screen or a given account.
  */
-const useNavigateToFollowageScreen = () => {
+const useNavigateToProfileConnections = () => {
   const { navigate } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
   return React.useCallback(
     (route: ROUTES.PROFILE_FOLLOWING | ROUTES.PROFILE_FOLLOWERS, userAddress: string) => {
-      navigate(ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS, {
+      navigate(ROUTES.PROFILE_CONNECTIONS, {
         userAddress,
         initialTabRouteName: route,
       });
@@ -19,4 +19,4 @@ const useNavigateToFollowageScreen = () => {
     [navigate],
   );
 };
-export default useNavigateToFollowageScreen;
+export default useNavigateToProfileConnections;
