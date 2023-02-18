@@ -13,7 +13,7 @@ import { Image } from 'react-native';
 import { errorImage, modalSuccess } from 'assets/images';
 import DView from 'components/DView';
 import { pairDevicesAnim } from 'assets/animations';
-import { useConnectToLedger } from './useHooks';
+import { useConnectToLedger } from './hooks';
 import useStyles from './useStyles';
 
 export interface ConnectToLedgerParams {
