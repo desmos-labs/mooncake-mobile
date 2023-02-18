@@ -6,9 +6,9 @@ import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/Mat
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
-import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
+import { formatNumShorthand } from 'lib/FormatUtils';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -20,40 +20,40 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
-import UserPostsTab from 'screens/ProfilePosts/UserCreatedPostsTab';
-import UserTippedPostsTab from 'screens/ProfilePosts/UserTippedPostsData';
+import useFollowersCount from 'hooks/useFollowersCount';
+import useFollowingCount from 'hooks/useFollowingCount';
+import FollowingTab from './components/FollowingTab';
+import FollowersTab from './components/FollowersTab';
 import useStyles from './useStyles';
 
 // -------------------------------------------------------------------------------------
 // --- TAB DATA
 // -------------------------------------------------------------------------------------
 
-const numOfTabs = 3;
 const Tab = createMaterialTopTabNavigator();
+const numOfTabs = 2;
 
-export type PostsTabParams = {
-  userAddress: string;
-};
+export interface ProfileConnectionsTabParams {
+  readonly userAddress: string;
+}
 
 // -------------------------------------------------------------------------------------
 // --- SCREEN DATA
 // -------------------------------------------------------------------------------------
 
-export interface ProfilePostsTabsParams {
+export type ProfileConnectionsParams = {
   readonly userAddress: string;
   readonly initialTabRouteName: string;
-}
+};
 
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS>;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS>;
 
 /**
- * Screen that allows the user to view all the posts related to a given user.
- * The posts that are shown here will be divided into tabs: all posts, liked posts, and tipped posts.
+ * Screen that displays the connections (followers and following) of a given account.
  * @constructor
  */
-const ProfilePosts = () => {
-  const { t } = useTranslation('profile');
+const ProfileConnections = () => {
+  const { t } = useTranslation('followingAndFollowers');
   const theme = useTheme();
   const styles = useStyles(numOfTabs);
 
@@ -62,9 +62,20 @@ const ProfilePosts = () => {
   const { userAddress, initialTabRouteName } = params;
 
   // -------------------------------------------------------------------------------------
+  // --- Tab bar labels
+  // -------------------------------------------------------------------------------------
+
+  const { count: followingCount } = useFollowingCount(userAddress);
+  const followingTabName = `${formatNumShorthand(followingCount)} ${t('profile:following')}`;
+
+  const { count: followersCount } = useFollowersCount(userAddress);
+  const followersTabName = `${formatNumShorthand(followersCount)} ${t('profile:followers')}`;
+
+  // -------------------------------------------------------------------------------------
   // --- Gestures handlers
   // -------------------------------------------------------------------------------------
 
+  // To allow going back to previous screen via swipe left.
   const [swipeEnabled, setSwipeEnabled] = useState(true);
 
   // A callback function that is called when the user touches the screen.
@@ -74,21 +85,21 @@ const ProfilePosts = () => {
   // Create a pan responder for the root container.
   const panResponder = useMemo(() => {
     // A callback function that is called when the user start to swipe left.
-    // It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent
+    // It disables the swipe handler of tab view, and allow the swipe event to bubbling to parent.
     const enableParentSwipeLeft = (
-      _: GestureResponderEvent,
+      _gestureResponderEvent: GestureResponderEvent,
       gestureState: PanResponderGestureState,
     ) => {
       const diffX = I18nManager.isRTL ? -gestureState.dx : gestureState.dx;
       const focusedRouteName = getFocusedRouteNameFromRoute(route) ?? initialTabRouteName;
-      setSwipeEnabled(focusedRouteName !== ROUTES.PROFILE_POSTS_POSTS || diffX < 0);
+      setSwipeEnabled(focusedRouteName !== ROUTES.PROFILE_FOLLOWING || diffX < 0);
       return false;
     };
     return PanResponder.create({
       onStartShouldSetPanResponderCapture: enableParentSwipeLeft,
       onMoveShouldSetPanResponderCapture: enableParentSwipeLeft,
     });
-  }, [route]);
+  }, [initialTabRouteName, route]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -104,36 +115,33 @@ const ProfilePosts = () => {
     swipeEnabled,
   };
 
+  const CenterElement = useMemo(() => {
+    return <Typography.Subtitle3>{t('connections')}</Typography.Subtitle3>;
+  }, [t]);
+
   return (
     <DView
-      backgroundColor={theme.colors.white}
-      topBar={<TopBar style={{ backgroundColor: theme.colors.white }} />}
+      topBar={<TopBar style={styles.topBar} centerElement={CenterElement} />}
       disableHideKeyboardTouchable={true}
       style={styles.container}
-      {...panResponder.panHandlers}
-      onTouchStart={disableParentSwipeLeft}>
-      <Spacer paddingVertical={8} />
-      <Typography.H3>{t('posts')}</Typography.H3>
+      backgroundColor="transparent"
+      scrollable={false}
+      onTouchStart={disableParentSwipeLeft}
+      {...panResponder.panHandlers}>
       <Tab.Navigator
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
-        initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
+        sceneContainerStyle={styles.tabContainerStyle}>
         <Tab.Screen
-          name={ROUTES.PROFILE_POSTS_POSTS}
-          component={UserPostsTab}
-          options={{ tabBarLabel: t('posts') }}
+          name={ROUTES.PROFILE_FOLLOWING}
+          component={FollowingTab}
+          options={{ tabBarLabel: followingTabName }}
           initialParams={{ userAddress }}
         />
         <Tab.Screen
-          name={ROUTES.PROFILE_POSTS_LIKED}
-          component={UserLikedPostsTab}
-          options={{ tabBarLabel: t('liked') }}
-          initialParams={{ userAddress }}
-        />
-        <Tab.Screen
-          name={ROUTES.PROFILE_POSTS_TIPPED}
-          component={UserTippedPostsTab}
-          options={{ tabBarLabel: t('tipped') }}
+          name={ROUTES.PROFILE_FOLLOWERS}
+          component={FollowersTab}
+          options={{ tabBarLabel: followersTabName }}
           initialParams={{ userAddress }}
         />
       </Tab.Navigator>
@@ -141,4 +149,4 @@ const ProfilePosts = () => {
   );
 };
 
-export default ProfilePosts;
+export default ProfileConnections;

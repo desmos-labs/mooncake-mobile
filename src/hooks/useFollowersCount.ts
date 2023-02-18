@@ -4,8 +4,7 @@ import { useQuery } from '@apollo/client';
 import GetFollowersCount from 'services/graphql/queries/GetFollowersCount';
 
 /**
- * Hook that returns the followers count for the user having the given address.
- * The followers count is defined as the number of users that are following the user with the given address.
+ * Hook that returns the number of users that the user having the given address is being followed by.
  * @param address {String  | undefined} - Address of the user for which to get the followers count.
  * If this is `undefined`, the current application's user address will be used instead.
  */

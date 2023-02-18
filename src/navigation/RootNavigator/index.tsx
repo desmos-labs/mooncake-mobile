@@ -61,6 +61,7 @@ import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions } from 'react-native';
 import WelcomePage from 'screens/WelcomePage';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
+import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -185,9 +186,9 @@ export type RootNavigatorParamList = {
   [ROUTES.PROFILE_POSTS_TIPPED]: PostsTabParams;
 
   // Profile followage
-  // [ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS]: NavigatorScreenParams<FollowingAndFollowersParams>;
-  // [ROUTES.PROFILE_FOLLOWING]: FollowingParams;
-  // [ROUTES.PROFILE_FOLLOWERS]: FollowingParams;
+  [ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS]: ProfileConnectionsParams;
+  [ROUTES.PROFILE_FOLLOWING]: ProfileConnectionsTabParams;
+  [ROUTES.PROFILE_FOLLOWERS]: ProfileConnectionsTabParams;
 
   // -------------------------------------------------------------------------------------
   // --- INVITE SCREENS

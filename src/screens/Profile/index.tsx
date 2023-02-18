@@ -42,17 +42,17 @@ import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
 import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
 import useNavigateToFollowageScreen from 'hooks/useNavigateToFollowageScreen';
 import useFollowersCount from 'hooks/useFollowersCount';
-import useFollowageCount from 'hooks/useFollowageCount';
+import useFollowingCount from 'hooks/useFollowingCount';
 import useAccountBalance from 'hooks/useAccountBalance';
 import useIsFollowing from 'hooks/useIsFollowing';
 import useAppLinksGivenAddress from 'hooks/useAppLinksGivenAddress';
 import useChainLinksGivenAddress from 'hooks/useChainLinksGivenAddress';
 import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import FollowUnfollowButton from 'screens/Profile/components/FollowUnfollowButton';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/usePostsCountByAddress';
+import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -116,7 +116,7 @@ const Profile = () => {
     count: followageCount,
     loading: isFollowageCountLoading,
     refetch: refreshFollowageCount,
-  } = useFollowageCount(address);
+  } = useFollowingCount(address);
 
   const {
     balance,
@@ -266,7 +266,7 @@ const Profile = () => {
   const handlePostsSectionPressed = () => {
     navigate(ROUTES.PROFILE_POSTS, {
       userAddress: address,
-      initialTabsRouteName: ROUTES.PROFILE_POSTS_POSTS,
+      initialTabRouteName: ROUTES.PROFILE_POSTS_POSTS,
     });
   };
 
@@ -531,7 +531,7 @@ const Profile = () => {
 
           {/* Section to edit the profile */}
           {isActiveAccount && (
-            <EditProfileSection profile={profile!} chainLinks={chainLinks} appLinks={appLinks} />
+            <EditProfileSection profile={profile} chainLinks={chainLinks} appLinks={appLinks} />
           )}
 
           {/* Follow/Unfollow button */}

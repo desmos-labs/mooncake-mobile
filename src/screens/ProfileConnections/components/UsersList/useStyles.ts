@@ -1,7 +1,15 @@
 import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  view: {
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+  },
+
+  emptyListView: {
     flexGrow: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -9,14 +17,14 @@ const useStyles = makeStyle(theme => ({
     alignContent: 'center',
     marginBottom: 140,
   },
-  image: {
+  emptyListImage: {
     width: 230,
     height: 116,
     resizeMode: 'contain',
     marginVertical: theme.spacing.m,
     alignSelf: 'center',
   },
-  subtitle1: {
+  emptyListText: {
     width: '100%',
     textAlign: 'center',
   },

@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 /**
- * It returns a View component with an ActivityIndicator component inside
- * @returns A React component that displays a loading indicator.
+ * Component that renders a loading indicator.
+ * @constructor
  */
-const Loading: FC = () => {
+const Loading = () => {
   const styles = useStyles();
   const theme = useTheme();
   return (

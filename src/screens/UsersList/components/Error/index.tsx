@@ -1,19 +1,35 @@
-import React, { ComponentProps, FC } from 'react';
-import Button from 'components/Button';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Snackbar, Text } from 'react-native-paper';
 import { View } from 'react-native';
 import useStyles from './useStyles';
 
-/* A React component that renders an error message. */
-const Error: FC<{
-  error: string;
-  label: string;
-  onPress: ComponentProps<typeof Button>['onPress'];
-}> = ({ error, label, onPress }) => {
+export interface ErrorProps {
+  /**
+   * The error message to display.
+   */
+  readonly error: string;
+  /**
+   * The text to display on the button.
+   */
+  readonly buttonText: string;
+  /**
+   * The function to call when the button is pressed.
+   */
+  readonly onPress: () => void;
+}
+
+/**
+ * Component that renders an error message.
+ * @constructor
+ */
+const Error = (props: ErrorProps) => {
   const styles = useStyles();
   const { t } = useTranslation('followingAndFollowers');
   const [visible, setVisible] = React.useState(true);
+
+  const { error, buttonText, onPress } = props;
+
   return (
     <Snackbar
       visible={visible}
@@ -22,7 +38,7 @@ const Error: FC<{
       duration={Number.POSITIVE_INFINITY}
       onDismiss={() => setVisible(false)}
       action={{
-        label,
+        label: buttonText,
         labelStyle: styles.retryLabel,
         contentStyle: styles.retryContent,
         uppercase: false,

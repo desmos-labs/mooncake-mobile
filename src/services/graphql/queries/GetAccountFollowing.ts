@@ -1,16 +1,6 @@
 import { gql } from '@apollo/client';
 
-export type QueueData = {
-  paginatedFollowers: PaginatedFollower[];
-  user_relationship_aggregate: {
-    aggregate: {
-      count: number;
-    };
-  };
-};
-
-/* A GraphQL query. */
-const GetPaginatedFollowing = gql`
+const GetAccountFollowing = gql`
   query GetPaginatedFollowing(
     $subspaceId: bigint!
     $userAddress: String!
@@ -39,4 +29,4 @@ const GetPaginatedFollowing = gql`
   }
 `;
 
-export default GetPaginatedFollowing;
+export default GetAccountFollowing;
