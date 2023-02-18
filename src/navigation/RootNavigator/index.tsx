@@ -214,7 +214,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
 
   // [ROUTES.BOTTOM_MODAL]: BottomModalParams;
-  // [ROUTES.NO_DTAG_FOUND]: undefined;
   // [ROUTES.CONNECT_CHAIN_METHOD]: undefined;
   // [ROUTES.CONNECT_CHAIN_TX_DETAIL]: ConnectChainTxDetailParams;
   // [ROUTES.ACTION_AUTHORIZATION]: ActionAuthorizationParams;
@@ -437,8 +436,6 @@ const RootNavigator = () => {
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
       {/* ------------------------------ */}
-
-      {/* <Stack.Screen name={ROUTES.NO_DTAG_FOUND} component={NoDtagFound} /> */}
 
       {/* Perhaps turn this into a more general "BroadcastTx" screen that */}
       {/* navigates away once the tx is finished broadcasting */}

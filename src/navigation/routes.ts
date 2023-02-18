@@ -164,8 +164,6 @@ enum ROUTES {
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
 
-  NO_DTAG_FOUND = 'NO_DTAG_FOUND',
-
   ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 
   NFT_DETAILS = 'NFT_DETAILS',
