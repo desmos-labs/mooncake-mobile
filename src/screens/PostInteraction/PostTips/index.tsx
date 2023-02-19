@@ -19,7 +19,7 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 import { Tip, TipTargetType } from 'types/tips';
-import useGetPostTips from 'hooks/useGetPostTips';
+import usePostTips from 'hooks/tips/usePostTips';
 
 type NavProps = CompositeScreenProps<
   StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
@@ -43,7 +43,7 @@ const PostTips = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { tips, loading: areTipsLoading, refetch: refetchTips, fetchMore } = useGetPostTips(post);
+  const { tips, loading: areTipsLoading, refetch: refetchTips, fetchMore } = usePostTips(post);
 
   // -------------------------------------------------------------------------------------
   // --- Actions

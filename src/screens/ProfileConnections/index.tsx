@@ -20,8 +20,8 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import useFollowersCount from 'hooks/useFollowersCount';
-import useFollowingCount from 'hooks/useFollowingCount';
+import useFollowersCount from 'hooks/relationships/useFollowersCount';
+import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import FollowingTab from './components/FollowingTab';
 import FollowersTab from './components/FollowersTab';
 import useStyles from './useStyles';

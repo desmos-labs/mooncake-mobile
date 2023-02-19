@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs/lib/typescript/src/types';
-import useRefreshSession from 'hooks/useRefreshSession';
+import useRefreshSession from 'hooks/apis/useRefreshSession';
 import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar';
 import ROUTES from 'navigation/routes';
 import React from 'react';

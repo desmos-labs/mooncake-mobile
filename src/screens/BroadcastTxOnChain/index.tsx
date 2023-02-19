@@ -11,7 +11,7 @@ import ROUTES from 'navigation/routes';
 import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
 import { DeliverTxResponse, EncodeObject } from '@desmoslabs/desmjs';
-import useOnBackAction from 'hooks/useOnBackAction';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';

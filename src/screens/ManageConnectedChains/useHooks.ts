@@ -1,6 +1,6 @@
 import { ChainLink } from 'types/desmos';
 import React from 'react';
-import useImportAccount from 'hooks/useImportAccount';
+import useImportAccount from 'hooks/accounts/useImportAccount';
 import LinkableChains from 'config/LinkableChains';
 import { SupportedChain } from 'types/chains';
 import { Account, AccountWithWallet, SelectedAccount } from 'types/account';
@@ -15,7 +15,7 @@ import {
 } from '@desmoslabs/desmjs';
 import { getAddress } from 'lib/ChainsUtils';
 import { SignerData } from '@cosmjs/stargate';
-import useSignTx from 'hooks/useSignTx';
+import useSignTx from 'hooks/transactions/useSignTx';
 import { useActiveAccount } from '@recoil/accounts';
 import { err, ok, Result } from 'neverthrow';
 import { toHex } from '@cosmjs/encoding';
@@ -28,8 +28,8 @@ import {
 } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
 import { PubKey } from 'cosmjs-types/cosmos/crypto/secp256k1/keys';
-import useBroadcastTx from 'hooks/useBroadcastTx';
-import useReturnToCurrentScreen from 'hooks/useReturnToCurrentScreen';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { useStoreUserChainLinks } from '@recoil/chainLinks';
 
 /**

@@ -11,8 +11,8 @@ import { LedgerApp } from 'types/ledger';
 import importAccountAppState from '@recoil/screens/importAccountState';
 import { CryptoDotOrgChain, DesmosChain } from 'config/LinkableChains';
 import { CosmosLedgerApp, CryptoOrgLedgerApp, DesmosLedgerApp } from 'config/LedgerApps';
-import useConnectToLedger from 'hooks/useConnectToLedger';
-import useSelectAccount from 'hooks/useSelectAccount';
+import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
+import useSelectAccount from 'hooks/accounts/useSelectAccount';
 import { WalletPickerMode } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
 import LedgerAppItem from './components/LedgerAppItem';
 

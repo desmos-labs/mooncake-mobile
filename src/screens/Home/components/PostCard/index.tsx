@@ -15,7 +15,7 @@ import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,11 +23,11 @@ import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import { isPostPending, Post } from 'types/posts';
-import useIsFollowing from 'hooks/useIsFollowing';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useHasReacted from 'hooks/useHasReacted';
-import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
-import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
+import useHasReacted from 'hooks/reactions/useHasReacted';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
 
@@ -107,8 +107,8 @@ const PostCard = (props: PostCardProps) => {
   const activeAddress = useActiveAccountAddress();
   const isFollowing = useIsFollowing(post.author.address);
   const hasReacted = useHasReacted(post);
-  const { count: reactionsCount } = useGetPostReactionsCount(post);
-  const { count: commentsCount } = useGetPostCommentsCount(post);
+  const { count: reactionsCount } = usePostReactionsCount(post);
+  const { count: commentsCount } = usePostCommentsCount(post);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data

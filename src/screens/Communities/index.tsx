@@ -1,7 +1,7 @@
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
-import useRequestNotificationsPermission from 'hooks/useRequestNotificationsPermission';
+import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import React from 'react';
 import useStyles from './useStyles';
 

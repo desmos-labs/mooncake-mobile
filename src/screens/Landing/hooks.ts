@@ -1,8 +1,8 @@
 import React from 'react';
-import useSaveAccount from 'hooks/useSaveAccount';
-import useSaveProfile from 'hooks/useSaveProfile';
+import useSaveAccount from 'hooks/accounts/useSaveAccount';
+import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import { useStoreProfile } from '@recoil/profiles';
-import useImportAccount from 'hooks/useImportAccount';
+import useImportAccount from 'hooks/accounts/useImportAccount';
 import { DesmosChain } from 'config/LinkableChains';
 
 /**

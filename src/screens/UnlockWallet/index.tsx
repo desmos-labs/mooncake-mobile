@@ -21,7 +21,7 @@ import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { BiometricAuthorizations } from 'types/settings';
 import { useUnlockWalletWithPassword } from 'screens/UnlockWallet/useHooks';
 import { ResultAsync } from 'neverthrow';
-import useOnBackAction from 'hooks/useOnBackAction';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;

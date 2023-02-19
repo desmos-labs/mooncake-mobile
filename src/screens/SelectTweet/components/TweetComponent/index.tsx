@@ -2,7 +2,7 @@ import { twitterIcon } from 'assets/images';
 import DropShadowWrapper from 'components/DropShadowWrapper';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';

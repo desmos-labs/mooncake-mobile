@@ -5,7 +5,7 @@ import UsersList from 'screens/ProfileConnections/components/UsersList';
 import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import useFollowing from 'hooks/useFollowing';
+import useFollowing from 'hooks/relationships/useFollowing';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING>;
 

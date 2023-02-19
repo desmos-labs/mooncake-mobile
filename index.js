@@ -7,7 +7,7 @@ import './src/assets/locales/i18n';
 import 'fastestsmallesttextencoderdecoder';
 import { AppRegistry } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import useCreateLocalNotification from 'hooks/useCreateLocalNotification';
+import useCreateLocalNotification from 'hooks/notifications/useCreateLocalNotification';
 import { parseRemoteNotification } from 'lib/NotificationsUtils';
 import { isSocialNotification } from 'types/notifications';
 import App from './App';

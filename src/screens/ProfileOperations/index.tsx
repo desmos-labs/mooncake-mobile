@@ -37,9 +37,9 @@ import FastImage from 'react-native-fast-image';
 import { useTheme } from 'react-native-paper';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
-import useAccountBalance from 'hooks/useAccountBalance';
+import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
-import { useGetBalanceFiatAmount } from 'hooks/useGetBalanceFiatAmount';
+import { useBalanceFiatAmount } from 'hooks/balance/useBalanceFiatAmount';
 import useStyles from './useStyles';
 import MessageListItem from './components/MessageListItem';
 
@@ -69,11 +69,7 @@ const ProfileOperations = () => {
   // -------------------------------------------------------------------------------------
 
   const { balance, refetch: refreshBalance } = useAccountBalance(userAddress);
-  const {
-    symbol,
-    amount: fiatAmount,
-    refetch: refreshFiatAmount,
-  } = useGetBalanceFiatAmount(balance);
+  const { symbol, amount: fiatAmount, refetch: refreshFiatAmount } = useBalanceFiatAmount(balance);
 
   const {
     sections,

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useButterConfig from 'hooks/useButterConfig';
+import useButterConfig from 'hooks/config/useButterConfig';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import { ResultAsync } from 'neverthrow';
-import useGetActiveAccountInvites from 'hooks/useGetInvites';
-import useAccountImpactPoints from 'hooks/useAccountImpactPoints';
+import useGetActiveAccountInvites from 'hooks/invites/useGetInvites';
+import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
 
 export interface InvitesInfo {
   /**

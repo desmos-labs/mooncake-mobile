@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { formatCoins, formatNumber } from 'lib/FormatUtils';
-import { useGetBalanceFiatAmount } from 'hooks/useGetBalanceFiatAmount';
+import { useBalanceFiatAmount } from 'hooks/balance/useBalanceFiatAmount';
 import useStyles from './useStyles';
 
 export interface BalanceSectionProps {
@@ -51,7 +51,7 @@ const BalanceSection = (props: BalanceSectionProps) => {
     symbol: currencySymbol,
     amount: fiatAmount,
     loading: isFiatAmountLoading,
-  } = useGetBalanceFiatAmount(balance);
+  } = useBalanceFiatAmount(balance);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

@@ -16,7 +16,7 @@ import { useTheme } from 'react-native-paper';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
-import usePerformLogin from 'hooks/usePerformLogin';
+import usePerformLogin from 'hooks/apis/usePerformLogin';
 import useSaveAccount from './hooks';
 import useStyles from './useStyles';
 

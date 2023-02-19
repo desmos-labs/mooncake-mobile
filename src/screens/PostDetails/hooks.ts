@@ -4,12 +4,12 @@ import ROUTES from 'navigation/routes';
 import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
 import { isCommentReply, Post } from 'types/posts';
-import useCreatePost from 'hooks/useCreatePost';
-import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
+import useCreatePost from 'hooks/posts/useCreatePost';
+import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
-import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import { TipTargetType } from 'types/tips';
-import useNavigateToPost from 'hooks/useNavigateToPost';
+import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 
 /**
  * Hook that allows to report a user.

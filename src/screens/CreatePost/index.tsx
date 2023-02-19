@@ -17,7 +17,7 @@ import { useTheme } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 import { Post } from 'types/posts';
 import { useActiveProfile } from '@recoil/profiles';
-import useCreatePost from 'hooks/useCreatePost';
+import useCreatePost from 'hooks/posts/useCreatePost';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import {
   useAddCreatePostAttachment,

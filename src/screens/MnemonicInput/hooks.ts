@@ -2,7 +2,7 @@ import React from 'react';
 import { validateMnemonic } from 'lib/ValidationUtils';
 import { sanitizeMnemonic } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
-import useSelectAccount from 'hooks/useSelectAccount';
+import useSelectAccount from 'hooks/accounts/useSelectAccount';
 import { WalletPickerMode } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
 import { useImportAccountState } from '@recoil/screens/importAccountState';
 

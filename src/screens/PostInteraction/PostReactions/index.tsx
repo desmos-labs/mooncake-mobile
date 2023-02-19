@@ -8,8 +8,8 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
-import useGetPostReactions from 'hooks/useGetPostReactions';
-import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
+import usePostReactions from 'hooks/reactions/usePostReactions';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { Post } from 'types/posts';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
@@ -33,13 +33,8 @@ const PostReactions = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { count, refetch: refetchCount } = useGetPostReactionsCount(postData);
-  const {
-    reactions,
-    loading,
-    refetch: refetchReactions,
-    fetchMore,
-  } = useGetPostReactions(postData);
+  const { count, refetch: refetchCount } = usePostReactionsCount(postData);
+  const { reactions, loading, refetch: refetchReactions, fetchMore } = usePostReactions(postData);
 
   const refetch = useCallback(() => {
     refetchCount();

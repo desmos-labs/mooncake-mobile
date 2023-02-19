@@ -1,4 +1,4 @@
-import useReturnToCurrentScreen from 'hooks/useReturnToCurrentScreen';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';

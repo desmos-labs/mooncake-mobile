@@ -17,7 +17,7 @@ import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
 import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
-import useChainLinksGivenAddress from 'hooks/useChainLinksGivenAddress';
+import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
 import useStyles from './useStyles';
 

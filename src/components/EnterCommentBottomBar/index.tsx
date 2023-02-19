@@ -30,7 +30,7 @@ import {
 } from '@recoil/screens/createPostState';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import usePostsParams from 'hooks/usePostsParams';
+import usePostsParams from 'hooks/posts/usePostsParams';
 import useStyles from './useStyles';
 
 export type Props = {

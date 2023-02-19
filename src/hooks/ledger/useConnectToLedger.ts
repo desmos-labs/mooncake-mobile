@@ -1,60 +1,37 @@
-import { LedgerConnector } from '@cosmjs/ledger-amino';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import { useCallback } from 'react';
+import { ConnectToLedgerStackParams } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
-import { useCallback, useEffect, useState } from 'react';
+import { LedgerApp } from 'types/ledger';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 
-export default function useConnectToLedger(ledger: BleLedger, ledgerApp: LedgerApp) {
-  const [paired, setPaired] = useState(false);
-  const [connecting, setConnecting] = useState(true);
-  const [connected, setConnected] = useState(false);
-  const [transport, setTransport] = useState<BluetoothTransport | undefined>();
-  const [connectionError, setConnectionError] = useState<string | undefined>();
+const useConnectToLedger = () => {
+  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const returnToCurrentScreen = useReturnToCurrentScreen();
 
-  const connectToLedger = useCallback(
-    async (ledgerToConnect: BleLedger, ledgerAppToUse: LedgerApp) => {
-      setPaired(false);
-      setConnecting(true);
-      setConnected(false);
-      setConnectionError(undefined);
-      setTransport(undefined);
-
-      try {
-        const transportToUse: BluetoothTransport = await BluetoothTransport.open(
-          ledgerToConnect.id,
-        );
-
-        setPaired(true);
-        const launchpad = new LedgerConnector(transportToUse, {
-          ledgerAppName: ledgerAppToUse.name,
+  return useCallback(
+    (ledgerApp: LedgerApp) =>
+      new Promise<BluetoothTransport | undefined>(resolve => {
+        navigator.navigate({
+          name: ROUTES.CONNECT_TO_LEDGER_STACK,
+          params: {
+            ledgerApp,
+            onConnect: transport => {
+              resolve(transport);
+              returnToCurrentScreen();
+            },
+            onCancel: () => {
+              resolve(undefined);
+              returnToCurrentScreen();
+            },
+          } as ConnectToLedgerStackParams,
         });
-        await launchpad.getCosmosAppVersion().catch(async ex => {
-          await transportToUse.close();
-          throw ex;
-        });
-        setTransport(transportToUse);
-        setConnected(true);
-      } catch (e: any) {
-        setConnectionError(e.toString());
-      }
-
-      setConnecting(false);
-    },
-    [],
+      }),
+    [navigator, returnToCurrentScreen],
   );
+};
 
-  const retry = useCallback(() => {
-    connectToLedger(ledger, ledgerApp);
-  }, [connectToLedger, ledger, ledgerApp]);
-
-  useEffect(() => {
-    connectToLedger(ledger, ledgerApp);
-  }, [connectToLedger, ledger, ledgerApp]);
-
-  return {
-    connecting,
-    connected,
-    transport,
-    connectionError,
-    retry,
-    paired,
-  };
-}
+export default useConnectToLedger;

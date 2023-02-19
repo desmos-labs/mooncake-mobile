@@ -4,12 +4,7 @@ import { parseISO } from 'date-fns';
 import { useAppStateValue } from '@recoil/appState';
 
 /**
- * A hook that formats a timestamp into a specified format, to the user's stored
- * timezone
- *
- * @param {string} timeToFormat The timestring to format
- * @param {string} formatString The specified date-fns to format the time into
- *                              See {https://date-fns.org/v2.29.3/docs/format}
+ * A hook that allows formatting a timestamp into a specified format.
  */
 const useFormatDateToTZ = () => {
   const currentTimeZone = useAppStateValue('currentTimezone');

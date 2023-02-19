@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import { FlatList, Image, ListRenderItemInfo, View } from 'react-native';
-import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
 import { errorImage } from 'assets/images';
 import Typography from 'components/Typography';

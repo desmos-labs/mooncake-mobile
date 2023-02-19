@@ -4,7 +4,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import usePostsCreatedByAddress from 'hooks/usePostsCreatedByAddress';
+import usePostsCreatedByAddress from 'hooks/posts/usePostsCreatedByAddress';
 import UserPostsList from 'screens/ProfilePosts/UserPostsList';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS_POSTS>;

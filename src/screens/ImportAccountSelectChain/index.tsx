@@ -18,7 +18,7 @@ import {
   useImportAccountState,
   useSetImportAccountState,
 } from '@recoil/screens/importAccountState';
-import useOnBackAction from 'hooks/useOnBackAction';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN>;
 

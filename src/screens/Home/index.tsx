@@ -33,9 +33,9 @@ import {
 } from 'screens/Home/hooks';
 import useWatchForNewPosts from 'screens/Home/useWatchForNewPosts';
 import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsListState';
-import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { isPostPending, Post } from 'types/posts';
-import useGetPosts, { PostsQueryType } from 'hooks/useGetPosts';
+import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import useStyles from './useStyles';
 
 type FollowingNavProps = CompositeScreenProps<
@@ -107,7 +107,7 @@ const Home = () => {
     fetchingMore,
     refresh: refreshPosts,
     refreshing,
-  } = useGetPosts(postsQueryType);
+  } = usePosts(postsQueryType);
 
   // -------------------------------------------------------------------------------------
   // --- Notifications ---

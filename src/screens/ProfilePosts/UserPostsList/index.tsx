@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-nat
 import { Post } from 'types/posts';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
-import useNavigateToPost from 'hooks/useNavigateToPost';
+import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 

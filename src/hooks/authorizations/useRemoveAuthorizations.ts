@@ -6,9 +6,9 @@ import {
 } from 'lib/AuthorizationsUtils';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { AllowedMsgAllowanceTypeUrl } from '@desmoslabs/desmjs';
-import useButterConfig from 'hooks/useButterConfig';
+import useButterConfig from 'hooks/config/useButterConfig';
 import { err } from 'neverthrow';
-import useBroadcastTx from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import React from 'react';
 
 /**

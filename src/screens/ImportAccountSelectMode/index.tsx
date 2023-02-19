@@ -10,7 +10,7 @@ import {
   useSetImportAccountState,
 } from '@recoil/screens/importAccountState';
 import { WalletType } from 'types/wallet';
-import useOnBackAction from 'hooks/useOnBackAction';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_MODE>;

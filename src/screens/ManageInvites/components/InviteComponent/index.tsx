@@ -3,7 +3,7 @@ import { copyIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

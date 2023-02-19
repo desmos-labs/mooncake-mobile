@@ -18,8 +18,8 @@ import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import { Asset } from 'react-native-image-picker';
-import useProfileParams from 'hooks/useProfileParams';
-import { SaveProfileStatus } from 'hooks/useSaveProfileOnChain';
+import useProfileParams from 'hooks/profiles/useProfileParams';
+import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
 import CreateAvatar from './components/CreateAvatar';
 import {

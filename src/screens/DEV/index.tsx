@@ -13,7 +13,7 @@ import { useToast } from 'react-native-toast-notifications';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import { useActiveAccount } from '@recoil/accounts';
 import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
-import useBroadcastTx from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import Long from 'long';
 
 // Add the ROUTE enum of the screens that should be rendered here

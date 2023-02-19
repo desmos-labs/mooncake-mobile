@@ -1,5 +1,5 @@
 import { getWallet } from 'lib/SecureStorage';
-import useConnectToLedger from 'hooks/useConnectToLedger';
+import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
 import {
   LedgerWallet,
   MnemonicWallet,

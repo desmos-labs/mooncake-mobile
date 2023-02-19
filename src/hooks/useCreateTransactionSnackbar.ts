@@ -3,7 +3,7 @@ import ToastConfig from 'config/ToastConfig';
 import { NotificationType, TransactionNotificationData } from 'types/notifications';
 import { useToast } from 'react-native-toast-notifications';
 import { useGetPendingTransaction } from '@recoil/transactions';
-import useBroadcastTx from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 
 const useCreateTransactionSnackbar = () => {
   const toast = useToast();

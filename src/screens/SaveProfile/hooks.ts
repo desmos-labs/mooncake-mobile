@@ -7,7 +7,7 @@ import { useLazyQuery } from '@apollo/client';
 import GetProfileForDTag from 'services/graphql/queries/GetProfileForDTag';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
-import useSaveProfileOnChain from 'hooks/useSaveProfileOnChain';
+import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
 import { AccountWithWallet } from 'types/account';
 import { useStoreProfile } from '@recoil/profiles';
 import { err, ok, Result } from 'neverthrow';

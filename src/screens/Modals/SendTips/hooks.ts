@@ -5,7 +5,7 @@ import { useAppStateValue } from '@recoil/appState';
 import { Coin } from '@cosmjs/stargate';
 import { findCoinByDenom } from 'lib/ChainsUtils';
 import { safeParseFloat } from 'lib/FormatUtils';
-import useSendTip from 'hooks/useSendTip';
+import useSendTip from 'hooks/tips/useSendTip';
 import { TipTarget } from 'types/tips';
 
 /**

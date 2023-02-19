@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { AccountWithWallet } from 'types/account';
-import useStoreAccount from 'hooks/useStoreAccount';
+import useStoreAccount from 'hooks/accounts/useStoreAccount';
 
 /**
  * Hook that allows to save an account on the local storage of the device.

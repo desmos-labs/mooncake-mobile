@@ -1,5 +1,5 @@
 import Typography from 'components/Typography';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
 import FastImage, { Source } from 'react-native-fast-image';

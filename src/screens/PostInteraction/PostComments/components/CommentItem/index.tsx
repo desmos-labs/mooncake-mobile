@@ -10,7 +10,7 @@ import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatNumShorthand } from 'lib/FormatUtils';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +18,10 @@ import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-nati
 import FastImage from 'react-native-fast-image';
 import { isPostPending, Post } from 'types/posts';
 import { getProfilePicture } from 'lib/ProfileUtils';
-import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
-import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
-import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
-import useHasReacted from 'hooks/useHasReacted';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import usePostTipsCount from 'hooks/tips/usePostTipsCount';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
+import useHasReacted from 'hooks/reactions/useHasReacted';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
@@ -60,10 +60,10 @@ const CommentItem = (props: CommentItemProps) => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { count: commentsCount } = useGetPostCommentsCount(comment);
+  const { count: commentsCount } = usePostCommentsCount(comment);
   const hasReacted = useHasReacted(comment);
-  const { count: reactionsCount } = useGetPostReactionsCount(comment);
-  const { count: tipsCount } = useGetPostTipsCount(comment);
+  const { count: reactionsCount } = usePostReactionsCount(comment);
+  const { count: tipsCount } = usePostTipsCount(comment);
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data

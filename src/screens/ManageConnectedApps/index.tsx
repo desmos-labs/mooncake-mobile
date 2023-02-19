@@ -15,7 +15,7 @@ import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnecte
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
 import { useActiveAccount } from '@recoil/accounts';
 import { ApplicationLink } from 'types/desmos';
-import useAppLinksGivenAddress from 'hooks/useAppLinksGivenAddress';
+import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
 import { useCreateAppLink, useUnlinkApplication } from './hooks';
 import useStyles from './useStyles';
 

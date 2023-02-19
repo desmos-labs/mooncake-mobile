@@ -6,7 +6,7 @@ import { DeliverTxResponse, DesmosClient, TxRaw } from '@desmoslabs/desmjs';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
 import { SignerData } from '@cosmjs/stargate';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
-import useSignTx from 'hooks/useSignTx';
+import useSignTx from 'hooks/transactions/useSignTx';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { useStoredAccounts } from '@recoil/accounts';
 

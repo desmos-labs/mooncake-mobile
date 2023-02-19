@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
 import { useInitializeAxios } from 'services/axios';
-import useButterConfig from 'hooks/useButterConfig';
-import useProfileParams from 'hooks/useProfileParams';
-import usePostsParams from 'hooks/usePostsParams';
-import useSubspaceParams from 'hooks/useSubspaceParams';
+import useButterConfig from 'hooks/config/useButterConfig';
+import useProfileParams from 'hooks/profiles/useProfileParams';
+import usePostsParams from 'hooks/posts/usePostsParams';
+import useSubspaceParams from 'hooks/config/useSubspaceParams';
 import { useSetAppStateValue } from '@recoil/appState';
 
 /**

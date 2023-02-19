@@ -3,7 +3,7 @@ import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import useBroadcastTx from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import { MsgUnlinkApplicationEncodeObject, MsgUnlinkApplicationTypeUrl } from '@desmoslabs/desmjs';
 import { useActiveAccount } from '@recoil/accounts';
 import { isCanceledOperationError } from 'types/error';

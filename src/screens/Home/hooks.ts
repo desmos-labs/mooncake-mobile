@@ -2,11 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { NavProps } from 'screens/Home';
-import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
-import useAddOrRemoveReaction from 'hooks/useAddOrRemoveReaction';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
 import { isPostPending, Post } from 'types/posts';
 import { TipTargetType } from 'types/tips';
-import useNavigateToPost from 'hooks/useNavigateToPost';
+import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 
 /**
  * Hook that is called when the user presses the button to follow or unfollow another user.

@@ -6,10 +6,11 @@ describe('hook: useFormatDateToTz', () => {
   it('formats the date to the specified format', () => {
     const timeToFormat = '2022-09-23T08:39:07+00:00';
     const format = 'dd MMM, HH:mm';
-    const { result } = renderHook(() => useFormatDateToTZ(timeToFormat, format), {
+    const formatDate = useFormatDateToTZ();
+
+    const { result } = renderHook(() => formatDate(timeToFormat, format), {
       wrapper: RecoilRoot,
     });
-
     expect(result.current).toEqual('23 Sep, 08:39');
   });
 });

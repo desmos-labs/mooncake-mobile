@@ -11,7 +11,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { OperationVariables } from '@apollo/client/core';
 import DiscoveryPostsCount from 'services/graphql/subscriptions/DiscoveryPostsCount';
 import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCount';
-import useFollowingAddresses from 'hooks/useFollowingAddresses';
+import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { debounce } from 'lodash';
 
 /**

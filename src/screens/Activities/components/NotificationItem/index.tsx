@@ -7,11 +7,11 @@ import { useTheme } from 'react-native-paper';
 import ToggleFollowageButton from 'screens/Activities/components/ToggleFollowageButton';
 import PostAttachmentsPreview from 'screens/Activities/components/PostAttachmentsPreview';
 import { CompleteNotification, NotificationType } from 'types/notifications';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { getProfileDisplayName, getProfilePicture } from 'lib/ProfileUtils';
-import useNavigateToProfile from 'hooks/useNavigateToProfile';
-import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
-import useSetNotificationAsRead from 'hooks/useSetNotificationAsRead';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
+import useSetNotificationAsRead from 'hooks/notifications/useSetNotificationAsRead';
 import useStyles from './useStyles';
 
 export interface NotificationComponentProps {

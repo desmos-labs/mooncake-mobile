@@ -14,7 +14,7 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
-import useReportPost from 'hooks/useReportPost';
+import useReportPost from 'hooks/reports/useReportPost';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {

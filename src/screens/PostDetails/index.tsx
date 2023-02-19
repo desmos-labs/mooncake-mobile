@@ -39,22 +39,22 @@ import CommentItem from 'screens/PostInteraction/PostComments/components/Comment
 import { FlashList } from '@shopify/flash-list';
 import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
-import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
-import useGetPost from 'hooks/useGetPost';
-import useHasReacted from 'hooks/useHasReacted';
-import useGetPostComments from 'hooks/useGetPostComments';
+import usePost from 'hooks/posts/usePost';
+import useHasReacted from 'hooks/reactions/useHasReacted';
+import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
-import useFormatTimeForPostDetails from 'hooks/useFormatTimeForPostDetails';
-import useIsFollowing from 'hooks/useIsFollowing';
-import useGetPostReactionsCount from 'hooks/useGetPostReactionsCount';
-import useGetPostCommentsCount from 'hooks/useGetPostCommentsCount';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useGetPostTipsCount from 'hooks/useGetPostTipsCount';
+import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
 import TopBar from 'components/TopBar';
-import usePostInteractionsAuthors from 'hooks/usePostInteractionsAuthors';
+import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
@@ -139,14 +139,14 @@ const PostDetails = () => {
   const activeProfile = useActiveProfile();
 
   // Post data
-  const { post, loading: isPostLoading, refetch: refreshPost } = useGetPost(subspaceId, postId);
+  const { post, loading: isPostLoading, refetch: refreshPost } = usePost(subspaceId, postId);
 
   // Reactions data
   const {
     count: reactionsCount,
     loading: isReactionsCountLoading,
     refetch: refreshReactionsCount,
-  } = useGetPostReactionsCount(postData);
+  } = usePostReactionsCount(postData);
   const hasReacted = useHasReacted(postData);
 
   // Comments data
@@ -155,15 +155,15 @@ const PostDetails = () => {
     loading: areCommentsLoading,
     refetch: refreshComments,
     fetchMore: fetchMoreComments,
-  } = useGetPostComments(postData);
-  const { count: commentsCount, refetch: refreshCommentsCount } = useGetPostCommentsCount(postData);
+  } = usePostComments(postData);
+  const { count: commentsCount, refetch: refreshCommentsCount } = usePostCommentsCount(postData);
 
   // Tips data
   const {
     count: tipsCount,
     loading: isTipsCountLoading,
     refetch: refreshTipsCount,
-  } = useGetPostTipsCount(postData);
+  } = usePostTipsCount(postData);
 
   // Interactions data
   const {

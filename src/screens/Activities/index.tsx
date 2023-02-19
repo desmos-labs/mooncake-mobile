@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
-import useNotificationsHistory from 'hooks/useNotificationsHistory';
+import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';
 import { useSetAppStateValue } from '@recoil/appState';
 import { useKeyExtractor, useSplitNotificationsByWeek } from './hooks';

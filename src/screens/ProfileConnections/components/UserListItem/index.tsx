@@ -5,9 +5,9 @@ import FastImage from 'react-native-fast-image';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useIsFollowing from 'hooks/useIsFollowing';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import FollowButton from 'components/FollowButton';
-import useFollowOrUnfollowUser from 'hooks/useFollowOrUnfollowUser';
+import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import useStyles from './useStyles';
 
 interface UserListItemProps {

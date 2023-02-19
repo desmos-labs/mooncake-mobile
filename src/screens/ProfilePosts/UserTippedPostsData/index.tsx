@@ -5,7 +5,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import UserPostsList from 'screens/ProfilePosts/UserPostsList';
-import usePostsTippedByAddress from 'hooks/usePostsTippedByAddress';
+import usePostsTippedByAddress from 'hooks/tips/usePostsTippedByAddress';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS_LIKED>;
 

@@ -11,7 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChainLink } from 'types/desmos';
 import LinkableChains from 'config/LinkableChains';
 import { MsgUnlinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
-import useBroadcastTx from 'hooks/useBroadcastTx';
+import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import { useActiveAccount } from '@recoil/accounts';
 import { MsgUnlinkChainAccountTypeUrl } from '@desmoslabs/desmjs';
 import { isCanceledOperationError } from 'types/error';

@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { DesmosProfile } from 'types/desmos';
-import useIsFollowing from 'hooks/useIsFollowing';
-import useNavigateToProfile from 'hooks/useNavigateToProfile';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useStyles from './useStyles';
 
 export interface NotificationButtonProps {

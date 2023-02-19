@@ -4,15 +4,15 @@ import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import useGenerateRandomAccount from 'hooks/useGenerateRandomAccount';
+import useGenerateRandomAccount from 'hooks/accounts/useGenerateRandomAccount';
 import { useAppStateValue } from '@recoil/appState';
-import usePerformLogin from 'hooks/usePerformLogin';
-import useAcceptInvite from 'hooks/useAcceptInvite';
+import usePerformLogin from 'hooks/apis/usePerformLogin';
+import useAcceptInvite from 'hooks/invites/useAcceptInvite';
 import { err, ok, Result } from 'neverthrow';
 import { AccountWithWallet } from 'types/account';
-import useStoreAccount from 'hooks/useStoreAccount';
+import useStoreAccount from 'hooks/accounts/useStoreAccount';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
-import useSaveProfile from 'hooks/useSaveProfile';
+import useSaveProfile from 'hooks/profiles/useSaveProfile';
 
 interface FormValues {
   readonly newPassword: string;

@@ -14,7 +14,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import useAccountBalance from 'hooks/useAccountBalance';
+import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins } from 'lib/FormatUtils';
 import { TipTarget } from 'types/tips';
 import useStyles from './useStyles';

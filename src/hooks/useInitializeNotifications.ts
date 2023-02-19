@@ -1,10 +1,10 @@
 import notifee from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
-import useHandleNotificationPressEvent from 'hooks/useHandleNotificationPressEvent';
+import useHandleNotificationPressEvent from 'hooks/notifications/useHandleNotificationPressEvent';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
-import useCreateLocalNotification from 'hooks/useCreateLocalNotification';
+import useCreateLocalNotification from 'hooks/notifications/useCreateLocalNotification';
 import { isSocialNotification, isTransactionNotification } from 'types/notifications';
 import useCreateTransactionNotificationSnackbar from 'hooks/useCreateTransactionSnackbar';
 import { parseRemoteNotification } from 'lib/NotificationsUtils';
