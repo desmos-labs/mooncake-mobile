@@ -8,7 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
  * Hook that allows to navigate to the profile of a user.
  */
 const useNavigateToProfile = () => {
-  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   return React.useCallback(
     (address?: string, onBeforeNavigation?: () => void) => {
       // Run any before navigation hook
@@ -18,14 +18,14 @@ const useNavigateToProfile = () => {
 
       switch (address) {
         case undefined:
-          navigation.navigate(ROUTES.PROFILE);
+          navigate(ROUTES.BOTTOM_TABS, { screen: ROUTES.PROFILE });
           break;
         default:
-          navigation.navigate(ROUTES.GUEST_PROFILE, { address });
+          navigate(ROUTES.GUEST_PROFILE, { address });
           break;
       }
     },
-    [navigation],
+    [navigate],
   );
 };
 

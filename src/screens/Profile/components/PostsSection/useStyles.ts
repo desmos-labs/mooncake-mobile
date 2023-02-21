@@ -11,7 +11,7 @@ const useStyles = makeStyle(theme => ({
     flexDirection: 'row',
   },
   emptyImage: { height: 80, width: 80, marginBottom: theme.spacing.s },
-  flatlistContainer: {
+  tweetsListContainer: {
     alignItems: 'center',
     flexGrow: 1,
   },

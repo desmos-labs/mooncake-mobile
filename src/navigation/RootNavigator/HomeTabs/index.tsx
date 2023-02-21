@@ -7,14 +7,34 @@ import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Home, { HomeParams } from 'screens/Home';
+import Home from 'screens/Home';
+import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 
-export type HomeTabsParamList = {
-  [ROUTES.HOME_DISCOVER]: HomeParams;
-  [ROUTES.HOME_FOLLOWING]: HomeParams;
-};
+// -------------------------------------------------------------------------------------
+// --- TAB DATA
+// -------------------------------------------------------------------------------------
 
-const Tab = createMaterialTopTabNavigator<HomeTabsParamList>();
+const Tab = createMaterialTopTabNavigator();
+
+// -------------------------------------------------------------------------------------
+// --- SCREEN DATA
+// -------------------------------------------------------------------------------------
+
+export interface HomeTabsParams {
+  /**
+   * The initial route name to be used when the user opens the home page.
+   */
+  readonly initialRouteName?: ROUTES.HOME_TAB_DISCOVER | ROUTES.HOME_TAB_FOLLOWING;
+}
+
+type NavProps = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
+  StackScreenProps<RootNavigatorParamList>
+>;
 
 /**
  * Component that contains all the tabs used inside the home page
@@ -24,6 +44,10 @@ const Tab = createMaterialTopTabNavigator<HomeTabsParamList>();
 const HomeTabs = () => {
   const theme = useTheme();
   const { top } = useSafeAreaInsets();
+
+  const route = useRoute<NavProps['route']>();
+  const { params } = route;
+  const initialRouteName = params?.initialRouteName ?? ROUTES.HOME_TAB_FOLLOWING;
 
   // Refresh the token if we have one, otherwise perform the login again
   const refreshSession = useRefreshSession();
@@ -51,20 +75,10 @@ const HomeTabs = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Tab.Navigator
         tabBar={renderTabBar}
-        screenOptions={{
-          swipeEnabled: false,
-        }}>
-        <Tab.Screen
-          name={ROUTES.HOME_DISCOVER}
-          initialParams={{ type: 'discover' }}
-          component={Home}
-        />
-
-        <Tab.Screen
-          name={ROUTES.HOME_FOLLOWING}
-          initialParams={{ type: 'following' }}
-          component={Home}
-        />
+        screenOptions={{ swipeEnabled: false }}
+        initialRouteName={initialRouteName}>
+        <Tab.Screen name={ROUTES.HOME_TAB_DISCOVER} component={Home} />
+        <Tab.Screen name={ROUTES.HOME_TAB_FOLLOWING} component={Home} />
       </Tab.Navigator>
     </View>
   );

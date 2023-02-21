@@ -1,15 +1,10 @@
 import { AndroidColor } from '@notifee/react-native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
-import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -38,27 +33,7 @@ import { isPostPending, Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import useStyles from './useStyles';
 
-type FollowingNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
-    StackScreenProps<RootNavigatorParamList>
-  >
->;
-
-type DiscoverNavProps = CompositeScreenProps<
-  StackScreenProps<HomeTabsParamList, ROUTES.HOME_DISCOVER>,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
-    StackScreenProps<RootNavigatorParamList>
-  >
->;
-
-export type NavProps = DiscoverNavProps | FollowingNavProps;
-
-export interface HomeParams {
-  readonly type: 'discover' | 'following';
-}
+type NavProps = StackScreenProps<any>;
 
 /**
  * Home screen of the application that displays the list of posts the user is
@@ -174,7 +149,7 @@ const Home = () => {
             }
             handlePressTip(item);
           }}
-          onPressFollow={() => handlePressFollow(item.author.address)}
+          onPressFollow={() => handlePressFollow(item.author)}
           onPressReport={() => {
             if (isPostPending(item) || !item.author) {
               return toast.show(t('toast:postTxInProgress'), {

@@ -25,7 +25,7 @@ import ChangePassword, { PasswordManipulationParams } from 'screens/PasswordMani
 import ConnectToLedgerStack, {
   ConnectToLedgerStackParams,
 } from 'navigation/RootNavigator/ConnectToLedgerStack';
-import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
+import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ImportAccountSelectLedgerApp from 'screens/ImportAccountSelectLedgerApp';
 import Settings from 'screens/Settings';
 import ManageConnectedChains from 'screens/ManageConnectedChains';
@@ -62,6 +62,8 @@ import { Dimensions } from 'react-native';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
 import { ProfileOperationsParams } from 'screens/ProfileOperations';
+import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
+import Login, { LoginParams } from 'screens/Login';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -78,6 +80,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ONBOARDING]: OnboardingParams;
   [ROUTES.CONSENT_AGREEMENT]: ConsentAgreementParams;
   [ROUTES.SIGNUP]: undefined;
+  [ROUTES.LOGIN]: LoginParams | undefined;
   [ROUTES.WELCOME]: undefined;
 
   // -------------------------------------------------------------------------------------
@@ -102,7 +105,7 @@ export type RootNavigatorParamList = {
   [ROUTES.ACTIVITIES]: undefined;
 
   // Home page
-  [ROUTES.HOME_TABS]: NavigatorScreenParams<HomeTabsParamList>;
+  [ROUTES.HOME_TABS]: HomeTabsParams;
 
   // -------------------------------------------------------------------------------------
   // --- BROADCAST TRANSACTION SCREENS
@@ -164,7 +167,7 @@ export type RootNavigatorParamList = {
   [ROUTES.DISCONNECT_APP_MODAL]: DisconnectAppParams;
 
   // Twitter connection
-  // [ROUTES.SELECT_TWEET]: SelectTweetParams;
+  [ROUTES.SELECT_TWEET]: SelectTweetParams;
 
   // -------------------------------------------------------------------------------------
   // --- PROFILE SCREENS
@@ -303,6 +306,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
+      <Stack.Screen name={ROUTES.LOGIN} component={Login} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
       {/* ------------------------ */}
@@ -382,7 +386,7 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
       <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
-      {/* <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} /> */}
+      <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
 
       {/* ----------------------- */}
       {/* --- PROFILE SCREENS --- */}

@@ -47,8 +47,8 @@ enum ROUTES {
 
   // Home pages
   HOME_TABS = 'HOME_TABS',
-  HOME_DISCOVER = 'HOME_DISCOVER',
-  HOME_FOLLOWING = 'HOME_FOLLOWING',
+  HOME_TAB_DISCOVER = 'HOME_TAB_DISCOVER',
+  HOME_TAB_FOLLOWING = 'HOME_TAB_FOLLOWING',
 
   // -------------------------------------------------------------------------------------
   // --- POST SCREENS

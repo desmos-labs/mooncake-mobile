@@ -15,13 +15,14 @@ import { useActiveAccount } from '@recoil/accounts';
 import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import Long from 'long';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
   ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
   ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
-  // ROUTES.LOGIN,
+  ROUTES.LOGIN,
   ROUTES.PROFILE,
   // ROUTES.SIGNUP_RESULT,
   // ROUTES.CONFIRM_MODAL,
@@ -61,8 +62,18 @@ type DevScreenProps = StackScreenProps<RootNavigatorParamList, ROUTES.DEV_SCREEN
 const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   const { navigate } = navigation;
   const toast = useToast();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const navigateToHome = useNavigateToHome();
   const activeAccount = useActiveAccount();
   const broadcastTx = useBroadcastTx();
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
   const testBroadcastTx = React.useCallback(async () => {
     if (activeAccount !== undefined) {
@@ -179,22 +190,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
-        <Button
-          mode="contained"
-          color="red"
-          onPress={() =>
-            navigate(ROUTES.BOTTOM_TABS, {
-              screen: ROUTES.HOME_TABS,
-              params: {
-                HOME_DISCOVER: {
-                  type: 'discover',
-                },
-                HOME_FOLLOWING: {
-                  type: 'following',
-                },
-              },
-            })
-          }>
+        <Button mode="contained" color="red" onPress={navigateToHome}>
           Continue to Home screen
         </Button>
         <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>

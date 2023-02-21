@@ -7,7 +7,7 @@ const useStyles = makeStyle(theme => ({
     paddingTop: theme.spacing.m,
     zIndex: 1,
   },
-  flatlist: {
+  tweetsList: {
     flex: 1,
   },
   flatlistInner: {

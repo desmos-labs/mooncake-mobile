@@ -123,7 +123,7 @@ const PostsSection = (props: PostsSectionProps) => {
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
         <FlatList
-          contentContainerStyle={styles.flatlistContainer}
+          contentContainerStyle={styles.tweetsListContainer}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           data={posts}

@@ -8,43 +8,58 @@ import Typography from 'components/Typography';
 import { Formik, FormikHelpers } from 'formik';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import * as Yup from 'yup';
-import { storeBiometricAuthorization } from 'lib/SecureStorage';
-import { BiometricAuthorizations } from 'types/settings';
-import { SecureStorageErrorType } from 'lib/SecureStorage/errors';
 import { useSetSetting } from '@recoil/settings';
-import useStyles from './useStyles';
+import useStyles from 'screens/SettingsEnableBiometrics/useStyles';
+import { useTheme } from 'react-native-paper';
+import { SecureStorageErrorType } from 'lib/SecureStorage/errors';
+import {
+  FormValues,
+  useEnableBiometrics,
+  useInitialFormValues,
+  useValidationSchema,
+} from './hooks';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_ENABLE_BIOMETRICS>;
 
-const initialFormValues = {
-  password: '',
-};
-
+/**
+ * Screen that allows the user to enable the biometric authentication.
+ * @constructor
+ */
 const SettingsEnableBiometrics = () => {
-  const [loading, setLoading] = useState(false);
   const { t } = useTranslation('enterPassword');
-  const { goBack } = useNavigation<NavProps['navigation']>();
-  const setBiometricsSetting = useSetSetting('biometrics');
-
   const styles = useStyles();
   const theme = useTheme();
 
-  const onFormSubmit = React.useCallback(
-    async (
-      formValues: typeof initialFormValues,
-      { setErrors }: FormikHelpers<typeof formValues>,
-    ) => {
+  const { goBack } = useNavigation<NavProps['navigation']>();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const setBiometricsSetting = useSetSetting('biometrics');
+  const initialFormValues = useInitialFormValues();
+  const validationSchema = useValidationSchema();
+  const enableBiometrics = useEnableBiometrics();
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen state
+  // -------------------------------------------------------------------------------------
+
+  const [loading, setLoading] = useState(false);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  const onFormSubmit = useCallback(
+    async (values: FormValues, { setErrors }: FormikHelpers<FormValues>) => {
       setLoading(true);
-      const result = await storeBiometricAuthorization(
-        BiometricAuthorizations.UnlockWallet,
-        formValues.password,
-      );
+      const result = await enableBiometrics(values.password);
       if (result.isErr()) {
+        // Set the errors inside the UI
         if (result.error.type === SecureStorageErrorType.WrongPassword) {
           setErrors({ password: t('error:incorrectPassword') });
         } else {
@@ -54,16 +69,16 @@ const SettingsEnableBiometrics = () => {
         setBiometricsSetting(true);
         goBack();
       }
+
+      // Set the loading to false
       setLoading(false);
     },
-    [goBack, setBiometricsSetting, t],
+    [enableBiometrics, goBack, setBiometricsSetting, t],
   );
 
-  const validationSchema = React.useMemo(() => {
-    return Yup.object().shape({
-      password: Yup.string().required(t('error:required')),
-    });
-  }, [t]);
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>

@@ -8,7 +8,7 @@ import {
   middleButtonIcon,
 } from 'assets/images';
 import ImageButton from 'components/ImageButton';
-import HomeTabs, { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
+import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
@@ -29,7 +29,7 @@ export interface Props extends BottomTabBarProps {}
  * Navigation bottom tabs
  */
 export type BottomTabsParamList = {
-  [ROUTES.HOME_TABS]: HomeTabsParamList;
+  [ROUTES.HOME_TABS]: HomeTabsParams | undefined;
   [ROUTES.COMMUNITIES]: undefined;
   [ROUTES.ACTIVITIES]: undefined;
   [ROUTES.CREATE_BUTTON]: undefined;

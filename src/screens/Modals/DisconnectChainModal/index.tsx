@@ -9,12 +9,16 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ChainLink } from 'types/desmos';
-import LinkableChains from 'config/LinkableChains';
 import { MsgUnlinkChainAccount } from '@desmoslabs/desmjs-types/desmos/profiles/v3/msgs_chain_links';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import { useActiveAccount } from '@recoil/accounts';
-import { MsgUnlinkChainAccountTypeUrl } from '@desmoslabs/desmjs';
+import {
+  MsgUnlinkChainAccountEncodeObject,
+  MsgUnlinkChainAccountTypeUrl,
+} from '@desmoslabs/desmjs';
 import { isCanceledOperationError } from 'types/error';
+import LinkableChains from 'config/LinkableChains';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.DISCONNECT_CHAIN_MODAL>;
@@ -24,37 +28,45 @@ export type DisconnectChainParams = {
 };
 
 const DisconnectChainModal = () => {
-  const styles = useStyles();
-  const { goBack, navigate } = useNavigation<NavProps['navigation']>();
-  const broadcastTx = useBroadcastTx();
-
-  const {
-    params: { chainLink },
-  } = useRoute<NavProps['route']>();
-
   const { t } = useTranslation('disconnectChain');
+  const styles = useStyles();
+
+  const { goBack, navigate } = useNavigation<NavProps['navigation']>();
+  const { params } = useRoute<NavProps['route']>();
+  const { chainLink } = params;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const navigateToProfile = useNavigateToProfile();
+
   const activeAccount = useActiveAccount();
+  const broadcastTx = useBroadcastTx();
 
   const chain = React.useMemo(() => {
     return LinkableChains.find(x => x.name.toLowerCase() === chainLink.chainName.toLowerCase());
   }, [chainLink]);
 
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
   const handlePressYes = React.useCallback(async () => {
     if (!activeAccount) return;
-    const msgUnlinkChainAccount = [
-      {
-        typeUrl: MsgUnlinkChainAccountTypeUrl,
-        value: MsgUnlinkChainAccount.fromPartial({
-          chainName: chainLink.chainName,
-          owner: activeAccount!.address,
-          target: chainLink.externalAddress,
-        }),
-      },
-    ];
 
-    const broadcastResult = await broadcastTx(msgUnlinkChainAccount, {
-      onChain: true,
-    });
+    // Create the message
+    const msgUnlinkChainAccount: MsgUnlinkChainAccountEncodeObject = {
+      typeUrl: MsgUnlinkChainAccountTypeUrl,
+      value: MsgUnlinkChainAccount.fromPartial({
+        chainName: chainLink.chainName,
+        owner: activeAccount!.address,
+        target: chainLink.externalAddress,
+      }),
+    };
+
+    // Broadcast the transaction
+    const broadcastResult = await broadcastTx([msgUnlinkChainAccount], { onChain: true });
 
     if (broadcastResult.isOk()) {
       navigate(ROUTES.CONFIRM_MODAL, {
@@ -64,10 +76,7 @@ const DisconnectChainModal = () => {
           chainLink: chainLink.chainName.toUpperCase(),
         }),
         primaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressPrimary: () =>
-          navigate(ROUTES.BOTTOM_TABS, {
-            screen: ROUTES.PROFILE,
-          }),
+        onPressPrimary: navigateToProfile,
       });
     } else if (!isCanceledOperationError(broadcastResult.error)) {
       navigate(ROUTES.CONFIRM_MODAL, {
@@ -77,16 +86,25 @@ const DisconnectChainModal = () => {
           chainLink: chainLink.chainName.toUpperCase(),
         }),
         primaryButtonLabel: t('common:retry') as string,
-        onPressPrimary: () => handlePressYes(),
+        onPressPrimary: handlePressYes,
         secondaryButtonMode: 'outlined',
         secondaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressSecondary: () =>
-          navigate(ROUTES.BOTTOM_TABS, {
-            screen: ROUTES.PROFILE,
-          }),
+        onPressSecondary: navigateToProfile,
       });
     }
-  }, [activeAccount, broadcastTx, chainLink.chainName, chainLink.externalAddress, navigate, t]);
+  }, [
+    activeAccount,
+    broadcastTx,
+    chainLink.chainName,
+    chainLink.externalAddress,
+    navigate,
+    navigateToProfile,
+    t,
+  ]);
+
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <View style={styles.container}>

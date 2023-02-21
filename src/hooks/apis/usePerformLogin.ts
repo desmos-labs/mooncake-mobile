@@ -8,37 +8,36 @@ import {
   getSignedBytes,
 } from '@desmoslabs/desmjs';
 import { toHex } from '@cosmjs/encoding';
-import { AccountWithWallet } from 'types/account';
 import { SignerData } from '@cosmjs/stargate';
 import Login, { LoginParams } from 'services/axios/requests/Login';
 import { useUpdateAuthToken } from 'services/axios';
+import { Wallet } from 'types/wallet';
 
 /**
  * Generate the params to be used when performing the login on the APIs.
- * @param account {@link AccountWithWallet} - Account with wallet that should be used to sign the login data.
+ * @param wallet {@link AccountWithWallet} - Account with wallet that should be used to sign the login data.
  */
-const generateLoginParams = async (account: AccountWithWallet): Promise<LoginParams> => {
-  const { nonce } = await GetNonce(account.account.address);
+const generateLoginParams = async (wallet: Wallet): Promise<LoginParams> => {
+  const { nonce } = await GetNonce(wallet.address);
   const fee: StdFee = { amount: [], gas: '0' };
 
-  const { address } = account.wallet;
   const signerData: SignerData = {
     sequence: 0,
     chainId: 'desmos',
     accountNumber: 0,
   };
-  const desmosClient = await DesmosClient.offline(account.wallet.signer);
+  const desmosClient = await DesmosClient.offline(wallet.signer);
 
   // Pass an empty array as message, as we just need to sign something
   // to grab the SignatureResult
-  const result = await desmosClient.signTx(address, [], {
+  const result = await desmosClient.signTx(wallet.address, [], {
     fee,
     memo: nonce,
     signerData,
   });
 
   return {
-    address: account.wallet.address,
+    address: wallet.address,
     signatureBytes: toHex(getSignatureBytes(result)),
     pubkeyBytes: toHex(getPubKeyBytes(result)),
     signedBytes: toHex(getSignedBytes(result)),
@@ -53,7 +52,7 @@ const generateLoginParams = async (account: AccountWithWallet): Promise<LoginPar
 const usePerformLogin = () => {
   const updateAuthToken = useUpdateAuthToken();
   return React.useCallback(
-    async (account: AccountWithWallet) => {
+    async (account: Wallet) => {
       // Perform the login
       const params = await generateLoginParams(account);
       const loginResult = await Login(params);

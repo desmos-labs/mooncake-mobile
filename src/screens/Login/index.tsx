@@ -1,12 +1,5 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import appSettingsState from '@recoil/settings';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
 import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
@@ -14,172 +7,140 @@ import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import useActiveAccount from 'hooks/useActiveAccount';
-import useClearUserData from 'hooks/useClearUserData';
-import { getPasswordWithBiometrics } from 'lib/SecureStorage';
-import _ from 'lodash';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
-import { HomeTabsParamList } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useRecoilValue } from 'recoil';
-import useLogin from 'services/axios/requests/Login/useLogin';
-import useAutoLoginFromSignUp from 'screens/Login/useAutoLoginFromSignUp';
-import ThemedLottieView from 'components/ThemedLottieView';
-import { broadcastAnim } from 'assets/animations';
+import { useSetting } from '@recoil/settings';
+import useClearUserData from 'hooks/useClearUserData';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
+import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
+import { BiometricAuthorizations } from 'types/settings';
+import { useOnSubmitPassword } from 'screens/Login/hooks';
 import useStyles from './useStyles';
 
-export type NavProps = CompositeScreenProps<
-  StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabsParamList, ROUTES.HOME_TABS>,
-    StackScreenProps<HomeTabsParamList, ROUTES.HOME_FOLLOWING>
-  >
->;
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
 
 export type LoginParams = {
-  // Callback to be executed if login is successful.
+  /**
+   * Callback to be executed if login is successful.
+   */
   onSuccess?: () => void;
-
-  // Do not call pop() on successful login.
-  noPop?: boolean;
 };
 
+/**
+ * Screen that allows the user to log into the app.
+ * @constructor
+ */
 const Login = () => {
   const styles = useStyles();
   const { t } = useTranslation('login');
   const theme = useTheme();
-  const { activeAddress } = useActiveAccount();
 
-  const { pop, getState, navigate } = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
+  const onSuccess = params?.onSuccess;
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
+  const navigateToHome = useNavigateToHome();
 
   const toast = useToast();
-  const { biometrics } = useRecoilValue(appSettingsState);
+  const areBiometricsEnabled = useSetting('biometrics');
+  const clearUserData = useClearUserData();
+
+  const getPasswordWithBiometrics = useGetPasswordFromBiometrics(BiometricAuthorizations.Login);
+  const onSubmitPassword = useOnSubmitPassword();
+
+  // -------------------------------------------------------------------------------------
+  // --- Local state
+  // -------------------------------------------------------------------------------------
+
   const [loading, setLoading] = React.useState(false);
   const [biometricsLoading, setBiometricsLoading] = useState(false);
   const [error, setError] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const { login } = useLogin();
-  const clearUserData = useClearUserData();
 
-  const { shouldAutoLogin } = useAutoLoginFromSignUp();
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
 
+  // Callback to be executed when the user has activated the biometrics login
   const unlockWithBiometrics = React.useCallback(async () => {
     setBiometricsLoading(true);
-    try {
-      if (activeAddress) {
-        const passwordToUse = await getPasswordWithBiometrics(activeAddress);
-        const loginResponse = await login({
-          activeAddress,
-          password: passwordToUse,
-          isDerivedPassword: true,
-        });
 
-        if (loginResponse) {
-          if (!_.get(params, 'noPop')) {
-            const { routes } = getState();
-            if (routes.length > 1) {
-              pop();
-            } else {
-              navigate(ROUTES.BOTTOM_TABS, {
-                screen: ROUTES.HOME_TABS,
-                params: {
-                  HOME_DISCOVER: {
-                    type: 'discover',
-                  },
-                  HOME_FOLLOWING: {
-                    type: 'following',
-                  },
-                },
-              });
-            }
-          }
+    // Get the password from the biometrics
+    const passwordResult = await getPasswordWithBiometrics();
+    if (passwordResult.isErr()) {
+      setBiometricsLoading(false);
 
-          const onSuccessFn = _.get(params, 'onSuccess');
-          onSuccessFn && onSuccessFn();
-        } else {
-          toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
-        }
-      } else {
-        t('toast:errorSystemBusy', { type: ToastConfig.ERROR_NO_RETRY });
-      }
-    } catch (err) {
-      // disable wrong password error if user cancels biometrics
-      if (!String(err).includes('code: 13, msg: Cancel')) {
+      const err = passwordResult.error.message;
+      if (!err.toLowerCase().includes('cancel')) {
+        // Disable wrong password error if user cancels biometrics
         setError(t('error:incorrectPassword'));
       }
-    } finally {
-      setBiometricsLoading(false);
+      return;
     }
-  }, [activeAddress, getState, login, params, toast]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (biometrics) {
-        unlockWithBiometrics();
-      }
-    }, [biometrics, unlockWithBiometrics]),
-  );
+    // Check the password value
+    const biometricsPassword = passwordResult.value;
+    if (!biometricsPassword) {
+      setBiometricsLoading(false);
+      setError(t('error:incorrectPassword'));
+      return;
+    }
+
+    // Perform the regular login
+    const loginResult = await onSubmitPassword(biometricsPassword);
+    if (loginResult.isErr()) {
+      setBiometricsLoading(false);
+      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      return;
+    }
+
+    // Navigate to the home page, and call the onSuccess method if defined
+    // We don't need to set the loading to false, as we will navigate away from here anyway
+    navigateToHome();
+    onSuccess && onSuccess();
+  }, [getPasswordWithBiometrics, navigateToHome, onSubmitPassword, onSuccess, t, toast]);
 
   const handleSubmit = React.useCallback(async () => {
-    if (!activeAddress) {
-      return toast.show(t('toast:errorSystemBusy', { type: ToastConfig.ERROR_NO_RETRY }));
-    }
-    try {
-      setLoading(true);
-      setError('');
-      const loginResponse = await login({
-        activeAddress,
-        password,
-      });
+    setLoading(true);
 
-      if (!loginResponse) {
-        toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
-      } else {
-        if (!_.get(params, 'noPop')) {
-          const { routes } = getState();
-          if (routes.length > 1) {
-            console.log('pop');
-            pop();
-          } else {
-            console.log('navigation');
-            navigate(ROUTES.BOTTOM_TABS, {
-              screen: ROUTES.HOME_TABS,
-              params: {
-                HOME_DISCOVER: {
-                  type: 'discover',
-                },
-                HOME_FOLLOWING: {
-                  type: 'following',
-                },
-              },
-            });
-          }
-        }
-
-        const onSuccessFn = _.get(params, 'onSuccess');
-        onSuccessFn && onSuccessFn();
-      }
-    } catch (err: any) {
-      setError(t('error:incorrectPassword'));
-    } finally {
+    // Perform the regular login
+    const loginResult = await onSubmitPassword(password);
+    if (loginResult.isErr()) {
       setLoading(false);
+      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      return;
     }
-  }, [activeAddress, toast, login, password, params, getState]);
 
-  if (shouldAutoLogin) {
-    return (
-      <DView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ThemedLottieView source={broadcastAnim} autoPlay autoSize loop />
-      </DView>
-    );
-  }
+    // Navigate to the home page, and call the onSuccess method if defined
+    // We don't need to set the loading to false, as we will navigate away from here anyway
+    navigateToHome();
+    onSuccess && onSuccess();
+  }, [onSubmitPassword, password, navigateToHome, onSuccess, toast, t]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  // If the user has enabled the biometrics login, ask that as soon as the screen renders
+  useFocusEffect(
+    React.useCallback(() => {
+      if (areBiometricsEnabled) {
+        unlockWithBiometrics();
+      }
+    }, [areBiometricsEnabled, unlockWithBiometrics]),
+  );
+
+  // -------------------------------------------------------------------------------------
+  // --- Screen rendering
+  // -------------------------------------------------------------------------------------
 
   return (
     <DView
@@ -201,7 +162,7 @@ const Login = () => {
         <View style={styles.contentContainer}>
           <Typography.Subtitle2 style={styles.labelStyle}>{t('password')}</Typography.Subtitle2>
           <DSecureTextInput
-            autoFocus={!biometrics}
+            autoFocus={!areBiometricsEnabled}
             style={styles.input}
             value={password}
             onChangeText={setPassword}

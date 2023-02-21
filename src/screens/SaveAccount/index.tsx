@@ -78,7 +78,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
       const saveAccountResult = await saveAccount({ account, wallet }, password);
       if (saveAccountResult.isOk()) {
         // Try to perform the login.
-        const loginResult = await performLogin({ account, wallet });
+        const loginResult = await performLogin(wallet);
         if (loginResult.isOk()) {
           // Login success, set the current account as active.
           setActiveAccount(account.address);
@@ -93,7 +93,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
 
     // Disable the lint warning on the next line as we want this effect to be
     // called only one time when the user sees the saving account screen
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const resetToHome = React.useCallback(async () => {

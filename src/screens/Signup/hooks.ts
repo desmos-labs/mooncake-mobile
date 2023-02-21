@@ -131,7 +131,7 @@ const usePerformSignUp = () => {
 
       // Perform the login
       setStatus(SignUpStatus.CREATING_ACCOUNT);
-      const token = await performLogin(account);
+      const token = await performLogin(account.wallet);
       if (!token) {
         setStatus(SignUpStatus.DONE);
         return err(new Error('Cannot get token from APIs'));

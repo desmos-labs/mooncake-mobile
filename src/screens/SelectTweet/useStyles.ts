@@ -40,11 +40,11 @@ const useStyles = makeStyle(theme => ({
     borderWidth: 1,
     marginBottom: theme.spacing.m,
   },
-  flatlistContainer: {
+  tweetsListContainer: {
     paddingHorizontal: theme.spacing.m,
     flexGrow: 1,
   },
-  flatlist: {
+  tweetsList: {
     marginHorizontal: -theme.spacing.m,
     flexGrow: 1,
   },

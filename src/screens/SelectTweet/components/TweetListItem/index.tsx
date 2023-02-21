@@ -6,29 +6,35 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { TwitterTweet, TwitterUser } from 'types/twitter';
 import useStyles from './useStyles';
 
-const TweetComponent = ({
-  selected,
-  data,
-  user,
-  onPress,
-}: {
-  selected: boolean;
-  data: any;
-  user: any;
-  onPress: (id: number) => void;
-}) => {
+export interface TweetListItemProps {
+  readonly tweet: TwitterTweet;
+  readonly user: TwitterUser;
+  readonly selected: boolean;
+  readonly onPress: (tweet: TwitterTweet) => void;
+}
+
+/**
+ * Component that allows to display a single Tweet into a list.
+ * @constructor
+ */
+const TweetListItem = (props: TweetListItemProps) => {
   const styles = useStyles();
   const theme = useTheme();
-  const formattedDate = useFormatTimeForPostDetails(data.creation_date);
+
+  const { tweet, user, selected, onPress } = props;
+
+  const formatTime = useFormatTimeForPostDetails();
+  const formattedDate = formatTime(tweet.createdAt);
 
   return (
     <DropShadowWrapper
       style={styles.container}
       outerShadowProps={{ startColor: 'rgba(16, 24, 40, 0.03)', distance: 30 }}>
       <TouchableOpacity
-        onPress={() => onPress(data.id)}
+        onPress={() => onPress(tweet)}
         style={[
           {
             padding: theme.spacing.m,
@@ -38,7 +44,7 @@ const TweetComponent = ({
           selected && { backgroundColor: theme.colors.butterOrange05 },
         ]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={{ uri: user.profile_pic }} style={styles.profilePic} />
+          <Image source={{ uri: user.profileImageUrl }} style={styles.profilePic} />
           <View
             style={{
               flexDirection: 'column',
@@ -51,7 +57,7 @@ const TweetComponent = ({
           <Image source={twitterIcon} style={styles.image} />
         </View>
         <Spacer paddingBottom={theme.spacing.m} />
-        <Typography.Body6>{data.text}</Typography.Body6>
+        <Typography.Body6>{tweet.text}</Typography.Body6>
         <Spacer paddingVertical={theme.spacing.s} />
         <Typography.Caption3 style={{ color: theme.colors.grey02 }}>
           {formattedDate}
@@ -61,4 +67,4 @@ const TweetComponent = ({
   );
 };
 
-export default TweetComponent;
+export default TweetListItem;

@@ -5,6 +5,10 @@ import { useSetAppState } from '@recoil/appState';
 import { Platform } from 'react-native';
 import { appStateOnce } from 'lib/AppStateUtils';
 
+/**
+ * A hook that returns a function that will request the biometrics password.
+ * @param biometricAuthorization The biometric authorization to request.
+ */
 const useGetPasswordFromBiometrics = (biometricAuthorization: BiometricAuthorizations) => {
   const setAppState = useSetAppState();
 

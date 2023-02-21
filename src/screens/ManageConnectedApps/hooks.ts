@@ -11,6 +11,7 @@ import { modalSuccess } from 'assets/images';
 import { capitalize } from 'lib/FormatUtils';
 import { useTranslation } from 'react-i18next';
 import { ApplicationLink } from 'types/desmos';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 
 export const useCreateAppLink = () => {
   // TODO: Implement app link creation logic.
@@ -19,9 +20,15 @@ export const useCreateAppLink = () => {
   }, []);
 };
 
+/**
+ * Hook that returns a function to disconnect an application from the current user.
+ */
 export const useUnlinkApplication = () => {
   const { t } = useTranslation('connectApp');
+
+  const navigateToProfile = useNavigateToProfile();
   const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
   const activeAccount = useActiveAccount()!;
   const broadcastTx = useBroadcastTx();
 
@@ -34,14 +41,10 @@ export const useUnlinkApplication = () => {
           appName: capitalize(appName),
         }),
         primaryButtonLabel: t('resultModal:goToProfile') as string,
-        onPressPrimary: () => {
-          navigate(ROUTES.BOTTOM_TABS, {
-            screen: ROUTES.PROFILE,
-          });
-        },
+        onPressPrimary: navigateToProfile,
       });
     },
-    [navigate, t],
+    [navigate, navigateToProfile, t],
   );
 
   const disconnectApplication = React.useCallback(
