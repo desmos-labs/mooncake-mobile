@@ -6,6 +6,7 @@ import React from 'react';
 import ROUTES from 'navigation/routes';
 import { useActiveAccount } from '@recoil/accounts';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import { Wallet } from 'types/wallet';
 
 export interface BroadcastTxCallbacks {
   onSuccess?: (txResponse: DeliverTxResponse) => void;
@@ -17,7 +18,7 @@ export interface BroadcastTxOptions extends BroadcastTxCallbacks {
    * Address of who is signing the transaction, if undefined will be used
    * the current active account.
    */
-  accountAddress?: string;
+  accountAddressOrWallet?: string | Wallet;
   /**
    * Optional transaction memo.
    */
@@ -37,7 +38,7 @@ const useBroadcastTxOnChain = () => {
     (messages: EncodeObject[], options?: BroadcastTxOptions) => {
       navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
         messages,
-        accountAddress: options?.accountAddress ?? activeAccount.address,
+        accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccount.address,
         memo: options?.memo,
         onSuccess: (txResponse: DeliverTxResponse) => {
           returnToCurrentScreen();

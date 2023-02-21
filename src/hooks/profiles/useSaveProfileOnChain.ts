@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { UploadMedia } from 'services/axios/requests/UploadMedia';
-import useUnlockWallet from 'hooks/useUnlockWallet';
 import { AccountWithWallet } from 'types/account';
-import useSignAndBroadcastTx, {
-  SignAndBroadcastSuccess,
-} from 'hooks/transactions/useSignAndBroadcastTx';
-import { DoNotModify, MsgSaveProfileEncodeObject, MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
-import { err, Result } from 'neverthrow';
+import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
+import {
+  DeliverTxResponse,
+  DoNotModify,
+  MsgSaveProfileEncodeObject,
+  MsgSaveProfileTypeUrl,
+} from '@desmoslabs/desmjs';
+import { err, ok, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
 import { isPictureAsset } from 'lib/ProfileUtils';
+import { Wallet } from 'types/wallet';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { CanceledOperationError } from 'types/error';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -32,15 +37,19 @@ export enum SaveProfileStatus {
  */
 const useSaveProfileOnChain = () => {
   const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
-  const unlockWallet = useUnlockWallet();
-  const signAndBroadcastTx = useSignAndBroadcastTx();
+  const broadcastTxOnChain = useBroadcastTxOnChain();
+  const activeAccountAddress = useActiveAccountAddress()!;
 
   const saveProfile = React.useCallback(
     async (
       params: DesmosProfile,
       providedAccount: AccountWithWallet | undefined,
-    ): Promise<Result<SignAndBroadcastSuccess, Error>> => {
-      const account = providedAccount ?? (await unlockWallet());
+    ): Promise<Result<DeliverTxResponse, Error>> => {
+      let wallet: Wallet | undefined;
+
+      if (providedAccount !== undefined) {
+        wallet = providedAccount.wallet;
+      }
 
       // Upload the profile and cover pictures
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
@@ -67,7 +76,7 @@ const useSaveProfileOnChain = () => {
       const msgSaveProfile: MsgSaveProfileEncodeObject = {
         typeUrl: MsgSaveProfileTypeUrl,
         value: {
-          creator: account.wallet.address,
+          creator: wallet?.address ?? activeAccountAddress,
           dtag: replaceUndefined(dTag),
           nickname: replaceUndefined(nickname),
           bio: replaceUndefined(bio),
@@ -78,9 +87,18 @@ const useSaveProfileOnChain = () => {
 
       // Sign and broadcast the transaction
       setStatus(SaveProfileStatus.BROADCASTING_TX);
-      const result = await signAndBroadcastTx(account, [msgSaveProfile], {
-        useOptimisticAPIs: false,
+      const result = await new Promise<Result<DeliverTxResponse, Error>>(resolve => {
+        broadcastTxOnChain([msgSaveProfile], {
+          accountAddressOrWallet: wallet,
+          onSuccess: txResponse => {
+            resolve(ok(txResponse));
+          },
+          onCancel: () => {
+            resolve(err(new CanceledOperationError()));
+          },
+        });
       });
+
       if (result.isErr()) {
         return err(result.error);
       }
@@ -89,7 +107,7 @@ const useSaveProfileOnChain = () => {
       setStatus(SaveProfileStatus.DONE);
       return result;
     },
-    [unlockWallet, signAndBroadcastTx],
+    [activeAccountAddress, broadcastTxOnChain],
   );
 
   return {

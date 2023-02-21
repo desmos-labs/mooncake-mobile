@@ -93,17 +93,22 @@ export function useBroadcastTx() {
 
   return React.useCallback(
     async (
-      accountAddress: string,
+      accountAddressOrWallet: string | Wallet,
       messages: EncodeObject[],
       fees: StdFee,
       memo?: string,
     ): Promise<Result<DeliverTxResponse, Error>> => {
-      const walletUnlockResult = await unlockWallet(accountAddress);
-      // An error occurred while unlocking the wallet, propagate it.
-      if (walletUnlockResult.isErr()) {
-        return err(walletUnlockResult.error);
+      let wallet: Wallet;
+      if (typeof accountAddressOrWallet === 'string') {
+        const walletUnlockResult = await unlockWallet(accountAddressOrWallet);
+        // An error occurred while unlocking the wallet, propagate it.
+        if (walletUnlockResult.isErr()) {
+          return err(walletUnlockResult.error);
+        }
+        wallet = walletUnlockResult.value;
+      } else {
+        wallet = accountAddressOrWallet;
       }
-      const wallet = walletUnlockResult.value;
 
       // Create an instance of DesmosClient that can be used to broadcast the
       // transaction and query data from the chain.

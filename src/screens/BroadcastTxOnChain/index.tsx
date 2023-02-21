@@ -17,6 +17,7 @@ import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
 import Button from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
+import { Wallet } from 'types/wallet';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -27,7 +28,7 @@ export type BroadcastTxParams = {
   /**
    * Address of who is signing the transaction.
    */
-  accountAddress: string;
+  accountAddressOrWallet: string | Wallet;
   /**
    * Optional transaction memo.
    */
@@ -47,7 +48,7 @@ const BroadcastTxOnChain: React.FC = () => {
   const { t } = useTranslation('broadcastTxOnChain');
   const styles = useStyles();
   const { params } = useRoute<NavProps['route']>();
-  const { accountAddress, messages, memo, title, onSuccess, onCancel } = params;
+  const { accountAddressOrWallet, messages, memo, title, onSuccess, onCancel } = params;
   const estimateFees = useEstimateFees();
   const [estimatingFees, setEstimatingFees] = React.useState(false);
   const [feesResult, setFeesResult] = React.useState<Result<StdFee, Error>>();
@@ -63,7 +64,13 @@ const BroadcastTxOnChain: React.FC = () => {
     (async () => {
       setFeesResult(undefined);
       setEstimatingFees(true);
-      const estimatedFees = await estimateFees(accountAddress, messages, memo);
+      let address: string;
+      if (typeof accountAddressOrWallet === 'object') {
+        address = accountAddressOrWallet.address;
+      } else {
+        address = accountAddressOrWallet;
+      }
+      const estimatedFees = await estimateFees(address, messages, memo);
       setEstimatingFees(false);
       setFeesResult(estimatedFees);
     })();
@@ -75,7 +82,7 @@ const BroadcastTxOnChain: React.FC = () => {
   const handleBroadcastTx = React.useCallback(async () => {
     if (feesResult?.isOk()) {
       setBroadcastingTx(true);
-      const result = await broadcastTx(accountAddress, messages, feesResult.value, memo);
+      const result = await broadcastTx(accountAddressOrWallet, messages, feesResult.value, memo);
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
@@ -85,7 +92,7 @@ const BroadcastTxOnChain: React.FC = () => {
         onSuccess(result.value);
       }
     }
-  }, [accountAddress, broadcastTx, feesResult, memo, messages, onSuccess]);
+  }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess]);
 
   return (
     <DView>
