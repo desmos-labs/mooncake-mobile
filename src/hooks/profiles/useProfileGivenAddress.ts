@@ -48,8 +48,10 @@ const useProfileGivenAddress = (address?: string) => {
 
     switch (isForActiveUser) {
       case true:
-        // Cache the profile of the active user
-        storeProfile(userAddress, onChainProfile);
+        if (onChainProfile !== undefined) {
+          // Cache the profile of the active user
+          storeProfile(userAddress, onChainProfile);
+        }
         break;
 
       default:

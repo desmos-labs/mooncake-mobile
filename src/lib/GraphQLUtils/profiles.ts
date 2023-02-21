@@ -26,13 +26,15 @@ export const convertGraphQLProfileParams = (params: any) =>
  * @param {any} profile - Desmos Profile data fetched from the server.
  * @returns {DesmosProfile} - A formatted DesmosProfile object
  */
-export const convertGraphQLProfile = (profile: any) =>
-  ({
-    dTag: profile.dtag,
-    address: profile.address,
-    bio: profile.bio,
-    profilePicture: profile.profile_picture?.length ? profile.profile_picture : undefined,
-    coverPicture: profile.cover_picture?.length ? profile.cover_picture : undefined,
-    nickname: profile.nickname,
-    creationTime: profile.creation_time,
-  } as DesmosProfile);
+export const convertGraphQLProfile = (profile: any | undefined) =>
+  profile
+    ? ({
+        dTag: profile.dtag,
+        address: profile.address,
+        bio: profile.bio,
+        profilePicture: profile.profile_picture?.length ? profile.profile_picture : undefined,
+        coverPicture: profile.cover_picture?.length ? profile.cover_picture : undefined,
+        nickname: profile.nickname,
+        creationTime: profile.creation_time,
+      } as DesmosProfile)
+    : undefined;
