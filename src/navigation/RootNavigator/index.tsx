@@ -59,7 +59,6 @@ import ManageConnectionsModal, {
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions } from 'react-native';
-import WelcomePage from 'screens/WelcomePage';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
 import { ProfileOperationsParams } from 'screens/ProfileOperations';
@@ -304,7 +303,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.WELCOME} component={WelcomeBack} />
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
-      <Stack.Screen name={ROUTES.WELCOME} component={WelcomePage} />
       <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
       {/* ------------------------ */}

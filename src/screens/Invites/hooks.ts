@@ -3,7 +3,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import useButterConfig from 'hooks/config/useButterConfig';
 import GenerateInvite from 'services/axios/requests/GenerateInvite';
 import { ResultAsync } from 'neverthrow';
-import useGetActiveAccountInvites from 'hooks/invites/useGetInvites';
+import useGetActiveAccountInvites from 'hooks/invites/useInvites';
 import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
 
 export interface InvitesInfo {

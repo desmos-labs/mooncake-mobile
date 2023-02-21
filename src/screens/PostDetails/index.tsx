@@ -37,7 +37,6 @@ import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComp
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
-import useFocusTextInputOnNavigate from 'hooks/useFocusOnTextInputWithParams';
 import { isCommentReply, isPostPending, Post } from 'types/posts';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
@@ -55,6 +54,7 @@ import { getProfileDisplayName } from 'lib/ProfileUtils';
 import { useActiveProfile } from '@recoil/profiles';
 import TopBar from 'components/TopBar';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
+import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
 import {
   useHandleCreateComment,
   useHandleExpandCommentView,
