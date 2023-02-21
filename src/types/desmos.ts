@@ -174,13 +174,6 @@ export interface ApplicationLink {
   readonly creationTime: Date;
 }
 
-export interface FollowedUser extends CacheableObject {
-  /**
-   * Address of the followed user.
-   */
-  readonly address: string;
-}
-
 export interface PostReaction extends CacheableObject {
   /**
    * Post associated with the reaction.
@@ -199,11 +192,14 @@ export interface PostReaction extends CacheableObject {
 /**
  * Represents a comparable {@link PostReaction}.
  */
-export type ComparableReaction = Pick<PostReaction, 'post'>;
+export interface ComparableReaction {
+  readonly subspaceId: number;
+  readonly postId: number;
+}
 
 /**
  * Allows to determine whether the two given reactions are equals or not.
  */
-export const areReactionsEqual = (first: ComparableReaction, second: ComparableReaction) => {
-  return first.post.subspaceId === second.post.subspaceId && first.post.id === second.post.id;
+export const areReactionsEqual = (first: PostReaction, second: ComparableReaction) => {
+  return first.post.subspaceId === second.subspaceId && first.post.id === second.postId;
 };

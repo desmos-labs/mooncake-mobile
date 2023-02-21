@@ -5,7 +5,7 @@ import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 
 /**
  * Hook that allows to update the pending reactions based on the data retrieved from the server.
- * @param user {string} - Address of the user for which the pending reactions should be deleted.
+ * @param user {string} - Address of the user for which the pending reactions should be updated.
  */
 const useUpdatePendingReactions = (user: string) => {
   const updateStoredPendingReaction = useUpdatePendingPostReaction(user);

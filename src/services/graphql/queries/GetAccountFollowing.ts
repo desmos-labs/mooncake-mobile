@@ -1,29 +1,21 @@
 import { gql } from '@apollo/client';
+import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
 
 const GetAccountFollowing = gql`
+  ${ProfileFields}
   query GetPaginatedFollowing(
     $subspaceId: bigint!
     $userAddress: String!
     $limit: Int!
     $offset: Int!
   ) @api(name: butter) {
-    paginatedFollowers: user_relationship(
-      limit: $limit
+    following: user_relationship(
+      where: { subspace_id: { _eq: $subspaceId }, creator_address: { _eq: $userAddress } }
       offset: $offset
-      where: { subspace_id: { _eq: $subspaceId }, creator_address: { _eq: $userAddress } }
+      limit: $limit
     ) {
-      _: counterparty {
-        address
-        dtag
-        profile_pic
-        nickname
-      }
-    }
-    user_relationship_aggregate(
-      where: { subspace_id: { _eq: $subspaceId }, creator_address: { _eq: $userAddress } }
-    ) {
-      aggregate {
-        count
+      counterparty {
+        ...ProfileFields
       }
     }
   }

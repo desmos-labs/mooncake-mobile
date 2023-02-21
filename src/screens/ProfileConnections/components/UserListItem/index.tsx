@@ -58,7 +58,7 @@ const UserListItem = (props: UserListItemProps) => {
       {/* Button to follow or unfollow a user */}
       {!isActiveAccount && (
         <FollowButton
-          onPress={() => followOrUnfollowUser(user.address)}
+          onPress={() => followOrUnfollowUser(user)}
           type={isFollowing ? 'unfollow' : 'follow'}
         />
       )}

@@ -3,7 +3,7 @@ import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mmkvValueToCache } from '@recoil/utils';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { areTipsEqual, ComparableTip, Tip, TipTargetType } from 'types/tips';
+import { areTipsEqual, comparablePostTip, comparableTip, ComparableTip, Tip } from 'types/tips';
 
 const tipsState = atom<MultipleUsersCache<Tip, ComparableTip>>({
   key: 'tipsState',
@@ -44,15 +44,7 @@ export const useHasPostTip = (user: string) => {
   return React.useCallback(
     (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
-      return userTips
-        .readAll()
-        .some(
-          tip =>
-            tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === subspaceId &&
-            tip.target.post.id === postId &&
-            tip.status !== DataStatus.DELETED_LOCALLY,
-        );
+      return userTips.has(comparablePostTip(subspaceId, postId));
     },
     [tips, user],
   );
@@ -77,14 +69,7 @@ export const useGetPostTipsToSync = (user: string) => {
   return React.useCallback(
     (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
-      return userTips
-        .readAll()
-        .filter(
-          tip =>
-            tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === subspaceId &&
-            tip.target.post.id === postId,
-        );
+      return userTips.filterPending(comparablePostTip(subspaceId, postId));
     },
     [tips, user],
   );
@@ -114,13 +99,7 @@ export const useGetPostTipsDifference = (user: string) => {
     (subspaceId: number, postId: number) => {
       const userTips = tips.get(user);
       return userTips
-        .readAll()
-        .filter(
-          tip =>
-            tip.target.type === TipTargetType.POST &&
-            tip.target.post.subspaceId === subspaceId &&
-            tip.target.post.id === postId,
-        )
+        .filter(comparablePostTip(subspaceId, postId))
         .map(followedUser => {
           switch (followedUser.status) {
             case DataStatus.CREATED_LOCALLY:
@@ -147,10 +126,8 @@ export const useUpdatePendingPostTip = (user: string) => {
     (original: Tip, update: Tip) => {
       setTips(tips => {
         const existingTips = tips.get(user);
-        const updatedTips = existingTips
-          .readAll()
-          .map(t => (areTipsEqual(t, original) && t.status !== DataStatus.SYNCED ? update : t));
-        return tips.update(user, existingTips.set(updatedTips));
+        const updatedTips = existingTips.updatePending(comparableTip(original), update);
+        return tips.update(user, updatedTips);
       });
     },
     [user, setTips],
@@ -167,10 +144,8 @@ export const useRemovePendingPostTip = (user: string) => {
     (tip: Tip) => {
       setTips(tips => {
         const existingTips = tips.get(user);
-        const updatedTips = existingTips
-          .readAll()
-          .filter(t => !areTipsEqual(t, tip) || t.status !== DataStatus.SYNCED);
-        return tips.update(user, existingTips.set(updatedTips));
+        const updatedTips = existingTips.removePending(comparableTip(tip));
+        return tips.update(user, updatedTips);
       });
     },
     [user, setTips],
@@ -187,7 +162,7 @@ export const useDeleteStoredTip = (user: string) => {
     (tip: Tip) => {
       setTips(tips => {
         const userTips = tips.get(user);
-        const updatedTips = userTips.remove(tip);
+        const updatedTips = userTips.remove(comparableTip(tip));
         return tips.update(user, updatedTips);
       });
     },

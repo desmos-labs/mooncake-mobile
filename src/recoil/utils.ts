@@ -9,9 +9,9 @@ import { getMMKV, MMKVKEYS } from 'lib/MMKVStorage';
  */
 // It's fine to disable the next warning as we might add other methods in the future
 // eslint-disable-next-line import/prefer-default-export
-export const mmkvValueToCache = <T extends CacheableObject, C extends Partial<T>>(
+export const mmkvValueToCache = <T extends CacheableObject, C>(
   key: MMKVKEYS,
-  comparator: Comparator<C>,
+  comparator: Comparator<T, C>,
 ): MultipleUsersCache<T, C> => {
   return MultipleUsersCache.fromSerializedValues(
     (getMMKV(key) ?? {}) as Record<string, T[]>,

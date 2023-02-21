@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { DesmosProfile } from 'types/desmos';
-import { useCallback, useState } from 'react';
 import GetAccountFollowers from 'services/graphql/queries/GetAccountFollowers';
 import { useQuery } from '@apollo/client';
 import { useAppStateValue } from '@recoil/appState';
@@ -27,14 +27,14 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   // Callback to be called when the followers list is fetched
-  const onCompletedCallback = (data: any) => {
+  const onCompletedCallback = React.useCallback((data: any) => {
     if (!data) return;
 
     const profiles = data.relationships
       .map((relationship: any) => relationship.creator)
       .map(convertGraphQLProfile);
     setFollowers(profiles);
-  };
+  }, []);
 
   // Query the followers list
   const { loading, fetchMore, refetch } = useQuery(GetAccountFollowers, {
@@ -45,10 +45,11 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
       limit: followersPerPage,
     },
     onCompleted: onCompletedCallback,
+    refetchWritePolicy: 'overwrite',
   });
 
   // Callback to be called to fetch more followers
-  const fetchMoreFollowers = useCallback(async () => {
+  const fetchMoreFollowers = React.useCallback(async () => {
     try {
       setError(undefined);
       setFetchingMore(true);
@@ -71,7 +72,7 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   }, [fetchMore, followers.length]);
 
   // Callback to be called when the followers list is refreshed
-  const refetchFollowers = useCallback(async () => {
+  const refetchFollowers = React.useCallback(async () => {
     try {
       setError(undefined);
       setRefreshing(true);
@@ -85,7 +86,7 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
       // Make sure to set the fetching to false in any case
       setRefreshing(false);
     }
-  }, [refetch]);
+  }, [onCompletedCallback, refetch]);
 
   return {
     followers: [] as DesmosProfile[],

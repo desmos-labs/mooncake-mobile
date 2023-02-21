@@ -30,7 +30,7 @@ export interface CacheableObject {
   readonly lastEdited: string;
 }
 
-export type Comparator<T> = (first: T, second: T) => boolean;
+export type Comparator<T, C> = (first: T, second: C) => boolean;
 
 /**
  *
@@ -41,17 +41,17 @@ export type Comparator<T> = (first: T, second: T) => boolean;
  * meaning they always return a new {@link MultipleUsersCache} instance.
  * This makes them safe to use even with libraries such as Recoil that freeze objects.
  */
-export class Cache<T extends CacheableObject, C extends Partial<T>> {
+export class Cache<T extends CacheableObject, C> {
   private readonly values: T[];
 
-  private readonly areEquals: Comparator<C>;
+  private readonly areEquals: Comparator<T, C>;
 
   /**
    * Builds a new Cache of a given type.
    * @param initialValues - Initial values to be stored inside the cache.
    * @param areEquals - Function that allows to determine whether two types are equals.
    */
-  constructor(initialValues: T[], areEquals: Comparator<C>) {
+  constructor(initialValues: T[], areEquals: Comparator<T, C>) {
     this.values = initialValues;
     this.areEquals = areEquals;
   }
@@ -92,9 +92,7 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
    */
   public has(data: C) {
     return this.values.some(
-      // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-      // @ts-ignore
-      value => this.areEquals(value as C, data) && value.status !== DataStatus.DELETED_LOCALLY,
+      value => this.areEquals(value, data) && value.status !== DataStatus.DELETED_LOCALLY,
     );
   }
 
@@ -104,9 +102,7 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
    * @param data - Data to be searched for.
    */
   public get(data: C): T | undefined {
-    // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-    // @ts-ignore
-    return this.values.find(value => this.areEquals(value as C, data));
+    return this.values.find(value => this.areEquals(value, data));
   }
 
   /**
@@ -121,9 +117,13 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
    * @param data : Filter to be applied.
    */
   public filter(data: C): T[] {
-    // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-    // @ts-ignore
-    return this.values.filter(value => this.areEquals(value as C, data));
+    return this.values.filter(value => this.areEquals(value, data));
+  }
+
+  public filterPending(data: C): T[] {
+    return this.values.filter(
+      value => value.status !== DataStatus.SYNCED && this.areEquals(value, data),
+    );
   }
 
   /**
@@ -133,9 +133,7 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
    */
   public updateStatus(data: C, status: DataStatus): Cache<T, C> {
     const updateValues = [...this.values].map(value => {
-      // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-      // @ts-ignore
-      return this.areEquals(value as C, data)
+      return this.areEquals(value, data)
         ? {
             ...value,
             status,
@@ -147,14 +145,26 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
     return new Cache<T, C>(updateValues, this.areEquals);
   }
 
+  public updatePending(data: C, newData: T): Cache<T, C> {
+    const updateValues = [...this.values].map(value => {
+      return value.status !== DataStatus.SYNCED && this.areEquals(value, data) ? newData : value;
+    });
+    return new Cache<T, C>(updateValues, this.areEquals);
+  }
+
   /**
    * Removes the given data from the cache.
    * @param data - Data to be deleted from the cache.
    */
   public remove(data: C): Cache<T, C> {
-    // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-    // @ts-ignore
-    const updatedValues = this.values.filter(value => !this.areEquals(value as C, data));
+    const updatedValues = this.values.filter(value => !this.areEquals(value, data));
+    return new Cache<T, C>(updatedValues, this.areEquals);
+  }
+
+  public removePending(data: C): Cache<T, C> {
+    const updatedValues = this.values.filter(value => {
+      return value.status !== DataStatus.SYNCED && !this.areEquals(value, data);
+    });
     return new Cache<T, C>(updatedValues, this.areEquals);
   }
 }
@@ -168,12 +178,12 @@ export class Cache<T extends CacheableObject, C extends Partial<T>> {
  * meaning they always return a new {@link MultipleUsersCache} instance.
  * This makes them safe to use even with libraries such as Recoil that freeze objects.
  */
-export class MultipleUsersCache<T extends CacheableObject, C extends Partial<T>> {
+export class MultipleUsersCache<T extends CacheableObject, C> {
   private readonly caches: Record<string, Cache<T, C>>;
 
-  private readonly comparator: Comparator<C>;
+  private readonly comparator: Comparator<T, C>;
 
-  constructor(caches: Record<string, Cache<T, C>>, comparator: Comparator<C>) {
+  constructor(caches: Record<string, Cache<T, C>>, comparator: Comparator<T, C>) {
     this.caches = caches;
     this.comparator = comparator;
   }
@@ -181,9 +191,9 @@ export class MultipleUsersCache<T extends CacheableObject, C extends Partial<T>>
   /**
    * Builds a new {@link MultipleUsersCache} using the given values and comparator.
    */
-  static fromSerializedValues<T extends CacheableObject, C extends Partial<T>>(
+  static fromSerializedValues<T extends CacheableObject, C>(
     values: Record<string, T[]>,
-    comparator: Comparator<C>,
+    comparator: Comparator<T, C>,
   ): MultipleUsersCache<T, C> {
     return Object.entries(values).reduce((previous, [key, cachedValues]) => {
       return previous.add(key, cachedValues);

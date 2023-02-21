@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Post } from 'types/posts';
+import { Post, PostStatus } from 'types/posts';
 import { useQuery } from '@apollo/client';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
 import { getLikeReactionId } from 'types/desmos';
@@ -29,7 +29,10 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   // Get the comments to be synced
   const postsToSync = usePostsToSync(activeAccountAddress);
   const commentsToSync = useMemo(
-    () => postsToSync.filter(p => p.conversationId === post.id),
+    () =>
+      postsToSync
+        .filter(p => p.conversationId === post.id)
+        .filter(p => p.status === PostStatus.CREATED_LOCALLY),
     [post.id, postsToSync],
   );
 
