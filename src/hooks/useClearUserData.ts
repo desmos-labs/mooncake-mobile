@@ -10,9 +10,9 @@ import { useTranslation } from 'react-i18next';
  * to the Landing page.
  */
 const useClearUserData = () => {
-  const { navigate, pop, reset } = useNavigation<any>();
-
   const { t } = useTranslation('forgotPassword');
+
+  const { navigate, pop, reset } = useNavigation<any>();
 
   const handleConfirmReset = React.useCallback(async () => {
     clearMMKV();
