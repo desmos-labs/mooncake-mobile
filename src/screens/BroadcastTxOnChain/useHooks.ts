@@ -97,15 +97,11 @@ export function useBroadcastTx() {
       messages: EncodeObject[],
       fees: StdFee,
       memo?: string,
-    ): Promise<Result<DeliverTxResponse | undefined, Error>> => {
+    ): Promise<Result<DeliverTxResponse, Error>> => {
       const walletUnlockResult = await unlockWallet(accountAddress);
       // An error occurred while unlocking the wallet, propagate it.
       if (walletUnlockResult.isErr()) {
         return err(walletUnlockResult.error);
-      }
-      // The user cancel the wallet unlock procedure.
-      if (walletUnlockResult.value === undefined) {
-        return ok(undefined);
       }
       const wallet = walletUnlockResult.value;
 

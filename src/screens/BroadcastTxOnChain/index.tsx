@@ -16,6 +16,7 @@ import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useH
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
 import Button from 'components/Button';
+import { isCanceledOperationError } from 'types/error';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -77,10 +78,10 @@ const BroadcastTxOnChain: React.FC = () => {
       const result = await broadcastTx(accountAddress, messages, feesResult.value, memo);
       setBroadcastingTx(false);
 
-      if (result.isErr()) {
+      if (result.isErr() && !isCanceledOperationError(result.error)) {
         // TODO: Show this error message in a modal.
         console.error(result.error.message);
-      } else if (result.value !== undefined && onSuccess) {
+      } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);
       }
     }

@@ -69,11 +69,11 @@ const Settings: React.FC<NavProps> = props => {
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
   const signOut = useSignOut();
+  const formatDateToTZ = useFormatDateToTZ();
 
-  const formattedAccountCreationDate = useFormatDateToTZ(
-    activeAccount.creationDate.toISOString(),
-    'MMM dd yyyy',
-  );
+  const formattedAccountCreationDate = React.useMemo(() => {
+    return formatDateToTZ(activeAccount.creationDate.toISOString(), 'MMM dd yyyy');
+  }, [formatDateToTZ]);
 
   const openConfirmSignOutModal = useCallback(() => {
     navigate({

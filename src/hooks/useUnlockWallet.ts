@@ -8,6 +8,7 @@ import ROUTES from 'navigation/routes';
 import { useActiveAccount } from '@recoil/accounts';
 import { SigningMode } from '@desmoslabs/desmjs';
 import { err, ok, Result } from 'neverthrow';
+import { CanceledOperationError } from 'types/error';
 
 /**
  * Hooks that provides a function to unlock and access a user wallet.
@@ -25,7 +26,7 @@ const useUnlockWallet = () => {
         return Promise.resolve(err(new Error('no account selected')));
       }
 
-      return new Promise<Result<Wallet | undefined, Error>>(resolve => {
+      return new Promise<Result<Wallet, Error>>(resolve => {
         navigator.navigate(ROUTES.UNLOCK_WALLET, {
           address,
           onSuccess: wallet => {
@@ -33,7 +34,7 @@ const useUnlockWallet = () => {
             returnToCurrentScreen();
           },
           onCancel: () => {
-            resolve(ok(undefined));
+            resolve(err(new CanceledOperationError()));
             returnToCurrentScreen();
           },
           signingMode,
