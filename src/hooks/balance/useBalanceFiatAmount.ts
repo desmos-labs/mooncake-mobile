@@ -1,25 +1,20 @@
-import { useCallback, useState } from 'react';
 import { Coin } from '@cosmjs/stargate';
+import useTokensPrices from 'hooks/balance/useTokensPrices';
 
 /**
  * Hook that allows to get the fiat amount for a given balance.
  * @param balance The balance to get the fiat amount for.
- * TODO: Implement this
  */
 const useBalanceFiatAmount = (balance: Coin[]) => {
-  // TODO: Get the fiat to be used from the user.
-
-  const [symbol, setSymbol] = useState<string>('$');
-  const [amount, setAmount] = useState<number>(0);
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const refetch = useCallback(async () => {}, []);
+  const { prices, loading, refetch: refetchPrices } = useTokensPrices(balance);
 
   return {
-    symbol,
-    amount,
+    // Currently the APIs allow to get only the price in USD.
+    symbol: '$',
+
+    amount: prices.map(p => p.price).reduce((a, b) => a + b, 0),
     loading,
-    refetch,
+    refetch: refetchPrices,
   };
 };
 

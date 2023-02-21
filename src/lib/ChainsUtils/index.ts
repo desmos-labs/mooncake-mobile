@@ -6,12 +6,27 @@ import { bech32AddressToAny } from '@desmoslabs/desmjs/build/aminomessages/profi
 import { Bech32Address } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_chain_links';
 import { Coin } from '@cosmjs/stargate';
 
+/**
+ * Finds the chain info with the given {@param chainName} inside the supported chains.
+ */
 export const findChainInfoByName = (chainName: string) => {
   return SupportedChains.flatMap(chain => chain.chainInfo).find(
     info => info?.chainName === chainName,
   );
 };
 
+/**
+ * Find the currency with the given {@param denom} inside the list of currencies of the supported chains.
+ */
+export const findCurrencyByDenom = (denom: string) => {
+  return SupportedChains.flatMap(chain => chain.chainInfo ?? [])
+    .flatMap(info => info.currencies ?? [])
+    .find(value => value.coinDenom === denom);
+};
+
+/**
+ * Finds the coin with the given {@param denom} in the given {@param coins} array.
+ */
 export const findCoinByDenom = (coins: Coin[], denom: string) => {
   return coins.find(coin => coin.denom === denom);
 };
