@@ -7,6 +7,16 @@ import { CanceledOperationError } from 'types/error';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
+import { useGetOnChainProfile } from 'hooks/profiles/useGetOnChainProfile';
+import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
+import useSaveProfile from 'hooks/profiles/useSaveProfile';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
+import { DesmosProfile } from 'types/desmos';
+import { useStoredProfiles } from '@recoil/profiles';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
 
 export interface BroadcastOptions {
   /**
@@ -28,6 +38,38 @@ export interface BroadcastOptions {
 export interface SuccessfulBroadcast {
   readonly txHash: string;
 }
+
+const useCreateUserProfileOnChain = () => {
+  const saveProfile = useSaveProfile();
+  const returnToCurrentScreen = useReturnToCurrentScreen();
+  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+
+  return React.useCallback(
+    (profile?: DesmosProfile): Promise<Result<void, CanceledOperationError>> => {
+      return new Promise(resolve => {
+        navigation.navigate(ROUTES.BOTTOM_MODAL, {
+          title: 'Save profile',
+          body: 'Your profile has not been saved on chain yet, to perform this transaction you need to save your profile first.',
+          onPressPrimary: () => {
+            saveProfile({
+              profile,
+              storeOnChain: true,
+              onSuccess: () => {
+                returnToCurrentScreen();
+                resolve(ok(undefined));
+              },
+              onCancel: () => {
+                resolve(err(new CanceledOperationError()));
+              },
+            });
+          },
+          primaryButtonLabel: 'Save profile',
+        });
+      });
+    },
+    [navigation, returnToCurrentScreen, saveProfile],
+  );
+};
 
 /**
  * Hook that allows to broadcast a transaction by going through the various UI based on the user's wallet type.
@@ -53,6 +95,9 @@ const useBroadcastTx = () => {
     activeAccountAddress,
     true,
   );
+  const fetchOnChainProfile = useGetOnChainProfile();
+  const createUserProfileOnChain = useCreateUserProfileOnChain();
+  const storedProfiles = useStoredProfiles();
 
   return React.useCallback(
     async (
@@ -60,6 +105,21 @@ const useBroadcastTx = () => {
       options?: BroadcastOptions,
     ): Promise<Result<SuccessfulBroadcast, Error>> => {
       let broadcastOnChain = options?.onChain === true;
+
+      const accountProfile = await fetchOnChainProfile(activeAccountAddress);
+      if (
+        accountProfile.isOk() &&
+        accountProfile.value === undefined &&
+        msgs.find(msg => msg.typeUrl === MsgSaveProfileTypeUrl) === undefined
+      ) {
+        const createProfileResult = await createUserProfileOnChain(
+          storedProfiles[activeAccountAddress],
+        );
+
+        if (createProfileResult.isErr()) {
+          return Promise.resolve(err(new Error("can't create user profile")));
+        }
+      }
 
       // Don't check the permissions if the user forced the
       // transaction to be on chain.

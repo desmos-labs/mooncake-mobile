@@ -9,11 +9,10 @@ import {
 } from '@desmoslabs/desmjs';
 import { err, ok, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
-import { isPictureAsset } from 'lib/ProfileUtils';
 import { Wallet } from 'types/wallet';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { CanceledOperationError } from 'types/error';
-import useUploadAsset from 'hooks/useUploadAsset';
+import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -36,15 +35,10 @@ export enum SaveProfileStatus {
  * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfileOnChain = () => {
-  const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Cannot save profile on-chain without an active account');
-  }
-
-  const uploadAsset = useUploadAsset();
-  const broadcastTxOnChain = useBroadcastTxOnChain();
-
   const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
+  const broadcastTxOnChain = useBroadcastTxOnChain();
+  const activeAccountAddress = useActiveAccountAddress()!;
+  const uploadProfilePictures = useUploadProfilePictures();
 
   const saveProfile = React.useCallback(
     async (
@@ -57,26 +51,15 @@ const useSaveProfileOnChain = () => {
         wallet = providedAccount.wallet;
       }
 
-      // Upload the profile and cover picture
+      // Upload the profile and cover pictures
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
-      const { coverPicture, profilePicture } = params;
+      const uploadPictureResult = await uploadProfilePictures(params);
 
-      const profilePicResult = isPictureAsset(profilePicture)
-        ? await uploadAsset(profilePicture)
-        : undefined;
-      if (profilePicResult?.isErr()) {
-        return err(profilePicResult.error);
+      if (uploadPictureResult.isErr()) {
+        return err(uploadPictureResult.error);
       }
 
-      const coverPicResult = isPictureAsset(coverPicture)
-        ? await uploadAsset(coverPicture)
-        : undefined;
-      if (coverPicResult?.isErr()) {
-        return err(coverPicResult.error);
-      }
-
-      const profilePicUrl = profilePicResult?.unwrapOr(undefined)?.uri;
-      const coverPicUrl = coverPicResult?.unwrapOr(undefined)?.uri;
+      const { profilePictureUrl, coverPictureUrl } = uploadPictureResult.value;
 
       // Build the message to save the profile on-chain
       const { dTag, nickname, bio } = params;
@@ -87,8 +70,8 @@ const useSaveProfileOnChain = () => {
           dtag: replaceUndefined(dTag),
           nickname: replaceUndefined(nickname),
           bio: replaceUndefined(bio),
-          profilePicture: replaceUndefined(profilePicUrl),
-          coverPicture: replaceUndefined(coverPicUrl),
+          profilePicture: replaceUndefined(profilePictureUrl),
+          coverPicture: replaceUndefined(coverPictureUrl),
         },
       };
 
@@ -114,7 +97,7 @@ const useSaveProfileOnChain = () => {
       setStatus(SaveProfileStatus.DONE);
       return result;
     },
-    [activeAccountAddress, broadcastTxOnChain],
+    [activeAccountAddress, broadcastTxOnChain, uploadProfilePictures],
   );
 
   return {

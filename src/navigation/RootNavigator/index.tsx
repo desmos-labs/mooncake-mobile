@@ -64,6 +64,7 @@ import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/P
 import { ProfileOperationsParams } from 'screens/ProfileOperations';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import Login, { LoginParams } from 'screens/Login';
+import { SaveProfileModalParams } from 'screens/Modals/UploadProfilePicturesModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -211,6 +212,7 @@ export type RootNavigatorParamList = {
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
+  [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS

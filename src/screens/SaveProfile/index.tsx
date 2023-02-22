@@ -21,6 +21,7 @@ import { Asset } from 'react-native-image-picker';
 import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import CreateAvatar from './components/CreateAvatar';
 import {
   SaveProfileFormState,
@@ -56,6 +57,10 @@ export interface SaveProfileParams {
    * Optional callback that is used when the profile is saved properly.
    */
   readonly onSuccess?: () => void;
+  /**
+   * Optional callback that is used when the user cancel the save operation.
+   */
+  readonly onCancel?: () => void;
   /**
    * Optional callback used when the profile saving returns any error.
    */
@@ -115,6 +120,9 @@ const SaveProfile = (props: NavProps) => {
   const { imageFromLibrary: selectProfilePicture } = useImageFromDevice({
     onImageSelected: image => setProfilePic(image),
   });
+
+  // Hook to handle the cancel action
+  useOnBackAction(params?.onCancel ?? (() => {}), []);
 
   // Hook to submit the form and check the status of the profile saving.
   const { status, submitForm } = useSubmitForm(profile, account, saveOnChain);
