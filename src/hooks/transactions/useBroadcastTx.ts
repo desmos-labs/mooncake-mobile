@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
+import { useTranslation } from 'react-i18next';
 
 export interface BroadcastOptions {
   /**
@@ -40,6 +41,7 @@ export interface SuccessfulBroadcast {
 }
 
 const useCreateUserProfileOnChain = () => {
+  const { t } = useTranslation('broadcastTx');
   const saveProfile = useSaveProfile();
   const returnToCurrentScreen = useReturnToCurrentScreen();
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
@@ -49,8 +51,8 @@ const useCreateUserProfileOnChain = () => {
       const confirmProfileCreation = await new Promise<Result<void, CanceledOperationError>>(
         resolve => {
           navigation.navigate(ROUTES.BOTTOM_MODAL, {
-            title: 'Save profile',
-            body: 'Your profile has not been saved on chain yet, to perform this transaction you need to save your profile first.',
+            title: t('save created profile'),
+            body: t('save created profile body'),
             onPressPrimary: () => {
               resolve(ok(undefined));
             },
@@ -80,7 +82,7 @@ const useCreateUserProfileOnChain = () => {
         });
       });
     },
-    [navigation, returnToCurrentScreen, saveProfile],
+    [navigation, returnToCurrentScreen, saveProfile, t],
   );
 };
 
