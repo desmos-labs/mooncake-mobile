@@ -11,6 +11,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useStyles from './useStyles';
 
 declare type Props = StackScreenProps<RootNavigatorParamList>;
@@ -26,15 +27,15 @@ const WelcomePage: React.FC<Props> = () => {
   const theme = useTheme();
 
   const { navigate } = useNavigation<Props['navigation']>();
+  const navigateHome = useNavigateToHome();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const navigateToHome = useCallback(() => {
-    // TODO: Implement this
-    Alert.alert('Implement navigation to Home screen');
-  }, []);
+    navigateHome();
+  }, [navigateHome]);
 
   const navigateToBackupPhrase = useCallback(() => {
     // TODO: Implement this
