@@ -1,5 +1,4 @@
 import { DesmosProfile } from 'types/desmos';
-import { PostReferenceType } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 export enum PostStatus {
   SYNCED = 'synced',
@@ -76,9 +75,27 @@ export interface Post {
   readonly transactions: PostTransaction[];
 }
 
+export enum PostReferenceType {
+  POST_REFERENCE_TYPE_UNSPECIFIED = '  POST_REFERENCE_TYPE_UNSPECIFIED',
+  POST_REFERENCE_TYPE_REPLY = 'POST_REFERENCE_TYPE_REPLY',
+  POST_REFERENCE_TYPE_QUOTE = 'POST_REFERENCE_TYPE_QUOTE',
+  POST_REFERENCE_TYPE_REPOST = 'POST_REFERENCE_TYPE_REPOST',
+}
+
 export interface PostReference {
+  /**
+   * ID of the post that is being referenced.
+   */
   readonly postId: number;
+
+  /**
+   * Position of the reference inside the post's text.
+   */
   readonly position: number;
+
+  /**
+   * Type of the reference.
+   */
   readonly type: PostReferenceType;
 }
 

@@ -19,6 +19,13 @@ const PostFields = gql`
         height
       }
     }
+    references {
+      type
+      position_index
+      reference {
+        id
+      }
+    }
     creation_date
     author {
       ...ProfileFields

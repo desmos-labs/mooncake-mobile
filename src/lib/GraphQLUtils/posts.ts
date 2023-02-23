@@ -6,6 +6,8 @@ import {
   PostAttachmentSize,
   PostAttachmentType,
   PostMediaAttachment,
+  PostReference,
+  PostReferenceType,
   PostStatus,
   PostTransaction,
 } from 'types/posts';
@@ -17,15 +19,22 @@ import { MediaTypeUrl } from '@desmoslabs/desmjs';
  * @param {any} params - Desmos posts params fetched from the server.
  * @returns {PostsParams} - A formatted PostsParams object
  */
-export const convertGraphQLPostsParams = (params: any) =>
-  ({
+export const convertGraphQLPostsParams = (params: any): PostsParams => {
+  return {
     maxTextLength: params.max_text_length,
-  } as PostsParams);
+  } as PostsParams;
+};
 
-const convertGraphQLPostAttachmentSize = (size: any | undefined) => {
-  return (size?.length ?? 0) === 0
-    ? undefined
-    : ({ height: size[0].height, width: size[0].width } as PostAttachmentSize);
+const convertGraphQLPostAttachmentSize = (
+  size: any | undefined,
+): PostAttachmentSize | undefined => {
+  if ((size?.length ?? 0) === 0) {
+    return undefined;
+  }
+  return {
+    height: size[0].height,
+    width: size[0].width,
+  } as PostAttachmentSize;
 };
 
 const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentContent => {
@@ -42,17 +51,27 @@ const convertGraphQLPostAttachmentContent = (content: any): PostAttachmentConten
   }
 };
 
-const convertGraphQLPostAttachment = (attachment: any) =>
-  ({
+const convertGraphQLPostAttachment = (attachment: any): PostAttachment => {
+  return {
     id: attachment.id,
     content: convertGraphQLPostAttachmentContent(attachment.content),
     size: convertGraphQLPostAttachmentSize(attachment.size),
-  } as PostAttachment);
+  } as PostAttachment;
+};
 
-const convertGraphQLPostTransaction = (transaction: any) =>
-  ({
+const convertGraphQLPostReference = (reference: any): PostReference => {
+  return {
+    type: PostReferenceType[reference.type as keyof typeof PostReferenceType],
+    postId: reference.reference.id,
+    position: reference.position_index,
+  };
+};
+
+const convertGraphQLPostTransaction = (transaction: any): PostTransaction => {
+  return {
     hash: transaction.hash,
-  } as PostTransaction);
+  } as PostTransaction;
+};
 
 export interface GraphQLPost extends Post {
   /**
@@ -62,8 +81,8 @@ export interface GraphQLPost extends Post {
 }
 
 /**
- *
- * @param post
+ * Converts a post fetched from the GraphQL API into a format that is easier to parse by the app.
+ * @param post The post to convert.
  */
 export const convertGraphQLPost = (post: any): GraphQLPost => ({
   status: PostStatus.SYNCED,
@@ -77,10 +96,8 @@ export const convertGraphQLPost = (post: any): GraphQLPost => ({
   creationDate: post.creation_date,
   author: convertGraphQLProfile(post.author),
   transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
+  references: (post.references ?? []).map(convertGraphQLPostReference),
 
   // Extension fields
   hasReacted: post.reactionPresence?.aggregate?.count > 0,
-
-  // TODO: Implement this
-  references: [],
 });
