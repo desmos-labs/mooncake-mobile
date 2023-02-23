@@ -14,7 +14,7 @@ import { ApplicationLink } from 'types/desmos';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 
 export const useCreateAppLink = () => {
-  // TODO: Implement app link creation logic.
+  // TODO: Implement app link creation logic by navigating to the proper screen
   return React.useCallback(() => {
     console.warn('Implement app link creation logic.');
   }, []);

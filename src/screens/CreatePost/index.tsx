@@ -59,7 +59,9 @@ const CreatePost = () => {
   // -------------------------------------------------------------------------------------
 
   const author = useActiveProfile();
-  const createPost = useCreatePost(parent);
+
+  // TODO: Properly display the state of the creation of the post
+  const { state, createPost } = useCreatePost();
 
   // -------------------------------------------------------------------------------------
   // --- Post state
@@ -84,7 +86,7 @@ const CreatePost = () => {
   // Callback used when the user wants to create the post
   const handleCreatePost = React.useCallback(async () => {
     setLoading(true);
-    const result = await createPost();
+    const result = await createPost(parent);
     setLoading(false);
 
     if (result.isErr()) {
@@ -94,7 +96,7 @@ const CreatePost = () => {
     }
 
     goBack();
-  }, [createPost, goBack]);
+  }, [createPost, goBack, parent]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components

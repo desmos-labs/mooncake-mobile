@@ -88,6 +88,7 @@ export const convertGraphQLPost = (post: any): GraphQLPost => ({
   status: PostStatus.SYNCED,
   statusUpdateDate: new Date(Date.now()).toISOString(),
   subspaceId: post.subspace_id,
+  sectionId: post?.section?.id ?? 0,
   id: post.id,
   externalId: post.external_id,
   conversationId: post.conversation_id ?? 0,

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { UploadMedia } from 'services/axios/requests/UploadMedia';
 import { AccountWithWallet } from 'types/account';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import {
@@ -14,6 +13,7 @@ import { isPictureAsset } from 'lib/ProfileUtils';
 import { Wallet } from 'types/wallet';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { CanceledOperationError } from 'types/error';
+import useUploadAsset from 'hooks/useUploadAsset';
 
 /**
  * Replaces the given possibly undefined value with <code>[do-not-modify]</code>.
@@ -36,9 +36,15 @@ export enum SaveProfileStatus {
  * If no account is provided, the current user account will be used instead.
  */
 const useSaveProfileOnChain = () => {
-  const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
+  const activeAccountAddress = useActiveAccountAddress();
+  if (!activeAccountAddress) {
+    throw new Error('Cannot save profile on-chain without an active account');
+  }
+
+  const uploadAsset = useUploadAsset();
   const broadcastTxOnChain = useBroadcastTxOnChain();
-  const activeAccountAddress = useActiveAccountAddress()!;
+
+  const [status, setStatus] = useState<SaveProfileStatus>(SaveProfileStatus.UNDEFINED);
 
   const saveProfile = React.useCallback(
     async (
@@ -51,25 +57,26 @@ const useSaveProfileOnChain = () => {
         wallet = providedAccount.wallet;
       }
 
-      // Upload the profile and cover pictures
+      // Upload the profile and cover picture
       setStatus(SaveProfileStatus.UPLOADING_PICTURES);
       const { coverPicture, profilePicture } = params;
 
-      const [uploadProfilePicResult, uploadCoverPicResult] = await Promise.all([
-        isPictureAsset(profilePicture) ? UploadMedia({ mediaFile: profilePicture }) : undefined,
-        isPictureAsset(coverPicture) ? UploadMedia({ mediaFile: coverPicture }) : undefined,
-      ]);
-
-      if (uploadProfilePicResult?.isErr()) {
-        return err(uploadProfilePicResult.error);
+      const profilePicResult = isPictureAsset(profilePicture)
+        ? await uploadAsset(profilePicture)
+        : undefined;
+      if (profilePicResult?.isErr()) {
+        return err(profilePicResult.error);
       }
 
-      if (uploadCoverPicResult?.isErr()) {
-        return err(uploadCoverPicResult.error);
+      const coverPicResult = isPictureAsset(coverPicture)
+        ? await uploadAsset(coverPicture)
+        : undefined;
+      if (coverPicResult?.isErr()) {
+        return err(coverPicResult.error);
       }
 
-      const profilePicUrl = uploadProfilePicResult?.unwrapOr(undefined)?.url;
-      const coverPicUrl = uploadCoverPicResult?.unwrapOr(undefined)?.url;
+      const profilePicUrl = profilePicResult?.unwrapOr(undefined)?.uri;
+      const coverPicUrl = coverPicResult?.unwrapOr(undefined)?.uri;
 
       // Build the message to save the profile on-chain
       const { dTag, nickname, bio } = params;

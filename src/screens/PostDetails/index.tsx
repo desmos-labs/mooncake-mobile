@@ -180,7 +180,9 @@ const PostDetails = () => {
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
 
   const handlePressCounters = useHandlePressCounters(postData);
-  const { handleCreateComment } = useHandleCreateComment();
+
+  // TODO: Properly display the state of the comment creation
+  const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
   const handlePressReaction = useHandlePressReaction();

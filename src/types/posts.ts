@@ -24,6 +24,11 @@ export interface Post {
   readonly subspaceId: number;
 
   /**
+   * ID of the section inside which this post has been created.
+   */
+  readonly sectionId: number;
+
+  /**
    * ID of the post on-chain.
    * If the post has been created locally but is still being broadcast to the chain,
    * this will be

@@ -1,27 +1,61 @@
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import React from 'react';
+import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { PostReference } from 'types/posts';
 
 /**
  * Represents the state of the screen that allows to create a post.
  */
 export interface CreatePostState {
   /**
+   * ID of the section inside which this post has been created.
+   * Default to `0` if not set.
+   */
+  readonly sectionId?: number;
+
+  /**
    * Post text input by the user.
    */
   readonly text: string;
+
   /**
    * Any attachment (video, image, etc) associated to the post.
    */
   readonly attachments: UploadAssetType[];
+
+  /**
+   * Tags associated to the post, if any.
+   */
+  readonly tags: string[];
+
+  /**
+   * Entities associated to the post, if any.
+   */
+  readonly entities: Entities | undefined;
+
+  /**
+   * Posts referenced by this post.
+   */
+  readonly referencedPosts: PostReference[];
+
+  /**
+   * Reply settings of the post.
+   */
+  readonly replySettings: ReplySetting;
 }
 
 /**
  * Default state of the screen allowing to create a post.
  */
 const DefaultCreatePostState: CreatePostState = {
+  sectionId: 0,
   text: '',
   attachments: [],
+  tags: [],
+  entities: undefined,
+  referencedPosts: [],
+  replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
 };
 
 /**
@@ -32,6 +66,11 @@ const createPostState = atom<CreatePostState>({
   key: 'createPostState',
   default: DefaultCreatePostState,
 });
+
+/**
+ * Hook that allows to observe the {@link CreatePostState} atom.
+ */
+export const useCreatePostState = () => useRecoilValue(createPostState);
 
 /**
  * Recoil that allows to select a single {@link CreatePostState} value.

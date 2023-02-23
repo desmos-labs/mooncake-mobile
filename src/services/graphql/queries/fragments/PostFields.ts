@@ -6,6 +6,9 @@ const PostFields = gql`
   fragment PostFields on post {
     id
     subspace_id
+    section {
+      id
+    }
     external_id
     conversation {
       id

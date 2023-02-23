@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ROUTES from 'navigation/routes';
 import { Keyboard } from 'react-native';
@@ -28,7 +28,7 @@ export const useHandlePressFollowOrUnfollow = () => {
   const followOrUnfollow = useFollowOrUnfollowUser();
   return React.useCallback(
     async (user: DesmosProfile) => {
-      await followOrUnfollow(user.address);
+      await followOrUnfollow(user);
     },
     [followOrUnfollow],
   );
@@ -73,15 +73,11 @@ export const useHandleExpandCommentView = () => {
  * Hook that allows to handle the creation of a comment.
  */
 export const useHandleCreateComment = () => {
-  const createPost = useCreatePost();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { state, createPost } = useCreatePost();
 
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
-      setLoading(true);
       const result = await createPost(post);
-      setLoading(false);
-
       if (result.isErr()) {
         // TODO: Show the error somewhat
         console.log('Error inside useHandleCreateComment', result.error.message);
@@ -94,7 +90,7 @@ export const useHandleCreateComment = () => {
   );
 
   return {
-    loading,
+    state,
     handleCreateComment,
   };
 };
