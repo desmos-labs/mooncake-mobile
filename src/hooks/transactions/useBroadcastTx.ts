@@ -3,7 +3,7 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/transactions/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
-import { CanceledOperationError } from 'types/error';
+import { CanceledOperationError, isCanceledOperationError } from 'types/error';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
@@ -45,25 +45,38 @@ const useCreateUserProfileOnChain = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
   return React.useCallback(
-    (profile?: DesmosProfile): Promise<Result<void, CanceledOperationError>> => {
+    async (profile?: DesmosProfile): Promise<Result<void, CanceledOperationError>> => {
+      const confirmProfileCreation = await new Promise<Result<void, CanceledOperationError>>(
+        resolve => {
+          navigation.navigate(ROUTES.BOTTOM_MODAL, {
+            title: 'Save profile',
+            body: 'Your profile has not been saved on chain yet, to perform this transaction you need to save your profile first.',
+            onPressPrimary: () => {
+              resolve(ok(undefined));
+            },
+            primaryButtonLabel: 'Save profile',
+            onCancel: () => {
+              resolve(err(new CanceledOperationError()));
+            },
+          });
+        },
+      );
+
+      if (confirmProfileCreation.isErr()) {
+        return err(confirmProfileCreation.error);
+      }
+
       return new Promise(resolve => {
-        navigation.navigate(ROUTES.BOTTOM_MODAL, {
-          title: 'Save profile',
-          body: 'Your profile has not been saved on chain yet, to perform this transaction you need to save your profile first.',
-          onPressPrimary: () => {
-            saveProfile({
-              profile,
-              storeOnChain: true,
-              onSuccess: () => {
-                returnToCurrentScreen();
-                resolve(ok(undefined));
-              },
-              onCancel: () => {
-                resolve(err(new CanceledOperationError()));
-              },
-            });
+        saveProfile({
+          profile,
+          storeOnChain: true,
+          onSuccess: () => {
+            returnToCurrentScreen();
+            resolve(ok(undefined));
           },
-          primaryButtonLabel: 'Save profile',
+          onCancel: () => {
+            resolve(err(new CanceledOperationError()));
+          },
         });
       });
     },
@@ -117,7 +130,11 @@ const useBroadcastTx = () => {
         );
 
         if (createProfileResult.isErr()) {
-          return Promise.resolve(err(new Error("can't create user profile")));
+          if (isCanceledOperationError(createProfileResult.error)) {
+            return err(createProfileResult.error);
+          } else {
+            return err(new Error("can't create user profile"));
+          }
         }
       }
 
@@ -132,6 +149,8 @@ const useBroadcastTx = () => {
           const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
           broadcastOnChain =
             missingAuthzPermissions.length !== 0 || missingFeeGrantsPermissions.length !== 0;
+        } else {
+          return err(fetchAuthorizationsResult.error);
         }
       }
 
@@ -170,7 +189,15 @@ const useBroadcastTx = () => {
         }
       });
     },
-    [broadcastTxOnChain, broadcastTxWithApi, fetchAuthorizations],
+    [
+      activeAccountAddress,
+      broadcastTxOnChain,
+      broadcastTxWithApi,
+      createUserProfileOnChain,
+      fetchAuthorizations,
+      fetchOnChainProfile,
+      storedProfiles,
+    ],
   );
 };
 

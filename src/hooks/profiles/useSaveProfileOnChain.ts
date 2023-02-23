@@ -56,6 +56,7 @@ const useSaveProfileOnChain = () => {
       const uploadPictureResult = await uploadProfilePictures(params);
 
       if (uploadPictureResult.isErr()) {
+        setStatus(SaveProfileStatus.UNDEFINED);
         return err(uploadPictureResult.error);
       }
 
@@ -90,6 +91,7 @@ const useSaveProfileOnChain = () => {
       });
 
       if (result.isErr()) {
+        setStatus(SaveProfileStatus.UNDEFINED);
         return err(result.error);
       }
 

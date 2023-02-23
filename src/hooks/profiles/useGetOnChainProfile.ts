@@ -19,6 +19,7 @@ export const useGetOnChainProfile = () => {
           variables: {
             address,
           },
+          fetchPolicy: 'network-only',
         }),
         e => Error((e as Partial<Error> | undefined)?.message ?? 'Error fetching profile'),
       );

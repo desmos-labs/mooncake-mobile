@@ -11,6 +11,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import useStyles from './useStyles';
 
 export type BottomModalParams = {
@@ -31,6 +32,10 @@ export type BottomModalParams = {
    * What to do when the user presses the primary (main) modal button.
    */
   onPressPrimary?: () => void;
+  /**
+   * Callback called if the user close the popup.
+   */
+  onCancel?: () => any;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BOTTOM_MODAL>;
@@ -47,7 +52,7 @@ const BottomModal = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { title, body, primaryButtonLabel, onPressPrimary } = params;
+  const { title, body, primaryButtonLabel, onPressPrimary, onCancel } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -57,6 +62,8 @@ const BottomModal = () => {
     onPressPrimary && onPressPrimary();
     goBack();
   }, [goBack, onPressPrimary]);
+
+  useOnBackAction(onCancel ?? (() => {}), []);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
