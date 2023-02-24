@@ -7,12 +7,13 @@ const GetTransactionsByAddress = gql`
     $offset: bigint = 0
     $types: _text = "{}"
   ) @api(name: forbole) {
-    messages_by_address(
+    messages: messages_by_address(
       args: { addresses: $address, types: $types, limit: $limit, offset: $offset }
     ) {
       type
       value
       transaction_hash
+      fees
       transaction {
         block {
           timestamp

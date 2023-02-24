@@ -22,14 +22,9 @@ const pendingTransactionsState = atom<Record<string, PendingTransaction[]>>({
 /**
  * Hook that allows to get all the pending transactions for the user having the provided address.
  */
-export const useGetPendingTransactions = () => {
+export const usePendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
-  return React.useCallback(
-    (user: string) => {
-      return transactions[user];
-    },
-    [transactions],
-  );
+  return transactions[user];
 };
 
 /**
