@@ -122,6 +122,9 @@ export type CreatePostState = CreatePostSimpleState | CreatePostErrorState;
 /**
  * Hook that allows to create a post.
  * The details to create the post will be taken from the Recoil atom that is holding the createPostState.
+ *
+ * TODO: Store the post locally
+ * TODO: Store the transaction as pending
  */
 const useCreatePost = () => {
   const activeAccountAddress = useActiveAccountAddress();

@@ -42,6 +42,8 @@ export interface SuccessfulBroadcast {
  *
  * @return a {@link Result} that can either be a {@link SuccessfulBroadcast} or an {@link Error}. If the user
  * cancels the broadcasting, a {@link CanceledOperationError} will be returned.
+ *
+ * TODO: Store the transaction as pending, and remove it from the pending queue when we get a notification from the server
  */
 const useBroadcastTx = () => {
   const activeAccountAddress = useActiveAccountAddress()!;
