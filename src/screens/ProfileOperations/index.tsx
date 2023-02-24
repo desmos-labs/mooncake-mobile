@@ -39,7 +39,7 @@ import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
-import { useBalanceFiatAmount } from 'hooks/balance/useBalanceFiatAmount';
+import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useStyles from './useStyles';
 import MessageListItem from './components/MessageListItem';
 

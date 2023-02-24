@@ -1,7 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import Typography from 'components/Typography';
-import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { Divider, useTheme } from 'react-native-paper';
@@ -10,7 +8,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { formatCoins, formatNumber } from 'lib/FormatUtils';
-import { useBalanceFiatAmount } from 'hooks/balance/useBalanceFiatAmount';
+import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
+import useNavigateToProfileOperations from 'hooks/navigation/useNavigateToProfileOperations';
 import useStyles from './useStyles';
 
 export interface BalanceSectionProps {
@@ -36,7 +35,6 @@ const BalanceSection = (props: BalanceSectionProps) => {
   const theme = useTheme();
   const styles = useStyles();
   const { t } = useTranslation('profile');
-  const { navigate } = useNavigation<any>();
 
   const { address, balance, isLoading } = props;
 
@@ -47,11 +45,22 @@ const BalanceSection = (props: BalanceSectionProps) => {
   const activeAccountAddress = useActiveAccountAddress();
   const isGuestProfile = activeAccountAddress !== address;
 
+  const navigateToProfileOperations = useNavigateToProfileOperations();
+
   const {
     symbol: currencySymbol,
     amount: fiatAmount,
     loading: isFiatAmountLoading,
   } = useBalanceFiatAmount(balance);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
+  // -------------------------------------------------------------------------------------
+
+  // Callback to navigate to the profile operations screen
+  const handlePressOperations = useCallback(() => {
+    navigateToProfileOperations(address);
+  }, [address, navigateToProfileOperations]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -83,9 +92,9 @@ const BalanceSection = (props: BalanceSectionProps) => {
           {!isGuestProfile && (
             <>
               <Divider style={styles.divider} />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigate(ROUTES.PROFILE_OPERATIONS, { address })}>
+
+              {/* Operations button */}
+              <TouchableOpacity style={styles.button} onPress={handlePressOperations}>
                 <Typography.Body6
                   style={{
                     marginRight: theme.spacing.s,

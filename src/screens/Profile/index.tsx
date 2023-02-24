@@ -279,8 +279,8 @@ const Profile = () => {
   }, [navigateToFollowageScreen, profile?.address]);
 
   const handlePressFollow = useCallback(async () => {
-    await followOrUnfollowUser(profile?.address ?? '');
-  }, [followOrUnfollowUser, profile?.address]);
+    await followOrUnfollowUser(profile!);
+  }, [followOrUnfollowUser, profile]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -554,7 +554,6 @@ const Profile = () => {
 
             {/* Balance */}
             <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
-            {/* TODO: Add the operations section if the active user */}
 
             <Divider style={styles.divider} />
 
