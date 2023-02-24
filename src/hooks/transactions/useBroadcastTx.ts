@@ -56,6 +56,7 @@ export interface SuccessfulBroadcast {
   readonly txHash: string;
 }
 
+// List of messages that requires a profile to be executed.
 const MsgsThatRequiresProfile = [
   // Post
   MsgCreatePostTypeUrl,
