@@ -13,7 +13,17 @@ import {
   getMissingFeeGrantPermissions,
 } from 'lib/AuthorizationsUtils';
 import { useGetOnChainProfile } from 'hooks/profiles/useGetOnChainProfile';
-import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
+import {
+  MsgAddReactionTypeUrl,
+  MsgCreatePostTypeUrl,
+  MsgCreateRelationshipTypeUrl,
+  MsgCreateReportTypeUrl,
+  MsgCreateSubspaceTypeUrl,
+  MsgDeletePostTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+  MsgDeleteSubspaceTypeUrl,
+  MsgRemoveReactionTypeUrl,
+} from '@desmoslabs/desmjs';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { DesmosProfile } from 'types/desmos';
@@ -46,7 +56,37 @@ export interface SuccessfulBroadcast {
   readonly txHash: string;
 }
 
-const useCreateUserProfileOnChain = () => {
+const MsgsThatRequiresProfile = [
+  // Post
+  MsgCreatePostTypeUrl,
+  MsgDeletePostTypeUrl,
+  // Reactions
+  MsgAddReactionTypeUrl,
+  MsgRemoveReactionTypeUrl,
+  // Subspace management
+  MsgCreateSubspaceTypeUrl,
+  MsgDeleteSubspaceTypeUrl,
+  // Report
+  MsgCreateReportTypeUrl,
+  // Relationships
+  MsgCreateRelationshipTypeUrl,
+  MsgDeleteRelationshipTypeUrl,
+];
+
+/**
+ * Function that returns true if the provided msg type url requires
+ * an on chain profile to execute.
+ * @param msgTyeUrl
+ */
+const msgRequiresProfile = (msgTyeUrl: string) => {
+  return MsgsThatRequiresProfile.indexOf(msgTyeUrl) !== -1;
+};
+
+/**
+ * Hook that provides a function that shows to the user that must create
+ * a profile to perform the operation and let the user create the profile.
+ */
+const usePromptRequestSaveProfile = () => {
   const { t } = useTranslation('broadcastTx');
   const saveProfile = useSaveProfile();
   const returnToCurrentScreen = useReturnToCurrentScreen();
@@ -92,9 +132,15 @@ const useCreateUserProfileOnChain = () => {
   );
 };
 
-const usePromptAccountPermissions = (activeAccountAddress: string) => {
+/**
+ * Hook that provides a function that requests to the user if wants to give
+ * the fee grants and authz permissions to the centralized API so that can
+ * perform the operations in a more simple way.
+ */
+const usePromptRequestAccountPermissions = () => {
   const { t } = useTranslation('broadcastTx');
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const activeAccountAddress = useActiveAccountAddress()!;
   const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
     activeAccountAddress,
     true,
@@ -160,7 +206,7 @@ const usePromptAccountPermissions = (activeAccountAddress: string) => {
         }
       });
     },
-    [activeAccountAddress, config, fetchAuthorizations, navigation],
+    [activeAccountAddress, config?.desmosAddress, fetchAuthorizations, navigation, t],
   );
 };
 
@@ -185,9 +231,9 @@ const useBroadcastTx = () => {
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
   const fetchOnChainProfile = useGetOnChainProfile();
-  const createUserProfileOnChain = useCreateUserProfileOnChain();
+  const promptRequestSaveProfile = usePromptRequestSaveProfile();
   const storedProfiles = useStoredProfiles();
-  const promtAccountPermissions = usePromptAccountPermissions(activeAccountAddress);
+  const promptAccountPermissions = usePromptRequestAccountPermissions();
 
   return React.useCallback(
     async (
@@ -199,9 +245,9 @@ const useBroadcastTx = () => {
       if (
         accountProfile.isOk() &&
         accountProfile.value === undefined &&
-        msgs.find(msg => msg.typeUrl === MsgSaveProfileTypeUrl) === undefined
+        msgs.find(msg => msgRequiresProfile(msg.typeUrl)) !== undefined
       ) {
-        const createProfileResult = await createUserProfileOnChain(
+        const createProfileResult = await promptRequestSaveProfile(
           storedProfiles[activeAccountAddress],
         );
 
@@ -218,7 +264,7 @@ const useBroadcastTx = () => {
       // Don't check the permissions if the user forced the
       // transaction to be on chain.
       if (!broadcastOnChain) {
-        const permissionsPromptResult = await promtAccountPermissions(msgs);
+        const permissionsPromptResult = await promptAccountPermissions(msgs);
         if (permissionsPromptResult.isErr()) {
           // The user rejected, just proceed with the normal broadcast.
           broadcastOnChain = true;
@@ -271,9 +317,9 @@ const useBroadcastTx = () => {
       activeAccountAddress,
       broadcastTxOnChain,
       broadcastTxWithApi,
-      createUserProfileOnChain,
+      promptRequestSaveProfile,
       fetchOnChainProfile,
-      promtAccountPermissions,
+      promptAccountPermissions,
       storedProfiles,
     ],
   );
