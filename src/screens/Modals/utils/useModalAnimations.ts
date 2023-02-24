@@ -18,7 +18,7 @@ import { toRad, transformOrigin } from 'react-native-redash';
  * modalThreshold: optional threshold value
  */
 const useModalAnimations = (modalThreshold?: number) => {
-  const { pop } = useNavigation<any['navigation']>();
+  const { goBack } = useNavigation<any['navigation']>();
   const theme = useTheme();
   const yOffset = useSharedValue(0);
   const hideThreshold = useSharedValue(0);
@@ -27,7 +27,7 @@ const useModalAnimations = (modalThreshold?: number) => {
     if (modalThreshold) {
       hideThreshold.value = modalThreshold;
     }
-  }, [modalThreshold]);
+  }, [hideThreshold, modalThreshold]);
 
   /**
    * Animation driver
@@ -43,7 +43,7 @@ const useModalAnimations = (modalThreshold?: number) => {
     })
     .onEnd(() => {
       if (yOffset.value > hideThreshold.value) {
-        pop();
+        goBack();
       } else {
         yOffset.value = withSpring(0, {
           damping: 80,

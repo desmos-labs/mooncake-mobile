@@ -33,7 +33,11 @@ export type BottomModalParams = {
    */
   onPressPrimary?: () => void;
   /**
-   * Callback called if the user close the popup.
+   * Label of the cancel button.
+   */
+  cancelButtonLabel?: string | ReactNode;
+  /**
+   * Callback called if the user close the popup or press the cancel button.
    */
   onCancel?: () => any;
 };
@@ -52,7 +56,7 @@ const BottomModal = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
-  const { title, body, primaryButtonLabel, onPressPrimary, onCancel } = params;
+  const { title, body, primaryButtonLabel, onPressPrimary, cancelButtonLabel, onCancel } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -64,6 +68,10 @@ const BottomModal = () => {
   }, [goBack, onPressPrimary]);
 
   useOnBackAction(onCancel ?? (() => {}), []);
+
+  const onCancelButtonPress = useCallback(() => {
+    goBack();
+  }, [goBack]);
 
   // -------------------------------------------------------------------------------------
   // --- View rendering
@@ -84,6 +92,17 @@ const BottomModal = () => {
               <Button color={theme.colors.surfaceBlack} mode="contained" onPress={onPressButton}>
                 {primaryButtonLabel}
               </Button>
+              {cancelButtonLabel && (
+                <>
+                  <Spacer paddingVertical={8} />
+                  <Button
+                    color={theme.colors.surfaceBlack}
+                    mode="contained"
+                    onPress={onCancelButtonPress}>
+                    {cancelButtonLabel}
+                  </Button>
+                </>
+              )}
             </Spacer>
           </TouchableOpacity>
         </Animated.View>

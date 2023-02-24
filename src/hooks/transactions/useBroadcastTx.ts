@@ -6,7 +6,12 @@ import { err, ok, Result } from 'neverthrow';
 import { CanceledOperationError, isCanceledOperationError } from 'types/error';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { getMissingAuthzPermissions, getMissingFeeGrantPermissions } from 'lib/AuthorizationsUtils';
+import {
+  buildGrantAllowanceEncodes,
+  buildGrantMsgEncodes,
+  getMissingAuthzPermissions,
+  getMissingFeeGrantPermissions,
+} from 'lib/AuthorizationsUtils';
 import { useGetOnChainProfile } from 'hooks/profiles/useGetOnChainProfile';
 import { MsgSaveProfileTypeUrl } from '@desmoslabs/desmjs';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
@@ -18,6 +23,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useTranslation } from 'react-i18next';
+import useButterConfig from 'hooks/config/useButterConfig';
 
 export interface BroadcastOptions {
   /**
@@ -86,6 +92,78 @@ const useCreateUserProfileOnChain = () => {
   );
 };
 
+const usePromptAccountPermissions = (activeAccountAddress: string) => {
+  const { t } = useTranslation('broadcastTx');
+  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
+  const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
+    activeAccountAddress,
+    true,
+  );
+  const { config } = useButterConfig();
+
+  return React.useCallback(
+    async (msgs: EncodeObject[]) => {
+      const fetchAuthorizationsResult = await fetchAuthorizations();
+      if (fetchAuthorizationsResult.isErr()) {
+        return err(fetchAuthorizationsResult.error);
+      }
+
+      return new Promise<Result<EncodeObject[], Error>>(resolve => {
+        const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
+        const msgsTypes = msgs.map(msg => msg.typeUrl);
+        const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
+        const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
+
+        if (missingFeeGrantsPermissions.length > 0 || missingAuthzPermissions.length > 0) {
+          let body = t('request simplified tx broadcasting body');
+          if (missingFeeGrantsPermissions.length > 0) {
+            body = `${body}${t('fee grant')}:\n${missingFeeGrantsPermissions.join('\n')}\n`;
+          }
+          if (missingAuthzPermissions.length > 0) {
+            body = `${body}${t('sign on your behalf')}:\n${missingAuthzPermissions.join('\n')}`;
+          }
+
+          navigation.navigate(ROUTES.BOTTOM_MODAL, {
+            title: t('request simplified tx broadcasting title'),
+            body,
+            primaryButtonLabel: 'Yes',
+            onPressPrimary: () => {
+              const grantPermissionsMsgs: EncodeObject[] = [];
+              if (missingFeeGrantsPermissions.length > 0) {
+                grantPermissionsMsgs.push(
+                  ...buildGrantAllowanceEncodes(
+                    feeGrants,
+                    missingFeeGrantsPermissions,
+                    config?.desmosAddress ?? '',
+                    activeAccountAddress,
+                  ),
+                );
+              }
+              if (missingAuthzPermissions.length > 0) {
+                grantPermissionsMsgs.push(
+                  ...buildGrantMsgEncodes(
+                    missingFeeGrantsPermissions,
+                    config?.desmosAddress ?? '',
+                    activeAccountAddress,
+                  ),
+                );
+              }
+              resolve(ok(grantPermissionsMsgs));
+            },
+            cancelButtonLabel: 'No',
+            onCancel: () => {
+              resolve(err(new CanceledOperationError()));
+            },
+          });
+        } else {
+          resolve(ok([]));
+        }
+      });
+    },
+    [activeAccountAddress, config, fetchAuthorizations, navigation],
+  );
+};
+
 /**
  * Hook that allows to broadcast a transaction by going through the various UI based on the user's wallet type.
  *
@@ -106,13 +184,10 @@ const useBroadcastTx = () => {
   const activeAccountAddress = useActiveAccountAddress()!;
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
-  const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
-    activeAccountAddress,
-    true,
-  );
   const fetchOnChainProfile = useGetOnChainProfile();
   const createUserProfileOnChain = useCreateUserProfileOnChain();
   const storedProfiles = useStoredProfiles();
+  const promtAccountPermissions = usePromptAccountPermissions(activeAccountAddress);
 
   return React.useCallback(
     async (
@@ -120,7 +195,6 @@ const useBroadcastTx = () => {
       options?: BroadcastOptions,
     ): Promise<Result<SuccessfulBroadcast, Error>> => {
       let broadcastOnChain = options?.onChain === true;
-
       const accountProfile = await fetchOnChainProfile(activeAccountAddress);
       if (
         accountProfile.isOk() &&
@@ -140,25 +214,27 @@ const useBroadcastTx = () => {
         }
       }
 
+      let msgToBroadcast: EncodeObject[] = msgs;
       // Don't check the permissions if the user forced the
       // transaction to be on chain.
       if (!broadcastOnChain) {
-        const fetchAuthorizationsResult = await fetchAuthorizations();
-        if (fetchAuthorizationsResult.isOk()) {
-          const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
-          const msgsTypes = msgs.map(msg => msg.typeUrl);
-          const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
-          const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
-          broadcastOnChain =
-            missingAuthzPermissions.length !== 0 || missingFeeGrantsPermissions.length !== 0;
-        } else {
-          return err(fetchAuthorizationsResult.error);
+        const permissionsPromptResult = await promtAccountPermissions(msgs);
+        if (permissionsPromptResult.isErr()) {
+          // The user rejected, just proceed with the normal broadcast.
+          broadcastOnChain = true;
+        } else if (permissionsPromptResult.isOk() && permissionsPromptResult.value.length > 0) {
+          // User accepted to give us the permissions, extends the broadcast
+          // messages to include the permissions messages so that from
+          // the next tx we can use the centralized APIs.
+          msgToBroadcast = [...permissionsPromptResult.value, ...msgs];
+          // Force to use the tx broadcasting.
+          broadcastOnChain = true;
         }
       }
 
       return new Promise(resolve => {
         if (broadcastOnChain) {
-          broadcastTxOnChain(msgs, {
+          broadcastTxOnChain(msgToBroadcast, {
             memo: options?.memo,
             onSuccess: txResponse => {
               resolve(
@@ -172,7 +248,7 @@ const useBroadcastTx = () => {
             },
           });
         } else {
-          broadcastTxWithApi(msgs, {
+          broadcastTxWithApi(msgToBroadcast, {
             optimistic: options?.optimistic,
             memo: options?.memo,
           })
@@ -196,8 +272,8 @@ const useBroadcastTx = () => {
       broadcastTxOnChain,
       broadcastTxWithApi,
       createUserProfileOnChain,
-      fetchAuthorizations,
       fetchOnChainProfile,
+      promtAccountPermissions,
       storedProfiles,
     ],
   );

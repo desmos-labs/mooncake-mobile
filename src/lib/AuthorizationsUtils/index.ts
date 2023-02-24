@@ -20,6 +20,7 @@ import { GenericSubspaceAuthorization } from '@desmoslabs/desmjs-types/desmos/su
 import Long from 'long';
 import EnvConfig from 'config/EnvConfig';
 import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import { EncodeObject } from '@cosmjs/proto-signing';
 
 /**
  * Computes the list of missing messages grant.
@@ -120,6 +121,99 @@ export const buildGrantAllowanceEncode = (
       }),
     }),
   };
+};
+
+/**
+ * Create the messages to be sent to the chain to add
+ * more messages that can be broadcast from the grantee using the balance of
+ * the granter to cover the transaction fees.
+ * @param currentFeeGrants - Current fee-grants granted by the granter to grantee.
+ * @param grants - List of new message types that will receive the fee grant.
+ * @param grantee - Grantee address.
+ * @param granter - Granter address.
+ */
+export const buildGrantAllowanceEncodes = (
+  currentFeeGrants: FeeGrant[],
+  grants: string[],
+  grantee: string,
+  granter: string,
+): EncodeObject[] => {
+  const msgs: EncodeObject[] = [];
+  if (grants.length > 0) {
+    // The fee grant module don't support the update, we need to remove it
+    // and then add it back with the current user's fee grants plus the
+    // new ones.
+    if (currentFeeGrants.length > 0) {
+      msgs.push(buildRevokeAllowanceEncode(grantee, granter));
+    }
+
+    // Get the list of the current messages that have a fee grant.
+    const newAuthorizations = currentFeeGrants.flatMap(feeGrant => {
+      if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
+        return feeGrant.allowance.allowedMessages;
+      } else {
+        return [];
+      }
+    });
+
+    // Add to the new authorizations list just the message types that weren't
+    // there before.
+    grants.forEach(authorization => {
+      if (newAuthorizations.indexOf(authorization) === -1) {
+        newAuthorizations.push(authorization);
+      }
+    });
+
+    // Push the new fee grant allowance message.
+    msgs.push(buildGrantAllowanceEncode(newAuthorizations, grantee, granter));
+  }
+
+  return msgs;
+};
+
+/**
+ * Create the messages to be sent to the chain to remove
+ * some messages from the lis of messages that can be broadcast from the
+ * grantee using the balance of the granter to cover the transaction fees.
+ * @param currentFeeGrants - Current fee-grants granted by the granter to grantee.
+ * @param grants - List of message types that to which it will be removed the fee-grant.
+ * @param grantee - Grantee address.
+ * @param granter - Granter address.
+ */
+export const buildRevokeAllowanceEncodes = (
+  currentFeeGrants: FeeGrant[],
+  grants: string[],
+  grantee: string,
+  granter: string,
+): EncodeObject[] => {
+  const msgs: EncodeObject[] = [];
+  if (grants.length > 0) {
+    // The fee grant module don't support the update, we need to remove it
+    // and then add it back with the difference from the current configured
+    // fee grants minus the one that we want to remove.
+    if (currentFeeGrants.length > 0) {
+      msgs.push(buildRevokeAllowanceEncode(grantee, granter));
+    }
+
+    // Compute the difference between the current user's fee grants and the
+    // ones we want to remove.
+    const toKeepFeeGrant = currentFeeGrants
+      .flatMap(feeGrant => {
+        if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
+          return feeGrant.allowance.allowedMessages;
+        } else {
+          return [];
+        }
+      })
+      .filter(feeGrantAllowedMessage => grants.indexOf(feeGrantAllowedMessage) === -1);
+
+    if (toKeepFeeGrant.length > 0) {
+      // Generate the new fee grant allowance message.
+      msgs.push(buildGrantAllowanceEncode(toKeepFeeGrant, grantee, granter));
+    }
+  }
+
+  return msgs;
 };
 
 /**

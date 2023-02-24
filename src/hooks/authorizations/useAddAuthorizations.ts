@@ -1,13 +1,11 @@
 import useGetAuthorizations from 'hooks/authorizations/useGetAuthorizationInformation';
 import {
-  buildGrantAllowanceEncode,
+  buildGrantAllowanceEncodes,
   buildGrantMsgEncodes,
-  buildRevokeAllowanceEncode,
   getMissingAuthzPermissions,
   getMissingFeeGrantPermissions,
 } from 'lib/AuthorizationsUtils';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { AllowedMsgAllowanceTypeUrl } from '@desmoslabs/desmjs';
 import useButterConfig from 'hooks/config/useButterConfig';
 import { err } from 'neverthrow';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
@@ -45,36 +43,15 @@ const useAddAuthorizations = (accountAddress: string) => {
 
       const msgs: EncodeObject[] = [];
 
-      if (missingFeeGrants.length > 0) {
-        // The fee grant module don't support the update, we need to remove it
-        // and then add it back with the current user's fee grants plus the
-        // new ones.
-        if (feeGrants.length > 0) {
-          msgs.push(buildRevokeAllowanceEncode(butterConfig.desmosAddress, accountAddress));
-        }
-
-        // Get the list of the current messages that have a fee grant.
-        const newAuthorizations = feeGrants.flatMap(feeGrant => {
-          if (feeGrant.allowance.typeUrl === AllowedMsgAllowanceTypeUrl) {
-            return feeGrant.allowance.allowedMessages;
-          } else {
-            return [];
-          }
-        });
-
-        // Add to the new authorizations list just the message types that weren't
-        // there before.
-        authorizations.forEach(authorization => {
-          if (newAuthorizations.indexOf(authorization) === -1) {
-            newAuthorizations.push(authorization);
-          }
-        });
-
-        // Push the new fee grant allowance message.
-        msgs.push(
-          buildGrantAllowanceEncode(newAuthorizations, butterConfig.desmosAddress, accountAddress),
-        );
-      }
+      // Push the messages to update the fee-grant..
+      msgs.push(
+        ...buildGrantAllowanceEncodes(
+          feeGrants,
+          missingFeeGrants,
+          butterConfig.desmosAddress,
+          accountAddress,
+        ),
+      );
 
       if (missingAuthzGrants.length > 0) {
         // Push the new authz grants message.
