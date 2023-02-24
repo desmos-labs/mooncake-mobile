@@ -13,10 +13,10 @@ import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 
 /**
  * Hook that allows to report a user.
- * TODO: Implement this
  */
 export const useHandlePressReportUser = () => {
   return React.useCallback((user: DesmosProfile) => {
+    // TODO: Implement this
     console.log('useHandlePressReportUser', user);
   }, []);
 };
