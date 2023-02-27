@@ -274,7 +274,7 @@ const useBroadcastTx = () => {
           // messages to include the permissions messages so that from
           // the next tx we can use the centralized APIs.
           msgToBroadcast = [...permissionsPromptResult.value, ...msgs];
-          // Force to use the tx broadcasting.
+          // Force to use the on chain tx broadcasting.
           broadcastOnChain = true;
         }
       }
