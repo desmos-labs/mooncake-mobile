@@ -16,6 +16,7 @@ export interface CreatePostState
     | 'subspaceId'
     | 'sectionId'
     | 'id'
+    | 'text'
     | 'attachments'
     | 'creationDate'
     | 'transactions'
@@ -28,6 +29,13 @@ export interface CreatePostState
    * We should make sure to set this to the proper value if it ever does
    */
   readonly sectionId: number | undefined;
+
+  /**
+   * Text of the post. This overloads the {@link Post} `text` field so that
+   * it cannot be `undefined`.
+   */
+  readonly text: string;
+
   /**
    * Any attachment (video, image, etc) associated to the post.
    * This overloads the {@link Post} `attachments` fields as it's a different

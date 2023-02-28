@@ -165,7 +165,7 @@ const CreatePost = () => {
       </DView>
       <MediaBottomPanel
         style={styles.bottomPanel}
-        commentLength={postText?.length ?? 0}
+        commentLength={postText.length}
         imageSelected={postAttachments.length > 0}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
