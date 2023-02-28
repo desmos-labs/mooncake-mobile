@@ -1,4 +1,5 @@
 import { DesmosProfile } from 'types/desmos';
+import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 export enum PostStatus {
   SYNCED = 'synced',
@@ -31,7 +32,7 @@ export interface Post {
   /**
    * ID of the post on-chain.
    * If the post has been created locally but is still being broadcast to the chain,
-   * this will be
+   * this will be `-1`.
    */
   readonly id: number;
 
@@ -62,6 +63,21 @@ export interface Post {
    * References to other posts.
    */
   readonly references: PostReference[];
+
+  /**
+   * Tags associated to this post.
+   */
+  readonly tags: string[];
+
+  /**
+   * Entities associated to this post.
+   */
+  readonly entities: Entities | undefined;
+
+  /**
+   * Reply settings of this post.
+   */
+  readonly replySettings: ReplySetting;
 
   /**
    * Date at which this post was created.

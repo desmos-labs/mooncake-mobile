@@ -1,4 +1,74 @@
-import { Post, PostStatus } from 'types/posts';
+import { Post, PostAttachment, PostAttachmentType, PostReference, PostStatus } from 'types/posts';
+import Long from 'long';
+import { Any } from '@desmoslabs/desmjs-types/google/protobuf/any';
+import { mediaToAny } from '@desmoslabs/desmjs/build/aminomessages/posts';
+import {
+  Media,
+  PostReference as DesmJSPostReference,
+} from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
+
+/**
+ * Gets the conversation id to be used when creating a post.
+ * @param parent {Post | undefined} - The parent post, if any
+ */
+export const getConversationId = (parent?: Post): number => {
+  if (!parent) {
+    return 0;
+  }
+
+  if (parent.conversationId === 0) {
+    return parent.id;
+  }
+
+  return parent.conversationId;
+};
+
+/**
+ * Converts the given {@param attachment} into an {@link Any} object.
+ */
+const convertPostAttachment = (attachment: PostAttachment): Any => {
+  switch (attachment.content.type) {
+    case PostAttachmentType.MEDIA:
+      return mediaToAny({
+        uri: attachment.content.uri,
+        mimeType: attachment.content.mimeType,
+      } as Media);
+  }
+};
+
+/**
+ * Converts the given {@param reference} to the DesmJS format.
+ */
+const convertPostReference = (reference: PostReference): DesmJSPostReference => {
+  return {
+    postId: Long.fromNumber(reference.postId),
+    position: Long.fromNumber(reference.position),
+    type: reference.type,
+  };
+};
+
+/**
+ * Converts the given {@param post} into a {@link MsgCreatePostEncodeObject} object
+ * that can be used to create a transaction.
+ */
+export const convertPostToMsgCreatePost = (post: Post): MsgCreatePostEncodeObject => {
+  return {
+    typeUrl: MsgCreatePostTypeUrl,
+    value: {
+      subspaceId: Long.fromNumber(post.subspaceId),
+      sectionId: post.sectionId,
+      conversationId: Long.fromNumber(post.conversationId),
+      text: post.text,
+      attachments: post.attachments.map(convertPostAttachment),
+      referencedPosts: post.references.map(convertPostReference),
+      entities: post.entities,
+      tags: post.tags,
+      author: post.author.address,
+      replySettings: post.replySettings,
+    },
+  } as MsgCreatePostEncodeObject;
+};
 
 /**
  * Allows to find, within the given {@param posts} array, the index of the post that

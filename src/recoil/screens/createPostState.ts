@@ -1,60 +1,57 @@
 import { atom, selectorFamily, useRecoilValue, useSetRecoilState } from 'recoil';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import React from 'react';
-import { Entities, ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
-import { PostReference } from 'types/posts';
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
+import { Post } from 'types/posts';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Represents the state of the screen that allows to create a post.
  */
-export interface CreatePostState {
+export interface CreatePostState
+  extends Omit<
+    Post,
+    | 'status'
+    | 'statusUpdateDate'
+    | 'subspaceId'
+    | 'sectionId'
+    | 'id'
+    | 'attachments'
+    | 'creationDate'
+    | 'transactions'
+    | 'author'
+  > {
   /**
-   * ID of the section inside which this post has been created.
-   * Default to `0` if not set.
+   * ID of the subspace section inside which this post has been created.
+   *
+   * <b>Note</b>: Currently Butter does not support sections.
+   * We should make sure to set this to the proper value if it ever does
    */
-  readonly sectionId?: number;
-
-  /**
-   * Post text input by the user.
-   */
-  readonly text: string;
-
+  readonly sectionId: number | undefined;
   /**
    * Any attachment (video, image, etc) associated to the post.
+   * This overloads the {@link Post} `attachments` fields as it's a different
+   * type of attachments since these need to be uploaded before creating
+   * the post on-chain.
    */
   readonly attachments: UploadAssetType[];
-
-  /**
-   * Tags associated to the post, if any.
-   */
-  readonly tags: string[];
-
-  /**
-   * Entities associated to the post, if any.
-   */
-  readonly entities: Entities | undefined;
-
-  /**
-   * Posts referenced by this post.
-   */
-  readonly referencedPosts: PostReference[];
-
-  /**
-   * Reply settings of the post.
-   */
-  readonly replySettings: ReplySetting;
 }
 
 /**
  * Default state of the screen allowing to create a post.
  */
 const DefaultCreatePostState: CreatePostState = {
-  sectionId: 0,
+  conversationId: 0,
+  sectionId: undefined,
+
+  // Generate a random UUID to be used as external ID
+  externalId: uuidv4(),
+
   text: '',
   attachments: [],
   tags: [],
   entities: undefined,
-  referencedPosts: [],
+  references: [],
   replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
 };
 
