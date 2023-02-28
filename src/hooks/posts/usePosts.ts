@@ -61,38 +61,41 @@ const getQueryParams = (
 const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): QueryOptions<any> => {
   const subspaceId = useAppStateValue('subspaceId');
   const subspaceParams = useAppStateValue('subspaceParams');
-  switch (params.type) {
-    case PostsQueryType.DISCOVERY:
-      return {
-        query: GetPosts,
-        variables: {
-          subspaceId,
-          user: params.user,
-          reaction: {
-            '@type': RegisteredReactionValueTypeUrl,
-            registered_reaction_id: getLikeReactionId(subspaceParams),
-          },
-          offset: 0,
-          limit: postsPerPage,
-        },
-      };
 
-    default:
-      return {
-        query: GetPostsFromFollowing,
-        variables: {
-          subspaceId,
-          following: Array.from(params.followedUsers),
-          user: params.user,
-          reaction: {
-            '@type': RegisteredReactionValueTypeUrl,
-            registered_reaction_id: getLikeReactionId(subspaceParams),
+  return React.useMemo(() => {
+    switch (params.type) {
+      case PostsQueryType.DISCOVERY:
+        return {
+          query: GetPosts,
+          variables: {
+            subspaceId,
+            user: params.user,
+            reaction: {
+              '@type': RegisteredReactionValueTypeUrl,
+              registered_reaction_id: getLikeReactionId(subspaceParams),
+            },
+            offset: 0,
+            limit: postsPerPage,
           },
-          offset: 0,
-          limit: postsPerPage,
-        },
-      };
-  }
+        };
+
+      default:
+        return {
+          query: GetPostsFromFollowing,
+          variables: {
+            subspaceId,
+            following: Array.from(params.followedUsers),
+            user: params.user,
+            reaction: {
+              '@type': RegisteredReactionValueTypeUrl,
+              registered_reaction_id: getLikeReactionId(subspaceParams),
+            },
+            offset: 0,
+            limit: postsPerPage,
+          },
+        };
+    }
+  }, [params, postsPerPage, subspaceId, subspaceParams]);
 };
 
 /**

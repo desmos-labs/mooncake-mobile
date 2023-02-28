@@ -9,7 +9,11 @@ const GetPosts = gql`
       offset: $offset
       limit: $limit
       order_by: { creation_date: desc }
-      where: { subspace_id: { _eq: $subspaceId }, _not: { conversation: {} } }
+      where: {
+        subspace_id: { _eq: $subspaceId }
+        _not: { conversation: {} }
+        external_id: { _is_null: false }
+      }
     ) {
       ...PostFields
       reactionPresence: reactions_aggregate(

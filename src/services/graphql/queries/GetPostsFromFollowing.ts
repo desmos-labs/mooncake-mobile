@@ -19,6 +19,7 @@ const GetPostsFromFollowing = gql`
         subspace_id: { _eq: $subspaceId }
         _not: { conversation: {} }
         author_address: { _in: $following }
+        external_id: { _is_null: false }
       }
     ) {
       ...PostFields
