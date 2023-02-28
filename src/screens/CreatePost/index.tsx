@@ -90,7 +90,7 @@ const CreatePost = () => {
     setLoading(false);
 
     if (result.isErr()) {
-      // TODO: Show the error somewhat
+      // TODO: Show the error somehow
       console.log('Error while creating post', result.error.message);
       return;
     }
@@ -165,7 +165,7 @@ const CreatePost = () => {
       </DView>
       <MediaBottomPanel
         style={styles.bottomPanel}
-        commentLength={postText.length}
+        commentLength={postText?.length ?? 0}
         imageSelected={postAttachments.length > 0}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
