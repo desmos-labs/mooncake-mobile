@@ -6,6 +6,7 @@ import useProfileParams from 'hooks/profiles/useProfileParams';
 import usePostsParams from 'hooks/posts/usePostsParams';
 import useSubspaceParams from 'hooks/config/useSubspaceParams';
 import { useSetAppStateValue } from '@recoil/appState';
+import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 
 /**
  * Hook that allows initializing the application data.
@@ -16,6 +17,7 @@ const useInitializeAppData = () => {
   const { refetch: refreshSubspaceParams } = useSubspaceParams();
   const { refetch: refreshProfileParams } = useProfileParams();
   const { refetch: refreshPostsParams } = usePostsParams();
+  const syncPendingTransactions = useSyncPendingTransactions();
 
   // App state setters
   const setDataInitialized = useSetAppStateValue('dataInitialized');
@@ -36,12 +38,8 @@ const useInitializeAppData = () => {
     setDataInitialized(true);
     setCurrentTimezone(RNLocalize.getTimeZone());
 
-    // TODO: See if these made sense
-    // const resolveOutstandingOptimisticRelationships = async () => {
-    //   await updateFollowing();
-    //   await resolveOptimisticRelationships();
-    // };
-    // resolveOutstandingOptimisticRelationships();
+    // Update the pending transactions
+    syncPendingTransactions();
   }, [
     refreshButterConfig,
     refreshPostsParams,
@@ -49,6 +47,7 @@ const useInitializeAppData = () => {
     refreshSubspaceParams,
     setCurrentTimezone,
     setDataInitialized,
+    syncPendingTransactions,
   ]);
 };
 

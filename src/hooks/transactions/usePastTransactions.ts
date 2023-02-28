@@ -2,7 +2,7 @@ import React from 'react';
 import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
 import { useQuery } from '@apollo/client';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
-import { usePendingTransactions } from '@recoil/transactions';
+import { useUserPendingTransactions } from '@recoil/transactions';
 import { convertGraphQLTransactionMessage } from 'lib/GraphQLUtils/transactions';
 import useUpdatePendingTransactions from 'hooks/transactions/useUpdatePendingTransactions';
 
@@ -55,9 +55,9 @@ const mergeTransactions = (
  */
 const usePastTransactions = (address: string, transactionsPerPage: number = 50) => {
   // Get the pending transactions for the user
-  const pendingTransactions = usePendingTransactions(address);
+  const pendingTransactions = useUserPendingTransactions(address);
   const pendingMessages = pendingTransactions.flatMap(convertPendingTransaction);
-  const syncPendingTransaction = useUpdatePendingTransactions();
+  const updatePendingTransactions = useUpdatePendingTransactions();
 
   // Set the pending transactions as the current value of the transactions
   const [remoteMessages, setRemoteMessages] = React.useState<PastTransactionMessage[]>([]);
@@ -76,10 +76,10 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
       if (!data) return;
 
       const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
-      syncPendingTransaction(onChainMessages);
+      updatePendingTransactions(onChainMessages);
       setRemoteMessages(onChainMessages);
     },
-    [syncPendingTransaction],
+    [updatePendingTransactions],
   );
 
   // Query the past transactions from the server

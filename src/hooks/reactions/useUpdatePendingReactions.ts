@@ -2,6 +2,7 @@ import React from 'react';
 import { useRemovePendingPostReaction, useUpdatePendingPostReaction } from '@recoil/reactions';
 import { PostReaction } from 'types/desmos';
 import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
+import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 
 /**
  * Hook that allows to update the pending reactions based on the data retrieved from the server.
@@ -10,6 +11,8 @@ import { CachedDataUpdate, CachedDataUpdateType } from 'lib/CacheUtils';
 const useUpdatePendingReactions = (user: string) => {
   const updateStoredPendingReaction = useUpdatePendingPostReaction(user);
   const removeStoredPendingReaction = useRemovePendingPostReaction(user);
+
+  const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
     (updates: CachedDataUpdate<PostReaction>[]) => {
@@ -31,11 +34,12 @@ const useUpdatePendingReactions = (user: string) => {
             break;
           }
         }
-
-        // TODO: Update the pending transactions by deleting the successful ones, or changing their statuses
       });
+
+      // Update the pending transactions to remove the ones that are now on-chain or are expired
+      syncPendingTransactions();
     },
-    [removeStoredPendingReaction, updateStoredPendingReaction],
+    [removeStoredPendingReaction, syncPendingTransactions, updateStoredPendingReaction],
   );
 };
 

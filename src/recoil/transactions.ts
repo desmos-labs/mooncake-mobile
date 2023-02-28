@@ -20,9 +20,17 @@ const pendingTransactionsState = atom<Record<string, PendingTransaction[]>>({
 });
 
 /**
+ * Hook that allows to get the list of all pending transactions for all users.
+ */
+export const usePendingTransactions = (): PendingTransaction[] => {
+  const transactions = useRecoilValue(pendingTransactionsState);
+  return Object.values(transactions).flatMap(txs => txs);
+};
+
+/**
  * Hook that allows to get all the pending transactions for the user having the provided address.
  */
-export const usePendingTransactions = (user: string) => {
+export const useUserPendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
   return transactions[user];
 };

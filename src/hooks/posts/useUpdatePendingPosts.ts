@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRemoveStoredPendingPost, useUpdateStoredPendingPost } from '@recoil/posts';
 import { PostUpdate, PostUpdateType } from 'lib/PostsUtils';
+import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransactions';
 
 /**
  * Hook that allows to delete the pending posts based on the data retrieved from the server.
@@ -9,6 +10,8 @@ import { PostUpdate, PostUpdateType } from 'lib/PostsUtils';
 const useUpdatePendingPosts = (user: string) => {
   const updateStoredPendingPost = useUpdateStoredPendingPost(user);
   const removeStoredPendingPost = useRemoveStoredPendingPost(user);
+
+  const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
     (updates: PostUpdate[]) => {
@@ -30,11 +33,12 @@ const useUpdatePendingPosts = (user: string) => {
             break;
           }
         }
-
-        // TODO: Update the pending transactions by deleting the successful ones, or changing their statuses
       });
+
+      // Update the pending transactions to remove the ones that are now on-chain or are expired
+      syncPendingTransactions();
     },
-    [removeStoredPendingPost, updateStoredPendingPost],
+    [removeStoredPendingPost, syncPendingTransactions, updateStoredPendingPost],
   );
 };
 

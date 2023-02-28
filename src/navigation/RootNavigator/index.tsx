@@ -274,10 +274,6 @@ const RootNavigator = () => {
   //   },
   // };
 
-  /**
-   * End
-   */
-
   const initialRouteName = React.useMemo(() => {
     if (__DEV__) return ROUTES.DEV_SCREEN;
     const activeAddr = getMMKV<string>(MMKVKEYS.ACTIVE_ACCOUNT_ADDRESS);
