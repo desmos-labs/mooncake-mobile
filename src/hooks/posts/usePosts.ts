@@ -33,24 +33,26 @@ type PostsQueryParams = TimelineQueryParams | DiscoveryQueryParam;
 /**
  * Returns the query params based on the given query type.
  */
-const getQueryParams = (
+const useQueryParams = (
   type: PostsQueryType,
   activeUser: string,
   followingAddresses: string[],
 ): PostsQueryParams => {
-  switch (type) {
-    case PostsQueryType.TIMELINE:
-      return {
-        type: PostsQueryType.TIMELINE,
-        user: activeUser,
-        followedUsers: followingAddresses,
-      } as TimelineQueryParams;
-    case PostsQueryType.DISCOVERY:
-      return {
-        type: PostsQueryType.DISCOVERY,
-        user: activeUser,
-      } as DiscoveryQueryParam;
-  }
+  return React.useMemo(() => {
+    switch (type) {
+      case PostsQueryType.TIMELINE:
+        return {
+          type: PostsQueryType.TIMELINE,
+          user: activeUser,
+          followedUsers: followingAddresses,
+        } as TimelineQueryParams;
+      case PostsQueryType.DISCOVERY:
+        return {
+          type: PostsQueryType.DISCOVERY,
+          user: activeUser,
+        } as DiscoveryQueryParam;
+    }
+  }, [type, activeUser, followingAddresses]);
 };
 
 /**
@@ -161,7 +163,7 @@ const usePosts = (queryType: PostsQueryType) => {
   );
 
   // Get the proper query to be executed
-  const queryParams = getQueryParams(queryType, activeAddress, followingAddresses);
+  const queryParams = useQueryParams(queryType, activeAddress, followingAddresses);
   const queryData = useQueryData(queryParams);
   const { refetch, loading, fetchMore } = useQuery(queryData.query, {
     variables: queryData.variables,

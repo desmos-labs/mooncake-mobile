@@ -38,8 +38,10 @@ export const useHasFollowedUser = (user: string) => {
  */
 export const useFollowageToSync = (user: string) => {
   const followage = useRecoilValue(followageState);
-  const userFollowage = followage.get(user);
-  return userFollowage.readAll().filter(r => r.status === DataStatus.CREATED_LOCALLY);
+  return React.useMemo(() => {
+    const userFollowage = followage.get(user);
+    return userFollowage.readAll().filter(r => r.status === DataStatus.CREATED_LOCALLY);
+  }, [followage, user]);
 };
 
 /**

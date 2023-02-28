@@ -27,9 +27,10 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   const updatePendingRelationships = useUpdatePendingRelationships(userAddress);
 
   // Get the relationships to sync
-  const relationshipsToSync = useFollowageToSync(userAddress).filter(
-    r => r.status === DataStatus.CREATED_LOCALLY,
-  );
+  const followageToSync = useFollowageToSync(userAddress);
+  const relationshipsToSync = React.useMemo(() => {
+    return followageToSync.filter(r => r.status === DataStatus.CREATED_LOCALLY);
+  }, [followageToSync]);
 
   // Set the initial users to be the list of the relationships to sync
   const [users, setUsers] = useState<FollowedUser[]>(relationshipsToSync);

@@ -1,4 +1,5 @@
 import useFollowing from 'hooks/relationships/useFollowing';
+import React from 'react';
 
 /**
  * Hook that allows to get all the addresses of the users that the current application
@@ -6,7 +7,7 @@ import useFollowing from 'hooks/relationships/useFollowing';
  */
 const useFollowingAddresses = () => {
   const { following } = useFollowing();
-  return following.map(user => user.user.address);
+  return React.useMemo(() => following.map(user => user.user.address), [following]);
 };
 
 export default useFollowingAddresses;
