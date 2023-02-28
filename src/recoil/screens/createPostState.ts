@@ -47,8 +47,9 @@ export interface CreatePostState
 
 /**
  * Default state of the screen allowing to create a post.
+ * This is a function because we need to generate a random UUID.
  */
-const DefaultCreatePostState: CreatePostState = {
+const DefaultCreatePostState = (): CreatePostState => ({
   conversationId: 0,
   sectionId: undefined,
 
@@ -61,7 +62,7 @@ const DefaultCreatePostState: CreatePostState = {
   entities: undefined,
   references: [],
   replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
-};
+});
 
 /**
  * Atom to persist user's entered comments when switching between
@@ -69,7 +70,7 @@ const DefaultCreatePostState: CreatePostState = {
  */
 const createPostState = atom<CreatePostState>({
   key: 'createPostState',
-  default: DefaultCreatePostState,
+  default: DefaultCreatePostState(),
 });
 
 /**
@@ -166,6 +167,6 @@ export const useRemoveCreatePostAttachment = () => {
 export const useResetCreatePostState = () => {
   const setCreatePostState = useSetRecoilState(createPostState);
   return React.useCallback(() => {
-    setCreatePostState(DefaultCreatePostState);
+    setCreatePostState(DefaultCreatePostState());
   }, [setCreatePostState]);
 };
