@@ -42,7 +42,7 @@ const cache = new InMemoryCache({
         return `profile:${object.address}`;
       case 'user_relationship':
         // @ts-ignore
-        return `user_relationship:${object.content.counterparty_address}`;
+        return `user_relationship:${object.content?.counterparty_address}`;
       default:
         return defaultDataIdFromObject(object);
     }
