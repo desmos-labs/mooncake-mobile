@@ -19,6 +19,24 @@ import { LedgerSigner } from '@cosmjs/ledger-amino';
 import { err, ok, Result } from 'neverthrow';
 
 /**
+ * Function that initialize a PrivateKeySigner from the provided private key.
+ * @param privateKey - Private key to use in the PrivateKeySigner.
+ * @param signMode - Sign mode.
+ * @param prefix - Bech32 address prefix.
+ */
+const initPrivateKeySigner = async (
+  privateKey: Uint8Array,
+  signMode: SigningMode,
+  prefix: string,
+): Promise<PrivateKeySigner> => {
+  const signer = await PrivateKeySigner.fromSecp256k1(privateKey, signMode, {
+    prefix,
+  });
+  await signer.connect();
+  return signer;
+};
+
+/**
  * Hook that provides a function to initialize a mnemonic wallet.
  */
 const useInitMnemonicWallet = () => {
@@ -36,9 +54,11 @@ const useInitMnemonicWallet = () => {
         privateKey,
         hdPath,
         addressPrefix: serializedWallet.addressPrefix,
-        signer: PrivateKeySigner.fromSecp256k1(privateKey, signingMode ?? SigningMode.DIRECT, {
-          prefix: serializedWallet.addressPrefix,
-        }),
+        signer: await initPrivateKeySigner(
+          privateKey,
+          signingMode ?? SigningMode.DIRECT,
+          serializedWallet.addressPrefix,
+        ),
       });
     },
     [],
@@ -112,9 +132,11 @@ const useInitWeb3AuthWallet = () => {
         privateKey,
         addressPrefix: serializedWallet.addressPrefix,
         loginProvider: serializedWallet.loginProvider,
-        signer: PrivateKeySigner.fromSecp256k1(privateKey, signingMode ?? SigningMode.DIRECT, {
-          prefix: serializedWallet.addressPrefix,
-        }),
+        signer: await initPrivateKeySigner(
+          privateKey,
+          signingMode ?? SigningMode.DIRECT,
+          serializedWallet.addressPrefix,
+        ),
       });
     },
     [],
