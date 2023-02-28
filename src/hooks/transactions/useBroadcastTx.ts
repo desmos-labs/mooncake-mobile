@@ -224,17 +224,21 @@ const usePromptRequestAccountPermissions = () => {
  *
  * @return a {@link Result} that can either be a {@link SuccessfulBroadcast} or an {@link Error}. If the user
  * cancels the broadcasting, a {@link CanceledOperationError} will be returned.
- *
- * TODO: Store the transaction as pending, and remove it from the pending queue when we get a notification from the server
  */
 const useBroadcastTx = () => {
-  const activeAccountAddress = useActiveAccountAddress()!;
+  const activeAccountAddress = useActiveAccountAddress();
+  if (!activeAccountAddress) {
+    throw new Error('Trying to broadcast a transaction without an active account');
+  }
+
+  const storedProfiles = useStoredProfiles();
+  const fetchOnChainProfile = useGetOnChainProfile();
+
+  const promptRequestSaveProfile = usePromptRequestSaveProfile();
+  const promptAccountPermissions = usePromptRequestAccountPermissions();
+
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
-  const fetchOnChainProfile = useGetOnChainProfile();
-  const promptRequestSaveProfile = usePromptRequestSaveProfile();
-  const storedProfiles = useStoredProfiles();
-  const promptAccountPermissions = usePromptRequestAccountPermissions();
 
   return React.useCallback(
     async (
@@ -279,40 +283,22 @@ const useBroadcastTx = () => {
         }
       }
 
-      return new Promise(resolve => {
-        if (broadcastOnChain) {
-          broadcastTxOnChain(msgToBroadcast, {
-            memo: options?.memo,
-            onSuccess: txResponse => {
-              resolve(
-                ok({
-                  txHash: txResponse.transactionHash,
-                }),
-              );
-            },
-            onCancel: () => {
-              resolve(err(new CanceledOperationError()));
-            },
-          });
-        } else {
-          broadcastTxWithApi(msgToBroadcast, {
-            optimistic: options?.optimistic,
-            memo: options?.memo,
-          })
-            .then(result => {
-              if (result.isOk()) {
-                resolve(
-                  ok({
-                    txHash: result.value.txHash,
-                  }),
-                );
-              } else {
-                resolve(err(result.error));
-              }
-            })
-            .catch(e => resolve(err(Error(e?.message ?? 'Tx with api failed'))));
-        }
-      });
+      // Broadcast the transaction regularly
+      if (broadcastOnChain) {
+        return broadcastTxOnChain(msgToBroadcast, {
+          memo: options?.memo,
+        }).map(result => ({
+          txHash: result.transactionHash,
+        }));
+      }
+
+      // Broadcast the transaction with the centralized APIs
+      return broadcastTxWithApi(msgToBroadcast, {
+        optimistic: options?.optimistic,
+        memo: options?.memo,
+      }).map(result => ({
+        txHash: result.txHash,
+      }));
     },
     [
       activeAccountAddress,

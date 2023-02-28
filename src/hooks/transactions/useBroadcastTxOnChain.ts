@@ -7,13 +7,10 @@ import ROUTES from 'navigation/routes';
 import { useActiveAccount } from '@recoil/accounts';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { Wallet } from 'types/wallet';
+import { ResultAsync } from 'neverthrow';
+import { CanceledOperationError } from 'types/error';
 
-export interface BroadcastTxCallbacks {
-  onSuccess?: (txResponse: DeliverTxResponse) => void;
-  onCancel?: () => void;
-}
-
-export interface BroadcastTxOptions extends BroadcastTxCallbacks {
+export interface BroadcastTxOptions {
   /**
    * Address of who is signing the transaction, if undefined will be used
    * the current active account.
@@ -36,18 +33,23 @@ const useBroadcastTxOnChain = () => {
 
   return React.useCallback(
     (messages: EncodeObject[], options?: BroadcastTxOptions) => {
-      navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
-        messages,
-        accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccount.address,
-        memo: options?.memo,
-        onSuccess: (txResponse: DeliverTxResponse) => {
-          returnToCurrentScreen();
-          if (options?.onSuccess) {
-            options.onSuccess(txResponse);
-          }
-        },
-        onCancel: options?.onCancel,
-      });
+      return ResultAsync.fromPromise<DeliverTxResponse, Error>(
+        new Promise((resolve, reject) => {
+          navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
+            messages,
+            accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccount.address,
+            memo: options?.memo,
+            onSuccess: (txResponse: DeliverTxResponse) => {
+              returnToCurrentScreen();
+              resolve(txResponse);
+            },
+            onCancel: () => {
+              reject(new Error('Operation canceled'));
+            },
+          });
+        }),
+        () => new CanceledOperationError(),
+      );
     },
     [activeAccount, navigation, returnToCurrentScreen],
   );

@@ -7,11 +7,10 @@ import {
   MsgSaveProfileEncodeObject,
   MsgSaveProfileTypeUrl,
 } from '@desmoslabs/desmjs';
-import { err, ok, Result } from 'neverthrow';
+import { err, Result } from 'neverthrow';
 import { DesmosProfile } from 'types/desmos';
 import { Wallet } from 'types/wallet';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { CanceledOperationError } from 'types/error';
 import useUploadProfilePictures from 'hooks/profiles/useUploadProfilePictures';
 
 /**
@@ -78,16 +77,8 @@ const useSaveProfileOnChain = () => {
 
       // Sign and broadcast the transaction
       setStatus(SaveProfileStatus.BROADCASTING_TX);
-      const result = await new Promise<Result<DeliverTxResponse, Error>>(resolve => {
-        broadcastTxOnChain([msgSaveProfile], {
-          accountAddressOrWallet: wallet,
-          onSuccess: txResponse => {
-            resolve(ok(txResponse));
-          },
-          onCancel: () => {
-            resolve(err(new CanceledOperationError()));
-          },
-        });
+      const result = await broadcastTxOnChain([msgSaveProfile], {
+        accountAddressOrWallet: wallet,
       });
 
       if (result.isErr()) {
