@@ -31,6 +31,7 @@ import { usePostsListState, useSetPostsListState } from '@recoil/screens/postsLi
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { isPostPending, Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
+import ROUTES from 'navigation/routes';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<any>;
@@ -72,7 +73,9 @@ const Home = () => {
   // -------------------------------------------------------------------------------------
 
   const postsQueryType = useMemo(() => {
-    return routeName === 'HOME_DISCOVER' ? PostsQueryType.DISCOVERY : PostsQueryType.TIMELINE;
+    return routeName === ROUTES.HOME_TAB_DISCOVER
+      ? PostsQueryType.DISCOVERY
+      : PostsQueryType.TIMELINE;
   }, [routeName]);
 
   const {

@@ -6,7 +6,7 @@ import useFollowing from 'hooks/relationships/useFollowing';
  */
 const useFollowingAddresses = () => {
   const { following } = useFollowing();
-  return following.map(user => user.address);
+  return following.map(user => user.user.address);
 };
 
 export default useFollowingAddresses;
