@@ -1,6 +1,24 @@
 import React from 'react';
 import { useDeletePendingTransaction, usePendingTransactions } from '@recoil/transactions';
-import useIsTransactionBroadcast from 'hooks/transactions/useIsTransactionBroadcast';
+import { useLazyQuery } from '@apollo/client';
+import GetTransactionsByHashes from 'services/graphql/queries/GetTransactionsByHashes';
+
+/**
+ * Hook that returns the hashes of the transactions that are on-chain.
+ */
+const useGetOnChainTransactionsByHashes = () => {
+  const [getTransactionsByHashes] = useLazyQuery(GetTransactionsByHashes);
+
+  return React.useCallback(
+    async (hashes: string[]) => {
+      const { data } = await getTransactionsByHashes({
+        variables: { hashes },
+      });
+      return data.message.map((tx: any) => tx.transaction_hash);
+    },
+    [getTransactionsByHashes],
+  );
+};
 
 /**
  * Hook that, for each pending transaction, checks if it has been included in a block.
@@ -9,23 +27,24 @@ import useIsTransactionBroadcast from 'hooks/transactions/useIsTransactionBroadc
  */
 const useSyncPendingTransactions = () => {
   const pendingTransactions = usePendingTransactions();
-
-  const isTransactionBroadcast = useIsTransactionBroadcast();
+  const getOnChainTransactionsByHashes = useGetOnChainTransactionsByHashes();
   const deletePendingTransaction = useDeletePendingTransaction();
 
   return React.useCallback(async () => {
-    await Promise.all(
-      pendingTransactions.map(async pendingTransaction => {
-        const isOnChain = await isTransactionBroadcast(pendingTransaction.hash);
-        const elapsedTime = Date.now() - Date.parse(pendingTransaction.timestamp);
+    // Get the hashes of the transactions that are on-chain
+    const pendingTransactionHashes = pendingTransactions.map(tx => tx.hash);
+    const onChainTransactions = await getOnChainTransactionsByHashes(pendingTransactionHashes);
 
-        // If the transaction is on-chain, or it was created more than 1 minute ago, delete it
-        if (isOnChain || elapsedTime > 60 * 1000) {
-          deletePendingTransaction(pendingTransaction.hash);
-        }
-      }),
-    );
-  }, [deletePendingTransaction, isTransactionBroadcast, pendingTransactions]);
+    pendingTransactions.map(async pendingTransaction => {
+      const isOnChain = onChainTransactions.includes(pendingTransaction.hash);
+      const elapsedTime = Date.now() - Date.parse(pendingTransaction.timestamp);
+
+      // If the transaction is on-chain, or it was created more than 1 minute ago, delete it
+      if (isOnChain || elapsedTime > 60 * 1000) {
+        deletePendingTransaction(pendingTransaction.hash);
+      }
+    });
+  }, [deletePendingTransaction, getOnChainTransactionsByHashes, pendingTransactions]);
 };
 
 export default useSyncPendingTransactions;
