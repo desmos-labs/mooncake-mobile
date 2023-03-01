@@ -25,6 +25,8 @@ const profilesState = atom<Record<string, DesmosProfile>>({
  */
 export const useStoredProfile = (user: string) => {
   const profiles = useRecoilValue(profilesState);
+  // Safe to non memoize this value since we are returning a frozen value from
+  // recoil.
   return profiles[user];
 };
 

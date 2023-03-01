@@ -2,6 +2,7 @@ import usePostsDataByAddress from 'hooks/posts/usePostsDataByAddress';
 import GetPostsCreatedByUser from 'services/graphql/queries/GetPostsCreatedByUser';
 import { usePostsToSync } from '@recoil/posts';
 import { Post, PostStatus } from 'types/posts';
+import React from 'react';
 
 /**
  * Hook that allows to retrieve the posts created by a given address and stored locally.
@@ -9,7 +10,10 @@ import { Post, PostStatus } from 'types/posts';
  */
 const useGetCreatedPosts = (address: string): Post[] => {
   const posts = usePostsToSync(address);
-  return posts.filter(post => post.status === PostStatus.CREATED_LOCALLY);
+  return React.useMemo(
+    () => posts.filter(post => post.status === PostStatus.CREATED_LOCALLY),
+    [posts],
+  );
 };
 
 /**

@@ -52,12 +52,16 @@ export const useHasPostTip = (user: string) => {
 
 /**
  * Hook that returns all the tips created by a given user, and that need to be synced with the server.
- * @param user {string} - Address of the user for which to get the tips.
  */
-export const useTipsToBeSynced = (user: string) => {
+export const useGetTipsToBeSynced = () => {
   const tips = useRecoilValue(tipsState);
-  const userTips = tips.get(user);
-  return userTips.readAll().filter(tip => tip.status !== DataStatus.SYNCED);
+  return React.useCallback(
+    (user: string) => {
+      const userTips = tips.get(user);
+      return userTips.readAll().filter(tip => tip.status !== DataStatus.SYNCED);
+    },
+    [tips],
+  );
 };
 
 /**

@@ -33,8 +33,12 @@ const usePostsByAddress = (address: string, postsLimit: number = 10) => {
     refetchPostsTipped();
   }, [refetchPostsCreated, refetchPostsLiked, refetchPostsTipped]);
 
+  const posts = React.useMemo(() => {
+    return [...postsCreated, ...postsLiked, ...postsTipped].slice(0, postsLimit);
+  }, [postsCreated, postsLiked, postsLimit, postsTipped]);
+
   return {
-    posts: [...postsCreated, ...postsLiked, ...postsTipped].slice(0, postsLimit),
+    posts,
     loading: arePostsCreatedLoading || arePostsLikedLoading || arePostsTippedLoading,
     refetch,
   };

@@ -5,6 +5,7 @@ import { safeParseFloat } from 'lib/FormatUtils';
 import { TokenPrice } from 'types/tokens';
 import { useQuery } from '@apollo/client';
 import GetTokensPrices from 'services/graphql/queries/GetTokensPrices';
+import React from 'react';
 
 /**
  * Get the prices of a given list of coins from the GraphQL data.
@@ -45,8 +46,13 @@ const getPrices = (data: any, coins: Coin[]) => {
  */
 const useTokensPrices = (coins: Coin[]) => {
   const { data, refetch, loading } = useQuery(GetTokensPrices);
+
+  const prices = React.useMemo(() => {
+    return getPrices(data, coins);
+  }, [data, coins]);
+
   return {
-    prices: getPrices(data, coins),
+    prices,
     loading,
     refetch,
   };

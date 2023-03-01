@@ -29,8 +29,9 @@ const postsState = atom<Record<string, Post[]>>({
  */
 export const usePostByID = (user: string, subspaceId: number, id: number) => {
   const posts = useRecoilValue(postsState);
-  const userPosts = posts[user] ?? [];
-  return userPosts.find(p => p.subspaceId === subspaceId && p.id === id);
+  return React.useMemo(() => {
+    return posts[user]?.find(p => p.subspaceId === subspaceId && p.id === id);
+  }, [id, posts, subspaceId, user]);
 };
 
 /**
@@ -38,8 +39,9 @@ export const usePostByID = (user: string, subspaceId: number, id: number) => {
  */
 export const usePostByExternalID = (user: string, subspaceId: number, externalId: string) => {
   const posts = useRecoilValue(postsState);
-  const userPosts = posts[user] ?? [];
-  return userPosts.find(p => p.subspaceId === subspaceId && p.externalId === externalId);
+  return React.useMemo(() => {
+    return posts[user]?.find(p => p.subspaceId === subspaceId && p.externalId === externalId);
+  }, [externalId, posts, subspaceId, user]);
 };
 
 /**
@@ -47,8 +49,9 @@ export const usePostByExternalID = (user: string, subspaceId: number, externalId
  */
 export const usePostsToSync = (user: string) => {
   const posts = useRecoilValue(postsState);
-  const userPosts = posts[user] ?? [];
-  return userPosts.filter(post => post.status !== PostStatus.SYNCED);
+  return React.useMemo(() => {
+    return posts[user]?.filter(post => post.status !== PostStatus.SYNCED) ?? [];
+  }, [posts, user]);
 };
 
 /**
@@ -199,8 +202,10 @@ export const useUpdatePostStatus = (user: string) => {
  */
 export const useStoredRootPosts = (user: string) => {
   const posts = useRecoilValue(postsState);
-  const userPosts = posts[user] ?? [];
-  return userPosts.filter(post => post.conversationId === 0);
+  return React.useMemo(
+    () => posts[user]?.filter(post => post.conversationId === 0) ?? [],
+    [posts, user],
+  );
 };
 
 /**
@@ -209,8 +214,10 @@ export const useStoredRootPosts = (user: string) => {
  */
 export const useStoredFollowingPosts = (user: string, followingAddresses: string[]) => {
   const posts = useRecoilValue(postsState);
-  const userPosts = posts[user] ?? [];
-  return userPosts.filter(post => followingAddresses.includes(post.author.address));
+  return React.useMemo(
+    () => posts[user]?.filter(post => followingAddresses.includes(post.author.address)) ?? [],
+    [followingAddresses, posts, user],
+  );
 };
 
 export const useUpdateStoredPendingPost = (user: string) => {

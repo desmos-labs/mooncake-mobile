@@ -1,6 +1,7 @@
 import { Post } from 'types/posts';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasPostTip } from '@recoil/tips';
+import React from 'react';
 
 /**
  * Hook that allows to know if the current user has tipped a given post or not.
@@ -13,7 +14,10 @@ const useHasTipped = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   }
 
   const hasPostTip = useHasPostTip(activeAddress);
-  return hasPostTip(post.subspaceId, post.id);
+  return React.useMemo(
+    () => hasPostTip(post.subspaceId, post.id),
+    [hasPostTip, post.subspaceId, post.id],
+  );
 };
 
 export default useHasTipped;

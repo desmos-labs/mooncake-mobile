@@ -45,12 +45,16 @@ const usePostInteractionsAuthors = (
     const reactionsAuthors = (reactions as any[])
       .map(r => r.author)
       .map(convertGraphQLProfile)
-      .filter(author => hasReacted || author.address !== activeAddress);
+      .filter(
+        author => author !== undefined && (hasReacted || author?.address !== activeAddress),
+      ) as DesmosProfile[];
 
     const tipsAuthors = (tips as any[])
       .map(t => t.author)
       .map(convertGraphQLProfile)
-      .filter(author => hasTipped || author.address !== activeAddress);
+      .filter(
+        author => author !== undefined && (hasTipped || author.address !== activeAddress),
+      ) as DesmosProfile[];
 
     const fetchedAuthors = [...reactionsAuthors, ...tipsAuthors];
 

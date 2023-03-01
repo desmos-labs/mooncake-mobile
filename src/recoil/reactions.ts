@@ -103,13 +103,17 @@ export const useGetPostReaction = (user: string) => {
 };
 
 /**
- * Hook that allows to get all the reactions that are stored locally and not yet synced.
- * @param user {string} - Address of the user for which to get the reactions.
+ * Hook that allows to get all the user's reactions that are stored locally and not yet synced.
  */
-export const useReactionsToSync = (user: string) => {
+export const useGetReactionsToSync = () => {
   const reactions = useRecoilValue(reactionsState);
-  const userReactions = reactions.get(user);
-  return userReactions.readAll().filter(reaction => reaction.status !== DataStatus.SYNCED);
+  return React.useCallback(
+    (user: string) => {
+      const userReactions = reactions.get(user);
+      return userReactions.readAll().filter(reaction => reaction.status !== DataStatus.SYNCED);
+    },
+    [reactions],
+  );
 };
 
 /**

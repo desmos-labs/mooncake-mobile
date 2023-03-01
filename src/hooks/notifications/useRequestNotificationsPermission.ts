@@ -33,6 +33,9 @@ const useRequestNotificationsPermission = () => {
 
   useEffect(() => {
     requestUserPermission().then(() => console.log('Permissions requested'));
+
+    // Safe to ignore, we want to execute this function just one time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

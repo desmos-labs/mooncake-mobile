@@ -1,5 +1,6 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasFollowedUser } from '@recoil/relationships';
+import React from 'react';
 
 /**
  * Hook that allows to know if the current user is following a given user or not.
@@ -14,8 +15,11 @@ const useIsFollowing = (counterparty: string) => {
 
   const hasFollowedUser = useHasFollowedUser(activeAddress);
 
-  // Do not perform the search if the active address and counterparty are the same
-  return activeAddress !== counterparty && hasFollowedUser(counterparty);
+  return React.useMemo(
+    // Do not perform the search if the active address and counterparty are the same
+    () => activeAddress !== counterparty && hasFollowedUser(counterparty),
+    [activeAddress, counterparty, hasFollowedUser],
+  );
 };
 
 export default useIsFollowing;

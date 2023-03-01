@@ -1,6 +1,7 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useHasPostReaction } from '@recoil/reactions';
 import { Post } from 'types/posts';
+import React from 'react';
 
 /**
  * Hook that allows to know if the current user has reacted to a given post or not.
@@ -13,7 +14,9 @@ const useHasReacted = (post: Pick<Post, 'subspaceId' | 'id'>) => {
   }
 
   const hasPostReaction = useHasPostReaction(activeAddress);
-  return hasPostReaction(post.subspaceId, post.id);
+  return React.useMemo(() => {
+    return hasPostReaction(post.subspaceId, post.id);
+  }, [hasPostReaction, post.subspaceId, post.id]);
 };
 
 export default useHasReacted;

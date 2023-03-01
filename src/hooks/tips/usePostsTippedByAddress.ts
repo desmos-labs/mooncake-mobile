@@ -1,21 +1,24 @@
 import usePostsDataByAddress from 'hooks/posts/usePostsDataByAddress';
-import { Post } from 'types/posts';
 import GetPostsTippedByUser from 'services/graphql/queries/GetPostsTippedByUser';
-import { useTipsToBeSynced } from '@recoil/tips';
+import { useGetTipsToBeSynced } from '@recoil/tips';
 import { PostTipTarget, TipTargetType } from 'types/tips';
 import { DataStatus } from 'types/cache';
 import { convertGraphQLPost, GraphQLPost } from 'lib/GraphQLUtils';
+import React from 'react';
 
 /**
  * Hook that allows to retrieve the posts tipped by a given address and stored locally.
- * @param address {string} The address of the user to retrieve the posts from.
  */
-const useGetTippedPosts = (address: string): Post[] => {
-  const tipsToSync = useTipsToBeSynced(address);
-  return tipsToSync
-    .filter(tip => tip.status === DataStatus.CREATED_LOCALLY)
-    .filter(tip => tip.target.type === TipTargetType.POST)
-    .map(tip => (tip.target as PostTipTarget).post);
+const useGetTippedPosts = () => {
+  const tipsToSync = useGetTipsToBeSynced();
+  return React.useCallback(
+    (address: string) =>
+      tipsToSync(address)
+        .filter(tip => tip.status === DataStatus.CREATED_LOCALLY)
+        .filter(tip => tip.target.type === TipTargetType.POST)
+        .map(tip => (tip.target as PostTipTarget).post),
+    [tipsToSync],
+  );
 };
 
 /**
@@ -35,11 +38,12 @@ function onlyUnique(value: GraphQLPost, index: number, array: GraphQLPost[]) {
  * @param postsPerPage The number of posts to retrieve per page.
  */
 const usePostsTippedByAddress = (address?: string, postsPerPage: number = 50) => {
+  const getTippedPosts = useGetTippedPosts();
   return usePostsDataByAddress({
     query: GetPostsTippedByUser,
     address,
     postsPerPage,
-    getInitialPosts: useGetTippedPosts,
+    getInitialPosts: getTippedPosts,
     queryMapper: (data: any | undefined) => {
       // We need to extract the post from the tip object
       const mappedPosts = (data?.tips ?? []).map((r: any) => r.post).map(convertGraphQLPost);
