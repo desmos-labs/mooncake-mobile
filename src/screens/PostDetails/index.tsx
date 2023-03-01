@@ -447,7 +447,7 @@ const PostDetails = () => {
         onRefresh={refreshPage}
         ListHeaderComponent={HeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        keyExtractor={item => String(item.id)}
+        keyExtractor={item => item.externalId}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
         data={comments}
