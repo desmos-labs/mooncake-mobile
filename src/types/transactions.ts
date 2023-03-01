@@ -26,6 +26,11 @@ export interface PendingTransaction {
    * Timestamp of the moment in which the transaction has been sent to the APIs.
    */
   readonly timestamp: string;
+
+  /**
+   * User that has created the transaction.
+   */
+  readonly user: string;
 }
 
 /**

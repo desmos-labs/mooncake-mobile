@@ -86,6 +86,7 @@ const useBroadcastTxWithApi = () => {
             fees: [],
             hash: result.txHash,
             timestamp: new Date().toISOString(),
+            user: activeAccountAddress,
           };
           storePendingTransaction(activeAccountAddress, transaction);
 

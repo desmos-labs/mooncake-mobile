@@ -7,9 +7,9 @@ import { PendingTransaction } from 'types/transactions';
  * Atom that holds all the pending transactions that have been sent to the APIs to be broadcast,
  * but are still waiting for confirmation.
  */
-const pendingTransactionsState = atom<Record<string, PendingTransaction[]>>({
+const pendingTransactionsState = atom<PendingTransaction[]>({
   key: 'pendingTransactionsState',
-  default: getMMKV(MMKVKEYS.PENDING_TRANSACTIONS) ?? {},
+  default: getMMKV(MMKVKEYS.PENDING_TRANSACTIONS) ?? [],
   effects: [
     ({ onSet }) => {
       onSet(transactions => {
@@ -22,19 +22,14 @@ const pendingTransactionsState = atom<Record<string, PendingTransaction[]>>({
 /**
  * Hook that allows to get the list of all pending transactions for all users.
  */
-export const useGetPendingTransactions = () => {
-  const transactions = useRecoilValue(pendingTransactionsState);
-  return React.useCallback(() => {
-    return Object.values(transactions).flatMap(txs => txs);
-  }, [transactions]);
-};
+export const usePendingTransactions = () => useRecoilValue(pendingTransactionsState);
 
 /**
  * Hook that allows to get all the pending transactions for the user having the provided address.
  */
 export const useUserPendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
-  return transactions[user];
+  return transactions.filter(tx => tx.user === user);
 };
 
 /**
@@ -44,17 +39,7 @@ export const useGetPendingTransaction = () => {
   const transactions = useRecoilValue(pendingTransactionsState);
   return React.useCallback(
     (txHash: string): PendingTransaction | undefined => {
-      // Find the entry containing the transaction with the given hash
-      const entry = Object.entries(transactions).find(
-        ([, txs]) => txs.find(tx => tx.hash === txHash) !== undefined,
-      );
-      if (!entry) {
-        return undefined;
-      }
-
-      // Find the pending transaction
-      const [, txs] = entry;
-      return txs.find(tx => tx.hash === txHash);
+      return transactions.find(tx => tx.hash === txHash);
     },
     [transactions],
   );
@@ -69,27 +54,24 @@ export const useStorePendingTransaction = () => {
     (user: string, transaction: PendingTransaction) => {
       setTransactions(currentTransactions => {
         // Get the user transactions
-        const userTransactions = currentTransactions[user] ?? [];
-        const existingTransactionIndex = userTransactions.findIndex(
-          t => t.hash === transaction.hash,
+        const existingTransactionIndex = currentTransactions.findIndex(
+          t => t.hash === transaction.hash && t.user === user,
         );
 
+        // Update the transaction, or insert it if not existing
+        const updatedTransactions = [...currentTransactions];
         switch (existingTransactionIndex) {
           case -1:
             // The transaction is brand new, so just add it
-            userTransactions.push(transaction);
+            updatedTransactions.push(transaction);
             break;
 
           default:
             // The transaction exists, so replace the current one with the new one
-            userTransactions[existingTransactionIndex] = transaction;
+            updatedTransactions[existingTransactionIndex] = transaction;
         }
 
         // Update the stored value
-        const updatedTransactions: Record<string, PendingTransaction[]> = {
-          ...currentTransactions,
-        };
-        updatedTransactions[user] = userTransactions;
         return updatedTransactions;
       });
     },
@@ -105,26 +87,27 @@ export const useDeletePendingTransaction = () => {
   return React.useCallback(
     (txHash: string) => {
       setTransactions(currentTransactions => {
-        // Find the entry which transactions contain the one with the provided hash
-        const entry = Object.entries(currentTransactions).find(
-          ([_, transactions]) => transactions.find(t => t.hash === txHash) !== undefined,
-        );
+        return currentTransactions.filter(t => t.hash !== txHash);
+      });
+    },
+    [setTransactions],
+  );
+};
 
-        // If the entry was not found, it means the transaction was already deleted
-        if (!entry) {
-          return currentTransactions;
+/**
+ * Hook that allows to delete a series of pending transaction given their hash or a predicate.
+ */
+export const useDeletePendingTransactions = () => {
+  const setTransactions = useSetRecoilState(pendingTransactionsState);
+  return React.useCallback(
+    (value: string[] | ((tx: PendingTransaction) => boolean)) => {
+      setTransactions(currentTransactions => {
+        switch (typeof value) {
+          case 'function':
+            return currentTransactions.filter(value);
+          case 'object':
+            return currentTransactions.filter(t => !value.includes(t.hash));
         }
-
-        // Update the transactions list removing the one with the provided hash
-        const [user, transactions] = entry;
-        const filteredTransactions = transactions.filter(t => t.hash !== txHash);
-
-        // Update the stored value
-        const updatedTransactions: Record<string, PendingTransaction[]> = {
-          ...currentTransactions,
-        };
-        updatedTransactions[user] = filteredTransactions;
-        return updatedTransactions;
       });
     },
     [setTransactions],
