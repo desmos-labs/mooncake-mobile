@@ -129,7 +129,10 @@ export const useAddCreatePostAttachment = () => {
       setCreatePostState(state => {
         const attachments = state.attachments ?? [];
         if (!attachments.some(a => a === attachment)) {
-          attachments.push(attachment);
+          return {
+            ...state,
+            attachments: [...attachments, attachment],
+          };
         }
 
         return {
