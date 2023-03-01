@@ -1,5 +1,5 @@
 import { AppPermissions, AppPermissionStatus } from 'types/permissions';
-import { useCallback, useMemo } from 'react';
+import React from 'react';
 import { AppState, Platform } from 'react-native';
 import * as Permissions from 'react-native-permissions';
 import { PERMISSIONS } from 'react-native-permissions';
@@ -8,11 +8,22 @@ import {
   useSetPermissionsRequestCount,
 } from '@recoil/permissionsRequestCount';
 import { useSetAppState } from '@recoil/appState';
+import DeviceInfo from 'react-native-device-info';
 
 const isMultipleRejected = (permissions: Record<any, Permissions.PermissionStatus>): boolean =>
-  Object.values(permissions).find(
-    permissionResult => permissionResult === 'denied' || permissionResult === 'blocked',
-  ) !== undefined;
+  Object.entries(permissions).find(([permission, permissionResult]) => {
+    // IOS.PHOTO_LIBRARY will fail on ios simulator, so we skip permission check on emulators
+    // https://github.com/zoontek/react-native-permissions/issues/498
+    if (
+      DeviceInfo.isEmulatorSync() &&
+      Platform.OS === 'ios' &&
+      permission === PERMISSIONS.IOS.PHOTO_LIBRARY
+    ) {
+      return false;
+    }
+
+    return permissionResult === 'denied' || permissionResult === 'blocked';
+  }) !== undefined;
 
 /**
  * Function that opens the application settings to ask the user
@@ -28,7 +39,9 @@ const openSettingsAndCheckPermissions = async (
   const promise = new Promise<AppPermissionStatus>((resolve, reject) => {
     const subscription = AppState.addEventListener('change', async state => {
       if (state === 'active') {
+        // Unsubscribe from the event listener when the app is in focus.
         subscription.remove();
+        // Resolve the promise with the result of the provided permissions check function.
         permissionsCheck().then(resolve).catch(reject);
       }
     });
@@ -36,6 +49,7 @@ const openSettingsAndCheckPermissions = async (
 
   // Open the settings
   await Permissions.openSettings();
+
   return promise;
 };
 
@@ -44,7 +58,8 @@ const usePermissions = (permission: AppPermissions) => {
   const setRequestsCount = useSetPermissionsRequestCount();
   const setAppState = useSetAppState();
 
-  const permissionsList = useMemo(() => {
+  // List of permissions that we should request.
+  const permissionsList = React.useMemo(() => {
     switch (permission) {
       case AppPermissions.Camera:
         return Platform.select({
@@ -60,13 +75,21 @@ const usePermissions = (permission: AppPermissions) => {
             Permissions.PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
           ],
         })!;
+      case AppPermissions.Storage:
+        return Platform.select({
+          android: [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE],
+          ios: [PERMISSIONS.IOS.PHOTO_LIBRARY],
+        })!;
 
       default:
         throw new Error(`unsupported permission ${permission}`);
     }
   }, [permission]);
 
-  const maxAllowedRequests = useMemo(
+  // Number of time that we can ask the user the permissions before
+  // the os tell us that the permissions are not granted without prompting
+  // the permissions request to the user.
+  const maxAllowedRequests = React.useMemo(
     () =>
       Platform.select({
         ios: 1,
@@ -75,7 +98,8 @@ const usePermissions = (permission: AppPermissions) => {
     [],
   );
 
-  const requestPermission = useCallback(async () => {
+  // Function to perform the permission request.
+  const requestPermission = React.useCallback(async () => {
     const updatedCount = {
       ...requestsCount,
       [permission]: (requestsCount[permission] ?? 0) + 1,
@@ -116,7 +140,8 @@ const usePermissions = (permission: AppPermissions) => {
     setRequestsCount,
   ]);
 
-  const checkPermission = useCallback(async () => {
+  // Function to check if the permissions have been granted.
+  const checkPermission = React.useCallback(async () => {
     const permissionsDenied = await Permissions.checkMultiple(permissionsList).then(
       isMultipleRejected,
     );
