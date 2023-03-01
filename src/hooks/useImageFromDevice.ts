@@ -1,9 +1,10 @@
 import React from 'react';
 import { CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Asset, ImageLibraryOptions } from 'react-native-image-picker/src/types';
-import { Alert, Platform } from 'react-native';
-import { Permission, PERMISSIONS, request } from 'react-native-permissions';
+import { Alert } from 'react-native';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import usePermissions from 'hooks/permissions/usePermissions';
+import { AppPermissions, AppPermissionStatus } from 'types/permissions';
 
 const DEFAULT_OPTIONS: ImageLibraryOptions | CameraOptions = {
   mediaType: 'photo',
@@ -71,6 +72,7 @@ const resizeImages = async (selectedImages: Asset[], disableResize?: boolean): P
  * image in a useState hook.
  */
 const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): ReturnValue => {
+  const { checkPermission, requestPermission } = usePermissions(AppPermissions.Camera);
   // selecting webp images on ios will return an error code
   const imageFromLibrary = React.useCallback(async () => {
     const result = await launchImageLibrary(DEFAULT_OPTIONS);
@@ -82,17 +84,19 @@ const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): Re
       const processedImages = await resizeImages(result.assets, disableResizeImage);
       onImageSelected(processedImages[0]);
     }
-  }, []);
+  }, [disableResizeImage, onImageSelected]);
 
   const imageFromCamera = React.useCallback(async () => {
-    const permissions = await request(
-      Platform.select({
-        ios: PERMISSIONS.IOS.CAMERA,
-        android: PERMISSIONS.ANDROID.CAMERA,
-      }) as Permission,
-    );
+    let cameraPermissions = await checkPermission();
 
-    if (permissions !== 'granted') return;
+    // Camera permissions not granted, request it to the user.
+    if (cameraPermissions !== AppPermissionStatus.Granted) {
+      cameraPermissions = await requestPermission();
+      if (cameraPermissions !== AppPermissionStatus.Granted) {
+        // TODO: Here we should inform the user that we need the camera permissions...
+        return;
+      }
+    }
 
     const result = await launchCamera(DEFAULT_OPTIONS);
     if (result.errorCode) {
@@ -102,7 +106,7 @@ const useImageFromDevice = ({ onImageSelected, disableResizeImage }: Params): Re
       const processedImages = await resizeImages(result.assets, disableResizeImage);
       onImageSelected(processedImages[0]);
     }
-  }, []);
+  }, [checkPermission, disableResizeImage, onImageSelected, requestPermission]);
 
   return {
     imageFromLibrary,
