@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDeletePendingTransaction, usePendingTransactions } from '@recoil/transactions';
+import { useDeletePendingTransaction, useGetPendingTransactions } from '@recoil/transactions';
 import { useLazyQuery } from '@apollo/client';
 import GetTransactionsByHashes from 'services/graphql/queries/GetTransactionsByHashes';
 
@@ -26,12 +26,13 @@ const useGetOnChainTransactionsByHashes = () => {
  * it removes it from the local storage.
  */
 const useSyncPendingTransactions = () => {
-  const pendingTransactions = usePendingTransactions();
+  const getPendingTransactions = useGetPendingTransactions();
   const getOnChainTransactionsByHashes = useGetOnChainTransactionsByHashes();
   const deletePendingTransaction = useDeletePendingTransaction();
 
   return React.useCallback(async () => {
     // Get the hashes of the transactions that are on-chain
+    const pendingTransactions = getPendingTransactions();
     const pendingTransactionHashes = pendingTransactions.map(tx => tx.hash);
     const onChainTransactions = await getOnChainTransactionsByHashes(pendingTransactionHashes);
 
@@ -44,7 +45,7 @@ const useSyncPendingTransactions = () => {
         deletePendingTransaction(pendingTransaction.hash);
       }
     });
-  }, [deletePendingTransaction, getOnChainTransactionsByHashes, pendingTransactions]);
+  }, [deletePendingTransaction, getOnChainTransactionsByHashes, getPendingTransactions]);
 };
 
 export default useSyncPendingTransactions;
