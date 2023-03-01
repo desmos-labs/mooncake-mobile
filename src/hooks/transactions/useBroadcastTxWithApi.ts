@@ -3,7 +3,7 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoTypes } from '@cosmjs/stargate';
 import { createDesmosTypes } from '@desmoslabs/desmjs';
 import axiosInstance from 'services/axios';
-import { ok, ResultAsync } from 'neverthrow';
+import { errAsync, ok, ResultAsync } from 'neverthrow';
 import { useAppStateValue } from '@recoil/appState';
 import { PendingTransaction } from 'types/transactions';
 import { useStorePendingTransaction } from '@recoil/transactions';
@@ -58,12 +58,8 @@ const postTransaction = (
  */
 const useBroadcastTxWithApi = () => {
   const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Trying to broadcast a transaction without active user');
-  }
 
   const token = useAppStateValue('bearerToken');
-
   const storePendingTransaction = useStorePendingTransaction();
 
   return React.useCallback(
@@ -71,6 +67,10 @@ const useBroadcastTxWithApi = () => {
       messages: EncodeObject[],
       options?: BroadcastTxWithApiOptions,
     ): ResultAsync<BroadcastTxWithApiResponse, Error> => {
+      if (!activeAccountAddress) {
+        return errAsync(new Error('Trying to broadcast a transaction without active account'));
+      }
+
       const aminoEncoder = new AminoTypes(createDesmosTypes('desmos'));
       const aminoMessages = messages.map(msg => aminoEncoder.toAmino(msg));
 

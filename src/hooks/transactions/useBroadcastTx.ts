@@ -227,9 +227,6 @@ const usePromptRequestAccountPermissions = () => {
  */
 const useBroadcastTx = () => {
   const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Trying to broadcast a transaction without an active account');
-  }
 
   const storedProfiles = useStoredProfiles();
   const fetchOnChainProfile = useGetOnChainProfile();
@@ -245,6 +242,10 @@ const useBroadcastTx = () => {
       msgs: EncodeObject[],
       options?: BroadcastOptions,
     ): Promise<Result<SuccessfulBroadcast, Error>> => {
+      if (!activeAccountAddress) {
+        return err(new Error('Trying to broadcast a transaction without an active account'));
+      }
+
       let broadcastOnChain = options?.onChain === true;
       const accountProfile = await fetchOnChainProfile(activeAccountAddress);
       if (
