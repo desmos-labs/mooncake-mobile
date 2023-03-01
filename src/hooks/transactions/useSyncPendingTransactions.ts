@@ -26,8 +26,6 @@ const useGetOnChainTransactionsByHashes = () => {
  * it removes it from the local storage.
  */
 const useSyncPendingTransactions = () => {
-  console.log('useSyncPendingTransactions');
-
   const pendingTransactions = usePendingTransactions();
 
   // Create a reference to the pending transactions so that we can access them inside the callback
