@@ -5,6 +5,7 @@ import { PermissionsRequestsCount } from 'types/permissions';
 const defaultValue: PermissionsRequestsCount = {
   camera: 0,
   bluetooth: 0,
+  storage: 0,
 };
 
 /**
