@@ -56,19 +56,14 @@ const usePostInteractionsAuthors = (
         author => author !== undefined && (hasTipped || author.address !== activeAddress),
       ) as DesmosProfile[];
 
-    const fetchedAuthors = [
-      ...reactionsAuthors,
-      ...tipsAuthors.filter(
-        tipAuthor =>
-          reactionsAuthors.find(reactionAuthor => {
-            return reactionAuthor.address === tipAuthor.address;
-          }) !== undefined,
-      ),
-    ];
+    const fetchedAuthors = [...reactionsAuthors, ...tipsAuthors];
 
     // Returns the first X unique authors
     const uniqueAuthors = fetchedAuthors
-      .filter((value, index) => fetchedAuthors.indexOf(value) === index)
+      .filter(
+        (value, index) =>
+          fetchedAuthors.findIndex(profile => profile.address === value.address) === index,
+      )
       .slice(0, 4);
     setAuthors(uniqueAuthors);
   }, [activeAddress, data, hasReacted, hasTipped, setAuthors]);
