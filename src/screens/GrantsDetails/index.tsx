@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { authorizationImage } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -137,7 +137,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
   const onPressGrant = useCallback(async () => {
     try {
       setLoading(true);
-      await checkAndUpdateGrants({
+      const result = await checkAndUpdateGrants({
         grantsToRequest: permissionsEnumList,
         stayOnCurrentScreen: true,
         detailsModal: {
@@ -181,7 +181,7 @@ const GrantsDetails: React.FC<NavProps> = () => {
         permissions: params.section.name.charAt(0).toUpperCase() + params.section.name.slice(1),
       }),
       primaryButtonLabel: t('yes revoke'),
-      secondaryButtonLabel: t('common:cancel'),
+      secondaryButtonLabel: t('cancel'),
       onPressPrimary: () => revokePermissionsWrapper(),
       onPressSecondary: () => pop(),
       removeModalAfterButtonPress: true,
@@ -214,16 +214,18 @@ const GrantsDetails: React.FC<NavProps> = () => {
         permissionsGiven ? (
           <Button
             loading={loading}
-            mode="outlined"
-            color={theme.colors.surfaceBlack}
+            mode={ButtonMode.OUTLINED}
+            size={44}
             onPress={onPressRevoke}>
             {t('revoke permission')}
           </Button>
         ) : (
           <Button
             loading={loading}
-            mode="contained"
-            color={theme.colors.surfaceBlack}
+            mode={ButtonMode.CONTAINED}
+            size={44}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
             onPress={onPressGrant}>
             {t('grant permission')}
           </Button>

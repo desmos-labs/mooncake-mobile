@@ -1,6 +1,6 @@
 import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -133,6 +133,7 @@ const SendTips = (props: NavProps) => {
                         key={String(value)}
                         disabled={!canEdit || shouldDisableTipButton(value)}
                         mode={values.amount === String(value) ? 'contained' : 'outlined'}
+                        size={44}
                         style={[
                           {
                             minWidth: 106,
@@ -159,23 +160,7 @@ const SendTips = (props: NavProps) => {
                         onPress={() => {
                           setFieldValue('amount', String(value), true);
                         }}>
-                        <Typography.Subtitle3
-                          style={
-                            shouldDisableTipButton(value)
-                              ? {
-                                  color: theme.colors.white,
-                                  textTransform: 'uppercase',
-                                }
-                              : {
-                                  color:
-                                    values.amount === String(value)
-                                      ? theme.colors.white
-                                      : theme.colors.surfaceBlack,
-                                  textTransform: 'uppercase',
-                                }
-                          }>
-                          {value} DSM
-                        </Typography.Subtitle3>
+                        {value} DSM
                       </Button>
                     );
                   })}
@@ -238,8 +223,10 @@ const SendTips = (props: NavProps) => {
                 <Spacer paddingVertical={30}>
                   <Button
                     loading={sendingTip}
-                    mode="contained"
-                    color={theme.colors.surfaceBlack}
+                    mode={ButtonMode.CONTAINED}
+                    size={44}
+                    textColor={theme.colors.white}
+                    backgroundColor={theme.colors.surfaceBlack}
                     onPress={handleSubmit}
                     disabled={values.amount === '' || _.flatten(Object.values(errors)).length > 0}>
                     {t('common:confirm')}

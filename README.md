@@ -1,5 +1,4 @@
-# Desmos Flagship Project
-* name TBC
+# Butter
 
 ## Quickstart
 
@@ -17,3 +16,10 @@ To run the application in storybook mode:
 To run the application in regular mode:
 1. `yarn use:main`
 2. `yarn ios` or `yarn android`
+
+## Detox
+As of FEB 2 2023, detox is only supported on `ios`.
+1. Install the following [prerequisite](https://wix.github.io/Detox/docs/introduction/getting-started/#2-macos-only-applesimutils):
+2.  Copy `detox.env.sample.ts` into `detox.env.ts` **Do not add to git**
+3. `yarn detox:build-ios`
+4. `yarn detox:test-ios`

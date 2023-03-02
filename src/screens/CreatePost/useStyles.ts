@@ -11,9 +11,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   postButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 35,
+    width: 58,
   },
   contentContainer: {
     flex: 1,

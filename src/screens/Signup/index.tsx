@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';
@@ -246,14 +246,16 @@ const Signup = () => {
                 <Button
                   onPress={handleSubmit}
                   loading={loading}
-                  color={theme.colors.surfaceBlack}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  size={44}
+                  textColor={theme.colors.white}
                   disabled={
                     !values.newPassword ||
                     !values.consent ||
                     !values.inviteCode ||
                     _.flatten(Object.values(errors)).length > 0
                   }
-                  mode="contained">
+                  mode={ButtonMode.CONTAINED}>
                   {t('common:next')}
                 </Button>
               </>

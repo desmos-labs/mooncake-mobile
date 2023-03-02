@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -28,7 +28,12 @@ const ConvertiblePointsModal = () => {
         <Typography.Body5>{t('convertible body modal 2')}</Typography.Body5>
       </Spacer>
       <Spacer paddingVertical={theme.spacing.xl}>
-        <Button mode="contained" color={theme.colors.surfaceBlack} onPress={goBack}>
+        <Button
+          mode={ButtonMode.CONTAINED}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
+          onPress={goBack}>
           {t('got it')}
         </Button>
       </Spacer>

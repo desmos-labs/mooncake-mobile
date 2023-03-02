@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -51,6 +51,7 @@ const MnemonicInput = () => {
                   </Typography.Subtitle2>
 
                   <DTextInput
+                    testID="mnemonicInput"
                     autoCapitalize="none"
                     textAlignVertical="top"
                     multiline
@@ -85,14 +86,18 @@ const MnemonicInput = () => {
 
               <View>
                 {__DEV__ && (
-                  <Button onPress={() => setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)}>
-                    autofill mnemonic
+                  <Button
+                    mode={ButtonMode.TEXT}
+                    size={32}
+                    onPress={() => setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)}>
+                    Autofill mnemonic
                   </Button>
                 )}
                 <Button
-                  color={theme.colors.surfaceBlack}
-                  mode="contained"
-                  labelStyle={styles.labelStyle}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  textColor={theme.colors.white}
+                  mode={ButtonMode.CONTAINED}
+                  size={44}
                   onPress={handleSubmit}>
                   {t('common:confirm')}
                 </Button>

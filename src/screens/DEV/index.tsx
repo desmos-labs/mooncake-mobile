@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ToastConfig from 'config/ToastConfig';
@@ -185,30 +185,56 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Spacer paddingVertical={4} />
-      <View style={{ marginHorizontal: 10 }}>
-        <Button mode="contained" color="green" onPress={() => navigate(ROUTES.LANDING)}>
+      <View style={{marginHorizontal: 10}}>
+        <Button
+          backgroundColor="green"
+          textColor="white"
+          mode={ButtonMode.CONTAINED}
+          size={44}
+          onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
-        <Button mode="contained" color="red" onPress={navigateToHome}>
+        <Button
+          backgroundColor="orange"
+          textColor="white"
+          mode={ButtonMode.CONTAINED}
+          size={44}
+          onPress={() =>
+            navigate(ROUTES.BOTTOM_TABS, {
+              screen: ROUTES.HOME_TABS,
+              params: {
+                HOME_DISCOVER: {
+                  type: 'discover',
+                },
+                HOME_FOLLOWING: {
+                  type: 'following',
+                },
+              },
+            })
+          }>
           Continue to Home screen
         </Button>
         <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>
         <Spacer paddingVertical={8} />
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flexDirection: 'column', flex: 0.5 }}>
-            <Button mode="contained" onPress={showToast}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'column', flex: 0.5}}>
+            <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button mode="contained" onPress={redeemAnInvite}>
+            <Button
+              onPress={redeemAnInvite}
+              mode={ButtonMode.OUTLINED}
+              size={32}>
               Accept invite
             </Button>
           </View>
           <Spacer paddingHorizontal={4} />
           <View style={{ flexDirection: 'column', flex: 0.5 }}>
             <Button
-              mode="contained"
+              mode={ButtonMode.OUTLINED}
+              size={32}
               onPress={() => {
                 Alert.alert('Are you sure?', 'This will revoke all grants on chain.', [
                   {
@@ -226,7 +252,8 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             </Button>
             <Spacer paddingVertical={4} />
             <Button
-              mode="contained"
+              mode={ButtonMode.OUTLINED}
+              size={32}
               onPress={() => {
                 Alert.alert(
                   'Are you sure?',

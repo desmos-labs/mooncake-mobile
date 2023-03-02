@@ -1,5 +1,5 @@
 import { checkBlackIcon, twitterIcon } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -78,14 +78,14 @@ const ConnectApp = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <Button
               disabled={!twitterUsername}
-              mode="contained"
-              color={theme.colors.surfaceBlack}
+              mode={ButtonMode.CONTAINED}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
               loading={openingTwitterApp}
               onPress={handleOnPress}
-              style={styles.button}>
-              <Typography.Button2 style={{ color: theme.colors.white }}>
-                {t('common:next')}
-              </Typography.Button2>
+              additionalStyle={styles.button}>
+              {t('common:next')}
             </Button>
           </KeyboardAvoidingView>
         </>
@@ -121,34 +121,25 @@ const ConnectApp = () => {
               <Image source={checkBlackIcon} style={{ width: 24, height: 24, marginLeft: 2 }} />
             </View>
           )}
-
           <Button
             disabled={!twitterUsername}
-            mode="contained"
-            color={theme.colors.surfaceBlack}
+            mode={ButtonMode.CONTAINED}
+            size={44}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
             loading={openingTwitterApp}
             onPress={twitted ? handleSelectTweet : openTwitterApp}
-            style={[styles.button, { marginBottom: theme.spacing.m }]}>
-            <Typography.Button2 style={{ color: theme.colors.white }}>
-              {twitted ? t('common:next') : t('tweet it now')}
-            </Typography.Button2>
+            additionalStyle={[styles.button, {marginBottom: theme.spacing.m}]}>
+            {twitted ? t('common:next') : t('tweet it now')}
           </Button>
           {!twitted && (
             <Button
               disabled={!twitterUsername}
-              mode="outlined"
-              color={theme.colors.surfaceBlack}
+              mode={ButtonMode.OUTLINED}
+              size={44}
               onPress={handleSelectTweet}
-              style={[
-                styles.button,
-                {
-                  height: 48,
-                  justifyContent: 'center',
-                },
-              ]}>
-              <Typography.Button2 style={{ color: theme.colors.surfaceBlack }}>
-                {t('tweet made go next')}
-              </Typography.Button2>
+              additionalStyle={[styles.button]}>
+              {t('tweet made go next')}
             </Button>
           )}
         </>

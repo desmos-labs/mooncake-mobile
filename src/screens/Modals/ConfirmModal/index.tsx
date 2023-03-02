@@ -67,13 +67,7 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?:
-    | 'text'
-    | 'outlined'
-    | 'contained'
-    | 'gradient'
-    | 'gradientFilled'
-    | 'backgroundComponent';
+  primaryButtonMode?: 'text' | 'outlined' | 'contained';
 
   /**
    * The mode of the secondary button.
@@ -151,17 +145,20 @@ const ConfirmModal = () => {
         <Spacer paddingTop={theme.spacing.xl}>
           {primaryButtonLabel && (
             <Button
-              style={styles.primaryButton}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
+              additionalStyle={styles.primaryButton}
               mode={primaryButtonMode}
               onPress={onPressPrimaryButton}>
               {primaryButtonLabel}
             </Button>
           )}
           {secondaryButtonLabel && (
-            <Spacer paddingTop={theme.spacing.xl}>
+            <Spacer paddingTop={theme.spacing.m}>
               <Button
-                containerStyle={styles.secondaryButton}
-                color={theme.colors.surfaceBlack}
+                size={44}
+                additionalStyle={styles.secondaryButton}
                 mode={secondaryButtonMode as any}
                 onPress={onPressSecondary}>
                 {secondaryButtonLabel}

@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -99,14 +99,12 @@ const SelectTweet = () => {
         <NoTweets />
         <Spacer paddingVertical={12} />
         <Button
-          color={theme.colors.surfaceBlack}
-          mode="outlined"
+          mode={ButtonMode.OUTLINED}
+          size={44}
           onPress={openTwitterApp}
           style={{
             alignSelf: 'center',
-            borderColor: theme.colors.surfaceBlack,
             width: 140,
-            height: 42,
             justifyContent: 'center',
           }}>
           {t('tweet now')}
@@ -145,16 +143,18 @@ const SelectTweet = () => {
           contentContainerStyle={styles.tweetsListContainer}
         />
         {tweets.length > 0 && (
-          <Button
-            disabled={selectedTweet === undefined}
-            mode="contained"
-            color={theme.colors.surfaceBlack}
-            onPress={handleConnect}
-            style={styles.button}>
-            <Typography.Button2 style={{ color: theme.colors.white }}>
+          <View style={{marginTop: theme.spacing.m}}>
+            <Button
+              disabled={!selectedTweetId}
+              mode={ButtonMode.CONTAINED}
+              size={44}
+              textColor={theme.colors.white}
+              backgroundColor={theme.colors.surfaceBlack}
+              onPress={handleConnect}
+              additionalStyle={styles.button}>
               {t('common:next')}
-            </Typography.Button2>
-          </Button>
+            </Button>
+          </View>
         )}
       </>
     </DView>

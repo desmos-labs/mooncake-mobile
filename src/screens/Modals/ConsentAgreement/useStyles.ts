@@ -27,10 +27,6 @@ const useStyles = makeStyle(theme => ({
     // lazy override padding
     paddingTop: theme.spacing.s,
   },
-  confirmButton: {
-    backgroundColor: theme.colors.surfaceBlack,
-    marginVertical: 40,
-  },
 }));
 
 export default useStyles;

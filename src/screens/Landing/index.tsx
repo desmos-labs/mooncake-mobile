@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
@@ -77,20 +77,23 @@ const Landing = () => {
       <Text style={styles.subtitle} allowFontScaling>
         {t('header')}
       </Text>
-      <View style={{ alignSelf: 'stretch' }}>
+      <Spacer paddingTop={theme.spacing.m} />
+      <View style={{alignSelf: 'stretch'}}>
         <Button
-          mode="contained"
-          style={{ backgroundColor: theme.colors.white }}
-          labelStyle={{ color: theme.colors.surfaceBlack }}
+          mode={ButtonMode.CONTAINED}
+          size={ButtonSize.L}
+          useSubtitle={true}
+          backgroundColor="rgba(255, 255, 255, 0.7)"
           onPress={onSignUp}>
           {t('signUp')}
         </Button>
 
         <Spacer paddingVertical={theme.spacing.l}>
           <Button
-            style={{ borderColor: theme.colors.white }}
-            labelStyle={{ color: theme.colors.white }}
-            mode="outlined"
+            mode={ButtonMode.CONTAINED}
+            size={ButtonSize.L}
+            useSubtitle={true}
+            backgroundColor="rgba(255, 255, 255, 0.7)"
             onPress={onSignUpWithWallet}>
             {t('signUp with wallet')}
           </Button>

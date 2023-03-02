@@ -50,7 +50,7 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
           <Button
             color={theme.colors.surfaceBlack}
             onPress={createAppLink}
-            mode="contained"
+            mode={ButtonMode.CONTAINED}
             labelStyle={styles.buttonStyle}>
             {t('connect app')}
           </Button>

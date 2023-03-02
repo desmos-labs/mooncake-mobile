@@ -14,7 +14,9 @@
     "postinstall": "patch-package && rn-nodeify --install stream,crypto,fs,path --hack",
     "deploy:androidInternal": "fastlane android deploy_to_internal_testing",
     "deploy:iosInternal": "fastlane ios closed_beta",
-    "deploy:copyDevEnv": "cp .env.dev.sample .env"
+    "deploy:copyDevEnv": "cp .env.dev.sample .env",
+    "detox:build-ios": "detox build -c ios.sim.release",
+    "detox:test-ios": "detox test -c ios.sim.release"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
@@ -29,6 +31,7 @@
     "@habx/apollo-multi-endpoint-link": "^2.9.0",
     "@ledgerhq/react-native-hw-transport-ble": "6.27.8",
     "@notifee/react-native": "^7.3.0",
+    "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-camera-roll/camera-roll": "5.0.2",
     "@react-native-clipboard/clipboard": "^1.11.1",
     "@react-native-community/blur": "4.2.0",
@@ -95,7 +98,7 @@
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-size-matters": "^0.4.0",
     "react-native-svg": "^12.3.0",
-    "react-native-tab-view": "^3.1.1",
+    "react-native-tab-view": "^3.3.4",
     "react-native-toast-notifications": "^3.3.1",
     "react-native-vector-icons": "^9.2.0",
     "readable-stream": "^1.0.33",
@@ -112,16 +115,17 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.0.0",
-    "@storybook/addon-actions": "^6.5.15",
+    "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-knobs": "^6.4.0",
-    "@storybook/addon-links": "^6.5.15",
-    "@storybook/addon-ondevice-actions": "^5.3.23",
-    "@storybook/addon-ondevice-knobs": "^5.3.25",
-    "@storybook/react-native": "^5.3.27",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/addon-ondevice-actions": "^6.0.1-beta.12",
+    "@storybook/addon-ondevice-knobs": "^6.0.1-beta.12",
+    "@storybook/react-native": "^6.0.1-beta.12",
     "@testing-library/jest-native": "^4.0.5",
     "@testing-library/react-native": "^10.1.0",
     "@tsconfig/react-native": "^2.0.2",
     "@types/axios": "^0.14.0",
+    "@types/detox": "^18.1.0",
     "@types/jest": "^29.2.1",
     "@types/react": "^18.0.24",
     "@types/react-native": "^0.69.0",
@@ -134,6 +138,9 @@
     "babel-loader": "9.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "danger": "^11.2.3",
+    "detox": "^20.1.2",
+    "dotenv": "^16.0.3",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-recommended": "^4.1.0",
@@ -153,38 +160,12 @@
     "react-native-flipper-performance-plugin": "^0.3.1",
     "react-native-storybook-loader": "^2.0.5",
     "react-test-renderer": "18.2.0",
+    "reassure": "^0.7.1",
+    "ts-jest": "^29.0.5",
     "typescript": "4.8.4"
   },
   "resolutions": {
     "@types/react": "^18"
-  },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "testEnvironment": "jsdom",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@react-native-community|@react-native|@react-navigation)|crypto-es"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect",
-      "<rootDir>/jest/setupAfterEnv.js",
-      "<rootDir>/jest/globalMock.js"
-    ],
-    "setupFiles": [
-      "<rootDir>/jest/setup.js",
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/assets/"
-    ]
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --quiet"

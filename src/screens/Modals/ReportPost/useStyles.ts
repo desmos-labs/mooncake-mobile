@@ -38,6 +38,10 @@ const useStyles = makeStyle(theme => ({
   textInput: {
     borderColor: theme.colors.lightGrey01,
   },
+  loadingView: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.m,
+  },
 }));
 
 export default useStyles;

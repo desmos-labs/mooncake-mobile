@@ -1,9 +1,9 @@
 import { emptyInvitesImage } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -60,8 +60,10 @@ const InvitesList = ({
         <Spacer paddingVertical="l" />
 
         <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
+          mode={ButtonMode.CONTAINED}
+          size={44}
+          textColor={theme.colors.white}
+          backgroundColor={theme.colors.surfaceBlack}
           onPress={() => navigate(ROUTES.SETTINGS_INVITES)}>
           {t('invite friends now')}
         </Button>
@@ -98,9 +100,11 @@ const InvitesList = ({
     ) : (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
-        mode="contained"
-        color={theme.colors.surfaceBlack}
-        style={{ marginHorizontal: theme.spacing.m }}>
+        mode={ButtonMode.CONTAINED}
+        size={44}
+        textColor={theme.colors.white}
+        backgroundColor={theme.colors.surfaceBlack}
+        additionalStyle={{marginHorizontal: theme.spacing.m}}>
         {t('invite more')}
       </Button>
     );

@@ -25,6 +25,7 @@ type Props = {
    * @default custom-checkbox
    */
   accessibilityLabel?: string;
+  testID?: string;
 };
 
 /**
@@ -35,6 +36,7 @@ const CustomCheckbox = ({
   handlePress,
   error,
   accessibilityLabel = 'custom-checkbox',
+  testID,
 }: Props) => {
   const styles = useStyles();
 
@@ -50,7 +52,10 @@ const CustomCheckbox = ({
   });
 
   return (
-    <TouchableOpacity accessibilityLabel={accessibilityLabel} onPress={handlePress}>
+    <TouchableOpacity
+      testID={testID}
+      accessibilityLabel={accessibilityLabel}
+      onPress={handlePress}>
       <Image
         source={checkboxUnchecked}
         style={[styles.image, error && styles.errorTint, checked && styles.checkedTint]}

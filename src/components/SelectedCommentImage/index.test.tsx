@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from 'jest/utils/CustomRender';
+import {render} from 'jest/utils/CustomWrappers';
 import SelectedCommentImage from 'components/SelectedCommentImage/index';
-import { desmosIcon } from 'assets/images';
+import {desmosIcon} from 'assets/images';
 
 describe('component: SelectedCommentImage', () => {
   it('renders', () => {

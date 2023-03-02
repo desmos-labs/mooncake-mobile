@@ -44,6 +44,10 @@ const useStyles = makeStyle(theme => ({
     padding: theme.spacing.l,
     paddingTop: 0,
   },
+  loadingView: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.m,
+  },
 }));
 
 export default useStyles;

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { infoIcon } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode, ButtonSize} from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -75,14 +75,13 @@ const ImpactPointsSection = () => {
           </TouchableOpacity>
 
           {/* Link to know how to earn impact points */}
-          <Button mode="text" onPress={handleHowToEarnPoints}>
-            <Typography.Body7
-              style={{
-                textTransform: 'none',
-                color: theme.colors.butterOrange01,
-              }}>
-              {t('how to earn points')}
-            </Typography.Body7>
+          <Button
+            size={ButtonSize.S}
+            mode={ButtonMode.TEXT}
+            textColor={theme.colors.butterOrange01}
+            onPress={handleHowToEarnPoints}>
+            {t('how to earn points')}
+
           </Button>
         </View>
 

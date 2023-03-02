@@ -10,8 +10,9 @@ const useStyles = makeStyle(theme => ({
   },
   dummyAvatar: {
     width: 150,
-    height: 150,
-    resizeMode: 'cover',
+    height: 133,
+    resizeMode: 'contain',
+    marginBottom: -theme.spacing.s,
   },
   title: {
     color: theme.colors.white,

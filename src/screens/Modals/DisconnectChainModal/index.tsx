@@ -3,7 +3,7 @@ import { Image, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import { desmosIcon, disconnectIcon, dummyAvatar, errorImage, modalSuccess } from 'assets/images';
-import Button from 'components/Button';
+import Button, {ButtonMode} from 'components/Button';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -122,14 +122,20 @@ const DisconnectChainModal = () => {
           {chainLink.externalAddress}
         </Typography.Button2>
 
-        <Button style={styles.confirmButton} mode="contained" onPress={handlePressYes}>
+        <Button
+          size={44}
+          style={styles.confirmButton}
+          mode={ButtonMode.CONTAINED}
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          onPress={handlePressYes}>
           {t('common:yes')}
         </Button>
 
         <Button
-          mode="outlined"
+          mode={ButtonMode.OUTLINED}
+          size={44}
           style={styles.cancelButton}
-          labelStyle={styles.cancelText}
           onPress={goBack}>
           {t('common:no')}
         </Button>
