@@ -1,9 +1,9 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar/index';
-import {defaultProfilePic} from 'assets/images';
-import {act, fireEvent, waitFor} from '@testing-library/react-native';
-import {Keyboard} from 'react-native';
+import { defaultProfilePic } from 'assets/images';
+import { act, fireEvent, waitFor } from '@testing-library/react-native';
+import { Keyboard } from 'react-native';
 import i18next from 'i18next';
 
 describe('component: EnterCommentBottomBar', () => {
@@ -21,7 +21,7 @@ describe('component: EnterCommentBottomBar', () => {
   });
 
   it('shows media panel', () => {
-    const {getByLabelText} = render(
+    const { getByLabelText } = render(
       <EnterCommentBottomBar
         profileImage={defaultProfilePic}
         onIconPress={jest.fn()}
@@ -39,7 +39,7 @@ describe('component: EnterCommentBottomBar', () => {
   });
 
   it('changes text', () => {
-    const {getByText, getByPlaceholderText} = render(
+    const { getByText, getByPlaceholderText } = render(
       <EnterCommentBottomBar
         profileImage={defaultProfilePic}
         onIconPress={jest.fn()}

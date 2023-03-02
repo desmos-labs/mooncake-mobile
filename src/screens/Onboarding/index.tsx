@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -142,7 +142,7 @@ const Onboarding = () => {
                 {t('skip')}
               </Button>
             ) : (
-              <View style={{height: 45}} />
+              <View style={{ height: 45 }} />
             )
           }
         />

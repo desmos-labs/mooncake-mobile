@@ -1,5 +1,5 @@
 import { errorImage } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';

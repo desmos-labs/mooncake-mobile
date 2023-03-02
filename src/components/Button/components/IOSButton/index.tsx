@@ -1,6 +1,6 @@
 import React from 'react';
-import {ActivityIndicator, TouchableOpacity, View} from 'react-native';
-import {ButtonProps} from 'components/Button';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
 
 interface Props extends ButtonProps {
@@ -33,22 +33,22 @@ const IOSButton = ({
         styles.button,
         styleMap[mode],
         sizeMap[size],
-        {backgroundColor},
+        { backgroundColor },
         additionalStyle,
         disabled ? styles.disabled : {},
       ]}
       {...rest}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         {useSubtitle ? (
           <Typography.Subtitle2
             numberOfLines={1}
-            style={{color: textColor || theme.colors.surfaceBlack}}>
+            style={{ color: textColor || theme.colors.surfaceBlack }}>
             {children}
           </Typography.Subtitle2>
         ) : (
           <Typography.Button2
             numberOfLines={1}
-            style={{color: textColor || theme.colors.surfaceBlack}}>
+            style={{ color: textColor || theme.colors.surfaceBlack }}>
             {children}
           </Typography.Button2>
         )}
@@ -56,7 +56,7 @@ const IOSButton = ({
           <ActivityIndicator
             size="small"
             color={textColor}
-            style={{marginLeft: theme.spacing.m}}
+            style={{ marginLeft: theme.spacing.m }}
           />
         ) : null}
       </View>

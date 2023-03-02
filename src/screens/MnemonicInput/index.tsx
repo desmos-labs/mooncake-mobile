@@ -1,4 +1,4 @@
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';

@@ -1,5 +1,5 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { areReactionsEqual, ComparableReaction, PostReaction } from 'types/desmos';
+import { areReactionsComparable, ComparableReaction, PostReaction } from 'types/desmos';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import React from 'react';
 import { Post } from 'types/posts';
@@ -13,7 +13,7 @@ import { useStoredProfile } from '@recoil/profiles';
  */
 const reactionsState = atom<MultipleUsersCache<PostReaction, ComparableReaction>>({
   key: 'reactionsState',
-  default: mmkvValueToCache(MMKVKEYS.POST_REACTIONS, areReactionsEqual),
+  default: mmkvValueToCache(MMKVKEYS.POST_REACTIONS, areReactionsComparable),
   effects: [
     ({ onSet }) => {
       onSet(reactions => {

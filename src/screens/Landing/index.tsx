@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
@@ -78,7 +78,7 @@ const Landing = () => {
         {t('header')}
       </Text>
       <Spacer paddingTop={theme.spacing.m} />
-      <View style={{alignSelf: 'stretch'}}>
+      <View style={{ alignSelf: 'stretch' }}>
         <Button
           mode={ButtonMode.CONTAINED}
           size={ButtonSize.L}

@@ -1,9 +1,9 @@
 import { emptyInvitesImage } from 'assets/images';
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -104,7 +104,7 @@ const InvitesList = ({
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        additionalStyle={{marginHorizontal: theme.spacing.m}}>
+        additionalStyle={{ marginHorizontal: theme.spacing.m }}>
         {t('invite more')}
       </Button>
     );

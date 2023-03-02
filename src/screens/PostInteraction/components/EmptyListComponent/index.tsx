@@ -1,5 +1,5 @@
 import { errorImage } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';

@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import ToastConfig from 'config/ToastConfig';
@@ -185,7 +185,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Spacer paddingVertical={4} />
-      <View style={{marginHorizontal: 10}}>
+      <View style={{ marginHorizontal: 10 }}>
         <Button
           backgroundColor="green"
           textColor="white"
@@ -203,18 +203,17 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           onPress={() => navigateToHome()}>
           Continue to Home screen
         </Button>
-        <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>
+        <Button onPress={testBroadcastTx} mode={ButtonMode.OUTLINED} size={32}>
+          Test Broadcast TX
+        </Button>
         <Spacer paddingVertical={8} />
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flexDirection: 'column', flex: 0.5}}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'column', flex: 0.5 }}>
             <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button
-              onPress={redeemAnInvite}
-              mode={ButtonMode.OUTLINED}
-              size={32}>
+            <Button onPress={redeemAnInvite} mode={ButtonMode.OUTLINED} size={32}>
               Accept invite
             </Button>
           </View>

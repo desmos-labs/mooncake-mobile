@@ -3,12 +3,16 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { mmkvValueToCache } from '@recoil/utils';
-import { areFollowedUsersEqual, ComparableFollowedUser, FollowedUser } from 'types/relationships';
+import {
+  areFollowedUsersComparable,
+  ComparableFollowedUser,
+  FollowedUser,
+} from 'types/relationships';
 import { DesmosProfile } from 'types/desmos';
 
 const followageState = atom<MultipleUsersCache<FollowedUser, ComparableFollowedUser>>({
   key: 'followageState',
-  default: mmkvValueToCache(MMKVKEYS.FOLLOWAGE, areFollowedUsersEqual),
+  default: mmkvValueToCache(MMKVKEYS.FOLLOWAGE, areFollowedUsersComparable),
   effects: [
     ({ onSet }) => {
       onSet(followage => {

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { infoIcon } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
@@ -81,7 +81,6 @@ const ImpactPointsSection = () => {
             textColor={theme.colors.butterOrange01}
             onPress={handleHowToEarnPoints}>
             {t('how to earn points')}
-
           </Button>
         </View>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem/index';
-import {render} from 'jest/utils/CustomWrappers';
-import {fireEvent} from '@testing-library/react-native';
+import { render } from 'jest/utils/CustomWrappers';
+import { fireEvent } from '@testing-library/react-native';
 
 describe('component: AppConnectedItem', () => {
   it('renders', () => {
@@ -20,7 +20,7 @@ describe('component: AppConnectedItem', () => {
   it('calls showSnackbar from props when copy button is clicked', () => {
     const mockShowSnackBar = jest.fn();
 
-    const {getByLabelText} = render(
+    const { getByLabelText } = render(
       <ChainLinkItem
         chainName="testmosis"
         address="test123123123"

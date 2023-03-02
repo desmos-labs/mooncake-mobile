@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import MediaBottomPanel from 'components/MediaBottomPanel/index';
 
 describe('component: MediaBottomPanel', () => {

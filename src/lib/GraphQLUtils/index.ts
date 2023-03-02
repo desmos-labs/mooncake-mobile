@@ -5,4 +5,3 @@ export * from './posts';
 export * from './profiles';
 export * from './subspaces';
 export * from './invites';
-export * from './impactPoints';

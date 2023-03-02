@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import IOSButton from 'components/Button/components/IOSButton';
 import AndroidButton from 'components/Button/components/AndroidButton';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export enum ButtonMode {
@@ -24,9 +24,7 @@ export enum ButtonSize {
   L = 56,
 }
 
-export interface ButtonProps
-  extends TouchableOpacityProps,
-    Pick<PressableProps, 'android_ripple'> {
+export interface ButtonProps extends TouchableOpacityProps, Pick<PressableProps, 'android_ripple'> {
   /** Defined Figma modes
    *  CONTAINED = 'contained',
    *  OUTLINED = 'outlined',
@@ -66,17 +64,17 @@ export interface ButtonProps
  * This HOC should be used to have a correct animation of the button in iOS as well,
  * since the Pressable does not have a consistent animation with both operating systems
  */
-const Button = ({children, ...rest}: ButtonProps) => {
+const Button = ({ children, ...rest }: ButtonProps) => {
   const styles = useStyles();
   const theme = useTheme();
 
-  const styleMap: {[index: string]: any} = {
+  const styleMap: { [index: string]: any } = {
     [ButtonMode.TEXT]: styles.text,
     [ButtonMode.CONTAINED]: styles.contained,
     [ButtonMode.OUTLINED]: styles.outlined,
   };
 
-  const sizeMap: {[index: string]: any} = {
+  const sizeMap: { [index: string]: any } = {
     [ButtonSize.XS]: styles.h26,
     [ButtonSize.S]: styles.h32,
     [ButtonSize.M]: styles.h44,
@@ -85,24 +83,14 @@ const Button = ({children, ...rest}: ButtonProps) => {
 
   if (Platform.OS === 'ios') {
     return (
-      <IOSButton
-        styles={styles}
-        theme={theme}
-        styleMap={styleMap}
-        sizeMap={sizeMap}
-        {...rest}>
+      <IOSButton styles={styles} theme={theme} styleMap={styleMap} sizeMap={sizeMap} {...rest}>
         {children}
       </IOSButton>
     );
   }
 
   return (
-    <AndroidButton
-      styles={styles}
-      theme={theme}
-      styleMap={styleMap}
-      sizeMap={sizeMap}
-      {...rest}>
+    <AndroidButton styles={styles} theme={theme} styleMap={styleMap} sizeMap={sizeMap} {...rest}>
       {children}
     </AndroidButton>
   );

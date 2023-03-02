@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';

@@ -1,13 +1,11 @@
 import { CacheableObject, Comparator, DataStatus } from 'types/cache';
 
-const findSameDataIndex = <T extends CacheableObject, C extends Partial<T>>(
+const findSameDataIndex = <T extends CacheableObject>(
   existing: T[],
   data: T,
-  comparator: Comparator<C>,
+  comparator: Comparator<T, T>,
 ): number => {
-  // It's fine to ignore the following warning, as C is always a Partial<T> by how we use it
-  // @ts-ignore
-  return existing.findIndex(value => comparator(value as C, data as C));
+  return existing.findIndex(value => comparator(value, data));
 };
 
 export enum CachedDataUpdateType {
@@ -44,10 +42,10 @@ export type CachedDataUpdate<T extends CacheableObject> =
  * @param comparator {Function} - Function used to compare different elements of the data.
  * @return A new list of <code>T</code> that represents the merged data.
  */
-export const mergeCacheableData = <T extends CacheableObject, C extends Partial<T>>(
+export const mergeCacheableData = <T extends CacheableObject>(
   existing: T[],
   external: T[],
-  comparator: Comparator<C>,
+  comparator: Comparator<T, T>,
 ): [T[], CachedDataUpdate<T>[]] => {
   if (existing.length === 0) {
     return [external, []];

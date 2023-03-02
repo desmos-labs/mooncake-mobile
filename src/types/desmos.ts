@@ -200,6 +200,17 @@ export interface ComparableReaction {
 /**
  * Allows to determine whether the two given reactions are equals or not.
  */
-export const areReactionsEqual = (first: PostReaction, second: ComparableReaction) => {
+export const areReactionsEqual = (first: PostReaction, second: PostReaction) => {
+  return (
+    first.post.subspaceId === second.post.subspaceId &&
+    first.post.id === second.post.id &&
+    first.id === second.id
+  );
+};
+
+/**
+ * Allows to determine whether the two given reactions are equals or not.
+ */
+export const areReactionsComparable = (first: PostReaction, second: ComparableReaction) => {
   return first.post.subspaceId === second.subspaceId && first.post.id === second.postId;
 };

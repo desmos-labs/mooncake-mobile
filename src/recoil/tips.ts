@@ -3,11 +3,17 @@ import { DataStatus, MultipleUsersCache } from 'types/cache';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { mmkvValueToCache } from '@recoil/utils';
 import { MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
-import { areTipsEqual, comparablePostTip, comparableTip, ComparableTip, Tip } from 'types/tips';
+import {
+  areTipsComparable,
+  comparablePostTip,
+  comparableTip,
+  ComparableTip,
+  Tip,
+} from 'types/tips';
 
 const tipsState = atom<MultipleUsersCache<Tip, ComparableTip>>({
   key: 'tipsState',
-  default: mmkvValueToCache(MMKVKEYS.TIPS, areTipsEqual),
+  default: mmkvValueToCache(MMKVKEYS.TIPS, areTipsComparable),
   effects: [
     ({ onSet }) => {
       onSet(tips => {

@@ -6,8 +6,8 @@ import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import FollowButton from 'components/FollowButton';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
+import FollowUnfollowButton from 'components/FollowUnfollowButton';
 import useStyles from './useStyles';
 
 interface UserListItemProps {
@@ -57,9 +57,9 @@ const UserListItem = (props: UserListItemProps) => {
 
       {/* Button to follow or unfollow a user */}
       {!isActiveAccount && (
-        <FollowButton
+        <FollowUnfollowButton
           onPress={() => followOrUnfollowUser(user)}
-          type={isFollowing ? 'unfollow' : 'follow'}
+          isFollowing={isFollowing}
         />
       )}
     </TouchableOpacity>

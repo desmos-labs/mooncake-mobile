@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import PostComponent from 'components/PostComponent/index';
 
 const mockTextPostData = {
@@ -78,17 +78,13 @@ describe('component: PostComponent', () => {
   });
 
   it('renders image posts', () => {
-    const tree = render(
-      <PostComponent postData={mockImagePostData} />,
-    ).toJSON();
+    const tree = render(<PostComponent postData={mockImagePostData} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });
 
   it('renders textImage posts', () => {
-    const tree = render(
-      <PostComponent postData={mockTextImagePostData} />,
-    ).toJSON();
+    const tree = render(<PostComponent postData={mockTextImagePostData} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

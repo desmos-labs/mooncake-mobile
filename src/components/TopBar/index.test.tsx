@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import TopBar from 'components/TopBar/index';
 
 const mockCanGoBack = jest.fn();

@@ -1,4 +1,4 @@
-import {makeStyle} from 'config/theme';
+import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => {
   return {
@@ -11,8 +11,8 @@ const useStyles = makeStyle(theme => {
       overflow: 'hidden',
       borderRadius: theme.roundness,
     },
-    text: {backgroundColor: 'transparent'},
-    contained: {backgroundColor: theme.colors.white},
+    text: { backgroundColor: 'transparent' },
+    contained: { backgroundColor: theme.colors.white },
     outlined: {
       backgroundColor: 'transparent',
       borderColor: theme.colors.surfaceBlack,

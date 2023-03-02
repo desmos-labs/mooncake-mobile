@@ -1,12 +1,10 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import SectionSwitch from 'components/SectionSwitch/index';
 
 describe('component: SectionSwitch', () => {
   it('renders', () => {
-    const tree = render(
-      <SectionSwitch label="label" value onValueChange={jest.fn()} />,
-    ).toJSON();
+    const tree = render(<SectionSwitch label="label" value onValueChange={jest.fn()} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import GradientBorder from 'components/GradientBorder/index';
 
 describe('component', () => {

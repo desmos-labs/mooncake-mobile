@@ -1,4 +1,4 @@
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -143,7 +143,7 @@ const SelectTweet = () => {
           contentContainerStyle={styles.tweetsListContainer}
         />
         {tweets.length > 0 && (
-          <View style={{marginTop: theme.spacing.m}}>
+          <View style={{ marginTop: theme.spacing.m }}>
             <Button
               disabled={!selectedTweetId}
               mode={ButtonMode.CONTAINED}

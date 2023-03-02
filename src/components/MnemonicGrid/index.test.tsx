@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import MnemonicGrid from 'components/MnemonicGrid/index';
 
 describe('component: MnemonicGrid', () => {

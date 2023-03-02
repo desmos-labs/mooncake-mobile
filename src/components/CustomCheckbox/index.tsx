@@ -52,10 +52,7 @@ const CustomCheckbox = ({
   });
 
   return (
-    <TouchableOpacity
-      testID={testID}
-      accessibilityLabel={accessibilityLabel}
-      onPress={handlePress}>
+    <TouchableOpacity testID={testID} accessibilityLabel={accessibilityLabel} onPress={handlePress}>
       <Image
         source={checkboxUnchecked}
         style={[styles.image, error && styles.errorTint, checked && styles.checkedTint]}

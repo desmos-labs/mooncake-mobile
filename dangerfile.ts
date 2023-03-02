@@ -1,4 +1,4 @@
-import {dangerReassure} from 'reassure';
+import { dangerReassure } from 'reassure';
 import path from 'path';
 
 dangerReassure({

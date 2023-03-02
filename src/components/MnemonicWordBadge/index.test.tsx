@@ -1,7 +1,7 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import MnemonicWordBadge from 'components/MnemonicWordBadge/index';
-import {fireEvent} from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 describe('component: MnemonicWordBard', () => {
   it('renders', () => {
@@ -13,9 +13,7 @@ describe('component: MnemonicWordBard', () => {
   it('calls onPress with value as arguments', () => {
     const mockOnPress = jest.fn();
 
-    const {getByText} = render(
-      <MnemonicWordBadge value="hello" onPress={mockOnPress} />,
-    );
+    const { getByText } = render(<MnemonicWordBadge value="hello" onPress={mockOnPress} />);
 
     fireEvent.press(getByText('hello'));
 

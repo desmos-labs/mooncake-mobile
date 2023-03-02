@@ -1,6 +1,6 @@
 import React from 'react';
-import {measurePerformance} from 'jest/utils/CustomWrappers';
-import {Text, View} from 'react-native';
+import { measurePerformance } from 'jest/utils/CustomWrappers';
+import { Text, View } from 'react-native';
 import DView from './index';
 
 describe('Performance Test: DView', () => {

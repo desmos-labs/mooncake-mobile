@@ -16,9 +16,16 @@ export interface ComparableFollowedUser {
 }
 
 /**
+ * Function that allows to check if two complete followed users are equal.
+ */
+export const areFollowedUsersEqual = (first: FollowedUser, second: FollowedUser): boolean => {
+  return first.user.address === second.user.address;
+};
+
+/**
  * Function that allows to check if two followed users are equal.
  */
-export const areFollowedUsersEqual = (
+export const areFollowedUsersComparable = (
   first: FollowedUser,
   second: ComparableFollowedUser,
 ): boolean => {

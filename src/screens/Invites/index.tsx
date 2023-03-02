@@ -11,7 +11,7 @@ import {
   invitesBanner,
   inviteUserIcon,
 } from 'assets/images';
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DView from 'components/DView';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
@@ -128,7 +128,7 @@ const Invites = () => {
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
-          additionalStyle={{marginHorizontal: theme.spacing.m}}
+          additionalStyle={{ marginHorizontal: theme.spacing.m }}
           mode={ButtonMode.CONTAINED}>
           {t('generate invite')}
         </Button>

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import CustomCheckbox from 'components/CustomCheckbox/index';
-import {fireEvent} from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 import {
   advanceAnimationByTime,
   withReanimatedTimer,
@@ -39,9 +39,7 @@ describe('component: CustomCheckbox', () => {
     withReanimatedTimer(() => {
       const handlePressFn = jest.fn();
 
-      const {getByLabelText} = render(
-        <CustomCheckbox handlePress={handlePressFn} />,
-      );
+      const { getByLabelText } = render(<CustomCheckbox handlePress={handlePressFn} />);
 
       fireEvent.press(getByLabelText('custom-checkbox'));
       advanceAnimationByTime(250);

@@ -1,6 +1,6 @@
 import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, {ButtonMode} from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';

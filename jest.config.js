@@ -1,6 +1,6 @@
-const {configure} = require('reassure');
+const { configure } = require('reassure');
 
-configure({testingLibrary: 'react-native'});
+configure({ testingLibrary: 'react-native' });
 
 const config = {
   preset: 'react-native',

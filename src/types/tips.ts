@@ -39,6 +39,36 @@ export interface Tip extends CacheableObject {
   readonly creationDate: string;
 }
 
+const areTipsTargetsEquals = (first: TipTarget, second: TipTarget): boolean => {
+  if (first.type !== second.type) {
+    return false;
+  }
+
+  switch (first.type) {
+    case TipTargetType.POST:
+      return (
+        second.type === TipTargetType.POST &&
+        first.post.subspaceId === second.post.subspaceId &&
+        first.post.id === second.post.id
+      );
+    case TipTargetType.USER:
+      return second.type === TipTargetType.USER && first.user.address === second.user.address;
+
+    default:
+      return false;
+  }
+};
+
+/**
+ * Returns true if the two given tips are equal.
+ */
+export const areTipsEqual = (first: Tip, second: Tip): boolean => {
+  return (
+    first.sender.address === second.sender.address &&
+    areTipsTargetsEquals(first.target, second.target)
+  );
+};
+
 export interface ComparablePostTipTarget {
   readonly type: TipTargetType.POST;
   readonly subspaceId: number;
@@ -52,7 +82,7 @@ export interface ComparableUserTipTarget {
 
 export type ComparableTipTarget = ComparablePostTipTarget | ComparableUserTipTarget;
 
-const areTargetsEqual = (first: TipTarget, second: ComparableTipTarget): boolean => {
+const areTargetsComparable = (first: TipTarget, second: ComparableTipTarget): boolean => {
   if (first.type !== second.type) {
     return false;
   }
@@ -97,6 +127,6 @@ export const comparableTip = (tip: Tip): ComparableTip => {
   }
 };
 
-export const areTipsEqual = (first: Tip, second: ComparableTip): boolean => {
-  return areTargetsEqual(first.target, second.target);
+export const areTipsComparable = (first: Tip, second: ComparableTip): boolean => {
+  return areTargetsComparable(first.target, second.target);
 };

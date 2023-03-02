@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from 'jest/utils/CustomWrappers';
+import { render } from 'jest/utils/CustomWrappers';
 import LoadingOverlay from 'components/LoadingOverlay/index';
 
 describe('component: LoadingOverlay', () => {

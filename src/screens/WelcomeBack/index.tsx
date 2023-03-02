@@ -1,5 +1,5 @@
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -46,7 +46,7 @@ const WelcomeBack = () => {
           <Button
             size={ButtonSize.M}
             textColor={theme.colors.white}
-            additionalStyle={{borderColor: theme.colors.white}}
+            additionalStyle={{ borderColor: theme.colors.white }}
             mode={ButtonMode.OUTLINED}>
             {t('common:confirm')}
           </Button>
@@ -54,10 +54,7 @@ const WelcomeBack = () => {
       </View>
 
       <View style={styles.forgotPwGroup}>
-        <Button
-          mode={ButtonMode.TEXT}
-          size={ButtonSize.M}
-          textColor={theme.colors.white}>
+        <Button mode={ButtonMode.TEXT} size={ButtonSize.M} textColor={theme.colors.white}>
           {t('forgotPw')}
         </Button>
       </View>

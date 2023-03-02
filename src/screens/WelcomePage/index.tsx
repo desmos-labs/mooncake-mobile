@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { modalSuccess } from 'assets/images';
-import Button, {ButtonMode, ButtonSize} from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -64,22 +64,19 @@ const WelcomePage: React.FC<Props> = () => {
       </View>
       <Button
         size={ButtonSize.M}
-        additionalStyle={{marginBottom: theme.spacing.m}}
+        additionalStyle={{ marginBottom: theme.spacing.m }}
         mode={ButtonMode.CONTAINED}
         onPress={navigateToHome}>
-        {t('welcome to', {product: 'Butter'})}
+        {t('welcome to', { product: 'Butter' })}
       </Button>
-      <Button
-        size={ButtonSize.M}
-        mode={ButtonMode.OUTLINED}
-        onPress={navigateToBackupPhrase}>
+      <Button size={ButtonSize.M} mode={ButtonMode.OUTLINED} onPress={navigateToBackupPhrase}>
         {t('backup phrase')}
       </Button>
       <Button
         size={ButtonSize.M}
         mode={ButtonMode.TEXT}
         onPress={navigateToBackupPhraseExplanation}
-        style={{marginTop: theme.spacing.m}}>
+        style={{ marginTop: theme.spacing.m }}>
         {t('backup explanation')}
       </Button>
     </DView>
