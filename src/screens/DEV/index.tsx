@@ -190,7 +190,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           Continue to Landing screen
         </Button>
         <Spacer paddingVertical={4} />
-        <Button mode="contained" color="red" onPress={navigateToHome}>
+        <Button mode="contained" color="red" onPress={() => navigateToHome()}>
           Continue to Home screen
         </Button>
         <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>
