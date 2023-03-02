@@ -27,7 +27,7 @@ export const convertGraphQLProfileParams = (params: any): ProfileParams => {
  * @param {any} profile - Desmos Profile data fetched from the server.
  * @returns {DesmosProfile} - A formatted DesmosProfile object
  */
-export const convertGraphQLProfile = (profile?: any): DesmosProfile | undefined => {
+export const convertGraphQLProfile = (profile?: any): DesmosProfile => {
   return profile
     ? ({
         dTag: profile.dtag,
@@ -38,5 +38,9 @@ export const convertGraphQLProfile = (profile?: any): DesmosProfile | undefined 
         nickname: profile.nickname,
         creationTime: profile.creation_time,
       } as DesmosProfile)
-    : undefined;
+    : {
+        address: 'deleted-profile',
+        nickname: 'Deleted Profile',
+        creationTime: '',
+      };
 };

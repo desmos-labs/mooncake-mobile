@@ -73,6 +73,9 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
   // Callback that is used to refetch the next page of reactions
   const fetchMoreReactions = React.useCallback(async () => {
     try {
+      if (loading) {
+        return;
+      }
       setError(undefined);
       setFetchingMore(true);
 
@@ -88,13 +91,16 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
       // Make sure to set the fetching to false in any case
       setFetchingMore(false);
     }
-  }, [fetchMore, reactions.length]);
+  }, [loading, fetchMore, reactions.length]);
 
   // Callback that is used in order to re-fetch the entire list of reactions
   const refreshReactions = React.useCallback(async () => {
     try {
       setError(undefined);
       setRefreshing(true);
+
+      // We are refetching the whole list of reactions, so we need to clear the cache.
+      setReactions([]);
 
       // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ offset: 0 });

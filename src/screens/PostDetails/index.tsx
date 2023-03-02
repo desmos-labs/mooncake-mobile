@@ -179,7 +179,7 @@ const PostDetails = () => {
   const handlePressReportUser = useHandlePressReportUser();
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
 
-  const handlePressCounters = useHandlePressCounters(postData);
+  const handlePressCounters = useHandlePressCounters();
 
   // TODO: Properly display the state of the comment creation
   const { state, handleCreateComment } = useHandleCreateComment();
@@ -302,7 +302,7 @@ const PostDetails = () => {
             loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
             likesCounter={reactionsCount}
             tipsCounter={tipsCount}
-            handlePressCounters={handlePressCounters}
+            handlePressCounters={() => handlePressCounters(post!)}
             interactionAuthors={interactionsAuthors}
           />
         </Spacer>

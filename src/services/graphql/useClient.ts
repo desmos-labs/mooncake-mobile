@@ -43,6 +43,15 @@ const cache = new InMemoryCache({
       case 'user_relationship':
         // @ts-ignore
         return `user_relationship:${object.content?.counterparty_address}`;
+      case 'reaction':
+        // TODO: This is a workaround since the API have a bug that
+        // returns different reactions with the same id.
+        // @ts-ignore
+        if (object.author?.address && object.post?.id && object.value) {
+          // @ts-ignore
+          return `reaction:${object.author.address}-${object.post.id}-${object.value.toString()}`;
+        }
+        return defaultDataIdFromObject(object);
       default:
         return defaultDataIdFromObject(object);
     }

@@ -10,7 +10,6 @@ import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import { Post } from 'types/posts';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -26,15 +25,20 @@ const PostReactions = () => {
   const styles = useStyles();
 
   const { params } = useRoute<NavProps['route']>();
-  const { subspaceId, postId } = params;
-  const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
+  const { post } = params;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { count, refetch: refetchCount } = usePostReactionsCount(postData);
-  const { reactions, loading, refetch: refetchReactions, fetchMore } = usePostReactions(postData);
+  const { count, refetch: refetchCount } = usePostReactionsCount(post);
+  const {
+    reactions,
+    loading,
+    refetch: refetchReactions,
+    fetchMore,
+    refreshing,
+  } = usePostReactions(post);
 
   const refetch = useCallback(() => {
     refetchCount();
@@ -61,9 +65,9 @@ const PostReactions = () => {
         </Typography.Body6>
       )}
       <FlatList
-        refreshing={loading}
+        refreshing={loading || refreshing}
         onRefresh={refetch}
-        keyExtractor={item => item.id?.toString() ?? ''}
+        keyExtractor={(item, index) => `${item.id?.toString() ?? ''}-${index}`}
         data={reactions}
         renderItem={renderItem}
         contentContainerStyle={styles.contentContainerStyle}
