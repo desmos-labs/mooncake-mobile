@@ -200,19 +200,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           textColor="white"
           mode={ButtonMode.CONTAINED}
           size={44}
-          onPress={() =>
-            navigate(ROUTES.BOTTOM_TABS, {
-              screen: ROUTES.HOME_TABS,
-              params: {
-                HOME_DISCOVER: {
-                  type: 'discover',
-                },
-                HOME_FOLLOWING: {
-                  type: 'following',
-                },
-              },
-            })
-          }>
+          onPress={() => navigateToHome()}>
           Continue to Home screen
         </Button>
         <Button onPress={testBroadcastTx}>Test Broadcast TX</Button>
