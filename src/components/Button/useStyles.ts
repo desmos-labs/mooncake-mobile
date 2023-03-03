@@ -7,6 +7,7 @@ const useStyles = makeStyle(theme => {
       alignItems: 'center',
       borderRadius: theme.roundness,
     },
+    flexRow: { flexDirection: 'row' },
     pressableView: {
       overflow: 'hidden',
       borderRadius: theme.roundness,

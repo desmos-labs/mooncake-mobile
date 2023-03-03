@@ -1,5 +1,4 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
 import Button, { ButtonMode } from 'components/Button';
 import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
+import { useTheme } from 'react-native-paper';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
 
