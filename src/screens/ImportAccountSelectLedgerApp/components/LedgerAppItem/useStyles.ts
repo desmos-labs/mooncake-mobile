@@ -6,7 +6,7 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     borderRadius: 12,
     alignItems: 'center',
-    paddingVertical: theme.spacing.s,
+    paddingVertical: theme.spacing.m,
     paddingHorizontal: theme.spacing.m,
   },
   iconStyle: {

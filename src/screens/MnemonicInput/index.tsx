@@ -28,7 +28,7 @@ const MnemonicInput = () => {
   const onSubmit = useOnSubmit();
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
+    <DView style={styles.container} backgroundColor={theme.colors.white} topBar={<TopBar />}>
       <Typography.H3>{t('importMnemonic')}</Typography.H3>
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 50 : 0}
@@ -98,7 +98,7 @@ const MnemonicInput = () => {
                   textColor={theme.colors.white}
                   mode={ButtonMode.CONTAINED}
                   size={44}
-                  onPress={handleSubmit}>
+                  onPress={() => handleSubmit()}>
                   {t('common:confirm')}
                 </Button>
               </View>

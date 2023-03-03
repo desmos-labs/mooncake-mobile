@@ -98,7 +98,7 @@ const ImportAccountSelectLedgerApp = () => {
       </View>
       <FlatList
         contentContainerStyle={{
-          paddingHorizontal: theme.spacing.m,
+          padding: theme.spacing.m,
         }}
         data={ledgerApplications}
         renderItem={renderItem}
