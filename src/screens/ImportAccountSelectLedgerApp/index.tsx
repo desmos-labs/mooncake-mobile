@@ -14,7 +14,7 @@ import { CosmosLedgerApp, CryptoOrgLedgerApp, DesmosLedgerApp } from 'config/Led
 import useConnectToLedger from 'hooks/ledger/useConnectToLedger';
 import useSelectAccount from 'hooks/accounts/useSelectAccount';
 import { WalletPickerMode } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
-import LedgerAppItem from './components/LedgerAppItem';
+import ShadowButton from 'components/ShadowButton';
 
 /**
  * A screen where users select a ledger app to connect chains with more than one
@@ -68,14 +68,16 @@ const ImportAccountSelectLedgerApp = () => {
       const handlePress = () => {
         onLedgerAppSelected(item);
       };
-      return <LedgerAppItem app={item} handlePress={handlePress} />;
+      return (
+        <ShadowButton buttonText={item.name} buttonImage={item.icon} handlePress={handlePress} />
+      );
     },
     [onLedgerAppSelected],
   );
 
   const ItemSeparatorComponent = React.useCallback(() => {
-    return <Spacer paddingVertical={theme.spacing.s} />;
-  }, [theme.spacing.s]);
+    return <Spacer paddingBottom={theme.spacing.l} />;
+  }, [theme.spacing.l]);
 
   return (
     <DView topBar={<TopBar />}>

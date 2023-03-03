@@ -12,10 +12,10 @@ import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
-import ImportButton from 'screens/ImportAccountSelectMode/ImportButton';
 import { connectLedger, importPhrase } from 'assets/images';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'react-native-paper';
+import ShadowButton from 'components/ShadowButton';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_MODE>;
@@ -54,12 +54,13 @@ const ImportAccountSelectMode = (props: NavProps) => {
     <DView style={styles.container} topBar={<TopBar />}>
       <Typography.H3>{t('header')}</Typography.H3>
       <Spacer paddingVertical={theme.spacing.m} />
-      <ImportButton
+      <ShadowButton
         buttonImage={importPhrase}
         buttonText={t('import recovery phrase')}
         handlePress={onImportWithMnemonic}
       />
-      <ImportButton
+      <Spacer paddingBottom={theme.spacing.l} />
+      <ShadowButton
         buttonImage={connectLedger}
         buttonText={t('connect ledger')}
         handlePress={onImportWithLedger}

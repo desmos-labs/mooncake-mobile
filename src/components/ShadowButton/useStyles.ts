@@ -10,9 +10,6 @@ const useStyles = makeStyle(theme => ({
     paddingHorizontal: theme.spacing.m,
     paddingVertical: theme.spacing.l,
   },
-  shadow: {
-    marginBottom: theme.spacing.l,
-  },
   buttonImage: {
     height: 24,
     width: 24,
