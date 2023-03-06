@@ -27,7 +27,7 @@ interface EditProfileSectionProps {
  * @constructor
  */
 const EditProfileSection = (props: EditProfileSectionProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('profile');
   const theme = useTheme();
   const styles = useStyles();
   const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
@@ -60,16 +60,12 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   // -------------------------------------------------------------------------------------
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.editButton} onPress={handleSaveProfile}>
         <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
       </TouchableOpacity>
       <TouchableOpacity style={styles.connectButton} onPress={handleConnectionButtonPressed}>
-        <FastImage
-          source={connectIcon}
-          style={{ height: 22, width: 22 }}
-          tintColor={theme.colors.surfaceBlack}
-        />
+        <FastImage source={connectIcon} style={styles.icon} tintColor={theme.colors.surfaceBlack} />
       </TouchableOpacity>
     </View>
   );
