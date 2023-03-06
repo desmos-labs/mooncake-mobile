@@ -1,14 +1,13 @@
 import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
-import NamedStyles = StyleSheet.NamedStyles;
+import useStyles from 'components/Button/useStyles';
+import { useTheme } from 'react-native-paper';
 
 interface Props extends ButtonProps {
-  styleMap: any;
-  sizeMap: any;
-  styles: NamedStyles<any>;
-  theme: ReactNativePaper.Theme;
+  styleMap: { [index: string]: any };
+  sizeMap: { [index: string]: any };
 }
 
 const GenericButton = ({
@@ -23,13 +22,15 @@ const GenericButton = ({
   useSubtitle,
   sizeMap,
   styleMap,
-  styles,
-  theme,
   ...rest
 }: Props) => {
+  const styles = useStyles();
+  const theme = useTheme();
+
   return (
     <View style={styles.pressableView}>
       <Pressable
+        android_ripple={{ color: 'rgba(255, 255, 255, 0.6)' }}
         style={[
           styles.button,
           styleMap[mode],

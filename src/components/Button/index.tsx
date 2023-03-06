@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleProp, TouchableOpacityProps, ViewStyle } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { StyleProp, ViewProps, ViewStyle } from 'react-native';
 // @ts-ignore Ignoring errors since typescript does not recognize the alias
 import GenericButton from 'components/Button/components/GenericButton'; // eslint-disable-line import/no-unresolved
 import useStyles from './useStyles';
@@ -34,16 +33,19 @@ export enum ButtonSize {
  * @typedef {Object} ButtonProps
  * @property {ButtonMode} mode - Defined Figma modes
  * @property {ButtonSize} size - Defined Figma sized
+ * @property {() => void} onPress - On press function
+ * @property {boolean} disabled - Disable button
  * @property {StyleProp<ViewStyle>} additionalStyle - Additional style
  * @property {string} backgroundColor - Background color, default white
  * @property {string} textColor - Text color, default surfaceBlack
  * @property {boolean} useSubtitle - Use subtitle2 instead of button2 as text component
  * @property {boolean} loading - Display a loading component (be sure to increment the width dinamically inside small buttons)
- * @property {TouchableOpacityProps} TouchableOpacityProps - TouchableOpacityProps
  */
-export interface ButtonProps extends TouchableOpacityProps {
+export interface ButtonProps extends ViewProps {
   mode: ButtonMode;
   size: ButtonSize;
+  onPress: () => void;
+  disabled?: boolean;
   additionalStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   textColor?: string;
@@ -58,7 +60,6 @@ export interface ButtonProps extends TouchableOpacityProps {
  */
 const Button = ({ children, ...rest }: ButtonProps) => {
   const styles = useStyles();
-  const theme = useTheme();
 
   const styleMap: { [index: string]: any } = {
     [ButtonMode.TEXT]: styles.text,
@@ -74,7 +75,7 @@ const Button = ({ children, ...rest }: ButtonProps) => {
   };
 
   return (
-    <GenericButton styles={styles} theme={theme} styleMap={styleMap} sizeMap={sizeMap} {...rest}>
+    <GenericButton styleMap={styleMap} sizeMap={sizeMap} {...rest}>
       {children}
     </GenericButton>
   );

@@ -1,14 +1,13 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
-import NamedStyles = StyleSheet.NamedStyles;
+import useStyles from 'components/Button/useStyles';
+import { useTheme } from 'react-native-paper';
 
 interface Props extends ButtonProps {
-  styleMap: any;
-  sizeMap: any;
-  styles: NamedStyles<any>;
-  theme: ReactNativePaper.Theme;
+  styleMap: { [index: string]: any };
+  sizeMap: { [index: string]: any };
 }
 
 const GenericButton = ({
@@ -23,10 +22,11 @@ const GenericButton = ({
   useSubtitle,
   sizeMap,
   styleMap,
-  styles,
-  theme,
   ...rest
 }: Props) => {
+  const styles = useStyles();
+  const theme = useTheme();
+
   return (
     <TouchableOpacity
       disabled={disabled}

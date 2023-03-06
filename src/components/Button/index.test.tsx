@@ -5,7 +5,12 @@ import Button, { ButtonMode } from 'components/Button/index';
 describe('component: Button', () => {
   it('renders button text mode color white size 26', () => {
     const tree = render(
-      <Button mode={ButtonMode.TEXT} backgroundColor="white" size={26} />,
+      <Button
+        mode={ButtonMode.TEXT}
+        backgroundColor="white"
+        size={26}
+        onPress={() => console.log('test')}
+      />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();
@@ -13,7 +18,12 @@ describe('component: Button', () => {
 
   it('renders button contained mode color white size 32', () => {
     const tree = render(
-      <Button mode={ButtonMode.CONTAINED} backgroundColor="white" size={32} />,
+      <Button
+        mode={ButtonMode.CONTAINED}
+        backgroundColor="white"
+        size={32}
+        onPress={() => console.log('test')}
+      />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();
@@ -21,7 +31,12 @@ describe('component: Button', () => {
 
   it('renders button outlined mode color white size 44', () => {
     const tree = render(
-      <Button mode={ButtonMode.OUTLINED} backgroundColor="white" size={44} />,
+      <Button
+        mode={ButtonMode.OUTLINED}
+        backgroundColor="white"
+        size={44}
+        onPress={() => console.log('test')}
+      />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();
@@ -29,7 +44,12 @@ describe('component: Button', () => {
 
   it('renders button text contained color white size 56', () => {
     const tree = render(
-      <Button mode={ButtonMode.CONTAINED} backgroundColor="white" size={56} />,
+      <Button
+        mode={ButtonMode.CONTAINED}
+        backgroundColor="white"
+        size={56}
+        onPress={() => console.log('test')}
+      />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();
@@ -37,7 +57,12 @@ describe('component: Button', () => {
 
   it('renders button text mode color white size 56', () => {
     const tree = render(
-      <Button mode={ButtonMode.TEXT} backgroundColor="white" size={56} />,
+      <Button
+        mode={ButtonMode.TEXT}
+        backgroundColor="white"
+        size={56}
+        onPress={() => console.log('test')}
+      />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();
