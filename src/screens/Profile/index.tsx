@@ -184,7 +184,7 @@ const Profile = () => {
     const timeout = setTimeout(() => {
       if (pageRefreshing) {
         InteractionManager.runAfterInteractions(() => {
-          refreshPage().then(() => setTimeout(() => setPageRefreshing(false), 500));
+          refreshPage().finally(() => setTimeout(() => setPageRefreshing(false), 500));
         });
       }
     }, 500);
