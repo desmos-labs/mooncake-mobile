@@ -58,13 +58,17 @@ import ManageConnectionsModal, {
 } from 'screens/Profile/components/ManageConnectionsModal';
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import Profile, { ProfileParams } from 'screens/Profile';
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
 import { ProfileOperationsParams } from 'screens/ProfileOperations';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import Login, { LoginParams } from 'screens/Login';
 import { SaveProfileModalParams } from 'screens/Modals/UploadProfilePicturesModal';
+import {
+  BottomSheetAndroid,
+  ModalPresentationIOS,
+} from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -242,11 +246,6 @@ export type RootNavigatorParamList = {
   // [ROUTES.OPERATIONS]: OperationsParams;
 };
 
-/* const NativeTransition = Platform.select({
-  ios: ModalPresentationIOS,
-  default: BottomSheetAndroid,
-}); */
-
 const Stack = createStackNavigator<RootNavigatorParamList>();
 
 // Feel free to put wip screens here
@@ -284,6 +283,11 @@ const RootNavigator = () => {
     return ROUTES.ONBOARDING;
   }, []);
 
+  const NativeTransition = Platform.select({
+    ios: ModalPresentationIOS,
+    default: BottomSheetAndroid,
+  });
+
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -305,7 +309,6 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.SIGNUP} component={Signup} />
       <Stack.Screen name={ROUTES.LOGIN} component={Login} />
-      <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
 
       {/* ------------------------ */}
       {/* --- ACCOUNTS SCREENS --- */}
@@ -350,7 +353,6 @@ const RootNavigator = () => {
       <Stack.Screen name={ROUTES.POST_CREATE} component={CreatePost} />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
       <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
-      <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
       <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
 
       {/* ------------------------ */}
@@ -431,20 +433,35 @@ const RootNavigator = () => {
       {/* --- MODALS --- */}
       {/* -------------- */}
 
-      <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
-      <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
-      <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
+      <Stack.Group
+        screenOptions={{
+          cardStyle: {
+            backgroundColor: 'transparent',
+          },
+          presentation: 'transparentModal',
+          cardOverlayEnabled: true,
+          ...NativeTransition,
+        }}>
+        <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
+        <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
+        <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
 
-      <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
-      <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
-      <Stack.Screen name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL} component={BackupPhraseBottomModal} />
+        <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
+        <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
+        <Stack.Screen
+          name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
+          component={BackupPhraseBottomModal}
+        />
+        <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
+        <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
+        <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
+      </Stack.Group>
 
       {/* ---------------------- */}
       {/* --- INVITE SCREENS --- */}
       {/* ---------------------- */}
 
       <Stack.Screen name={ROUTES.MANAGE_INVITES} component={ManageInvites} />
-      <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
 
       {/* ------------------------------ */}
       {/* TODO: Categorize these screens */}
@@ -454,23 +471,6 @@ const RootNavigator = () => {
       {/* <Stack.Screen name={ROUTES.GRANTS_DETAILS} component={GrantsDetails} /> */}
 
       {/* <Stack.Screen name={ROUTES.OPERATIONS} component={Operations} /> */}
-
-      {/* <Stack.Group */}
-      {/*  screenOptions={{ */}
-      {/*    cardStyle: { */}
-      {/*      backgroundColor: 'transparent', */}
-      {/*    }, */}
-      {/*    presentation: 'transparentModal', */}
-      {/*    cardOverlayEnabled: true, */}
-      {/*    ...NativeTransition, */}
-      {/*  }}> */}
-
-      {/*  <Stack.Screen */}
-      {/*    name={ROUTES.ACTION_AUTHORIZATION} */}
-      {/*    component={ActionAuthorization} */}
-      {/*  /> */}
-
-      {/* </Stack.Group> */}
 
       {/* <Stack.Screen name={ROUTES.NFT_DETAILS} component={NftDetails} /> */}
     </Stack.Navigator>
