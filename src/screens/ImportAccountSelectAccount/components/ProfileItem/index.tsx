@@ -29,15 +29,13 @@ const ProfileItem = ({ address, handlePress }: Props) => {
   return (
     <DropShadowWrapper
       outerShadowProps={{
-        startColor: 'rgba(37, 87, 188, 0.07)',
-        distance: 40,
-        offset: [10, 20],
+        startColor: 'rgba(37, 87, 188, 0.05)',
       }}>
       <TouchableOpacity onPress={onPress} style={styles.container}>
         <ProfileImage style={styles.avatar} profile={profile} size={46} loading={profileLoading} />
         <View>
           {profile && <Typography.H5>{getProfileDisplayName(profile)}</Typography.H5>}
-          <Typography.Body6 ellipsizeMode="middle" numberOfLines={1}>
+          <Typography.Body6 ellipsizeMode="middle" numberOfLines={1} style={styles.address}>
             {address}
           </Typography.Body6>
         </View>
