@@ -11,6 +11,8 @@
   "congratulations": "Congratulations!",
   "profile created": "Your profile has been created",
   "welcome": "Welcome to Butter",
+  "error saving the account": "Error saving the account",
+  "saving account": "Saving account...",
   "understand": "I understand",
   "backup phrase": "Backup Secret Recovery Phrase",
   "why backup": "Why do I need to backup Secret Recovery Phrase?",
