@@ -12,10 +12,10 @@ import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   ImageBackground,
+  InteractionManager,
   RefreshControl,
   SafeAreaView,
   StatusBar,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -57,8 +57,8 @@ import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
 
-const HEADER_HEIGHT_COMPACT = 95;
-const HEADER_HEIGHT_EXPANDED = 60;
+export const HEADER_HEIGHT_COMPACT = 95;
+export const HEADER_HEIGHT_EXPANDED = 60;
 
 export interface ProfileParams {
   /**
@@ -75,14 +75,12 @@ const Profile = () => {
   const { t } = useTranslation('profile');
   const theme = useTheme();
   const styles = useStyles({ insets: useSafeAreaInsets() });
-
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
   const { navigate, goBack } = navigation;
-
   const { params } = route;
   const givenAddress = params?.address;
-
+  const [pageRefreshing, setPageRefreshing] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
   // -------------------------------------------------------------------------------------
@@ -149,6 +147,7 @@ const Profile = () => {
 
   // Callback to refresh the data
   const refreshPage = useCallback(async () => {
+    setPageRefreshing(true);
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
@@ -157,6 +156,7 @@ const Profile = () => {
     await refreshBalance();
     await refreshPosts();
     await refreshPostsCount();
+    setPageRefreshing(false);
   }, [
     refreshAppLinks,
     refreshBalance,
@@ -168,10 +168,6 @@ const Profile = () => {
     refreshProfile,
   ]);
 
-  const userDataLoading = useMemo(() => {
-    return isProfileLoading;
-  }, [isProfileLoading]);
-
   // Refresh the data on the focus of the screen
   useEffect(() => {
     setInitialLoading(true);
@@ -179,6 +175,22 @@ const Profile = () => {
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Refresh the data when using pull to refresh gesture. Please note, this trick is needed because
+  // we need to manage animations in a smooth way.
+  // If we use a classic pull to refresh technique, the animation will look weird lagging and behaving badly
+  // Interaction Manager is used to manage the animation in a smooth way waiting for the end of all the previous interactions
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (pageRefreshing) {
+        InteractionManager.runAfterInteractions(() => {
+          refreshPage().finally(() => setTimeout(() => setPageRefreshing(false), 500));
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [pageRefreshing, refreshPage]);
 
   // -------------------------------------------------------------------------------------
   // --- Animations
@@ -290,7 +302,7 @@ const Profile = () => {
     // Show the loading indicator
     if (areAppLinksLoading || areChainLinksLoading) {
       return (
-        <View style={{ alignSelf: 'flex-start' }}>
+        <View style={styles.flexStart}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </View>
       );
@@ -313,46 +325,33 @@ const Profile = () => {
 
     // Nothing to show
     return undefined;
-  }, [
-    areAppLinksLoading,
-    areChainLinksLoading,
-    chainLinks,
-    appLinks,
-    theme.colors.surfaceBlack,
-    profile?.address,
-    navigate,
-  ]);
+  }, [areAppLinksLoading, areChainLinksLoading, chainLinks, appLinks, profile?.address, navigate]);
 
-  // TODO: Move the styles into useStyles
+  // Banner image needs to be memoized to avoid flickering
   const Banner = useMemo(() => {
     return (
       <AnimatedImageBackground
         resizeMode="cover"
         source={getCoverPicture(profile)}
-        style={[
-          {
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            zIndex: 0,
-            height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_COMPACT,
-          },
-          animatedImageBGStyle,
-        ]}>
+        style={[styles.banner, animatedImageBGStyle]}>
         <AnimatedBlurView
           blurType="dark"
           blurAmount={96}
-          style={[
-            {
-              ...StyleSheet.absoluteFillObject,
-              zIndex: 2,
-            },
-            animatedBlurStyle,
-          ]}
+          style={[styles.bannerBlur, animatedBlurStyle]}
         />
       </AnimatedImageBackground>
     );
-  }, [AnimatedBlurView, AnimatedImageBackground, animatedBlurStyle, animatedImageBGStyle, profile]);
+  }, [profile]);
+
+  // Profile image needs to be memoized to avoid flickering
+  const ProfileImage = useMemo(() => {
+    return (
+      <AnimatedFastImage
+        source={getProfilePicture(profile)}
+        style={[styles.profileImage, animatedProfilePicStyle]}
+      />
+    );
+  }, [profile]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -375,7 +374,7 @@ const Profile = () => {
       );
     }
 
-    // TODO: Show an error here as the profile no longer exists
+    // TODO: Show an error here as the profile no longer exists -> Waiting for the design
     goBack();
     return null;
   }
@@ -399,13 +398,13 @@ const Profile = () => {
         <>
           <ImageButton
             image={profileSettings}
-            buttonStyle={[styles.buttonStyleRight, { right: 20 }]}
+            buttonStyle={[styles.buttonStyleRight, styles.r20]}
             style={styles.topBarImage}
             onPress={() => navigate(ROUTES.SETTINGS)}
           />
           <ImageButton
             image={profileScan}
-            buttonStyle={[styles.buttonStyleRight, { right: 60 }]}
+            buttonStyle={[styles.buttonStyleRight, styles.r60]}
             style={styles.topBarImage}
           />
         </>
@@ -427,23 +426,7 @@ const Profile = () => {
       {Banner}
 
       {/* Profile image */}
-      <AnimatedFastImage
-        source={getProfilePicture(profile)}
-        style={[
-          {
-            zIndex: 2,
-            position: 'absolute',
-            width: 100,
-            height: 100,
-            borderRadius: 50,
-            borderWidth: 3,
-            left: theme.spacing.m,
-            borderColor: theme.colors.white,
-            backgroundColor: theme.colors.white,
-          },
-          animatedProfilePicStyle,
-        ]}
-      />
+      {ProfileImage}
 
       <Animated.ScrollView
         overScrollMode="never"
@@ -453,8 +436,8 @@ const Profile = () => {
         refreshControl={
           <RefreshControl
             enabled={true}
-            onRefresh={refreshPage}
-            refreshing={userDataLoading}
+            onRefresh={() => setPageRefreshing(true)}
+            refreshing={pageRefreshing}
             tintColor={theme.colors.white}
           />
         }
@@ -465,14 +448,10 @@ const Profile = () => {
         }}>
         <View style={styles.contentContainer}>
           {/* Posts, following and followers counters */}
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'row', right: 0, marginLeft: 'auto' }}>
+          <View style={styles.flexRow}>
+            <View style={styles.innerContainer}>
               {/* Posts count */}
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+              <View style={styles.postCount}>
                 <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
               </View>
@@ -500,21 +479,12 @@ const Profile = () => {
           </View>
 
           {/* Profile nickname */}
-          <Typography.H5
-            style={{
-              marginTop: 10,
-            }}
-            numberOfLines={1}>
+          <Typography.H5 style={styles.nickname} numberOfLines={1}>
             {profile.nickname}
           </Typography.H5>
 
-          {/* Profile DTag */}
-          <Typography.Body7
-            style={{
-              marginVertical: 4,
-              color: theme.colors.darkGrey,
-            }}
-            numberOfLines={1}>
+          {/* Profile Dtag */}
+          <Typography.Body7 style={styles.profileDtag} numberOfLines={1}>
             @{profile.dTag}
           </Typography.Body7>
 
