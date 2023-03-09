@@ -2,15 +2,15 @@ import React from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
+import useStyles from 'components/Button/useStyles';
+import { useTheme } from 'react-native-paper';
 
 interface Props extends ButtonProps {
-  styleMap: any;
-  sizeMap: any;
-  styles: any;
-  theme: ReactNativePaper.Theme;
+  styleMap: { [index: string]: any };
+  sizeMap: { [index: string]: any };
 }
 
-const AndroidButton = ({
+const GenericButton = ({
   mode,
   size,
   backgroundColor,
@@ -22,17 +22,15 @@ const AndroidButton = ({
   useSubtitle,
   sizeMap,
   styleMap,
-  styles,
-  theme,
   ...rest
 }: Props) => {
+  const styles = useStyles();
+  const theme = useTheme();
+
   return (
     <View style={styles.pressableView}>
       <Pressable
-        android_ripple={{
-          color: theme.colors.white,
-          foreground: true,
-        }}
+        android_ripple={{ color: 'rgba(255, 255, 255, 0.6)' }}
         style={[
           styles.button,
           styleMap[mode],
@@ -42,7 +40,7 @@ const AndroidButton = ({
           disabled ? styles.disabled : {},
         ]}
         {...rest}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.flexRow}>
           {useSubtitle ? (
             <Typography.Subtitle2
               numberOfLines={1}
@@ -69,4 +67,4 @@ const AndroidButton = ({
   );
 };
 
-export default AndroidButton;
+export default GenericButton;

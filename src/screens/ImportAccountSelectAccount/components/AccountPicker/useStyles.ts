@@ -7,6 +7,9 @@ const useStyles = makeStyle(theme => ({
   separator: {
     paddingVertical: theme.spacing.s,
   },
+  contentContainer: {
+    padding: theme.spacing.m,
+  },
 }));
 
 export default useStyles;

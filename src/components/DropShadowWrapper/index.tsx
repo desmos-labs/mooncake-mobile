@@ -76,8 +76,9 @@ const DropShadowWrapper: React.FC<Props> = props => {
       <Shadow
         stretch={true}
         style={[innerStyle, styles.innerShadow]}
-        startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.04)'}
-        distance={customDistance || 6}
+        startColor={(customOverlayColor as any) || 'rgba(16, 24, 40, 0.03)'}
+        distance={customDistance || 10}
+        offset={[0, 1]}
         {...innerShadowProps}>
         {children}
       </Shadow>

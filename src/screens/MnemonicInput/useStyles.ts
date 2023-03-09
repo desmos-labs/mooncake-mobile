@@ -16,7 +16,7 @@ const useStyles = makeStyle(theme => ({
   },
   mnemonicInput: {
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: theme.colors.lightGrey01,
     paddingTop: theme.spacing.s,
     textAlignVertical: 'top',
     height: verticalScale(160),

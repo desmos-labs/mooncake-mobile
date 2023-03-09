@@ -2,15 +2,15 @@ import React from 'react';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
+import useStyles from 'components/Button/useStyles';
+import { useTheme } from 'react-native-paper';
 
 interface Props extends ButtonProps {
-  styleMap: any;
-  sizeMap: any;
-  styles: any;
-  theme: any;
+  styleMap: { [index: string]: any };
+  sizeMap: { [index: string]: any };
 }
 
-const IOSButton = ({
+const GenericButton = ({
   mode,
   size,
   backgroundColor,
@@ -22,10 +22,11 @@ const IOSButton = ({
   useSubtitle,
   sizeMap,
   styleMap,
-  styles,
-  theme,
   ...rest
 }: Props) => {
+  const styles = useStyles();
+  const theme = useTheme();
+
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -38,7 +39,7 @@ const IOSButton = ({
         disabled ? styles.disabled : {},
       ]}
       {...rest}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={styles.flexRow}>
         {useSubtitle ? (
           <Typography.Subtitle2
             numberOfLines={1}
@@ -64,4 +65,4 @@ const IOSButton = ({
   );
 };
 
-export default IOSButton;
+export default GenericButton;

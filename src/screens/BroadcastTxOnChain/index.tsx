@@ -15,9 +15,10 @@ import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
-import Button from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
+import { useTheme } from 'react-native-paper';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -47,6 +48,7 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX_ON_
 const BroadcastTxOnChain: React.FC = () => {
   const { t } = useTranslation('broadcastTxOnChain');
   const styles = useStyles();
+  const theme = useTheme();
   const { params } = useRoute<NavProps['route']>();
   const { accountAddressOrWallet, messages, memo, title, onSuccess, onCancel } = params;
   const estimateFees = useEstimateFees();
@@ -95,7 +97,7 @@ const BroadcastTxOnChain: React.FC = () => {
   }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess]);
 
   return (
-    <DView>
+    <DView style={styles.root}>
       <View style={styles.container}>
         {/* Broadcasting animation shown while the transaction it's broadcasting */}
         {broadcastingTx && (
@@ -112,26 +114,29 @@ const BroadcastTxOnChain: React.FC = () => {
           <>
             {/* TODO: Create a proper UI to display the tx messages */}
             <ScrollView style={{ minHeight: '80%', flex: 1 }}>
-              <Typography.Body1>{JSON.stringify(messages)}</Typography.Body1>
+              <Typography.Body5>{JSON.stringify(messages)}</Typography.Body5>
             </ScrollView>
             {estimatingFees || feesResult === undefined ? (
               /* TODO: Create a proper UI with a spinner or something else */
-              <Typography.Body1>Estimating fees...</Typography.Body1>
+              <Typography.Body5>Estimating fees...</Typography.Body5>
             ) : (
               /* TODO: Create a proper UI to render the fee result */
-              <Typography.Body1>
+              <Typography.Body5>
                 Fees:{' '}
                 {feesResult.isOk() ? JSON.stringify(feesResult.value) : feesResult.error.message}
-              </Typography.Body1>
+              </Typography.Body5>
             )}
-            <Typography.Body1>
+            <Typography.Body5>
               {t('memo')}: {memo ?? 'N/A'}
-            </Typography.Body1>
+            </Typography.Body5>
           </>
         )}
       </View>
       <Button
-        style={{ zIndex: 99 }}
+        mode={ButtonMode.CONTAINED}
+        size={ButtonSize.M}
+        backgroundColor={theme.colors.surfaceBlack}
+        textColor={theme.colors.white}
         onPress={handleBroadcastTx}
         loading={broadcastingTx}
         disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>

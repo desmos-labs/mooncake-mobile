@@ -38,10 +38,9 @@ const ImportAccountSelectAccount = ({ route: { params }, navigation }: NavProps)
 
   return (
     <DView topBar={<TopBar />}>
-      <Spacer padding={16}>
+      <Spacer paddingHorizontal={16} paddingTop={16}>
         <Typography.H4>{t('header')}</Typography.H4>
       </Spacer>
-
       <AccountPicker onAccountSelected={onSelect} params={accountPickerParams} />
     </DView>
   );

@@ -52,6 +52,7 @@ const AccountPicker: React.FC<AccountPickerProps> = ({ onAccountSelected, params
     <View style={[style, styles.root]}>
       {/* Address picker */}
       <PaginatedFlatList
+        contentContainerStyle={styles.contentContainer}
         loadPage={fetchWallets}
         itemsPerPage={10}
         renderItem={renderListItem}
