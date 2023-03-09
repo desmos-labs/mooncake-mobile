@@ -10,7 +10,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
@@ -71,7 +71,7 @@ const ReportPost = () => {
     setLoading(false);
 
     if (result.isErr()) {
-      // TODO: Do something here
+      // TODO: Do something here -> waiting for design
       console.log('Error while reporting a post', result.error.message);
       return;
     }
