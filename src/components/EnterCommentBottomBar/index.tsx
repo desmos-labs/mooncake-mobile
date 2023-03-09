@@ -5,7 +5,6 @@ import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
 import SelectedCommentImage from 'components/SelectedCommentImage';
 import Spacer from 'components/Spacer';
-import Typography from 'components/Typography';
 import useImageFromDevice from 'hooks/useImageFromDevice';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -142,21 +141,13 @@ const EnterCommentBottomBar = (props: Props) => {
         size={32}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
-        disabled={commentAttachment ? false : comment.length === 0}
+        disabled={attachment ? false : comment.length === 0}
         additionalStyle={styles.postButton}
         onPress={handlePostComment}>
         {t('post')}
       </Button>
     );
-  }, [
-    attachment,
-    comment.length,
-    styles.postButton,
-    loading,
-    handlePostComment,
-    theme.colors.white,
-    t,
-  ]);
+  }, [attachment, comment.length, loading, handlePostComment]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

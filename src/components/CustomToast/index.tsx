@@ -1,4 +1,4 @@
-import Button from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 import Typography from 'components/Typography';
 
 import ToastConfig from 'config/ToastConfig';
