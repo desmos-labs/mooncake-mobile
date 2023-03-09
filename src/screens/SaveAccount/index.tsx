@@ -1,10 +1,9 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { modalSuccess } from 'assets/images';
-import Button from 'components/Button';
+import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
-import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -108,13 +107,13 @@ const SaveAccount = ({ navigation }: NavProps) => {
   }, [reset]);
 
   return (
-    <DView style={styles.root} topBar={<TopBar noBackButton={true} />}>
+    <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <FastImage resizeMode="cover" source={modalSuccess} style={styles.image} />
+        <FastImage resizeMode="cover" source={accountCreatedIcon} style={styles.image} />
         <Spacer paddingTop={60} />
         <View style={{ alignItems: 'center' }}>
           {saving ? (
-            <Typography.H4>{t('saving account...')}</Typography.H4>
+            <Typography.H4>{t('saving account')}</Typography.H4>
           ) : error !== undefined ? (
             <>
               <Typography.H4>{t('error saving the account')}</Typography.H4>
@@ -130,15 +129,16 @@ const SaveAccount = ({ navigation }: NavProps) => {
           )}
         </View>
         <Spacer paddingTop={60} />
-        <Button
-          mode="contained"
-          color={theme.colors.surfaceBlack}
-          onPress={resetToHome}
-          disabled={saving}>
-          <Typography.Button2 style={{ color: theme.colors.white }}>
-            {t('welcome to butter')}
-          </Typography.Button2>
-        </Button>
+        {!saving && (
+          <Button
+            mode={ButtonMode.CONTAINED}
+            size={ButtonSize.M}
+            backgroundColor={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            onPress={resetToHome}>
+            {t('welcome')}
+          </Button>
+        )}
         <Spacer paddingTop={theme.spacing.m} />
       </View>
     </DView>

@@ -170,6 +170,10 @@ export const verifiedIcon = require('./images/verified.png');
 
 export const emptyPostsIcon = require('./images/emptyPosts.png');
 
+export const accountCreatedBg = require('./images/accountCreatedBg.png');
+
+export const accountCreatedIcon = require('./images/accountCreatedIcon.png');
+
 export const connectTwitterProfileIcon = require('./images/connectTwitterProfile.png');
 export const connectWalletProfileIcon = require('./images/connectWalletProfile.png');
 export const manageConnectedTwitterProfileIcon = require('./images/manageConnectedTwitterProfile.png');
