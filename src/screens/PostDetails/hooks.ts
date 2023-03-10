@@ -150,8 +150,6 @@ export const useHandlePressCounters = () => {
         screen: ROUTES.POST_REACTIONS,
         params: {
           post,
-          expandOnOpen: true,
-          allowPanning: true,
         },
       });
     },
