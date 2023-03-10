@@ -1,7 +1,7 @@
 import { BlurView } from '@react-native-community/blur';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { profileBack, profileScan, profileSettings } from 'assets/images';
+import { profileBack, profileSettings } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -31,9 +31,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
-import BadgesSection from 'screens/Profile/components/BadgesSection';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
-import NFTsSection from 'screens/Profile/components/NFTsSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
 import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile/components/UserBio';
@@ -47,7 +45,6 @@ import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
-import ImpactPointsSection from 'screens/Profile/components/ImpactPointsSection';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
@@ -298,6 +295,7 @@ const Profile = () => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
+  // TODO: Removed from the beta version
   const ConnectedChains = React.useMemo(() => {
     // Show the loading indicator
     if (areAppLinksLoading || areChainLinksLoading) {
@@ -402,11 +400,14 @@ const Profile = () => {
             style={styles.topBarImage}
             onPress={() => navigate(ROUTES.SETTINGS)}
           />
-          <ImageButton
+          {/*
+          Removed in beta version
+          */}
+          {/*          <ImageButton
             image={profileScan}
             buttonStyle={[styles.buttonStyleRight, styles.r60]}
             style={styles.topBarImage}
-          />
+          /> */}
         </>
       )}
 
@@ -495,7 +496,9 @@ const Profile = () => {
           {profile?.bio && (
             <Spacer paddingVertical={theme.spacing.m}>
               <UserBio content={profile.bio} />
+              {/*
               {ConnectedChains}
+              */}
             </Spacer>
           )}
 
@@ -514,13 +517,13 @@ const Profile = () => {
 
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
-            {/* Impact points */}
-            {isActiveAccount && (
+            {/* Impact points removed in beta version */}
+            {/*            {isActiveAccount && (
               <>
                 <ImpactPointsSection />
                 <Divider style={styles.divider} />
               </>
-            )}
+            )} */}
 
             {/* Balance */}
             <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
@@ -534,15 +537,15 @@ const Profile = () => {
               loading={arePostsLoading}
               onPress={handlePostsSectionPressed}
             />
-            <Divider style={styles.divider} />
-
-            {/* NFTs */}
+            {/* NFTs removed in beta version */}
+            {/*
             <NFTsSection />
+            */}
 
-            <Divider style={styles.divider} />
-
-            {/* Badges */}
+            {/* Badges removed in beta version */}
+            {/*
             <BadgesSection />
+            */}
           </View>
         </View>
       </Animated.ScrollView>
