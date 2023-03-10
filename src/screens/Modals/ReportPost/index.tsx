@@ -8,13 +8,15 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
 import useReportPost from 'hooks/reports/useReportPost';
+import FastImage from 'react-native-fast-image';
+import { reportSuccessIcon } from 'assets/images';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -55,6 +57,7 @@ const ReportPost = () => {
   // -------------------------------------------------------------------------------------
 
   const [message, setMessage] = useState<string>('');
+  const [successfulReport, setSuccessfulReport] = useState(false);
   const [selectedReport, setSelectedReport] = useState({
     index: 0,
     value: reportReasons[0].id,
@@ -73,11 +76,23 @@ const ReportPost = () => {
     if (result.isErr()) {
       // TODO: Do something here -> waiting for design
       console.log('Error while reporting a post', result.error.message);
-      return;
+    } else {
+      setSuccessfulReport(true);
     }
+  }, [reportPost, message, selectedReport.value]);
 
-    goBack();
-  }, [reportPost, message, selectedReport.value, goBack]);
+  const successfulReportComponent = useMemo(() => {
+    return (
+      <View style={styles.successfullReport}>
+        <FastImage source={reportSuccessIcon} style={styles.reportIcon} />
+        <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
+        <Spacer paddingBottom={theme.spacing.m} />
+        <Typography.Body5 style={styles.reportSuccessText}>
+          {t('report success message')}
+        </Typography.Body5>
+      </View>
+    );
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -85,43 +100,51 @@ const ReportPost = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <BottomUpModalWrapper goBack={goBack}>
-        <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
-        <Spacer paddingBottom={10} />
+        {successfulReport ? (
+          successfulReportComponent
+        ) : (
+          <>
+            <Typography.H4 style={styles.headerText}>{t('header')}</Typography.H4>
+            <Spacer paddingBottom={10} />
 
-        <View>
-          <CustomRadioGroup
-            values={reportingReasons}
-            selectedValue={selectedReport.index}
-            onSelect={(index, value) => setSelectedReport({ value: parseInt(value, 10), index })}
-          />
+            <View>
+              <CustomRadioGroup
+                values={reportingReasons}
+                selectedValue={selectedReport.index}
+                onSelect={(index, value) =>
+                  setSelectedReport({ value: parseInt(value, 10), index })
+                }
+              />
 
-          <Spacer paddingBottom={theme.spacing.s} />
-          <DTextInput
-            editable={true}
-            inputStyle={styles.messageInput}
-            value={message}
-            onChangeText={text => setMessage(text)}
-            style={styles.textInput}
-            multiline
-            placeholder={t('message')}
-          />
-        </View>
-        <Spacer paddingVertical={30}>
-          {loading ? (
-            <View style={styles.loadingView}>
-              <ActivityIndicator color={theme.colors.surfaceBlack} />
+              <Spacer paddingBottom={theme.spacing.s} />
+              <DTextInput
+                editable={true}
+                inputStyle={styles.messageInput}
+                value={message}
+                onChangeText={text => setMessage(text)}
+                style={styles.textInput}
+                multiline
+                placeholder={t('message')}
+              />
             </View>
-          ) : (
-            <Button
-              size={44}
-              backgroundColor={theme.colors.surfaceBlack}
-              textColor={theme.colors.white}
-              mode={ButtonMode.CONTAINED}
-              onPress={onSubmit}>
-              {t('submit')}
-            </Button>
-          )}
-        </Spacer>
+            <Spacer paddingVertical={30}>
+              {loading ? (
+                <View style={styles.loadingView}>
+                  <ActivityIndicator color={theme.colors.surfaceBlack} />
+                </View>
+              ) : (
+                <Button
+                  size={44}
+                  backgroundColor={theme.colors.surfaceBlack}
+                  textColor={theme.colors.white}
+                  mode={ButtonMode.CONTAINED}
+                  onPress={onSubmit}>
+                  {t('submit')}
+                </Button>
+              )}
+            </Spacer>
+          </>
+        )}
       </BottomUpModalWrapper>
     </KeyboardAvoidingView>
   );

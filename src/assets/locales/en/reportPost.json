@@ -7,5 +7,7 @@
   "others": "Others",
   "report": "Report",
   "submit": "Submit",
-  "message": "Add more details"
+  "message": "Add more details",
+  "thanks for reporting": "Thank you for reporting",
+  "report success message": "Thank you for taking your time to report this post. In case the post violates our community guidelines, Butter will take care of handling the post."
 }

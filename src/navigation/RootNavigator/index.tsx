@@ -352,7 +352,6 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.POST_CREATE} component={CreatePost} />
       <Stack.Screen name={ROUTES.POST_DETAILS} component={PostDetails} />
-      <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
 
       {/* ------------------------ */}
       {/* --- SETTINGS SCREENS --- */}
@@ -450,6 +449,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.CONSENT_AGREEMENT} component={ConsentAgreement} />
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
+        <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen
           name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
           component={BackupPhraseBottomModal}

@@ -42,6 +42,17 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     paddingVertical: theme.spacing.m,
   },
+  successfullReport: {
+    alignItems: 'center',
+    paddingVertical: 70,
+  },
+  reportIcon: {
+    width: 121,
+    height: 121,
+  },
+  reportSuccessText: {
+    textAlign: 'center',
+  },
 }));
 
 export default useStyles;
