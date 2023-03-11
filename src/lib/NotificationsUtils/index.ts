@@ -31,6 +31,9 @@ interface ReceivedNotificationData {
   readonly comment_id: string | undefined;
   readonly reply_id: string | undefined;
   readonly subspace_id: string | undefined;
+
+  // Invites
+  readonly claimer_address: string | undefined;
 }
 
 /**
@@ -47,6 +50,7 @@ const convertRemoteMessage = (data: any): ReceivedNotificationData => {
     comment_id: data.comment_id as string,
     reply_id: data.reply_id as string,
     subspace_id: data.subspace_id as string,
+    claimer_address: data.claimer_address as string,
   };
 };
 /**
@@ -126,6 +130,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         type: NotificationType.InviteClaimed,
         title: data.notification_title,
         body: data.notification_body,
+        claimerAddress: data.claimer_address,
       } as InviteClaimedNotificationData;
 
     case NotificationType.InviteUnlocked:

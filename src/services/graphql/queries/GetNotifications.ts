@@ -5,7 +5,7 @@ const GetNotifications = gql`
   ${NotificationReadFields}
   query GetNotifications($limit: Int!, $offset: Int!) @api(name: butter) {
     notifications: notification(
-      where: { _not: { data: { _contains: { type: "transaction_success" } } } }
+      where: { type: { _nilike: "%transaction%" } }
       order_by: { timestamp: desc }
       limit: $limit
       offset: $offset

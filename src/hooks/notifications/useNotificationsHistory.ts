@@ -238,7 +238,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
 
       setNotifications(completeNotifications);
     },
-    [getCompleteData],
+    [getCompleteData, setNotifications],
   );
 
   // Query used to get the notifications
