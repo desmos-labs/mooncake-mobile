@@ -13,6 +13,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
+import { useAppStateValue } from '@recoil/appState';
 
 // -------------------------------------------------------------------------------------
 // --- TAB DATA
@@ -47,7 +48,9 @@ const HomeTabs = () => {
 
   const route = useRoute<NavProps['route']>();
   const { params } = route;
-  const initialRouteName = params?.initialRouteName ?? ROUTES.HOME_TAB_FOLLOWING;
+
+  const lastInitialRouteName = useAppStateValue('lastHomeTab');
+  const initialRouteName = params?.initialRouteName ?? lastInitialRouteName;
 
   // Refresh the token if we have one, otherwise perform the login again
   const refreshSession = useRefreshSession();

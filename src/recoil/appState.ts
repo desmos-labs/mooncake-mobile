@@ -5,6 +5,8 @@ import { SubspaceParams } from 'types/desmos';
 import EnvConfig from 'config/EnvConfig';
 import { AppStateStatus } from 'react-native';
 import { ButterConfig } from 'types/butter';
+import { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
+import ROUTES from 'navigation/routes';
 
 /**
  * Contains the overall state of the application.
@@ -50,6 +52,10 @@ export interface AppState {
    * Overall count of the notifications sent to the application.
    */
   readonly notificationsCount: number;
+  /**
+   * Last tab that the user has opened in the home screen.
+   */
+  readonly lastHomeTab: HomeTabsParams['initialRouteName'];
 }
 
 const DefaultAppState: AppState = {
@@ -67,6 +73,7 @@ const DefaultAppState: AppState = {
   },
   butterConfig: undefined,
   notificationsCount: 0,
+  lastHomeTab: ROUTES.HOME_TAB_DISCOVER,
 };
 
 const appState = atom<AppState>({
