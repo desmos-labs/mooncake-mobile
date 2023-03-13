@@ -2,24 +2,20 @@ import { gql } from '@apollo/client';
 
 const GetTransactionsByAddress = gql`
   query GetTransactionsByAddress(
-    $address: _text
+    $address: String!
     $limit: bigint = 20
     $offset: bigint = 0
     $types: _text = "{}"
-  ) @api(name: forbole) {
+  ) @api(name: butter) {
     messages: messages_by_address(
-      args: { addresses: $address, types: $types, limit: $limit, offset: $offset }
+      args: { address: $address, types: $types, limit: $limit, offset: $offset }
     ) {
       type
       value
       transaction_hash
       fees
-      transaction {
-        block {
-          timestamp
-        }
-        success
-      }
+      timestamp
+      index
     }
   }
 `;

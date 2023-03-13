@@ -61,7 +61,7 @@ import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions, Platform } from 'react-native';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
-import { ProfileOperationsParams } from 'screens/ProfileOperations';
+import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import Login, { LoginParams } from 'screens/Login';
 import { SaveProfileModalParams } from 'screens/Modals/UploadProfilePicturesModal';
@@ -415,6 +415,8 @@ const RootNavigator = () => {
           gestureResponseDistance,
         }}
       />
+
+      <Stack.Screen name={ROUTES.PROFILE_OPERATIONS} component={ProfileOperations} />
 
       {/* <Stack.Screen */}
       {/*  name={ROUTES.PROFILE_FOLLOWING_AND_FOLLOWERS} */}

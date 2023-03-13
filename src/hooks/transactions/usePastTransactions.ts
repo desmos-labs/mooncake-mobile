@@ -85,7 +85,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
   // Query the past transactions from the server
   const { loading, fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
     variables: {
-      address: `{${address}}`,
+      address: `${address}`,
       limit: transactionsPerPage,
       offset: 0,
       types: '{}',
@@ -107,7 +107,8 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
         }),
       });
     } catch (e: any) {
-      setError(e.toString);
+      console.log(e);
+      setError(e.toString());
     } finally {
       // Make sure to set the fetching to false in any case
       setFetchingMore(false);
