@@ -10,7 +10,7 @@ import settings from './settings.json';
 import confirmModal from './confirmModal.json';
 import profile from './profile.json';
 import mnemonicInput from './mnemonicInput.json';
-import selectDtag from './selectDtag.json';
+import selectProfile from './selectProfile.json';
 import consentAgreement from './consentAgreement.json';
 import signup from './signup.json';
 import welcomePage from './welcomePage.json';
@@ -67,7 +67,7 @@ const en = {
   settings,
   profile,
   mnemonicInput,
-  selectDtag,
+  selectProfile,
   consentAgreement,
   signup,
   welcomePage,
