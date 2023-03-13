@@ -17,9 +17,7 @@ const GetSubspaceConfig = gql`
       display_value
       shorthand_code
     }
-    tips_contract: contract(
-      where: { type: { _ilike: "tips" }, config: { _contains: { subspace_id: $subspaceId } } }
-    ) {
+    contracts: contract(where: { type: { _ilike: "tips" } }) {
       address
       type
       config
