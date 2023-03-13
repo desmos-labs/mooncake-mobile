@@ -3,7 +3,7 @@ import GetPostsTippedByUser from 'services/graphql/queries/GetPostsTippedByUser'
 import { useGetTipsToBeSynced } from '@recoil/tips';
 import { PostTipTarget, TipTargetType } from 'types/tips';
 import { DataStatus } from 'types/cache';
-import { convertGraphQLPost, GraphQLPost } from 'lib/GraphQLUtils';
+import { GraphQLPost } from 'lib/GraphQLUtils';
 import React from 'react';
 
 /**
@@ -45,11 +45,9 @@ const usePostsTippedByAddress = (address?: string, postsPerPage: number = 50) =>
     postsPerPage,
     getInitialPosts: getTippedPosts,
     queryMapper: (data: any | undefined) => {
-      // We need to extract the post from the tip object
-      const mappedPosts = (data?.tips ?? []).map((r: any) => r.post).map(convertGraphQLPost);
       return {
-        // Make sure the posts are not duplicated
-        posts: mappedPosts.filter(onlyUnique),
+        // Extract the post from the tip object and make sure the posts are not duplicated
+        posts: (data?.tips ?? []).map((r: any) => r.post).filter(onlyUnique),
       };
     },
   });

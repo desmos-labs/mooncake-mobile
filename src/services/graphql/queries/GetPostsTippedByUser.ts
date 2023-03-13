@@ -11,7 +11,7 @@ const GetPostsTippedByUser = gql`
       limit: $limit
     ) {
       post {
-        ...PostsFields
+        ...PostFields
       }
     }
   }

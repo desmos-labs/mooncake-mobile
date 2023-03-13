@@ -12,7 +12,7 @@ const GetPostsLikedByUser = gql`
       limit: $limit
     ) {
       post {
-        ...PostsFields
+        ...PostFields
       }
     }
   }
