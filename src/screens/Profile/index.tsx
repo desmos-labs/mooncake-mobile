@@ -44,7 +44,6 @@ import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
-import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
@@ -125,12 +124,6 @@ const Profile = () => {
     refetch: refreshAppLinks,
   } = useAppLinksGivenAddress(address);
 
-  const {
-    chainLinks,
-    loading: areChainLinksLoading,
-    refetch: refreshChainLinks,
-  } = useChainLinksGivenAddress(address);
-
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
@@ -148,7 +141,6 @@ const Profile = () => {
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
-    await refreshChainLinks();
     await refreshAppLinks();
     await refreshBalance();
     await refreshPosts();
@@ -157,7 +149,6 @@ const Profile = () => {
   }, [
     refreshAppLinks,
     refreshBalance,
-    refreshChainLinks,
     refreshFollowageCount,
     refreshFollowersCount,
     refreshPosts,
@@ -296,9 +287,9 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
 
   // TODO: Removed from the beta version
-  const ConnectedChains = React.useMemo(() => {
+  const ConnectedApps = React.useMemo(() => {
     // Show the loading indicator
-    if (areAppLinksLoading || areChainLinksLoading) {
+    if (areAppLinksLoading) {
       return (
         <View style={styles.flexStart}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
@@ -307,13 +298,13 @@ const Profile = () => {
     }
 
     // Show the various app links and chain links
-    if (chainLinks.length > 0 || appLinks.length > 0) {
+    if (appLinks.length > 0) {
       return (
         <View>
           <SocialAndWalletsCountersBar
-            loading={areAppLinksLoading || areChainLinksLoading}
+            loading={areAppLinksLoading}
             address={profile?.address ?? ''}
-            chainLinks={chainLinks}
+            chainLinks={[]}
             appLinks={appLinks}
             handlePressCounters={() => navigate(ROUTES.SETTINGS)}
           />
@@ -323,7 +314,7 @@ const Profile = () => {
 
     // Nothing to show
     return undefined;
-  }, [areAppLinksLoading, areChainLinksLoading, chainLinks, appLinks, profile?.address, navigate]);
+  }, [appLinks, profile?.address, navigate]);
 
   // Banner image needs to be memoized to avoid flickering
   const Banner = useMemo(() => {
@@ -393,22 +384,12 @@ const Profile = () => {
 
       {/* Edit and scan buttons */}
       {isActiveAccount && (
-        <>
-          <ImageButton
-            image={profileSettings}
-            buttonStyle={[styles.buttonStyleRight, styles.r20]}
-            style={styles.topBarImage}
-            onPress={() => navigate(ROUTES.SETTINGS)}
-          />
-          {/*
-          Removed in beta version
-          */}
-          {/*          <ImageButton
-            image={profileScan}
-            buttonStyle={[styles.buttonStyleRight, styles.r60]}
-            style={styles.topBarImage}
-          /> */}
-        </>
+        <ImageButton
+          image={profileSettings}
+          buttonStyle={[styles.buttonStyleRight, styles.r20]}
+          style={styles.topBarImage}
+          onPress={() => navigate(ROUTES.SETTINGS)}
+        />
       )}
 
       {/* DTag */}
@@ -496,16 +477,12 @@ const Profile = () => {
           {profile?.bio && (
             <Spacer paddingVertical={theme.spacing.m}>
               <UserBio content={profile.bio} />
-              {/*
-              {ConnectedChains}
-              */}
+              {ConnectedApps}
             </Spacer>
           )}
 
           {/* Section to edit the profile */}
-          {isActiveAccount && (
-            <EditProfileSection profile={profile} chainLinks={chainLinks} appLinks={appLinks} />
-          )}
+          {isActiveAccount && <EditProfileSection profile={profile} appLinks={appLinks} />}
 
           {/* Follow/Unfollow button */}
           {!isActiveAccount && (
@@ -517,14 +494,6 @@ const Profile = () => {
 
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
-            {/* Impact points removed in beta version */}
-            {/*            {isActiveAccount && (
-              <>
-                <ImpactPointsSection />
-                <Divider style={styles.divider} />
-              </>
-            )} */}
-
             {/* Balance */}
             <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
 
@@ -537,15 +506,6 @@ const Profile = () => {
               loading={arePostsLoading}
               onPress={handlePostsSectionPressed}
             />
-            {/* NFTs removed in beta version */}
-            {/*
-            <NFTsSection />
-            */}
-
-            {/* Badges removed in beta version */}
-            {/*
-            <BadgesSection />
-            */}
           </View>
         </View>
       </Animated.ScrollView>
