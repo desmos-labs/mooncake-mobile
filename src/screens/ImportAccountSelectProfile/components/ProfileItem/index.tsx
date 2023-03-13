@@ -16,9 +16,15 @@ type Props = {
   handlePress: (profile: DesmosProfile | undefined) => void;
 };
 
-const ProfileItem = ({ address, handlePress }: Props) => {
+/**
+ * Component that allows to render a single user item within a list.
+ * @constructor
+ */
+const ProfileItem = (props: Props) => {
   const styles = useStyles();
-  const { profile, profileLoading } = useFetchProfile(address, 1000);
+
+  const { address, handlePress } = props;
+  const { profile, profileLoading } = useFetchProfile(address, 250);
 
   const onPress = React.useCallback(() => {
     if (!profileLoading) {

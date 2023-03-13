@@ -98,6 +98,11 @@ export const convertGraphQLPost = (post: any): GraphQLPost => ({
   author: convertGraphQLProfile(post.author),
   transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
   references: (post.references ?? []).map(convertGraphQLPostReference),
+  tags: post.tags,
+
+  // TODO: Check if these are parsed correctly
+  entities: post.entities,
+  replySettings: post.reply_settings,
 
   // Extension fields
   hasReacted: post.reactionPresence?.aggregate?.count > 0,

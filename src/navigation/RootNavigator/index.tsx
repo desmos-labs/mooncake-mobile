@@ -15,9 +15,9 @@ import BackupPhraseBottomModal from 'screens/Modals/BackupPhraseBottomModal';
 import BottomTabs, { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import Onboarding, { OnboardingParams } from 'screens/Onboarding';
-import ImportAccountSelectAccount, {
+import ImportAccountSelectProfile, {
   SelectAccountParamList,
-} from 'screens/ImportAccountSelectAccount';
+} from 'screens/ImportAccountSelectProfile';
 import ConsentAgreement, { ConsentAgreementParams } from 'screens/Modals/ConsentAgreement';
 import ImportAccountSelectMode from 'screens/ImportAccountSelectMode';
 import SaveAccount, { SaveAccountParams } from 'screens/SaveAccount';
@@ -96,7 +96,7 @@ export type RootNavigatorParamList = {
   [ROUTES.IMPORT_ACCOUNT_SELECT_MODE]: undefined;
   [ROUTES.IMPORT_ACCOUNT_SELECT_LEDGER_APP]: undefined;
   [ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT]: undefined;
-  [ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT]: SelectAccountParamList;
+  [ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE]: SelectAccountParamList;
   [ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT]: SaveAccountParams;
 
   [ROUTES.PASSWORD_MANIPULATION]: PasswordManipulationParams;
@@ -325,8 +325,8 @@ const RootNavigator = () => {
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT} component={MnemonicInput} />
       <Stack.Screen
-        name={ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT}
-        component={ImportAccountSelectAccount}
+        name={ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE}
+        component={ImportAccountSelectProfile}
       />
       <Stack.Screen name={ROUTES.IMPORT_ACCOUNT_SAVE_ACCOUNT} component={SaveAccount} />
 

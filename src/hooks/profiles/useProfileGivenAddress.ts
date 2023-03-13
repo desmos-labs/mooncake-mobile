@@ -42,9 +42,8 @@ const useProfileGivenAddress = (address?: string) => {
       return;
     }
 
-    const { profile } = data;
-    const [firstProfile] = profile;
-    const onChainProfile = convertGraphQLProfile(firstProfile);
+    const { profiles } = data;
+    const onChainProfile = profiles.length === 0 ? undefined : convertGraphQLProfile(profiles[0]);
 
     switch (isForActiveUser) {
       case true:

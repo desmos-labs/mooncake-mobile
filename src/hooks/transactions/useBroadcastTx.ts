@@ -12,7 +12,6 @@ import {
   getMissingAuthzPermissions,
   getMissingFeeGrantPermissions,
 } from 'lib/AuthorizationsUtils';
-import { useGetOnChainProfile } from 'hooks/profiles/useGetOnChainProfile';
 import {
   MsgAddReactionTypeUrl,
   MsgCreatePostTypeUrl,
@@ -34,6 +33,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useTranslation } from 'react-i18next';
 import useButterConfig from 'hooks/config/useButterConfig';
+import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 
 export interface BroadcastOptions {
   /**
@@ -246,13 +246,13 @@ const useBroadcastTx = () => {
         return err(new Error('Trying to broadcast a transaction without an active account'));
       }
 
-      let broadcastOnChain = options?.onChain === true;
+      // Check if the user already has its profile stored on chain.
       const accountProfile = await fetchOnChainProfile(activeAccountAddress);
-      if (
-        accountProfile.isOk() &&
-        accountProfile.value === undefined &&
-        msgs.find(msg => msgRequiresProfile(msg.typeUrl)) !== undefined
-      ) {
+
+      const anyMsgRequiresProfile = msgs.some(msg => msgRequiresProfile(msg.typeUrl));
+      if (!accountProfile && anyMsgRequiresProfile) {
+        // If the user doesn't have a profile stored on chain and any of the messages
+        // requires a profile, then we need to ask the user if they want to create one.
         const createProfileResult = await promptRequestSaveProfile(
           storedProfiles[activeAccountAddress],
         );
@@ -261,11 +261,12 @@ const useBroadcastTx = () => {
           if (isCanceledOperationError(createProfileResult.error)) {
             return err(createProfileResult.error);
           } else {
-            return err(new Error("can't create user profile"));
+            return err(new Error("Can't save the user's profile"));
           }
         }
       }
 
+      let broadcastOnChain = options?.onChain === true;
       let msgToBroadcast: EncodeObject[] = msgs;
       // Don't check the permissions if the user forced the
       // transaction to be on chain.

@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useCallback } from 'react';
-import { AccountPickerParams } from 'screens/ImportAccountSelectAccount/components/AccountPicker/types';
+import { AccountPickerParams } from 'screens/ImportAccountSelectProfile/components/AccountPicker/types';
 import { SelectedAccount } from 'types/account';
 
 export interface ResultCallbacks {
@@ -19,7 +19,7 @@ const useSelectAccount = () => {
 
   return useCallback(
     (accountPickerParams: AccountPickerParams, callbacks: ResultCallbacks): void =>
-      navigator.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_ACCOUNT, {
+      navigator.navigate(ROUTES.IMPORT_ACCOUNT_SELECT_PROFILE, {
         accountPickerParams,
         onSelect: callbacks.onSuccess,
         onCancel: callbacks.onCancel,
