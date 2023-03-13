@@ -144,7 +144,7 @@ const Settings: React.FC<NavProps> = props => {
         <SectionButton label={t('about')} onPress={showAboutInfo} />
       </Section>
       <Spacer paddingVertical={12} />
-      <Button size={ButtonSize.M} mode={ButtonMode.OUTLINED} onPress={navigateToConfirmModal}>
+      <Button size={ButtonSize.M} mode={ButtonMode.OUTLINED} onPress={openConfirmSignOutModal}>
         {t('confirmModal:signout')}
       </Button>
 
