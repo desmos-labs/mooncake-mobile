@@ -1,12 +1,11 @@
 import { ApolloProvider } from '@apollo/client';
 import { NavigationContainer } from '@react-navigation/native';
 import CustomToast from 'components/CustomToast';
-import LightTheme from 'config/theme/LightTheme';
+import { NativeBaseProvider } from 'native-base';
 import ToastConfig from 'config/ToastConfig';
 import RootNavigator from 'navigation/RootNavigator';
 import React from 'react';
 import RNBootSplash from 'react-native-bootsplash';
-import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { RecoilRoot } from 'recoil';
@@ -53,7 +52,7 @@ function App(): JSX.Element {
   return (
     <SafeAreaProvider>
       <RecoilRoot>
-        <PaperProvider theme={LightTheme}>
+        <NativeBaseProvider>
           <ButterToastProvider>
             <ButterApolloClientProvider>
               <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
@@ -61,7 +60,7 @@ function App(): JSX.Element {
               </NavigationContainer>
             </ButterApolloClientProvider>
           </ButterToastProvider>
-        </PaperProvider>
+        </NativeBaseProvider>
       </RecoilRoot>
     </SafeAreaProvider>
   );

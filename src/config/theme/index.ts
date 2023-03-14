@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
+import { ITheme } from 'native-base/src/theme';
 import NamedStyles = StyleSheet.NamedStyles;
 
 export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(
-  styleProvider: (theme: ReactNativePaper.Theme) => T,
+  styleProvider: (theme: ITheme) => T,
 ): () => T {
   return () => {
     const theme = useTheme();
@@ -13,7 +14,7 @@ export function makeStyle<T extends NamedStyles<T> | NamedStyles<any>>(
 }
 
 export function makeStyleWithProps<P, T extends NamedStyles<T> | NamedStyles<any>>(
-  styleProvider: (props: P, theme: ReactNativePaper.Theme) => T,
+  styleProvider: (props: P, theme: ITheme) => T,
 ): (props: P) => T {
   return (props: P) => {
     const theme = useTheme();
