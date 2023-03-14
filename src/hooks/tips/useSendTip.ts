@@ -71,14 +71,15 @@ const useSendTip = () => {
       // Store the tip locally
       storeTip(tip);
 
-      // Compute the fee amount
-      const fees = tip.amount.map(
-        coin =>
-          ({
-            denom: coin.denom,
-            amount: ((safeParseFloat(coin.amount) * tipPercentage) / 100).toString(),
-          } as Coin),
-      );
+      // Compute the funds amount by summing, for each coin, the amount and the fees
+      const tipFunds = tip.amount.map(coin => {
+        const tippedAmount = safeParseFloat(coin.amount);
+        const fundAmount = tippedAmount + (tippedAmount * tipPercentage) / 100;
+        return {
+          denom: coin.denom,
+          amount: fundAmount.toString(),
+        } as Coin;
+      });
 
       // Build the message
       const msg: MsgExecuteContractEncodeObject = {
@@ -86,7 +87,7 @@ const useSendTip = () => {
         value: {
           sender: activeAddress,
           contract: tipsContractAddress,
-          funds: fees,
+          funds: tipFunds,
           msg: toUtf8(
             JSON.stringify({
               send_tip: {
