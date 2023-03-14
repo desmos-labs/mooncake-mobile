@@ -32,7 +32,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     () =>
       postsToSync
         .filter(p => p.conversationId === post.id)
-        .filter(p => p.status === PostStatus.CREATED_LOCALLY),
+        .filter(p => p.status !== PostStatus.DELETED_LOCALLY),
     [post.id, postsToSync],
   );
 
