@@ -114,15 +114,12 @@ export const useStorePost = (user: string) => {
   return React.useCallback(
     (post: Post) => {
       setPosts(posts => {
-        const updatedPosts: Record<string, Post[]> = {
-          ...posts,
-        };
-        const userPosts = posts[user] ?? [];
+        const userPosts = [...(posts[user] ?? [])];
         const existingPostIndex = findSamePost(userPosts, post);
         switch (existingPostIndex) {
           case -1:
             // Add the non-existing post
-            userPosts.push(post);
+            userPosts.unshift(post);
             break;
           default:
             // Replace the existing post
@@ -131,6 +128,9 @@ export const useStorePost = (user: string) => {
         }
 
         // Update the value
+        const updatedPosts: Record<string, Post[]> = {
+          ...posts,
+        };
         updatedPosts[user] = userPosts;
         return updatedPosts;
       });

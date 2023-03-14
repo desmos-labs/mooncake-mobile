@@ -30,7 +30,7 @@ export const usePendingTransactions = () => useRecoilValue(pendingTransactionsSt
 export const useUserPendingTransactions = (user: string) => {
   const transactions = useRecoilValue(pendingTransactionsState);
   return React.useMemo(() => {
-    transactions.filter(tx => tx.user === user);
+    return transactions.filter(tx => tx.user === user);
   }, [transactions, user]);
 };
 

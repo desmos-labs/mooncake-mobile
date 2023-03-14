@@ -1,4 +1,3 @@
-import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import usePostsDataByAddress from 'hooks/posts/usePostsDataByAddress';
 import GetPostsLikedByUser from 'services/graphql/queries/GetPostsLikedByUser';
 import { useGetReactionsToSync } from '@recoil/reactions';
@@ -35,8 +34,8 @@ const usePostsLikedByAddress = (address?: string, postsPerPage: number = 50) => 
     getInitialPosts: getLikedPosts,
     queryMapper: (data: any | undefined) => {
       return {
-        // We need to extract the post from the reaction object
-        posts: (data?.reactions ?? []).map((r: any) => r.post).map(convertGraphQLPost),
+        // Extract the post from the reaction object
+        posts: (data?.reactions ?? []).map((r: any) => r.post),
       };
     },
   });

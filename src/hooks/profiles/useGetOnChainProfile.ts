@@ -1,35 +1,32 @@
-import { useApolloClient } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import React from 'react';
 import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
-import { err, ok, ResultAsync } from 'neverthrow';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Hook that provides a function to fetch the profile
  * associated with an address.
  */
-export const useGetOnChainProfile = () => {
-  const apollo = useApolloClient();
+const useGetOnChainProfile = () => {
+  const [getProfile] = useLazyQuery(GetProfileForAddress, {
+    fetchPolicy: 'cache-first',
+  });
 
   return React.useCallback(
-    async (address: string) => {
-      const result = await ResultAsync.fromPromise(
-        apollo.query({
-          query: GetProfileForAddress,
-          variables: {
-            address,
-          },
-          fetchPolicy: 'network-only',
-        }),
-        e => Error((e as Partial<Error> | undefined)?.message ?? 'Error fetching profile'),
-      );
-      if (result.isErr()) {
-        return err(result.error);
+    async (address: string): Promise<DesmosProfile | undefined> => {
+      const { data } = await getProfile({
+        variables: { address },
+      });
+      if (!data) {
+        return undefined;
       }
-      const { profile } = result.value.data;
-      const [firstProfile] = profile;
-      return ok(convertGraphQLProfile(firstProfile));
+
+      const { profiles } = data;
+      return profiles.length === 0 ? undefined : convertGraphQLProfile(profiles[0]);
     },
-    [apollo],
+    [getProfile],
   );
 };
+
+export default useGetOnChainProfile;

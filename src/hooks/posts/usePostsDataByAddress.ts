@@ -7,7 +7,7 @@ import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { DocumentNode, useQuery } from '@apollo/client';
 
 export interface PostQueryResult {
-  readonly posts: Post[];
+  readonly posts: any[];
 }
 
 export interface PostsDataByAddressOptions {
@@ -88,17 +88,21 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const onCompletedCallback = useCallback((data: any) => {
-    if (!data) return;
+  const onCompletedCallback = useCallback(
+    (data: any) => {
+      if (!data) return;
 
-    const { posts: onChainPosts } = data;
+      const { posts: remotePosts } = data;
+      const onChainPosts = (remotePosts ?? []).map(convertGraphQLPost);
 
-    // Update the state
-    setPosts(existingPosts => {
-      const [mergedPosts] = mergePosts(existingPosts, onChainPosts.map(convertGraphQLPost));
-      return mergedPosts;
-    });
-  }, []);
+      // Update the state
+      setPosts(existingPosts => {
+        const [mergedPosts] = mergePosts(existingPosts, onChainPosts);
+        return mergedPosts;
+      });
+    },
+    [setPosts],
+  );
 
   const { loading, refetch, fetchMore } = useQuery(options.query, {
     variables: {

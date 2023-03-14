@@ -1,6 +1,6 @@
 {
   "header": "Welcome Back!",
-  "description": "Log back into your profile dTag",
+  "description": "Log back into your profile",
   "inputLabel": "Password",
   "inputPlaceholder": "Enter password",
   "forgotPw": "Forgot Password"

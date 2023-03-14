@@ -6,7 +6,7 @@ import { connectIcon } from 'assets/images';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'react-native-paper';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import { ApplicationLink, ChainLink, DesmosProfile } from 'types/desmos';
+import { ApplicationLink, DesmosProfile } from 'types/desmos';
 import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -18,7 +18,6 @@ interface EditProfileSectionProps {
    * Profile to be edited.
    */
   profile: DesmosProfile;
-  chainLinks: ChainLink[];
   appLinks: ApplicationLink[];
 }
 
@@ -32,7 +31,7 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   const styles = useStyles();
   const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
-  const { profile, chainLinks, appLinks } = props;
+  const { profile, appLinks } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -51,9 +50,8 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   const handleConnectionButtonPressed = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
       appLinks,
-      chainLinks,
     });
-  }, [appLinks, chainLinks, navigate]);
+  }, [appLinks, navigate]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

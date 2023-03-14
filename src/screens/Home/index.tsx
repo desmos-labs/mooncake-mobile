@@ -32,9 +32,10 @@ import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { isPostPending, Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
+import { useSetAppStateValue } from '@recoil/appState';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<any>;
+type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
 
 /**
  * Home screen of the application that displays the list of posts the user is
@@ -46,6 +47,7 @@ const Home = () => {
   const { t } = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
+
   const { name: routeName } = useRoute<NavProps['route']>();
 
   // Reference and state of the post list, to be able to scroll to the top of it
@@ -57,7 +59,18 @@ const Home = () => {
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
   // -------------------------------------------------------------------------------------
-  // --- Actions ---
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  const setLastHomeTab = useSetAppStateValue('lastHomeTab');
+
+  // Set the last home tab when the route changes
+  useEffect(() => {
+    setLastHomeTab(routeName);
+  }, [routeName, setLastHomeTab]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Actions
   // -------------------------------------------------------------------------------------
 
   const handleNavigateToProfile = useNavigateToProfile();
@@ -69,7 +82,7 @@ const Home = () => {
   const handlePressTip = useHandlePressTip();
 
   // -------------------------------------------------------------------------------------
-  // --- Data queries ---
+  // --- Data queries
   // -------------------------------------------------------------------------------------
 
   const postsQueryType = useMemo(() => {
@@ -88,7 +101,7 @@ const Home = () => {
   } = usePosts(postsQueryType);
 
   // -------------------------------------------------------------------------------------
-  // --- Notifications ---
+  // --- Notifications
   // -------------------------------------------------------------------------------------
 
   useWatchForNewPosts(
@@ -104,7 +117,7 @@ const Home = () => {
   );
 
   // -------------------------------------------------------------------------------------
-  // --- Child components ---
+  // --- Child components
   // -------------------------------------------------------------------------------------
 
   const renderPost = React.useCallback(
@@ -221,7 +234,7 @@ const Home = () => {
   }, [postsListState, setPostsListState, styles]);
 
   // -------------------------------------------------------------------------------------
-  // --- Component rendering ---
+  // --- Component rendering
   // -------------------------------------------------------------------------------------
 
   // Return the loading view if the posts are still loading

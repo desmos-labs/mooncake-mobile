@@ -18,35 +18,10 @@ import { convertGraphQLNotification, GraphQLNotification } from 'lib/GraphQLUtil
 import GetPost from 'services/graphql/queries/GetPost';
 import { getLikeReactionId } from 'types/desmos';
 import { useAppStateValue } from '@recoil/appState';
-import { convertGraphQLPost, convertGraphQLProfile } from 'lib/GraphQLUtils';
-import GetProfileForAddress from 'services/graphql/queries/GetProfileForAddress';
+import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
-
-/**
- * Hook that allows to get the data of a profile given its address.
- */
-const useGetProfileData = () => {
-  const [getProfile] = useLazyQuery(GetProfileForAddress, {
-    fetchPolicy: 'cache-first',
-  });
-
-  return React.useCallback(
-    async (address: string) => {
-      const { data } = await getProfile({
-        variables: { address },
-      });
-      if (!data) {
-        return undefined;
-      }
-
-      const { profiles } = data;
-      const [firstProfile] = profiles;
-      return convertGraphQLProfile(firstProfile);
-    },
-    [getProfile],
-  );
-};
+import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 
 /**
  * Hook that allows to get the data of a post given its subspace and post ids.
@@ -118,7 +93,7 @@ const useGetReactionData = () => {
  * @param activeAddress {string} - Address of the currently active user.
  */
 const useGetCompleteData = (activeAddress: string) => {
-  const getProfile = useGetProfileData();
+  const getProfile = useGetOnChainProfile();
   const getPost = useGetPostData(activeAddress);
   const getReaction = useGetReactionData();
 

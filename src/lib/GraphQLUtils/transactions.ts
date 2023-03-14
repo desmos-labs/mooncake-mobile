@@ -10,6 +10,8 @@ export const convertGraphQLTransactionMessage = (data: any): PastTransactionMess
   return {
     type: data.type,
     fees: data.fees,
-    timestamp: data.transaction.block.timestamp,
+    timestamp: data.timestamp,
+    index: data.index,
+    hash: data.transaction_hash,
   };
 };

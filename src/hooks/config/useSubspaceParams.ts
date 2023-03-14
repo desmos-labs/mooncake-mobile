@@ -22,8 +22,8 @@ const useSubspaceParams = () => {
     if (!data) {
       return;
     }
-    setSubspaceParams(convertGraphQLSubspaceParams(data));
-  }, [data, setSubspaceParams]);
+    setSubspaceParams(convertGraphQLSubspaceParams(subspaceId, data));
+  }, [data, setSubspaceParams, subspaceId]);
 
   return {
     params: subspaceParams,
