@@ -1,8 +1,9 @@
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
-import Typography from 'components/Typography';
 import useRequestNotificationsPermission from 'hooks/notifications/useRequestNotificationsPermission';
 import React from 'react';
+import Typography from 'components/Typography';
+import { communitiesBackgroundImage } from 'assets/images';
 import useStyles from './useStyles';
 
 const Communities = () => {
@@ -11,8 +12,13 @@ const Communities = () => {
   useRequestNotificationsPermission();
 
   return (
-    <DView style={styles.container} topBar={<TopBar />}>
-      <Typography.Body6>Coming soon..</Typography.Body6>
+    <DView
+      style={styles.container}
+      topBar={<TopBar />}
+      backgroundImage={communitiesBackgroundImage}
+      backgroundFillScreen={true}>
+      <Typography.H5>Decentralised Communities</Typography.H5>
+      <Typography.H5 style={styles.bottomText}>Coming soon</Typography.H5>
     </DView>
   );
 };
