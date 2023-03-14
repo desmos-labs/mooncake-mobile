@@ -392,7 +392,15 @@ const PostDetails = () => {
     );
   }, [
     post,
+    styles.customTopBarContainer,
+    styles.customTopBarInnerContainer,
+    styles.rightContainer,
+    styles.middleTextContainer,
+    styles.followIcon,
+    styles.moreIcon,
+    styles.topBar,
     goBack,
+    theme.spacing.m,
     formatDate,
     activeAddress,
     isFollowingAddress,
