@@ -20,12 +20,9 @@ import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import {
   useChangePassword,
   useManageAppLinks,
-  useManageChainLinks,
-  useManageInvites,
   useOpenNotificationsSettings,
   useSendFeedback,
   useShowAboutInfo,
-  useShowCommunities,
   useShowPrivateKey,
   useSignOut,
   useToggleBiometrics,
@@ -46,7 +43,6 @@ const Settings: React.FC<NavProps> = props => {
 
   // Account section hooks
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
-  const manageChainLinks = useManageChainLinks();
   const manageAppLinks = useManageAppLinks();
 
   // Security sections hooks.
@@ -64,8 +60,6 @@ const Settings: React.FC<NavProps> = props => {
     useToggleNotifications('newDiscPostNotification');
   const { value: notifyOnNewFollowerPost, toggle: toggleNotifyOnNewFollowerPost } =
     useToggleNotifications('newFollowPostNotification');
-  const manageInvites = useManageInvites();
-  const showCommunities = useShowCommunities();
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
   const signOut = useSignOut();
@@ -98,15 +92,6 @@ const Settings: React.FC<NavProps> = props => {
     <DView scrollable style={styles.root} topBar={<TopBar />}>
       <Typography.H3 style={styles.title}>{t('settings')}</Typography.H3>
 
-      {/* Account section */}
-      <Section style={styles.spacer} title={t('account')}>
-        {canShowPrivateKey && (
-          <SectionButton label={t('show private key')} onPress={showPrivateKey} />
-        )}
-        <SectionButton label={t('manage connected addresses')} onPress={manageChainLinks} />
-        <SectionButton label={t('manage connected apps')} onPress={manageAppLinks} />
-      </Section>
-
       {/* Security section */}
       <Section style={styles.spacer} title={t('security')}>
         <SectionSwitch
@@ -115,7 +100,7 @@ const Settings: React.FC<NavProps> = props => {
           value={simplifiedTxBroadcast}
           disabled={loadingSimplifiedTxBroadcast}
         />
-        <SectionButton label={t('change password')} onPress={changePassword} />
+
         {biometricsSupported && (
           <SectionSwitch
             label={t('enable biometrics')}
@@ -123,11 +108,19 @@ const Settings: React.FC<NavProps> = props => {
             onValueChange={toggleBiometrics}
           />
         )}
+        <SectionButton label={t('change password')} onPress={changePassword} />
+        {canShowPrivateKey && (
+          <SectionButton label={t('show private key')} onPress={showPrivateKey} />
+        )}
+      </Section>
+
+      {/* Account section */}
+      <Section style={styles.spacer} title={t('applications')}>
+        <SectionButton label={t('manage connected apps')} onPress={manageAppLinks} />
       </Section>
 
       {/* Other section */}
       <Section style={styles.spacer} title={t('others')}>
-        <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
         <SectionSwitch
           label={t('notifyOnNewDiscPosts')}
           value={notifyOnNewDiscoverPost}
@@ -138,8 +131,7 @@ const Settings: React.FC<NavProps> = props => {
           value={notifyOnNewFollowerPost}
           onValueChange={toggleNotifyOnNewFollowerPost}
         />
-        <SectionButton label={t('invites:invites')} onPress={manageInvites} />
-        <SectionButton label={t('community')} onPress={showCommunities} />
+        <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton label={t('about')} onPress={showAboutInfo} />
       </Section>

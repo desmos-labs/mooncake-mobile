@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
@@ -48,16 +48,17 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
         <NoAppConnections />
         <View style={styles.buttonContainer}>
           <Button
-            color={theme.colors.surfaceBlack}
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
             onPress={createAppLink}
-            mode={ButtonMode.CONTAINED}
-            labelStyle={styles.buttonStyle}>
+            size={ButtonSize.M}
+            mode={ButtonMode.CONTAINED}>
             {t('connect app')}
           </Button>
         </View>
       </Spacer>
     );
-  }, [createAppLink, styles.buttonContainer, styles.buttonStyle, t, theme.colors.surfaceBlack]);
+  }, [createAppLink]);
 
   const ItemSeparatorComponent = React.useCallback(
     () => <Spacer paddingVertical={theme.spacing.s} />,
