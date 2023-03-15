@@ -433,10 +433,10 @@ const Profile = () => {
           <View style={styles.flexRow}>
             <View style={styles.innerContainer}>
               {/* Posts count */}
-              <View style={styles.postCount}>
+              <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
                 <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
-              </View>
+              </TouchableOpacity>
 
               {/* Followage count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
