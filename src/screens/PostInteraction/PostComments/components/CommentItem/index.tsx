@@ -3,10 +3,11 @@ import {
   commentIcon,
   commentLiked,
   commentLikeEmptyIcon,
-  commentMore,
+  followBlackIcon,
+  reportIcon,
   tipIcon,
+  unfollowBlackIcon,
 } from 'assets/images';
-import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
@@ -22,11 +23,13 @@ import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';
+import PopupMenu from 'components/PopupMenu';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
-  readonly handlePressMore: (event: GestureResponderEvent) => void;
   readonly handlePressComment: () => void;
   readonly handlePressLike: () => void;
   readonly handlePressTip: () => void;
@@ -49,7 +52,6 @@ const CommentItem = (props: CommentItemProps) => {
     disableInnerComment,
     handlePressComment,
     handlePressLike,
-    handlePressMore,
     handlePressTip,
     handlePress,
     handleLongPress,
@@ -87,6 +89,30 @@ const CommentItem = (props: CommentItemProps) => {
   });
 
   // -------------------------------------------------------------------------------------
+  // --- Menu Items
+  // -------------------------------------------------------------------------------------
+
+  const isFollowing = useIsFollowing(comment.author.address);
+  const handlePressFollow = useHandlePressFollow();
+  const handlePressReport = useHandlePressReport();
+
+  const menuItems = React.useMemo(
+    () => [
+      {
+        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        onPress: () => handlePressFollow(comment.author),
+        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
+      {
+        label: t('home:report'),
+        onPress: () => handlePressReport(comment),
+        icon: reportIcon,
+      },
+    ],
+    [handlePressFollow, handlePressReport, isFollowing],
+  );
+
+  // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
@@ -116,7 +142,7 @@ const CommentItem = (props: CommentItemProps) => {
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={loadingOrange} style={styles.loadingAnim} />
           ) : (
-            <ImageButton onPress={handlePressMore} image={commentMore} style={styles.buttonImage} />
+            <PopupMenu menuItems={menuItems} />
           )}
         </View>
         {MediaAttachment}
