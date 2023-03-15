@@ -60,7 +60,10 @@ import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/Pr
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions, Platform } from 'react-native';
 import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
-import { ProfileConnectionsParams, ProfileConnectionsTabParams } from 'screens/ProfileConnections';
+import ProfileConnections, {
+  ProfileConnectionsParams,
+  ProfileConnectionsTabParams,
+} from 'screens/ProfileConnections';
 import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import Login, { LoginParams } from 'screens/Login';
@@ -416,6 +419,7 @@ const RootNavigator = () => {
         }}
       />
 
+      <Stack.Screen name={ROUTES.PROFILE_CONNECTIONS} component={ProfileConnections} />
       <Stack.Screen name={ROUTES.PROFILE_OPERATIONS} component={ProfileOperations} />
 
       {/* <Stack.Screen */}

@@ -50,6 +50,7 @@ const FollowersTab = () => {
 
   return (
     <UsersList
+      userAddress={userAddress}
       users={followers}
       loading={loading}
       fetchMore={fetchMore}
