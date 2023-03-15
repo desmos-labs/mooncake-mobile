@@ -26,18 +26,32 @@ interface Props {
   readonly addressToCheck: string;
 }
 
+/**
+ * Component that renders the top bar for the post details screen.
+ * @param post - Post to render
+ * @param handlePressMore - Handler for pressing the more button
+ * @param onBackButtonPress - Handler for pressing the back button
+ * @param addressToCheck - Address to check if the user is following
+ * @constructor
+ */
 const PostTopBar = ({ post, handlePressMore, onBackButtonPress, addressToCheck }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
 
-  // Hooks
+  /**
+   * Hooks for handling various actions
+   */
   const handlePressFollowOrUnfollow = useHandlePressFollowOrUnfollow();
   const formatDate = useFormatTimeForPostDetails();
   const activeAddress = useActiveAccountAddress();
-  const { count: commentsCount } = usePostCommentsCount(post);
   const handleNavigateToProfile = useNavigateToProfile();
   const isFollowingAddress = useIsFollowing(addressToCheck);
+
+  /**
+   * Hooks for getting comments count
+   */
+  const { count: commentsCount } = usePostCommentsCount(post);
 
   if (isCommentReply(post!)) {
     return (
@@ -54,7 +68,6 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress, addressToCheck }
     );
   }
 
-  // Custom top bar for comments
   return (
     <View style={styles.customTopBarContainer}>
       <View style={styles.customTopBarInnerContainer}>

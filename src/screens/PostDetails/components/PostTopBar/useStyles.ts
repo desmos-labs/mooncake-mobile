@@ -1,9 +1,6 @@
 import { makeStyle } from 'config/theme';
 
 const useStyles = makeStyle(theme => ({
-  root: {
-    backgroundColor: theme.colors.white,
-  },
   sceneContainerStyle: {
     backgroundColor: theme.colors.white,
   },
@@ -11,9 +8,6 @@ const useStyles = makeStyle(theme => ({
     backgroundColor: theme.colors.white,
     zIndex: 2,
     paddingBottom: 10,
-  },
-  flatListContainer: {
-    paddingHorizontal: theme.spacing.m,
   },
   followIcon: {
     zIndex: 1,

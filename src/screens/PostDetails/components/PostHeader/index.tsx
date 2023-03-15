@@ -21,6 +21,11 @@ interface Props {
   post: Post;
 }
 
+/**
+ * Component that renders the header of the post details screen.
+ * @param post - Post to render
+ * @constructor
+ */
 const PostHeader = ({ post }: Props) => {
   const styles = useStyles();
   const { focusTextInputRef } = useFocusTextInputOnNavigate();
@@ -36,6 +41,9 @@ const PostHeader = ({ post }: Props) => {
   const { authors: interactionsAuthors, loading: areInteractionsAuthorsLoading } =
     usePostInteractionsAuthors(post, 3);
 
+  /**
+   * Handlers for post actions
+   */
   const handlePressCounters = useHandlePressCounters();
   const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
