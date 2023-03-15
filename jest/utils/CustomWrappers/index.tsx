@@ -1,12 +1,12 @@
 import React, {FC, ReactElement} from 'react';
 import {render} from '@testing-library/react-native';
 import {Options} from '@testing-library/react-native/build/render';
-import {Provider as PaperProvider} from 'react-native-paper';
-import LightTheme from 'config/theme/LightTheme';
+import {NativeBaseProvider} from "native-base";
 import {RecoilRoot} from 'recoil';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {MeasureOptions, measurePerformance} from '@callstack/reassure-measure';
+import customTheme from "config/theme/CustomTheme";
 
 /**
  * A custom render function for use in unit tests for components that
@@ -16,9 +16,9 @@ const AllTheProviders: FC<{children: React.ReactElement}> = ({children}) => {
   return (
     <RecoilRoot>
       <NavigationContainer>
-        <PaperProvider theme={LightTheme}>
+        <NativeBaseProvider theme={customTheme}>
           <SafeAreaProvider style={{flex: 1}}>{children}</SafeAreaProvider>
-        </PaperProvider>
+        </NativeBaseProvider>
       </NavigationContainer>
     </RecoilRoot>
   );

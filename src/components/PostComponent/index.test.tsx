@@ -40,7 +40,7 @@ const mockTextPostData = {
       count: 0,
     },
   },
-};
+} as any;
 
 const mockImagePostData = {
   ...mockTextPostData,
@@ -49,7 +49,7 @@ const mockImagePostData = {
     {
       id: 1,
       content: {
-        uri: 'https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg',
+        urij: 'https://images.wallpapersden.com/image/download/minimal-abstract-2021-art_bGxla2aUmZqaraWkpJRmbmdlrWZlbWU.jpg',
         mimeType: 'image/png',
       },
     },
@@ -72,19 +72,19 @@ const mockTextImagePostData = {
 
 describe('component: PostComponent', () => {
   it('renders', () => {
-    const tree = render(<PostComponent postData={mockTextPostData} />).toJSON();
+    const tree = render(<PostComponent post={mockTextPostData} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });
 
   it('renders image posts', () => {
-    const tree = render(<PostComponent postData={mockImagePostData} />).toJSON();
+    const tree = render(<PostComponent post={mockImagePostData} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });
 
   it('renders textImage posts', () => {
-    const tree = render(<PostComponent postData={mockTextImagePostData} />).toJSON();
+    const tree = render(<PostComponent post={mockTextImagePostData} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

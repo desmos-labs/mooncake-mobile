@@ -2,214 +2,194 @@
 
 exports[`component: RadialTextCounter changes color if character count nears max 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
-  style={
-    {
-      "flex": 1,
-    }
-  }
+  style={{}}
 >
-  <View
-    style={{}}
-  >
-    <RNSVGSvgView
-      bbHeight={24}
-      bbWidth={24}
-      focusable={false}
-      height={24}
-      style={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "flex": 0,
-            "height": 24,
-            "width": 24,
-          },
-        ]
-      }
-      width={24}
-    >
-      <RNSVGGroup>
-        <RNSVGGroup
-          matrix={
-            [
-              1,
-              0,
-              -0,
-              1,
-              0,
-              0,
-            ]
-          }
-        >
-          <RNSVGPath
-            d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
-            fill={0}
-            propList={
-              [
-                "fill",
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-              ]
-            }
-            stroke={4292730333}
-            strokeLinecap={0}
-            strokeWidth={2}
-          />
-        </RNSVGGroup>
-      </RNSVGGroup>
-    </RNSVGSvgView>
-    <View
-      style={
+  <RNSVGSvgView
+    bbHeight={24}
+    bbWidth={24}
+    focusable={false}
+    height={24}
+    style={
+      [
         {
-          "alignItems": "center",
-          "borderRadius": 10,
-          "height": 20,
-          "justifyContent": "center",
-          "left": 2,
-          "overflow": "hidden",
-          "position": "absolute",
-          "top": 2,
-          "width": 20,
-        }
-      }
-    >
-      <Text
-        style={
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    width={24}
+  >
+    <RNSVGGroup>
+      <RNSVGGroup
+        matrix={
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 12,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "lineHeight": 16,
-                "textAlign": "left",
-              },
-            ],
-            {
-              "color": "#F359A8",
-            },
+            1,
+            0,
+            -0,
+            1,
+            0,
+            0,
           ]
         }
       >
-        1
-      </Text>
-    </View>
+        <RNSVGPath
+          d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
+          fill={0}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+            ]
+          }
+          stroke={4292730333}
+          strokeLinecap={0}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "borderRadius": 10,
+        "height": 20,
+        "justifyContent": "center",
+        "left": 2,
+        "overflow": "hidden",
+        "position": "absolute",
+        "top": 2,
+        "width": 20,
+      }
+    }
+  >
+    <Text
+      style={
+        [
+          [
+            {
+              "color": "#25282D",
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 12,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "lineHeight": 16,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#F359A8",
+          },
+        ]
+      }
+    >
+      1
+    </Text>
   </View>
 </View>
 `;
 
 exports[`component: RadialTextCounter renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
-  style={
-    {
-      "flex": 1,
-    }
-  }
+  style={{}}
 >
-  <View
-    style={{}}
+  <RNSVGSvgView
+    bbHeight={24}
+    bbWidth={24}
+    focusable={false}
+    height={24}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "flex": 0,
+          "height": 24,
+          "width": 24,
+        },
+      ]
+    }
+    width={24}
   >
-    <RNSVGSvgView
-      bbHeight={24}
-      bbWidth={24}
-      focusable={false}
-      height={24}
+    <RNSVGGroup>
+      <RNSVGGroup
+        matrix={
+          [
+            1,
+            0,
+            -0,
+            1,
+            0,
+            0,
+          ]
+        }
+      >
+        <RNSVGPath
+          d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
+          fill={0}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+            ]
+          }
+          stroke={4292730333}
+          strokeLinecap={0}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "borderRadius": 10,
+        "height": 20,
+        "justifyContent": "center",
+        "left": 2,
+        "overflow": "hidden",
+        "position": "absolute",
+        "top": 2,
+        "width": 20,
+      }
+    }
+  >
+    <Text
       style={
         [
+          [
+            {
+              "color": "#25282D",
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 12,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "lineHeight": 16,
+              "textAlign": "left",
+            },
+          ],
           {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "flex": 0,
-            "height": 24,
-            "width": 24,
+            "color": "#AFAFAF",
           },
         ]
       }
-      width={24}
-    >
-      <RNSVGGroup>
-        <RNSVGGroup
-          matrix={
-            [
-              1,
-              0,
-              -0,
-              1,
-              0,
-              0,
-            ]
-          }
-        >
-          <RNSVGPath
-            d="M 11.993088496616858 1.0000021713128966 A 11 11 0 1 0 12 1"
-            fill={0}
-            propList={
-              [
-                "fill",
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-              ]
-            }
-            stroke={4292730333}
-            strokeLinecap={0}
-            strokeWidth={2}
-          />
-        </RNSVGGroup>
-      </RNSVGGroup>
-    </RNSVGSvgView>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "borderRadius": 10,
-          "height": 20,
-          "justifyContent": "center",
-          "left": 2,
-          "overflow": "hidden",
-          "position": "absolute",
-          "top": 2,
-          "width": 20,
-        }
-      }
-    >
-      <Text
-        style={
-          [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 12,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "lineHeight": 16,
-                "textAlign": "left",
-              },
-            ],
-            {
-              "color": "#AFAFAF",
-            },
-          ]
-        }
-      />
-    </View>
+    />
   </View>
 </View>
 `;

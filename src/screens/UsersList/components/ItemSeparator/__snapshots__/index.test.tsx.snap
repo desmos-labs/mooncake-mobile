@@ -2,25 +2,15 @@
 
 exports[`component: ItemSeparator renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
     {
-      "flex": 1,
+      "backgroundColor": "rgb(239,239,239)",
+      "flexGrow": 1,
+      "height": 1,
+      "margin": 7,
+      "maxHeight": 1,
+      "minHeight": 1,
     }
   }
->
-  <View
-    style={
-      {
-        "backgroundColor": "rgb(239,239,239)",
-        "flexGrow": 1,
-        "height": 1,
-        "margin": 7,
-        "maxHeight": 1,
-        "minHeight": 1,
-      }
-    }
-  />
-</View>
+/>
 `;

@@ -2,140 +2,128 @@
 
 exports[`component: DSecureTextInput renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
-  }
->
-  <View
-    style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 14,
+        "display": "flex",
+        "flexDirection": "row",
+        "minHeight": 48,
+      },
       [
         {
-          "alignItems": "center",
           "backgroundColor": "#FFFFFF",
-          "borderRadius": 14,
-          "display": "flex",
-          "flexDirection": "row",
-          "minHeight": 48,
         },
-        [
-          {
-            "backgroundColor": "#FFFFFF",
-          },
-          undefined,
-        ],
-      ]
-    }
-  >
-    <TextInput
-      onBlur={[Function]}
-      onFocus={[Function]}
-      placeHolderColor="#AFAFAF"
-      placeholderTextColor="#AFAFAF"
-      rightElement={
-        <withTheme(IconButton)
-          accessibilityLabel="undefined-hidden"
-          color="#AFAFAF"
-          icon={
+        undefined,
+      ],
+    ]
+  }
+>
+  <TextInput
+    onBlur={[Function]}
+    onFocus={[Function]}
+    placeHolderColor="#AFAFAF"
+    placeholderTextColor="#AFAFAF"
+    rightElement={
+      <Memo
+        accessibilityLabel="undefined-hidden"
+        onPress={[Function]}
+      >
+        <Image
+          source={
             {
               "testUri": "../../../src/assets/images/eyeOpen.png",
             }
           }
-          onPress={[Function]}
-        />
-      }
-      secureTextEntry={true}
-      style={
-        [
-          undefined,
-          {
-            "color": "#25282D",
-            "flex": 0.95,
-            "flexGrow": 1,
-            "fontFamily": "Poppins-Regular",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "fontWeight": "400",
-            "letterSpacing": 0.025,
-            "lineHeight": 21,
-            "minHeight": undefined,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          },
-        ]
-      }
-      textAlignVertical="center"
-    />
-    <View
-      style={
-        {
-          "margin": 0,
-          "padding": 0,
-          "paddingRight": 8,
-        }
-      }
-    >
-      <View
-        accessibilityLabel="undefined-hidden"
-        accessibilityRole="button"
-        accessibilityState={
-          {
-            "disabled": false,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        focusable={true}
-        hitSlop={
-          {
-            "bottom": 6,
-            "left": 6,
-            "right": 6,
-            "top": 6,
-          }
-        }
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          [
+          style={
             {
-              "overflow": "hidden",
-            },
-            [
-              {
-                "alignItems": "center",
-                "justifyContent": "center",
-                "margin": 6,
-                "overflow": "hidden",
-              },
-              {
-                "borderRadius": 18,
-                "height": 36,
-                "width": 36,
-              },
-              undefined,
-              undefined,
-            ],
-          ]
+              "height": 18,
+              "width": 24,
+            }
+          }
+        />
+      </Memo>
+    }
+    secureTextEntry={true}
+    style={
+      [
+        undefined,
+        {
+          "color": "#25282D",
+          "flex": 0.95,
+          "flexGrow": 1,
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.025,
+          "lineHeight": 21,
+          "minHeight": undefined,
+          "paddingHorizontal": 11,
+          "textAlign": "left",
+        },
+      ]
+    }
+    textAlignVertical="center"
+  />
+  <View
+    style={
+      {
+        "margin": 0,
+        "padding": 0,
+        "paddingRight": 8,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="undefined-hidden"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
         }
-      >
-        <View />
-      </View>
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      dataSet={{}}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={{}}
+    >
+      <Image
+        source={
+          {
+            "testUri": "../../../src/assets/images/eyeOpen.png",
+          }
+        }
+        style={
+          {
+            "height": 18,
+            "width": 24,
+          }
+        }
+      />
     </View>
   </View>
 </View>

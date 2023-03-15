@@ -6,15 +6,33 @@ import { act, fireEvent, waitFor } from '@testing-library/react-native';
 import { Keyboard } from 'react-native';
 import i18next from 'i18next';
 
+jest.mock('@apollo/client', () => {
+  const baseImplementation = jest.requireActual('@apollo/client');
+
+  // Mock the response of GetPostsParams query
+  const mockGetPostsParamsData = {
+    params: [
+      {
+        params: {
+          max_text_length: 500,
+        },
+      },
+    ],
+  };
+
+  return {
+    ...baseImplementation,
+    __esModule: true,
+    useQuery: jest.fn(() => ({
+      data: mockGetPostsParamsData,
+    })),
+  };
+});
+
 describe('component: EnterCommentBottomBar', () => {
   it('renders', () => {
     const tree = render(
-      <EnterCommentBottomBar
-        profileImage={defaultProfilePic}
-        onIconPress={jest.fn()}
-        focusTextInput={true}
-        handlePostComment={jest.fn()}
-      />,
+      <EnterCommentBottomBar onIconPress={jest.fn()} handlePostComment={jest.fn()} />,
     ).toJSON();
 
     expect(tree).toMatchSnapshot();

@@ -31,7 +31,7 @@ exports[`component: DView renders 1`] = `
   style={
     [
       {
-        "backgroundColor": "#f6f6f6",
+        "backgroundColor": "#F7F8FA",
         "flexDirection": "column",
         "flexGrow": 1,
       },
@@ -101,7 +101,7 @@ exports[`component: DView renders background prop 1`] = `
   style={
     [
       {
-        "backgroundColor": "#f6f6f6",
+        "backgroundColor": "#F7F8FA",
         "flexDirection": "column",
         "flexGrow": 1,
       },

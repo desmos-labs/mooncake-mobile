@@ -1,22 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component: BackButton renders 1`] = `
-<View
+<RNGestureHandlerButton
   collapsable={false}
-  pointerEvents="box-none"
-  style={
+  delayLongPress={600}
+  enabled={true}
+  exclusive={true}
+  handlerTag={1}
+  handlerType="NativeViewGestureHandler"
+  hitSlop={
     {
-      "flex": 1,
+      "bottom": 50,
+      "left": 50,
+      "right": 50,
+      "top": 50,
     }
   }
+  onGestureEvent={[Function]}
+  onGestureHandlerEvent={[Function]}
+  onGestureHandlerStateChange={[Function]}
+  onHandlerStateChange={[Function]}
+  rippleColor={0}
+  touchSoundDisabled={false}
 >
-  <RNGestureHandlerButton
+  <View
+    accessibilityLabel="back-button"
+    accessible={true}
     collapsable={false}
-    delayLongPress={600}
-    enabled={true}
-    exclusive={true}
-    handlerTag={1}
-    handlerType="NativeViewGestureHandler"
     hitSlop={
       {
         "bottom": 50,
@@ -25,54 +35,34 @@ exports[`component: BackButton renders 1`] = `
         "top": 50,
       }
     }
-    onGestureEvent={[Function]}
-    onGestureHandlerEvent={[Function]}
-    onGestureHandlerStateChange={[Function]}
-    onHandlerStateChange={[Function]}
-    rippleColor={0}
-    touchSoundDisabled={false}
-  >
-    <View
-      accessibilityLabel="back-button"
-      accessible={true}
-      collapsable={false}
-      hitSlop={
-        {
-          "bottom": 50,
-          "left": 50,
-          "right": 50,
-          "top": 50,
-        }
+    style={
+      {
+        "opacity": 1,
+        "padding": 6,
       }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      selectable={false}
       style={
-        {
-          "opacity": 1,
-          "padding": 6,
-        }
+        [
+          {
+            "color": "#25282D",
+            "fontSize": 32,
+          },
+          undefined,
+          {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
       }
     >
-      <Text
-        allowFontScaling={true}
-        selectable={false}
-        style={
-          [
-            {
-              "color": "#25282D",
-              "fontSize": 32,
-            },
-            undefined,
-            {
-              "fontFamily": "FontAwesome",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            {},
-          ]
-        }
-      >
-        
-      </Text>
-    </View>
-  </RNGestureHandlerButton>
-</View>
+      
+    </Text>
+  </View>
+</RNGestureHandlerButton>
 `;

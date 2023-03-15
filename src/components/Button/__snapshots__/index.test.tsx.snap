@@ -2,427 +2,377 @@
 
 exports[`component: Button renders button contained mode color white size 32 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderRadius": 14,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingVertical": 5,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "white",
-        "borderRadius": 14,
-        "justifyContent": "center",
-        "opacity": 1,
-        "paddingVertical": 5,
+        "flexDirection": "row",
       }
     }
   >
-    <View
+    <Text
+      numberOfLines={1}
       style={
-        {
-          "flexDirection": "row",
-        }
-      }
-    >
-      <Text
-        numberOfLines={1}
-        style={
+        [
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 14,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "letterSpacing": 0.015,
-                "lineHeight": 21,
-                "textAlign": "left",
-              },
-            ],
             {
               "color": "#25282D",
             },
-          ]
-        }
-      />
-    </View>
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#25282D",
+          },
+        ]
+      }
+    />
   </View>
 </View>
 `;
 
 exports[`component: Button renders button outlined mode color white size 44 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderColor": "#25282D",
+      "borderRadius": 14,
+      "borderWidth": 1,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingVertical": 12,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "white",
-        "borderColor": "#25282D",
-        "borderRadius": 14,
-        "borderWidth": 1,
-        "justifyContent": "center",
-        "opacity": 1,
-        "paddingVertical": 12,
+        "flexDirection": "row",
       }
     }
   >
-    <View
+    <Text
+      numberOfLines={1}
       style={
-        {
-          "flexDirection": "row",
-        }
-      }
-    >
-      <Text
-        numberOfLines={1}
-        style={
+        [
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 14,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "letterSpacing": 0.015,
-                "lineHeight": 21,
-                "textAlign": "left",
-              },
-            ],
             {
               "color": "#25282D",
             },
-          ]
-        }
-      />
-    </View>
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#25282D",
+          },
+        ]
+      }
+    />
   </View>
 </View>
 `;
 
 exports[`component: Button renders button text contained color white size 56 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderRadius": 14,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingVertical": 16,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "white",
-        "borderRadius": 14,
-        "justifyContent": "center",
-        "opacity": 1,
-        "paddingVertical": 16,
+        "flexDirection": "row",
       }
     }
   >
-    <View
+    <Text
+      numberOfLines={1}
       style={
-        {
-          "flexDirection": "row",
-        }
-      }
-    >
-      <Text
-        numberOfLines={1}
-        style={
+        [
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 14,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "letterSpacing": 0.015,
-                "lineHeight": 21,
-                "textAlign": "left",
-              },
-            ],
             {
               "color": "#25282D",
             },
-          ]
-        }
-      />
-    </View>
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#25282D",
+          },
+        ]
+      }
+    />
   </View>
 </View>
 `;
 
 exports[`component: Button renders button text mode color white size 26 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderRadius": 14,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingVertical": 2,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "white",
-        "borderRadius": 14,
-        "justifyContent": "center",
-        "opacity": 1,
-        "paddingVertical": 2,
+        "flexDirection": "row",
       }
     }
   >
-    <View
+    <Text
+      numberOfLines={1}
       style={
-        {
-          "flexDirection": "row",
-        }
-      }
-    >
-      <Text
-        numberOfLines={1}
-        style={
+        [
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 14,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "letterSpacing": 0.015,
-                "lineHeight": 21,
-                "textAlign": "left",
-              },
-            ],
             {
               "color": "#25282D",
             },
-          ]
-        }
-      />
-    </View>
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#25282D",
+          },
+        ]
+      }
+    />
   </View>
 </View>
 `;
 
 exports[`component: Button renders button text mode color white size 56 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderRadius": 14,
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingVertical": 16,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "white",
-        "borderRadius": 14,
-        "justifyContent": "center",
-        "opacity": 1,
-        "paddingVertical": 16,
+        "flexDirection": "row",
       }
     }
   >
-    <View
+    <Text
+      numberOfLines={1}
       style={
-        {
-          "flexDirection": "row",
-        }
-      }
-    >
-      <Text
-        numberOfLines={1}
-        style={
+        [
           [
-            [
-              {
-                "color": "#25282D",
-              },
-              {
-                "fontFamily": "Poppins-SemiBold",
-                "fontSize": 14,
-                "fontStyle": "normal",
-                "fontWeight": "600",
-                "letterSpacing": 0.015,
-                "lineHeight": 21,
-                "textAlign": "left",
-              },
-            ],
             {
               "color": "#25282D",
             },
-          ]
-        }
-      />
-    </View>
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.015,
+              "lineHeight": 21,
+              "textAlign": "left",
+            },
+          ],
+          {
+            "color": "#25282D",
+          },
+        ]
+      }
+    />
   </View>
 </View>
 `;

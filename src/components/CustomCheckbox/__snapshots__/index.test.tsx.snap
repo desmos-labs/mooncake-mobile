@@ -1,15 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component: CustomCheckbox renders checked 1`] = `
-<View
-  collapsable={false}
-  pointerEvents="box-none"
-  style={
-    {
-      "flex": 1,
-    }
-  }
->
+[
   <View
     accessibilityLabel="custom-checkbox"
     accessibilityState={
@@ -103,21 +95,13 @@ exports[`component: CustomCheckbox renders checked 1`] = `
         }
       }
     />
-  </View>
-  ,
-</View>
+  </View>,
+  ",",
+]
 `;
 
 exports[`component: CustomCheckbox renders error 1`] = `
-<View
-  collapsable={false}
-  pointerEvents="box-none"
-  style={
-    {
-      "flex": 1,
-    }
-  }
->
+[
   <View
     accessibilityLabel="custom-checkbox"
     accessibilityState={
@@ -167,7 +151,7 @@ exports[`component: CustomCheckbox renders error 1`] = `
             "width": 24,
           },
           {
-            "tintColor": "#25282D",
+            "tintColor": "#FD565F",
           },
           {
             "tintColor": "#1EC490",
@@ -213,21 +197,13 @@ exports[`component: CustomCheckbox renders error 1`] = `
         }
       }
     />
-  </View>
-  ,
-</View>
+  </View>,
+  ",",
+]
 `;
 
 exports[`component: CustomCheckbox renders unchecked 1`] = `
-<View
-  collapsable={false}
-  pointerEvents="box-none"
-  style={
-    {
-      "flex": 1,
-    }
-  }
->
+[
   <View
     accessibilityLabel="custom-checkbox"
     accessibilityState={
@@ -319,7 +295,7 @@ exports[`component: CustomCheckbox renders unchecked 1`] = `
         }
       }
     />
-  </View>
-  ,
-</View>
+  </View>,
+  ",",
+]
 `;

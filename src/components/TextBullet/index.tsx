@@ -15,7 +15,7 @@ const TextBullet = ({ textArr }: Props) => {
   return (
     <View style={styles.outerContainer}>
       {textArr.map(x => (
-        <View style={styles.innerContainer}>
+        <View key={x} style={styles.innerContainer}>
           <View style={styles.bullet} />
 
           <Typography.Body5>{x}</Typography.Body5>
