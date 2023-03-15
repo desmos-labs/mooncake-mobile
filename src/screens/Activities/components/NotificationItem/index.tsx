@@ -42,15 +42,32 @@ const NotificationItem = (props: NotificationComponentProps) => {
       case NotificationType.ReactionReply:
       case NotificationType.ReactionComment:
       case NotificationType.ReactionPost:
-        return notification.reaction.author;
+        return notification.reaction?.author;
       case NotificationType.Comment:
-        return notification.comment.author;
+        return notification.comment?.author;
       case NotificationType.Reply:
-        return notification.reply.author;
+        return notification.reply?.author;
       case NotificationType.Follow:
         return notification.user;
       case NotificationType.InviteClaimed:
         return notification.claimer;
+      default:
+        return undefined;
+    }
+  }, [notification]);
+
+  const post = useMemo(() => {
+    switch (notification.type) {
+      case NotificationType.ReactionPost:
+        return notification.post;
+      case NotificationType.ReactionComment:
+        return notification.comment;
+      case NotificationType.ReactionReply:
+        return notification.reply;
+      case NotificationType.Comment:
+        return notification.comment;
+      case NotificationType.Reply:
+        return notification.reply;
       default:
         return undefined;
     }
@@ -107,23 +124,17 @@ const NotificationItem = (props: NotificationComponentProps) => {
   // -------------------------------------------------------------------------------------
 
   const RightElement = useMemo(() => {
-    switch (notification.type) {
-      case NotificationType.ReactionPost:
-        return <PostAttachmentsPreview post={notification.post} />;
-      case NotificationType.ReactionComment:
-        return <PostAttachmentsPreview post={notification.comment} />;
-      case NotificationType.ReactionReply:
-        return <PostAttachmentsPreview post={notification.reply} />;
-      case NotificationType.Comment:
-        return <PostAttachmentsPreview post={notification.comment} />;
-      case NotificationType.Reply:
-        return <PostAttachmentsPreview post={notification.reply} />;
-      case NotificationType.Follow:
-        return <ToggleFollowageButton user={notification.user} />;
-      default:
-        return null;
+    if (post) {
+      return <PostAttachmentsPreview post={post} />;
     }
-  }, [notification]);
+
+    if (notification.type === NotificationType.Follow) {
+      const { user } = notification;
+      return user && <ToggleFollowageButton user={user} />;
+    }
+
+    return null;
+  }, [notification, post]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
