@@ -15,10 +15,14 @@ export const useUpdateAuthToken = () => {
   const setToken = useSetAppStateValue('bearerToken');
   return React.useCallback(
     (newToken: string) => {
-      setToken(newToken);
-      axiosInstance.defaults.headers.common = {
-        Authorization: `Bearer ${newToken}`,
-      };
+      setToken(value => {
+        // Only update the token if the new one is not empty
+        const tokenValue = newToken.length > 0 ? newToken : value;
+        axiosInstance.defaults.headers.common = {
+          Authorization: `Bearer ${tokenValue}`,
+        };
+        return tokenValue;
+      });
     },
     [setToken],
   );
