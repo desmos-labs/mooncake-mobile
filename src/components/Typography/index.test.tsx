@@ -59,6 +59,12 @@ describe('component: Typography', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('renders H6', () => {
+    const tree = render(<Typography.H6>{testText}</Typography.H6>).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+
   it('renders Subtitle1', () => {
     const tree = render(<Typography.Subtitle1>{testText}</Typography.Subtitle1>).toJSON();
 

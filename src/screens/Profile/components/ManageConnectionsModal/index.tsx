@@ -43,7 +43,7 @@ const ManageConnectionsModal = () => {
         }),
       200,
     ); */
-  }, [goBack, navigate]);
+  }, [goBack]);
 
   const onPressManageConnectedTwitter = useCallback(() => {
     goBack();

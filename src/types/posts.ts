@@ -97,7 +97,7 @@ export interface Post {
 }
 
 export enum PostReferenceType {
-  POST_REFERENCE_TYPE_UNSPECIFIED = '  POST_REFERENCE_TYPE_UNSPECIFIED',
+  POST_REFERENCE_TYPE_UNSPECIFIED = 'POST_REFERENCE_TYPE_UNSPECIFIED',
   POST_REFERENCE_TYPE_REPLY = 'POST_REFERENCE_TYPE_REPLY',
   POST_REFERENCE_TYPE_QUOTE = 'POST_REFERENCE_TYPE_QUOTE',
   POST_REFERENCE_TYPE_REPOST = 'POST_REFERENCE_TYPE_REPOST',
@@ -150,7 +150,7 @@ export const isCommentTo = (post: Post, parentId: number): boolean => {
  * Tells whether the given {@param post} is a reply to a comment.
  */
 export const isCommentReply = (post: Post): boolean => {
-  return post.conversationId !== getReplyId(post);
+  return post.conversationId !== 0 && post.conversationId !== getReplyId(post);
 };
 
 export const isPostPending = (post: Post): boolean => {

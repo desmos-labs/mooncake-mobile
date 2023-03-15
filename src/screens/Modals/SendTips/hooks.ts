@@ -84,8 +84,7 @@ export const useValidateForm = (accountBalance: Coin[]) => {
   const coinBalance = useCoinBalance(accountBalance);
 
   // Tips config
-  const tipsFeePercentage = useTipFeePercentage();
-  const minTipValue = 1 + tipsFeePercentage / 100;
+  const minTipValue = 1;
   const maxTipValue = safeParseFloat(coinBalance.amount) * 0.99;
 
   return useCallback(

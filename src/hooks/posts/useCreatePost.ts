@@ -9,12 +9,12 @@ import {
 } from 'types/posts';
 import { err, Result } from 'neverthrow';
 import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
-import { useCreatePostState } from '@recoil/screens/createPostState';
+import { useCreatePostState, useResetCreatePostState } from '@recoil/screens/createPostState';
 import { useAppStateValue } from '@recoil/appState';
 import useUploadAssets from 'hooks/useUploadAssets';
 import { useActiveProfile } from '@recoil/profiles';
 import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
-import { useRemoveStoredPendingPost, useStorePost, useUpdatePostStatus } from '@recoil/posts';
+import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
 import { UploadAssetResult } from 'hooks/useUploadAsset';
 
 /**
@@ -100,9 +100,9 @@ const useCreatePost = () => {
 
   const subspaceId = useAppStateValue('subspaceId');
   const createPostState = useCreatePostState();
+  const resetCreatePostState = useResetCreatePostState();
 
   const storePost = useStorePost(activeProfile.address);
-  const updatePostStatus = useUpdatePostStatus(activeProfile.address);
   const deletePost = useRemoveStoredPendingPost(activeProfile.address);
 
   const uploadAssets = useUploadAssets();
@@ -157,8 +157,8 @@ const useCreatePost = () => {
         deletePost(post.subspaceId, post.externalId);
         setState({ type: CreatePostStateType.ERROR, error: result.error });
       } else {
-        // If there is no errors, update the post status to be synced
-        updatePostStatus(post, PostStatus.SYNCED);
+        // If the post creation was successful, reset the state
+        resetCreatePostState();
         setState({ type: CreatePostStateType.SUCCESS });
       }
       return result;
@@ -168,9 +168,9 @@ const useCreatePost = () => {
       broadcastTx,
       createPostState,
       deletePost,
+      resetCreatePostState,
       storePost,
       subspaceId,
-      updatePostStatus,
       uploadAssets,
     ],
   );

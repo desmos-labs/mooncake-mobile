@@ -180,6 +180,7 @@ export const manageConnectedTwitterProfileIcon = require('./images/manageConnect
 export const manageConnectedWalletsProfileIcon = require('./images/manageConnectedWalletProfile.png');
 export const addProfileIcon = require('./images/addProfileIcon.png');
 export const reportSuccessIcon = require('./images/reportSuccessIcon.png');
+export const communitiesBackgroundImage = require('./images/communities_background.png');
 
 // TX
 

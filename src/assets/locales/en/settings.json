@@ -25,6 +25,7 @@
   "thirdRow": "Butter does not store your secret recovery phrase; you are the owner of your secret recovery phrase.",
   "show recovery passphrase message": "This is the <0>ONLY WAY</0> to restore your account, write them down in the right order and save them somewhere safe. <1>NEVER SHARE</1> it with anyone",
   "security": "Security",
+  "applications": "Applications",
   "settings": "Settings",
   "website": "Website",
   "twitter": "Twitter",

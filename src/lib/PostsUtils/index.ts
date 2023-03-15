@@ -5,6 +5,7 @@ import { mediaToAny } from '@desmoslabs/desmjs/build/aminomessages/posts';
 import {
   Media,
   PostReference as DesmJSPostReference,
+  PostReferenceType,
 } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/desmjs';
 
@@ -44,7 +45,7 @@ const convertPostReference = (reference: PostReference): DesmJSPostReference => 
   return {
     postId: Long.fromNumber(reference.postId),
     position: Long.fromNumber(reference.position),
-    type: reference.type,
+    type: PostReferenceType[reference.type],
   };
 };
 
@@ -58,14 +59,15 @@ export const convertPostToMsgCreatePost = (post: Post): MsgCreatePostEncodeObjec
     value: {
       subspaceId: Long.fromNumber(post.subspaceId),
       sectionId: post.sectionId,
-      conversationId: Long.fromNumber(post.conversationId),
+      externalId: post.externalId,
       text: post.text,
-      attachments: post.attachments.map(convertPostAttachment),
-      referencedPosts: post.references.map(convertPostReference),
       entities: post.entities,
       tags: post.tags,
+      attachments: post.attachments.map(convertPostAttachment),
       author: post.author.address,
+      conversationId: Long.fromNumber(post.conversationId),
       replySettings: post.replySettings,
+      referencedPosts: post.references.map(convertPostReference),
     },
   } as MsgCreatePostEncodeObject;
 };
