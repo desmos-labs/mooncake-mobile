@@ -25,14 +25,12 @@ export interface Props {
      */
     onPress: () => void;
   }[];
-
-  onMenuOpen?: () => void;
 }
 
 /**
  * A floating context menu that provides additional options to the user once opened.
  */
-const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
+const PopupMenu: React.FC<Props> = ({ menuItems }) => {
   const styles = useStyles();
 
   const { t } = useTranslation('a11y');
@@ -67,7 +65,6 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t('showPostActions')}
-        onPress={onMenuOpen}
         {...triggerProps}>
         <Image source={moreBlackIcon} style={styles.menuButton} />
       </Pressable>
