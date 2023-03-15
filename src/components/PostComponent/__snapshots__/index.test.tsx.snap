@@ -35,7 +35,6 @@ exports[`component: PostComponent renders 1`] = `
               "fontStyle": "normal",
               "fontWeight": "600",
               "letterSpacing": 0.0015,
-              "lineHeight": 48,
               "textAlign": "left",
             },
           ],

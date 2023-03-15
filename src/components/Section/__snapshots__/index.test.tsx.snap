@@ -3136,7 +3136,6 @@ exports[`component: Section renders with title 1`] = `
                   "fontStyle": "normal",
                   "fontWeight": "600",
                   "letterSpacing": 0.0125,
-                  "lineHeight": 21,
                   "textAlign": "left",
                 },
               ],
