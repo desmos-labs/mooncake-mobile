@@ -10,7 +10,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'native-base';
 import { ApplicationLink } from 'types/desmos';
 import useStyles from './useStyles';
 

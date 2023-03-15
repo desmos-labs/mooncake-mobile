@@ -2,7 +2,7 @@ import { makeStyle } from 'config/theme';
 import React, { useState } from 'react';
 import { Keyboard, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 

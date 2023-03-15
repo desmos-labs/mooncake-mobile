@@ -18,7 +18,7 @@ import { StdFee } from '@cosmjs/amino';
 import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {

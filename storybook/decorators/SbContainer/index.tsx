@@ -1,10 +1,9 @@
 import React, {ReactNode} from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
-import DarkTheme from 'config/theme/DarkTheme';
-import LightTheme from 'config/theme/LightTheme';
 import {Switch, ColorValue, View, Text} from 'react-native';
 import {useMMKVBoolean} from 'react-native-mmkv';
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import {NativeBaseProvider} from "native-base";
+import customTheme from "config/theme/CustomTheme";
 
 interface Props {
   children?: ReactNode;
@@ -30,11 +29,12 @@ const SbContainer: React.FC<Props> = ({
   // but this is fine, as it is only used to control the background color of the
   // container view
   // However, it should be used sparingly.
-  const theme = isDarkMode ? DarkTheme : LightTheme;
+  // TODO implement dark mode for native base
+  const theme = isDarkMode? customTheme : customTheme;
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={isDarkMode ? DarkTheme : LightTheme}>
+      <NativeBaseProvider theme={theme}>
         <View
           style={{
             flex: 1,
@@ -71,7 +71,7 @@ const SbContainer: React.FC<Props> = ({
             />
           </View>
         </View>
-      </PaperProvider>
+      </NativeBaseProvider>
     </SafeAreaProvider>
   );
 };

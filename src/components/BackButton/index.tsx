@@ -2,7 +2,7 @@ import { makeStyle } from 'config/theme';
 import React from 'react';
 import { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export type Props = {

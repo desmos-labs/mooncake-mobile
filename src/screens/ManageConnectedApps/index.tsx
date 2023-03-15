@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnectedItem';
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
 import { useActiveAccount } from '@recoil/accounts';

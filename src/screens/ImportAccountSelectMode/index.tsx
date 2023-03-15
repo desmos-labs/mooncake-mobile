@@ -14,7 +14,7 @@ import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
 import { connectLedger, importPhrase } from 'assets/images';
 import Spacer from 'components/Spacer';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import ShadowButton from 'components/ShadowButton';
 import useStyles from './useStyles';
 

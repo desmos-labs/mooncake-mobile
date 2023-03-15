@@ -3,7 +3,7 @@ import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';

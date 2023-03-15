@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React, { Fragment, useCallback } from 'react';
-import { Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
-import { Divider, Menu } from 'react-native-paper';
+import { Image, ImageSourcePropType, Text, TouchableOpacity, View } from 'react-native';
+import { Divider, HamburgerIcon, Menu, Pressable } from 'native-base';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -20,6 +20,23 @@ const PopupMenu: React.FC<Props> = ({ anchor, visible, closeMenu, menuItems }) =
       item.onPress();
     },
     [closeMenu],
+  );
+
+  // temporarily stub implementation
+  return (
+    <Menu
+      style={styles.container}
+      isOpen={visible}
+      onClose={closeMenu}
+      trigger={triggerProps => {
+        return (
+          <Pressable {...triggerProps} opacity={0}>
+            <HamburgerIcon />
+          </Pressable>
+        );
+      }}>
+      <Text>Stubbed function</Text>
+    </Menu>
   );
 
   return (

@@ -14,7 +14,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import VersionString from 'screens/Settings/components/VersionString';
 import useStyles from 'screens/Settings/useStyles';
 import useFormatDateToTZ from 'hooks/formatting/useFormatDateToTZ';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import {

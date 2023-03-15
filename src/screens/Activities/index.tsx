@@ -10,7 +10,7 @@ import Typography from 'components/Typography';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'native-base';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';

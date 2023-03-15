@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import {
   Extrapolate,
   interpolate,

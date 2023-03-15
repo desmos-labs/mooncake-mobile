@@ -28,7 +28,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Dimensions, View } from 'react-native';
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { verticalScale } from 'react-native-size-matters';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';

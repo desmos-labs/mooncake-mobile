@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, ImageProps, TouchableOpacity } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Typography from '../Typography';
 import useStyles from './useStyles';

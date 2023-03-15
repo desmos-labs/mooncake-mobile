@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Animated, {
   FadeIn,
   FadeOut,

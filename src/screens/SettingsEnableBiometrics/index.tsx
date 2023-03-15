@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useSetSetting } from '@recoil/settings';
 import useStyles from 'screens/SettingsEnableBiometrics/useStyles';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { SecureStorageErrorType } from 'lib/SecureStorage/errors';
 import {
   FormValues,

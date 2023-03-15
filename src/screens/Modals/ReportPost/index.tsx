@@ -11,7 +11,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
 import useReportPost from 'hooks/reports/useReportPost';

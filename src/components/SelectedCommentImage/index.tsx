@@ -11,7 +11,7 @@ import {
 import { whiteCross } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 
 interface Props extends Omit<ImageProps, 'style' | 'source'> {

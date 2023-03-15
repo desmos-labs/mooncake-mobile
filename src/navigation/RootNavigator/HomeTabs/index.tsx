@@ -5,7 +5,7 @@ import HomeTabBar from 'navigation/RootNavigator/HomeTabs/components/HomeTabBar'
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { StatusBar, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Home from 'screens/Home';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';

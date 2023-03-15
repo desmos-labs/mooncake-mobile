@@ -11,6 +11,7 @@ import { ToastProvider } from 'react-native-toast-notifications';
 import { RecoilRoot } from 'recoil';
 import useClient from 'services/graphql/useClient';
 import { ViewProps } from 'react-native';
+import customTheme from 'config/theme/CustomTheme';
 
 /**
  * Provider that allows to easily get the context allowing to show
@@ -52,7 +53,7 @@ function App(): JSX.Element {
   return (
     <SafeAreaProvider>
       <RecoilRoot>
-        <NativeBaseProvider>
+        <NativeBaseProvider theme={customTheme}>
           <ButterToastProvider>
             <ButterApolloClientProvider>
               <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>

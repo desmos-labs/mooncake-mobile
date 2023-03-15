@@ -5,7 +5,7 @@ import Typography from 'components/Typography';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { TwitterTweet, TwitterUser } from 'types/twitter';
 import useStyles from './useStyles';
 

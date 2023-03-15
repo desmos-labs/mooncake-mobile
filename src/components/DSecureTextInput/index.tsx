@@ -1,7 +1,7 @@
 import { eyeClosed, eyeOpen } from 'assets/images';
 import DTextInput, { Props as DTextInputProps } from 'components/DTextInput';
 import React, { useState } from 'react';
-import { IconButton, useTheme } from 'react-native-paper';
+import { IconButton, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur, ...rest }) => {

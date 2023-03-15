@@ -20,7 +20,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   FadeIn,

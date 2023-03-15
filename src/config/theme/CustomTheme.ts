@@ -1,8 +1,11 @@
-import { DefaultTheme } from 'react-native-paper';
+import { extendTheme } from 'native-base';
 import { addAlphaToHex } from 'config/theme/index';
 
-const LightTheme: ReactNativePaper.Theme = {
-  ...DefaultTheme,
+/**
+ * A custom theme created by extending native-base base theme. Some colors retain their material-ui names as they were
+ * imported from the previous material-ui stylesheet.
+ */
+const customTheme = extendTheme({
   spacing: {
     xs: 4,
     s: 8,
@@ -12,11 +15,6 @@ const LightTheme: ReactNativePaper.Theme = {
   },
   roundness: 14,
   colors: {
-    ...DefaultTheme.colors,
-    // override default colors for compatibility with
-    // default MUI colors
-
-    // when using colors, try to use the custom ones below instead
     primary: '#FEB027',
     background: '#F7F8FA',
     surface: '#EFEFEF',
@@ -91,6 +89,13 @@ const LightTheme: ReactNativePaper.Theme = {
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
     blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
   },
-};
+});
 
-export default LightTheme;
+// Extend native-base ICustomTheme interface for typescript support.
+type CustomThemeType = typeof customTheme;
+
+declare module 'native-base' {
+  interface ICustomTheme extends CustomThemeType {}
+}
+
+export default customTheme;

@@ -5,7 +5,7 @@ import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, Linking, ListRenderItemInfo, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import NoTweets from 'screens/SelectTweet/components/NoConnections';
 import TweetListItem from 'screens/SelectTweet/components/TweetListItem';
 import { TwitterTweet } from 'types/twitter';

@@ -8,7 +8,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import SettingsCommunityButton from './components/SettingsCommunityButton';
 import useStyles from './useStyles';
 

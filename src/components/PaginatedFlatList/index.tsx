@@ -4,7 +4,7 @@ import {
   FlashListProps,
   ListRenderItemInfo as FlashListRenderItemInfo,
 } from '@shopify/flash-list';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { ActivityIndicator } from 'react-native';
 
 export type ListRenderItemInfo<T> = FlashListRenderItemInfo<T>;

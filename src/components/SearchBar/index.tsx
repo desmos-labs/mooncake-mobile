@@ -1,7 +1,7 @@
 import { magnifyingGlass } from 'assets/images';
 import React from 'react';
 import { Image, TextInput, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {

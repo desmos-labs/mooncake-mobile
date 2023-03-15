@@ -3,7 +3,7 @@ import DView from 'components/DView';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import Spacer from 'components/Spacer';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useTranslation } from 'react-i18next';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';

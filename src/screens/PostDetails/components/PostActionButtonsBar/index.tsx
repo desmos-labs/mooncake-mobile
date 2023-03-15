@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { Divider } from 'react-native-paper';
+import { Divider } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {

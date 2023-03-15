@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { Text, useTheme } from 'native-base';
 import { useAppStateValue } from '@recoil/appState';
 import { usePerformImportAccount } from 'screens/Landing/hooks';
 import useStyles from './useStyles';
