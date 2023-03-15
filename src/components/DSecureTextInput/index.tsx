@@ -1,7 +1,8 @@
 import { eyeClosed, eyeOpen } from 'assets/images';
 import DTextInput, { Props as DTextInputProps } from 'components/DTextInput';
 import React, { useState } from 'react';
-import { IconButton, useTheme } from 'native-base';
+import { Pressable, useTheme } from 'native-base';
+import { Image } from 'react-native';
 import useStyles from './useStyles';
 
 const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur, ...rest }) => {
@@ -38,14 +39,13 @@ const DSecureTextInput: React.FC<DTextInputProps> = ({ onOuterFocus, onOuterBlur
         // error && styles.error, focused && styles.focused
       ]}
       rightElement={
-        <IconButton
+        <Pressable
           accessibilityLabel={`${a11yLabel}-${hideText ? 'hidden' : 'visible'}`}
-          icon={hideText ? eyeOpen : eyeClosed}
-          color={iconColor}
           onPress={() => {
             setHideText(old => !old);
-          }}
-        />
+          }}>
+          <Image style={styles.icon} source={hideText ? eyeOpen : eyeClosed} />
+        </Pressable>
       }
     />
   );

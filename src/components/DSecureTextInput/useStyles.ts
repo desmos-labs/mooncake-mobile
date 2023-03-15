@@ -14,6 +14,10 @@ const useStyles = makeStyle(theme => ({
     borderRadius: theme.roundness,
     borderColor: theme.colors.pink01,
   },
+  icon: {
+    width: 32 * 0.75,
+    height: 24 * 0.75,
+  },
 }));
 
 export default useStyles;
