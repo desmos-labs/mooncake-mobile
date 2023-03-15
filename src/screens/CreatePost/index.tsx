@@ -1,5 +1,5 @@
 import Typography from 'components/Typography';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import DView from 'components/DView';
 import { TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
@@ -78,6 +78,9 @@ const CreatePost = () => {
   });
 
   const [loading, setLoading] = useState<boolean>(false);
+  const canCreatePost = useMemo(() => {
+    return postText.trim().length > 0 || postAttachments.length > 0;
+  }, [postAttachments.length, postText]);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -110,12 +113,21 @@ const CreatePost = () => {
         backgroundColor={theme.colors.primary}
         textColor={theme.colors.white}
         size={ButtonSize.S}
+        disabled={!canCreatePost}
         onPress={handleCreatePost}
         additionalStyle={styles.postButton}>
         {t('post')}
       </Button>
     );
-  }, [handleCreatePost, loading, styles.postButton, styles.postButtonText, t]);
+  }, [
+    canCreatePost,
+    handleCreatePost,
+    loading,
+    styles.postButton,
+    t,
+    theme.colors.primary,
+    theme.colors.white,
+  ]);
 
   const TopBarCenterElement = React.useMemo(() => {
     if (!parent) return undefined;
