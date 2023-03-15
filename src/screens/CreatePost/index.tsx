@@ -1,9 +1,9 @@
 import Typography from 'components/Typography';
 import React, { useState } from 'react';
 import DView from 'components/DView';
-import { Platform, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
-import Button from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
@@ -106,11 +106,13 @@ const CreatePost = () => {
     return (
       <Button
         loading={loading}
-        mode="contained"
+        mode={ButtonMode.CONTAINED}
+        backgroundColor={theme.colors.primary}
+        textColor={theme.colors.white}
+        size={ButtonSize.S}
         onPress={handleCreatePost}
-        contentStyle={Platform.OS === 'android' && { height: '100%', width: 64 }}
-        style={styles.postButton}>
-        <Typography.Button3 style={styles.postButtonText}>{t('post')}</Typography.Button3>
+        additionalStyle={styles.postButton}>
+        {t('post')}
       </Button>
     );
   }, [handleCreatePost, loading, styles.postButton, styles.postButtonText, t]);

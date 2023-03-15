@@ -22,18 +22,18 @@ import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';
+import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import {
+  useHandlePressReaction,
+  useHandlePressSendTips,
+  useHandlePressShowCommentDetails,
+} from 'screens/PostDetails/hooks';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
-  readonly handlePressMore: (event: GestureResponderEvent) => void;
-  readonly handlePressComment: () => void;
-  readonly handlePressLike: () => void;
-  readonly handlePressTip: () => void;
-  readonly handlePress?: () => void;
-  readonly handleProfilePicPress?: () => void;
-  readonly handleLongPress?: (event: GestureResponderEvent) => void;
   readonly disableInnerComment?: boolean;
+  readonly handlePressMore: (event: GestureResponderEvent) => void;
 }
 
 /**
@@ -44,17 +44,7 @@ const CommentItem = (props: CommentItemProps) => {
   const styles = useStyles(props);
   const { t } = useTranslation();
 
-  const {
-    comment,
-    disableInnerComment,
-    handlePressComment,
-    handlePressLike,
-    handlePressMore,
-    handlePressTip,
-    handlePress,
-    handleLongPress,
-    handleProfilePicPress,
-  } = props;
+  const { comment, handlePressMore, disableInnerComment } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -64,12 +54,16 @@ const CommentItem = (props: CommentItemProps) => {
   const hasReacted = useHasReacted(comment);
   const { count: reactionsCount } = usePostReactionsCount(comment);
   const { count: tipsCount } = usePostTipsCount(comment);
-
+  const handleNavigateToProfile = useNavigateToProfile();
+  const handlePressReaction = useHandlePressReaction();
+  const handlePressSendTips = useHandlePressSendTips();
+  const handleShowCommentDetails = useHandlePressShowCommentDetails();
   // -------------------------------------------------------------------------------------
   // --- Formatted data
   // -------------------------------------------------------------------------------------
 
-  const formattedDate = useFormatTimeForPostDetails(comment.creationDate);
+  const formatDate = useFormatTimeForPostDetails();
+  const formattedDate = formatDate(comment.creationDate);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -90,19 +84,30 @@ const CommentItem = (props: CommentItemProps) => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
+  const handlePressLike = () => {
+    if (isPostPending(comment)) return;
+    handlePressReaction(comment);
+  };
+  const handlePressTip = () => {
+    if (isPostPending(comment)) return;
+    handlePressSendTips(comment);
+  };
+  const handlePress = () => {
+    if (isPostPending(comment)) return;
+    handleShowCommentDetails(comment);
+  };
+
   return (
     <View style={[styles.container, styles.flexRow]}>
-      <TouchableOpacity onPress={handleProfilePicPress}>
+      <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
         <FastImage source={getProfilePicture(comment.author)} style={styles.avatar} />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={handlePress}
-        onLongPress={handleLongPress}
-        activeOpacity={handlePress ? 0.8 : 1}
-        style={styles.flex}>
+      <TouchableOpacity onPress={handlePress} style={styles.flex}>
         <View style={styles.contentContainer}>
-          <TouchableOpacity style={styles.flexRow} onPress={handleProfilePicPress}>
+          <TouchableOpacity
+            style={styles.flexRow}
+            onPress={() => handleNavigateToProfile(comment.author.address)}>
             <View>
               <Typography.Subtitle3 style={styles.textStyle}>
                 {comment.author.nickname ? comment.author.nickname : t('no nickname')}
@@ -130,7 +135,7 @@ const CommentItem = (props: CommentItemProps) => {
 
           <View style={styles.interactionButtonGroup}>
             {!disableInnerComment && (
-              <TouchableOpacity onPress={handlePressComment} style={styles.interactionButton}>
+              <TouchableOpacity style={styles.interactionButton}>
                 <Image source={commentIcon} style={[styles.buttonImage, styles.interactionImage]} />
                 <Typography.Subtitle3 style={styles.textStyle}>
                   {formatNumShorthand(commentsCount)}

@@ -30,7 +30,7 @@ exports[`component: Button renders button contained mode color white size 32 1`]
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -70,7 +70,7 @@ exports[`component: Button renders button contained mode color white size 32 1`]
                 "fontStyle": "normal",
                 "fontWeight": "600",
                 "letterSpacing": 0.015,
-                "lineHeight": 21,
+                "lineHeight": 19,
                 "textAlign": "left",
               },
             ],
@@ -115,7 +115,7 @@ exports[`component: Button renders button outlined mode color white size 44 1`] 
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -157,7 +157,7 @@ exports[`component: Button renders button outlined mode color white size 44 1`] 
                 "fontStyle": "normal",
                 "fontWeight": "600",
                 "letterSpacing": 0.015,
-                "lineHeight": 21,
+                "lineHeight": 19,
                 "textAlign": "left",
               },
             ],
@@ -202,7 +202,7 @@ exports[`component: Button renders button text contained color white size 56 1`]
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -242,7 +242,7 @@ exports[`component: Button renders button text contained color white size 56 1`]
                 "fontStyle": "normal",
                 "fontWeight": "600",
                 "letterSpacing": 0.015,
-                "lineHeight": 21,
+                "lineHeight": 19,
                 "textAlign": "left",
               },
             ],
@@ -287,7 +287,7 @@ exports[`component: Button renders button text mode color white size 26 1`] = `
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -327,7 +327,7 @@ exports[`component: Button renders button text mode color white size 26 1`] = `
                 "fontStyle": "normal",
                 "fontWeight": "600",
                 "letterSpacing": 0.015,
-                "lineHeight": 21,
+                "lineHeight": 19,
                 "textAlign": "left",
               },
             ],
@@ -372,7 +372,7 @@ exports[`component: Button renders button text mode color white size 56 1`] = `
     }
     accessible={true}
     collapsable={false}
-    focusable={false}
+    focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -412,7 +412,7 @@ exports[`component: Button renders button text mode color white size 56 1`] = `
                 "fontStyle": "normal",
                 "fontWeight": "600",
                 "letterSpacing": 0.015,
-                "lineHeight": 21,
+                "lineHeight": 19,
                 "textAlign": "left",
               },
             ],
