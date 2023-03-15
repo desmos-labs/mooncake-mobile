@@ -200,7 +200,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           textColor="white"
           mode={ButtonMode.CONTAINED}
           size={44}
-          onPress={() => navigateToHome()}>
+          onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
           Continue to Home screen
         </Button>
         <Button onPress={testBroadcastTx} mode={ButtonMode.OUTLINED} size={32}>
