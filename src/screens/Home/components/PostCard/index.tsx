@@ -100,10 +100,10 @@ const PostCard = (props: PostCardProps) => {
   const { count: commentsCount } = usePostCommentsCount(post);
 
   // -------------------------------------------------------------------------------------
-  // --- Menu Items
+  // --- Popup Menu Items
   // -------------------------------------------------------------------------------------
 
-  const menuItems = React.useMemo(
+  const popupMenuItems = React.useMemo(
     () => [
       {
         label: isFollowing ? t('unfollow') : t('follow'),
@@ -173,9 +173,9 @@ const PostCard = (props: PostCardProps) => {
     if (isPending) {
       return <ThemedLottieView source={loadingOrange} autoPlay style={styles.pendingIcon} />;
     } else if (!isCurrentUserAuthor) {
-      return <PopupMenu menuItems={menuItems} />;
+      return <PopupMenu menuItems={popupMenuItems} />;
     }
-  }, [menuItems, isPending, isCurrentUserAuthor, styles.pendingIcon]);
+  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon]);
 
   const ProfileInfo = React.useMemo(() => {
     return (

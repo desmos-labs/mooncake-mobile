@@ -89,14 +89,14 @@ const CommentItem = (props: CommentItemProps) => {
   });
 
   // -------------------------------------------------------------------------------------
-  // --- Menu Items
+  // --- Popup Menu Items
   // -------------------------------------------------------------------------------------
 
   const isFollowing = useIsFollowing(comment.author.address);
   const handlePressFollow = useHandlePressFollow();
   const handlePressReport = useHandlePressReport();
 
-  const menuItems = React.useMemo(
+  const popupMenuItems = React.useMemo(
     () => [
       {
         label: isFollowing ? t('home:unfollow') : t('home:follow'),
@@ -142,7 +142,7 @@ const CommentItem = (props: CommentItemProps) => {
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={loadingOrange} style={styles.loadingAnim} />
           ) : (
-            <PopupMenu menuItems={menuItems} />
+            <PopupMenu menuItems={popupMenuItems} />
           )}
         </View>
         {MediaAttachment}

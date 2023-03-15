@@ -146,6 +146,28 @@ const PostDetails = () => {
   } = usePostInteractionsAuthors(postData, 3);
 
   // -------------------------------------------------------------------------------------
+  // --- Popup Menu Items
+  // -------------------------------------------------------------------------------------
+
+  const popupMenuItems = React.useMemo(
+    () => [
+      {
+        icon: shareBlackIcon,
+        label: t('share'),
+        onPress: () => console.log('share'),
+      },
+      {
+        icon: reportIcon,
+        label: t('report'),
+        onPress: () => {
+          handlePressReportPost(post!);
+        },
+      },
+    ],
+    [handlePressReportPost],
+  );
+
+  // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
@@ -309,22 +331,7 @@ const PostDetails = () => {
                 />
               )}
               <Spacer paddingLeft="s" />
-              <PopupMenu
-                menuItems={[
-                  {
-                    icon: shareBlackIcon,
-                    label: t('share'),
-                    onPress: () => console.log('share'),
-                  },
-                  {
-                    icon: reportIcon,
-                    label: t('report'),
-                    onPress: () => {
-                      handlePressReportPost(post!);
-                    },
-                  },
-                ]}
-              />
+              <PopupMenu menuItems={popupMenuItems} />
             </HStack>
           }
         />
