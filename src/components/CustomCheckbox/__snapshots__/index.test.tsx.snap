@@ -167,7 +167,7 @@ exports[`component: CustomCheckbox renders error 1`] = `
             "width": 24,
           },
           {
-            "tintColor": "#25282D",
+            "tintColor": "#FD565F",
           },
           {
             "tintColor": "#1EC490",

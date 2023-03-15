@@ -149,7 +149,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -226,7 +225,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -303,7 +301,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -395,7 +392,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -472,7 +468,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -549,7 +544,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -641,7 +635,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -718,7 +711,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -795,7 +787,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -887,7 +878,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -964,7 +954,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1041,7 +1030,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1133,7 +1121,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1210,7 +1197,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1287,7 +1273,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1379,7 +1364,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1456,7 +1440,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1533,7 +1516,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1625,7 +1607,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1702,7 +1683,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1779,7 +1759,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1871,7 +1850,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -1948,7 +1926,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
@@ -2025,7 +2002,6 @@ exports[`component: MnemonicGrid renders 1`] = `
                       "fontStyle": "normal",
                       "fontWeight": "400",
                       "letterSpacing": 0.025,
-                      "lineHeight": 21,
                       "textAlign": "left",
                     },
                   ]
