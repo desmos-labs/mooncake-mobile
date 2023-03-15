@@ -503,7 +503,7 @@ const PostDetails = () => {
             icon: reportIcon,
             label: t('report'),
             onPress: () => {
-              handlePressReportPost(popupMenuParams!.post);
+              handlePressReportPost(post);
             },
           },
         ]}
