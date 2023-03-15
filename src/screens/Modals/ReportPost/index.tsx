@@ -17,6 +17,7 @@ import { useAppStateValue } from '@recoil/appState';
 import useReportPost from 'hooks/reports/useReportPost';
 import FastImage from 'react-native-fast-image';
 import { reportSuccessIcon } from 'assets/images';
+import { isPostAlreadyReportedError } from 'types/error';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -74,6 +75,11 @@ const ReportPost = () => {
     setLoading(false);
 
     if (result.isErr()) {
+      if (isPostAlreadyReportedError(result.error)) {
+        // TODO: Do something here - Maybe even nothing?
+        return;
+      }
+
       // TODO: Do something here -> waiting for design
       console.log('Error while reporting a post', result.error.message);
     } else {
@@ -83,7 +89,7 @@ const ReportPost = () => {
 
   const successfulReportComponent = useMemo(() => {
     return (
-      <View style={styles.successfullReport}>
+      <View style={styles.successfulReport}>
         <FastImage source={reportSuccessIcon} style={styles.reportIcon} />
         <Typography.H4 style={styles.headerText}>{t('thanks for reporting')}</Typography.H4>
         <Spacer paddingBottom={theme.spacing.m} />
@@ -92,7 +98,14 @@ const ReportPost = () => {
         </Typography.Body5>
       </View>
     );
-  }, []);
+  }, [
+    styles.headerText,
+    styles.reportIcon,
+    styles.reportSuccessText,
+    styles.successfulReport,
+    t,
+    theme.spacing.m,
+  ]);
 
   return (
     <KeyboardAvoidingView

@@ -7,7 +7,10 @@ import Long from 'long';
 import { Post } from 'types/posts';
 import { postTargetToAny } from '@desmoslabs/desmjs/build/aminomessages/reports';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
+import useBroadcastTx, { SuccessfulBroadcast } from 'hooks/transactions/useBroadcastTx';
+import useHasReportedPost from 'hooks/reports/useHasReportedPost';
+import { err, Result } from 'neverthrow';
+import { PostAlreadyReportedError } from 'types/error';
 
 /**
  * Hook that allows to report the given post for a given reason and with an optional message.
@@ -19,10 +22,16 @@ const useReportPost = (post: Post) => {
     throw new Error('Trying to report a post without an active account');
   }
 
+  const hasReportedPost = useHasReportedPost();
   const broadcastTx = useBroadcastTx();
 
   return React.useCallback(
-    async (message: string, reasonsIds: number[]) => {
+    async (message: string, reasonsIds: number[]): Promise<Result<SuccessfulBroadcast, Error>> => {
+      const isReported = await hasReportedPost(post.subspaceId, post.id);
+      if (isReported) {
+        return err(new PostAlreadyReportedError());
+      }
+
       // Create the message
       const msg: MsgCreateReportEncodeObject = {
         typeUrl: GrantEnums.MsgCreateReport,
@@ -42,7 +51,7 @@ const useReportPost = (post: Post) => {
         optimistic: true,
       });
     },
-    [activeAddress, broadcastTx, post.id],
+    [activeAddress, broadcastTx, hasReportedPost, post.id, post.subspaceId],
   );
 };
 
