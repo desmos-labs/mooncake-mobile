@@ -6,7 +6,7 @@ import {RecoilRoot} from 'recoil';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {MeasureOptions, measurePerformance} from '@callstack/reassure-measure';
-import customTheme from "config/theme/CustomTheme";
+import lightTheme from "config/theme/LightTheme";
 
 /**
  * A custom render function for use in unit tests for components that
@@ -16,7 +16,7 @@ const AllTheProviders: FC<{children: React.ReactElement}> = ({children}) => {
   return (
     <RecoilRoot>
       <NavigationContainer>
-        <NativeBaseProvider theme={customTheme}>
+        <NativeBaseProvider theme={lightTheme}>
           <SafeAreaProvider style={{flex: 1}}>{children}</SafeAreaProvider>
         </NativeBaseProvider>
       </NavigationContainer>

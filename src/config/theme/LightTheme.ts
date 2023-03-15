@@ -5,7 +5,7 @@ import { addAlphaToHex } from 'config/theme/index';
  * A custom theme created by extending native-base base theme. Some colors retain their material-ui names as they were
  * imported from the previous material-ui stylesheet.
  */
-const customTheme = extendTheme({
+const lightTheme = extendTheme({
   spacing: {
     xs: 4,
     s: 8,
@@ -92,10 +92,10 @@ const customTheme = extendTheme({
 });
 
 // Extend native-base ICustomTheme interface for typescript support.
-type CustomThemeType = typeof customTheme;
+type CustomThemeType = typeof lightTheme;
 
 declare module 'native-base' {
   interface ICustomTheme extends CustomThemeType {}
 }
 
-export default customTheme;
+export default lightTheme;

@@ -3,7 +3,7 @@ import {Switch, ColorValue, View, Text} from 'react-native';
 import {useMMKVBoolean} from 'react-native-mmkv';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {NativeBaseProvider} from "native-base";
-import customTheme from "config/theme/CustomTheme";
+import lightTheme from "config/theme/LightTheme";
 
 interface Props {
   children?: ReactNode;
@@ -30,7 +30,7 @@ const SbContainer: React.FC<Props> = ({
   // container view
   // However, it should be used sparingly.
   // TODO implement dark mode for native base
-  const theme = isDarkMode? customTheme : customTheme;
+  const theme = isDarkMode? lightTheme : lightTheme;
 
   return (
     <SafeAreaProvider>
