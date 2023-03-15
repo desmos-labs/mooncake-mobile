@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from 'components/Typography';
 import { Image, ImageSourcePropType } from 'react-native';
-import { Divider, HStack, Menu, Pressable } from 'native-base';
+import { Box, Divider, HStack, Menu, Pressable } from 'native-base';
 import { moreBlackIcon } from 'assets/images';
 import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +43,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   const menuOptions = React.useMemo(() => {
     return menuItems.map((item, idx) => {
       return (
-        <>
+        <Box id={item.label}>
           <Menu.Item
             accessibilityLabel={item.label}
             accessibilityRole="button"
@@ -54,7 +54,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
             </HStack>
           </Menu.Item>
           {idx !== menuItems.length - 1 && <Divider />}
-        </>
+        </Box>
       );
     });
   }, [menuItems]);
