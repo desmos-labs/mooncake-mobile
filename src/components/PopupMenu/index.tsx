@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from 'components/Typography';
 import { Image, ImageSourcePropType } from 'react-native';
-import { HStack, Menu, Pressable } from 'native-base';
+import { Divider, HStack, Menu, Pressable } from 'native-base';
 import { moreBlackIcon } from 'assets/images';
 import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';
 import { useTranslation } from 'react-i18next';
@@ -41,17 +41,20 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
    * Memoize the menu items to prevent re-renders.
    */
   const menuOptions = React.useMemo(() => {
-    return menuItems.map(item => {
+    return menuItems.map((item, idx) => {
       return (
-        <Menu.Item
-          accessibilityLabel={item.label}
-          accessibilityRole="button"
-          onPress={item.onPress}>
-          <HStack>
-            <Image source={item.icon} style={styles.icon} />
-            <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
-          </HStack>
-        </Menu.Item>
+        <>
+          <Menu.Item
+            accessibilityLabel={item.label}
+            accessibilityRole="button"
+            onPress={item.onPress}>
+            <HStack alignItems="center">
+              <Image source={item.icon} style={styles.icon} />
+              <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
+            </HStack>
+          </Menu.Item>
+          {idx !== menuItems.length - 1 && <Divider />}
+        </>
       );
     });
   }, [menuItems]);
@@ -74,7 +77,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   }, []);
 
   return (
-    <Menu placement="bottom" trigger={menuTriggerFn}>
+    <Menu placement="left top" trigger={menuTriggerFn} rounded="xl">
       {menuOptions}
     </Menu>
   );
