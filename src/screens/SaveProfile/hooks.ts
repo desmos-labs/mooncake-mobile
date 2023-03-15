@@ -173,22 +173,30 @@ export const useSubmitForm = (
       }
 
       // Get the profile to save
-      const profileToSave: DesmosProfile = {
+      const profileToSaveOnChain: DesmosProfile = {
         dTag: getValueToSave(values.dTag, profile?.dTag),
         nickname: getValueToSave(values.nickname, profile?.nickname),
         bio: getValueToSave(values.bio, profile?.bio),
         profilePicture: profilePic,
         coverPicture: coverPic,
         address: profileAddress,
-        creationTime: new Date(Date.now()).toISOString(),
+        creationTime: profile?.creationTime ?? new Date(Date.now()).toISOString(),
       };
 
-      // Store the profile locally
-      storeProfile(profileAddress, profileToSave);
+      // Store the profile locally by replacing the values with the previous ones (if undefined)
+      const profileToSaveLocally: DesmosProfile = {
+        ...profileToSaveOnChain,
+        dTag: profileToSaveOnChain.dTag ?? profile?.dTag,
+        nickname: profileToSaveOnChain.nickname ?? profile?.nickname,
+        bio: profileToSaveOnChain.bio ?? profile?.bio,
+        profilePicture: profileToSaveOnChain.profilePicture ?? profile?.profilePicture,
+        coverPicture: profileToSaveOnChain.coverPicture ?? profile?.coverPicture,
+      };
+      storeProfile(profileAddress, profileToSaveLocally);
 
       // Save the profile on-chain, if required
       if (saveOnChain) {
-        const result = await saveProfile(profileToSave, account);
+        const result = await saveProfile(profileToSaveOnChain, account);
         if (result.isErr()) {
           return result;
         }
