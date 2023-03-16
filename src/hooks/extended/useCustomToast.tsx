@@ -59,7 +59,9 @@ const useCustomToast = () => {
       toast.show({
         ...BaseToastConfig,
         id: toastId,
-        render: () => <CustomToast message={message} type={type} options={options} />,
+        render: () => (
+          <CustomToast message={message} type={type} options={{ ...options, id: toastId }} />
+        ),
       });
     },
     [toast],
@@ -86,10 +88,13 @@ const useCustomToast = () => {
     [showToast],
   );
 
+  const closeAll = () => toast.closeAll();
+
   return {
     success,
     error,
     errorNoRetry,
+    closeAll,
   };
 };
 
