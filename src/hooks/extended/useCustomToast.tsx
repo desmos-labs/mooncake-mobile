@@ -17,8 +17,7 @@ export enum ToastConfig {
  * Toast options for SUCCESS and ERROR_NO_RETRY toasts
  */
 interface ShowToastOptions {
-  message: string;
-
+  id?: string;
   handlePressToast?: () => void;
 }
 
@@ -52,37 +51,37 @@ const useCustomToast = () => {
   const toast = useToast();
 
   const showToast = React.useCallback(
-    (type: ToastConfig, options: ShowToastOptions | ShowErrorToastOptions, id?: string) => {
-      const toastId = generateToastId(id);
+    (type: ToastConfig, message: string, options: ShowToastOptions | ShowErrorToastOptions) => {
+      const toastId = generateToastId(options.id);
 
       if (toast.isActive(toastId)) return;
 
       toast.show({
         ...BaseToastConfig,
         id: toastId,
-        render: () => <CustomToast type={type} options={options} />,
+        render: () => <CustomToast message={message} type={type} options={options} />,
       });
     },
     [toast],
   );
 
   const success = React.useCallback(
-    (options: ShowToastOptions, id?: string) => {
-      showToast(ToastConfig.SUCCESS, options, id);
+    (message: string, options?: ShowToastOptions) => {
+      showToast(ToastConfig.SUCCESS, message, options || {});
     },
     [showToast],
   );
 
   const error = React.useCallback(
-    (options: ShowErrorToastOptions, id?: string) => {
-      showToast(ToastConfig.ERROR, options, id);
+    (message: string, options?: ShowErrorToastOptions) => {
+      showToast(ToastConfig.ERROR, message, options || {});
     },
     [showToast],
   );
 
   const errorNoRetry = React.useCallback(
-    (options: ShowToastOptions, id?: string) => {
-      showToast(ToastConfig.ERROR_NO_RETRY, options, id);
+    (message: string, options?: ShowToastOptions) => {
+      showToast(ToastConfig.ERROR_NO_RETRY, message, options || {});
     },
     [showToast],
   );

@@ -15,16 +15,16 @@ export interface Props {
    */
   type: ToastConfig;
 
-  options: {
-    message: string;
+  message: string;
 
+  options: {
     handlePressToast?: () => void;
 
     handlePressRetry?: () => void;
   };
 }
 
-const CustomToast = ({ type, options }: Props): JSX.Element => {
+const CustomToast = ({ type, message, options }: Props): JSX.Element => {
   const styles = useStyles(type);
   const theme = useTheme();
   const { t } = useTranslation('');
@@ -40,7 +40,7 @@ const CustomToast = ({ type, options }: Props): JSX.Element => {
             <Typography.Subtitle3>{t('common:oops')}</Typography.Subtitle3>
           )}
           <Typography.Body6 numberOfLines={2} style={{ color: theme.colors.surfaceBlack }}>
-            {options.message}
+            {message}
           </Typography.Body6>
         </View>
 
