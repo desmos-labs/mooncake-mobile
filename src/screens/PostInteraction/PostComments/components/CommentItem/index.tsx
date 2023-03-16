@@ -3,10 +3,11 @@ import {
   commentIcon,
   commentLiked,
   commentLikeEmptyIcon,
-  commentMore,
+  followBlackIcon,
+  reportIcon,
   tipIcon,
+  unfollowBlackIcon,
 } from 'assets/images';
-import ImageButton from 'components/ImageButton';
 import ThemedLottieView from 'components/ThemedLottieView';
 import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
@@ -14,7 +15,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import { formatNumShorthand } from 'lib/FormatUtils';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { isPostPending, Post } from 'types/posts';
 import { getProfilePicture } from 'lib/ProfileUtils';
@@ -28,12 +29,19 @@ import {
   useHandlePressSendTips,
   useHandlePressShowCommentDetails,
 } from 'screens/PostDetails/hooks';
+import PopupMenu from 'components/PopupMenu';
+import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import { useHandlePressFollow, useHandlePressReport } from 'screens/Home/hooks';
 import useStyles from './useStyles';
 
 export interface CommentItemProps {
   readonly comment: Post;
   readonly disableInnerComment?: boolean;
-  readonly handlePressMore: (event: GestureResponderEvent) => void;
+  // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
+  // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
+  readonly handlePressMore?: () => void;
+  // old implementation, for reference (marked for deletion)
+  // readonly handlePressMore: (event: GestureResponderEvent) => void;
 }
 
 /**
@@ -58,6 +66,10 @@ const CommentItem = (props: CommentItemProps) => {
   const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
   const handleShowCommentDetails = useHandlePressShowCommentDetails();
+  const isFollowing = useIsFollowing(comment.author.address);
+  const handlePressFollow = useHandlePressFollow();
+  const handlePressReport = useHandlePressReport();
+
   // -------------------------------------------------------------------------------------
   // --- Formatted data
   // -------------------------------------------------------------------------------------
@@ -97,6 +109,31 @@ const CommentItem = (props: CommentItemProps) => {
     handleShowCommentDetails(comment);
   };
 
+  // -------------------------------------------------------------------------------------
+  // --- Conditional Rendering
+  // -------------------------------------------------------------------------------------
+
+  /**
+   * Call handlePressMore if it has been passed as an argument, otherwise open a contextual popup menu where
+   * the user can follow or report the comment author.
+   */
+  const PressMoreComponent = React.useMemo(() => {
+    const menuItems = [
+      {
+        label: isFollowing ? t('home:unfollow') : t('home:follow'),
+        onPress: () => handlePressFollow(comment.author),
+        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
+      {
+        label: t('home:report'),
+        onPress: () => handlePressReport(comment),
+        icon: reportIcon,
+      },
+    ];
+
+    return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
+  }, [comment, handlePressFollow, handlePressMore, handlePressReport, isFollowing, t]);
+
   return (
     <View style={[styles.container, styles.flexRow]}>
       <TouchableOpacity onPress={() => handleNavigateToProfile(comment.author.address)}>
@@ -121,7 +158,7 @@ const CommentItem = (props: CommentItemProps) => {
           {isPostPending(comment) ? (
             <ThemedLottieView loop autoPlay source={loadingOrange} style={styles.loadingAnim} />
           ) : (
-            <ImageButton onPress={handlePressMore} image={commentMore} style={styles.buttonImage} />
+            PressMoreComponent
           )}
         </View>
         {MediaAttachment}

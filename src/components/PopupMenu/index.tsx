@@ -7,30 +7,35 @@ import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/t
 import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
-export interface Props {
+interface PopupMenuItem {
   /**
-   * The buttons that will be rendered in the menu.
+   * The icon of the item.
    */
-  menuItems: {
-    /**
-     * The icon of the item.
-     */
-    icon: ImageSourcePropType;
-    /**
-     * The label of the item.
-     */
-    label: string;
-    /**
-     * What to do when the item is pressed.
-     */
-    onPress: () => void;
-  }[];
+  icon: ImageSourcePropType;
+  /**
+   * The label of the item.
+   */
+  label: string;
+  /**
+   * What to do when the item is pressed.
+   */
+  onPress: () => void;
+}
+
+export interface Props {
+  menuItems: PopupMenuItem[];
+
+  /**
+   * An optional callback that is called when the menu is opened.
+   */
+  onMenuOpen?: () => void;
 }
 
 /**
  * A floating context menu that provides additional options to the user once opened.
+ * @constructor
  */
-const PopupMenu: React.FC<Props> = ({ menuItems }) => {
+const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   const styles = useStyles();
 
   const { t } = useTranslation('a11y');
@@ -74,7 +79,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems }) => {
   }, []);
 
   return (
-    <Menu placement="left top" trigger={menuTriggerFn} rounded="xl">
+    <Menu placement="left top" trigger={menuTriggerFn} rounded="xl" onOpen={onMenuOpen}>
       {menuOptions}
     </Menu>
   );
