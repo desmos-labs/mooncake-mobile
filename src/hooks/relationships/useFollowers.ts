@@ -89,7 +89,7 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   }, [onCompletedCallback, refetch]);
 
   return {
-    followers: [] as DesmosProfile[],
+    followers,
     loading,
     fetchMore: fetchMoreFollowers,
     fetchingMore,

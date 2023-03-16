@@ -84,7 +84,7 @@ export interface ReplyReactionNotificationData extends SocialNotificationData {
 export interface FollowNotificationData extends SocialNotificationData {
   readonly type: NotificationType.Follow;
   readonly subspaceId: number;
-  readonly follower: string;
+  readonly userAddress: string;
 }
 
 export interface InviteClaimedNotificationData extends SocialNotificationData {
@@ -143,24 +143,28 @@ export interface CompleteCommentNotification
   type: NotificationType.Comment;
   /**
    * Post that has been commented
+   * This is going to be `undefined` if the post has been deleted in the meanwhile.
    */
-  post: Post;
+  post: Post | undefined;
   /**
    * Comment that was added.
+   * This is going to be `undefined` if the comment has been deleted in the meanwhile.
    */
-  comment: Post;
+  comment: Post | undefined;
 }
 
 export interface CompleteReplyNotification extends CompleteNotificationData, ReplyNotificationData {
   type: NotificationType.Reply;
   /**
    * Comment that has been replied to.
+   * This is going to be `undefined` if the comment has been deleted in the meanwhile.
    */
-  comment: Post;
+  comment: Post | undefined;
   /**
    * Reply that was added.
+   * This is going to be `undefined` if the reply has been deleted in the meanwhile.
    */
-  reply: Post;
+  reply: Post | undefined;
 }
 
 export interface CompletePostReactionNotification
@@ -169,12 +173,14 @@ export interface CompletePostReactionNotification
   type: NotificationType.ReactionPost;
   /**
    * Post that has been reacted to.
+   * This is going to be `undefined` if the post has been deleted in the meanwhile.
    */
-  post: Post;
+  post: Post | undefined;
   /**
    * Reaction that was added.
+   * This is going to be `undefined` if the reaction has been deleted in the meanwhile.
    */
-  reaction: PostReaction;
+  reaction: PostReaction | undefined;
 }
 
 export interface CompleteCommentReactionNotification
@@ -183,16 +189,19 @@ export interface CompleteCommentReactionNotification
   type: NotificationType.ReactionComment;
   /**
    * Conversation inside which the comment is.
+   * This is going to be `undefined` if the conversation has been deleted in the meanwhile.
    */
-  conversation: Post;
+  conversation: Post | undefined;
   /**
    * Comment to which the reaction was added.
+   * This is going to be `undefined` if the comment has been deleted in the meanwhile.
    */
-  comment: Post;
+  comment: Post | undefined;
   /**
    * Reaction that was added.
+   * This is going to be `undefined` if the reaction has been deleted in the meanwhile.
    */
-  reaction: PostReaction;
+  reaction: PostReaction | undefined;
 }
 
 export interface CompleteReplyReactionNotification
@@ -201,20 +210,24 @@ export interface CompleteReplyReactionNotification
   type: NotificationType.ReactionReply;
   /**
    * Conversation inside which the comment is.
+   * This is going to be `undefined` if the conversation has been deleted in the meanwhile.
    */
-  conversation: Post;
+  conversation: Post | undefined;
   /**
    * Comment that the reply references.
+   * This is going to be `undefined` if the comment has been deleted in the meanwhile.
    */
-  comment: Post;
+  comment: Post | undefined;
   /**
    * Comment reply to which the reaction was added.
+   * This is going to be `undefined` if the reply has been deleted in the meanwhile.
    */
-  reply: Post;
+  reply: Post | undefined;
   /**
    * Reaction that was added.
+   * This is going to be `undefined` if the reaction has been deleted in the meanwhile.
    */
-  reaction: PostReaction;
+  reaction: PostReaction | undefined;
 }
 
 export interface CompleteFollowNotification
@@ -223,8 +236,9 @@ export interface CompleteFollowNotification
   type: NotificationType.Follow;
   /**
    * User that started following the user.
+   * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
    */
-  user: DesmosProfile;
+  user: DesmosProfile | undefined;
 }
 
 export interface CompleteInviteClaimedNotification
@@ -233,8 +247,9 @@ export interface CompleteInviteClaimedNotification
   type: NotificationType.InviteClaimed;
   /**
    * Address of the user that has claimed the invite.
+   * This is going to be `undefined` if the user has deleted their profile in the meanwhile.
    */
-  claimer: DesmosProfile;
+  claimer: DesmosProfile | undefined;
 }
 
 export interface CompleteInviteUnlockedNotification

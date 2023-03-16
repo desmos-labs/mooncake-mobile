@@ -2,141 +2,135 @@
 
 exports[`component: SectionSwitch renders 1`] = `
 <View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
     {
-      "alignItems": "center",
-      "display": "flex",
-      "flexDirection": "row",
-      "paddingVertical": 16,
+      "flex": 1,
     }
   }
 >
-  <Text
+  <View
     style={
-      [
-        [
-          {
-            "color": "#25282D",
-          },
-          {
-            "fontFamily": "Poppins-SemiBold",
-            "fontSize": 16,
-            "fontStyle": "normal",
-            "fontWeight": "600",
-            "letterSpacing": 0.0015,
-            "textAlign": "left",
-          },
-        ],
-        [
-          {
-            "flex": 1,
-          },
-          null,
-        ],
-      ]
+      {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "paddingVertical": 16,
+      }
     }
   >
-    label
-  </Text>
-  <RCTSwitch
-    accessibilityRole="switch"
-    activeThumbColor="#fafafa"
-    colorScheme="primary"
-    dataSet={{}}
-    onChange={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    onTintColor="#FEB027"
-    style={
-      [
+    <Text
+      style={
+        [
+          [
+            {
+              "color": "#25282D",
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 16,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.0015,
+              "textAlign": "left",
+            },
+          ],
+          [
+            {
+              "flex": 1,
+            },
+            null,
+          ],
+        ]
+      }
+    >
+      label
+    </Text>
+    <RCTSwitch
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#FEB027"
+      style={
         {
           "height": 31,
           "width": 51,
-        },
-        [
-          {},
-          {
-            "backgroundColor": "#d4d4d4",
-            "borderRadius": 16,
-          },
-        ],
-      ]
-    }
-    thumbTintColor="white"
-    value={true}
-  />
+        }
+      }
+      thumbTintColor="white"
+      value={true}
+    />
+  </View>
 </View>
 `;
 
 exports[`component: SectionSwitch renders disabled 1`] = `
 <View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
     {
-      "alignItems": "center",
-      "display": "flex",
-      "flexDirection": "row",
-      "paddingVertical": 16,
+      "flex": 1,
     }
   }
 >
-  <Text
+  <View
     style={
-      [
-        [
-          {
-            "color": "#25282D",
-          },
-          {
-            "fontFamily": "Poppins-SemiBold",
-            "fontSize": 16,
-            "fontStyle": "normal",
-            "fontWeight": "600",
-            "letterSpacing": 0.0015,
-            "textAlign": "left",
-          },
-        ],
-        [
-          {
-            "flex": 1,
-          },
-          {
-            "opacity": 0.3,
-          },
-        ],
-      ]
+      {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "paddingVertical": 16,
+      }
     }
   >
-    label
-  </Text>
-  <RCTSwitch
-    accessibilityRole="switch"
-    activeThumbColor="#fafafa"
-    colorScheme="primary"
-    dataSet={{}}
-    disabled={true}
-    onChange={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    onTintColor="#FEB027"
-    style={
-      [
+    <Text
+      style={
+        [
+          [
+            {
+              "color": "#25282D",
+            },
+            {
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 16,
+              "fontStyle": "normal",
+              "fontWeight": "600",
+              "letterSpacing": 0.0015,
+              "textAlign": "left",
+            },
+          ],
+          [
+            {
+              "flex": 1,
+            },
+            {
+              "opacity": 0.3,
+            },
+          ],
+        ]
+      }
+    >
+      label
+    </Text>
+    <RCTSwitch
+      accessibilityRole="switch"
+      disabled={true}
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#FEB027"
+      style={
         {
           "height": 31,
           "width": 51,
-        },
-        [
-          {
-            "opacity": 0.4,
-          },
-          {
-            "backgroundColor": "#d4d4d4",
-            "borderRadius": 16,
-          },
-        ],
-      ]
-    }
-    thumbTintColor="white"
-    value={true}
-  />
+        }
+      }
+      thumbTintColor="white"
+      value={true}
+    />
+  </View>
 </View>
 `;

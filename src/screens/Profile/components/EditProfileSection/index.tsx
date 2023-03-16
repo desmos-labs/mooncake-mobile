@@ -11,6 +11,7 @@ import ROUTES from 'navigation/routes';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import useStyles from './useStyles';
 
 interface EditProfileSectionProps {
@@ -38,14 +39,18 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
   // -------------------------------------------------------------------------------------
 
   const saveProfile = useSaveProfile();
+  const returnToCurrentScreen = useReturnToCurrentScreen();
 
   // -------------------------------------------------------------------------------------
   // --- Actions
   // -------------------------------------------------------------------------------------
 
   const handleSaveProfile = useCallback(() => {
-    saveProfile({ profile });
-  }, [profile, saveProfile]);
+    saveProfile({
+      profile,
+      onSuccess: returnToCurrentScreen,
+    });
+  }, [profile, returnToCurrentScreen, saveProfile]);
 
   const handleConnectionButtonPressed = useCallback(() => {
     navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {

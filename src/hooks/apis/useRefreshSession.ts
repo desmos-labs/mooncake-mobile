@@ -20,7 +20,6 @@ const useRefreshSession = () => {
       return err(new Error('No bearer token found'));
     }
 
-    console.log('Refreshing bearer token');
     axiosInstance.defaults.headers.common = {
       Authorization: `Bearer ${bearerToken}`,
     };

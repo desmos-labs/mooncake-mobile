@@ -3,7 +3,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
   copyIcon,
-  infoIcon,
   invite1,
   invite2,
   invite3,
@@ -11,9 +10,8 @@ import {
   invitesBanner,
   inviteUserIcon,
 } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
-import ImageButton from 'components/ImageButton';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -100,6 +98,18 @@ const Invites = () => {
     setGeneratingInvite(false);
   }, [generateInvite, toast]);
 
+  const generateButtonDisabled = useMemo(() => {
+    // Comment out this line to test the UI. Dev flag added to test the logic
+    if (__DEV__) {
+      return false;
+    }
+    return (
+      invitesInfo === undefined ||
+      invitesInfo.generatedInvites >= invitesInfo.generableInvitesCount ||
+      generatingInvite
+    );
+  }, [generatingInvite, invitesInfo]);
+
   return (
     <DView
       backgroundColor={theme.colors.background}
@@ -118,17 +128,13 @@ const Invites = () => {
       {inviteLink === undefined ? (
         /* Component to generate a new invitation link */
         <Button
-          disabled={
-            invitesInfo === undefined ||
-            invitesInfo.generatedInvites === invitesInfo.generableInvitesCount ||
-            invitesInfo.requiredImpactPoints > invitesInfo.userImpactPoints ||
-            generatingInvite
-          }
+          disabled={generateButtonDisabled}
           onPress={handleGenerateInvitePress}
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
           additionalStyle={{ marginHorizontal: theme.spacing.m }}
+          loading={generatingInvite}
           mode={ButtonMode.CONTAINED}>
           {t('generate invite')}
         </Button>
@@ -145,37 +151,20 @@ const Invites = () => {
               <Image source={copyIcon} style={styles.copyIcon} />
             </TouchableOpacity>
           </View>
-          <Button mode="contained" color={theme.colors.surfaceBlack} onPress={onShare}>
+          <Button
+            mode={ButtonMode.CONTAINED}
+            backgroundColor={theme.colors.surfaceBlack}
+            size={ButtonSize.M}
+            textColor={theme.colors.white}
+            onPress={onShare}>
             {t('share')}
           </Button>
         </View>
       )}
 
-      <Spacer paddingVertical={theme.spacing.m} />
+      <Spacer paddingVertical={theme.spacing.s} />
 
       <View style={{ alignItems: 'center' }}>
-        {/* Shows the required impact points to generate an invitation link */}
-        {(invitesInfo === undefined ||
-          invitesInfo.generatedInvites < invitesInfo.generableInvitesCount) && (
-          <View style={styles.rowCenter}>
-            {invitesInfo !== undefined ? (
-              <Typography.Subtitle2>
-                {t('points', { number: invitesInfo.requiredImpactPoints })}
-              </Typography.Subtitle2>
-            ) : (
-              <ActivityIndicator color={theme.colors.surfaceBlack} />
-            )}
-            <Typography.Body5> {t('required')}</Typography.Body5>
-            <ImageButton
-              onPress={() => navigate(ROUTES.IMPACT_POINTS_MODAL)}
-              image={infoIcon}
-              style={styles.iconLeft}
-            />
-          </View>
-        )}
-
-        <Spacer paddingTop={6} />
-
         {/* Shows the number of generated invitation links */}
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
@@ -197,7 +186,6 @@ const Invites = () => {
         <Typography.Subtitle2>{t('invite steps')}</Typography.Subtitle2>
         <View style={{ padding: theme.spacing.m }}>
           <StepComponent image={invite1} number={1} text={t('generate invite')} />
-
           <StepComponent image={invite2} number={2} text={t('share invite')} />
           <StepComponent image={invite3} number={3} text={t('wait redeem')} />
           <StepComponent image={invite4} number={4} text={t('get rewards')} disableLine={true} />

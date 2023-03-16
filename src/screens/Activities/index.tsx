@@ -158,7 +158,7 @@ const Activities = () => {
       </View>
 
       {/* Notifications list */}
-      {!areNotificationsLoading && notifications ? (
+      {!areNotificationsLoading ? (
         <FlashList
           keyExtractor={keyExtractor}
           refreshControl={

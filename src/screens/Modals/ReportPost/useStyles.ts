@@ -42,7 +42,7 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     paddingVertical: theme.spacing.m,
   },
-  successfullReport: {
+  successfulReport: {
     alignItems: 'center',
     paddingVertical: 70,
   },

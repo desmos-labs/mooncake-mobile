@@ -26,11 +26,17 @@ interface ReceivedNotificationData {
   // Transactions
   readonly tx_hash: string | undefined;
 
-  // Social
+  // Posts
+  readonly subspace_id: string | undefined;
   readonly post_id: string | undefined;
   readonly comment_id: string | undefined;
   readonly reply_id: string | undefined;
-  readonly subspace_id: string | undefined;
+
+  // Reactions
+  readonly reaction_id: string | undefined;
+
+  // Relationships
+  readonly relationship_creator: string | undefined;
 
   // Invites
   readonly claimer_address: string | undefined;
@@ -43,13 +49,21 @@ interface ReceivedNotificationData {
 const convertRemoteMessage = (data: any): ReceivedNotificationData => {
   return {
     type: data.type as NotificationType,
+
     notification_title: data.notification_title,
     notification_body: data.notification_body,
+
     tx_hash: data.tx_hash as string,
+
+    subspace_id: data.subspace_id as string,
     post_id: data.post_id as string,
     comment_id: data.comment_id as string,
     reply_id: data.reply_id as string,
-    subspace_id: data.subspace_id as string,
+
+    reaction_id: data.reaction_id as string,
+
+    relationship_creator: data.relationship_creator as string,
+
     claimer_address: data.claimer_address as string,
   };
 };
@@ -79,6 +93,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         body: data.notification_body,
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         postId: parseInt(data?.post_id ?? '0', 10),
+        commentId: parseInt(data?.comment_id ?? '0', 10),
       } as CommentNotificationData;
 
     case NotificationType.Reply:
@@ -88,6 +103,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         body: data.notification_body,
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         commentId: parseInt(data?.post_id ?? '0', 10),
+        replyId: parseInt(data?.reply_id ?? '0', 10),
       } as ReplyNotificationData;
 
     case NotificationType.ReactionPost:
@@ -97,6 +113,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         body: data.notification_body,
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         postId: parseInt(data?.post_id ?? '0', 10),
+        reactionId: parseInt(data?.reaction_id ?? '0', 10),
       } as PostReactionNotificationData;
 
     case NotificationType.ReactionComment:
@@ -104,8 +121,10 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         type: NotificationType.ReactionComment,
         title: data.notification_title,
         body: data.notification_body,
+        postId: parseInt(data?.post_id ?? '0', 10),
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
         commentId: parseInt(data?.comment_id ?? '0', 10),
+        reactionId: parseInt(data?.reaction_id ?? '0', 10),
       } as CommentReactionNotificationData;
 
     case NotificationType.ReactionReply:
@@ -114,7 +133,10 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         title: data.notification_title,
         body: data.notification_body,
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
+        postId: parseInt(data?.post_id ?? '0', 10),
         commentId: parseInt(data?.comment_id ?? '0', 10),
+        replyId: parseInt(data?.reply_id ?? '0', 10),
+        reactionId: parseInt(data?.reaction_id ?? '0', 10),
       } as ReplyReactionNotificationData;
 
     case NotificationType.Follow:
@@ -123,6 +145,7 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         title: data.notification_title,
         body: data.notification_body,
         subspaceId: parseInt(data?.subspace_id ?? '0', 10),
+        userAddress: data?.relationship_creator,
       } as FollowNotificationData;
 
     case NotificationType.InviteClaimed:

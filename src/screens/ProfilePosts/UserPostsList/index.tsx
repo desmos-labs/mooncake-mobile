@@ -91,7 +91,11 @@ const UserPostsList = (props: UserPostsListProps) => {
   // -------------------------------------------------------------------------------------
 
   if (isLoading) {
-    return <ActivityIndicator color={theme.colors.surfaceBlack} />;
+    return (
+      <View style={styles.contentContainer}>
+        <ActivityIndicator color={theme.colors.surfaceBlack} />
+      </View>
+    );
   }
 
   return (

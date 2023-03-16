@@ -55,14 +55,6 @@ export const useShowPrivateKey = () => {
   };
 };
 
-export const useManageChainLinks = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(() => {
-    navigator.navigate(ROUTES.MANAGE_CONNECTED_CHAINS);
-  }, [navigator]);
-};
-
 export const useManageAppLinks = () => {
   const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
@@ -179,45 +171,6 @@ export const useOpenNotificationsSettings = () => {
   return React.useCallback(() => {
     Linking.openSettings();
   }, []);
-};
-
-/**
- * Hook that provides a function to enable/disable a notification
- * and its current state.
- * @param notificationType - Type of the notification of interest.
- */
-export const useToggleNotifications = (
-  notificationType: 'newDiscPostNotification' | 'newFollowPostNotification',
-) => {
-  const setSetting = useSetSetting(notificationType);
-  const settingValue = useSetting(notificationType);
-
-  const toggleSetting = React.useCallback(() => {
-    setSetting(currentValue => {
-      return !currentValue;
-    });
-  }, [setSetting]);
-
-  return {
-    value: settingValue,
-    toggle: toggleSetting,
-  };
-};
-
-export const useManageInvites = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(() => {
-    navigator.navigate(ROUTES.SETTINGS_INVITES);
-  }, [navigator]);
-};
-
-export const useShowCommunities = () => {
-  const navigator = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(() => {
-    navigator.navigate(ROUTES.SETTINGS_COMMUNITY);
-  }, [navigator]);
 };
 
 /**

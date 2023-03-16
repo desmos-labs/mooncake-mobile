@@ -1,606 +1,886 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component: Typography renders Body1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 24,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 24,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 22,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 22,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 20,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 20,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body4 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 18,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 18,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body5 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 16,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.005,
-        "lineHeight": 22,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 16,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.005,
+          "lineHeight": 22,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body6 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 14,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.025,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.025,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Body7 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 12,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "lineHeight": 16,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 12,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "lineHeight": 16,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Button1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 16,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 16,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Button2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 14,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.015,
-        "lineHeight": 19,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.015,
+          "lineHeight": 19,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Button3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 12,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.04,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 12,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.04,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Caption1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 12,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.004,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 12,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.004,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Caption2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 10,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.004,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 10,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.004,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Caption3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 10,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.004,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 10,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.004,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Display1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 64,
-        "fontWeight": "600",
-        "letterSpacing": -0.015,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 64,
+          "fontWeight": "600",
+          "letterSpacing": -0.015,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Display1 2`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 64,
-        "fontWeight": "600",
-        "letterSpacing": -0.015,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 64,
+          "fontWeight": "600",
+          "letterSpacing": -0.015,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Display2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 54,
-        "fontWeight": "600",
-        "letterSpacing": -0.005,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 54,
+          "fontWeight": "600",
+          "letterSpacing": -0.005,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Display3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 48,
-        "fontWeight": "600",
-        "lineHeight": 72,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 48,
+          "fontWeight": "600",
+          "lineHeight": 72,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 40,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 40,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 32,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 32,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 24,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.0015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 24,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.0015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H4 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 22,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.0015,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 22,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.0015,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H5 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 20,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": -0.0015,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 20,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": -0.0015,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders H6 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 18,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": -0.0015,
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 18,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": -0.0015,
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Link1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 16,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "lineHeight": 24,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 16,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "lineHeight": 24,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Subtitle1 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-Regular",
-        "fontSize": 18,
-        "fontStyle": "normal",
-        "fontWeight": "400",
-        "letterSpacing": 0.015,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 18,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.015,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Subtitle2 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 16,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.001,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 16,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.001,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Subtitle3 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 14,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "letterSpacing": 0.0125,
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "letterSpacing": 0.0125,
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;
 
 exports[`component: Typography renders Subtitle4 1`] = `
-<Text
+<View
+  collapsable={false}
+  pointerEvents="box-none"
   style={
-    [
-      {
-        "color": "#25282D",
-      },
-      {
-        "fontFamily": "Poppins-SemiBold",
-        "fontSize": 12,
-        "fontStyle": "normal",
-        "fontWeight": "600",
-        "textAlign": "left",
-      },
-    ]
+    {
+      "flex": 1,
+    }
   }
 >
-  Hello world
-</Text>
+  <Text
+    style={
+      [
+        {
+          "color": "#25282D",
+        },
+        {
+          "fontFamily": "Poppins-SemiBold",
+          "fontSize": 12,
+          "fontStyle": "normal",
+          "fontWeight": "600",
+          "textAlign": "left",
+        },
+      ]
+    }
+  >
+    Hello world
+  </Text>
+</View>
 `;

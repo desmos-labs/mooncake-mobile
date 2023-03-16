@@ -50,6 +50,7 @@ const FollowingTab = () => {
 
   return (
     <UsersList
+      userAddress={userAddress}
       users={following}
       loading={loading}
       fetchMore={fetchMore}

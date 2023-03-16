@@ -26,7 +26,6 @@ import {
   useShowPrivateKey,
   useSignOut,
   useToggleBiometrics,
-  useToggleNotifications,
   useToggleSimplifiedTxBroadcast,
 } from './hooks';
 
@@ -56,10 +55,6 @@ const Settings: React.FC<NavProps> = props => {
 
   // Other section hooks.
   const openNotificationsSettings = useOpenNotificationsSettings();
-  const { value: notifyOnNewDiscoverPost, toggle: toggleNotifyOnNewDiscoverPost } =
-    useToggleNotifications('newDiscPostNotification');
-  const { value: notifyOnNewFollowerPost, toggle: toggleNotifyOnNewFollowerPost } =
-    useToggleNotifications('newFollowPostNotification');
   const sendFeedback = useSendFeedback();
   const showAboutInfo = useShowAboutInfo();
   const signOut = useSignOut();
@@ -121,16 +116,6 @@ const Settings: React.FC<NavProps> = props => {
 
       {/* Other section */}
       <Section style={styles.spacer} title={t('others')}>
-        <SectionSwitch
-          label={t('notifyOnNewDiscPosts')}
-          value={notifyOnNewDiscoverPost}
-          onValueChange={toggleNotifyOnNewDiscoverPost}
-        />
-        <SectionSwitch
-          label={t('notifyOnNewFollowPosts')}
-          value={notifyOnNewFollowerPost}
-          onValueChange={toggleNotifyOnNewFollowerPost}
-        />
         <SectionButton label={t('notifications')} onPress={openNotificationsSettings} />
         <SectionButton label={t('feedbacks')} onPress={sendFeedback} />
         <SectionButton label={t('about')} onPress={showAboutInfo} />

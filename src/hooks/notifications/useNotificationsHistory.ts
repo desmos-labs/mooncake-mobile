@@ -16,18 +16,23 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import GetNotifications from 'services/graphql/queries/GetNotifications';
 import { convertGraphQLNotification, GraphQLNotification } from 'lib/GraphQLUtils/notifications';
 import GetPost from 'services/graphql/queries/GetPost';
-import { getLikeReactionId } from 'types/desmos';
+import { getLikeReactionId, PostReaction } from 'types/desmos';
 import { useAppStateValue } from '@recoil/appState';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostReactions from 'services/graphql/queries/GetPostReactions';
 import { convertGraphQLReaction } from 'lib/GraphQLUtils/reactions';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
+import { Post } from 'types/posts';
 
 /**
  * Hook that allows to get the data of a post given its subspace and post ids.
- * @param activeAddress {string} - Address of the currently active user.
  */
-const useGetPostData = (activeAddress: string) => {
+const useGetPostData = () => {
+  const activeAddress = useActiveAccountAddress();
+  if (!activeAddress) {
+    throw new Error('Trying to get post data without active user');
+  }
+
   const subspaceParams = useAppStateValue('subspaceParams');
 
   const [getPost] = useLazyQuery(GetPost, {
@@ -35,7 +40,7 @@ const useGetPostData = (activeAddress: string) => {
   });
 
   return React.useCallback(
-    async (subspaceId: number, postId: number) => {
+    async (subspaceId: number, postId: number): Promise<Post | undefined> => {
       const { data } = await getPost({
         variables: {
           subspaceId,
@@ -51,9 +56,7 @@ const useGetPostData = (activeAddress: string) => {
         return undefined;
       }
 
-      const { posts } = data;
-      const [firstPost] = posts;
-      return convertGraphQLPost(firstPost);
+      return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
     [activeAddress, getPost, subspaceParams],
   );
@@ -68,7 +71,11 @@ const useGetReactionData = () => {
   });
 
   return React.useCallback(
-    async (subspaceId: number, postId: number, reactionId: number) => {
+    async (
+      subspaceId: number,
+      postId: number,
+      reactionId: number,
+    ): Promise<PostReaction | undefined> => {
       const { data } = await getReaction({
         variables: {
           subspaceId,
@@ -90,11 +97,10 @@ const useGetReactionData = () => {
 
 /**
  * Hook that allows to map a {@link GraphQLNotification} to a {@link CompleteNotification} data.
- * @param activeAddress {string} - Address of the currently active user.
  */
-const useGetCompleteData = (activeAddress: string) => {
+const useGetCompleteData = () => {
   const getProfile = useGetOnChainProfile();
-  const getPost = useGetPostData(activeAddress);
+  const getPost = useGetPostData();
   const getReaction = useGetReactionData();
 
   return React.useCallback(
@@ -153,7 +159,7 @@ const useGetCompleteData = (activeAddress: string) => {
             ...notification,
             ...data,
             type: NotificationType.Follow,
-            user: await getProfile(data.follower),
+            user: await getProfile(data.userAddress),
           } as CompleteFollowNotification;
         case NotificationType.InviteClaimed:
           return {
@@ -180,12 +186,7 @@ const useGetCompleteData = (activeAddress: string) => {
  * Hook that allows to get the notifications history of the current application user.
  */
 const useNotificationsHistory = (notificationsPerPage: number = 50) => {
-  const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw new Error('Trying to get activities without active account');
-  }
-
-  const getCompleteData = useGetCompleteData(activeAddress);
+  const getCompleteData = useGetCompleteData();
 
   const [notifications, setNotifications] = useState<CompleteNotification[]>([]);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);

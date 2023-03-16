@@ -22,8 +22,8 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('invites');
-  const creationDate = useFormatTimeForPostDetails(invite.creationTime.toISOString());
-
+  const formatTime = useFormatTimeForPostDetails();
+  const formattedDate = formatTime(invite.creationTime.toISOString());
   const content = useMemo(() => {
     return (
       <View style={styles.flexRowView}>
@@ -34,7 +34,7 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
                 {t('invite')} # {index}
               </Typography.Body5>
               <Typography.Body7 style={{ color: theme.colors.midGrey }}>
-                {creationDate}
+                {formattedDate}
               </Typography.Body7>
             </View>
             <Spacer paddingBottom={theme.spacing.s} />
@@ -61,37 +61,40 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
                 {t('invite')} # {index}
               </Typography.Body5>
               <Typography.Body7 style={{ color: theme.colors.midGrey }}>
-                {creationDate}
+                {formattedDate}
               </Typography.Body7>
             </View>
             <Spacer paddingBottom={theme.spacing.s} />
-            <View style={{ flexDirection: 'row' }}>
-              <Typography.Body7 style={{ color: theme.colors.midGrey }}>
-                {invite.link}
-              </Typography.Body7>
-              <ImageButton
-                buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
-                image={copyIcon}
-                style={{ width: 16, height: 16 }}
-                onPress={() => Clipboard.setString(invite.link)}
-              />
+            <View>
+              <View style={{ flexDirection: 'row' }}>
+                <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+                  {invite.link}
+                </Typography.Body7>
+                <ImageButton
+                  buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
+                  image={copyIcon}
+                  style={{ width: 16, height: 16 }}
+                  onPress={() => Clipboard.setString(invite.link)}
+                />
+              </View>
+              <Spacer paddingTop={theme.spacing.s} />
+              <View style={{ flexDirection: 'row' }}>
+                <Typography.Body7 style={{ color: theme.colors.midGrey }}>
+                  {invite.code}
+                </Typography.Body7>
+                <ImageButton
+                  buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
+                  image={copyIcon}
+                  style={{ width: 16, height: 16 }}
+                  onPress={() => Clipboard.setString(invite.code)}
+                />
+              </View>
             </View>
           </View>
         )}
       </View>
     );
-  }, [
-    creationDate,
-    index,
-    invite.claimer,
-    invite.link,
-    styles.avatar,
-    styles.flexRowView,
-    styles.profileView,
-    t,
-    theme.colors.midGrey,
-    theme.spacing.s,
-  ]);
+  }, [formatTime, index, invite.claimer, invite.creationTime, invite.link]);
 
   return <View style={styles.container}>{content}</View>;
 };

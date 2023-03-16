@@ -113,7 +113,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   }, [onCompletedCallback, refetch]);
 
   return {
-    following: users,
+    following: users.map(value => value.user),
     loading,
     fetchMore: fetchMoreUsers,
     fetchingMore,

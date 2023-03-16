@@ -71,13 +71,13 @@ const Profile = () => {
   const { t } = useTranslation('profile');
   const theme = useTheme();
   const styles = useStyles({ insets: useSafeAreaInsets() });
+
   const route = useRoute<NavProps['route']>();
   const navigation = useNavigation<NavProps['navigation']>();
   const { navigate, goBack } = navigation;
+
   const { params } = route;
   const givenAddress = params?.address;
-  const [pageRefreshing, setPageRefreshing] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -132,6 +132,13 @@ const Profile = () => {
   const followOrUnfollowUser = useFollowOrUnfollowUser();
 
   // -------------------------------------------------------------------------------------
+  // --- Local state
+  // -------------------------------------------------------------------------------------
+
+  const [pageRefreshing, setPageRefreshing] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(!isActiveAccount);
+
+  // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
 
@@ -158,7 +165,7 @@ const Profile = () => {
 
   // Refresh the data on the focus of the screen
   useEffect(() => {
-    setInitialLoading(true);
+    setInitialLoading(!isActiveAccount);
     refreshPage().finally(() => setInitialLoading(false));
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -433,10 +440,10 @@ const Profile = () => {
           <View style={styles.flexRow}>
             <View style={styles.innerContainer}>
               {/* Posts count */}
-              <View style={styles.postCount}>
+              <TouchableOpacity style={styles.postCount} onPress={handlePostsSectionPressed}>
                 <Typography.Subtitle3>{postsCount}</Typography.Subtitle3>
                 <Typography.Caption1>{t('posts')}</Typography.Caption1>
-              </View>
+              </TouchableOpacity>
 
               {/* Followage count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
