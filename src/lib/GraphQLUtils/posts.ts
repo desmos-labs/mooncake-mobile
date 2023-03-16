@@ -13,6 +13,7 @@ import {
 } from 'types/posts';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
 import { MediaTypeUrl } from '@desmoslabs/desmjs';
+import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 
 /**
  * Format an incoming posts params data from the server into a format that is easier to parse by the app.
@@ -84,26 +85,29 @@ export interface GraphQLPost extends Post {
  * Converts a post fetched from the GraphQL API into a format that is easier to parse by the app.
  * @param post The post to convert.
  */
-export const convertGraphQLPost = (post: any): GraphQLPost => ({
-  status: PostStatus.SYNCED,
-  statusUpdateDate: new Date(Date.now()).toISOString(),
-  subspaceId: post.subspace_id,
-  sectionId: post?.section?.id ?? 0,
-  id: post.id,
-  externalId: post.external_id,
-  conversationId: post.conversation_id ?? 0,
-  text: post.text,
-  attachments: (post.attachments ?? []).map(convertGraphQLPostAttachment),
-  creationDate: post.creation_date,
-  author: convertGraphQLProfile(post.author),
-  transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
-  references: (post.references ?? []).map(convertGraphQLPostReference),
-  tags: post.tags,
+export const convertGraphQLPost = (post: any): GraphQLPost => {
+  return {
+    status: PostStatus.SYNCED,
+    statusUpdateDate: new Date(Date.now()).toISOString(),
+    subspaceId: post.subspace_id,
+    sectionId: post?.section?.id ?? 0,
+    id: post.id,
+    externalId: post.external_id,
+    conversationId: post.conversation?.id ?? 0,
+    text: post.text,
+    attachments: (post.attachments ?? []).map(convertGraphQLPostAttachment),
+    references: (post.references ?? []).map(convertGraphQLPostReference),
+    tags: post.tags,
 
-  // TODO: Check if these are parsed correctly
-  entities: post.entities,
-  replySettings: post.reply_settings,
+    // TODO: Check if these are parsed correctly
+    entities: post.entities,
+    replySettings: ReplySetting[post.reply_settings as keyof typeof ReplySetting],
 
-  // Extension fields
-  hasReacted: post.reactionPresence?.aggregate?.count > 0,
-});
+    creationDate: post.creation_date,
+    author: convertGraphQLProfile(post.author),
+    transactions: (post.transactions ?? []).map(convertGraphQLPostTransaction),
+
+    // Extension fields
+    hasReacted: post.reactionPresence?.aggregate?.count > 0,
+  } as GraphQLPost;
+};
