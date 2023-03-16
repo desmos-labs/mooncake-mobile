@@ -4,10 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
 import ROUTES from 'navigation/routes';
-import { useActiveAccount } from '@recoil/accounts';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { Wallet } from 'types/wallet';
-import { ResultAsync } from 'neverthrow';
+import { errAsync, ResultAsync } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
 
 export interface BroadcastTxOptions {
@@ -27,17 +27,25 @@ export interface BroadcastTxOptions {
  * The flow will vary based on the wallet type the user is using (mnemonic, Ledger, Web3Auth, etc).
  */
 const useBroadcastTxOnChain = () => {
+  const activeAccountAddress = useActiveAccountAddress();
+
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const activeAccount = useActiveAccount()!;
   const returnToCurrentScreen = useReturnToCurrentScreen();
 
   return React.useCallback(
-    (messages: EncodeObject[], options?: BroadcastTxOptions) => {
+    (
+      messages: EncodeObject[],
+      options?: BroadcastTxOptions,
+    ): ResultAsync<DeliverTxResponse, Error> => {
+      if (!activeAccountAddress) {
+        return errAsync(new Error('Trying to broadcast a transaction without active account'));
+      }
+
       return ResultAsync.fromPromise<DeliverTxResponse, Error>(
         new Promise((resolve, reject) => {
           navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
             messages,
-            accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccount.address,
+            accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccountAddress,
             memo: options?.memo,
             onSuccess: (txResponse: DeliverTxResponse) => {
               returnToCurrentScreen();
@@ -51,7 +59,7 @@ const useBroadcastTxOnChain = () => {
         () => new CanceledOperationError(),
       );
     },
-    [activeAccount, navigation, returnToCurrentScreen],
+    [activeAccountAddress, navigation, returnToCurrentScreen],
   );
 };
 
