@@ -189,6 +189,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
   const getCompleteData = useGetCompleteData();
 
   const [notifications, setNotifications] = useState<CompleteNotification[]>([]);
+  const [convertingData, setConvertingData] = useState<boolean>(false);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -198,8 +199,8 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
     async (data: any) => {
       if (!data) return;
 
+      setConvertingData(true);
       const onChainNotifications = (data.notifications as any[]).map(convertGraphQLNotification);
-
       const completeNotifications: CompleteNotification[] = [];
 
       // It's fine to disable the next line warning as using a for loop makes it easier to read the code here
@@ -213,8 +214,9 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
       }
 
       setNotifications(completeNotifications);
+      setConvertingData(false);
     },
-    [getCompleteData, setNotifications],
+    [setConvertingData, getCompleteData, setNotifications],
   );
 
   // Query used to get the notifications
@@ -269,7 +271,7 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
 
   return {
     notifications,
-    loading,
+    loading: loading || convertingData,
     fetchMore: fetchMoreNotifications,
     fetchingMore,
     refresh: refetchNotifications,
