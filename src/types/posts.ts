@@ -124,10 +124,6 @@ const getReplyId = (post: Post): number | undefined => {
   return post.references.find(r => r.type === PostReferenceType.POST_REFERENCE_TYPE_REPLY)?.postId;
 };
 
-const hasReplyToPostWithId = (post: Post, id: number) => {
-  return getReplyId(post) === id;
-};
-
 export const isRootPost = (post: Post): boolean => {
   return post.conversationId === 0;
 };
@@ -136,14 +132,14 @@ export const isRootPost = (post: Post): boolean => {
  * Tells whether the given {@param post} is a comment or not.
  */
 export const isComment = (post: Post): boolean => {
-  return post.conversationId !== 0 && hasReplyToPostWithId(post, post.conversationId);
+  return post.conversationId !== 0 && post.conversationId === getReplyId(post);
 };
 
 /**
  * Tells whether the given {@param post} is a comment to the post with the provided {@param parentId}.
  */
 export const isCommentTo = (post: Post, parentId: number): boolean => {
-  return post.conversationId === parentId && hasReplyToPostWithId(post, parentId);
+  return post.conversationId !== 0 && parentId === getReplyId(post);
 };
 
 /**
