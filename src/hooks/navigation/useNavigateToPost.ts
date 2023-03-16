@@ -4,14 +4,27 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 
+/**
+ * Options that can be passed to the navigateToPost callback.
+ */
 export interface NavigateToPostOptions {
+  /**
+   * Whether to focus the comment box when navigating to the post details screen.
+   */
   readonly focusCommentBox?: boolean;
+  /**
+   * The id of the post to focus on when navigating to the post details screen.
+   */
   readonly focusPostId?: number;
+  /**
+   * The navigation method to use when navigating to the post details screen.
+   */
   readonly navigationMethod?: 'push' | 'navigate';
 }
 
 /**
  * Hook that allows navigating to the screen that displays the details of a post.
+ * It returns a callback that allows to navigate to the proper screen given a subspace id and post id.
  */
 const useNavigateToPost = () => {
   const { navigate, push } =
