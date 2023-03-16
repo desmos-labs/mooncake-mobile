@@ -42,14 +42,13 @@ const cache = new InMemoryCache({
         return `profile:${object.address}`;
       case 'user_relationship':
         // @ts-ignore
-        return `user_relationship:${object.content?.counterparty_address}`;
+        return `user_relationship:${object.subspace_id}-${object.creator.address}-${object.counterparty.address}`;
       case 'reaction':
-        // TODO: This is a workaround since the API have a bug that
-        // returns different reactions with the same id.
         // @ts-ignore
-        if (object.author?.address && object.post?.id && object.value) {
+        if (object.post.subspace_id && object.author?.address && object.post?.id && object.value) {
           // @ts-ignore
-          return `reaction:${object.author.address}-${object.post.id}-${object.value.toString()}`;
+          // eslint-disable-next-line prettier/prettier
+          return `reaction:${object.post.subspace_id}-${object.author.address}-${object.value.toString()}`;
         }
         return defaultDataIdFromObject(object);
       default:
