@@ -15,8 +15,8 @@ const useStyles = makeStyle(theme => ({
     borderColor: theme.colors.pink01,
   },
   icon: {
-    width: 32 * 0.75,
-    height: 24 * 0.75,
+    width: 24,
+    height: 17.25,
   },
 }));
 
