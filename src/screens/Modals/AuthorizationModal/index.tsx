@@ -1,16 +1,14 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Button, { ButtonMode, ButtonSize } from 'components/Button';
-// dismiss button
-// import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
 import Spacer from 'components/Spacer';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export type AuthorizationModalParams = {
@@ -66,14 +64,12 @@ const AuthorizationModal = () => {
       />
       <View style={styles.innerContainer}>
         <Spacer paddingBottom={16}>
-          <Typography.H4 style={{ textAlign: 'center' }}>
-            {t('permissions modal header')}
-          </Typography.H4>
+          <Typography.H4 style={{ textAlign: 'center' }}>{t('permissions')}</Typography.H4>
         </Spacer>
 
-        <Typography.Body5>{t('permissions modal subtitle1')}</Typography.Body5>
+        <Typography.Body5>{t('permissions modal subtitle')}</Typography.Body5>
         <Spacer paddingTop={theme.spacing.m} />
-        <Typography.Body5>{t('permissions modal subtitle2')}</Typography.Body5>
+        <Typography.Body5>{t('permissions modal body')}</Typography.Body5>
 
         <Spacer paddingTop={theme.spacing.xl}>
           <Button
