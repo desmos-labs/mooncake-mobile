@@ -4,7 +4,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
-import ToastConfig from 'config/ToastConfig';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
 import PostCard from 'screens/Home/components/PostCard';
 import {
@@ -35,7 +34,7 @@ import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
+export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
 
 /**
  * Home screen of the application that displays the list of posts the user is
@@ -43,7 +42,7 @@ type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TA
  * @constructor
  */
 const Home = () => {
-  const toast = useToast();
+  const toast = useCustomToast();
   const { t } = useTranslation();
   const styles = useStyles();
   const theme = useTheme();
@@ -135,42 +134,32 @@ const Home = () => {
           onPressAuthor={() => handleNavigateToProfile(item.author.address)}
           onPressDetails={() => {
             if (isPostPending(item)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
+              return toast.errorNoRetry(t('toast:postTxInProgress'));
             }
             handlePressDetails(item);
           }}
           onPressLike={() => {
             if (isPostPending(item)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
+              return toast.errorNoRetry(t('toast:postTxInProgress'));
             }
             handlePressReaction(item);
           }}
           onPressComment={() => {
             if (isPostPending(item)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
+              return toast.errorNoRetry(t('toast:postTxInProgress'));
             }
             handlePressComments(item);
           }}
           onPressTip={() => {
             if (isPostPending(item)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
+              return toast.errorNoRetry(t('toast:postTxInProgress'));
             }
             handlePressTip(item);
           }}
           onPressFollow={() => handlePressFollow(item.author)}
           onPressReport={() => {
             if (isPostPending(item) || !item.author) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
+              return toast.errorNoRetry(t('toast:postTxInProgress'));
             }
             handlePressReport(item);
           }}

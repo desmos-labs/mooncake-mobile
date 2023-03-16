@@ -1,7 +1,6 @@
 import { DocumentNode, useSubscription } from '@apollo/client';
 import { useCallback, useRef } from 'react';
-import ToastConfig from 'config/ToastConfig';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +58,7 @@ const usePostsCountSubscription = <TVariables = OperationVariables>(
  */
 const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   const { t } = useTranslation('home');
-  const toast = useToast();
+  const toast = useCustomToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -67,10 +66,9 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   const activeAddress = useActiveAccountAddress();
 
   const onNewDiscoveryPosts = useCallback(() => {
-    if (!isFocused || routeName !== 'HOME_DISCOVER') return;
-    toast.show(t('newDiscoverPost'), {
-      type: ToastConfig.SUCCESS,
-      onPress: onPressNotification,
+    if (!isFocused || routeName !== 'HOME_TAB_DISCOVER') return;
+    toast.success(t('newDiscoverPost'), {
+      handlePressToast: onPressNotification,
     });
   }, []);
 
@@ -91,7 +89,7 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
  */
 const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   const { t } = useTranslation('home');
-  const toast = useToast();
+  const toast = useCustomToast();
   const isFocused = useIsFocused();
   const { name: routeName } = useRoute<NavProps['route']>();
 
@@ -99,10 +97,9 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   const followingAddresses = useFollowingAddresses();
 
   const onNewFollowingPosts = useCallback(() => {
-    if (!isFocused || routeName !== 'HOME_FOLLOWING') return;
-    toast.show(t('newFollowingPost'), {
-      type: ToastConfig.SUCCESS,
-      onPress: onPressNotification,
+    if (!isFocused || routeName !== 'HOME_TAB_FOLLOWING') return;
+    toast.success(t('newFollowingPost'), {
+      handlePressToast: onPressNotification,
     });
   }, []);
 
