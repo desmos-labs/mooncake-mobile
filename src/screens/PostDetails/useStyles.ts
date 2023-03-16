@@ -10,6 +10,11 @@ const useStyles = makeStyle(theme => ({
   flatListContainer: {
     paddingHorizontal: theme.spacing.m,
   },
+  emptyView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
 export default useStyles;
