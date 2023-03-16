@@ -51,6 +51,8 @@ const cache = new InMemoryCache({
           return `reaction:${object.post.subspace_id}-${object.author.address}-${object.value.toString()}`;
         }
         return defaultDataIdFromObject(object);
+      case 'notification':
+        return `notification:${object.id}`;
       default:
         return defaultDataIdFromObject(object);
     }
