@@ -18,7 +18,7 @@ export const getConversationId = (parent?: Post): number => {
     return 0;
   }
 
-  if (parent.conversationId === 0) {
+  if (!parent.conversationId) {
     return parent.id;
   }
 
