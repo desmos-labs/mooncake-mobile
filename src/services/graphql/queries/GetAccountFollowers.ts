@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
+import RelationshipFields from 'services/graphql/queries/fragments/RelationshipFields';
 
 const GetAccountFollowers = gql`
-  ${ProfileFields}
+  ${RelationshipFields}
   query GetPaginatedFollowers(
     $subspaceId: bigint!
     $userAddress: String!
@@ -14,9 +14,7 @@ const GetAccountFollowers = gql`
       limit: $limit
       offset: $offset
     ) {
-      creator {
-        ...ProfileFields
-      }
+      ...RelationshipFields
     }
   }
 `;
