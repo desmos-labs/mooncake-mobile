@@ -4,7 +4,7 @@ import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
@@ -43,22 +43,28 @@ const AuthorizationModal = () => {
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   // Little hack to make sure the modal is dismissed before the onPress callback is invoked
-  const onPressPrimaryButton = () => {
+  const onPressPrimaryButton = useCallback(() => {
     goBack();
     onPressYes && setTimeout(() => onPressYes(), 200);
-  };
+  }, [goBack, onPressYes]);
 
   // Little hack to make sure the modal is dismissed before the onPress callback is invoked
-  const onPressSecondaryButton = () => {
+  const onPressSecondaryButton = useCallback(() => {
     goBack();
     onPressNo && setTimeout(() => onPressNo(), 200);
-  };
+  }, [goBack, onPressNo]);
+
+  // Little hack to make sure the modal is dismissed before the onDismiss callback is invoked
+  const onPressDismiss = useCallback(() => {
+    goBack();
+    onDismiss && setTimeout(() => onDismiss(), 200);
+  }, [goBack, onDismiss]);
 
   return (
     <View style={styles.container}>
       {/* invoke dismiss fn or goBack if user presses the background */}
       <TouchableOpacity
-        onPress={onDismiss ?? goBack}
+        onPress={onPressDismiss}
         activeOpacity={1}
         style={StyleSheet.absoluteFillObject}
       />

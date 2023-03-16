@@ -16,6 +16,23 @@ export const isPostAlreadyReportedError = (e: Error): e is PostAlreadyReportedEr
 };
 
 /**
+ * Error that tells the user has not granted the permission to use the centralized APIs.
+ */
+export class CentralizedApiNotGrantedError extends Error {
+  readonly type: 'CentralizedApiNotGrantedError';
+
+  constructor(message?: string) {
+    super(message);
+    this.type = 'CentralizedApiNotGrantedError';
+  }
+}
+
+export const isCentralizedApiNotGrantedError = (e: Error): e is CentralizedApiNotGrantedError => {
+  const { type } = e as CentralizedApiNotGrantedError;
+  return type === 'CentralizedApiNotGrantedError';
+};
+
+/**
  * Error that represents an operation that has been canceled from the user.
  */
 export class CanceledOperationError extends Error {

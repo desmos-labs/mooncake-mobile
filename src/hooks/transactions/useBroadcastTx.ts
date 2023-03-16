@@ -3,7 +3,12 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/transactions/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
-import { CanceledOperationError, isCanceledOperationError } from 'types/error';
+import {
+  CanceledOperationError,
+  CentralizedApiNotGrantedError,
+  isCanceledOperationError,
+  isCentralizedApiNotGrantedError,
+} from 'types/error';
 import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import {
@@ -134,11 +139,11 @@ const usePromptRequestSaveProfile = () => {
 };
 
 /**
- * Hook that provides a function that requests to the user if wants to give
+ * Hook that provides a function that requests the user if they want to give
  * the fee grants and authz permissions to the centralized API so that can
  * perform the operations in a more simple way.
  */
-const usePromptRequestAccountPermissions = () => {
+const usePromptRequestCentralizedAPIsPermissions = () => {
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress()!;
   const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
@@ -186,6 +191,9 @@ const usePromptRequestAccountPermissions = () => {
               resolve(ok(grantPermissionsMsgs));
             },
             onPressNo: () => {
+              resolve(err(new CentralizedApiNotGrantedError()));
+            },
+            onDismiss: () => {
               resolve(err(new CanceledOperationError()));
             },
           });
@@ -219,7 +227,7 @@ const useBroadcastTx = () => {
   const fetchOnChainProfile = useGetOnChainProfile();
 
   const promptRequestSaveProfile = usePromptRequestSaveProfile();
-  const promptAccountPermissions = usePromptRequestAccountPermissions();
+  const promptAccountPermissions = usePromptRequestCentralizedAPIsPermissions();
 
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
@@ -260,8 +268,13 @@ const useBroadcastTx = () => {
       if (!broadcastOnChain) {
         const permissionsPromptResult = await promptAccountPermissions(msgs);
         if (permissionsPromptResult.isErr()) {
-          // The user rejected, just proceed with the normal broadcast.
-          broadcastOnChain = true;
+          if (isCanceledOperationError(permissionsPromptResult.error)) {
+            // The user has canceled the operation, so do nothing
+            return err(permissionsPromptResult.error);
+          } else if (isCentralizedApiNotGrantedError(permissionsPromptResult.error)) {
+            // The user rejected, just proceed with the normal broadcast.
+            broadcastOnChain = true;
+          }
         } else if (permissionsPromptResult.isOk() && permissionsPromptResult.value.length > 0) {
           // User accepted to give us the permissions, extends the broadcast
           // messages to include the permissions messages so that from
