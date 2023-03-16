@@ -60,7 +60,7 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
         return merged;
       });
     },
-    [updatePendingRelationships],
+    [setUsers, updatePendingRelationships],
   );
 
   // Query used to get the following list
