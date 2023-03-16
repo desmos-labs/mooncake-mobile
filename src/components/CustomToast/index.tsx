@@ -15,15 +15,28 @@ export interface Props {
    */
   type: ToastConfig;
 
+  /**
+   * The message that will be displayed in the toast.
+   */
   message: string;
 
   options: {
+    /**
+     * What to do when the actual toast object is pressed.
+     */
     handlePressToast?: () => void;
 
+    /**
+     * What to do if the Retry button is pressed (only applicable for ERROR type toasts).
+     */
     handlePressRetry?: () => void;
   };
 }
 
+/**
+ * Implementation of the Custom Toast component which is used to show toasts to the user.
+ * @constructor
+ */
 const CustomToast = ({ type, message, options }: Props): JSX.Element => {
   const styles = useStyles(type);
   const theme = useTheme();
@@ -50,7 +63,7 @@ const CustomToast = ({ type, message, options }: Props): JSX.Element => {
             additionalStyle={styles.button}
             mode={ButtonMode.TEXT}
             onPress={options.handlePressRetry}>
-            <Typography.Subtitle3>Retry</Typography.Subtitle3>
+            <Typography.Subtitle3>{t('toast:retry')}</Typography.Subtitle3>
           </Button>
         ) : null}
       </TouchableOpacity>
