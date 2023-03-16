@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useStyles from './useStyles';
 

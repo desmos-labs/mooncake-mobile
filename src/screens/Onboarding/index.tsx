@@ -14,7 +14,7 @@ import { Animated as ClassicAnimated, Dimensions, View } from 'react-native';
 import { ScalingDot } from 'react-native-animated-pagination-dots';
 import FastImage, { Source } from 'react-native-fast-image';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 const AnimatedPagerView = ClassicAnimated.createAnimatedComponent(PagerView);

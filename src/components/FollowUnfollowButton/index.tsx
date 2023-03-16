@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export interface FollowUnfollowButtonProps {

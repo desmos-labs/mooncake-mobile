@@ -2,182 +2,152 @@
 
 exports[`component: DTextInput renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 14,
+        "display": "flex",
+        "flexDirection": "row",
+        "minHeight": 48,
+      },
+      undefined,
+    ]
   }
 >
-  <View
+  <TextInput
+    placeholderTextColor="#9D9D9D"
     style={
       [
-        {
-          "alignItems": "center",
-          "backgroundColor": "#FFFFFF",
-          "borderRadius": 14,
-          "display": "flex",
-          "flexDirection": "row",
-          "minHeight": 48,
-        },
         undefined,
+        {
+          "color": "#25282D",
+          "flex": 0.95,
+          "flexGrow": 1,
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.025,
+          "lineHeight": 21,
+          "minHeight": undefined,
+          "paddingHorizontal": 11,
+          "textAlign": "left",
+        },
       ]
     }
-  >
-    <TextInput
-      placeholderTextColor="#9D9D9D"
-      style={
-        [
-          undefined,
-          {
-            "color": "#25282D",
-            "flex": 0.95,
-            "flexGrow": 1,
-            "fontFamily": "Poppins-Regular",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "fontWeight": "400",
-            "letterSpacing": 0.025,
-            "lineHeight": 21,
-            "minHeight": undefined,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          },
-        ]
+  />
+  <View
+    style={
+      {
+        "margin": 0,
+        "padding": 0,
+        "paddingRight": 8,
       }
-    />
-    <View
-      style={
-        {
-          "margin": 0,
-          "padding": 0,
-          "paddingRight": 8,
-        }
-      }
-    />
-  </View>
+    }
+  />
 </View>
 `;
 
 exports[`component: DTextInput renders error style 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 14,
+        "display": "flex",
+        "flexDirection": "row",
+        "minHeight": 48,
+      },
+      undefined,
+    ]
   }
 >
-  <View
+  <TextInput
+    error={true}
+    placeholderTextColor="#9D9D9D"
     style={
       [
-        {
-          "alignItems": "center",
-          "backgroundColor": "#FFFFFF",
-          "borderRadius": 14,
-          "display": "flex",
-          "flexDirection": "row",
-          "minHeight": 48,
-        },
         undefined,
+        {
+          "color": "#F359A8",
+          "flex": 0.95,
+          "flexGrow": 1,
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.025,
+          "lineHeight": 21,
+          "minHeight": undefined,
+          "paddingHorizontal": 11,
+          "textAlign": "left",
+        },
       ]
     }
-  >
-    <TextInput
-      error={true}
-      placeholderTextColor="#9D9D9D"
-      style={
-        [
-          undefined,
-          {
-            "color": "#F359A8",
-            "flex": 0.95,
-            "flexGrow": 1,
-            "fontFamily": "Poppins-Regular",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "fontWeight": "400",
-            "letterSpacing": 0.025,
-            "lineHeight": 21,
-            "minHeight": undefined,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          },
-        ]
+  />
+  <View
+    style={
+      {
+        "margin": 0,
+        "padding": 0,
+        "paddingRight": 8,
       }
-    />
-    <View
-      style={
-        {
-          "margin": 0,
-          "padding": 0,
-          "paddingRight": 8,
-        }
-      }
-    />
-  </View>
+    }
+  />
 </View>
 `;
 
 exports[`component: DTextInput renders numberOfLines style 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 14,
+        "display": "flex",
+        "flexDirection": "row",
+        "minHeight": 48,
+      },
+      undefined,
+    ]
   }
 >
-  <View
+  <TextInput
+    numberOfLines={1}
+    placeholderTextColor="#9D9D9D"
     style={
       [
-        {
-          "alignItems": "center",
-          "backgroundColor": "#FFFFFF",
-          "borderRadius": 14,
-          "display": "flex",
-          "flexDirection": "row",
-          "minHeight": 48,
-        },
         undefined,
+        {
+          "color": "#25282D",
+          "flex": 0.95,
+          "flexGrow": 1,
+          "fontFamily": "Poppins-Regular",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "400",
+          "letterSpacing": 0.025,
+          "lineHeight": 21,
+          "minHeight": 25,
+          "paddingHorizontal": 11,
+          "textAlign": "left",
+        },
       ]
     }
-  >
-    <TextInput
-      numberOfLines={1}
-      placeholderTextColor="#9D9D9D"
-      style={
-        [
-          undefined,
-          {
-            "color": "#25282D",
-            "flex": 0.95,
-            "flexGrow": 1,
-            "fontFamily": "Poppins-Regular",
-            "fontSize": 14,
-            "fontStyle": "normal",
-            "fontWeight": "400",
-            "letterSpacing": 0.025,
-            "lineHeight": 21,
-            "minHeight": 25,
-            "paddingHorizontal": 11,
-            "textAlign": "left",
-          },
-        ]
+  />
+  <View
+    style={
+      {
+        "margin": 0,
+        "padding": 0,
+        "paddingRight": 8,
       }
-    />
-    <View
-      style={
-        {
-          "margin": 0,
-          "padding": 0,
-          "paddingRight": 8,
-        }
-      }
-    />
-  </View>
+    }
+  />
 </View>
 `;

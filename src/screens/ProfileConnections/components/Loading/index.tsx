@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { Spinner, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 /**
@@ -12,7 +12,7 @@ const Loading = () => {
   const theme = useTheme();
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator color={theme.colors.surfaceBlack} />
+      <Spinner color={theme.colors.surfaceBlack} />
     </View>
   );
 };

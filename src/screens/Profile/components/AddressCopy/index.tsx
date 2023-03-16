@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { copyIcon } from 'assets/images';
 import Clipboard from '@react-native-clipboard/clipboard';
 

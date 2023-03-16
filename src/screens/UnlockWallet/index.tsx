@@ -13,7 +13,7 @@ import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import * as Yup from 'yup';
 import { Wallet } from 'types/wallet';
 import { SigningMode } from '@desmoslabs/desmjs';

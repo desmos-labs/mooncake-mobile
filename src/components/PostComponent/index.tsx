@@ -2,7 +2,7 @@ import Typography from 'components/Typography';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import useStyles from './useStyles';
 

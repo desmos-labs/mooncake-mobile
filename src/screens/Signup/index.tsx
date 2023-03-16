@@ -18,7 +18,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Animated, {
   interpolate,
   useAnimatedStyle,

@@ -9,7 +9,7 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import { useTranslation } from 'react-i18next';
 import { useGetSectionedInvites } from './hooks';

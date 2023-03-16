@@ -3,7 +3,7 @@ import React from 'react';
 import { Trans } from 'react-i18next';
 import { View } from 'react-native';
 import FastImage, { Source } from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 
 interface Props {
   image: Source;

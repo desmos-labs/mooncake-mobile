@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { View } from 'react-native';
 
 /**

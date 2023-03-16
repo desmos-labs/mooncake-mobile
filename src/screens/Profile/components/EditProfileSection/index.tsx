@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import FastImage from 'react-native-fast-image';
 import { connectIcon } from 'assets/images';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
 import { ApplicationLink, DesmosProfile } from 'types/desmos';
 import ROUTES from 'navigation/routes';

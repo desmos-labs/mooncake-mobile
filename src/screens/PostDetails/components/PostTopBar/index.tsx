@@ -1,5 +1,5 @@
 import React from 'react';
-import { GestureResponderEvent, View } from 'react-native';
+import { View } from 'react-native';
 import { isCommentReply, Post } from 'types/posts';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -8,22 +8,27 @@ import Spacer from 'components/Spacer';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
 import { getProfileDisplayName } from 'lib/ProfileUtils';
 import ImageButton from 'components/ImageButton';
-import { followBlackIcon, moreBlackIcon, unfollowBlackIcon } from 'assets/images';
+import { followBlackIcon, reportIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useTranslation } from 'react-i18next';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
+import PopupMenu from 'components/PopupMenu';
+import { useHandlePressReport } from 'screens/Home/hooks';
 import useStyles from './useStyles';
 
 interface Props {
   readonly post: Post;
-  readonly handlePressMore: (event: GestureResponderEvent) => void;
   readonly onBackButtonPress: () => void;
-  readonly addressToCheck: string;
+  // This callback may not be necessary anymore as native-base menu does not require x,y anchors to be explicitly set
+  // for positioning, but it may be useful to keep around in-case we want to do additional actions when opening the popup menu
+  readonly handlePressMore?: () => void;
+  // old implementation, for reference (marked for deletion)
+  // readonly handlePressMore: (event: GestureResponderEvent) => void;
 }
 
 /**
@@ -31,10 +36,9 @@ interface Props {
  * @param post - Post to render
  * @param handlePressMore - Handler for pressing the more button
  * @param onBackButtonPress - Handler for pressing the back button
- * @param addressToCheck - Address to check if the user is following
  * @constructor
  */
-const PostTopBar = ({ post, handlePressMore, onBackButtonPress, addressToCheck }: Props) => {
+const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -46,12 +50,34 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress, addressToCheck }
   const formatDate = useFormatTimeForPostDetails();
   const activeAddress = useActiveAccountAddress();
   const handleNavigateToProfile = useNavigateToProfile();
-  const isFollowingAddress = useIsFollowing(addressToCheck);
+  const isFollowingAddress = useIsFollowing(post.author.address);
+  const handlePressReport = useHandlePressReport();
+  const handlePressFollow = useHandlePressFollowOrUnfollow();
 
   /**
    * Hooks for getting comments count
    */
   const { count: commentsCount } = usePostCommentsCount(post);
+
+  /**
+   * Popup Menu
+   */
+  const PressMoreComponent = React.useMemo(() => {
+    const menuItems = [
+      {
+        label: isFollowingAddress ? t('home:unfollow') : t('home:follow'),
+        onPress: () => handlePressFollow(post.author),
+        icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
+      },
+      {
+        label: t('home:report'),
+        onPress: () => handlePressReport(post),
+        icon: reportIcon,
+      },
+    ];
+
+    return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
+  }, [handlePressFollow, handlePressMore, handlePressReport, isFollowingAddress, post, t]);
 
   if (isCommentReply(post!)) {
     return (
@@ -99,7 +125,8 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress, addressToCheck }
             }}
           />
         )}
-        <ImageButton onPress={handlePressMore} style={styles.moreIcon} image={moreBlackIcon} />
+        <Spacer paddingHorizontal="xs" />
+        {PressMoreComponent}
       </View>
     </View>
   );

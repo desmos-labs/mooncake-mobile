@@ -3,7 +3,7 @@ import PostComponent from 'components/PostComponent';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import Spacer from 'components/Spacer';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
-import { Divider } from 'react-native-paper';
+import { Divider } from 'native-base';
 import { Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';

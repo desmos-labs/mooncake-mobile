@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { Spinner, useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import useStyles from './useStyles';
@@ -37,7 +37,7 @@ const InteractionCountersBar = (props: Props) => {
   }, [interactionAuthors.length]);
 
   return loading ? (
-    <ActivityIndicator color={theme.colors.surfaceBlack} />
+    <Spinner color={theme.colors.surfaceBlack} />
   ) : (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>

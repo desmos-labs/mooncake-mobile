@@ -8,7 +8,7 @@ import ROUTES from 'navigation/routes';
 import React, { ReactNode, useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';

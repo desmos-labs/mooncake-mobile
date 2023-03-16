@@ -3,7 +3,7 @@ import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { ButtonProps } from 'components/Button';
 import Typography from 'components/Typography';
 import useStyles from 'components/Button/useStyles';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 
 interface Props extends ButtonProps {
   styleMap: { [index: string]: any };

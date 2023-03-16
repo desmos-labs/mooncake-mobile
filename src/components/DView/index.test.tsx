@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { desmosIcon } from 'assets/images';
+import { render } from 'jest/utils/CustomWrappers';
 import DView from '.';
 
 describe('component: DView', () => {

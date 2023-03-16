@@ -9,7 +9,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import ConsentButtonGroup from './components/ConsentButtonGroup';
 import useStyles from './useStyles';
 

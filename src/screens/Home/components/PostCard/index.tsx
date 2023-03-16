@@ -1,7 +1,6 @@
 import { loadingOrange } from 'assets/animations';
 import {
   followBlackIcon,
-  moreBlackIcon,
   postLikedIcon,
   postToCommentIcon,
   postToLikeIcon,
@@ -17,11 +16,11 @@ import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { Center, useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -91,16 +90,6 @@ const PostCard = (props: PostCardProps) => {
   } = props;
 
   // -------------------------------------------------------------------------------------
-  // --- Menu visibility
-  // -------------------------------------------------------------------------------------
-
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState<{
-    x: number;
-    y: number;
-  }>();
-
-  // -------------------------------------------------------------------------------------
   // --- Utility hooks
   // -------------------------------------------------------------------------------------
 
@@ -109,6 +98,26 @@ const PostCard = (props: PostCardProps) => {
   const hasReacted = useHasReacted(post);
   const { count: reactionsCount } = usePostReactionsCount(post);
   const { count: commentsCount } = usePostCommentsCount(post);
+
+  // -------------------------------------------------------------------------------------
+  // --- Popup Menu Items
+  // -------------------------------------------------------------------------------------
+
+  const popupMenuItems = React.useMemo(
+    () => [
+      {
+        label: isFollowing ? t('unfollow') : t('follow'),
+        onPress: onPressFollow,
+        icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
+      },
+      {
+        label: t('report'),
+        onPress: onPressReport,
+        icon: reportIcon,
+      },
+    ],
+    [onPressFollow, onPressReport, isFollowing],
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Formatted data
@@ -164,33 +173,9 @@ const PostCard = (props: PostCardProps) => {
     if (isPending) {
       return <ThemedLottieView source={loadingOrange} autoPlay style={styles.pendingIcon} />;
     } else if (!isCurrentUserAuthor) {
-      return (
-        <ImageButton
-          onPress={event => {
-            setMenuAnchor({
-              x: event.nativeEvent.pageX,
-              y: event.nativeEvent.pageY,
-            });
-            setMenuVisible(true);
-          }}
-          tintColor={theme.colors.surfaceBlack}
-          image={moreBlackIcon}
-          buttonStyle={{
-            marginTop: theme.spacing.s,
-            marginRight: theme.spacing.xs,
-          }}
-          style={{ width: 20, height: 20 }}
-        />
-      );
+      return <PopupMenu menuItems={popupMenuItems} />;
     }
-  }, [
-    isPending,
-    isCurrentUserAuthor,
-    styles.pendingIcon,
-    theme.colors.surfaceBlack,
-    theme.spacing.s,
-    theme.spacing.xs,
-  ]);
+  }, [popupMenuItems, isPending, isCurrentUserAuthor, styles.pendingIcon]);
 
   const ProfileInfo = React.useMemo(() => {
     return (
@@ -213,7 +198,7 @@ const PostCard = (props: PostCardProps) => {
             </View>
           </View>
         </TouchableOpacity>
-        {PendingIndicator}
+        <Center justifyContent="flex-start">{PendingIndicator}</Center>
       </View>
     );
   }, [
@@ -304,23 +289,6 @@ const PostCard = (props: PostCardProps) => {
       )}
       {MediaAttachment && <View style={styles.mediaView}>{MediaAttachment}</View>}
       {!isPending && BottomBar}
-      <PopupMenu
-        anchor={menuAnchor}
-        visible={menuVisible}
-        closeMenu={() => setMenuVisible(false)}
-        menuItems={[
-          {
-            label: isFollowing ? t('unfollow') : t('follow'),
-            onPress: onPressFollow,
-            icon: isFollowing ? unfollowBlackIcon : followBlackIcon,
-          },
-          {
-            label: t('report'),
-            onPress: onPressReport,
-            icon: reportIcon,
-          },
-        ]}
-      />
     </TouchableOpacity>
   );
 };

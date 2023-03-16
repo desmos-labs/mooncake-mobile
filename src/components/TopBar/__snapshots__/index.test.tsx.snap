@@ -2,12 +2,15 @@
 
 exports[`component: TopBar renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "paddingHorizontal": 16,
+      },
+      undefined,
+    ]
   }
 >
   <View
@@ -15,67 +18,57 @@ exports[`component: TopBar renders 1`] = `
       [
         {
           "alignItems": "center",
-          "flexDirection": "row",
-          "paddingHorizontal": 16,
         },
-        undefined,
+        {
+          "alignItems": "flex-start",
+          "flex": 0.25,
+          "justifyContent": "center",
+        },
       ]
     }
-  >
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "flex-start",
-            "flex": 0.25,
-            "justifyContent": "center",
-          },
-        ]
-      }
-    />
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "center",
-            "flex": 0.5,
-            "justifyContent": "center",
-          },
-        ]
-      }
-    />
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "flex-end",
-            "flex": 0.25,
-            "justifyContent": "center",
-          },
-        ]
-      }
-    />
-  </View>
+  />
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+        },
+        {
+          "alignItems": "center",
+          "flex": 0.5,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+        },
+        {
+          "alignItems": "flex-end",
+          "flex": 0.25,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  />
 </View>
 `;
 
 exports[`component: TopBar renders back button 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
-    {
-      "flex": 1,
-    }
+    [
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "paddingHorizontal": 16,
+      },
+      undefined,
+    ]
   }
 >
   <View
@@ -83,34 +76,41 @@ exports[`component: TopBar renders back button 1`] = `
       [
         {
           "alignItems": "center",
-          "flexDirection": "row",
-          "paddingHorizontal": 16,
         },
-        undefined,
+        {
+          "alignItems": "flex-start",
+          "flex": 0.25,
+          "justifyContent": "center",
+        },
       ]
     }
   >
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "flex-start",
-            "flex": 0.25,
-            "justifyContent": "center",
-          },
-        ]
+    <RNGestureHandlerButton
+      collapsable={false}
+      delayLongPress={600}
+      enabled={true}
+      exclusive={true}
+      handlerTag={1}
+      handlerType="NativeViewGestureHandler"
+      hitSlop={
+        {
+          "bottom": 50,
+          "left": 50,
+          "right": 50,
+          "top": 50,
+        }
       }
+      onGestureEvent={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onHandlerStateChange={[Function]}
+      rippleColor={0}
+      touchSoundDisabled={false}
     >
-      <RNGestureHandlerButton
+      <View
+        accessibilityLabel="back-button"
+        accessible={true}
         collapsable={false}
-        delayLongPress={600}
-        enabled={true}
-        exclusive={true}
-        handlerTag={1}
-        handlerType="NativeViewGestureHandler"
         hitSlop={
           {
             "bottom": 50,
@@ -119,84 +119,64 @@ exports[`component: TopBar renders back button 1`] = `
             "top": 50,
           }
         }
-        onGestureEvent={[Function]}
-        onGestureHandlerEvent={[Function]}
-        onGestureHandlerStateChange={[Function]}
-        onHandlerStateChange={[Function]}
-        rippleColor={0}
-        touchSoundDisabled={false}
-      >
-        <View
-          accessibilityLabel="back-button"
-          accessible={true}
-          collapsable={false}
-          hitSlop={
-            {
-              "bottom": 50,
-              "left": 50,
-              "right": 50,
-              "top": 50,
-            }
+        style={
+          {
+            "opacity": 1,
+            "padding": 6,
           }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          selectable={false}
           style={
-            {
-              "opacity": 1,
-              "padding": 6,
-            }
+            [
+              {
+                "color": "#25282D",
+                "fontSize": 32,
+              },
+              undefined,
+              {
+                "fontFamily": "FontAwesome",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
           }
         >
-          <Text
-            allowFontScaling={true}
-            selectable={false}
-            style={
-              [
-                {
-                  "color": "#25282D",
-                  "fontSize": 32,
-                },
-                undefined,
-                {
-                  "fontFamily": "FontAwesome",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-        </View>
-      </RNGestureHandlerButton>
-    </View>
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "center",
-            "flex": 0.5,
-            "justifyContent": "center",
-          },
-        ]
-      }
-    />
-    <View
-      style={
-        [
-          {
-            "alignItems": "center",
-          },
-          {
-            "alignItems": "flex-end",
-            "flex": 0.25,
-            "justifyContent": "center",
-          },
-        ]
-      }
-    />
+          
+        </Text>
+      </View>
+    </RNGestureHandlerButton>
   </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+        },
+        {
+          "alignItems": "center",
+          "flex": 0.5,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+        },
+        {
+          "alignItems": "flex-end",
+          "flex": 0.25,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  />
 </View>
 `;

@@ -13,7 +13,7 @@ import {
   SectionListData,
   View,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import InviteComponent from 'screens/ManageInvites/components/InviteComponent';
 import { Invite } from 'types/invites';
 import { useTranslation } from 'react-i18next';

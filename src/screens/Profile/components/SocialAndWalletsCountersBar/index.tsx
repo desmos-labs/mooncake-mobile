@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { scale } from 'react-native-size-matters';
 import { ApplicationLink, ChainLink } from 'types/desmos';
 import { useActiveAccountAddress } from '@recoil/accounts';

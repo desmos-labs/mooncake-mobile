@@ -21,7 +21,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';

@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 
 type Props = {
   /**

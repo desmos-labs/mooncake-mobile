@@ -4,7 +4,7 @@ import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
 import { Image, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 
 export interface EmptyPostComponentProps {
   readonly textLabel: string;

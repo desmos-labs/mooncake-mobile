@@ -12,7 +12,7 @@ import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import { useSetting } from '@recoil/settings';
 import useClearUserData from 'hooks/useClearUserData';

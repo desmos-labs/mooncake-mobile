@@ -8,7 +8,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
 import useStyles from './useStyles';
 

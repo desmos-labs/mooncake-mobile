@@ -2,7 +2,7 @@ import Typography from 'components/Typography';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'native-base';
 import { verticalScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Coin } from '@cosmjs/stargate';

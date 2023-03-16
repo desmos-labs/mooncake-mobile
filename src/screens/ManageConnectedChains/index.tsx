@@ -9,7 +9,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
-import { Snackbar, useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
 import { ChainLink } from 'types/desmos';
@@ -19,6 +19,7 @@ import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
+import { useToast } from 'react-native-toast-notifications';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -28,7 +29,7 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const toast = useToast();
   const { chainLinks, loading, refetch } = useChainLinksGivenAddress();
   const connectChain = useConnectChain(chainLinks);
 
@@ -64,7 +65,9 @@ const ManageConnectedChains = () => {
           chainName={info.item.chainName}
           address={info.item.externalAddress}
           onPressDisconnect={handlePressDisconnectChainLink(info.item)}
-          showSnackBar={() => setShowSnackbar(true)}
+          showSnackBar={() => {
+            toast.show(t('common:addressCopied'));
+          }}
         />
       );
     },
@@ -136,16 +139,6 @@ const ManageConnectedChains = () => {
           style={{ overflow: 'visible' }}
         />
       )}
-      <Snackbar
-        visible={showSnackbar}
-        style={styles.snackbar}
-        onDismiss={() => setShowSnackbar(false)}
-        action={{
-          label: t('hide'),
-        }}
-        duration={Snackbar.DURATION_SHORT}>
-        <Typography.Caption1>{t('common:addressCopied')}</Typography.Caption1>
-      </Snackbar>
     </DView>
   );
 };

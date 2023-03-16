@@ -10,6 +10,10 @@ const useStyles = makeStyle(theme => ({
     width: 24,
     resizeMode: 'contain',
   },
+  menuButton: {
+    height: 20,
+    width: 20,
+  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',

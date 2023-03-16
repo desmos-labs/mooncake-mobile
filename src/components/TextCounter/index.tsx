@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from 'components/Typography';
 import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 
 type Props = {
   maxChar: number;
