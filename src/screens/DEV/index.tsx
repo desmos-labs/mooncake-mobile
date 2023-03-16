@@ -108,14 +108,10 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   }, [activeAccount, broadcastTx]);
 
   const showToast = () => {
-    toast.error(
-      {
-        message: 'hello world',
-        handlePressToast: () => console.log('hello world'),
-        handlePressRetry: () => console.log('retry'),
-      },
-      'i-am-an-id',
-    );
+    toast.error('hello world', {
+      handlePressToast: () => console.log('hello world'),
+      handlePressRetry: () => console.log('retry'),
+    });
   };
 
   const acceptInvite = useCallback(async (code: string) => {
