@@ -129,6 +129,7 @@ const ProfileConnections = () => {
       onTouchStart={disableParentSwipeLeft}
       {...panResponder.panHandlers}>
       <Tab.Navigator
+        initialRouteName={initialTabRouteName}
         screenOptions={screenOptions}
         tabBar={MaterialTopTabBar}
         sceneContainerStyle={styles.tabContainerStyle}>
