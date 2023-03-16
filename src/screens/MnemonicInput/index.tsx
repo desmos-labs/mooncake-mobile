@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useInitialFormFields, useOnSubmit, useValidateForm } from './hooks';
 import useStyles from './useStyles';

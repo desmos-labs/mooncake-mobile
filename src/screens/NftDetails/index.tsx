@@ -12,7 +12,7 @@ import React from 'react';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   interpolate,

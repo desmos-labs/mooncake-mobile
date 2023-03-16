@@ -3,7 +3,7 @@ import Typography from 'components/Typography';
 import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import ToggleFollowageButton from 'screens/Activities/components/ToggleFollowageButton';
 import PostAttachmentsPreview from 'screens/Activities/components/PostAttachmentsPreview';
 import { CompleteNotification, NotificationType } from 'types/notifications';

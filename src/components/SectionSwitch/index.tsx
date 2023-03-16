@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Switch, useTheme } from 'react-native-paper';
+import { Switch, useTheme } from 'native-base';
 import Typography from '../Typography';
 import useStyles from './useStyles';
 

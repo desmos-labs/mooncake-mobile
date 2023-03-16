@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import SingleProperty from 'screens/NftDetails/components/SingleProperty';
 import useStyles from './useStyles';
 

@@ -2,209 +2,189 @@
 
 exports[`component: SectionButton renders 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "display": "flex",
+      "flexDirection": "row",
+      "opacity": 1,
+      "paddingVertical": 16,
     }
   }
 >
-  <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+  <Text
     style={
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "opacity": 1,
-        "paddingVertical": 16,
-      }
-    }
-  >
-    <Text
-      style={
-        [
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.0015,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "flex": 1,
-          },
-        ]
-      }
-    >
-      label
-    </Text>
-    <Text
-      allowFontScaling={true}
-      selectable={false}
-      style={
+      [
         [
           {
             "color": "#25282D",
-            "fontSize": 24,
           },
-          undefined,
           {
-            "fontFamily": "FontAwesome",
+            "fontFamily": "Poppins-SemiBold",
+            "fontSize": 16,
             "fontStyle": "normal",
-            "fontWeight": "normal",
+            "fontWeight": "600",
+            "letterSpacing": 0.0015,
+            "textAlign": "left",
           },
-          {},
-        ]
-      }
-    >
-      
-    </Text>
-  </View>
+        ],
+        {
+          "flex": 1,
+        },
+      ]
+    }
+  >
+    label
+  </Text>
+  <Text
+    allowFontScaling={true}
+    selectable={false}
+    style={
+      [
+        {
+          "color": "#25282D",
+          "fontSize": 24,
+        },
+        undefined,
+        {
+          "fontFamily": "FontAwesome",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+        },
+        {},
+      ]
+    }
+  >
+    
+  </Text>
 </View>
 `;
 
 exports[`component: SectionButton renders left icon 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  pointerEvents="box-none"
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
-      "flex": 1,
+      "alignItems": "center",
+      "display": "flex",
+      "flexDirection": "row",
+      "opacity": 1,
+      "paddingVertical": 16,
     }
   }
 >
-  <View
-    accessibilityState={
+  <Image
+    resizeMode="contain"
+    source={
       {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
+        "testUri": "../../../src/assets/images/desmosIcon.png",
       }
     }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={false}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "opacity": 1,
-        "paddingVertical": 16,
+        "height": 24,
+        "marginRight": 8,
+        "width": 24,
       }
     }
-  >
-    <Image
-      resizeMode="contain"
-      source={
-        {
-          "testUri": "../../../src/assets/images/desmosIcon.png",
-        }
-      }
-      style={
-        {
-          "height": 24,
-          "marginRight": 8,
-          "width": 24,
-        }
-      }
-    />
-    <Text
-      style={
-        [
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.0015,
-              "textAlign": "left",
-            },
-          ],
-          {
-            "flex": 1,
-          },
-        ]
-      }
-    >
-      label
-    </Text>
-    <Text
-      allowFontScaling={true}
-      selectable={false}
-      style={
+  />
+  <Text
+    style={
+      [
         [
           {
             "color": "#25282D",
-            "fontSize": 24,
           },
-          undefined,
           {
-            "fontFamily": "FontAwesome",
+            "fontFamily": "Poppins-SemiBold",
+            "fontSize": 16,
             "fontStyle": "normal",
-            "fontWeight": "normal",
+            "fontWeight": "600",
+            "letterSpacing": 0.0015,
+            "textAlign": "left",
           },
-          {},
-        ]
-      }
-    >
-      
-    </Text>
-  </View>
+        ],
+        {
+          "flex": 1,
+        },
+      ]
+    }
+  >
+    label
+  </Text>
+  <Text
+    allowFontScaling={true}
+    selectable={false}
+    style={
+      [
+        {
+          "color": "#25282D",
+          "fontSize": 24,
+        },
+        undefined,
+        {
+          "fontFamily": "FontAwesome",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+        },
+        {},
+      ]
+    }
+  >
+    
+  </Text>
 </View>
 `;

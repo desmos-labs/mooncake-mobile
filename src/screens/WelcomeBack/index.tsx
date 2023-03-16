@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { Text, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 /**

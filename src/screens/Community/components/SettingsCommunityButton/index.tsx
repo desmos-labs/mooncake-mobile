@@ -2,7 +2,7 @@ import DropShadowWrapper from 'components/DropShadowWrapper';
 import Typography from 'components/Typography';
 import React from 'react';
 import { Image, ImageSourcePropType, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useStyles from './useStyles';
 

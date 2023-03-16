@@ -11,7 +11,7 @@ import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import ChainItem from 'screens/ImportAccountSelectChain/components/ChainItem';
 import { SupportedChain } from 'types/chains';
 import {

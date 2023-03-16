@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import React from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { Shadow } from 'react-native-shadow-2';
 import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';

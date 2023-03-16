@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render } from 'jest/utils/CustomWrappers';
 import Spacer from './index';
 
 describe('component: Spacer', () => {

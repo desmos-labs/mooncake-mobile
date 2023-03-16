@@ -1,7 +1,7 @@
 import Typography from 'components/Typography';
 import React from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export interface Props {

@@ -3,7 +3,7 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
 import FastImage, { Source } from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { formatCoins } from 'lib/FormatUtils';
 import { Coin } from '@cosmjs/stargate';
 import useStyles from './useStyles';

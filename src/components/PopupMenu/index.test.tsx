@@ -7,9 +7,6 @@ describe('component: PopupMenu', () => {
   it('renders', () => {
     const tree = render(
       <PopupMenu
-        anchor={{ x: 0, y: 0 }}
-        visible
-        closeMenu={jest.fn()}
         menuItems={[
           {
             icon: defaultProfilePic,

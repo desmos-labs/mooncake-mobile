@@ -19,7 +19,7 @@ import {
   PanResponder,
   PanResponderGestureState,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import UserLikedPostsTab from 'screens/ProfilePosts/UserLikedPostsTab';
 import UserPostsTab from 'screens/ProfilePosts/UserCreatedPostsTab';
 import UserTippedPostsTab from 'screens/ProfilePosts/UserTippedPostsData';

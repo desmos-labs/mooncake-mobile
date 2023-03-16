@@ -2,101 +2,91 @@
 
 exports[`component/TextBullet renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
     {
-      "flex": 1,
+      "marginVertical": 16,
     }
   }
 >
   <View
     style={
       {
-        "marginVertical": 16,
+        "alignItems": "center",
+        "flexDirection": "row",
       }
     }
   >
     <View
       style={
         {
-          "alignItems": "center",
-          "flexDirection": "row",
+          "backgroundColor": "#25282D",
+          "borderRadius": 2,
+          "height": 4,
+          "marginRight": 8,
+          "width": 4,
         }
       }
-    >
-      <View
-        style={
+    />
+    <Text
+      style={
+        [
           {
-            "backgroundColor": "#25282D",
-            "borderRadius": 2,
-            "height": 4,
-            "marginRight": 8,
-            "width": 4,
-          }
-        }
-      />
-      <Text
-        style={
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-Regular",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "400",
-              "letterSpacing": 0.005,
-              "lineHeight": 22,
-              "textAlign": "left",
-            },
-          ]
-        }
-      >
-        hello
-      </Text>
-    </View>
+            "color": "#25282D",
+          },
+          {
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.005,
+            "lineHeight": 22,
+            "textAlign": "left",
+          },
+        ]
+      }
+    >
+      hello
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+      }
+    }
+  >
     <View
       style={
         {
-          "alignItems": "center",
-          "flexDirection": "row",
+          "backgroundColor": "#25282D",
+          "borderRadius": 2,
+          "height": 4,
+          "marginRight": 8,
+          "width": 4,
         }
       }
-    >
-      <View
-        style={
+    />
+    <Text
+      style={
+        [
           {
-            "backgroundColor": "#25282D",
-            "borderRadius": 2,
-            "height": 4,
-            "marginRight": 8,
-            "width": 4,
-          }
-        }
-      />
-      <Text
-        style={
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-Regular",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "400",
-              "letterSpacing": 0.005,
-              "lineHeight": 22,
-              "textAlign": "left",
-            },
-          ]
-        }
-      >
-        world
-      </Text>
-    </View>
+            "color": "#25282D",
+          },
+          {
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.005,
+            "lineHeight": 22,
+            "textAlign": "left",
+          },
+        ]
+      }
+    >
+      world
+    </Text>
   </View>
 </View>
 `;

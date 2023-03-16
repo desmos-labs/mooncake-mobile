@@ -13,7 +13,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import FastImage from 'react-native-fast-image';
 import { Post } from 'types/posts';
 import { useActiveProfile } from '@recoil/profiles';

@@ -53,6 +53,7 @@ import operations from './operations.json';
 import ledgerScan from './ledgerScan.json';
 import broadcastTxOnChain from './broadcastTxOnChain.json';
 import importAccountSelectMode from './importAccountSelectMode.json';
+import a11y from './a11y.json';
 
 const en = {
   common,
@@ -110,6 +111,7 @@ const en = {
   ledgerScan,
   broadcastTxOnChain,
   importAccountSelectMode,
+  a11y
 };
 
 export default en;

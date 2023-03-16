@@ -2,22 +2,12 @@
 
 exports[`component: FlatListSeparator renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
     {
-      "flex": 1,
+      "backgroundColor": "#9D9D9D",
+      "height": 1,
+      "width": "100%",
     }
   }
->
-  <View
-    style={
-      {
-        "backgroundColor": "#9D9D9D",
-        "height": 1,
-        "width": "100%",
-      }
-    }
-  />
-</View>
+/>
 `;

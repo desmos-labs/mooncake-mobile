@@ -9,7 +9,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { Spinner, useTheme } from 'native-base';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -188,7 +188,7 @@ const SendTips = (props: NavProps) => {
 
                 {/* When we have the selected account properties, we will show the available balance and disable the buttons accordingly */}
                 {loadingBalance ? (
-                  <ActivityIndicator
+                  <Spinner
                     style={{ left: 0, marginRight: 'auto' }}
                     size={16}
                     color={theme.colors.surfaceBlack}

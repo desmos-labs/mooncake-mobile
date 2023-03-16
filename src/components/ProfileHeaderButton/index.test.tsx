@@ -5,7 +5,7 @@ import { defaultProfilePic } from 'assets/images';
 
 describe('component: ProfileHeaderButton', () => {
   it('renders', () => {
-    const tree = render(<ProfileHeaderButton imageSrc={defaultProfilePic} />).toJSON();
+    const tree = render(<ProfileHeaderButton image={defaultProfilePic} />).toJSON();
 
     expect(tree).toMatchSnapshot();
   });

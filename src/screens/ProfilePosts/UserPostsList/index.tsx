@@ -4,7 +4,7 @@ import { Post } from 'types/posts';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 export interface UserPostsListProps {

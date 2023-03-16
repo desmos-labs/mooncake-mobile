@@ -2,7 +2,7 @@ import { magnifyingGlass } from 'assets/images';
 import React, { useEffect, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {

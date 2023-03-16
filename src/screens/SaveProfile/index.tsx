@@ -9,7 +9,7 @@ import { Formik } from 'formik';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { DesmosProfile } from 'types/desmos';
 import { AccountWithWallet } from 'types/account';
 import { StackScreenProps } from '@react-navigation/stack';

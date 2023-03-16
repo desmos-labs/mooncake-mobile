@@ -1,6 +1,6 @@
 import React from 'react';
 import Spacer from 'components/Spacer';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useTranslation } from 'react-i18next';
 import {
   MIN_PW_LENGTH,

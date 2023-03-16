@@ -2,71 +2,61 @@
 
 exports[`component: SectionText renders 1`] = `
 <View
-  collapsable={false}
-  pointerEvents="box-none"
   style={
     {
-      "flex": 1,
+      "display": "flex",
+      "flexDirection": "row",
+      "paddingVertical": 16,
     }
   }
 >
-  <View
+  <Text
     style={
-      {
-        "display": "flex",
-        "flexDirection": "row",
-        "paddingVertical": 16,
-      }
+      [
+        [
+          {
+            "color": "#25282D",
+          },
+          {
+            "fontFamily": "Poppins-SemiBold",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "600",
+            "letterSpacing": 0.0015,
+            "textAlign": "left",
+          },
+        ],
+        {
+          "flex": 1,
+        },
+      ]
     }
   >
-    <Text
-      style={
+    left
+  </Text>
+  <Text
+    style={
+      [
         [
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.0015,
-              "textAlign": "left",
-            },
-          ],
           {
-            "flex": 1,
+            "color": "#25282D",
           },
-        ]
-      }
-    >
-      left
-    </Text>
-    <Text
-      style={
-        [
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 16,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.0015,
-              "textAlign": "left",
-            },
-          ],
           {
-            "color": "#9D9D9D",
+            "fontFamily": "Poppins-SemiBold",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "600",
+            "letterSpacing": 0.0015,
+            "textAlign": "left",
           },
-        ]
-      }
-    >
-      right
-    </Text>
-  </View>
+        ],
+        {
+          "color": "#9D9D9D",
+        },
+      ]
+    }
+  >
+    right
+  </Text>
 </View>
 `;

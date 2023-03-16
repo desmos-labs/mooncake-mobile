@@ -17,7 +17,7 @@ describe('services-axios: GetNonce', () => {
   it('calls get with correct url and address', async () => {
     const mockAddress = 'mock-address';
 
-    const result = await GetNonce({ address: mockAddress });
+    const result = await GetNonce(mockAddress);
 
     expect(axiosInstance.get).toHaveBeenCalledWith(`/nonce/${mockAddress}`);
 

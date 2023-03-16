@@ -34,7 +34,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';

@@ -1,44 +1,86 @@
+import React from 'react';
 import Typography from 'components/Typography';
-import React, { Fragment, useCallback } from 'react';
-import { Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
-import { Divider, Menu } from 'react-native-paper';
+import { Image, ImageSourcePropType } from 'react-native';
+import { Box, Divider, HStack, Menu, Pressable } from 'native-base';
+import { moreBlackIcon } from 'assets/images';
+import { InterfaceMenuProps } from 'native-base/src/components/composites/Menu/types';
+import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
-export type Props = {
-  anchor: React.ComponentProps<typeof Menu>['anchor'];
-  visible: boolean;
-  closeMenu: () => void;
-  menuItems: { icon: ImageSourcePropType; label: string; onPress: () => void }[];
-};
+interface PopupMenuItem {
+  /**
+   * The icon of the item.
+   */
+  icon: ImageSourcePropType;
+  /**
+   * The label of the item.
+   */
+  label: string;
+  /**
+   * What to do when the item is pressed.
+   */
+  onPress: () => void;
+}
 
-const PopupMenu: React.FC<Props> = ({ anchor, visible, closeMenu, menuItems }) => {
+export interface Props {
+  menuItems: PopupMenuItem[];
+
+  /**
+   * An optional callback that is called when the menu is opened.
+   */
+  onMenuOpen?: () => void;
+}
+
+/**
+ * A floating context menu that provides additional options to the user once opened.
+ * @constructor
+ */
+const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   const styles = useStyles();
 
-  const onPressButton = useCallback(
-    (item: any) => {
-      closeMenu();
-      item.onPress();
-    },
-    [closeMenu],
-  );
+  const { t } = useTranslation('a11y');
 
-  return (
-    <Menu contentStyle={styles.container} visible={visible} onDismiss={closeMenu} anchor={anchor}>
-      {menuItems.map((item, index) => {
-        const last = index === menuItems.length - 1;
-        return (
-          <Fragment key={item.label}>
-            <TouchableOpacity
-              style={styles.item}
-              accessibilityLabel={`${item.label} button`}
-              onPress={() => onPressButton(item)}>
+  /**
+   * Memoize the menu items to prevent re-renders.
+   */
+  const menuOptions = React.useMemo(() => {
+    return menuItems.map((item, idx) => {
+      return (
+        <Box id={item.label}>
+          <Menu.Item
+            accessibilityLabel={item.label}
+            accessibilityRole="button"
+            onPress={item.onPress}>
+            <HStack alignItems="center">
               <Image source={item.icon} style={styles.icon} />
               <Typography.Subtitle4>{item.label}</Typography.Subtitle4>
-            </TouchableOpacity>
-            {!last && <Divider style={styles.divider} />}
-          </Fragment>
-        );
-      })}
+            </HStack>
+          </Menu.Item>
+          {idx !== menuItems.length - 1 && <Divider />}
+        </Box>
+      );
+    });
+  }, [menuItems]);
+
+  /**
+   * Wrap the Menu trigger function in a useCallback.
+   */
+  const menuTriggerFn = React.useCallback((triggerProps: Pick<InterfaceMenuProps, 'trigger'>) => {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('showPostActions')}
+        {...triggerProps}>
+        <Image source={moreBlackIcon} style={styles.menuButton} />
+      </Pressable>
+    );
+    // Can ignore this dependency has the styles will never change after initial render
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Menu placement="left top" trigger={menuTriggerFn} rounded="xl" onOpen={onMenuOpen}>
+      {menuOptions}
     </Menu>
   );
 };

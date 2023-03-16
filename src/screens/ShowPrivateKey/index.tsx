@@ -7,7 +7,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import DTextInput from 'components/DTextInput';
 import useStyles from './useStyles';
 

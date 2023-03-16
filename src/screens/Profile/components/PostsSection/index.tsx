@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfilePostCard from 'screens/Profile/components/ProfilePostCard';
 import { Post } from 'types/posts';

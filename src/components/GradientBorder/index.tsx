@@ -1,6 +1,6 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { addAlphaToHex } from 'config/theme';
 
 type Props = {
