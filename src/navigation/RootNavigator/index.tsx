@@ -72,6 +72,7 @@ import {
   BottomSheetAndroid,
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
+import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -220,6 +221,7 @@ export type RootNavigatorParamList = {
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
+  [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -433,9 +435,9 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
 
-      {/* -------------- */}
-      {/* --- MODALS --- */}
-      {/* -------------- */}
+      {/* --------------------- */}
+      {/* --- BOTTOM MODALS --- */}
+      {/* --------------------- */}
 
       <Stack.Group
         screenOptions={{
@@ -456,6 +458,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
+        <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
         <Stack.Screen
           name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
           component={BackupPhraseBottomModal}

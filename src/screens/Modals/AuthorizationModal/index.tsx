@@ -1,0 +1,102 @@
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
+// dismiss button
+// import {iconCross} from 'assets/images';
+import Typography from 'components/Typography';
+import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import ROUTES from 'navigation/routes';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import Spacer from 'components/Spacer';
+import useStyles from './useStyles';
+
+export type AuthorizationModalParams = {
+  /**
+   * What to do when the user presses the close button.
+   */
+  onDismiss?: () => void;
+  /**
+   * What to do when the user presses the primary (main) modal button.
+   */
+  onPressYes: () => void;
+  /**
+   * What to do when the user presses the secondary (bottom-one) modal button.
+   */
+  onPressNo: () => void;
+};
+
+type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.AUTHORIZATION_MODAL>;
+
+/**
+ * Modal to request authorization for simplified tx broadcasting
+ * @constructor
+ */
+const AuthorizationModal = () => {
+  const {
+    params: { onDismiss, onPressYes, onPressNo },
+  } = useRoute<NavProps['route']>();
+  const { t } = useTranslation('broadcastTx');
+  const styles = useStyles();
+  const theme = useTheme();
+
+  const { goBack } = useNavigation<NavProps['navigation']>();
+
+  // Little hack to make sure the modal is dismissed before the onPress callback is invoked
+  const onPressPrimaryButton = () => {
+    goBack();
+    onPressYes && setTimeout(() => onPressYes(), 200);
+  };
+
+  // Little hack to make sure the modal is dismissed before the onPress callback is invoked
+  const onPressSecondaryButton = () => {
+    goBack();
+    onPressNo && setTimeout(() => onPressNo(), 200);
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* invoke dismiss fn or goBack if user presses the background */}
+      <TouchableOpacity
+        onPress={onDismiss ?? goBack}
+        activeOpacity={1}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <View style={styles.innerContainer}>
+        <Spacer paddingBottom={16}>
+          <Typography.H4 style={{ textAlign: 'center' }}>
+            {t('permissions modal header')}
+          </Typography.H4>
+        </Spacer>
+
+        <Typography.Body5>{t('permissions modal subtitle1')}</Typography.Body5>
+        <Spacer paddingTop={theme.spacing.m} />
+        <Typography.Body5>{t('permissions modal subtitle2')}</Typography.Body5>
+
+        <Spacer paddingTop={theme.spacing.xl}>
+          <Button
+            textColor={theme.colors.white}
+            backgroundColor={theme.colors.surfaceBlack}
+            mode={ButtonMode.CONTAINED}
+            size={ButtonSize.M}
+            onPress={onPressPrimaryButton}>
+            {t('common:yes')}
+          </Button>
+          <Spacer paddingTop={theme.spacing.m}>
+            <Button
+              textColor={theme.colors.surfaceBlack}
+              mode={ButtonMode.OUTLINED}
+              size={ButtonSize.M}
+              onPress={onPressSecondaryButton}>
+              {t('common:no')}
+            </Button>
+          </Spacer>
+        </Spacer>
+      </View>
+    </View>
+  );
+};
+
+export default AuthorizationModal;

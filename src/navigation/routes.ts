@@ -159,13 +159,12 @@ enum ROUTES {
   BACKUP_PHRASE_BOTTOM_MODAL = 'BACKUP_PHRASE_BOTTOM_MODAL',
   CONVERTIBLE_POINTS_MODAL = 'CONVERTIBLE_POINTS_MODAL',
   UPLOAD_PROFILE_PICTURES_MODALS = 'UPLOAD_PROFILE_PICTURES_MODALS',
+  AUTHORIZATION_MODAL = 'AUTHORIZATION_MODAL',
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
   // --- TODO: Categorize them as well
   // -------------------------------------------------------------------------------------
-
-  ACTION_AUTHORIZATION = 'ACTION_AUTHORIZATION',
 
   NFT_DETAILS = 'NFT_DETAILS',
 }
