@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PostComponent from 'components/PostComponent';
 import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButtonsBar';
 import Spacer from 'components/Spacer';
@@ -15,6 +15,10 @@ import {
   useHandlePressReaction,
   useHandlePressSendTips,
 } from 'screens/PostDetails/hooks';
+import { useActiveAccountAddress } from '@recoil/accounts';
+import { useToast } from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
+import { useTranslation } from 'react-i18next';
 import useStyles from './useStyles';
 
 interface Props {
@@ -28,8 +32,10 @@ interface Props {
  */
 const PostHeader = ({ post }: Props) => {
   const styles = useStyles();
+  const { t } = useTranslation('postDetails');
   const { focusTextInputRef } = useFocusTextInputOnNavigate();
-
+  const activeAddress = useActiveAccountAddress();
+  const toast = useToast();
   // Reactions data
   const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
   const hasReacted = useHasReacted(post);
@@ -41,12 +47,30 @@ const PostHeader = ({ post }: Props) => {
   const { authors: interactionsAuthors, loading: areInteractionsAuthorsLoading } =
     usePostInteractionsAuthors(post, 3);
 
+  const isCurrentUserAuthor = useMemo(
+    () => post.author.address === activeAddress,
+    [post, activeAddress],
+  );
+
   /**
    * Handlers for post actions
    */
   const handlePressCounters = useHandlePressCounters();
   const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
+
+  /**
+   * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
+   */
+  const checkUserAndHandleSendTips = useCallback(() => {
+    if (isCurrentUserAuthor) {
+      toast.show(t('common:cannot tip yourself'), {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
+    } else {
+      handlePressSendTips(post);
+    }
+  }, [handlePressSendTips, isCurrentUserAuthor, post, t, toast]);
 
   return (
     <>
@@ -55,7 +79,7 @@ const PostHeader = ({ post }: Props) => {
         postLiked={hasReacted}
         handleLikePress={() => handlePressReaction(post!)}
         handleCommentPress={focusTextInputRef}
-        handleTipPress={() => handlePressSendTips(post!)}
+        handleTipPress={checkUserAndHandleSendTips}
       />
       <Spacer paddingVertical={16}>
         <InteractionCountersBar
