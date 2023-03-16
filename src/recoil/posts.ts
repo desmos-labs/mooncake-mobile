@@ -106,6 +106,25 @@ export const useGetPostCommentsDifference = (user: string) => {
 };
 
 /**
+ * Hook that allows to get all the comments that are yet to-be-synced for a given user and post.
+ * @param user {string} - Address of the user inside which posts' to search for.
+ * @param subspaceId {number} - Subspace id of the post.
+ * @param postId {number} - ID of the post for which to get the comments.
+ */
+export const usePostCommentsToSync = (user: string, subspaceId: number, postId: number) => {
+  const posts = useRecoilValue(postsState);
+  return React.useMemo(() => {
+    const userPosts = posts[user] ?? [];
+    return userPosts.filter(
+      p =>
+        p.subspaceId === subspaceId &&
+        isCommentTo(p, postId) &&
+        p.status !== PostStatus.DELETED_LOCALLY,
+    );
+  }, [posts, user, subspaceId, postId]);
+};
+
+/**
  * Hook that allows to store a given post.
  * @param user {string} - User for which the post should be stored.
  */
