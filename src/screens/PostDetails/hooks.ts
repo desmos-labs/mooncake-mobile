@@ -47,7 +47,7 @@ export const useHandlePressShowCommentDetails = () => {
           return;
         default:
           // If the post is a comment to a post, navigate to its details
-          navigateToPost(comment.subspaceId, comment.id);
+          navigateToPost(comment.subspaceId, comment.id, { navigationMethod: 'push' });
       }
     },
     [navigateToPost],
