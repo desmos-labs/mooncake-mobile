@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils';
+import { removeDuplicates } from 'lib/ProfileUtils';
 
 /**
  * Hook that returns the list of the accounts that are following the user having the given address.
@@ -27,17 +28,12 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   // Callback to be called when the followers list is fetched
-  const onCompletedCallback = React.useCallback(
-    (data: any) => {
-      if (!data) return;
+  const onCompletedCallback = React.useCallback((data: any) => {
+    if (!data) return;
 
-      const profiles = data.relationships
-        .map((relationship: any) => relationship.creator)
-        .map(convertGraphQLProfile);
-      setFollowers(profiles);
-    },
-    [setFollowers],
-  );
+    const profiles = (data.relationships as any[]).map(r => r.creator).map(convertGraphQLProfile);
+    setFollowers(profiles);
+  }, []);
 
   // Query the followers list
   const { loading, fetchMore, refetch } = useQuery(GetAccountFollowers, {
@@ -92,7 +88,8 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   }, [onCompletedCallback, refetch]);
 
   return {
-    followers,
+    // Make sure to remove duplicate followers users if, for any reason, we have them
+    followers: removeDuplicates(followers),
     loading,
     fetchMore: fetchMoreFollowers,
     fetchingMore,

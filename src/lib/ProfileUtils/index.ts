@@ -92,3 +92,13 @@ export const getAppLinkImage = (app: ApplicationLink): Source => {
       return defaultProfilePic;
   }
 };
+
+/**
+ * Function that, given a list of {@link DesmosProfile}, returns a new list
+ * without any duplicated profile by their address.
+ */
+export const removeDuplicates = (profiles: DesmosProfile[]): DesmosProfile[] => {
+  return profiles.filter(
+    (profile, index, self) => index === self.findIndex(p => p.address === profile.address),
+  );
+};
