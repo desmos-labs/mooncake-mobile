@@ -72,6 +72,8 @@ const CustomToast = ({ type, message, options }: Props): JSX.Element => {
         .onStart(() => {
           Toast.close(options.id);
         }),
+    // This warning can be ignored as options will never change after initial render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
