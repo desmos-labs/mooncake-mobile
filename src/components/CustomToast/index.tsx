@@ -1,8 +1,7 @@
+import React from 'react';
 import Button, { ButtonMode } from 'components/Button';
 import Typography from 'components/Typography';
-
 import ToastConfig from 'config/ToastConfig';
-import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Toast, useTheme } from 'native-base';
 import { Shadow } from 'react-native-shadow-2';

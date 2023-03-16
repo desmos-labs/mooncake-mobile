@@ -1,7 +1,7 @@
 import { makeStyleWithProps } from 'config/theme';
 import ToastConfig from 'config/ToastConfig';
 
-const useStyles = makeStyleWithProps((toastType: ToastConfig, theme) => ({
+const useStyles = makeStyleWithProps((toastType: ToastConfig) => ({
   commonToastStyle: {
     width: '95%',
     top: 18,
@@ -16,26 +16,9 @@ const useStyles = makeStyleWithProps((toastType: ToastConfig, theme) => ({
       toastType === ToastConfig.SUCCESS ? 'rgba(241, 255, 225, 1)' : 'rgba(255, 242, 249, 1)',
     margin: 6,
   },
-  topToastStyle: {
-    top: 0,
-  },
-  bottomToastStyle: {
-    bottom: 0,
-  },
-  textGroup: {
-    justifyContent: 'center',
-  },
   button: {
     right: 0,
     marginLeft: 'auto',
-  },
-  success: {
-    backgroundColor: theme.colors.accentGreen01,
-    borderColor: theme.colors.accentGreen02,
-  },
-  failure: {
-    backgroundColor: theme.colors.pink03,
-    borderColor: theme.colors.pink02,
   },
 }));
 
