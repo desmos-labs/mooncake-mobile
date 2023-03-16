@@ -16,7 +16,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Dimensions } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { verticalScale } from 'react-native-size-matters';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -24,7 +24,6 @@ import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSepar
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
 import { FlashList } from '@shopify/flash-list';
 import { isPostPending, Post } from 'types/posts';
-import { DesmosProfile } from 'types/desmos';
 import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
@@ -87,18 +86,10 @@ const PostDetails = () => {
   // --- Menus
   // -------------------------------------------------------------------------------------
 
-  const [menuVisible, setMenuVisible] = useState(false);
-
   const [profileMenuVisible, setProfileMenuVisible] = useState(false);
   const [profileMenuAnchor, setProfileMenuAnchor] = useState<{
     x: number;
     y: number;
-  }>();
-
-  const [anchor, setAnchor] = useState<{ x: number; y: number }>();
-  const [popupMenuParams, setPopupMenuParams] = useState<{
-    post: Post;
-    user: DesmosProfile;
   }>();
 
   // -------------------------------------------------------------------------------------
@@ -280,9 +271,6 @@ const PostDetails = () => {
 
       {/* Menu used to perform author-related operations */}
       <PopupMenu
-        anchor={anchor}
-        visible={menuVisible}
-        closeMenu={() => setMenuVisible(false)}
         menuItems={[
           {
             icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,

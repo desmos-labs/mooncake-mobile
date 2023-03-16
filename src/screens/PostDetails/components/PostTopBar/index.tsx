@@ -10,7 +10,7 @@ import { getProfileDisplayName } from 'lib/ProfileUtils';
 import ImageButton from 'components/ImageButton';
 import { followBlackIcon, moreBlackIcon, unfollowBlackIcon } from 'assets/images';
 import { useHandlePressFollowOrUnfollow } from 'screens/PostDetails/hooks';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from 'native-base';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
