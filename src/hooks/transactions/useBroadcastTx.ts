@@ -39,6 +39,7 @@ import ROUTES from 'navigation/routes';
 import { useTranslation } from 'react-i18next';
 import useButterConfig from 'hooks/config/useButterConfig';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
+import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 
 export interface BroadcastOptions {
   /**
@@ -153,7 +154,7 @@ const usePromptRequestCentralizedAPIsPermissions = () => {
   const { config } = useButterConfig();
 
   return React.useCallback(
-    async (msgs: EncodeObject[]) => {
+    async (_: EncodeObject[]) => {
       const fetchAuthorizationsResult = await fetchAuthorizations();
       if (fetchAuthorizationsResult.isErr()) {
         return err(fetchAuthorizationsResult.error);
@@ -161,9 +162,16 @@ const usePromptRequestCentralizedAPIsPermissions = () => {
 
       return new Promise<Result<EncodeObject[], Error>>(resolve => {
         const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
-        const msgsTypes = msgs.map(msg => msg.typeUrl);
-        const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
-        const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
+
+        // Ideally, what could be done, is mapping each message to its type and ask the
+        // permission only for such message. However, right now we ask for all permissions
+        // for all messages here, in order to be coherent with that is done inside the
+        // Settings page (where all permissions are enabled using a single toggle).
+        const msgTypes = RequiredMessageTypesGrant;
+
+        // Compute the missing permissions
+        const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgTypes, feeGrants);
+        const missingAuthzPermissions = getMissingAuthzPermissions(msgTypes, authzGrants);
 
         if (missingFeeGrantsPermissions.length > 0 || missingAuthzPermissions.length > 0) {
           navigation.navigate(ROUTES.AUTHORIZATION_MODAL, {
