@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button, { ButtonMode } from 'components/Button';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
@@ -67,19 +67,13 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?: 'text' | 'outlined' | 'contained';
+  primaryButtonMode?: ButtonMode;
 
   /**
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?:
-    | 'text'
-    | 'outlined'
-    | 'contained'
-    | 'gradient'
-    | 'gradientFilled'
-    | 'backgroundComponent';
+  secondaryButtonMode?: ButtonMode;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -97,8 +91,8 @@ const ConfirmModal = () => {
       onPressSecondary,
       removeModalAfterButtonPress,
       image,
-      primaryButtonMode = 'contained',
-      secondaryButtonMode = 'text',
+      primaryButtonMode = ButtonMode.CONTAINED,
+      secondaryButtonMode = ButtonMode.TEXT,
     },
   } = useRoute<NavProps['route']>();
 
@@ -160,7 +154,7 @@ const ConfirmModal = () => {
                 size={44}
                 additionalStyle={styles.secondaryButton}
                 mode={secondaryButtonMode as any}
-                onPress={onPressSecondary}>
+                onPress={() => onPressSecondary}>
                 {secondaryButtonLabel}
               </Button>
             </Spacer>

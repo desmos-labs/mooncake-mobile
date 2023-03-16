@@ -1,6 +1,6 @@
 import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, { ButtonMode } from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -131,10 +131,22 @@ const SendTips = (props: NavProps) => {
                     return (
                       <Button
                         key={String(value)}
+                        backgroundColor={
+                          values.amount === String(value)
+                            ? theme.colors.butterOrange01
+                            : theme.colors.white
+                        }
+                        textColor={
+                          values.amount === String(value) ? theme.colors.white : theme.colors.black
+                        }
                         disabled={!canEdit || shouldDisableTipButton(value)}
-                        mode={values.amount === String(value) ? 'contained' : 'outlined'}
-                        size={44}
-                        style={[
+                        mode={
+                          values.amount === String(value)
+                            ? ButtonMode.CONTAINED
+                            : ButtonMode.OUTLINED
+                        }
+                        size={ButtonSize.M}
+                        additionalStyle={[
                           {
                             minWidth: 106,
                           },
@@ -144,17 +156,6 @@ const SendTips = (props: NavProps) => {
                               }
                             : {
                                 borderColor: theme.colors.surfaceBlack,
-                              },
-                        ]}
-                        contentStyle={[
-                          { height: 42 },
-                          shouldDisableTipButton(value)
-                            ? {
-                                backgroundColor: theme.colors.tabIconGrey,
-                              }
-                            : {
-                                backgroundColor:
-                                  values.amount === String(value) ? theme.colors.primary : 'white',
                               },
                         ]}
                         onPress={() => {

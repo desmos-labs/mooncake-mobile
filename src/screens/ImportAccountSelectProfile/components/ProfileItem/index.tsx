@@ -41,13 +41,13 @@ const ProfileItem = (props: Props) => {
         <ProfileImage style={styles.avatar} profile={profile} size={46} loading={profileLoading} />
         <View>
           {profile && (
-            <Typography.H5 ellipsizeMode="tail" numberOfLines={1}>
+            <Typography.H6 ellipsizeMode="tail" numberOfLines={1}>
               {getProfileDisplayName(profile)}
-            </Typography.H5>
+            </Typography.H6>
           )}
-          <Typography.Body6 ellipsizeMode="middle" numberOfLines={1} style={styles.address}>
+          <Typography.Body7 ellipsizeMode="middle" numberOfLines={1} style={styles.address}>
             {address}
-          </Typography.Body6>
+          </Typography.Body7>
         </View>
       </TouchableOpacity>
     </DropShadowWrapper>

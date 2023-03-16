@@ -139,7 +139,6 @@ const usePromptRequestSaveProfile = () => {
  * perform the operations in a more simple way.
  */
 const usePromptRequestAccountPermissions = () => {
-  const { t } = useTranslation('broadcastTx');
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
   const activeAccountAddress = useActiveAccountAddress()!;
   const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
@@ -162,19 +161,8 @@ const usePromptRequestAccountPermissions = () => {
         const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
 
         if (missingFeeGrantsPermissions.length > 0 || missingAuthzPermissions.length > 0) {
-          let body = t('request simplified tx broadcasting body');
-          if (missingFeeGrantsPermissions.length > 0) {
-            body = `${body}${t('fee grant')}:\n${missingFeeGrantsPermissions.join('\n')}\n`;
-          }
-          if (missingAuthzPermissions.length > 0) {
-            body = `${body}${t('sign on your behalf')}:\n${missingAuthzPermissions.join('\n')}`;
-          }
-
-          navigation.navigate(ROUTES.BOTTOM_MODAL, {
-            title: t('request simplified tx broadcasting title'),
-            body,
-            primaryButtonLabel: 'Yes',
-            onPressPrimary: () => {
+          navigation.navigate(ROUTES.AUTHORIZATION_MODAL, {
+            onPressYes: () => {
               const grantPermissionsMsgs: EncodeObject[] = [];
               if (missingFeeGrantsPermissions.length > 0) {
                 grantPermissionsMsgs.push(
@@ -197,8 +185,7 @@ const usePromptRequestAccountPermissions = () => {
               }
               resolve(ok(grantPermissionsMsgs));
             },
-            cancelButtonLabel: 'No',
-            onCancel: () => {
+            onPressNo: () => {
               resolve(err(new CanceledOperationError()));
             },
           });
@@ -207,7 +194,7 @@ const usePromptRequestAccountPermissions = () => {
         }
       });
     },
-    [activeAccountAddress, config?.desmosAddress, fetchAuthorizations, navigation, t],
+    [activeAccountAddress, config?.desmosAddress, fetchAuthorizations, navigation],
   );
 };
 
@@ -293,7 +280,6 @@ const useBroadcastTx = () => {
           txHash: result.transactionHash,
         }));
       }
-
       // Broadcast the transaction with the centralized APIs
       return broadcastTxWithApi(msgToBroadcast, {
         optimistic: options?.optimistic,

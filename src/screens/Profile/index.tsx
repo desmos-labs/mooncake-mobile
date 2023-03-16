@@ -136,7 +136,7 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
 
   const [pageRefreshing, setPageRefreshing] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(!isActiveAccount);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -165,7 +165,7 @@ const Profile = () => {
 
   // Refresh the data on the focus of the screen
   useEffect(() => {
-    setInitialLoading(!isActiveAccount);
+    setInitialLoading(true);
     refreshPage().finally(() => setInitialLoading(false));
     // Suppress the warning of the next line in order to update the data only on the first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
