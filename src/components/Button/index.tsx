@@ -44,7 +44,7 @@ export enum ButtonSize {
 export interface ButtonProps extends ViewProps {
   mode: ButtonMode;
   size: ButtonSize;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
   additionalStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;

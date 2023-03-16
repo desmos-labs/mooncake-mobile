@@ -1,8 +1,7 @@
 import { makeStyleWithProps } from 'config/theme';
 import ToastConfig from 'config/ToastConfig';
-import { Props } from './index';
 
-const useStyles = makeStyleWithProps((props: Props, theme) => ({
+const useStyles = makeStyleWithProps((toastType: ToastConfig, theme) => ({
   commonToastStyle: {
     width: '95%',
     top: 18,
@@ -12,9 +11,9 @@ const useStyles = makeStyleWithProps((props: Props, theme) => ({
     flexDirection: 'row',
     borderWidth: 1,
     borderColor:
-      props.type === ToastConfig.SUCCESS ? 'rgba(30, 196, 144, 1)' : 'rgba(249, 172, 212, 1)',
+      toastType === ToastConfig.SUCCESS ? 'rgba(30, 196, 144, 1)' : 'rgba(249, 172, 212, 1)',
     backgroundColor:
-      props.type === ToastConfig.SUCCESS ? 'rgba(241, 255, 225, 1)' : 'rgba(255, 242, 249, 1)',
+      toastType === ToastConfig.SUCCESS ? 'rgba(241, 255, 225, 1)' : 'rgba(255, 242, 249, 1)',
     margin: 6,
   },
   topToastStyle: {
