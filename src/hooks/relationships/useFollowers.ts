@@ -27,14 +27,17 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   // Callback to be called when the followers list is fetched
-  const onCompletedCallback = React.useCallback((data: any) => {
-    if (!data) return;
+  const onCompletedCallback = React.useCallback(
+    (data: any) => {
+      if (!data) return;
 
-    const profiles = data.relationships
-      .map((relationship: any) => relationship.creator)
-      .map(convertGraphQLProfile);
-    setFollowers(profiles);
-  }, []);
+      const profiles = data.relationships
+        .map((relationship: any) => relationship.creator)
+        .map(convertGraphQLProfile);
+      setFollowers(profiles);
+    },
+    [setFollowers],
+  );
 
   // Query the followers list
   const { loading, fetchMore, refetch } = useQuery(GetAccountFollowers, {
