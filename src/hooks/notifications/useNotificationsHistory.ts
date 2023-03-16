@@ -185,11 +185,11 @@ const useGetCompleteData = () => {
 /**
  * Hook that allows to get the notifications history of the current application user.
  */
-const useNotificationsHistory = (notificationsPerPage: number = 50) => {
+const useNotificationsHistory = (notificationsPerPage: number = 20) => {
   const getCompleteData = useGetCompleteData();
 
   const [notifications, setNotifications] = useState<CompleteNotification[]>([]);
-  const [convertingData, setConvertingData] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -198,8 +198,6 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
   const onCompletedCallback = React.useCallback(
     async (data: any) => {
       if (!data) return;
-
-      setConvertingData(true);
       const onChainNotifications = (data.notifications as any[]).map(convertGraphQLNotification);
       const completeNotifications: CompleteNotification[] = [];
 
@@ -214,13 +212,15 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
       }
 
       setNotifications(completeNotifications);
-      setConvertingData(false);
+      setLoading(false);
+      setFetchingMore(false);
+      setRefreshing(false);
     },
-    [setConvertingData, getCompleteData, setNotifications],
+    [setLoading, getCompleteData, setNotifications],
   );
 
   // Query used to get the notifications
-  const { loading, refetch, fetchMore } = useQuery(GetNotifications, {
+  const { refetch, fetchMore } = useQuery(GetNotifications, {
     variables: {
       offset: 0,
       limit: notificationsPerPage,
@@ -245,10 +245,8 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
         }),
       });
     } catch (e: any) {
-      setError(e.toString);
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString);
     }
   }, [fetchMore, notifications.length]);
 
@@ -262,16 +260,14 @@ const useNotificationsHistory = (notificationsPerPage: number = 50) => {
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);
 
   return {
     notifications,
-    loading: loading || convertingData,
+    loading,
     fetchMore: fetchMoreNotifications,
     fetchingMore,
     refresh: refetchNotifications,
