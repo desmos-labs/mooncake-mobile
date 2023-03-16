@@ -46,7 +46,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   const menuOptions = React.useMemo(() => {
     return menuItems.map((item, idx) => {
       return (
-        <Box id={item.label}>
+        <Box id={item.label} key={item.label}>
           <Menu.Item
             accessibilityLabel={item.label}
             accessibilityRole="button"
