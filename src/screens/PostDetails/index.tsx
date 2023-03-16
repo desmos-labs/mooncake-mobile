@@ -6,15 +6,12 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { followBlackIcon, reportIcon, shareBlackIcon, unfollowBlackIcon } from 'assets/images';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
-import PopupMenu from 'components/PopupMenu';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
@@ -25,7 +22,6 @@ import { Post } from 'types/posts';
 import usePost from 'hooks/posts/usePost';
 import usePostComments from 'hooks/posts/comments/usePostComments';
 import { ListRenderItemInfo } from '@shopify/flash-list/src/FlashListProps';
-import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { useActiveProfile } from '@recoil/profiles';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
@@ -35,11 +31,7 @@ import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import PostTopBar from 'screens/PostDetails/components/PostTopBar';
 import useStyles from './useStyles';
-import {
-  useHandleCreateComment,
-  useHandleExpandCommentView,
-  useHandlePressReportPost,
-} from './hooks';
+import { useHandleCreateComment, useHandleExpandCommentView } from './hooks';
 
 export type NavProps = CompositeScreenProps<
   StackScreenProps<RootNavigatorParamList, ROUTES.POST_DETAILS>,
@@ -70,7 +62,6 @@ export interface PostDetailsParams {
 const PostDetails = () => {
   const styles = useStyles();
   const theme = useTheme();
-  const { t } = useTranslation('postDetails');
   const { goBack } = useNavigation<NavProps['navigation']>();
 
   const { params } = useRoute<NavProps['route']>();
@@ -119,7 +110,6 @@ const PostDetails = () => {
   const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
-  const handlePressReportPost = useHandlePressReportPost();
 
   // Method used to refresh the post data
   const refreshPage = useCallback(() => {
@@ -139,20 +129,11 @@ const PostDetails = () => {
   ]);
 
   // -------------------------------------------------------------------------------------
-  // --- Formatted data
-  // -------------------------------------------------------------------------------------
-
-  const isFollowingAddress = useIsFollowing('');
-
-  // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
 
   useFocusEffect(
     useCallback(() => {
-      // Clean the popup params
-      // setPopupMenuParams(undefined);
-
       // Refresh the data
       refreshPage();
     }, []),
@@ -220,47 +201,6 @@ const PostDetails = () => {
         handlePostComment={() => handleCreateComment(post)}
         textInputRef={textInputRef}
         onIconPress={() => handleExpandCommentView(post)}
-      />
-
-      {/* Menu used to perform author-related operations */}
-      <PopupMenu
-        menuItems={[
-          {
-            icon: isFollowingAddress ? unfollowBlackIcon : followBlackIcon,
-            label: isFollowingAddress ? t('unfollow') : t('follow'),
-            onPress: () => {
-              // handlePressFollowOrUnfollow(popupMenuParams!.user);
-            },
-          },
-          {
-            icon: reportIcon,
-            label: t('report'),
-            onPress: () => {
-              // handlePressReportUser(popupMenuParams!.user);
-            },
-          },
-        ]}
-      />
-
-      {/* Menu used to perform post-related operations */}
-      <PopupMenu
-        // anchor={profileMenuAnchor}
-        // visible={profileMenuVisible}
-        // closeMenu={() => setProfileMenuVisible(false)}
-        menuItems={[
-          {
-            icon: shareBlackIcon,
-            label: t('share'),
-            onPress: () => console.log('share'),
-          },
-          {
-            icon: reportIcon,
-            label: t('report'),
-            onPress: () => {
-              handlePressReportPost(post);
-            },
-          },
-        ]}
       />
     </DView>
   );
