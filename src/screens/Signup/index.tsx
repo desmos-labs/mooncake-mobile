@@ -26,8 +26,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useResetSignUpState } from '@recoil/screens/signUpState';
-import { useToast } from 'react-native-toast-notifications';
-import ToastConfig from 'config/ToastConfig';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import {
   SignUpStatus,
   useHandlePressPrivacyPolicy,
@@ -50,7 +49,7 @@ const Signup = () => {
   const { navigate, goBack } = useNavigation<NavProps['navigation']>();
   const theme = useTheme();
   const styles = useStyles();
-  const toast = useToast();
+  const toast = useCustomToast();
 
   // Form validation
   const validationSchema = useValidationSchema();
@@ -82,9 +81,7 @@ const Signup = () => {
   const onError = useCallback(
     (error: Error) => {
       // TODO: Show the error here, maybe in a modal
-      toast.show(error.message, {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(error.message);
     },
     [toast],
   );

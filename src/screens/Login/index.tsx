@@ -6,14 +6,13 @@ import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
-import ToastConfig from 'config/ToastConfig';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import { useSetting } from '@recoil/settings';
 import useClearUserData from 'hooks/useClearUserData';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
@@ -49,7 +48,7 @@ const Login = () => {
 
   const navigateToHome = useNavigateToHome();
 
-  const toast = useToast();
+  const toast = useCustomToast();
   const areBiometricsEnabled = useSetting('biometrics');
   const clearUserData = useClearUserData();
 
@@ -98,7 +97,7 @@ const Login = () => {
     const loginResult = await onSubmitPassword(biometricsPassword);
     if (loginResult.isErr()) {
       setBiometricsLoading(false);
-      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      toast.errorNoRetry(t('toast:errorLogin'));
       return;
     }
 
@@ -115,7 +114,7 @@ const Login = () => {
     const loginResult = await onSubmitPassword(password);
     if (loginResult.isErr()) {
       setLoading(false);
-      toast.show(t('toast:errorLogin'), { type: ToastConfig.ERROR_NO_RETRY });
+      toast.errorNoRetry(t('toast:errorLogin'));
       return;
     }
 

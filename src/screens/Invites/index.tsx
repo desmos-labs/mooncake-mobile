@@ -22,10 +22,9 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'native-base';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';
-import ToastConfig from 'config/ToastConfig';
 import { ResultAsync } from 'neverthrow';
 import useStyles from './useStyles';
 
@@ -38,7 +37,7 @@ const Invites = () => {
   const { t } = useTranslation('invites');
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const toast = useToast();
+  const toast = useCustomToast();
   const generateInvite = useGenerateInvite();
   const { refetch, invitesInfo } = useGetActiveAccountInvitesInfo();
 
@@ -78,9 +77,7 @@ const Invites = () => {
           // dismissed
         }
       } else {
-        toast.show(shareResult.error.message, {
-          type: ToastConfig.ERROR_NO_RETRY,
-        });
+        toast.errorNoRetry(shareResult.error.message);
       }
     }
   }, [inviteLink, toast]);
@@ -91,9 +88,7 @@ const Invites = () => {
     if (generateInviteResult.isOk()) {
       setInviteLink(generateInviteResult.value);
     } else {
-      toast.show(generateInviteResult.error.message, {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(generateInviteResult.error.message);
     }
     setGeneratingInvite(false);
   }, [generateInvite, toast]);

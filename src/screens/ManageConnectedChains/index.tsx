@@ -19,7 +19,7 @@ import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
-import { useToast } from 'react-native-toast-notifications';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -29,7 +29,7 @@ const ManageConnectedChains = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { navigate } = useNavigation<NavProps['navigation']>();
-  const toast = useToast();
+  const toast = useCustomToast();
   const { chainLinks, loading, refetch } = useChainLinksGivenAddress();
   const connectChain = useConnectChain(chainLinks);
 
@@ -66,7 +66,7 @@ const ManageConnectedChains = () => {
           address={info.item.externalAddress}
           onPressDisconnect={handlePressDisconnectChainLink(info.item)}
           showSnackBar={() => {
-            toast.show(t('common:addressCopied'));
+            toast.success(t('common:addressCopied'));
           }}
         />
       );
