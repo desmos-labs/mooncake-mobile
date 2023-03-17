@@ -38,12 +38,6 @@ const useCreateLocalNotification = () => {
         data: JSON.parse(JSON.stringify(data)),
         ios: {
           interruptionLevel: 'active',
-          foregroundPresentationOptions: {
-            badge: true,
-            sound: true,
-            banner: true,
-            list: true,
-          },
           sound: 'default',
         },
       });

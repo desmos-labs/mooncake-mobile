@@ -51,12 +51,10 @@ static void ClearKeychainIfNecessary() {
     [client addPlugin:[FlipperPerformancePlugin new]];
   #endif
 
-  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
-
   self.moduleName = @"Butter";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
-  self.initialProps = appProperties;
+  self.initialProps = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:self.window.rootViewController.view];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

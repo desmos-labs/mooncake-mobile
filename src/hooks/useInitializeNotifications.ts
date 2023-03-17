@@ -39,7 +39,9 @@ const useInitializeNotifications = () => {
 
       // Navigation to the correct screen based on notification
       const { notification } = initialNotification;
-      handleNotificationPressEvent(parseRemoteNotification(notification.data));
+      // The notification created when the app receives a notification in the background has already been parsed but it is not typed
+      // To avoid this we need to cast as any this object
+      handleNotificationPressEvent(notification.data as any);
     }
   }, [handleNotificationPressEvent, setNotificationsCount]);
 
@@ -58,22 +60,22 @@ const useInitializeNotifications = () => {
   }, [manageInitialNotifications, setAppState, setNotificationsCount]);
 
   useEffect(() => {
-    // Checking if the app is active, if so we do not want to send the user notifications
     // We will be able to use this onMessage to handle different type of notifications, maybe create a snackbar instead
-    if (appStateVisible !== 'active') {
-      const unsubscribe = messaging().onMessage(async remoteMessage => {
-        const notification = parseRemoteNotification(remoteMessage);
-        if (isTransactionNotification(notification)) {
-          await createTransactionNotificationSnackbar(notification);
-        } else if (isSocialNotification(notification)) {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      const notification = parseRemoteNotification(remoteMessage.data);
+      if (isTransactionNotification(notification)) {
+        await createTransactionNotificationSnackbar(notification);
+      } else if (isSocialNotification(notification)) {
+        // Checking if the app is active, if so we do not want to send the user social notifications
+        if (appStateVisible !== 'active') {
           await createLocalNotification(notification);
         }
-      });
+      }
+    });
 
-      // Unsubscribe the listener when the effect is destroyed
-      return () => unsubscribe();
-    }
-  }, [appStateVisible, createTransactionNotificationSnackbar, createLocalNotification]);
+    // Unsubscribe the listener when the effect is destroyed
+    return () => unsubscribe();
+  }, [appStateVisible, createLocalNotification, createTransactionNotificationSnackbar]);
 };
 
 export default useInitializeNotifications;

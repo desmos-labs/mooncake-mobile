@@ -1,8 +1,8 @@
-import ROUTES from 'navigation/routes';
 import { useCallback } from 'react';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import ROUTES from 'navigation/routes';
 
 export interface NavigateToPostOptions {
   readonly focusCommentBox?: boolean;
