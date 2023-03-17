@@ -26,6 +26,8 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 // Fake app spawn if a notification is coming from FCM
 function HeadlessCheck({ isHeadless }) {
   if (isHeadless) {
+    // Hack to open the app on ios when a notification is received
+    // JSX not allowed in files with extension -> we can ignore safely, it is just a fake app container
     // eslint-disable-next-line react/jsx-filename-extension
     return <AppSilent />;
   }
