@@ -13,25 +13,28 @@ export interface Props {
   /**
    * The type of toast to be shown. Directly affects the appearance of the toast.
    */
-  type: ToastConfig;
+  readonly type: ToastConfig;
 
   /**
    * The message that will be displayed in the toast.
    */
-  message: string;
+  readonly message: string;
 
   options: {
     /**
      * What to do when the actual toast object is pressed.
      */
-    handlePressToast?: () => void;
+    readonly handlePressToast?: () => void;
 
     /**
      * What to do if the Retry button is pressed (only applicable for ERROR type toasts).
      */
-    handlePressRetry?: () => void;
+    readonly handlePressRetry?: () => void;
 
-    id: string;
+    /**
+     * A unique id used to check if a toast is currently active.
+     */
+    readonly id: string;
   };
 }
 
