@@ -638,11 +638,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Butter/ButterDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.10.1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
+				DEVELOPMENT_TEAM = S7CFLM85H9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Butter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Butter;
@@ -659,7 +657,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = Butter;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore social.butter";
 				SWIFT_OBJC_BRIDGING_HEADER = "Butter-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -676,11 +673,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Butter/Butter.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.10.1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S7CFLM85H9;
+				DEVELOPMENT_TEAM = S7CFLM85H9;
 				INFOPLIST_FILE = Butter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Butter;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -696,7 +691,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = social.butter;
 				PRODUCT_NAME = Butter;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore social.butter";
 				SWIFT_OBJC_BRIDGING_HEADER = "Butter-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
