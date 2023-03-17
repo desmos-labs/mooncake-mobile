@@ -1,6 +1,10 @@
 import { SocialNotificationData } from 'types/notifications';
 import notifee from '@notifee/react-native';
 
+/**
+ * Function that allows to create a local notification when the app is in background
+ * @param data The notification data
+ */
 const createBackgroundNotificationData = async (data: SocialNotificationData) => {
   // TODO find a way to update the notifications count without using the recoil state hook because
   // is not possible to use the recoil state in a function that is not a react component
