@@ -3190,31 +3190,31 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.3.0.tgz#9e558170c106bbafaa1ef502bd8e6d4651012bf9"
   integrity sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==
 
-"@react-native-firebase/analytics@16.5.2":
-  version "16.5.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-16.5.2.tgz#0e073a806a8d6f3c16df096a3cd2e3e0e4b8f8b0"
-  integrity sha512-UEfiSG8yE4rqyE7BYkIhENiQcPscgvLLIoZOi5tSEBMiJN2GLm8gs1eF/9VSIGFOVstU7juz744j/iEOmX6UIg==
+"@react-native-firebase/analytics@17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-17.3.2.tgz#31ddb8b349f073b540d6e15ac2c4216439b39390"
+  integrity sha512-xjgH5QFmVDHpaxxndhGMXhMFBizNg9Rkr5ukeWIMeR/K6Shi/xGVoomjn/PmgoCZWIjX3EJkokXSxsntMlh+Vg==
 
-"@react-native-firebase/app@16.5.2":
-  version "16.5.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-16.5.2.tgz#b67866ce605f366409e3039fa461ac601065edb0"
-  integrity sha512-BKRFadp/oEu8y4jBvO7/+9bQjEoYJv/7tgZWXG2Pt+qiQLvL7PJCnWjN+OzBE8Vcfy7pAXQYQZ9vrDvm4evyOQ==
+"@react-native-firebase/app@17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-17.3.2.tgz#c39dd34f5389ff65845c5d67313bbf2371275a8f"
+  integrity sha512-JPA9PuD3il2/FERnsW5bC/PbXdcBcVMtk4V0vL8YgLh+jQg+E3qQTQmeWn9eOWTYJb6BYOiiNHTdTglvqoo5Cg==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/dynamic-links@16.5.2":
-  version "16.5.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-16.5.2.tgz#ec17d8d07372e788ca948fa85da4f1f70c728991"
-  integrity sha512-Ge8Bd0WgW263Mzd7Iqg2O39GEOV3yyV4jZIg0hL0q4o82UUd8Id77MJ3LiSQ/2ag9V1oNWCZtRrl2ldOBbVLVA==
+"@react-native-firebase/dynamic-links@17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-17.3.2.tgz#a965b71e84c1e0d99a6dc3f9eb6ef8dc870f15cc"
+  integrity sha512-iBANo9TFdVStxXjRw+EtwF3bCxEiLJzms1yyuYuqrSQb8bVOeD+ViJXbF4XAlzti04ut+L1kY3avEUV9IoCM5g==
   dependencies:
     "@expo/config-plugins" "^5.0.4"
 
-"@react-native-firebase/messaging@16.5.2":
-  version "16.5.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-16.5.2.tgz#c062b07859b7873e0c963d3f7e3b283247a6bb3d"
-  integrity sha512-wT3iPj8kCFBGvha0a8kIcgSJyIuCMoyKr2eMyBO09j75ym0/G/TBpZc6luYnOnJccMSaT0uPageEa3ymT6VQwg==
+"@react-native-firebase/messaging@17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.3.2.tgz#1d37fdf8cc3027542fdbab871f5df3ea2fb687c8"
+  integrity sha512-7IO12OjNdjtvtxHXY/8qJ9a0RLTg4cUddnE1sNxj3RciDz+Sx7SRJX0fsyX19i1m7dcPh73p9NzrrtnvNnILfw==
 
 "@react-native-masked-view/masked-view@^0.2.6":
   version "0.2.8"

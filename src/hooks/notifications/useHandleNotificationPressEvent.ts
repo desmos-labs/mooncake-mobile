@@ -30,7 +30,6 @@ const useHandleNotificationPressEvent = () => {
       if (!profile) {
         return;
       }
-
       switch (data?.type) {
         case NotificationType.Comment:
           navigateToPost(data.subspaceId, data.postId);
