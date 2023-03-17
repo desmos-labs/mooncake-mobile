@@ -39,8 +39,10 @@ const useInitializeNotifications = () => {
 
       // Navigation to the correct screen based on notification
       const { notification } = initialNotification;
-      // The notification created when the app receives a notification in the background has already been parsed but it is not typed
-      // To avoid this we need to cast as any this object
+      // The notification created when the app receives a notification in the background has already been parsed, but it is not typed
+      // because notifee cast it into a generic object when spawning a notification
+      // ------ see @Notification type (data property) in @notifee/react-native ------
+      // To avoid any type mismatch we need to cast as any this object
       handleNotificationPressEvent(notification.data as any);
     }
   }, [handleNotificationPressEvent, setNotificationsCount]);

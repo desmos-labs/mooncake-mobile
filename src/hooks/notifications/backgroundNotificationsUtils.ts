@@ -10,6 +10,8 @@ const createBackgroundNotificationData = async (data: SocialNotificationData) =>
   // is not possible to use the recoil state in a function that is not a react component
   const actualBadgeCount = await notifee.getBadgeCount();
   await notifee.setBadgeCount(actualBadgeCount + 1);
+
+  // TODO create more channels based on the notification type
   // Create the notification channel id
   const channelId = await notifee.createChannel({
     id: 'default',

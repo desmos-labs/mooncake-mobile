@@ -13,6 +13,7 @@ const useCreateLocalNotification = () => {
       const actualBadgeCount = await notifee.getBadgeCount();
       await notifee.setBadgeCount(actualBadgeCount + 1);
 
+      // TODO create more channels based on the notification type
       // Create the notification channel id
       const channelId = await notifee.createChannel({
         id: 'default',
