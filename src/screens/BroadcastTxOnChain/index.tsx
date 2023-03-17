@@ -90,7 +90,7 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
-        toast.show(result.error.message.toString(), {
+        toast.show(result.error.message, {
           type: ToastConfig.ERROR_NO_RETRY,
         });
       } else if (result.isOk() && onSuccess) {

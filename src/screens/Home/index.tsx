@@ -111,7 +111,7 @@ const Home = () => {
   // --- Utility functions
   // -------------------------------------------------------------------------------------
 
-  const getPostType = (item: Post) => {
+  const getPostType = useCallback((item: Post) => {
     if (item.attachments && item.attachments.length > 0 && item.text) {
       return 'text+media';
     }
@@ -122,7 +122,7 @@ const Home = () => {
       return 'text';
     }
     return 'default';
-  };
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
