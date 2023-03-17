@@ -29,7 +29,7 @@ import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
 import useStyles from './useStyles';
 
-type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
+export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
 
 /**
  * Home screen of the application that displays the list of posts the user is
