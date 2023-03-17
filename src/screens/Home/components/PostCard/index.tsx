@@ -1,6 +1,5 @@
 import { loadingOrange } from 'assets/animations';
 import {
-  defaultProfilePic,
   followBlackIcon,
   postLikedIcon,
   postToCommentIcon,
@@ -17,7 +16,7 @@ import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -91,8 +90,6 @@ const PostCard = (props: PostCardProps) => {
     onPressTip,
     onPressDetails,
   } = props;
-
-  const [imageError, setImageError] = useState(false);
 
   // -------------------------------------------------------------------------------------
   // --- Utility hooks
@@ -202,11 +199,7 @@ const PostCard = (props: PostCardProps) => {
     return (
       <View style={styles.profileInfoView}>
         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
-          <FastImage
-            source={imageError ? defaultProfilePic : getProfilePicture(post.author)}
-            style={styles.profilePic}
-            onError={() => setImageError(true)}
-          />
+          <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
           <View style={{ flexDirection: 'column' }}>
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
             <View style={{ flexDirection: 'row' }}>

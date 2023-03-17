@@ -1,4 +1,3 @@
-import { placeholderIcon } from 'assets/images';
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
   StyleProp,
@@ -63,12 +62,6 @@ const ImageButton = ({
       }
     : undefined;
   const [imageSource, setImageSource] = useState(image);
-  const [imageError, setImageError] = useState(false);
-
-  const onImageNotFound = () => {
-    console.log('image not found');
-    setImageError(true);
-  };
 
   useEffect(() => {
     setImageSource(image);
@@ -79,13 +72,7 @@ const ImageButton = ({
       style={[{ opacity: rest.disabled ? 0.3 : 1 }, buttonStyle]}
       hitSlop={hitSlop}
       {...rest}>
-      <FastImage
-        resizeMode="cover"
-        style={style}
-        source={imageError ? placeholderIcon : imageSource}
-        tintColor={tintColor}
-        onError={() => console.log('image error')}
-      />
+      <FastImage resizeMode="cover" style={style} source={imageSource} tintColor={tintColor} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>
           {overlayComponent}
