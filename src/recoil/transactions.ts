@@ -53,11 +53,11 @@ export const useGetPendingTransaction = () => {
 export const useStorePendingTransaction = () => {
   const setTransactions = useSetRecoilState(pendingTransactionsState);
   return React.useCallback(
-    (user: string, transaction: PendingTransaction) => {
+    (transaction: PendingTransaction) => {
       setTransactions(currentTransactions => {
         // Get the user transactions
         const existingTransactionIndex = currentTransactions.findIndex(
-          t => t.hash === transaction.hash && t.user === user,
+          t => t.hash === transaction.hash && t.user === transaction.user,
         );
 
         // Update the transaction, or insert it if not existing

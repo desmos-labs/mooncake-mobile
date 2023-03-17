@@ -3,9 +3,8 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoTypes } from '@cosmjs/stargate';
 import { createDesmosTypes } from '@desmoslabs/desmjs';
 import axiosInstance from 'services/axios';
-import { errAsync, ok, ResultAsync } from 'neverthrow';
-import { PendingTransaction } from 'types/transactions';
-import { useStorePendingTransaction } from '@recoil/transactions';
+import { errAsync, ResultAsync } from 'neverthrow';
+import { BroadcastTxWithApiResult, PendingTransaction } from 'types/transactions';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { AminoMsg } from '@cosmjs/amino';
 
@@ -51,13 +50,11 @@ const postTransaction = (messages: AminoMsg[], options?: BroadcastTxWithApiOptio
  */
 const useBroadcastTxWithApi = () => {
   const activeAccountAddress = useActiveAccountAddress();
-
-  const storePendingTransaction = useStorePendingTransaction();
   return React.useCallback(
     (
       messages: EncodeObject[],
       options?: BroadcastTxWithApiOptions,
-    ): ResultAsync<BroadcastTxWithApiResponse, Error> => {
+    ): ResultAsync<BroadcastTxWithApiResult, Error> => {
       if (!activeAccountAddress) {
         return errAsync(new Error('Trying to broadcast a transaction without active account'));
       }
@@ -70,22 +67,19 @@ const useBroadcastTxWithApi = () => {
         (e: any) => new Error(e?.message ?? 'Error broadcasting the transaction'),
       )
         .map(response => ({ txHash: response.data.tx_hash }))
-        .andThen(result => {
-          // Store the transaction locally
-          const transaction: PendingTransaction = {
-            messages,
-            fees: [],
-            hash: result.txHash,
-            timestamp: new Date().toISOString(),
-            user: activeAccountAddress,
-          };
-          storePendingTransaction(activeAccountAddress, transaction);
-
-          // Return the original result
-          return ok(result);
+        .map(result => {
+          return {
+            pendingTransaction: {
+              messages,
+              fees: [],
+              hash: result.txHash,
+              timestamp: new Date().toISOString(),
+              user: activeAccountAddress,
+            } as PendingTransaction,
+          } as BroadcastTxWithApiResult;
         });
     },
-    [activeAccountAddress, storePendingTransaction],
+    [activeAccountAddress],
   );
 };
 

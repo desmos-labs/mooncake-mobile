@@ -9,6 +9,7 @@ import { err, ok, Result, ResultAsync } from 'neverthrow';
 import useSignTx from 'hooks/transactions/useSignTx';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { useStoredAccounts } from '@recoil/accounts';
+import { BroadcastTxOnChainResult, PendingTransaction } from 'types/transactions';
 
 /**
  * Hook that provide a function to get the information of an account
@@ -87,9 +88,10 @@ export const useEstimateFees = () => {
  */
 export function useBroadcastTx() {
   const chainInfo = useCurrentChainInfo();
+
+  const unlockWallet = useUnlockWallet();
   const getSignerData = useGetSignerData();
   const signTx = useSignTx();
-  const unlockWallet = useUnlockWallet();
 
   return React.useCallback(
     async (
@@ -97,7 +99,7 @@ export function useBroadcastTx() {
       messages: EncodeObject[],
       fees: StdFee,
       memo?: string,
-    ): Promise<Result<DeliverTxResponse, Error>> => {
+    ): Promise<Result<BroadcastTxOnChainResult, Error>> => {
       let wallet: Wallet;
       if (typeof accountAddressOrWallet === 'string') {
         const walletUnlockResult = await unlockWallet(accountAddressOrWallet);
@@ -144,10 +146,22 @@ export function useBroadcastTx() {
       // Encode the transaction to bytes.
       const txBytes = TxRaw.encode(signResult.value.signatureResult.txRaw).finish();
 
-      // Perform the broadcast.
+      // Perform the broadcast
+      // TODO: Change this to *not* wait for a block inclusion. We can safely wait for the TX_ASYNC checks only
       return ResultAsync.fromPromise(client.broadcastTx(txBytes), e =>
         Error(e?.toString() ?? 'Error while signing the transaction'),
-      );
+      ).map((broadcastResult: DeliverTxResponse) => {
+        return {
+          pendingTransaction: {
+            messages,
+            fees: fees.amount,
+            user: wallet.address,
+            hash: broadcastResult.transactionHash,
+            timestamp: new Date().toISOString(),
+          } as PendingTransaction,
+          response: broadcastResult,
+        } as BroadcastTxOnChainResult;
+      });
     },
     [chainInfo.rpcUrl, getSignerData, signTx, unlockWallet],
   );

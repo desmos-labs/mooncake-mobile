@@ -46,17 +46,16 @@ const useSyncPendingTransactions = () => {
     const onChainTransactions = await getOnChainTransactionsByHashes(pendingTransactionHashes);
 
     // Get the hashes of the transactions that are pending and should be deleted
-    const hashesToDelete = transactionsRef.current
-      .filter(tx => {
-        const isOnChain = onChainTransactions.includes(tx.hash);
-        const elapsedTime = Date.now() - Date.parse(tx.timestamp);
+    const transactionsToDelete = transactionsRef.current.filter(tx => {
+      const isOnChain = onChainTransactions.includes(tx.hash);
+      const elapsedTime = Date.now() - Date.parse(tx.timestamp);
 
-        // If the transaction is on-chain, or it was created more than 1 minute ago, delete it
-        return isOnChain || elapsedTime > 60 * 1000;
-      })
-      .map(tx => tx.hash);
+      // If the transaction is on-chain, or it was created more than 1 minute ago, delete it
+      return isOnChain || elapsedTime > 60 * 1000;
+    });
 
     // Delete the transactions
+    const hashesToDelete = transactionsToDelete.map(tx => tx.hash);
     deletePendingTransactions(hashesToDelete);
   }, [deletePendingTransactions, getOnChainTransactionsByHashes]);
 };

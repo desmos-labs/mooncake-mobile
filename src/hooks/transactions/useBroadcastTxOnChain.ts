@@ -1,4 +1,4 @@
-import { DeliverTxResponse, EncodeObject } from '@desmoslabs/desmjs';
+import { EncodeObject } from '@desmoslabs/desmjs';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -9,6 +9,7 @@ import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen'
 import { Wallet } from 'types/wallet';
 import { errAsync, ResultAsync } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
+import { BroadcastTxOnChainResult, BroadcastTxResult } from 'types/transactions';
 
 export interface BroadcastTxOptions {
   /**
@@ -36,18 +37,18 @@ const useBroadcastTxOnChain = () => {
     (
       messages: EncodeObject[],
       options?: BroadcastTxOptions,
-    ): ResultAsync<DeliverTxResponse, Error> => {
+    ): ResultAsync<BroadcastTxResult, Error> => {
       if (!activeAccountAddress) {
         return errAsync(new Error('Trying to broadcast a transaction without active account'));
       }
 
-      return ResultAsync.fromPromise<DeliverTxResponse, Error>(
+      return ResultAsync.fromPromise<BroadcastTxOnChainResult, Error>(
         new Promise((resolve, reject) => {
           navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
             messages,
             accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccountAddress,
             memo: options?.memo,
-            onSuccess: (txResponse: DeliverTxResponse) => {
+            onSuccess: (txResponse: BroadcastTxOnChainResult) => {
               returnToCurrentScreen();
               resolve(txResponse);
             },

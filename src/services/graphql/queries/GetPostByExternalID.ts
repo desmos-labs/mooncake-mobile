@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client';
 import PostFields from 'services/graphql/queries/fragments/PostFields';
 
-const GetPost = gql`
+const GetPostByExternalID = gql`
   ${PostFields}
-  query GetPost($subspaceId: bigint!, $postId: bigint!, $user: String, $reaction: jsonb!)
+  query GetPost($subspaceId: bigint!, $externalId: String!, $user: String, $reaction: jsonb!)
   @api(name: butter) {
-    posts: post(where: { subspace_id: { _eq: $subspaceId }, id: { _eq: $postId } }) {
+    posts: post(where: { subspace_id: { _eq: $subspaceId }, external_id: { _eq: $externalId } }) {
       ...PostFields
       reactionPresence: reactions_aggregate(
         where: { author_address: { _eq: $user }, value: { _contains: $reaction } }
@@ -18,4 +18,4 @@ const GetPost = gql`
   }
 `;
 
-export default GetPost;
+export default GetPostByExternalID;

@@ -295,8 +295,7 @@ const PostCard = (props: PostCardProps) => {
     reactionsCount,
     onPressComment,
     commentsCount,
-    isCurrentUserAuthor,
-    onPressTip,
+    checkUserAndHandleSendTips,
     t,
   ]);
 
