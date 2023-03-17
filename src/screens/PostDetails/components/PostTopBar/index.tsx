@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { isCommentReply, Post } from 'types/posts';
+import { isComment, Post } from 'types/posts';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
 import BackButton from 'components/BackButton';
@@ -79,7 +79,7 @@ const PostTopBar = ({ post, handlePressMore, onBackButtonPress }: Props) => {
     return <PopupMenu menuItems={menuItems} onMenuOpen={handlePressMore} />;
   }, [handlePressFollow, handlePressMore, handlePressReport, isFollowingAddress, post, t]);
 
-  if (isCommentReply(post!)) {
+  if (isComment(post!)) {
     return (
       <TopBar
         style={styles.topBar}

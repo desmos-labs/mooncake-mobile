@@ -15,7 +15,6 @@ const GetPostComments = gql`
       order_by: { creation_date: asc }
       where: {
         subspace_id: { _eq: $subspaceId }
-        conversation: { id: { _eq: $postId } }
         references: {
           type: { _eq: "POST_REFERENCE_TYPE_REPLY" }
           reference: { id: { _eq: $postId } }

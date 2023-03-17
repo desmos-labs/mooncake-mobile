@@ -1,6 +1,6 @@
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isCommentTo, Post, PostStatus } from 'types/posts';
+import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost } from 'lib/PostsUtils';
 
@@ -221,10 +221,7 @@ export const useUpdatePostStatus = (user: string) => {
  */
 export const useStoredRootPosts = (user: string) => {
   const posts = useRecoilValue(postsState);
-  return React.useMemo(
-    () => posts[user]?.filter(post => post.conversationId === 0) ?? [],
-    [posts, user],
-  );
+  return React.useMemo(() => (posts[user] ?? []).filter(isRootPost), [posts, user]);
 };
 
 /**
