@@ -205,5 +205,10 @@ export const mergePosts = (
     }
   });
 
+  // Order the posts to store based on their creation date descending
+  postsToStore = postsToStore.sort(
+    (a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate),
+  );
+
   return [postsToStore, postsUpdates];
 };
