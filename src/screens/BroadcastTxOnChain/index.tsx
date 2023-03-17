@@ -19,6 +19,8 @@ import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
 import { useTheme } from 'native-base';
+import { useToast } from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -56,7 +58,7 @@ const BroadcastTxOnChain: React.FC = () => {
   const [feesResult, setFeesResult] = React.useState<Result<StdFee, Error>>();
   const broadcastTx = useBroadcastTx();
   const [broadcastingTx, setBroadcastingTx] = React.useState(false);
-
+  const toast = useToast();
   // Call cancel callback if the use goes back.
   useOnBackAction(() => {
     onCancel && onCancel();
@@ -88,13 +90,14 @@ const BroadcastTxOnChain: React.FC = () => {
       setBroadcastingTx(false);
 
       if (result.isErr() && !isCanceledOperationError(result.error)) {
-        // TODO: Show this error message in a modal.
-        console.error(result.error.message);
+        toast.show(result.error.message.toString(), {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
       } else if (result.isOk() && onSuccess) {
         onSuccess(result.value);
       }
     }
-  }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess]);
+  }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess, toast]);
 
   return (
     <DView style={styles.root}>

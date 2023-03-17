@@ -63,6 +63,12 @@ const ImageButton = ({
       }
     : undefined;
   const [imageSource, setImageSource] = useState(image);
+  const [imageError, setImageError] = useState(false);
+
+  const onImageNotFound = () => {
+    console.log('image not found');
+    setImageError(true);
+  };
 
   useEffect(() => {
     setImageSource(image);
@@ -76,9 +82,9 @@ const ImageButton = ({
       <FastImage
         resizeMode="cover"
         style={style}
-        source={imageSource}
+        source={imageError ? placeholderIcon : imageSource}
         tintColor={tintColor}
-        onError={() => setImageSource(placeholderIcon)}
+        onError={() => console.log('image error')}
       />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>
