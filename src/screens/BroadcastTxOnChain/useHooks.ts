@@ -2,14 +2,15 @@ import { StdFee } from '@cosmjs/amino';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import React from 'react';
 import { Wallet } from 'types/wallet';
-import { DeliverTxResponse, DesmosClient, TxRaw } from '@desmoslabs/desmjs';
+import { DesmosClient } from '@desmoslabs/desmjs';
 import { useCurrentChainGasPrice, useCurrentChainInfo } from '@recoil/settings';
 import { SignerData } from '@cosmjs/stargate';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 import useSignTx from 'hooks/transactions/useSignTx';
 import useUnlockWallet from 'hooks/useUnlockWallet';
 import { useStoredAccounts } from '@recoil/accounts';
-import { BroadcastTxOnChainResult, PendingTransaction } from 'types/transactions';
+import { PendingTransaction } from 'types/transactions';
+import { SyncBroadcastResponse } from '@desmoslabs/desmjs/build/types/responses';
 
 /**
  * Hook that provide a function to get the information of an account
@@ -99,7 +100,7 @@ export function useBroadcastTx() {
       messages: EncodeObject[],
       fees: StdFee,
       memo?: string,
-    ): Promise<Result<BroadcastTxOnChainResult, Error>> => {
+    ): Promise<Result<PendingTransaction, Error>> => {
       let wallet: Wallet;
       if (typeof accountAddressOrWallet === 'string') {
         const walletUnlockResult = await unlockWallet(accountAddressOrWallet);
@@ -143,24 +144,20 @@ export function useBroadcastTx() {
         return err(signResult.error);
       }
 
-      // Encode the transaction to bytes.
-      const txBytes = TxRaw.encode(signResult.value.signatureResult.txRaw).finish();
+      // Get the transaction to be broadcast
+      const txBytes = signResult.value.signatureResult.txRaw;
 
       // Perform the broadcast
-      // TODO: Change this to *not* wait for a block inclusion. We can safely wait for the TX_ASYNC checks only
-      return ResultAsync.fromPromise(client.broadcastTx(txBytes), e =>
+      return ResultAsync.fromPromise(client.broadcastTxSync(txBytes), e =>
         Error(e?.toString() ?? 'Error while signing the transaction'),
-      ).map((broadcastResult: DeliverTxResponse) => {
+      ).map((broadcastResult: SyncBroadcastResponse) => {
         return {
-          pendingTransaction: {
-            messages,
-            fees: fees.amount,
-            user: wallet.address,
-            hash: broadcastResult.transactionHash,
-            timestamp: new Date().toISOString(),
-          } as PendingTransaction,
-          response: broadcastResult,
-        } as BroadcastTxOnChainResult;
+          messages,
+          fees: fees.amount,
+          user: wallet.address,
+          hash: broadcastResult.hash,
+          timestamp: new Date().toISOString(),
+        } as PendingTransaction;
       });
     },
     [chainInfo.rpcUrl, getSignerData, signTx, unlockWallet],

@@ -21,7 +21,7 @@ import { Wallet } from 'types/wallet';
 import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
-import { BroadcastTxOnChainResult } from 'types/transactions';
+import { PendingTransaction } from 'types/transactions';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -42,7 +42,7 @@ export type BroadcastTxParams = {
    */
   title?: string;
 
-  onSuccess?: (txResponse: BroadcastTxOnChainResult) => void;
+  onSuccess?: (transaction: PendingTransaction) => void;
   onCancel?: () => void;
 };
 

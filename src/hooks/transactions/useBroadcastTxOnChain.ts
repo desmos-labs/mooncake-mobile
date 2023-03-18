@@ -9,7 +9,7 @@ import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen'
 import { Wallet } from 'types/wallet';
 import { errAsync, ResultAsync } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
-import { BroadcastTxOnChainResult, BroadcastTxResult } from 'types/transactions';
+import { PendingTransaction } from 'types/transactions';
 
 export interface BroadcastTxOptions {
   /**
@@ -37,20 +37,20 @@ const useBroadcastTxOnChain = () => {
     (
       messages: EncodeObject[],
       options?: BroadcastTxOptions,
-    ): ResultAsync<BroadcastTxResult, Error> => {
+    ): ResultAsync<PendingTransaction, Error> => {
       if (!activeAccountAddress) {
         return errAsync(new Error('Trying to broadcast a transaction without active account'));
       }
 
-      return ResultAsync.fromPromise<BroadcastTxOnChainResult, Error>(
+      return ResultAsync.fromPromise<PendingTransaction, Error>(
         new Promise((resolve, reject) => {
           navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
             messages,
             accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccountAddress,
             memo: options?.memo,
-            onSuccess: (txResponse: BroadcastTxOnChainResult) => {
+            onSuccess: (pendingTx: PendingTransaction) => {
               returnToCurrentScreen();
-              resolve(txResponse);
+              resolve(pendingTx);
             },
             onCancel: () => {
               reject(new Error('Operation canceled'));

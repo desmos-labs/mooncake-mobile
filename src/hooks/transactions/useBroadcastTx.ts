@@ -163,9 +163,7 @@ const useBroadcastTx = () => {
             optimistic: options?.optimistic,
           });
 
-      return result.andThen(broadcastResult => {
-        const pendingTx = broadcastResult.pendingTransaction;
-
+      return result.andThen(pendingTx => {
         // Store the transaction locally
         storePendingTransaction(pendingTx);
 

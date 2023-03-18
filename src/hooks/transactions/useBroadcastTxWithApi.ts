@@ -4,7 +4,7 @@ import { AminoTypes } from '@cosmjs/stargate';
 import { createDesmosTypes } from '@desmoslabs/desmjs';
 import axiosInstance from 'services/axios';
 import { errAsync, ResultAsync } from 'neverthrow';
-import { BroadcastTxWithApiResult, PendingTransaction } from 'types/transactions';
+import { PendingTransaction } from 'types/transactions';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { AminoMsg } from '@cosmjs/amino';
 
@@ -21,13 +21,6 @@ export interface BroadcastTxWithApiOptions {
    * Transaction memo.
    */
   memo?: string;
-}
-
-export interface BroadcastTxWithApiResponse {
-  /**
-   * Hash of the broadcast transaction.
-   */
-  txHash: string;
 }
 
 /**
@@ -54,12 +47,12 @@ const useBroadcastTxWithApi = () => {
     (
       messages: EncodeObject[],
       options?: BroadcastTxWithApiOptions,
-    ): ResultAsync<BroadcastTxWithApiResult, Error> => {
+    ): ResultAsync<PendingTransaction, Error> => {
       if (!activeAccountAddress) {
         return errAsync(new Error('Trying to broadcast a transaction without active account'));
       }
 
-      const aminoEncoder = new AminoTypes(createDesmosTypes('desmos'));
+      const aminoEncoder = new AminoTypes(createDesmosTypes());
       const aminoMessages = messages.map(msg => aminoEncoder.toAmino(msg));
 
       return ResultAsync.fromPromise(
@@ -69,14 +62,12 @@ const useBroadcastTxWithApi = () => {
         .map(response => ({ txHash: response.data.tx_hash }))
         .map(result => {
           return {
-            pendingTransaction: {
-              messages,
-              fees: [],
-              hash: result.txHash,
-              timestamp: new Date().toISOString(),
-              user: activeAccountAddress,
-            } as PendingTransaction,
-          } as BroadcastTxWithApiResult;
+            messages,
+            fees: [],
+            hash: result.txHash,
+            timestamp: new Date().toISOString(),
+            user: activeAccountAddress,
+          } as PendingTransaction;
         });
     },
     [activeAccountAddress],

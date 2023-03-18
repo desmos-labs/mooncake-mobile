@@ -1,6 +1,5 @@
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { Coin } from '@cosmjs/stargate';
-import { DeliverTxResponse } from '@desmoslabs/desmjs';
 
 /**
  * Contains the data of a transaction that has been sent to the APIs to be broadcast,
@@ -62,23 +61,4 @@ export interface PastTransactionMessage {
    * Timestamp of the block inside which the transaction that contains this message has been included.
    */
   readonly timestamp: string;
-}
-
-/**
- * Contains the data of the successful result of a transaction broadcast.
- */
-export interface BroadcastTxResult {
-  readonly pendingTransaction: PendingTransaction;
-}
-
-/**
- * Contains the data of the successful result of a transaction broadcast using the centralized APIs.
- */
-export interface BroadcastTxWithApiResult extends BroadcastTxResult {}
-
-/**
- * Contains the data of the successful result of a transaction broadcast directly on chain.
- */
-export interface BroadcastTxOnChainResult extends BroadcastTxResult {
-  readonly response: DeliverTxResponse;
 }
