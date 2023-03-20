@@ -56,12 +56,12 @@ const useGetPostUpdate = () => {
  */
 const useHandlePostsMessages = () => {
   const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress && !__DEV__) {
+  if (!activeAccountAddress) {
     throw new Error('Trying to update a post without an active account');
   }
 
   const getPostUpdate = useGetPostUpdate();
-  const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress!);
+  const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress);
 
   return React.useCallback(
     async (messages: EncodeObject[]) => {

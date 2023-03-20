@@ -12,7 +12,7 @@ import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
  */
 const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
-  if (!activeAddress && !__DEV__) {
+  if (!activeAddress) {
     throw new Error('Trying to get post data without active user');
   }
 
