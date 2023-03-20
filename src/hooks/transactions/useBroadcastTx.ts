@@ -3,11 +3,7 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/transactions/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
-import {
-  CanceledOperationError,
-  isCanceledOperationError,
-  isCentralizedApiNotGrantedError,
-} from 'types/error';
+import { isCanceledOperationError, isCentralizedApiNotGrantedError } from 'types/error';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import {
   MsgAddReactionTypeUrl,
