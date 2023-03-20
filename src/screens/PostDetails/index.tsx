@@ -73,7 +73,7 @@ const PostDetails = () => {
   // --- Views references
   // -------------------------------------------------------------------------------------
 
-  const scrollViewRef = useRef<any>(null);
+  const scrollViewRef = useRef<FlashList<Post>>(null);
   const { textInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
