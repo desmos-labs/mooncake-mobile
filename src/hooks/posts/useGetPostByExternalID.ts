@@ -19,7 +19,7 @@ const useGetPostByExternalID = () => {
   const subspaceParams = useAppStateValue('subspaceParams');
 
   const [getPost] = useLazyQuery(GetPostByExternalID, {
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
   });
 
   return React.useCallback(

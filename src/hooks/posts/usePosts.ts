@@ -11,6 +11,7 @@ import { mergePosts } from 'lib/PostsUtils';
 import { getLikeReactionId } from 'types/desmos';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import { RegisteredReactionValueTypeUrl } from '@desmoslabs/desmjs';
+import sleep from 'lib/sleep';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -99,15 +100,6 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
     }
   }, [params, postsPerPage, subspaceId, subspaceParams]);
 };
-
-/**
- * Allows to sleep the current execution for the provided amount of milliseconds.
- * @param ms {number} - Milliseconds for which to sleep
- */
-const sleep = (ms: number) =>
-  new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
 
 /**
  * Hook that allows to get the posts of the given type, for the currently active user.

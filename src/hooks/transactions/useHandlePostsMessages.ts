@@ -6,6 +6,7 @@ import React from 'react';
 import { PostUpdate, PostUpdateType } from 'lib/PostsUtils';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
+import sleep from 'lib/sleep';
 
 /**
  * Function that retrieves all the external post ids from the messages of the given transaction.
@@ -32,7 +33,12 @@ const useGetPostUpdate = () => {
   return React.useCallback(
     async (data: Pick<Post, 'subspaceId' | 'externalId'>) => {
       // Get the on-chain post
-      const onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
+      let onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
+      if (!onChainPost) {
+        // The post might not have been parsed yet, we can simply wait for some seconds and try again
+        await sleep(1000);
+        onChainPost = await getPostByExternalId(data.subspaceId, data.externalId);
+      }
 
       // Get the post update
       return {
@@ -60,11 +66,7 @@ const useHandlePostsMessages = () => {
   return React.useCallback(
     async (messages: EncodeObject[]) => {
       const postsData = getPostsData(messages);
-      console.log('Handling posts messages', postsData);
-
       const updates = await Promise.all(postsData.map(getPostUpdate));
-      console.log('Updates', updates);
-
       updatePendingPosts(updates);
     },
     [getPostUpdate, updatePendingPosts],
