@@ -90,6 +90,7 @@ const PostHeader = ({ post }: Props) => {
           interactionAuthors={interactionsAuthors}
         />
       </Spacer>
+
       <Divider style={styles.divider} />
       <Spacer paddingBottom={16} />
     </>

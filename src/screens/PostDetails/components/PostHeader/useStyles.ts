@@ -4,7 +4,6 @@ const useStyles = makeStyle(theme => ({
   divider: {
     borderColor: theme.colors.dividerGrey,
     borderWidth: 0.5,
-    marginHorizontal: -30,
   },
 }));
 

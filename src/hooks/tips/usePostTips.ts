@@ -30,6 +30,7 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
   // This will later be merged with tips from the chain at the first fetch.
   const [tips, setTips] = useState<Tip[]>(postTipsToSync);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
@@ -50,12 +51,15 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
 
         return merged;
       });
+      setLoading(false);
+      setFetchingMore(false);
+      setFetchingMore(false);
     },
     [updatePendingTips],
   );
 
   // Query used to get the comments
-  const { refetch, loading, fetchMore } = useQuery(GetPostTips, {
+  const { refetch, fetchMore } = useQuery(GetPostTips, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
@@ -80,9 +84,6 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
       });
     } catch (e: any) {
       setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
-      setFetchingMore(false);
     }
   }, [fetchMore, tips.length]);
 
@@ -97,9 +98,6 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
       onCompletedCallback(data);
     } catch (e: any) {
       setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
-      setRefreshing(false);
     }
   }, [onCompletedCallback, refetch]);
 

@@ -1,4 +1,4 @@
-import { cameraIcon, galleryIcon, tagIcon } from 'assets/images';
+import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
@@ -71,13 +71,6 @@ const MediaBottomPanel = ({
             disabled={imageSelected}
             onPress={handlePressCamera}
             image={cameraIcon}
-            style={styles.imageButtonStyle}
-          />
-          <ImageButton
-            accessibilityLabel="mention a user"
-            hitSlopValue={8}
-            onPress={handlePressMention}
-            image={tagIcon}
             style={styles.imageButtonStyle}
           />
         </View>

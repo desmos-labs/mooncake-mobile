@@ -37,7 +37,7 @@ const PostComponent = (props: Props) => {
     if (post.text && post.attachments?.length === 0) {
       return (
         <View style={styles.textContainer}>
-          <Typography.H2 style={styles.textStyle}>{post.text}</Typography.H2>
+          <Typography.Body5>{post.text}</Typography.Body5>
         </View>
       );
     } else if (!post.text && post.attachments?.length !== 0) {
@@ -50,14 +50,7 @@ const PostComponent = (props: Props) => {
         </View>
       );
     }
-  }, [
-    MediaAttachment,
-    post.attachments?.length,
-    post.text,
-    styles.textContainer,
-    styles.textStyle,
-    theme.spacing.m,
-  ]);
+  }, [MediaAttachment, post.attachments?.length, post.text, theme.spacing.m]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

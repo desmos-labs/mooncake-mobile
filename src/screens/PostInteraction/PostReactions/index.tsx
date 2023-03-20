@@ -10,6 +10,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
+import { Center, Spinner } from 'native-base';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -40,9 +41,9 @@ const PostReactions = () => {
     refreshing,
   } = usePostReactions(post);
 
-  const refetch = useCallback(() => {
-    refetchCount();
-    refetchReactions();
+  const refetch = useCallback(async () => {
+    await refetchCount();
+    await refetchReactions();
   }, [refetchCount, refetchReactions]);
 
   // -------------------------------------------------------------------------------------
@@ -57,6 +58,14 @@ const PostReactions = () => {
     return <EmptyListComponent label={t('noReactions')} />;
   }, [t]);
 
+  if (loading) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+  }
+
   return (
     <>
       {count > 0 && (
@@ -65,7 +74,7 @@ const PostReactions = () => {
         </Typography.Body6>
       )}
       <FlatList
-        refreshing={loading || refreshing}
+        refreshing={refreshing}
         onRefresh={refetch}
         keyExtractor={(item, index) => `${item.id?.toString() ?? ''}-${index}`}
         data={reactions}

@@ -40,6 +40,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
     });
   }, [commentsToSync]);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
@@ -59,15 +60,17 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
         // This is done because comments are not cached inside the local storage of the device, and
         // they are not handled by the optimistic APIs
         updatePendingPosts(updates);
-
         return merged;
       });
+      setFetchingMore(false);
+      setRefreshing(false);
+      setLoading(false);
     },
     [updatePendingPosts],
   );
 
   // Query used to get the comments
-  const { refetch, loading, fetchMore } = useQuery(GetPostComments, {
+  const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
@@ -96,10 +99,8 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
         }),
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [fetchMore, comments.length]);
 
@@ -113,10 +114,8 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);
 
