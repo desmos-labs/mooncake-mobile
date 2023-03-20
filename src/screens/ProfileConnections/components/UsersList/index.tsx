@@ -110,12 +110,12 @@ export const UsersList = (props: UsersListProps) => {
     <View style={styles.container}>
       <FlatList
         data={users}
-        refreshing={false}
+        refreshing={refreshing}
         onRefresh={refresh}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={loading ? null : EmptyComponent}
-        ListFooterComponent={loading ? Loading : undefined}
+        ListFooterComponent={fetchingMore ? Loading : undefined}
         onEndReachedThreshold={3}
         onEndReached={fetchMore}
         getItemLayout={getItemLayout}

@@ -13,34 +13,26 @@ exports[`component: PostComponent renders 1`] = `
   <View
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "#FEB027",
-        "height": 630,
-        "justifyContent": "center",
-        "paddingHorizontal": 16,
-        "width": 750,
+        "alignSelf": "flex-start",
+        "flex": 1,
+        "paddingVertical": 16,
       }
     }
   >
     <Text
       style={
         [
-          [
-            {
-              "color": "#25282D",
-            },
-            {
-              "fontFamily": "Poppins-SemiBold",
-              "fontSize": 32,
-              "fontStyle": "normal",
-              "fontWeight": "600",
-              "letterSpacing": 0.0015,
-              "textAlign": "left",
-            },
-          ],
           {
-            "color": "#FFFFFF",
-            "fontSize": 32,
+            "color": "#25282D",
+          },
+          {
+            "fontFamily": "Poppins-Regular",
+            "fontSize": 16,
+            "fontStyle": "normal",
+            "fontWeight": "400",
+            "letterSpacing": 0.005,
+            "lineHeight": 22,
+            "textAlign": "left",
           },
         ]
       }

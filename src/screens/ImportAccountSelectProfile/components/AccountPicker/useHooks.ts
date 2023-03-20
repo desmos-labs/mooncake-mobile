@@ -42,7 +42,7 @@ function generationParamsToWalletGenerationData(
   }
 }
 
-export const useFetchWallets = (params: AccountPickerParams) => {
+const useFetchWallets = (params: AccountPickerParams) => {
   const fetchWallets = useCallback(
     async (start: number, end: number) => {
       let paths: HdPath[] = [];
@@ -83,3 +83,5 @@ export const useFetchWallets = (params: AccountPickerParams) => {
     fetchWallets,
   };
 };
+
+export default useFetchWallets;

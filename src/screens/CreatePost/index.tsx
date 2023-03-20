@@ -61,6 +61,7 @@ const CreatePost = () => {
   const author = useActiveProfile();
 
   // TODO: Properly display the state of the creation of the post
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state, createPost } = useCreatePost();
 
   // -------------------------------------------------------------------------------------

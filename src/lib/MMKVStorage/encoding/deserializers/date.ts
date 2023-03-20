@@ -1,7 +1,9 @@
 import { Deserializer, SerializedObject } from '../types';
 
-export const DateDeserializer: Deserializer = {
+const DateDeserializer: Deserializer = {
   decode(serialized: SerializedObject): Date {
     return new Date(serialized.value);
   },
 };
+
+export default DateDeserializer;

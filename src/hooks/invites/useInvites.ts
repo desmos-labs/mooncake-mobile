@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import GetInvites, { GqlInvites } from 'services/graphql/queries/GetInvites';
-import { convertGQLInvite } from 'lib/GraphQLUtils';
 import React from 'react';
+import convertGQLInvite from 'lib/GraphQLUtils/invites';
 
 /**
  * Hook to fetch the invites created from the current active account.

@@ -12,7 +12,7 @@ import FastImage from 'react-native-fast-image';
 import { useTheme } from 'native-base';
 import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import { useTranslation } from 'react-i18next';
-import { useGetSectionedInvites } from './hooks';
+import useGetSectionedInvites from './hooks';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_INVITES>;

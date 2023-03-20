@@ -4,7 +4,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import useGetActiveAccountInvites from 'hooks/invites/useInvites';
 import useButterConfig from 'hooks/config/useButterConfig';
 
-export const useGetSectionedInvites = () => {
+const useGetSectionedInvites = () => {
   const activeAddress = useActiveAccountAddress();
   const {
     invites,
@@ -67,3 +67,5 @@ export const useGetSectionedInvites = () => {
     error,
   };
 };
+
+export default useGetSectionedInvites;

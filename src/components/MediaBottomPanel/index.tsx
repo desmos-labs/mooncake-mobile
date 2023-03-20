@@ -17,10 +17,6 @@ type Props = {
    */
   handlePressCamera: () => void;
   /**
-   * Action to execute when the mention icon is pressed
-   */
-  handlePressMention: () => void;
-  /**
    * Actual length of the comment
    */
   commentLength: number;
@@ -41,7 +37,6 @@ type Props = {
 const MediaBottomPanel = ({
   handlePressCamera,
   handlePressGallery,
-  handlePressMention,
   commentLength,
   imageSelected,
   rightComponent,

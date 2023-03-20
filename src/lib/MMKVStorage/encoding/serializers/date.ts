@@ -1,6 +1,6 @@
 import { SerializableTypes, SerializedObject, Serializer } from '../types';
 
-export const DateSerializer: Serializer = {
+const DateSerializer: Serializer = {
   canEncodeObj(obj: any): boolean {
     return typeof obj?.toISOString === 'function';
   },
@@ -11,3 +11,5 @@ export const DateSerializer: Serializer = {
     };
   },
 };
+
+export default DateSerializer;

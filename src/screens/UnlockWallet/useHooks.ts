@@ -150,7 +150,7 @@ const useInitWeb3AuthWallet = () => {
 /**
  * Hook that provides a function to unlock the wallet using the password.
  */
-export const useUnlockWalletWithPassword = () => {
+const useUnlockWalletWithPassword = () => {
   const { initMnemonicWallet } = useInitMnemonicWallet();
   const { initLedgerWallet } = useInitLedgerWallet();
   const { initWeb3AuthWallet } = useInitWeb3AuthWallet();
@@ -183,3 +183,5 @@ export const useUnlockWalletWithPassword = () => {
     [initMnemonicWallet, initLedgerWallet, initWeb3AuthWallet],
   );
 };
+
+export default useUnlockWalletWithPassword;

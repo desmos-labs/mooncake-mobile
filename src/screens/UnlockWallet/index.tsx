@@ -19,9 +19,9 @@ import { Wallet } from 'types/wallet';
 import { SigningMode } from '@desmoslabs/desmjs';
 import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { BiometricAuthorizations } from 'types/settings';
-import { useUnlockWalletWithPassword } from 'screens/UnlockWallet/useHooks';
 import { ResultAsync } from 'neverthrow';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UNLOCK_WALLET>;

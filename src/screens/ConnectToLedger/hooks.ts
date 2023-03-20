@@ -15,7 +15,7 @@ import { closeApp, openApp, openLedgerTransport } from 'lib/LedgerUtils/commands
  * @param ledger - The Ledger device to connect to.
  * @param ledgerApp - The app that the Ledger device should have opened.
  */
-export function useConnectToLedger(ledger: BLELedger, ledgerApp: LedgerApp) {
+function useConnectToLedger(ledger: BLELedger, ledgerApp: LedgerApp) {
   const [connecting, setConnecting] = useState(true);
   const [connected, setConnected] = useState(false);
   const [transport, setTransport] = useState<BluetoothTransport | undefined>();
@@ -97,3 +97,5 @@ export function useConnectToLedger(ledger: BLELedger, ledgerApp: LedgerApp) {
     retry,
   };
 }
+
+export default useConnectToLedger;

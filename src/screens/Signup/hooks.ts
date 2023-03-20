@@ -1,6 +1,3 @@
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -80,8 +77,6 @@ export const useHandlePressTOS = () => {
     // go to Terms of Service page
   }, []);
 };
-
-type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SIGNUP>;
 
 /**
  * Enum that represents all the possible statuses of the signup process.

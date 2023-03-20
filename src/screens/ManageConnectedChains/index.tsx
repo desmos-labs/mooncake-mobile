@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
-import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
+import useConnectChain from 'screens/ManageConnectedChains/useHooks';
 import { useToast } from 'react-native-toast-notifications';
 import useStyles from './useStyles';
 

@@ -108,6 +108,7 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   // TODO: Properly display the state of the comment creation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();

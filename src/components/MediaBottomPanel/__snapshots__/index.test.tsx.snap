@@ -33,7 +33,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
         style={
           {
             "alignItems": "center",
-            "flex": 0.4,
+            "flex": 0.2,
             "flexDirection": "row",
             "justifyContent": "space-between",
           }
@@ -98,7 +98,6 @@ exports[`component: MediaBottomPanel renders 1`] = `
           >
             <FastImageView
               defaultSource={null}
-              onFastImageError={[Function]}
               resizeMode="cover"
               source={
                 {
@@ -176,89 +175,10 @@ exports[`component: MediaBottomPanel renders 1`] = `
           >
             <FastImageView
               defaultSource={null}
-              onFastImageError={[Function]}
               resizeMode="cover"
               source={
                 {
                   "testUri": "../../../src/assets/images/cameraIcon.png",
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-        </View>
-        <View
-          accessibilityLabel="mention a user"
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          hitSlop={
-            {
-              "bottom": 8,
-              "left": 8,
-              "right": 8,
-              "top": 8,
-            }
-          }
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "opacity": 1,
-            }
-          }
-        >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 24,
-                  "resizeMode": "contain",
-                  "width": 24,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              defaultSource={null}
-              onFastImageError={[Function]}
-              resizeMode="cover"
-              source={
-                {
-                  "testUri": "../../../src/assets/images/tagIcon.png",
                 }
               }
               style={
@@ -278,7 +198,7 @@ exports[`component: MediaBottomPanel renders 1`] = `
         style={
           {
             "alignItems": "center",
-            "flex": 0.6,
+            "flex": 0.8,
             "flexDirection": "row",
             "justifyContent": "flex-end",
           }
