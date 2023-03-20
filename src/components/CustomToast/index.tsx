@@ -2,8 +2,8 @@ import React from 'react';
 import Button, { ButtonMode } from 'components/Button';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import { TouchableOpacity, View } from 'react-native';
-import { Toast, useTheme } from 'native-base';
+import { TouchableOpacity } from 'react-native';
+import { Box, Toast, useTheme } from 'native-base';
 import { Shadow } from 'react-native-shadow-2';
 import { useTranslation } from 'react-i18next';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -87,14 +87,14 @@ const CustomToast = ({ type, message, options }: Props): JSX.Element => {
             activeOpacity={1}
             onPress={options.handlePressToast}
             style={styles.commonToastStyle}>
-            <View>
+            <Box flex={1}>
               {type !== ToastConfig.SUCCESS && (
                 <Typography.Subtitle3>{t('common:oops')}</Typography.Subtitle3>
               )}
               <Typography.Body6 numberOfLines={2} style={{ color: theme.colors.surfaceBlack }}>
                 {message}
               </Typography.Body6>
-            </View>
+            </Box>
 
             {type === ToastConfig.ERROR ? (
               <Button

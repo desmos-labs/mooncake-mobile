@@ -1,9 +1,10 @@
 import { makeStyleWithProps } from 'config/theme';
 import ToastConfig from 'config/ToastConfig';
+import { Dimensions } from 'react-native';
 
 const useStyles = makeStyleWithProps((toastType: ToastConfig) => ({
   commonToastStyle: {
-    width: '95%',
+    width: Dimensions.get('window').width * 0.95,
     top: 18,
     borderRadius: 8,
     paddingHorizontal: 16,
@@ -15,6 +16,7 @@ const useStyles = makeStyleWithProps((toastType: ToastConfig) => ({
     backgroundColor:
       toastType === ToastConfig.SUCCESS ? 'rgba(241, 255, 225, 1)' : 'rgba(255, 242, 249, 1)',
     margin: 6,
+    alignItems: 'center',
   },
   button: {
     right: 0,
