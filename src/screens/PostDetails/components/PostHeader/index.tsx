@@ -81,20 +81,15 @@ const PostHeader = ({ post }: Props) => {
         handleCommentPress={focusTextInputRef}
         handleTipPress={checkUserAndHandleSendTips}
       />
-      {tipsCount > 0 ||
-        (reactionsCount > 0 && (
-          <Spacer paddingVertical={16}>
-            <InteractionCountersBar
-              loading={
-                isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading
-              }
-              likesCounter={reactionsCount}
-              tipsCounter={tipsCount}
-              handlePressCounters={() => handlePressCounters(post!)}
-              interactionAuthors={interactionsAuthors}
-            />
-          </Spacer>
-        ))}
+      <Spacer paddingVertical={16}>
+        <InteractionCountersBar
+          loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
+          likesCounter={reactionsCount}
+          tipsCounter={tipsCount}
+          handlePressCounters={() => handlePressCounters(post!)}
+          interactionAuthors={interactionsAuthors}
+        />
+      </Spacer>
 
       <Divider style={styles.divider} />
       <Spacer paddingBottom={16} />

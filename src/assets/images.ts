@@ -181,6 +181,7 @@ export const manageConnectedWalletsProfileIcon = require('./images/manageConnect
 export const addProfileIcon = require('./images/addProfileIcon.png');
 export const reportSuccessIcon = require('./images/reportSuccessIcon.png');
 export const communitiesBackgroundImage = require('./images/communities_background.png');
+export const emptyListPlaceholder = require('./images/emptyListsPlaceholders/emptyListPlaceholder.png');
 
 // TX
 

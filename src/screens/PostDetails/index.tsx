@@ -200,7 +200,7 @@ const PostDetails = () => {
         keyExtractor={item => item.externalId}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContainer}
-        data={comments}
+        data={[]}
         ListEmptyComponent={<EmptyListComponent label="No comments yet" />}
         keyboardDismissMode="on-drag"
         onEndReached={fetchMoreComments}
