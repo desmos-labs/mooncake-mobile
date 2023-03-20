@@ -4,9 +4,9 @@ import { MsgCreatePostEncodeObject, MsgCreatePostTypeUrl } from '@desmoslabs/des
 import useGetPostByExternalID from 'hooks/posts/useGetPostByExternalID';
 import React from 'react';
 import { PostUpdate, PostUpdateType } from 'lib/PostsUtils';
-import { useActiveAccountAddress } from '@recoil/accounts';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import sleep from 'lib/sleep';
+import { useActiveAccountAddress } from '@recoil/accounts';
 
 /**
  * Function that retrieves all the external post ids from the messages of the given transaction.
@@ -55,21 +55,21 @@ const useGetPostUpdate = () => {
  * Hook that allows to handle the messages of a transaction that are related to a post creation.
  */
 const useHandlePostsMessages = () => {
-  const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Trying to update a post without an active account');
-  }
-
+  const activeAddress = useActiveAccountAddress();
   const getPostUpdate = useGetPostUpdate();
-  const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress);
+  const updatePendingPosts = useUpdatePendingPosts();
 
   return React.useCallback(
     async (messages: EncodeObject[]) => {
+      if (!activeAddress) {
+        throw new Error('Trying to handle posts messages without active user');
+      }
+
       const postsData = getPostsData(messages);
       const updates = await Promise.all(postsData.map(getPostUpdate));
-      updatePendingPosts(updates);
+      updatePendingPosts(activeAddress, updates);
     },
-    [getPostUpdate, updatePendingPosts],
+    [activeAddress, getPostUpdate, updatePendingPosts],
   );
 };
 

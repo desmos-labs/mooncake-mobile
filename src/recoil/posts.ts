@@ -236,10 +236,10 @@ export const useStoredFollowingPosts = (user: string, followingAddresses: string
   );
 };
 
-export const useUpdateStoredPendingPost = (user: string) => {
+export const useUpdateStoredPendingPost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (subspaceId: number, externalId: string, update: Post) => {
+    (user: string, subspaceId: number, externalId: string, update: Post) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -257,7 +257,7 @@ export const useUpdateStoredPendingPost = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 
@@ -265,10 +265,10 @@ export const useUpdateStoredPendingPost = (user: string) => {
  * Hook that allows to delete the given pending post from the posts state.
  * @param user {string} - Address of the user for which the post should be deleted.
  */
-export const useRemoveStoredPendingPost = (user: string) => {
+export const useRemoveStoredPendingPost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (subspaceId: number, externalId: string) => {
+    (user: string, subspaceId: number, externalId: string) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -286,7 +286,7 @@ export const useRemoveStoredPendingPost = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 

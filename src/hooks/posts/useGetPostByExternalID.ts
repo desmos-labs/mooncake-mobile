@@ -12,10 +12,6 @@ import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
  */
 const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
-  if (!activeAddress) {
-    throw new Error('Trying to get post data without active user');
-  }
-
   const subspaceParams = useAppStateValue('subspaceParams');
 
   const [getPost] = useLazyQuery(GetPostByExternalID, {
@@ -24,6 +20,10 @@ const useGetPostByExternalID = () => {
 
   return React.useCallback(
     async (subspaceId: number, externalId: string): Promise<Post | undefined> => {
+      if (!activeAddress) {
+        throw new Error('Trying to get post data without active user');
+      }
+
       const { data } = await getPost({
         variables: {
           subspaceId,
