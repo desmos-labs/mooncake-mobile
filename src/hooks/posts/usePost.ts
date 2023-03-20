@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import GetPost from 'services/graphql/queries/GetPost';
+import GetPostByID from 'services/graphql/queries/GetPostByID';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import { getLikeReactionId } from 'types/desmos';
@@ -28,7 +28,7 @@ const usePost = (subspaceId: number, postId: number) => {
   const post = usePostByID(activeAddress, subspaceId, postId);
 
   // Query the post from the GraphQL server
-  const { data, refetch, loading } = useQuery(GetPost, {
+  const { data, refetch, loading } = useQuery(GetPostByID, {
     refetchWritePolicy: 'overwrite',
     variables: {
       subspaceId,

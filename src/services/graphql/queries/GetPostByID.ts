@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import PostFields from 'services/graphql/queries/fragments/PostFields';
 
-const GetPost = gql`
+const GetPostByID = gql`
   ${PostFields}
   query GetPost($subspaceId: bigint!, $postId: bigint!, $user: String, $reaction: jsonb!)
   @api(name: butter) {
@@ -18,4 +18,4 @@ const GetPost = gql`
   }
 `;
 
-export default GetPost;
+export default GetPostByID;

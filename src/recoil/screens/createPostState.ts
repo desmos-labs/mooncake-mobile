@@ -3,7 +3,6 @@ import { UploadAssetType } from 'services/axios/requests/UploadMedia';
 import React from 'react';
 import { ReplySetting } from '@desmoslabs/desmjs-types/desmos/posts/v2/models';
 import { Post } from 'types/posts';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Represents the state of the screen that allows to create a post.
@@ -16,6 +15,7 @@ export interface CreatePostState
     | 'subspaceId'
     | 'sectionId'
     | 'id'
+    | 'externalId'
     | 'text'
     | 'attachments'
     | 'creationDate'
@@ -49,12 +49,9 @@ export interface CreatePostState
  * Default state of the screen allowing to create a post.
  * This is a function because we need to generate a random UUID.
  */
-const DefaultCreatePostState = (): CreatePostState => ({
+const DefaultCreatePostState: CreatePostState = {
   conversationId: 0,
   sectionId: undefined,
-
-  // Generate a random UUID to be used as external ID
-  externalId: uuidv4(),
 
   text: '',
   attachments: [],
@@ -62,7 +59,7 @@ const DefaultCreatePostState = (): CreatePostState => ({
   entities: undefined,
   references: [],
   replySettings: ReplySetting.REPLY_SETTING_EVERYONE,
-});
+};
 
 /**
  * Atom to persist user's entered comments when switching between
@@ -70,7 +67,7 @@ const DefaultCreatePostState = (): CreatePostState => ({
  */
 const createPostState = atom<CreatePostState>({
   key: 'createPostState',
-  default: DefaultCreatePostState(),
+  default: DefaultCreatePostState,
 });
 
 /**
@@ -170,6 +167,6 @@ export const useRemoveCreatePostAttachment = () => {
 export const useResetCreatePostState = () => {
   const setCreatePostState = useSetRecoilState(createPostState);
   return React.useCallback(() => {
-    setCreatePostState(DefaultCreatePostState());
+    setCreatePostState(DefaultCreatePostState);
   }, [setCreatePostState]);
 };

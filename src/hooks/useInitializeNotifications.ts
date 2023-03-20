@@ -5,14 +5,22 @@ import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
 import useCreateLocalNotification from 'hooks/notifications/useCreateLocalNotification';
-import { isSocialNotification, isTransactionNotification } from 'types/notifications';
+import {
+  isSocialNotification,
+  isTransactionNotification,
+  NotificationType,
+} from 'types/notifications';
 import useCreateTransactionNotificationSnackbar from 'hooks/useCreateTransactionSnackbar';
 import { parseRemoteNotification } from 'lib/NotificationsUtils';
+import useHandleSuccessfulTransaction from 'hooks/transactions/useHandleSuccessfulTransaction';
 
 /**
  * Hook to initialize the notifications handling.
  */
 const useInitializeNotifications = () => {
+  // Hook to handle a successful transaction
+  const handleSuccessfulTransaction = useHandleSuccessfulTransaction();
+
   // Utility hooks to create the notifications UI
   const createLocalNotification = useCreateLocalNotification();
   const createTransactionNotificationSnackbar = useCreateTransactionNotificationSnackbar();
@@ -66,6 +74,12 @@ const useInitializeNotifications = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       const notification = parseRemoteNotification(remoteMessage.data);
       if (isTransactionNotification(notification)) {
+        if (notification.type === NotificationType.TransactionSuccess) {
+          // Handle the update of the data
+          await handleSuccessfulTransaction(notification.txHash);
+        }
+
+        // Create a notification snackbar
         await createTransactionNotificationSnackbar(notification);
       } else if (isSocialNotification(notification)) {
         // Checking if the app is active, if so we do not want to send the user social notifications
@@ -77,7 +91,12 @@ const useInitializeNotifications = () => {
 
     // Unsubscribe the listener when the effect is destroyed
     return () => unsubscribe();
-  }, [appStateVisible, createLocalNotification, createTransactionNotificationSnackbar]);
+  }, [
+    appStateVisible,
+    createLocalNotification,
+    createTransactionNotificationSnackbar,
+    handleSuccessfulTransaction,
+  ]);
 };
 
 export default useInitializeNotifications;

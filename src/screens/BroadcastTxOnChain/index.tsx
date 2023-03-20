@@ -10,7 +10,7 @@ import { ScrollView, View } from 'react-native';
 import ROUTES from 'navigation/routes';
 import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
-import { DeliverTxResponse, EncodeObject } from '@desmoslabs/desmjs';
+import { EncodeObject } from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
@@ -21,6 +21,7 @@ import { Wallet } from 'types/wallet';
 import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
+import { PendingTransaction } from 'types/transactions';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -41,39 +42,67 @@ export type BroadcastTxParams = {
    */
   title?: string;
 
-  onSuccess?: (txResponse: DeliverTxResponse) => void;
+  onSuccess?: (transaction: PendingTransaction) => void;
   onCancel?: () => void;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.BROADCAST_TX_ON_CHAIN>;
 
+/**
+ * Screen that allows the user to broadcast a transaction on chain.
+ * @constructor
+ */
 const BroadcastTxOnChain: React.FC = () => {
   const { t } = useTranslation('broadcastTxOnChain');
   const styles = useStyles();
   const theme = useTheme();
+
   const { params } = useRoute<NavProps['route']>();
   const { accountAddressOrWallet, messages, memo, title, onSuccess, onCancel } = params;
+
+  // -----------------------------------------------------------------------
+  // --- Hooks
+  // -----------------------------------------------------------------------
+
+  const toast = useToast();
   const estimateFees = useEstimateFees();
+  const broadcastTx = useBroadcastTx();
+
+  // -----------------------------------------------------------------------
+  // --- State
+  // -----------------------------------------------------------------------
+
   const [estimatingFees, setEstimatingFees] = React.useState(false);
   const [feesResult, setFeesResult] = React.useState<Result<StdFee, Error>>();
-  const broadcastTx = useBroadcastTx();
   const [broadcastingTx, setBroadcastingTx] = React.useState(false);
-  const toast = useToast();
+
+  // -----------------------------------------------------------------------
+  // --- Back action
+  // -----------------------------------------------------------------------
+
   // Call cancel callback if the use goes back.
   useOnBackAction(() => {
     onCancel && onCancel();
   }, [onCancel]);
 
+  // -----------------------------------------------------------------------
+  // --- Effects
+  // -----------------------------------------------------------------------
+
   React.useEffect(() => {
     (async () => {
       setFeesResult(undefined);
       setEstimatingFees(true);
+
+      // Get the address of the user
       let address: string;
       if (typeof accountAddressOrWallet === 'object') {
         address = accountAddressOrWallet.address;
       } else {
         address = accountAddressOrWallet;
       }
+
+      // Estimate the fees
       const estimatedFees = await estimateFees(address, messages, memo);
       setEstimatingFees(false);
       setFeesResult(estimatedFees);
@@ -82,6 +111,10 @@ const BroadcastTxOnChain: React.FC = () => {
     // Safe to ignore, we want to estimate the fees just when we enter this screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // -----------------------------------------------------------------------
+  // --- Actions
+  // -----------------------------------------------------------------------
 
   const handleBroadcastTx = React.useCallback(async () => {
     if (feesResult?.isOk()) {
@@ -98,6 +131,10 @@ const BroadcastTxOnChain: React.FC = () => {
       }
     }
   }, [accountAddressOrWallet, broadcastTx, feesResult, memo, messages, onSuccess, toast]);
+
+  // -----------------------------------------------------------------------
+  // --- Screen rendering
+  // -----------------------------------------------------------------------
 
   return (
     <DView style={styles.root}>

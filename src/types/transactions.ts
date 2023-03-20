@@ -20,7 +20,7 @@ export interface PendingTransaction {
   /**
    * Fees that have been paid for this transaction.
    */
-  readonly fees: Coin[];
+  readonly fees: readonly Coin[];
 
   /**
    * Timestamp of the moment in which the transaction has been sent to the APIs.

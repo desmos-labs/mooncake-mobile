@@ -5,6 +5,9 @@ import { useToast } from 'react-native-toast-notifications';
 import { useGetPendingTransaction } from '@recoil/transactions';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 
+/**
+ * Hook to create a snackbar for a transaction notification.
+ */
 const useCreateTransactionSnackbar = () => {
   const toast = useToast();
 
@@ -38,7 +41,7 @@ const useCreateTransactionSnackbar = () => {
           break;
       }
     },
-    [toast],
+    [broadcastTx, getPendingTransaction, toast],
   );
 };
 
