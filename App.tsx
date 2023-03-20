@@ -9,6 +9,7 @@ import { RecoilRoot } from 'recoil';
 import useClient from 'services/graphql/useClient';
 import { ViewProps } from 'react-native';
 import lightTheme from 'config/theme/LightTheme';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 /**
  * Context provider that allows to properly instantiate an Apollo client that
@@ -23,17 +24,19 @@ const ButterApolloClientProvider = (props: ViewProps) => {
 
 function App(): JSX.Element {
   return (
-    <SafeAreaProvider>
-      <RecoilRoot>
-        <NativeBaseProvider theme={lightTheme}>
-          <ButterApolloClientProvider>
-            <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
-              <RootNavigator />
-            </NavigationContainer>
-          </ButterApolloClientProvider>
-        </NativeBaseProvider>
-      </RecoilRoot>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <RecoilRoot>
+          <NativeBaseProvider theme={lightTheme}>
+            <ButterApolloClientProvider>
+              <NavigationContainer onReady={() => RNBootSplash.hide({ fade: true })}>
+                <RootNavigator />
+              </NavigationContainer>
+            </ButterApolloClientProvider>
+          </NativeBaseProvider>
+        </RecoilRoot>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
