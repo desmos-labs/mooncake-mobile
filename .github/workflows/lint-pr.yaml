@@ -1,5 +1,6 @@
 name: "Lint PR"
-
+# Lint PR runs the proper PR linting
+# This workflow is run on every pull request
 on:
   pull_request_target:
     types:
@@ -7,8 +8,7 @@ on:
       - edited
       - synchronize
 jobs:
-  main:
-    if: startsWith(github.head_ref, 'l10n') == false && startsWith(github.head_ref, 'i10n') == false
+  Lint:
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@v4.4.0
