@@ -16,7 +16,7 @@ import { useDeleteAuthToken } from 'services/axios';
 import { PASSWORD_MANIPULATION_MODE } from 'screens/PasswordManipulation';
 import { Linking } from 'react-native';
 import useUnlockWallet from 'hooks/useUnlockWallet';
-import { isAccountWithPrivateKey } from 'lib/AccountUtils/type';
+import isAccountWithPrivateKey from 'lib/AccountUtils/type';
 import { WalletWithPrivateKey } from 'types/wallet';
 import { toHex } from '@cosmjs/encoding';
 

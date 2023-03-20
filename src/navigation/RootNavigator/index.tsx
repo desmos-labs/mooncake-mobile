@@ -59,7 +59,6 @@ import ManageConnectionsModal, {
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions, Platform } from 'react-native';
-import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import ProfileConnections, {
   ProfileConnectionsParams,
   ProfileConnectionsTabParams,
@@ -216,7 +215,6 @@ export type RootNavigatorParamList = {
 
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
@@ -450,7 +448,6 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
-        <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
         <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
         <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />

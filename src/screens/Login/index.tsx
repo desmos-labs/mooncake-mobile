@@ -19,7 +19,7 @@ import useClearUserData from 'hooks/useClearUserData';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { BiometricAuthorizations } from 'types/settings';
-import { useOnSubmitPassword } from 'screens/Login/hooks';
+import useOnSubmitPassword from 'screens/Login/hooks';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;

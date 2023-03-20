@@ -155,7 +155,7 @@ const useSaveChainLinkAccount = () => {
  * Hook used to start the connection to an external chain.
  * @param userChainLinks - Current user's chain links.
  */
-export const useConnectChain = (userChainLinks: ChainLink[]) => {
+const useConnectChain = (userChainLinks: ChainLink[]) => {
   const returnToCurrentScreen = useReturnToCurrentScreen();
   const ignoreAddresses = React.useMemo(
     () => userChainLinks.map(({ externalAddress }) => externalAddress),
@@ -204,3 +204,5 @@ export const useConnectChain = (userChainLinks: ChainLink[]) => {
     }
   }, [broadcastTx, generateMsgChainLink, importAccount, returnToCurrentScreen, saveChainLink]);
 };
+
+export default useConnectChain;

@@ -3,7 +3,7 @@ import { getBiometricPassword } from 'lib/SecureStorage';
 import { BiometricAuthorizations } from 'types/settings';
 import { useSetAppState } from '@recoil/appState';
 import { Platform } from 'react-native';
-import { appStateOnce } from 'lib/AppStateUtils';
+import appStateOnce from 'lib/AppStateUtils';
 
 /**
  * A hook that returns a function that will request the biometrics password.

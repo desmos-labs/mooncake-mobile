@@ -1,6 +1,8 @@
 /**
  * Error that represents a post that has already been reported.
  */
+// Since we don't want to split this file into multiple files we are suppressing the eslint rule
+// eslint-disable-next-line max-classes-per-file
 export class PostAlreadyReportedError extends Error {
   readonly type: 'PostAlreadyReportedError';
 

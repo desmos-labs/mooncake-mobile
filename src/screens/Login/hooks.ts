@@ -1,10 +1,10 @@
 import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useUnlockWalletWithPassword } from 'screens/UnlockWallet/useHooks';
+import useUnlockWalletWithPassword from 'screens/UnlockWallet/useHooks';
 import { err } from 'neverthrow';
 import usePerformLogin from 'hooks/apis/usePerformLogin';
 
-export const useOnSubmitPassword = () => {
+const useOnSubmitPassword = () => {
   const activeAddress = useActiveAccountAddress();
   const unlockWalletWithPassword = useUnlockWalletWithPassword();
   const performLogin = usePerformLogin();
@@ -30,3 +30,5 @@ export const useOnSubmitPassword = () => {
     [activeAddress, performLogin, unlockWalletWithPassword],
   );
 };
+
+export default useOnSubmitPassword;

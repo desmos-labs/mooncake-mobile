@@ -5,9 +5,11 @@ import { AppState, AppStateEvent, AppStateStatus } from 'react-native';
  * @param type - App state event.
  * @param listener - Callback called on when the event is fired.
  */
-export const appStateOnce = (type: AppStateEvent, listener: (state: AppStateStatus) => void) => {
+const appStateOnce = (type: AppStateEvent, listener: (state: AppStateStatus) => void) => {
   const subscription = AppState.addEventListener(type, (state: AppStateStatus) => {
     listener(state);
     subscription.remove();
   });
 };
+
+export default appStateOnce;

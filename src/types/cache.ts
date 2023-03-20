@@ -1,6 +1,8 @@
 /**
  * Represents the different status that the data can have within the application.
  */
+// Since we don't want to split this file into multiple files we are suppressing the eslint rule
+// eslint-disable-next-line max-classes-per-file
 export enum DataStatus {
   /**
    * The data is synced with the chain.
