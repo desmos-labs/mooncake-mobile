@@ -7,6 +7,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.roundness,
+    marginTop: theme.spacing.s,
   },
   followButton: {
     height: 32,
@@ -14,6 +15,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: theme.roundness,
+    marginTop: theme.spacing.s,
   },
 }));
 

@@ -87,7 +87,13 @@ export const UsersList = (props: UsersListProps) => {
   // Callback used to render each item within the list
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<DesmosProfile>) => {
-      return <UserListItem profileAddress={userAddress} user={item} onPress={navigateToProfile} />;
+      return (
+        <UserListItem
+          profileAddress={userAddress}
+          user={item}
+          onPress={() => navigateToProfile(item.address)}
+        />
+      );
     },
     [navigateToProfile, userAddress],
   );
