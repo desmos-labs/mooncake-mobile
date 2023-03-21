@@ -44,7 +44,7 @@
     "@react-navigation/material-top-tabs": "^6.5.2",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
-    "@shopify/flash-list": "^1.4.1",
+    "@shopify/flash-list": "^1.4.2",
     "@types/uuid": "^9.0.0",
     "asyncstorage-down": "^4.2.0",
     "axios": "^1.2.5",
