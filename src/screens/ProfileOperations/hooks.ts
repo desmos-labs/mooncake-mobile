@@ -39,7 +39,7 @@ const groupMessagesByDate = (messages: PastTransactionMessage[]) => {
  * @param address {string} - Address of the user whose past actions we want to retrieve.
  * @param transactionsPerPage {number} - Number of transactions to retrieve per page.
  */
-export const usePastActionsSections = (address: string, transactionsPerPage: number = 50) => {
+export const usePastActionsSections = (address: string, transactionsPerPage: number = 20) => {
   const {
     transactions,
     loading,
