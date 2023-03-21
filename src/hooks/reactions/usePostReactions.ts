@@ -30,6 +30,7 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
   // This will later be merged with reactions from the chain at the first fetch.
   const [reactions, setReactions] = useState<PostReaction[]>(postReactionsToSync);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
@@ -51,15 +52,17 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
 
         // Update the pending reactions (delete the ones that have been sent or are expired)
         updatePendingReactions(updates);
-
         return merged;
       });
+      setLoading(false);
+      setRefreshing(false);
+      setFetchingMore(false);
     },
     [updatePendingReactions],
   );
 
   // Query used to get the comments
-  const { refetch, loading, fetchMore } = useQuery(GetPostReactions, {
+  const { refetch, fetchMore } = useQuery(GetPostReactions, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
@@ -86,10 +89,8 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
         }),
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [loading, fetchMore, reactions.length]);
 
@@ -106,10 +107,8 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
+      setFetchingMore(false);
       setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
-      setRefreshing(false);
     }
   }, [onCompletedCallback, refetch]);
 

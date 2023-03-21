@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
-import ProfileFields from 'services/graphql/queries/fragments/ProfilesFields';
+import RelationshipFields from 'services/graphql/queries/fragments/RelationshipFields';
 
 const GetAccountFollowing = gql`
-  ${ProfileFields}
+  ${RelationshipFields}
   query GetPaginatedFollowing(
     $subspaceId: bigint!
     $userAddress: String!
@@ -14,9 +14,7 @@ const GetAccountFollowing = gql`
       offset: $offset
       limit: $limit
     ) {
-      counterparty {
-        ...ProfileFields
-      }
+      ...RelationshipFields
     }
   }
 `;

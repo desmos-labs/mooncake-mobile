@@ -1,6 +1,6 @@
 import React from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isCommentTo, Post, PostStatus } from 'types/posts';
+import { isCommentTo, isRootPost, Post, PostStatus } from 'types/posts';
 import { getMMKV, MMKVKEYS, setMMKV } from 'lib/MMKVStorage';
 import { findSamePost } from 'lib/PostsUtils';
 
@@ -106,6 +106,25 @@ export const useGetPostCommentsDifference = (user: string) => {
 };
 
 /**
+ * Hook that allows to get all the comments that are yet to-be-synced for a given user and post.
+ * @param user {string} - Address of the user inside which posts' to search for.
+ * @param subspaceId {number} - Subspace id of the post.
+ * @param postId {number} - ID of the post for which to get the comments.
+ */
+export const usePostCommentsToSync = (user: string, subspaceId: number, postId: number) => {
+  const posts = useRecoilValue(postsState);
+  return React.useMemo(() => {
+    const userPosts = posts[user] ?? [];
+    return userPosts.filter(
+      p =>
+        p.subspaceId === subspaceId &&
+        isCommentTo(p, postId) &&
+        p.status !== PostStatus.DELETED_LOCALLY,
+    );
+  }, [posts, user, subspaceId, postId]);
+};
+
+/**
  * Hook that allows to store a given post.
  * @param user {string} - User for which the post should be stored.
  */
@@ -202,10 +221,7 @@ export const useUpdatePostStatus = (user: string) => {
  */
 export const useStoredRootPosts = (user: string) => {
   const posts = useRecoilValue(postsState);
-  return React.useMemo(
-    () => posts[user]?.filter(post => post.conversationId === 0) ?? [],
-    [posts, user],
-  );
+  return React.useMemo(() => (posts[user] ?? []).filter(isRootPost), [posts, user]);
 };
 
 /**
@@ -220,10 +236,10 @@ export const useStoredFollowingPosts = (user: string, followingAddresses: string
   );
 };
 
-export const useUpdateStoredPendingPost = (user: string) => {
+export const useUpdateStoredPendingPost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (subspaceId: number, externalId: string, update: Post) => {
+    (user: string, subspaceId: number, externalId: string, update: Post) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -241,7 +257,7 @@ export const useUpdateStoredPendingPost = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 
@@ -249,10 +265,10 @@ export const useUpdateStoredPendingPost = (user: string) => {
  * Hook that allows to delete the given pending post from the posts state.
  * @param user {string} - Address of the user for which the post should be deleted.
  */
-export const useRemoveStoredPendingPost = (user: string) => {
+export const useRemoveStoredPendingPost = () => {
   const setPosts = useSetRecoilState(postsState);
   return React.useCallback(
-    (subspaceId: number, externalId: string) => {
+    (user: string, subspaceId: number, externalId: string) => {
       setPosts(currentTimeline => {
         const updatedPosts: Record<string, Post[]> = {
           ...currentTimeline,
@@ -270,7 +286,7 @@ export const useRemoveStoredPendingPost = (user: string) => {
         return updatedPosts;
       });
     },
-    [setPosts, user],
+    [setPosts],
   );
 };
 

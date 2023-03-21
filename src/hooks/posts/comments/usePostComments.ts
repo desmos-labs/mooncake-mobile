@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { Post, PostStatus } from 'types/posts';
+import React, { useState } from 'react';
+import { Post } from 'types/posts';
 import { useQuery } from '@apollo/client';
 import GetPostComments from 'services/graphql/queries/GetPostComments';
 import { getLikeReactionId } from 'types/desmos';
 import { useAppStateValue } from '@recoil/appState';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { RegisteredReactionValueTypeUrl } from '@desmoslabs/desmjs';
-import { usePostsToSync } from '@recoil/posts';
+import { usePostCommentsToSync } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
@@ -26,20 +26,21 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   const subspaceParams = useAppStateValue('subspaceParams');
   const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress);
 
+  const [comments, setComments] = useState<Post[]>([]);
+
   // Get the comments to be synced
-  const postsToSync = usePostsToSync(activeAccountAddress);
-  const commentsToSync = useMemo(
-    () =>
-      postsToSync
-        .filter(p => p.conversationId === post.id)
-        .filter(p => p.status !== PostStatus.DELETED_LOCALLY),
-    [post.id, postsToSync],
-  );
+  const commentsToSync = usePostCommentsToSync(activeAccountAddress, post.subspaceId, post.id);
 
-  // Set the initial comments state to be the comments to sync.
-  // This will later be merged with comments from the chain at the first fetch.
-  const [comments, setComments] = useState<Post[]>(commentsToSync);
+  // Update the comments when the comments to sync change
+  React.useEffect(() => {
+    // Update the comments
+    setComments(currentComments => {
+      const [merged] = mergePosts(currentComments, commentsToSync);
+      return merged;
+    });
+  }, [commentsToSync]);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [fetchingMore, setFetchingMore] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
@@ -59,15 +60,17 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
         // This is done because comments are not cached inside the local storage of the device, and
         // they are not handled by the optimistic APIs
         updatePendingPosts(updates);
-
         return merged;
       });
+      setFetchingMore(false);
+      setRefreshing(false);
+      setLoading(false);
     },
     [updatePendingPosts],
   );
 
   // Query used to get the comments
-  const { refetch, loading, fetchMore } = useQuery(GetPostComments, {
+  const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
@@ -96,10 +99,8 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
         }),
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [fetchMore, comments.length]);
 
@@ -113,10 +114,8 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);
 

@@ -40,7 +40,7 @@ export const TopBar: React.FC<Props> = props => {
     return navigation.canGoBack() && !noBackButton ? (
       <BackButton onPress={navigation.goBack} />
     ) : null;
-  }, [backButtonCustomBehavior, navigation]);
+  }, [backButtonCustomBehavior, navigation, noBackButton]);
 
   return (
     <View style={[styles.root, style]}>

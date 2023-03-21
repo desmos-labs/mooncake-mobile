@@ -3,15 +3,8 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import useBroadcastTxOnChain from 'hooks/transactions/useBroadcastTxOnChain';
 import useBroadcastTxWithApi from 'hooks/transactions/useBroadcastTxWithApi';
 import { err, ok, Result } from 'neverthrow';
-import { CanceledOperationError, isCanceledOperationError } from 'types/error';
-import useGetAuthorizationInformation from 'hooks/authorizations/useGetAuthorizationInformation';
+import { isCanceledOperationError, isCentralizedApiNotGrantedError } from 'types/error';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import {
-  buildGrantAllowanceEncodes,
-  buildGrantMsgEncodes,
-  getMissingAuthzPermissions,
-  getMissingFeeGrantPermissions,
-} from 'lib/AuthorizationsUtils';
 import {
   MsgAddReactionTypeUrl,
   MsgCreatePostTypeUrl,
@@ -23,17 +16,11 @@ import {
   MsgDeleteSubspaceTypeUrl,
   MsgRemoveReactionTypeUrl,
 } from '@desmoslabs/desmjs';
-import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
-import { DesmosProfile } from 'types/desmos';
 import { useStoredProfiles } from '@recoil/profiles';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
-import ROUTES from 'navigation/routes';
-import { useTranslation } from 'react-i18next';
-import useButterConfig from 'hooks/config/useButterConfig';
 import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
+import usePromptRequestSaveProfile from 'hooks/transactions/usePrompRequestSaveProfile';
+import usePromptRequestCentralizedAPIsPermissions from 'hooks/transactions/usePromptRequestCentralizedAPIsPermissions';
+import { useStorePendingTransaction } from '@recoil/transactions';
 
 export interface BroadcastOptions {
   /**
@@ -84,134 +71,6 @@ const msgRequiresProfile = (msgTyeUrl: string) => {
 };
 
 /**
- * Hook that provides a function that shows to the user that must create
- * a profile to perform the operation and let the user create the profile.
- */
-const usePromptRequestSaveProfile = () => {
-  const { t } = useTranslation('broadcastTx');
-  const saveProfile = useSaveProfile();
-  const returnToCurrentScreen = useReturnToCurrentScreen();
-  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-
-  return React.useCallback(
-    async (profile?: DesmosProfile): Promise<Result<void, CanceledOperationError>> => {
-      const confirmProfileCreation = await new Promise<Result<void, CanceledOperationError>>(
-        resolve => {
-          navigation.navigate(ROUTES.BOTTOM_MODAL, {
-            title: t('save created profile'),
-            body: t('save created profile body'),
-            onPressPrimary: () => {
-              resolve(ok(undefined));
-            },
-            primaryButtonLabel: 'Save profile',
-            onCancel: () => {
-              resolve(err(new CanceledOperationError()));
-            },
-          });
-        },
-      );
-
-      if (confirmProfileCreation.isErr()) {
-        return err(confirmProfileCreation.error);
-      }
-
-      return new Promise(resolve => {
-        saveProfile({
-          profile,
-          storeOnChain: true,
-          onSuccess: () => {
-            returnToCurrentScreen();
-            resolve(ok(undefined));
-          },
-          onCancel: () => {
-            resolve(err(new CanceledOperationError()));
-          },
-        });
-      });
-    },
-    [navigation, returnToCurrentScreen, saveProfile, t],
-  );
-};
-
-/**
- * Hook that provides a function that requests to the user if wants to give
- * the fee grants and authz permissions to the centralized API so that can
- * perform the operations in a more simple way.
- */
-const usePromptRequestAccountPermissions = () => {
-  const { t } = useTranslation('broadcastTx');
-  const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const activeAccountAddress = useActiveAccountAddress()!;
-  const { refetch: fetchAuthorizations } = useGetAuthorizationInformation(
-    activeAccountAddress,
-    true,
-  );
-  const { config } = useButterConfig();
-
-  return React.useCallback(
-    async (msgs: EncodeObject[]) => {
-      const fetchAuthorizationsResult = await fetchAuthorizations();
-      if (fetchAuthorizationsResult.isErr()) {
-        return err(fetchAuthorizationsResult.error);
-      }
-
-      return new Promise<Result<EncodeObject[], Error>>(resolve => {
-        const { authzGrants, feeGrants } = fetchAuthorizationsResult.value;
-        const msgsTypes = msgs.map(msg => msg.typeUrl);
-        const missingFeeGrantsPermissions = getMissingFeeGrantPermissions(msgsTypes, feeGrants);
-        const missingAuthzPermissions = getMissingAuthzPermissions(msgsTypes, authzGrants);
-
-        if (missingFeeGrantsPermissions.length > 0 || missingAuthzPermissions.length > 0) {
-          let body = t('request simplified tx broadcasting body');
-          if (missingFeeGrantsPermissions.length > 0) {
-            body = `${body}${t('fee grant')}:\n${missingFeeGrantsPermissions.join('\n')}\n`;
-          }
-          if (missingAuthzPermissions.length > 0) {
-            body = `${body}${t('sign on your behalf')}:\n${missingAuthzPermissions.join('\n')}`;
-          }
-
-          navigation.navigate(ROUTES.BOTTOM_MODAL, {
-            title: t('request simplified tx broadcasting title'),
-            body,
-            primaryButtonLabel: 'Yes',
-            onPressPrimary: () => {
-              const grantPermissionsMsgs: EncodeObject[] = [];
-              if (missingFeeGrantsPermissions.length > 0) {
-                grantPermissionsMsgs.push(
-                  ...buildGrantAllowanceEncodes(
-                    feeGrants,
-                    missingFeeGrantsPermissions,
-                    config?.desmosAddress ?? '',
-                    activeAccountAddress,
-                  ),
-                );
-              }
-              if (missingAuthzPermissions.length > 0) {
-                grantPermissionsMsgs.push(
-                  ...buildGrantMsgEncodes(
-                    missingFeeGrantsPermissions,
-                    config?.desmosAddress ?? '',
-                    activeAccountAddress,
-                  ),
-                );
-              }
-              resolve(ok(grantPermissionsMsgs));
-            },
-            cancelButtonLabel: 'No',
-            onCancel: () => {
-              resolve(err(new CanceledOperationError()));
-            },
-          });
-        } else {
-          resolve(ok([]));
-        }
-      });
-    },
-    [activeAccountAddress, config?.desmosAddress, fetchAuthorizations, navigation, t],
-  );
-};
-
-/**
  * Hook that allows to broadcast a transaction by going through the various UI based on the user's wallet type.
  *
  * If the user is using a wallet that has granted the centralized APIs the permission to sign on their behalf,
@@ -232,10 +91,11 @@ const useBroadcastTx = () => {
   const fetchOnChainProfile = useGetOnChainProfile();
 
   const promptRequestSaveProfile = usePromptRequestSaveProfile();
-  const promptAccountPermissions = usePromptRequestAccountPermissions();
+  const promptAccountPermissions = usePromptRequestCentralizedAPIsPermissions();
 
   const broadcastTxOnChain = useBroadcastTxOnChain();
   const broadcastTxWithApi = useBroadcastTxWithApi();
+  const storePendingTransaction = useStorePendingTransaction();
 
   return React.useCallback(
     async (
@@ -273,8 +133,13 @@ const useBroadcastTx = () => {
       if (!broadcastOnChain) {
         const permissionsPromptResult = await promptAccountPermissions(msgs);
         if (permissionsPromptResult.isErr()) {
-          // The user rejected, just proceed with the normal broadcast.
-          broadcastOnChain = true;
+          if (isCanceledOperationError(permissionsPromptResult.error)) {
+            // The user has canceled the operation, so do nothing
+            return err(permissionsPromptResult.error);
+          } else if (isCentralizedApiNotGrantedError(permissionsPromptResult.error)) {
+            // The user rejected, just proceed with the normal broadcast.
+            broadcastOnChain = true;
+          }
         } else if (permissionsPromptResult.isOk() && permissionsPromptResult.value.length > 0) {
           // User accepted to give us the permissions, extends the broadcast
           // messages to include the permissions messages so that from
@@ -286,30 +151,33 @@ const useBroadcastTx = () => {
       }
 
       // Broadcast the transaction regularly
-      if (broadcastOnChain) {
-        return broadcastTxOnChain(msgToBroadcast, {
-          memo: options?.memo,
-        }).map(result => ({
-          txHash: result.transactionHash,
-        }));
-      }
+      const txOptions = { memo: options?.memo };
+      const result = broadcastOnChain
+        ? broadcastTxOnChain(msgToBroadcast, txOptions)
+        : broadcastTxWithApi(msgToBroadcast, {
+            ...txOptions,
+            optimistic: options?.optimistic,
+          });
 
-      // Broadcast the transaction with the centralized APIs
-      return broadcastTxWithApi(msgToBroadcast, {
-        optimistic: options?.optimistic,
-        memo: options?.memo,
-      }).map(result => ({
-        txHash: result.txHash,
-      }));
+      return result.andThen(pendingTx => {
+        // Store the transaction locally
+        storePendingTransaction(pendingTx);
+
+        // Return the proper data
+        return ok({
+          txHash: pendingTx.hash,
+        } as SuccessfulBroadcast);
+      });
     },
     [
       activeAccountAddress,
+      fetchOnChainProfile,
       broadcastTxOnChain,
       broadcastTxWithApi,
       promptRequestSaveProfile,
-      fetchOnChainProfile,
-      promptAccountPermissions,
       storedProfiles,
+      promptAccountPermissions,
+      storePendingTransaction,
     ],
   );
 };

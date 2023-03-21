@@ -1,6 +1,5 @@
 import { DocumentNode, useSubscription } from '@apollo/client';
 import { useCallback, useRef } from 'react';
-import useCustomToast from 'hooks/extended/useCustomToast';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { NavProps } from 'screens/Home';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +11,8 @@ import DiscoveryPostsCount from 'services/graphql/subscriptions/DiscoveryPostsCo
 import FollowingPostsCount from 'services/graphql/subscriptions/FollowingPostsCount';
 import useFollowingAddresses from 'hooks/relationships/useFollowingAddresses';
 import { debounce } from 'lodash';
+import ROUTES from 'navigation/routes';
+import useCustomToast from 'hooks/extended/useCustomToast';
 
 /**
  * Hook that allows to observe a generic posts count subscription,
@@ -19,11 +20,13 @@ import { debounce } from 'lodash';
  * @param subscription {DocumentNode} - Subscription that will be observed
  * @param variables {any} - Variables used inside the subscription.
  * @param onNewPosts {Function} - Function called when a new data is retrieved.
+ * @param waitTimeSeconds {number} - Minimum amount of time, in seconds, to wait between one notification and the other.
  */
 const usePostsCountSubscription = <TVariables = OperationVariables>(
   subscription: DocumentNode,
   variables: TVariables,
   onNewPosts: () => void,
+  waitTimeSeconds: number = 30,
 ) => {
   // Reference to the last retrieved posts count for the subscription
   const postsCount = useRef<number>(0);
@@ -33,17 +36,22 @@ const usePostsCountSubscription = <TVariables = OperationVariables>(
   const onNewData = useCallback(
     (options: OnDataOptions) => {
       const retrievedCount = options.data?.data?.posts?.aggregate?.count || 0;
-      if (retrievedCount !== 0 && retrievedCount !== postsCount) {
+      if (retrievedCount > postsCount.current) {
+        if (postsCount.current > 0) {
+          // Only notify the listener after the first data retrieval.
+          // This will avoid the notification to be shown immediately
+          // after the subscription is created.
+          onNewPosts();
+        }
         postsCount.current = retrievedCount;
-        onNewPosts();
       }
     },
-    [postsCount.current],
+    [onNewPosts],
   );
 
   // We use a debounced callback of 30 seconds in order to avoid
   // spamming the user with new notifications continuously
-  const debouncedCallback = debounce(onNewData, 30 * 1000);
+  const debouncedCallback = debounce(onNewData, waitTimeSeconds * 1000);
 
   useSubscription(subscription, {
     variables,
@@ -66,11 +74,12 @@ const useWatchNewDiscoveryPosts = (onPressNotification: () => void) => {
   const activeAddress = useActiveAccountAddress();
 
   const onNewDiscoveryPosts = useCallback(() => {
-    if (!isFocused || routeName !== 'HOME_TAB_DISCOVER') return;
+    if (!isFocused || routeName !== ROUTES.HOME_TAB_DISCOVER) return;
+    console.log('Received new discover posts');
     toast.success(t('newDiscoverPost'), {
       handlePressToast: onPressNotification,
     });
-  }, []);
+  }, [isFocused, onPressNotification, routeName, t, toast]);
 
   usePostsCountSubscription(
     DiscoveryPostsCount,
@@ -97,11 +106,12 @@ const useWatchNewFollowingPosts = (onPressNotification: () => void) => {
   const followingAddresses = useFollowingAddresses();
 
   const onNewFollowingPosts = useCallback(() => {
-    if (!isFocused || routeName !== 'HOME_TAB_FOLLOWING') return;
+    if (!isFocused || routeName !== ROUTES.HOME_TAB_FOLLOWING) return;
+    console.log('Received new followers posts');
     toast.success(t('newFollowingPost'), {
       handlePressToast: onPressNotification,
     });
-  }, []);
+  }, [isFocused, onPressNotification, routeName, t, toast]);
 
   usePostsCountSubscription(
     FollowingPostsCount,
@@ -121,7 +131,7 @@ const useWatchForNewPosts = (onPressNotification: () => void) => {
   // Callback used when the user presses a notification
   const onPress = useCallback(() => {
     onPressNotification();
-  }, []);
+  }, [onPressNotification]);
 
   useWatchNewDiscoveryPosts(onPress);
   useWatchNewFollowingPosts(onPress);

@@ -13,6 +13,7 @@ const useCreateLocalNotification = () => {
       const actualBadgeCount = await notifee.getBadgeCount();
       await notifee.setBadgeCount(actualBadgeCount + 1);
 
+      // TODO create more channels based on the notification type
       // Create the notification channel id
       const channelId = await notifee.createChannel({
         id: 'default',
@@ -38,12 +39,6 @@ const useCreateLocalNotification = () => {
         data: JSON.parse(JSON.stringify(data)),
         ios: {
           interruptionLevel: 'active',
-          foregroundPresentationOptions: {
-            badge: true,
-            sound: true,
-            banner: true,
-            list: true,
-          },
           sound: 'default',
         },
       });

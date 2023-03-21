@@ -1,4 +1,4 @@
-import { errorImage } from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
@@ -18,10 +18,10 @@ const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Image source={errorImage} style={styles.imageStyle} />
+        <Image source={emptyListPlaceholder} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
-      {additionalButton && buttonLabel && (
+      {additionalButton && handleButton && (
         <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx={80}>
           {buttonLabel}
         </Button>
@@ -44,16 +44,17 @@ const useStyles = makeStyle(theme => ({
     textAlign: 'center',
   },
   imageStyle: {
-    width: 335,
-    height: 116,
+    width: 72,
+    height: 72,
     resizeMode: 'contain',
+    marginBottom: theme.spacing.s,
   },
   buttonStyle: {
     marginTop: theme.spacing.l,
   },
   additionalButton: {
-    marginTop: theme.spacing.xl,
-    marginHorizontal: 80,
+    marginTop: theme.spacing.l,
+    marginHorizontal: 100,
   },
 }));
 

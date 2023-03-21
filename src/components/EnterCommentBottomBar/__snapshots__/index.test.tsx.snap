@@ -802,7 +802,6 @@ exports[`component: EnterCommentBottomBar renders 1`] = `
               >
                 <FastImageView
                   defaultSource={null}
-                  onFastImageError={[Function]}
                   resizeMode="cover"
                   source={
                     {

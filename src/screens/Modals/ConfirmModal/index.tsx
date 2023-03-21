@@ -1,5 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import Button, { ButtonMode } from 'components/Button';
 import Button from 'components/CustomButton';
 // dismiss button
 // import {iconCross} from 'assets/images';
@@ -73,13 +74,7 @@ export type ConfirmModalParams = {
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?:
-    | 'text'
-    | 'outlined'
-    | 'contained'
-    | 'gradient'
-    | 'gradientFilled'
-    | 'backgroundComponent';
+  secondaryButtonMode?: ButtonMode;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -97,8 +92,8 @@ const ConfirmModal = () => {
       onPressSecondary,
       removeModalAfterButtonPress,
       image,
-      primaryButtonMode = 'contained',
-      secondaryButtonMode = 'text',
+      primaryButtonMode = ButtonMode.CONTAINED,
+      secondaryButtonMode = ButtonMode.TEXT,
     },
   } = useRoute<NavProps['route']>();
 

@@ -16,6 +16,8 @@ import { useActiveProfile } from '@recoil/profiles';
 import { convertPostToMsgCreatePost, getConversationId } from 'lib/PostsUtils';
 import { useRemoveStoredPendingPost, useStorePost } from '@recoil/posts';
 import { UploadAssetResult } from 'hooks/useUploadAsset';
+import { isCanceledOperationError } from 'types/error';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Gets the post references to be used when creating a post.
@@ -59,6 +61,7 @@ export enum CreatePostStateType {
   UPLOADING_ATTACHMENTS = 'UPLOADING_ATTACHMENTS',
   CREATING_MESSAGE = 'CREATING_MESSAGE',
   BROADCASTING_TRANSACTION = 'BROADCASTING_TRANSACTION',
+  CANCELED = 'CANCELED',
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
 }
@@ -72,6 +75,7 @@ export interface CreatePostSimpleState {
     | CreatePostStateType.UPLOADING_ATTACHMENTS
     | CreatePostStateType.CREATING_MESSAGE
     | CreatePostStateType.BROADCASTING_TRANSACTION
+    | CreatePostStateType.CANCELED
     | CreatePostStateType.SUCCESS;
 }
 
@@ -135,6 +139,10 @@ const useCreatePost = () => {
         subspaceId,
         sectionId: createPostState.sectionId ?? parent?.sectionId ?? 0,
         id: -1, // TODO: This should be deleted
+
+        // Generate a random UUID to be used as external ID
+        externalId: uuidv4(),
+
         conversationId: getConversationId(parent),
         references: postReferences,
         attachments: postAttachments,
@@ -155,6 +163,9 @@ const useCreatePost = () => {
       if (result.isErr()) {
         // If there is an error, delete the post from the local storage
         deletePost(post.subspaceId, post.externalId);
+        if (isCanceledOperationError(result.error)) {
+          setState({ type: CreatePostStateType.CANCELED });
+        }
         setState({ type: CreatePostStateType.ERROR, error: result.error });
       } else {
         // If the post creation was successful, reset the state

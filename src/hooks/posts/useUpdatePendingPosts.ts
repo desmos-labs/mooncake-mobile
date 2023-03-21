@@ -5,16 +5,15 @@ import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransac
 
 /**
  * Hook that allows to delete the pending posts based on the data retrieved from the server.
- * @param user {string} - Address of the user for which the pending posts should be deleted.
  */
-const useUpdatePendingPosts = (user: string) => {
-  const updateStoredPendingPost = useUpdateStoredPendingPost(user);
-  const removeStoredPendingPost = useRemoveStoredPendingPost(user);
+const useUpdatePendingPosts = () => {
+  const updateStoredPendingPost = useUpdateStoredPendingPost();
+  const removeStoredPendingPost = useRemoveStoredPendingPost();
 
   const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
-    (updates: PostUpdate[]) => {
+    (user: string, updates: PostUpdate[]) => {
       updates.forEach(update => {
         switch (update.type) {
           case PostUpdateType.CREATE:
@@ -23,13 +22,13 @@ const useUpdatePendingPosts = (user: string) => {
 
           case PostUpdateType.REPLACE: {
             const { original, updated } = update;
-            updateStoredPendingPost(original.subspaceId, original.externalId, updated);
+            updateStoredPendingPost(user, original.subspaceId, original.externalId, updated);
             break;
           }
 
           case PostUpdateType.DELETE: {
             const { post } = update;
-            removeStoredPendingPost(post.subspaceId, post.externalId);
+            removeStoredPendingPost(user, post.subspaceId, post.externalId);
             break;
           }
         }

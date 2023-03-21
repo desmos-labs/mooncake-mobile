@@ -3,9 +3,8 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoTypes } from '@cosmjs/stargate';
 import { createDesmosTypes } from '@desmoslabs/desmjs';
 import axiosInstance from 'services/axios';
-import { ok, ResultAsync } from 'neverthrow';
+import { errAsync, ResultAsync } from 'neverthrow';
 import { PendingTransaction } from 'types/transactions';
-import { useStorePendingTransaction } from '@recoil/transactions';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { AminoMsg } from '@cosmjs/amino';
 
@@ -22,13 +21,6 @@ export interface BroadcastTxWithApiOptions {
    * Transaction memo.
    */
   memo?: string;
-}
-
-export interface BroadcastTxWithApiResponse {
-  /**
-   * Hash of the broadcast transaction.
-   */
-  txHash: string;
 }
 
 /**
@@ -51,17 +43,16 @@ const postTransaction = (messages: AminoMsg[], options?: BroadcastTxWithApiOptio
  */
 const useBroadcastTxWithApi = () => {
   const activeAccountAddress = useActiveAccountAddress();
-  // if (!activeAccountAddress) {
-  //   throw new Error('Trying to broadcast a transaction without active account');
-  // }
-
-  const storePendingTransaction = useStorePendingTransaction();
   return React.useCallback(
     (
       messages: EncodeObject[],
       options?: BroadcastTxWithApiOptions,
-    ): ResultAsync<BroadcastTxWithApiResponse, Error> => {
-      const aminoEncoder = new AminoTypes(createDesmosTypes('desmos'));
+    ): ResultAsync<PendingTransaction, Error> => {
+      if (!activeAccountAddress) {
+        return errAsync(new Error('Trying to broadcast a transaction without active account'));
+      }
+
+      const aminoEncoder = new AminoTypes(createDesmosTypes());
       const aminoMessages = messages.map(msg => aminoEncoder.toAmino(msg));
 
       return ResultAsync.fromPromise(
@@ -69,22 +60,17 @@ const useBroadcastTxWithApi = () => {
         (e: any) => new Error(e?.message ?? 'Error broadcasting the transaction'),
       )
         .map(response => ({ txHash: response.data.tx_hash }))
-        .andThen(result => {
-          // Store the transaction locally
-          const transaction: PendingTransaction = {
+        .map(result => {
+          return {
             messages,
             fees: [],
             hash: result.txHash,
             timestamp: new Date().toISOString(),
             user: activeAccountAddress,
-          };
-          storePendingTransaction(activeAccountAddress, transaction);
-
-          // Return the original result
-          return ok(result);
+          } as PendingTransaction;
         });
     },
-    [activeAccountAddress, storePendingTransaction],
+    [activeAccountAddress],
   );
 };
 

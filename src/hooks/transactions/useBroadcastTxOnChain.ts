@@ -1,14 +1,15 @@
-import { DeliverTxResponse, EncodeObject } from '@desmoslabs/desmjs';
+import { EncodeObject } from '@desmoslabs/desmjs';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React from 'react';
 import ROUTES from 'navigation/routes';
-import { useActiveAccount } from '@recoil/accounts';
+import { useActiveAccountAddress } from '@recoil/accounts';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import { Wallet } from 'types/wallet';
-import { ResultAsync } from 'neverthrow';
+import { errAsync, ResultAsync } from 'neverthrow';
 import { CanceledOperationError } from 'types/error';
+import { PendingTransaction } from 'types/transactions';
 
 export interface BroadcastTxOptions {
   /**
@@ -27,21 +28,29 @@ export interface BroadcastTxOptions {
  * The flow will vary based on the wallet type the user is using (mnemonic, Ledger, Web3Auth, etc).
  */
 const useBroadcastTxOnChain = () => {
+  const activeAccountAddress = useActiveAccountAddress();
+
   const navigation = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
-  const activeAccount = useActiveAccount()!;
   const returnToCurrentScreen = useReturnToCurrentScreen();
 
   return React.useCallback(
-    (messages: EncodeObject[], options?: BroadcastTxOptions) => {
-      return ResultAsync.fromPromise<DeliverTxResponse, Error>(
+    (
+      messages: EncodeObject[],
+      options?: BroadcastTxOptions,
+    ): ResultAsync<PendingTransaction, Error> => {
+      if (!activeAccountAddress) {
+        return errAsync(new Error('Trying to broadcast a transaction without active account'));
+      }
+
+      return ResultAsync.fromPromise<PendingTransaction, Error>(
         new Promise((resolve, reject) => {
           navigation.navigate(ROUTES.BROADCAST_TX_ON_CHAIN, {
             messages,
-            accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccount.address,
+            accountAddressOrWallet: options?.accountAddressOrWallet ?? activeAccountAddress,
             memo: options?.memo,
-            onSuccess: (txResponse: DeliverTxResponse) => {
+            onSuccess: (pendingTx: PendingTransaction) => {
               returnToCurrentScreen();
-              resolve(txResponse);
+              resolve(pendingTx);
             },
             onCancel: () => {
               reject(new Error('Operation canceled'));
@@ -51,7 +60,7 @@ const useBroadcastTxOnChain = () => {
         () => new CanceledOperationError(),
       );
     },
-    [activeAccount, navigation, returnToCurrentScreen],
+    [activeAccountAddress, navigation, returnToCurrentScreen],
   );
 };
 

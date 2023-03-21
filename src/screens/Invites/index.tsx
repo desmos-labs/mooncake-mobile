@@ -146,9 +146,8 @@ const Invites = () => {
             </TouchableOpacity>
           </View>
           <Button
-            mode={ButtonMode.CONTAINED}
             backgroundColor={theme.colors.surfaceBlack}
-            size={ButtonSize.M}
+            size={44}
             textColor={theme.colors.white}
             onPress={onShare}>
             {t('share')}

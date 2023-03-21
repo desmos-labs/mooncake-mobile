@@ -5,6 +5,9 @@ import { useGetPendingTransaction } from '@recoil/transactions';
 import useBroadcastTx from 'hooks/transactions/useBroadcastTx';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Hook to create a snackbar for a transaction notification.
+ */
 const useCreateTransactionSnackbar = () => {
   const toast = useCustomToast();
   const { t } = useTranslation();
@@ -35,7 +38,7 @@ const useCreateTransactionSnackbar = () => {
           break;
       }
     },
-    [toast],
+    [broadcastTx, getPendingTransaction, toast],
   );
 };
 

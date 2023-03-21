@@ -131,6 +131,14 @@ const SendTips = (props: NavProps) => {
                     return (
                       <Button
                         key={String(value)}
+                        backgroundColor={
+                          values.amount === String(value)
+                            ? theme.colors.butterOrange01
+                            : theme.colors.white
+                        }
+                        textColor={
+                          values.amount === String(value) ? theme.colors.white : theme.colors.black
+                        }
                         disabled={!canEdit || shouldDisableTipButton(value)}
                         variant={values.amount === String(value) ? 'solid' : 'outlined'}
                         size={44}
@@ -146,13 +154,6 @@ const SendTips = (props: NavProps) => {
                                 borderColor: theme.colors.surfaceBlack,
                               },
                         ]}
-                        textColor={
-                          shouldDisableTipButton(value)
-                            ? 'tabIconGrey'
-                            : values.amount === String(value)
-                            ? 'white'
-                            : 'surfaceBlack'
-                        }
                         onPress={() => {
                           setFieldValue('amount', String(value), true);
                         }}>
@@ -222,7 +223,7 @@ const SendTips = (props: NavProps) => {
                     size={44}
                     textColor={theme.colors.white}
                     backgroundColor={theme.colors.surfaceBlack}
-                    onPress={handleSubmit as any}
+                    onPress={handleSubmit}
                     disabled={values.amount === '' || _.flatten(Object.values(errors)).length > 0}>
                     {t('common:confirm')}
                   </Button>

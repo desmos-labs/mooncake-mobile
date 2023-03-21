@@ -9,6 +9,7 @@ const PostFields = gql`
     section {
       id
     }
+    reply_settings
     external_id
     conversation {
       id

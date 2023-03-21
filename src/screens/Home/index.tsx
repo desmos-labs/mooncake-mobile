@@ -4,15 +4,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import HomePostContentLoader from 'components/Loaders/HomePostContentLoader';
 import Typography from 'components/Typography';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Platform,
-  RefreshControl,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Platform, RefreshControl, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from 'native-base';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -53,9 +47,6 @@ const Home = () => {
   const postListRef = useRef<any>(null);
   const postsListState = usePostsListState();
   const setPostsListState = useSetPostsListState();
-
-  // State to know whether the list end was reached during the momentum
-  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -114,6 +105,23 @@ const Home = () => {
       }
     }, [postListRef, refreshPosts]),
   );
+
+  // -------------------------------------------------------------------------------------
+  // --- Utility functions
+  // -------------------------------------------------------------------------------------
+
+  const getPostType = useCallback((item: Post) => {
+    if (item.attachments && item.attachments.length > 0 && item.text) {
+      return 'text+media';
+    }
+    if (item.attachments && item.attachments.length > 0) {
+      return 'media';
+    }
+    if (item.text) {
+      return 'text';
+    }
+    return 'default';
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -180,18 +188,6 @@ const Home = () => {
     ],
   );
 
-  const footerComponent = useMemo(() => {
-    if (fetchingMore) {
-      return (
-        <View style={styles.loaderView}>
-          <HomePostContentLoader />
-        </View>
-      );
-    } else {
-      return null;
-    }
-  }, [fetchingMore, styles]);
-
   // Function called when the user manually refreshes the list
   const onRefresh = useCallback(async () => {
     await refreshPosts();
@@ -222,6 +218,18 @@ const Home = () => {
     );
   }, [postsListState, setPostsListState, styles]);
 
+  const footerComponent = useMemo(() => {
+    if (fetchingMore) {
+      return (
+        <View style={styles.loaderView}>
+          <HomePostContentLoader />
+        </View>
+      );
+    } else {
+      return null;
+    }
+  }, [fetchingMore, styles]);
+
   // -------------------------------------------------------------------------------------
   // --- Component rendering
   // -------------------------------------------------------------------------------------
@@ -229,10 +237,18 @@ const Home = () => {
   // Return the loading view if the posts are still loading
   // TODO: If the view is NOT loading, and there are no posts, we should return an empty view
   // This might be the case if the user is offline and has no cached posts
-  if (!posts && loading) {
+  if (loading) {
     return (
       <View style={styles.loadingView}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
+        <HomePostContentLoader />
+      </View>
+    );
+  }
+
+  if (!loading && posts.length === 0) {
+    return (
+      <View style={styles.loadingView}>
+        <Typography.Body5>No posts</Typography.Body5>
       </View>
     );
   }
@@ -256,17 +272,11 @@ const Home = () => {
           }
           renderItem={renderPost}
           showsVerticalScrollIndicator={false}
-          estimatedItemSize={497}
+          estimatedItemSize={250}
           ListFooterComponent={footerComponent}
-          onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
           ItemSeparatorComponent={HomeItemSeparatorComponent}
-          onEndReached={async () => {
-            if (!onEndReachedCalledDuringMomentum) {
-              await fetchMorePosts();
-              setOnEndReachedCalledDuringMomentum(true);
-            }
-          }}
-          onEndReachedThreshold={0.5}
+          onEndReached={fetchMorePosts}
+          getItemType={getPostType}
         />
       </View>
       {SearchView}

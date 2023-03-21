@@ -11,6 +11,7 @@ import { mergePosts } from 'lib/PostsUtils';
 import { getLikeReactionId } from 'types/desmos';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
 import { RegisteredReactionValueTypeUrl } from '@desmoslabs/desmjs';
+import sleep from 'lib/sleep';
 
 export enum PostsQueryType {
   TIMELINE,
@@ -101,15 +102,6 @@ const useQueryData = (params: PostsQueryParams, postsPerPage: number = 10): Quer
 };
 
 /**
- * Allows to sleep the current execution for the provided amount of milliseconds.
- * @param ms {number} - Milliseconds for which to sleep
- */
-const sleep = (ms: number) =>
-  new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
-
-/**
  * Hook that allows to get the posts of the given type, for the currently active user.
  * @param queryType {PostsQueryType} - Type of posts query that should be performed.
  */
@@ -134,6 +126,7 @@ const usePosts = (queryType: PostsQueryType) => {
   );
 
   // Local state, used as returned values
+  const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -141,7 +134,7 @@ const usePosts = (queryType: PostsQueryType) => {
   // Callback used when the query for the posts has completed.
   // It takes care of merging the results with the data stored
   const onCompletedCallback = useCallback(
-    (data: any) => {
+    async (data: any) => {
       // If there is no data, just return
       if (!data) return;
 
@@ -158,6 +151,13 @@ const usePosts = (queryType: PostsQueryType) => {
       graphQLPosts.forEach(post => {
         updatePostReactionCache(post);
       });
+      // This sleep is added on purpose in order to make the user wait,
+      // to trigger the release of serotonin inside their brain
+      // (just like slot machines)
+      await sleep(500);
+      setLoading(false);
+      setFetchingMore(false);
+      setRefreshing(false);
     },
     [storePosts, updatePostReactionCache],
   );
@@ -165,7 +165,7 @@ const usePosts = (queryType: PostsQueryType) => {
   // Get the proper query to be executed
   const queryParams = useQueryParams(queryType, activeAddress, followingAddresses);
   const queryData = useQueryData(queryParams);
-  const { refetch, loading, fetchMore } = useQuery(queryData.query, {
+  const { refetch, fetchMore } = useQuery(queryData.query, {
     variables: queryData.variables,
     onCompleted: onCompletedCallback,
     refetchWritePolicy: 'overwrite',
@@ -176,12 +176,6 @@ const usePosts = (queryType: PostsQueryType) => {
     try {
       setError(undefined);
       setFetchingMore(true);
-
-      // This sleep is added on purpose in order to make the user wait,
-      // to trigger the release of serotonin inside their brain
-      // (just like slot machines)
-      await sleep(500);
-
       await fetchMore({
         variables: { offset: posts.length },
         updateQuery: (prev, { fetchMoreResult }) => ({
@@ -189,10 +183,8 @@ const usePosts = (queryType: PostsQueryType) => {
         }),
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [setError, setFetchingMore, fetchMore, posts]);
 
@@ -201,20 +193,12 @@ const usePosts = (queryType: PostsQueryType) => {
     try {
       setError(undefined);
       setRefreshing(true);
-
-      // This sleep is added on purpose in order to make the user wait,
-      // to trigger the release of serotonin inside their brain
-      // (just like slot machines)
-      await sleep(500);
-
       // Get the new data by resetting the fetch offset to restart post fetching
       const { data } = await refetch({ ...queryData.variables, offset: 0 });
-      onCompletedCallback(data);
+      await onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [refetch, queryData.variables, onCompletedCallback]);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import { Box, Toast, useTheme } from 'native-base';
+import { useTheme, Box, Toast } from 'native-base';
 import { Shadow } from 'react-native-shadow-2';
 import { useTranslation } from 'react-i18next';
 import {

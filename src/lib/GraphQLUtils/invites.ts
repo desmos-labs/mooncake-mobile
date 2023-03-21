@@ -2,7 +2,7 @@ import { GqlInvite } from 'services/graphql/queries/GetInvites';
 import { Invite } from 'types/invites';
 import { convertGraphQLProfile } from 'lib/GraphQLUtils/profiles';
 
-export function convertGQLInvite(invite: GqlInvite): Invite {
+function convertGQLInvite(invite: GqlInvite): Invite {
   return {
     claimer: invite.claimer ? convertGraphQLProfile(invite.claimer) : undefined,
     code: invite.code,
@@ -13,3 +13,5 @@ export function convertGQLInvite(invite: GqlInvite): Invite {
     expirationTime: invite.expiration_time ? new Date(invite.expiration_time) : undefined,
   };
 }
+
+export default convertGQLInvite;

@@ -1,4 +1,4 @@
-import { cameraIcon, galleryIcon, tagIcon } from 'assets/images';
+import { cameraIcon, galleryIcon } from 'assets/images';
 import ImageButton from 'components/ImageButton';
 import RadialTextCounter from 'components/RadialTextCounter';
 import EnvConfig from 'config/EnvConfig';
@@ -16,10 +16,6 @@ type Props = {
    * Action to execute when the camera icon is pressed
    */
   handlePressCamera: () => void;
-  /**
-   * Action to execute when the mention icon is pressed
-   */
-  handlePressMention: () => void;
   /**
    * Actual length of the comment
    */
@@ -41,7 +37,6 @@ type Props = {
 const MediaBottomPanel = ({
   handlePressCamera,
   handlePressGallery,
-  handlePressMention,
   commentLength,
   imageSelected,
   rightComponent,
@@ -71,13 +66,6 @@ const MediaBottomPanel = ({
             disabled={imageSelected}
             onPress={handlePressCamera}
             image={cameraIcon}
-            style={styles.imageButtonStyle}
-          />
-          <ImageButton
-            accessibilityLabel="mention a user"
-            hitSlopValue={8}
-            onPress={handlePressMention}
-            image={tagIcon}
             style={styles.imageButtonStyle}
           />
         </View>

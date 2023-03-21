@@ -59,7 +59,6 @@ import ManageConnectionsModal, {
 import ProfilePosts, { PostsTabParams, ProfilePostsTabsParams } from 'screens/ProfilePosts';
 import Profile, { ProfileParams } from 'screens/Profile';
 import { Dimensions, Platform } from 'react-native';
-import BottomModal, { BottomModalParams } from 'screens/Modals/BottomModal';
 import ProfileConnections, {
   ProfileConnectionsParams,
   ProfileConnectionsTabParams,
@@ -72,6 +71,7 @@ import {
   BottomSheetAndroid,
   ModalPresentationIOS,
 } from '@react-navigation/stack/src/TransitionConfigs/TransitionPresets';
+import AuthorizationModal, { AuthorizationModalParams } from 'screens/Modals/AuthorizationModal';
 
 export type RootNavigatorParamList = {
   // -------------------------------------------------------------------------------------
@@ -215,11 +215,11 @@ export type RootNavigatorParamList = {
 
   [ROUTES.CONVERTIBLE_POINTS_MODAL]: undefined;
   [ROUTES.TEXTONLY_MODAL]: TextOnlyModalParams;
-  [ROUTES.BOTTOM_MODAL]: BottomModalParams;
   [ROUTES.CONFIRM_MODAL]: ConfirmModalParams;
   [ROUTES.MANAGE_CONNECTIONS_MODAL]: ManageConnectionsModalParams;
   [ROUTES.BACKUP_PHRASE_BOTTOM_MODAL]: undefined;
   [ROUTES.UPLOAD_PROFILE_PICTURES_MODALS]: SaveProfileModalParams;
+  [ROUTES.AUTHORIZATION_MODAL]: AuthorizationModalParams;
 
   // -------------------------------------------------------------------------------------
   // --- OTHER SCREENS
@@ -386,13 +386,7 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
-      <Stack.Screen
-        name={ROUTES.DISCONNECT_APP_MODAL}
-        component={DisconnectAppModal}
-        initialParams={{
-          appName: 'test',
-        }}
-      />
+      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
       <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
 
       {/* ----------------------- */}
@@ -439,9 +433,9 @@ const RootNavigator = () => {
 
       {/* <Stack.Screen name={ROUTES.PROFILE_NFTS} component={ProfileNfts} /> */}
 
-      {/* -------------- */}
-      {/* --- MODALS --- */}
-      {/* -------------- */}
+      {/* --------------------- */}
+      {/* --- BOTTOM MODALS --- */}
+      {/* --------------------- */}
 
       <Stack.Group
         screenOptions={{
@@ -454,14 +448,6 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
-        <Stack.Screen
-          name={ROUTES.BOTTOM_MODAL}
-          component={BottomModal}
-          initialParams={{
-            primaryButtonLabel: 'hey',
-            cancelButtonLabel: 'cancel',
-          }}
-        />
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
         <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
         <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />
@@ -469,6 +455,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.POST_SEND_TIPS} component={SendTips} />
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
+        <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
         <Stack.Screen
           name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
           component={BackupPhraseBottomModal}

@@ -1,7 +1,7 @@
 import { toHex } from '@cosmjs/encoding';
 import { SerializableTypes, SerializedObject, Serializer } from '../types';
 
-export const Uint8ArraySerializer: Serializer = {
+const Uint8ArraySerializer: Serializer = {
   canEncodeObj(obj: any): boolean {
     return obj instanceof Uint8Array;
   },
@@ -12,3 +12,5 @@ export const Uint8ArraySerializer: Serializer = {
     };
   },
 };
+
+export default Uint8ArraySerializer;

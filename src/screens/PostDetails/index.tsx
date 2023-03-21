@@ -1,19 +1,14 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import {
-  CompositeScreenProps,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { CompositeScreenProps, useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
 import EnterCommentBottomBar from 'components/EnterCommentBottomBar';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import { BottomTabsParamList } from 'navigation/RootNavigator/BottomTabs';
 import ROUTES from 'navigation/routes';
-import React, { useCallback, useRef } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { useTheme } from 'native-base';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { SafeAreaView } from 'react-native';
+import { Spinner, useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
@@ -69,10 +64,16 @@ const PostDetails = () => {
   const postData = { subspaceId, id: postId } as Pick<Post, 'subspaceId' | 'id'>;
 
   // -------------------------------------------------------------------------------------
+  // --- Loading states
+  // -------------------------------------------------------------------------------------
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [pageRefreshing, setPageRefreshing] = useState(false);
+
+  // -------------------------------------------------------------------------------------
   // --- Views references
   // -------------------------------------------------------------------------------------
 
-  const scrollViewRef = useRef<any>(null);
+  const scrollViewRef = useRef<FlashList<Post>>(null);
   const { textInputRef } = useFocusTextInputOnNavigate();
 
   // -------------------------------------------------------------------------------------
@@ -107,18 +108,21 @@ const PostDetails = () => {
   // -------------------------------------------------------------------------------------
 
   // TODO: Properly display the state of the comment creation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { state, handleCreateComment } = useHandleCreateComment();
 
   const handleExpandCommentView = useHandleExpandCommentView();
 
   // Method used to refresh the post data
-  const refreshPage = useCallback(() => {
-    refreshPost();
-    refreshReactionsCount();
-    refreshComments();
-    refreshCommentsCount();
-    refreshTipsCount();
-    refreshInteractionsAuthors();
+  const refreshPage = useCallback(async () => {
+    setPageRefreshing(true);
+    await refreshPost();
+    await refreshReactionsCount();
+    await refreshComments();
+    await refreshCommentsCount();
+    await refreshTipsCount();
+    await refreshInteractionsAuthors();
+    setPageRefreshing(false);
   }, [
     refreshComments,
     refreshCommentsCount,
@@ -132,12 +136,13 @@ const PostDetails = () => {
   // --- Effects
   // -------------------------------------------------------------------------------------
 
-  useFocusEffect(
-    useCallback(() => {
-      // Refresh the data
-      refreshPage();
-    }, []),
-  );
+  // Refresh the data on the focus of the screen
+  useEffect(() => {
+    setInitialLoading(true);
+    refreshPage().finally(() => setInitialLoading(false));
+    // Suppress the warning of the next line in order to update the data only on the first render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -157,12 +162,20 @@ const PostDetails = () => {
     // If the post is loading, show the loading screen
     if (isPostLoading) {
       // TODO: Improve this in order to show the proper loading screen
-      return <ActivityIndicator />;
+      return <Spinner />;
     }
 
     // TODO: It's best to show an error here or something, as it means the post does not exist anymore
     goBack();
     return null;
+  }
+
+  if (initialLoading) {
+    return (
+      <SafeAreaView style={styles.emptyView}>
+        <Spinner />
+      </SafeAreaView>
+    );
   }
 
   // -------------------------------------------------------------------------------------
@@ -181,7 +194,7 @@ const PostDetails = () => {
         estimatedItemSize={120}
         ref={scrollViewRef}
         scrollEnabled={true}
-        refreshing={isPostLoading}
+        refreshing={pageRefreshing}
         onRefresh={refreshPage}
         ListHeaderComponent={<PostHeader post={post!} />}
         ItemSeparatorComponent={ItemSeparatorComponent}

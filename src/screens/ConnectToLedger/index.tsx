@@ -13,7 +13,8 @@ import { Image } from 'react-native';
 import { errorImage, modalSuccess } from 'assets/images';
 import DView from 'components/DView';
 import { pairDevicesAnim } from 'assets/animations';
-import { useConnectToLedger } from './hooks';
+import { useTheme } from 'native-base';
+import useConnectToLedger from './hooks';
 import useStyles from './useStyles';
 
 export interface ConnectToLedgerParams {
@@ -31,7 +32,6 @@ const ConnectToLedger = (props: Props) => {
   const { t } = useTranslation('connectToLedger');
   const styles = useStyles();
   const theme = useTheme();
-
   const { navigation, route } = props;
   const { bleLedger, ledgerApp, onConnect } = route.params;
   const { connecting, connected, connectionError, transport, retry } = useConnectToLedger(

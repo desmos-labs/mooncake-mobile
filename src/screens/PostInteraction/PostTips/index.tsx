@@ -13,7 +13,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, ListRenderItemInfo } from 'react-native';
-import { useTheme } from 'native-base';
+import { Center, Spinner, useTheme } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
@@ -43,7 +43,13 @@ const PostTips = () => {
   // --- Hooks
   // -------------------------------------------------------------------------------------
 
-  const { tips, loading: areTipsLoading, refetch: refetchTips, fetchMore } = usePostTips(post);
+  const {
+    tips,
+    loading: areTipsLoading,
+    refetch: refetchTips,
+    refreshing,
+    fetchMore,
+  } = usePostTips(post);
 
   // -------------------------------------------------------------------------------------
   // --- Actions
@@ -73,10 +79,9 @@ const PostTips = () => {
         additionalButton
         buttonLabel={t('tip')}
         handleButton={handlePressSendTips}
-        additionalButtonStyle={{ backgroundColor: theme.colors.black }}
       />
     );
-  }, [handlePressSendTips, t, theme.colors.black]);
+  }, [handlePressSendTips, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -92,6 +97,14 @@ const PostTips = () => {
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
 
+  if (areTipsLoading) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+  }
+
   return (
     <>
       {tips.length > 0 && (
@@ -103,7 +116,7 @@ const PostTips = () => {
       )}
       <FlatList
         data={tips}
-        refreshing={areTipsLoading}
+        refreshing={refreshing}
         onRefresh={refetchTips}
         renderItem={renderItem}
         ListEmptyComponent={ListEmptyComponent}

@@ -13,13 +13,6 @@ const lightTheme = extendTheme({
     l: 24,
     xl: 32,
   },
-  space: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 32,
-  },
   roundness: 14,
   colors: {
     primary: '#FEB027',

@@ -35,5 +35,6 @@
   "success": "Success",
   "failed": "Failed",
   "oops":"Oops!",
-  "broadcasting": "Broadcasting..."
+  "broadcasting": "Broadcasting...",
+  "cannot tip yourself": "You cannot tip yourself"
 }

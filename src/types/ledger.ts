@@ -1,3 +1,5 @@
+// Since we don't want to split this file into multiple files we are suppressing the eslint rule
+// eslint-disable-next-line max-classes-per-file
 import { ImageSourcePropType } from 'react-native';
 import { HdPath } from '@cosmjs/crypto';
 

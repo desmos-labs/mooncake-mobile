@@ -5,14 +5,22 @@ import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { useSetAppStateValue } from '@recoil/appState';
 import useCreateLocalNotification from 'hooks/notifications/useCreateLocalNotification';
-import { isSocialNotification, isTransactionNotification } from 'types/notifications';
+import {
+  isSocialNotification,
+  isTransactionNotification,
+  NotificationType,
+} from 'types/notifications';
 import useCreateTransactionNotificationSnackbar from 'hooks/useCreateTransactionSnackbar';
 import { parseRemoteNotification } from 'lib/NotificationsUtils';
+import useHandleSuccessfulTransaction from 'hooks/transactions/useHandleSuccessfulTransaction';
 
 /**
  * Hook to initialize the notifications handling.
  */
 const useInitializeNotifications = () => {
+  // Hook to handle a successful transaction
+  const handleSuccessfulTransaction = useHandleSuccessfulTransaction();
+
   // Utility hooks to create the notifications UI
   const createLocalNotification = useCreateLocalNotification();
   const createTransactionNotificationSnackbar = useCreateTransactionNotificationSnackbar();
@@ -39,7 +47,11 @@ const useInitializeNotifications = () => {
 
       // Navigation to the correct screen based on notification
       const { notification } = initialNotification;
-      handleNotificationPressEvent(parseRemoteNotification(notification.data));
+      // The notification created when the app receives a notification in the background has already been parsed, but it is not typed
+      // because notifee cast it into a generic object when spawning a notification
+      // ------ see @Notification type (data property) in @notifee/react-native ------
+      // To avoid any type mismatch we need to cast as any this object
+      handleNotificationPressEvent(notification.data as any);
     }
   }, [handleNotificationPressEvent, setNotificationsCount]);
 
@@ -58,22 +70,33 @@ const useInitializeNotifications = () => {
   }, [manageInitialNotifications, setAppState, setNotificationsCount]);
 
   useEffect(() => {
-    // Checking if the app is active, if so we do not want to send the user notifications
     // We will be able to use this onMessage to handle different type of notifications, maybe create a snackbar instead
-    if (appStateVisible !== 'active') {
-      const unsubscribe = messaging().onMessage(async remoteMessage => {
-        const notification = parseRemoteNotification(remoteMessage);
-        if (isTransactionNotification(notification)) {
-          await createTransactionNotificationSnackbar(notification);
-        } else if (isSocialNotification(notification)) {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      const notification = parseRemoteNotification(remoteMessage.data);
+      if (isTransactionNotification(notification)) {
+        if (notification.type === NotificationType.TransactionSuccess) {
+          // Handle the update of the data
+          await handleSuccessfulTransaction(notification.txHash);
+        }
+
+        // Create a notification snackbar
+        await createTransactionNotificationSnackbar(notification);
+      } else if (isSocialNotification(notification)) {
+        // Checking if the app is active, if so we do not want to send the user social notifications
+        if (appStateVisible !== 'active') {
           await createLocalNotification(notification);
         }
-      });
+      }
+    });
 
-      // Unsubscribe the listener when the effect is destroyed
-      return () => unsubscribe();
-    }
-  }, [appStateVisible, createTransactionNotificationSnackbar, createLocalNotification]);
+    // Unsubscribe the listener when the effect is destroyed
+    return () => unsubscribe();
+  }, [
+    appStateVisible,
+    createLocalNotification,
+    createTransactionNotificationSnackbar,
+    handleSuccessfulTransaction,
+  ]);
 };
 
 export default useInitializeNotifications;

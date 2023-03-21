@@ -16,7 +16,7 @@ import { parseISO } from 'date-fns';
 import useRenderMediaAttachment from 'hooks/rendering/useRenderMediaAttachment';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import { formatMsToHumanReadable } from 'lib/FormatUtils';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -28,6 +28,7 @@ import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -76,7 +77,7 @@ const PostCard = (props: PostCardProps) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('home');
-
+  const toast = useCustomToast();
   // Unwrap the props
   const {
     post,
@@ -157,6 +158,20 @@ const PostCard = (props: PostCardProps) => {
       return formattedDate;
     }
   }, [formattedDate, post.creationDate, t]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Utility functions
+  // -------------------------------------------------------------------------------------
+  /**
+   * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
+   */
+  const checkUserAndHandleSendTips = useCallback(() => {
+    if (isCurrentUserAuthor) {
+      toast.errorNoRetry(t('common:cannot tip yourself'));
+    } else {
+      onPressTip();
+    }
+  }, [onPressTip, isCurrentUserAuthor, t, toast]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -251,7 +266,7 @@ const PostCard = (props: PostCardProps) => {
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
         {/* 2. It's extremely hard to implement, and completely useless in the first place */}
         <TouchableOpacity
-          onPress={onPressTip}
+          onPress={checkUserAndHandleSendTips}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -277,7 +292,7 @@ const PostCard = (props: PostCardProps) => {
     reactionsCount,
     onPressComment,
     commentsCount,
-    onPressTip,
+    checkUserAndHandleSendTips,
     t,
   ]);
 

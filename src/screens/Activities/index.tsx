@@ -33,7 +33,7 @@ const Activities = () => {
 
   const {
     notifications,
-    loading: areNotificationsLoading,
+    loading,
     fetchMore,
     fetchingMore,
     refresh: refreshNotifications,
@@ -71,7 +71,7 @@ const Activities = () => {
 
   // Component shown if there are no past activities
   const EmptyActivities = useMemo(() => {
-    if (areNotificationsLoading || notifications.length > 0) {
+    if (loading || notifications.length > 0) {
       return;
     }
     return (
@@ -80,7 +80,7 @@ const Activities = () => {
         <Typography.Body5>{t('no activities')}</Typography.Body5>
       </View>
     );
-  }, [areNotificationsLoading, notifications.length, styles.emptyView, styles.errorImage, t]);
+  }, [loading, notifications.length, styles.emptyView, styles.errorImage, t]);
 
   // Function that is used in order to render each item within the list
   const renderItem = useCallback(
@@ -158,7 +158,7 @@ const Activities = () => {
       </View>
 
       {/* Notifications list */}
-      {!areNotificationsLoading ? (
+      {!loading ? (
         <FlashList
           keyExtractor={keyExtractor}
           refreshControl={
@@ -178,7 +178,6 @@ const Activities = () => {
           ListFooterComponent={FooterComponent}
           estimatedItemSize={90}
           stickyHeaderIndices={stickyHeaderIndices}
-          onEndReachedThreshold={0.5}
           getItemType={item => {
             return typeof item === 'string' ? 'sectionHeader' : 'row';
           }}

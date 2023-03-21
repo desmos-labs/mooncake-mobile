@@ -74,6 +74,9 @@ const PostsSection = (props: PostsSectionProps) => {
   // --- Child components
   // -------------------------------------------------------------------------------------
 
+  // Function to extract the key of a post
+  const keyExtractor = useCallback((item: Post) => item.externalId, []);
+
   // Callback used to render a post within the list
   const renderPost = useCallback(
     ({ item }: ListRenderItemInfo<Post>) => (
@@ -123,6 +126,7 @@ const PostsSection = (props: PostsSectionProps) => {
       {/* Posts list, or loading indicator */}
       {!isLoading ? (
         <FlatList
+          keyExtractor={keyExtractor}
           contentContainerStyle={styles.tweetsListContainer}
           showsHorizontalScrollIndicator={false}
           horizontal={true}

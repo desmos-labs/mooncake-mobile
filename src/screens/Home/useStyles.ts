@@ -29,7 +29,6 @@ const useStyles = makeStyle(theme => ({
   loadingView: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: theme.colors.white,
   },
   loaderView: { flex: 1, marginHorizontal: theme.spacing.m },

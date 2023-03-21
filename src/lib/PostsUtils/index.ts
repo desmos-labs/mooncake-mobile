@@ -18,7 +18,7 @@ export const getConversationId = (parent?: Post): number => {
     return 0;
   }
 
-  if (parent.conversationId === 0) {
+  if (!parent.conversationId) {
     return parent.id;
   }
 
@@ -204,6 +204,11 @@ export const mergePosts = (
         postsToStore[index] = externalPosts[onChainIndex];
     }
   });
+
+  // Order the posts to store based on their creation date descending
+  postsToStore = postsToStore.sort(
+    (a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate),
+  );
 
   return [postsToStore, postsUpdates];
 };

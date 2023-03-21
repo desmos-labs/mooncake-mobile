@@ -9,6 +9,7 @@ import { mergeCacheableData } from 'lib/CacheUtils';
 import { convertGraphQLFollowedUser } from 'lib/GraphQLUtils/relationships';
 import { areFollowedUsersEqual, FollowedUser } from 'types/relationships';
 import useUpdatePendingRelationships from 'hooks/relationships/useUpdatePendingRelationships';
+import { removeDuplicates } from 'lib/ProfileUtils';
 
 /**
  * Hook that returns the list of the accounts that the user having the given address is following.
@@ -113,7 +114,8 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
   }, [onCompletedCallback, refetch]);
 
   return {
-    following: users.map(value => value.user),
+    // Make sure to remove duplicate following users if, for any reason, we have them
+    following: removeDuplicates(users.map(value => value.user)),
     loading,
     fetchMore: fetchMoreUsers,
     fetchingMore,

@@ -95,7 +95,6 @@ const parseNotification = (data: ReceivedNotificationData): NotificationData | u
         postId: parseInt(data?.post_id ?? '0', 10),
         commentId: parseInt(data?.comment_id ?? '0', 10),
       } as CommentNotificationData;
-
     case NotificationType.Reply:
       return {
         type: NotificationType.Reply,
