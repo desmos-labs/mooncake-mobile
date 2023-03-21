@@ -11,9 +11,14 @@ const useNavigateToProfileConnections = () => {
   // We must use push here instead of navigate because we want to be able to go back to the previous screen
   const { push } = useNavigation<StackScreenProps<RootNavigatorParamList>['navigation']>();
   return React.useCallback(
-    (route: ROUTES.PROFILE_FOLLOWING | ROUTES.PROFILE_FOLLOWERS, userAddress: string) => {
+    (
+      route: ROUTES.PROFILE_FOLLOWING | ROUTES.PROFILE_FOLLOWERS,
+      userAddress: string,
+      userNickname?: string,
+    ) => {
       push(ROUTES.PROFILE_CONNECTIONS, {
         userAddress,
+        userNickname,
         initialTabRouteName: route,
       });
     },

@@ -22,7 +22,6 @@ import {
 import { useTheme } from 'native-base';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
-import { useActiveProfile } from '@recoil/profiles';
 import FollowingTab from './components/FollowingTab';
 import FollowersTab from './components/FollowersTab';
 import useStyles from './useStyles';
@@ -44,6 +43,7 @@ export interface ProfileConnectionsTabParams {
 
 export type ProfileConnectionsParams = {
   readonly userAddress: string;
+  readonly userNickname?: string;
   readonly initialTabRouteName: string;
 };
 
@@ -60,8 +60,7 @@ const ProfileConnections = () => {
 
   const route = useRoute<NavProps['route']>();
   const { params } = route;
-  const { userAddress, initialTabRouteName } = params;
-  const profile = useActiveProfile();
+  const { userNickname, userAddress, initialTabRouteName } = params;
   // -------------------------------------------------------------------------------------
   // --- Tab bar labels
   // -------------------------------------------------------------------------------------
@@ -116,8 +115,8 @@ const ProfileConnections = () => {
   };
 
   const CenterElement = useMemo(() => {
-    return <Typography.Subtitle3>{profile?.nickname || 'no-nickname'}</Typography.Subtitle3>;
-  }, [profile?.nickname]);
+    return <Typography.Subtitle3>{userNickname || 'no-nickname'}</Typography.Subtitle3>;
+  }, [userNickname]);
 
   return (
     <DView

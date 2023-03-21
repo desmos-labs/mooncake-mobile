@@ -3,6 +3,7 @@ import { makeStyle } from 'config/theme';
 const useStyles = makeStyle(theme => ({
   unfollowButton: {
     height: 32,
+    minWidth: 80,
     backgroundColor: theme.colors.surfaceGrey,
     justifyContent: 'center',
     alignItems: 'center',
@@ -11,6 +12,7 @@ const useStyles = makeStyle(theme => ({
   },
   followButton: {
     height: 32,
+    minWidth: 80,
     backgroundColor: theme.colors.surfaceBlack,
     justifyContent: 'center',
     alignItems: 'center',
