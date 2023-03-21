@@ -1,5 +1,5 @@
 import { expandCommentIcon } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';
@@ -137,12 +137,12 @@ const EnterCommentBottomBar = (props: Props) => {
   const RightButtonComponent = useMemo(() => {
     return (
       <Button
-        mode={ButtonMode.CONTAINED}
         size={32}
+        width={71}
+        ml={12}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.butterOrange01}
         disabled={attachment ? false : comment.length === 0}
-        additionalStyle={styles.postButton}
         onPress={handlePostComment}>
         {t('post')}
       </Button>

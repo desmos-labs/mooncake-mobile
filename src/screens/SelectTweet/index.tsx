@@ -1,4 +1,4 @@
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -99,14 +99,12 @@ const SelectTweet = () => {
         <NoTweets />
         <Spacer paddingVertical={12} />
         <Button
-          mode={ButtonMode.OUTLINED}
+          variant="outlined"
           size={44}
           onPress={openTwitterApp}
-          style={{
-            alignSelf: 'center',
-            width: 140,
-            justifyContent: 'center',
-          }}>
+          width={140}
+          alignSelf="center"
+          justifyContent="center">
           {t('tweet now')}
         </Button>
       </>

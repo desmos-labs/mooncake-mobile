@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import DView from 'components/DView';
 import { TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import { useTranslation } from 'react-i18next';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
@@ -108,14 +108,13 @@ const CreatePost = () => {
   const TopBarRightElement = React.useMemo(() => {
     return (
       <Button
-        loading={loading}
-        mode={ButtonMode.CONTAINED}
+        isLoading={loading}
         backgroundColor={theme.colors.primary}
         textColor={theme.colors.white}
-        size={ButtonSize.S}
+        size={32}
         disabled={!canCreatePost}
         onPress={handleCreatePost}
-        additionalStyle={styles.postButton}>
+        width={58}>
         {t('post')}
       </Button>
     );

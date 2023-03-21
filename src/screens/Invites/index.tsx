@@ -10,7 +10,7 @@ import {
   invitesBanner,
   inviteUserIcon,
 } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -128,9 +128,8 @@ const Invites = () => {
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
-          additionalStyle={{ marginHorizontal: theme.spacing.m }}
-          loading={generatingInvite}
-          mode={ButtonMode.CONTAINED}>
+          mx={theme.spacing.xs}
+          isLoading={generatingInvite}>
           {t('generate invite')}
         </Button>
       ) : (

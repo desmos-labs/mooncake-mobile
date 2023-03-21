@@ -2,7 +2,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
@@ -178,8 +178,7 @@ const PasswordManipulation = () => {
                       values.confirmPassword.length === 0 ||
                       values.newPassword.length === 0 ||
                       _.flatten(Object.values(errors)).length > 0
-                    }
-                    mode={ButtonMode.CONTAINED}>
+                    }>
                     {t(buttonLabel)}
                   </Button>
                 )}

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { modalSuccess } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
 import Typography from 'components/Typography';
@@ -10,7 +10,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, View } from 'react-native';
-import { useTheme } from 'native-base';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useStyles from './useStyles';
 
@@ -24,7 +23,6 @@ declare type Props = StackScreenProps<RootNavigatorParamList>;
 const WelcomePage: React.FC<Props> = () => {
   const { t } = useTranslation('common');
   const styles = useStyles();
-  const theme = useTheme();
 
   const { navigate } = useNavigation<Props['navigation']>();
   const navigateHome = useNavigateToHome();
@@ -46,7 +44,7 @@ const WelcomePage: React.FC<Props> = () => {
     navigate(ROUTES.BOTTOM_MODAL, {
       title: t('welcomePage:why backup'),
       body: t('welcomePage:backup explanation'),
-      primaryButtonLabel: t('common:i understand'),
+      primaryButtonLabel: t('common:i understand') as string,
       onPressPrimary: () => console.log('primary'),
     });
   }, [navigate, t]);
@@ -62,21 +60,13 @@ const WelcomePage: React.FC<Props> = () => {
         <Typography.H4>{t('congratulations')}</Typography.H4>
         <Typography.Body6>{t('dtag created')}</Typography.Body6>
       </View>
-      <Button
-        size={ButtonSize.M}
-        additionalStyle={{ marginBottom: theme.spacing.m }}
-        mode={ButtonMode.CONTAINED}
-        onPress={navigateToHome}>
+      <Button size={44} mb="m" onPress={navigateToHome}>
         {t('welcome to', { product: 'Butter' })}
       </Button>
-      <Button size={ButtonSize.M} mode={ButtonMode.OUTLINED} onPress={navigateToBackupPhrase}>
+      <Button size={44} variant="outlined" onPress={navigateToBackupPhrase}>
         {t('backup phrase')}
       </Button>
-      <Button
-        size={ButtonSize.M}
-        mode={ButtonMode.TEXT}
-        onPress={navigateToBackupPhraseExplanation}
-        style={{ marginTop: theme.spacing.m }}>
+      <Button size={44} variant="link" onPress={navigateToBackupPhraseExplanation} mt="m">
         {t('backup explanation')}
       </Button>
     </DView>

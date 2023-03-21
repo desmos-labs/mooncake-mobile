@@ -15,6 +15,8 @@ interface Props
   textColor?: ColorValue;
 
   buttonColor?: string;
+
+  onPress?: () => void;
 }
 
 const CustomButton = ({
@@ -25,7 +27,7 @@ const CustomButton = ({
   children,
   ...rest
 }: Props) => {
-  const makeButtonProps = useMakeButtonStyle();
+  const makeButtonStyle = useMakeButtonStyle();
 
   const makeButtonTypography = useMakeButtonTypography();
 
@@ -34,7 +36,7 @@ const CustomButton = ({
       {...makeButtonTypography({ size, textColor })}
       // can ignore this error as variant has a default value of solid
       // @ts-ignore
-      {...makeButtonProps({ variant, buttonColor })}
+      {...makeButtonStyle({ variant, buttonColor })}
       py={size / 3}
       {...rest}>
       {children}

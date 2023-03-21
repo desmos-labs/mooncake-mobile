@@ -386,7 +386,13 @@ const RootNavigator = () => {
 
       <Stack.Screen name={ROUTES.MANAGE_CONNECTED_APPS} component={ManageConnectedApps} />
       {/* <Stack.Screen name={ROUTES.CONNECT_APP} component={ConnectApp} /> */}
-      <Stack.Screen name={ROUTES.DISCONNECT_APP_MODAL} component={DisconnectAppModal} />
+      <Stack.Screen
+        name={ROUTES.DISCONNECT_APP_MODAL}
+        component={DisconnectAppModal}
+        initialParams={{
+          appName: 'test',
+        }}
+      />
       <Stack.Screen name={ROUTES.SELECT_TWEET} component={SelectTweet} />
 
       {/* ----------------------- */}
@@ -448,7 +454,14 @@ const RootNavigator = () => {
         }}>
         <Stack.Screen name={ROUTES.CONFIRM_MODAL} component={ConfirmModal} />
         <Stack.Screen name={ROUTES.TEXTONLY_MODAL} component={TextOnlyModal} />
-        <Stack.Screen name={ROUTES.BOTTOM_MODAL} component={BottomModal} />
+        <Stack.Screen
+          name={ROUTES.BOTTOM_MODAL}
+          component={BottomModal}
+          initialParams={{
+            primaryButtonLabel: 'hey',
+            cancelButtonLabel: 'cancel',
+          }}
+        />
         <Stack.Screen name={ROUTES.POST_INTERACTION} component={PostInteractionTabs} />
         <Stack.Screen name={ROUTES.CONVERTIBLE_POINTS_MODAL} component={ConvertiblePointsModal} />
         <Stack.Screen name={ROUTES.MANAGE_CONNECTIONS_MODAL} component={ManageConnectionsModal} />

@@ -1,5 +1,5 @@
 import { backButton, cameraButton, defaultBanner, defaultProfilePic } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';
@@ -268,9 +268,8 @@ const SaveProfile = (props: NavProps) => {
                   disabled={!values.dTag}
                   textColor={theme.colors.white}
                   backgroundColor={theme.colors.surfaceBlack}
-                  mode={ButtonMode.CONTAINED}
-                  size={ButtonSize.M}
-                  onPress={handleSubmit}>
+                  size={44}
+                  onPress={handleSubmit as any}>
                   {t('common:confirm')}
                 </Button>
               </View>

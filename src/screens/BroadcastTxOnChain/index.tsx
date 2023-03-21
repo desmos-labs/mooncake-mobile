@@ -15,7 +15,7 @@ import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
 import { useTheme } from 'native-base';
@@ -133,12 +133,11 @@ const BroadcastTxOnChain: React.FC = () => {
         )}
       </View>
       <Button
-        mode={ButtonMode.CONTAINED}
-        size={ButtonSize.M}
+        size={44}
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
         onPress={handleBroadcastTx}
-        loading={broadcastingTx}
+        isLoading={broadcastingTx}
         disabled={estimatingFees || feesResult?.isErr() || broadcastingTx}>
         {t('broadcast tx')}
       </Button>

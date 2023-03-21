@@ -1,4 +1,4 @@
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -87,7 +87,7 @@ const MnemonicInput = () => {
               <View>
                 {__DEV__ && (
                   <Button
-                    mode={ButtonMode.TEXT}
+                    variant="link"
                     size={32}
                     onPress={() => setFieldValue('mnemonic', EnvConfig.DEV_MNEMONIC, false)}>
                     Autofill mnemonic
@@ -96,7 +96,6 @@ const MnemonicInput = () => {
                 <Button
                   backgroundColor={theme.colors.surfaceBlack}
                   textColor={theme.colors.white}
-                  mode={ButtonMode.CONTAINED}
                   size={44}
                   onPress={() => handleSubmit()}>
                   {t('common:confirm')}

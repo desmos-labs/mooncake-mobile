@@ -1,7 +1,7 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -174,12 +174,11 @@ const Login = () => {
             <Button
               size={56}
               textColor="white"
-              backgroundColor="transparent"
               disabled={loading || !password}
-              loading={loading}
+              isLoading={loading}
               onPress={handleSubmit}
-              additionalStyle={{ borderColor: theme.colors.white }}
-              mode={ButtonMode.OUTLINED}>
+              buttonColor={theme.colors.white}
+              variant="outlined">
               {t('common:confirm')}
             </Button>
           </Spacer>

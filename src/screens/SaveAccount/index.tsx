@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -131,8 +131,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
         <Spacer paddingTop={60} />
         {!saving && (
           <Button
-            mode={ButtonMode.CONTAINED}
-            size={ButtonSize.M}
+            size={44}
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             onPress={resetToHome}>

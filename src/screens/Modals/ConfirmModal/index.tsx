@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/Button';
+import Button from 'components/CustomButton';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';
@@ -41,11 +41,11 @@ export type ConfirmModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel?: string | ReactNode;
+  primaryButtonLabel?: string;
   /**
    * Label of the secondary button.
    */
-  secondaryButtonLabel?: string | ReactNode;
+  secondaryButtonLabel?: string;
   /**
    * What to do when the user presses the close button.
    */
@@ -67,7 +67,7 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?: 'text' | 'outlined' | 'contained';
+  primaryButtonMode?: Pick<React.ComponentProps<typeof Button>, 'variant'>;
 
   /**
    * The mode of the secondary button.
@@ -148,8 +148,9 @@ const ConfirmModal = () => {
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
-              additionalStyle={styles.primaryButton}
-              mode={primaryButtonMode}
+              alignSelf="stretch"
+              // TODO: fix this properly
+              variant={primaryButtonMode as any}
               onPress={onPressPrimaryButton}>
               {primaryButtonLabel}
             </Button>
@@ -158,8 +159,9 @@ const ConfirmModal = () => {
             <Spacer paddingTop={theme.spacing.m}>
               <Button
                 size={44}
-                additionalStyle={styles.secondaryButton}
-                mode={secondaryButtonMode as any}
+                mb={theme.spacing.s}
+                alignSelf="stretch"
+                variant={secondaryButtonMode as any}
                 onPress={onPressSecondary}>
                 {secondaryButtonLabel}
               </Button>

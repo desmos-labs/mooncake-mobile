@@ -11,7 +11,7 @@ import useUploadPictures, {
 } from 'screens/Modals/UploadProfilePicturesModal/hooks';
 import { useTranslation } from 'react-i18next';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
-import Button from 'components/Button';
+import Button from 'components/CustomButton';
 
 export interface UploadPicturesSuccess {
   readonly profilePictureUrl?: string;
@@ -80,7 +80,7 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
       <Button
         onPress={handleBtnPress}
         disabled={state.type === UploadPictureStateType.Uploading}
-        loading={state.type === UploadPictureStateType.Uploading}>
+        isLoading={state.type === UploadPictureStateType.Uploading}>
         {btnText}
       </Button>
     </View>

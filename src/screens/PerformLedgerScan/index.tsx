@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Button from 'components/Button';
+import Button from 'components/CustomButton';
 import ROUTES from 'navigation/routes';
 import { ConnectToLedgerStackParamList } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
@@ -86,7 +86,6 @@ const PerformLedgerScan = (props: NavProps) => {
     if (!authorized) {
       return (
         <Button
-          mode="contained"
           onPress={async () => {
             const permissions = await requestBluetoothPermissions();
             if (permissions === AppPermissionStatus.Granted) {
@@ -100,7 +99,7 @@ const PerformLedgerScan = (props: NavProps) => {
 
     if (scanError === undefined) {
       return (
-        <Button mode="contained" loading={scanning} disabled={scanning} onPress={() => scan()}>
+        <Button isLoading={scanning} disabled={scanning} onPress={() => scan()}>
           {scanning ? t('looking for devices') : t('start scan')}
         </Button>
       );
@@ -110,7 +109,6 @@ const PerformLedgerScan = (props: NavProps) => {
       case ScanErrorType.BtOff:
         return (
           <Button
-            mode="contained"
             onPress={async () => {
               const result = await requestEnableBt();
               if (result) {

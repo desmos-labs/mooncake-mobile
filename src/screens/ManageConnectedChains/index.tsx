@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
@@ -81,11 +81,10 @@ const ManageConnectedChains = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            size={ButtonSize.M}
+            size={44}
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
-            onPress={handleConnectChain}
-            mode={ButtonMode.CONTAINED}>
+            onPress={handleConnectChain}>
             {t('profile:connectAddress')}
           </Button>
         </View>

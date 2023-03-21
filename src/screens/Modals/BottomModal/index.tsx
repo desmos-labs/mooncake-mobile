@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -27,7 +27,7 @@ export type BottomModalParams = {
   /**
    * Label of the primary button.
    */
-  primaryButtonLabel: string | ReactNode;
+  primaryButtonLabel: string;
   /**
    * What to do when the user presses the primary (main) modal button.
    */
@@ -93,11 +93,16 @@ const BottomModal = () => {
                 backgroundColor={theme.colors.surfaceBlack}
                 textColor={theme.colors.white}
                 size={44}
-                mode={ButtonMode.CONTAINED}
                 onPress={onPressButton}>
                 {primaryButtonLabel}
               </Button>
             </Spacer>
+
+            {cancelButtonLabel && (
+              <Button variant="link" onPress={onCancelButtonPress}>
+                {cancelButtonLabel as string}
+              </Button>
+            )}
           </TouchableOpacity>
         </Animated.View>
       </TouchableOpacity>

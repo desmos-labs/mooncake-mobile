@@ -1,25 +1,18 @@
 import { errorImage } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';
-import { Image, StyleProp, View, ViewStyle } from 'react-native';
+import { Image, View } from 'react-native';
 
 type Props = {
   label: string;
   additionalButton?: boolean;
   buttonLabel?: string;
   handleButton?: () => void;
-  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 
-const EmptyListComponent = ({
-  label,
-  additionalButton,
-  buttonLabel,
-  handleButton,
-  additionalButtonStyle,
-}: Props) => {
+const EmptyListComponent = ({ label, additionalButton, buttonLabel, handleButton }: Props) => {
   const styles = useStyles();
 
   return (
@@ -28,13 +21,9 @@ const EmptyListComponent = ({
         <Image source={errorImage} style={styles.imageStyle} />
         <Typography.Body5 style={styles.textStyle}>{label}</Typography.Body5>
       </View>
-      {additionalButton && (
-        <Button
-          size={ButtonSize.M}
-          additionalStyle={[styles.additionalButton, additionalButtonStyle]}
-          mode={ButtonMode.CONTAINED}
-          onPress={handleButton}>
-          <Typography.Button3 style={styles.buttonText}>{buttonLabel}</Typography.Button3>
+      {additionalButton && buttonLabel && (
+        <Button size={44} textColor="white" onPress={handleButton} mt="xl" mx={80}>
+          {buttonLabel}
         </Button>
       )}
     </View>
@@ -52,10 +41,6 @@ const useStyles = makeStyle(theme => ({
   },
   textStyle: {
     color: theme.colors.surfaceBlack,
-    textAlign: 'center',
-  },
-  buttonText: {
-    color: theme.colors.white,
     textAlign: 'center',
   },
   imageStyle: {

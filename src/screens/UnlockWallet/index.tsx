@@ -1,7 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSetting } from '@recoil/settings';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';
@@ -169,16 +169,13 @@ const UnlockWallet = () => {
               behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.buttonGroup}>
               <Button
-                loading={loading}
+                isLoading={loading}
                 backgroundColor={theme.colors.surfaceBlack}
                 textColor={theme.colors.white}
                 disabled={!values.password || Object.values(errors).length > 0}
-                onPress={handleSubmit}
-                size={ButtonSize.M}
-                mode={ButtonMode.CONTAINED}>
-                <Typography.Button1 style={styles.confirmButtonText}>
-                  {t('common:next')}
-                </Typography.Button1>
+                onPress={handleSubmit as any}
+                size={44}>
+                {t('common:next')}
               </Button>
 
               <TouchableOpacity style={styles.forgotPwButton} onPress={clearUserData}>

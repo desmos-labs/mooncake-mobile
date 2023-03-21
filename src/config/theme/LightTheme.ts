@@ -13,6 +13,13 @@ const lightTheme = extendTheme({
     l: 24,
     xl: 32,
   },
+  space: {
+    xs: 4,
+    s: 8,
+    m: 16,
+    l: 24,
+    xl: 32,
+  },
   roundness: 14,
   colors: {
     primary: '#FEB027',
@@ -88,6 +95,20 @@ const lightTheme = extendTheme({
     pinkGradient: [addAlphaToHex('#F359A8', 0.24)],
     whiteGradient01: [addAlphaToHex('#FFFFFF', 0.1), '#ABC1FB'],
     blackGradient01: [addAlphaToHex('#000000', 0.4), addAlphaToHex('#FFFFFF', 0.1)],
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        _pressed: {
+          opacity: 0.4,
+        },
+        _hover: {
+          opacity: 0.8,
+        },
+        opacity: 1,
+        rounded: 14,
+      },
+    },
   },
 });
 

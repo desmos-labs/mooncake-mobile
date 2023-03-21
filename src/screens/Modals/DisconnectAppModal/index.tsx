@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { desmosIcon, disconnectIcon } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import GetAppIcon from 'lib/GetAppIcon';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -44,15 +44,16 @@ const DisconnectAppModal = () => {
 
         <Button
           size={44}
-          additionalStyle={styles.confirmButton}
-          mode={ButtonMode.CONTAINED}
+          mt="m"
+          mb="l"
+          textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}
           onPress={onConfirmDisconnection}>
           {t('common:yes')}
         </Button>
 
-        <Button size={44} mode={ButtonMode.OUTLINED} onPress={goBack}>
-          <Typography.Button1>{t('common:no')}</Typography.Button1>
+        <Button size={44} variant="outlined" onPress={goBack}>
+          {t('common:no')}
         </Button>
       </View>
     </View>

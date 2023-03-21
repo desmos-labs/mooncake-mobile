@@ -1,6 +1,6 @@
 import { infoIcon } from 'assets/images';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
@@ -132,7 +132,7 @@ const SendTips = (props: NavProps) => {
                       <Button
                         key={String(value)}
                         disabled={!canEdit || shouldDisableTipButton(value)}
-                        mode={values.amount === String(value) ? 'contained' : 'outlined'}
+                        variant={values.amount === String(value) ? 'solid' : 'outlined'}
                         size={44}
                         style={[
                           {
@@ -146,21 +146,17 @@ const SendTips = (props: NavProps) => {
                                 borderColor: theme.colors.surfaceBlack,
                               },
                         ]}
-                        contentStyle={[
-                          { height: 42 },
+                        textColor={
                           shouldDisableTipButton(value)
-                            ? {
-                                backgroundColor: theme.colors.tabIconGrey,
-                              }
-                            : {
-                                backgroundColor:
-                                  values.amount === String(value) ? theme.colors.primary : 'white',
-                              },
-                        ]}
+                            ? 'tabIconGrey'
+                            : values.amount === String(value)
+                            ? 'white'
+                            : 'surfaceBlack'
+                        }
                         onPress={() => {
                           setFieldValue('amount', String(value), true);
                         }}>
-                        {value} DSM
+                        {`${value} DSM`}
                       </Button>
                     );
                   })}
@@ -222,12 +218,11 @@ const SendTips = (props: NavProps) => {
                 />
                 <Spacer paddingVertical={30}>
                   <Button
-                    loading={sendingTip}
-                    mode={ButtonMode.CONTAINED}
+                    isLoading={sendingTip}
                     size={44}
                     textColor={theme.colors.white}
                     backgroundColor={theme.colors.surfaceBlack}
-                    onPress={handleSubmit}
+                    onPress={handleSubmit as any}
                     disabled={values.amount === '' || _.flatten(Object.values(errors)).length > 0}>
                     {t('common:confirm')}
                   </Button>

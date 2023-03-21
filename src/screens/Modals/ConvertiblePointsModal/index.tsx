@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
@@ -29,7 +29,6 @@ const ConvertiblePointsModal = () => {
       </Spacer>
       <Spacer paddingVertical={theme.spacing.xl}>
         <Button
-          mode={ButtonMode.CONTAINED}
           size={44}
           textColor={theme.colors.white}
           backgroundColor={theme.colors.surfaceBlack}

@@ -1,5 +1,5 @@
 import { errorImage } from 'assets/images';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
@@ -33,14 +33,8 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
       />
       <Typography.Body6 style={{ textAlign: 'center' }}>{textLabel}</Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
-      <Button
-        size={ButtonSize.M}
-        mode={ButtonMode.OUTLINED}
-        additionalStyle={{
-          marginHorizontal: 100,
-          justifyContent: 'center',
-        }}>
-        <Typography.Button1>{buttonLabel}</Typography.Button1>
+      <Button size={44} variant="outlined" mx={100} justifyContent="center">
+        {buttonLabel}
       </Button>
     </View>
   );

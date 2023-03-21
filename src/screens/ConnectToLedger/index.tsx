@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import { BLELedger, LedgerApp } from 'types/ledger';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import ROUTES from 'navigation/routes';
@@ -30,6 +30,7 @@ export type Props = StackScreenProps<ConnectToLedgerStackParamList, ROUTES.CONNE
 const ConnectToLedger = (props: Props) => {
   const { t } = useTranslation('connectToLedger');
   const styles = useStyles();
+  const theme = useTheme();
 
   const { navigation, route } = props;
   const { bleLedger, ledgerApp, onConnect } = route.params;
@@ -81,10 +82,9 @@ const ConnectToLedger = (props: Props) => {
       <Typography.Body1 style={styles.errorMessage}>{connectionError}</Typography.Body1>
 
       <Button
-        size={ButtonSize.M}
+        size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        mode={ButtonMode.CONTAINED}
         onPress={onButtonPressed}
         disabled={connecting}
         loading={connecting}>

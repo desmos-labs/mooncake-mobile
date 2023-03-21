@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { bgonboarding, onboarding1, onboarding2, onboarding3, onboarding4 } from 'assets/images';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import TopBar from 'components/TopBar';
@@ -132,13 +132,10 @@ const Onboarding = () => {
             selected !== 3 ? (
               <Button
                 onPress={() => navigateToCorrectScreen()}
-                mode={ButtonMode.TEXT}
+                variant="link"
                 size={26}
-                additionalStyle={{
-                  right: 0,
-                  marginLeft: 'auto',
-                  marginVertical: theme.spacing.s,
-                }}>
+                ml="auto"
+                my="s">
                 {t('skip')}
               </Button>
             ) : (
@@ -164,7 +161,6 @@ const Onboarding = () => {
       {selected === 3 ? (
         <View style={{ marginHorizontal: theme.spacing.m }}>
           <Button
-            mode={ButtonMode.CONTAINED}
             backgroundColor={theme.colors.surfaceBlack}
             textColor={theme.colors.white}
             size={44}

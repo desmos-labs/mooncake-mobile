@@ -1,5 +1,5 @@
 import React from 'react';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import { useTranslation } from 'react-i18next';
 import Spacer from 'components/Spacer';

@@ -51,9 +51,9 @@ const postTransaction = (messages: AminoMsg[], options?: BroadcastTxWithApiOptio
  */
 const useBroadcastTxWithApi = () => {
   const activeAccountAddress = useActiveAccountAddress();
-  if (!activeAccountAddress) {
-    throw new Error('Trying to broadcast a transaction without active account');
-  }
+  // if (!activeAccountAddress) {
+  //   throw new Error('Trying to broadcast a transaction without active account');
+  // }
 
   const storePendingTransaction = useStorePendingTransaction();
   return React.useCallback(

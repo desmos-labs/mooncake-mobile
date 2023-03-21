@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import GradientBorder from 'components/GradientBorder';
 import Spacer from 'components/Spacer';
@@ -51,8 +51,7 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
             onPress={createAppLink}
-            size={ButtonSize.M}
-            mode={ButtonMode.CONTAINED}>
+            size={44}>
             {t('connect app')}
           </Button>
         </View>

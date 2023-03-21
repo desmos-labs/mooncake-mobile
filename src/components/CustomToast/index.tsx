@@ -1,12 +1,16 @@
 import React from 'react';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
-import { TouchableOpacity } from 'react-native';
 import { Box, Toast, useTheme } from 'native-base';
 import { Shadow } from 'react-native-shadow-2';
 import { useTranslation } from 'react-i18next';
-import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import useStyles from './useStyles';
 
 export interface Props {
@@ -97,13 +101,11 @@ const CustomToast = ({ type, message, options }: Props): JSX.Element => {
             </Box>
 
             {type === ToastConfig.ERROR ? (
-              <Button
-                size={32}
-                additionalStyle={styles.button}
-                mode={ButtonMode.TEXT}
-                onPress={options.handlePressRetry}>
-                <Typography.Subtitle3>{t('toast:retry')}</Typography.Subtitle3>
-              </Button>
+              <Box style={styles.button}>
+                <Button size={32} variant="link" onPress={options.handlePressRetry}>
+                  {t('toast:retry')}
+                </Button>
+              </Box>
             ) : null}
           </TouchableOpacity>
         </Shadow>
