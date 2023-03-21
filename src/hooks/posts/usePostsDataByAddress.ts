@@ -2,7 +2,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import { Post } from 'types/posts';
 import { useCallback, useState } from 'react';
-import { mergePosts } from 'lib/PostsUtils';
+import { mergePosts, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { DocumentNode, useQuery } from '@apollo/client';
 
@@ -162,7 +162,7 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
   }, [onCompletedCallback, refetch, queryMapper]);
 
   return {
-    posts,
+    posts: sortPostsByCreationDate(posts),
     loading,
     refetch: refetchPosts,
     refreshing,
