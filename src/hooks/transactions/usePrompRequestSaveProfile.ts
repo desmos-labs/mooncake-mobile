@@ -24,15 +24,17 @@ const usePromptRequestSaveProfile = () => {
     async (profile?: DesmosProfile): Promise<Result<void, CanceledOperationError>> => {
       const confirmProfileCreation = await new Promise<Result<void, CanceledOperationError>>(
         resolve => {
-          navigation.navigate(ROUTES.BOTTOM_MODAL, {
+          navigation.navigate(ROUTES.CONFIRM_MODAL, {
             title: t('save created profile'),
-            body: t('save created profile body'),
+            subtitle: t('save created profile body'),
             onPressPrimary: () => {
               resolve(ok(undefined));
             },
             primaryButtonLabel: 'Save profile',
-            onCancel: () => {
+            secondaryButtonLabel: 'Cancel',
+            onPressSecondary: () => {
               resolve(err(new CanceledOperationError()));
+              navigation.goBack();
             },
           });
         },

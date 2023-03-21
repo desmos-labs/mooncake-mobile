@@ -110,6 +110,15 @@ const ConfirmModal = () => {
     }
   };
 
+  const onPressSecondaryButton = () => {
+    if (removeModalAfterButtonPress) {
+      goBack();
+      onPressSecondary && setTimeout(() => onPressSecondary(), 200);
+    } else {
+      onPressSecondary && onPressSecondary();
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* invoke dismiss fn or goBack if user presses the background */}
@@ -154,7 +163,7 @@ const ConfirmModal = () => {
                 size={44}
                 additionalStyle={styles.secondaryButton}
                 mode={secondaryButtonMode as any}
-                onPress={() => onPressSecondary}>
+                onPress={onPressSecondaryButton}>
                 {secondaryButtonLabel}
               </Button>
             </Spacer>
