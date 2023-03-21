@@ -278,12 +278,12 @@ const Profile = () => {
   };
 
   const handleFollowingPressed = useCallback(() => {
-    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWING, profile?.address ?? '', profile?.nickname);
-  }, [navigateToFollowageScreen, profile?.address, profile?.nickname]);
+    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWING, profile);
+  }, [navigateToFollowageScreen, profile]);
 
   const handleFollowersPressed = useCallback(() => {
-    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWERS, profile?.address ?? '', profile?.nickname);
-  }, [navigateToFollowageScreen, profile?.address, profile?.nickname]);
+    navigateToFollowageScreen(ROUTES.PROFILE_FOLLOWERS, profile);
+  }, [navigateToFollowageScreen, profile]);
 
   const handlePressFollow = useCallback(async () => {
     await followOrUnfollowUser(profile!);

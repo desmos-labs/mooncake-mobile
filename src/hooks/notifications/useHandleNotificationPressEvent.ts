@@ -8,6 +8,7 @@ import { NotificationData, NotificationType } from 'types/notifications';
 import { useActiveProfile } from '@recoil/profiles';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
 import useNavigateToProfileConnections from 'hooks/navigation/useNavigateToProfileConnections';
+import { DesmosProfile } from 'types/desmos';
 
 /**
  * Hook that allows handling the navigation to the proper screen when the user
@@ -56,7 +57,9 @@ const useHandleNotificationPressEvent = () => {
           break;
 
         case NotificationType.Follow:
-          navigateToFollowage(ROUTES.PROFILE_FOLLOWING, data.userAddress, data.userAddress);
+          navigateToFollowage(ROUTES.PROFILE_FOLLOWING, {
+            address: data.userAddress,
+          } as DesmosProfile);
           break;
 
         case NotificationType.InviteClaimed:

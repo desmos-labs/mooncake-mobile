@@ -22,6 +22,7 @@ import {
 import { useTheme } from 'native-base';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
+import { DesmosProfile } from 'types/desmos';
 import FollowingTab from './components/FollowingTab';
 import FollowersTab from './components/FollowersTab';
 import useStyles from './useStyles';
@@ -42,8 +43,7 @@ export interface ProfileConnectionsTabParams {
 // -------------------------------------------------------------------------------------
 
 export type ProfileConnectionsParams = {
-  readonly userAddress: string;
-  readonly userNickname?: string;
+  readonly profile: DesmosProfile | undefined;
   readonly initialTabRouteName: string;
 };
 
@@ -60,15 +60,15 @@ const ProfileConnections = () => {
 
   const route = useRoute<NavProps['route']>();
   const { params } = route;
-  const { userNickname, userAddress, initialTabRouteName } = params;
+  const { profile, initialTabRouteName } = params;
   // -------------------------------------------------------------------------------------
   // --- Tab bar labels
   // -------------------------------------------------------------------------------------
 
-  const { count: followingCount } = useFollowingCount(userAddress);
+  const { count: followingCount } = useFollowingCount(profile?.address);
   const followingTabName = `${formatNumShorthand(followingCount)} ${t('profile:following')}`;
 
-  const { count: followersCount } = useFollowersCount(userAddress);
+  const { count: followersCount } = useFollowersCount(profile?.address);
   const followersTabName = `${formatNumShorthand(followersCount)} ${t('profile:followers')}`;
 
   // -------------------------------------------------------------------------------------
@@ -115,8 +115,8 @@ const ProfileConnections = () => {
   };
 
   const CenterElement = useMemo(() => {
-    return <Typography.Subtitle3>{userNickname || 'no-nickname'}</Typography.Subtitle3>;
-  }, [userNickname]);
+    return <Typography.Subtitle3>{profile?.nickname || 'no-nickname'}</Typography.Subtitle3>;
+  }, [profile?.nickname]);
 
   return (
     <DView
@@ -136,13 +136,13 @@ const ProfileConnections = () => {
           name={ROUTES.PROFILE_FOLLOWING}
           component={FollowingTab}
           options={{ tabBarLabel: followingTabName }}
-          initialParams={{ userAddress }}
+          initialParams={{ userAddress: profile?.address }}
         />
         <Tab.Screen
           name={ROUTES.PROFILE_FOLLOWERS}
           component={FollowersTab}
           options={{ tabBarLabel: followersTabName }}
-          initialParams={{ userAddress }}
+          initialParams={{ userAddress: profile?.address }}
         />
       </Tab.Navigator>
     </DView>
