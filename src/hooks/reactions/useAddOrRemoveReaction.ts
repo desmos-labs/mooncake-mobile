@@ -31,7 +31,6 @@ const useAddReaction = (activeAddress: string) => {
   const broadcastTx = useBroadcastTx();
 
   const addPostReaction = useAddPostReaction(activeAddress);
-  const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
   const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
@@ -46,6 +45,7 @@ const useAddReaction = (activeAddress: string) => {
       // Check if the reaction exists on the server
       const { data } = await getReaction({
         variables: {
+          subspaceId: post.subspaceId,
           postId: post.id,
           userAddress: activeAddress,
         },
@@ -68,16 +68,10 @@ const useAddReaction = (activeAddress: string) => {
 
         // Broadcast the transaction
         const result = await broadcastTx([messageAddReaction], { optimistic: true });
-
-        // Handle the errors
         if (result.isErr()) {
           // If the transaction is canceled or errors, revert the addition of the reaction.
           removePostReaction(post);
-          return;
         }
-
-        // If the transaction is successful, set the reaction as synced with the chain
-        setPostReactionStatus(post, DataStatus.SYNCED);
       }
     },
     [
@@ -87,7 +81,6 @@ const useAddReaction = (activeAddress: string) => {
       subspaceId,
       subspaceParams,
       broadcastTx,
-      setPostReactionStatus,
       removePostReaction,
     ],
   );
@@ -101,7 +94,6 @@ const useRemoveReaction = (activeAddress: string) => {
   const broadcastTx = useBroadcastTx();
 
   const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
-  const removePostReaction = useRemovePostReaction(activeAddress);
 
   const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
     fetchPolicy: 'network-only',
@@ -115,6 +107,7 @@ const useRemoveReaction = (activeAddress: string) => {
       // Get the reaction id from the server
       const { data } = await getReaction({
         variables: {
+          subspaceId: post.subspaceId,
           postId: post.id,
           userAddress: activeAddress,
         },
@@ -139,22 +132,11 @@ const useRemoveReaction = (activeAddress: string) => {
         const result = await broadcastTx([messageRemoveReaction], { optimistic: true });
         if (result.isErr()) {
           // If the transaction is canceled or errors, revert the removal of the reaction.
-          setPostReactionStatus(post, DataStatus.SYNCED);
-          return;
+          setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);
         }
-
-        // If the transaction is successful, remove the reaction from the local storage as well
-        removePostReaction(post);
       }
     },
-    [
-      setPostReactionStatus,
-      getReaction,
-      activeAddress,
-      subspaceId,
-      broadcastTx,
-      removePostReaction,
-    ],
+    [setPostReactionStatus, getReaction, activeAddress, subspaceId, broadcastTx],
   );
 };
 
