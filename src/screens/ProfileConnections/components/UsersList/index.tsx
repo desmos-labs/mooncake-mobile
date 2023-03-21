@@ -11,10 +11,6 @@ import Loading from '../Loading';
 
 export interface UsersListProps {
   /**
-   * Address of the user for which the list is being rendered.
-   */
-  readonly userAddress: string;
-  /**
    * The list of users to render.
    */
   readonly users: DesmosProfile[];
@@ -57,8 +53,7 @@ const ITEM_SEPARATOR_HEIGHT = 15;
 export const UsersList = (props: UsersListProps) => {
   const styles = useStyles();
 
-  const { userAddress, users, loading, fetchMore, fetchingMore, refresh, refreshing, emptyText } =
-    props;
+  const { users, loading, fetchMore, fetchingMore, refresh, refreshing, emptyText } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -89,13 +84,13 @@ export const UsersList = (props: UsersListProps) => {
     ({ item }: ListRenderItemInfo<DesmosProfile>) => {
       return (
         <UserListItem
-          profileAddress={userAddress}
+          profileAddress={item.address}
           user={item}
           onPress={() => navigateToProfile(item.address)}
         />
       );
     },
-    [navigateToProfile, userAddress],
+    [navigateToProfile],
   );
 
   // Component used to render an empty list
