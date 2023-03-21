@@ -8,7 +8,7 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    flex: 0.95,
+    flex: 1,
   },
   connectButton: {
     backgroundColor: theme.colors.surfaceGrey,
