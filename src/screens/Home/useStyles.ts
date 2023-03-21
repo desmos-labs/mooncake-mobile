@@ -33,6 +33,19 @@ const useStyles = makeStyle(theme => ({
   },
   loaderView: { flex: 1, marginHorizontal: theme.spacing.m },
   searchView: { flex: 1, zIndex: 2 },
+  emptyImage: {
+    width: 72,
+    height: 72,
+    resizeMode: 'cover',
+    marginBottom: theme.spacing.s,
+  },
+  emptyView: {
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.spacing.m,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;

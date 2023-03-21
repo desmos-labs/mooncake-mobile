@@ -1,16 +1,15 @@
 import notifee, { AndroidColor } from '@notifee/react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
-import { errorImage } from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import DView from 'components/DView';
 import NotificationContentLoader from 'components/Loaders/NotificationContentLoader';
-import TextRowContentLoader from 'components/Loaders/TextRowContentLoader';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Image, Platform, RefreshControl, View } from 'react-native';
-import { Divider, useTheme } from 'native-base';
+import { Image, Platform, RefreshControl, View } from 'react-native';
+import { Divider, Skeleton, Spinner, useTheme } from 'native-base';
 import NotificationComponent from 'screens/Activities/components/NotificationItem';
 import useNotificationsHistory from 'hooks/notifications/useNotificationsHistory';
 import { CompleteNotification } from 'types/notifications';
@@ -76,8 +75,8 @@ const Activities = () => {
     }
     return (
       <View style={styles.emptyView}>
-        <Image source={errorImage} style={styles.errorImage} />
-        <Typography.Body5>{t('no activities')}</Typography.Body5>
+        <Image source={emptyListPlaceholder} style={styles.errorImage} />
+        <Typography.Body6>{t('no activities')}</Typography.Body6>
       </View>
     );
   }, [loading, notifications.length, styles.emptyView, styles.errorImage, t]);
@@ -99,7 +98,7 @@ const Activities = () => {
         // Render a section header
         return (
           <View style={styles.sectionHeader}>
-            <Typography.Button2>{item}</Typography.Button2>
+            <Typography.Button2>{t(item)}</Typography.Button2>
           </View>
         );
       }
@@ -115,13 +114,13 @@ const Activities = () => {
     if (fetchingMore) {
       return (
         <View style={{ padding: theme.spacing.m }}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
+          <Spinner />
         </View>
       );
     } else {
       return null;
     }
-  }, [fetchingMore, theme.colors.surfaceBlack, theme.spacing.m]);
+  }, [fetchingMore, theme.spacing.m]);
 
   // -------------------------------------------------------------------------------------
   // --- Effects
@@ -185,7 +184,7 @@ const Activities = () => {
         />
       ) : (
         <View style={{ margin: theme.spacing.m }}>
-          <TextRowContentLoader width="90" />
+          <Skeleton h={1.5} w={90} rounded={theme.roundness} />
           <Spacer paddingVertical={theme.spacing.s} />
           <NotificationContentLoader />
         </View>
