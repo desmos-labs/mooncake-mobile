@@ -1,16 +1,14 @@
 import React, { memo } from 'react';
 import { Button as NBButton } from 'native-base';
 import { ColorValue } from 'react-native';
-import { useMakeButtonTextComponent, useMakeButtonProps } from 'components/CustomButton/hooks';
+import { useMakeButtonStyle, useMakeButtonTypography } from 'components/CustomButton/hooks';
 
 interface Props
   extends Omit<
     React.ComponentProps<typeof NBButton>,
-    'shadow' | 'variant' | '_pressed' | 'hover' | 'opacity'
+    'shadow' | '_pressed' | 'hover' | 'opacity' | 'color' | 'colorScheme' | '_text'
   > {
   size?: 26 | 32 | 44 | 56;
-
-  mode?: 'contained' | 'text' | 'outlined';
 
   children: string;
 
@@ -21,19 +19,25 @@ interface Props
 
 const CustomButton = ({
   size = 56,
-  mode = 'contained',
+  variant = 'solid',
   buttonColor,
   textColor,
   children,
   ...rest
 }: Props) => {
-  const makeButtonProps = useMakeButtonProps();
+  const makeButtonProps = useMakeButtonStyle();
 
-  const buildTextComponent = useMakeButtonTextComponent();
+  const makeButtonTypography = useMakeButtonTypography();
 
   return (
-    <NBButton {...makeButtonProps({ mode, buttonColor })} {...rest} py={size / 3}>
-      {buildTextComponent({ size, textColor, children })}
+    <NBButton
+      {...makeButtonTypography({ size, textColor })}
+      // can ignore this error as variant has a default value of solid
+      // @ts-ignore
+      {...makeButtonProps({ variant, buttonColor })}
+      py={size / 3}
+      {...rest}>
+      {children}
     </NBButton>
   );
 };
