@@ -6,6 +6,8 @@ import React from 'react';
 import { Image, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { makeStyle } from 'config/theme';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
+import ROUTES from 'navigation/routes';
 
 export interface EmptyPostComponentProps {
   readonly textLabel: string;
@@ -20,7 +22,7 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
   const theme = useTheme();
   const { textLabel, buttonLabel } = props;
   const styles = useStyles();
-
+  const navigateToHome = useNavigateToHome();
   return (
     <View style={styles.container}>
       <Spacer paddingVertical={theme.spacing.m} />
@@ -28,7 +30,7 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
       <Typography.Body6 style={styles.text}>{textLabel}</Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
       <Button
-        onPress={() => console.log('test')}
+        onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}
         size={ButtonSize.M}
         mode={ButtonMode.OUTLINED}
         additionalStyle={styles.button}>
@@ -39,7 +41,12 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
 };
 
 const useStyles = makeStyle(theme => ({
-  container: { flex: 1, alignSelf: 'center', marginTop: theme.spacing.xl },
+  container: {
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: theme.spacing.xl,
+    backgroundColor: theme.colors.white,
+  },
   emptyImage: {
     height: 72,
     resizeMode: 'contain',
