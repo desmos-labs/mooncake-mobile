@@ -19,7 +19,6 @@ import { useActiveAccount } from '@recoil/accounts';
 import { RequiredMessageTypesGrant } from 'config/AutzGrants';
 import {
   useChangePassword,
-  useManageAppLinks,
   useOpenNotificationsSettings,
   useSendFeedback,
   useShowAboutInfo,
@@ -42,7 +41,6 @@ const Settings: React.FC<NavProps> = props => {
 
   // Account section hooks
   const { canShowPrivateKey, showPrivateKey } = useShowPrivateKey();
-  const manageAppLinks = useManageAppLinks();
 
   // Security sections hooks.
   const {
@@ -107,11 +105,6 @@ const Settings: React.FC<NavProps> = props => {
         {canShowPrivateKey && (
           <SectionButton label={t('show private key')} onPress={showPrivateKey} />
         )}
-      </Section>
-
-      {/* Account section */}
-      <Section style={styles.spacer} title={t('applications')}>
-        <SectionButton label={t('manage connected apps')} onPress={manageAppLinks} />
       </Section>
 
       {/* Other section */}

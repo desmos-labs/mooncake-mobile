@@ -20,7 +20,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Divider, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import Animated, {
   Extrapolation,
   FadeIn,
@@ -33,7 +33,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddressCopy from 'screens/Profile/components/AddressCopy';
 import BalanceSection from 'screens/Profile/components/BalanceSection';
 import PostsSection from 'screens/Profile/components/PostsSection';
-import SocialAndWalletsCountersBar from 'screens/Profile/components/SocialAndWalletsCountersBar';
 import UserBio from 'screens/Profile/components/UserBio';
 import useProfileGivenAddress from 'hooks/profiles/useProfileGivenAddress';
 import { getCoverPicture, getProfilePicture } from 'lib/ProfileUtils';
@@ -43,7 +42,6 @@ import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
-import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
@@ -118,12 +116,6 @@ const Profile = () => {
     refetch: refreshBalance,
   } = useAccountBalance(address);
 
-  const {
-    appLinks,
-    loading: areAppLinksLoading,
-    refetch: refreshAppLinks,
-  } = useAppLinksGivenAddress(address);
-
   const { posts, loading: arePostsLoading, refetch: refreshPosts } = usePostsByAddress(address, 5);
   const { count: postsCount, refetch: refreshPostsCount } = usePostsCountByAddress(address);
 
@@ -148,13 +140,11 @@ const Profile = () => {
     await refreshProfile();
     await refreshFollowageCount();
     await refreshFollowersCount();
-    await refreshAppLinks();
     await refreshBalance();
     await refreshPosts();
     await refreshPostsCount();
     setPageRefreshing(false);
   }, [
-    refreshAppLinks,
     refreshBalance,
     refreshFollowageCount,
     refreshFollowersCount,
@@ -292,36 +282,6 @@ const Profile = () => {
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
-
-  // TODO: Removed from the beta version
-  const ConnectedApps = React.useMemo(() => {
-    // Show the loading indicator
-    if (areAppLinksLoading) {
-      return (
-        <View style={styles.flexStart}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
-        </View>
-      );
-    }
-
-    // Show the various app links and chain links
-    if (appLinks.length > 0) {
-      return (
-        <View>
-          <SocialAndWalletsCountersBar
-            loading={areAppLinksLoading}
-            address={profile?.address ?? ''}
-            chainLinks={[]}
-            appLinks={appLinks}
-            handlePressCounters={() => navigate(ROUTES.SETTINGS)}
-          />
-        </View>
-      );
-    }
-
-    // Nothing to show
-    return undefined;
-  }, [appLinks, profile?.address, navigate]);
 
   // Banner image needs to be memoized to avoid flickering
   const Banner = useMemo(() => {
@@ -484,12 +444,11 @@ const Profile = () => {
           {profile?.bio && (
             <Spacer paddingVertical={theme.spacing.m}>
               <UserBio content={profile.bio} />
-              {ConnectedApps}
             </Spacer>
           )}
 
           {/* Section to edit the profile */}
-          {isActiveAccount && <EditProfileSection profile={profile} appLinks={appLinks} />}
+          {isActiveAccount && <EditProfileSection profile={profile} />}
 
           {/* Follow/Unfollow button */}
           {!isActiveAccount && (
@@ -497,14 +456,14 @@ const Profile = () => {
           )}
 
           <Spacer paddingVertical={theme.spacing.s} />
-          <Divider style={styles.divider} />
+          <View style={styles.divider} />
 
           {/* Lower section (balance, posts, NFTs, badges, etc) */}
           <View style={styles.container}>
             {/* Balance */}
             <BalanceSection address={address} balance={balance} isLoading={isBalanceLoading} />
 
-            <Divider style={styles.divider} />
+            <View style={styles.divider} />
 
             {/* Posts */}
             <PostsSection
