@@ -27,6 +27,7 @@ const usePromptRequestSaveProfile = () => {
           navigation.navigate(ROUTES.CONFIRM_MODAL, {
             title: t('save created profile'),
             subtitle: t('save created profile body'),
+            subtitleStyle: { textAlign: 'left' },
             onPressPrimary: () => {
               resolve(ok(undefined));
             },
