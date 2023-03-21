@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback, useMemo } from 'react';
 import { FlatList, Image, ListRenderItemInfo, View } from 'react-native';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
-import { errorImage } from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import Typography from 'components/Typography';
 import ItemSeparator from '../../../UsersList/components/ItemSeparator';
 import UserListItem from '../UserListItem';
@@ -102,8 +102,8 @@ export const UsersList = (props: UsersListProps) => {
   const EmptyComponent = useMemo(() => {
     return (
       <View style={styles.emptyListView}>
-        <Image style={styles.emptyListImage} source={errorImage} />
-        <Typography.Subtitle1 style={styles.emptyListText}>{emptyText}</Typography.Subtitle1>
+        <Image style={styles.emptyListImage} source={emptyListPlaceholder} />
+        <Typography.Body5 style={styles.emptyListText}>{emptyText}</Typography.Body5>
       </View>
     );
   }, [emptyText, styles.emptyListImage, styles.emptyListText, styles.emptyListView]);

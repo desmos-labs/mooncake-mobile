@@ -1,6 +1,6 @@
 {
   "connections": "Connections",
-  "noFollowingDTags": "No following dTags",
+  "noFollowing": "No following accounts",
   "noFollowers": "No followers",
   "failedToFollow": "Failed to follow <0>{{userName}}</0>",
   "oops": "Oops!",

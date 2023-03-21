@@ -18,7 +18,7 @@ type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE
  * @constructor
  */
 const FollowersTab = () => {
-  const { t } = useTranslation('followersAndFollowing');
+  const { t } = useTranslation('followingAndFollowers');
   const styles = useStyles();
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
