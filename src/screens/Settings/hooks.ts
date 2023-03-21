@@ -179,7 +179,7 @@ export const useOpenNotificationsSettings = () => {
  */
 export const useSendFeedback = () => {
   return React.useCallback(async () => {
-    Linking.openURL('mailto:dev@forbole.com').catch(err =>
+    Linking.openURL('mailto:support@butter.social').catch(err =>
       console.error("Couldn't open email application", err),
     );
   }, []);
