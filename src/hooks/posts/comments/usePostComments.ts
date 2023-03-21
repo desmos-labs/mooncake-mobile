@@ -24,7 +24,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   }
 
   const subspaceParams = useAppStateValue('subspaceParams');
-  const updatePendingPosts = useUpdatePendingPosts(activeAccountAddress);
+  const updatePendingPosts = useUpdatePendingPosts();
 
   const [comments, setComments] = useState<Post[]>([]);
 
@@ -59,7 +59,7 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
         // Update the pending comments by deleting the ones that are now on-chain or are expired
         // This is done because comments are not cached inside the local storage of the device, and
         // they are not handled by the optimistic APIs
-        updatePendingPosts(updates);
+        updatePendingPosts(activeAccountAddress, updates);
         return merged;
       });
       setFetchingMore(false);

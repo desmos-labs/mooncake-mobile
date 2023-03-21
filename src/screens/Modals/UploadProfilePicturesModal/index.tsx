@@ -11,7 +11,9 @@ import useUploadPictures, {
 } from 'screens/Modals/UploadProfilePicturesModal/hooks';
 import { useTranslation } from 'react-i18next';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
-import Button from 'components/Button';
+import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import { useTheme } from 'native-base';
+import useStyles from './useStyles';
 
 export interface UploadPicturesSuccess {
   readonly profilePictureUrl?: string;
@@ -29,6 +31,8 @@ type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.UPLOAD_PROFILE_P
 
 const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
   const { t } = useTranslation('uploadProfilePictures');
+  const theme = useTheme();
+  const styles = useStyles();
   const { profilePicture, coverPicture, onUploadSuccess, onCancel } = route.params;
   const { state, retry } = useUploadPictures(profilePicture, coverPicture);
   useOnBackAction(onCancel, []);
@@ -37,16 +41,16 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
     switch (state.type) {
       case UploadPictureStateType.Uploading:
         return state.pictureType === PictureType.Profile
-          ? t('uploading profile picture...')
-          : t('uploading cover picture...');
+          ? t('uploading profile picture')
+          : t('uploading cover picture');
       case UploadPictureStateType.Completed:
-        return t('upload completed...');
+        return t('upload completed');
       case UploadPictureStateType.Failed:
         return state.pictureType === PictureType.Profile
           ? t('profile picture upload failed')
           : t('profile picture upload failed');
       default:
-        return t('unknown upload state...');
+        return t('unknown upload state');
     }
   }, [state, t]);
 
@@ -55,9 +59,9 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
       case UploadPictureStateType.Uploading:
         return t('uploading pictures');
       case UploadPictureStateType.Completed:
-        return t('continue');
+        return t('common:continue');
       case UploadPictureStateType.Failed:
-        return t('retry');
+        return t('common:retry');
       default:
         return '';
     }
@@ -75,14 +79,20 @@ const UploadProfilePicturesModal: React.FC<NavProps> = ({ route }) => {
   }, [onUploadSuccess, retry, state]);
 
   return (
-    <View>
-      <Typography.Body1>{uiMessage}</Typography.Body1>
-      <Button
-        onPress={handleBtnPress}
-        disabled={state.type === UploadPictureStateType.Uploading}
-        loading={state.type === UploadPictureStateType.Uploading}>
-        {btnText}
-      </Button>
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Typography.Body5 style={styles.message}>{uiMessage}</Typography.Body5>
+        <Button
+          backgroundColor={theme.colors.surfaceBlack}
+          textColor={theme.colors.white}
+          mode={ButtonMode.CONTAINED}
+          size={ButtonSize.M}
+          onPress={handleBtnPress}
+          disabled={state.type === UploadPictureStateType.Uploading}
+          loading={state.type === UploadPictureStateType.Uploading}>
+          {btnText}
+        </Button>
+      </View>
     </View>
   );
 };

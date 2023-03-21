@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, RefreshControl, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, Platform, RefreshControl, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import HomeItemSeparatorComponent from 'screens/Home/components/HomeItemSeparatorComponent';
@@ -27,6 +27,7 @@ import { isPostPending, Post } from 'types/posts';
 import usePosts, { PostsQueryType } from 'hooks/posts/usePosts';
 import ROUTES from 'navigation/routes';
 import { useSetAppStateValue } from '@recoil/appState';
+import { emptyListPlaceholder } from 'assets/images';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.HOME_TAB_DISCOVER>;
@@ -38,7 +39,7 @@ export type NavProps = StackScreenProps<any, ROUTES.HOME_TAB_FOLLOWING | ROUTES.
  */
 const Home = () => {
   const toast = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
   const styles = useStyles();
   const theme = useTheme();
 
@@ -258,8 +259,9 @@ const Home = () => {
 
   if (!loading && posts.length === 0) {
     return (
-      <View style={styles.loadingView}>
-        <Typography.Body5>No posts</Typography.Body5>
+      <View style={styles.emptyView}>
+        <Image source={emptyListPlaceholder} style={styles.emptyImage} />
+        <Typography.Body6>{t('no posts to display')}</Typography.Body6>
       </View>
     );
   }

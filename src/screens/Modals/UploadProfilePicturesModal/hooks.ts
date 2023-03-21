@@ -57,7 +57,6 @@ const useUploadPictures = (profilePicture?: Asset, coverPicture?: Asset) => {
         pictureType: PictureType.Profile,
       });
       uploadProfilePictureResult = await UploadMedia({ mediaFile: profilePicture });
-
       if (uploadProfilePictureResult.isErr()) {
         setUploadState({
           type: UploadPictureStateType.Failed,
@@ -74,15 +73,14 @@ const useUploadPictures = (profilePicture?: Asset, coverPicture?: Asset) => {
         pictureType: PictureType.Cover,
       });
       uploadCoverPictureResult = await UploadMedia({ mediaFile: coverPicture });
-
       if (uploadCoverPictureResult.isErr()) {
         setUploadState({
           type: UploadPictureStateType.Failed,
           pictureType: PictureType.Cover,
           error: uploadCoverPictureResult.error,
         });
+        return;
       }
-      return;
     }
 
     setUploadState({
