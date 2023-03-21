@@ -2,18 +2,19 @@ import { makeStyleWithProps } from 'config/theme';
 
 const useStyles = makeStyleWithProps((numOfTabs: number, theme) => ({
   container: {
+    backgroundColor: theme.colors.white,
     flexGrow: 1,
-    backgroundColor: 'transparent',
   },
   topBar: {
-    backgroundColor: 'transparent',
+    backgroundColor: theme.colors.white,
     shadowOpacity: 0,
   },
   tabBar: {
+    backgroundColor: theme.colors.white,
+    shadowOpacity: 0,
     margin: 0,
     marginBottom: 10,
     padding: 0,
-    backgroundColor: 'transparent',
   },
   tabBarItem: {
     margin: 0,

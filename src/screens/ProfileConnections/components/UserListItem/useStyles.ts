@@ -14,6 +14,7 @@ const useStyles = makeStyle(theme => ({
     width: 40,
     height: 40,
     resizeMode: 'contain',
+    backgroundColor: theme.colors.background,
   },
   names: {
     marginHorizontal: 10,

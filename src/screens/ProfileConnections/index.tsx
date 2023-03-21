@@ -22,6 +22,7 @@ import {
 import { useTheme } from 'native-base';
 import useFollowersCount from 'hooks/relationships/useFollowersCount';
 import useFollowingCount from 'hooks/relationships/useFollowingCount';
+import { useActiveProfile } from '@recoil/profiles';
 import FollowingTab from './components/FollowingTab';
 import FollowersTab from './components/FollowersTab';
 import useStyles from './useStyles';
@@ -60,7 +61,7 @@ const ProfileConnections = () => {
   const route = useRoute<NavProps['route']>();
   const { params } = route;
   const { userAddress, initialTabRouteName } = params;
-
+  const profile = useActiveProfile();
   // -------------------------------------------------------------------------------------
   // --- Tab bar labels
   // -------------------------------------------------------------------------------------
@@ -109,22 +110,21 @@ const ProfileConnections = () => {
     tabBarStyle: styles.tabBar,
     tabBarItemStyle: styles.tabBarItem,
     tabBarLabelStyle: styles.tabBarLabel,
-    tabBarActiveTintColor: theme.colors.text,
     tabBarInactiveTintColor: theme.colors.grey01,
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
   };
 
   const CenterElement = useMemo(() => {
-    return <Typography.Subtitle3>{t('connections')}</Typography.Subtitle3>;
-  }, [t]);
+    return <Typography.Subtitle3>{profile?.nickname || 'no-nickname'}</Typography.Subtitle3>;
+  }, [profile?.nickname]);
 
   return (
     <DView
       topBar={<TopBar style={styles.topBar} centerElement={CenterElement} />}
       disableHideKeyboardTouchable={true}
       style={styles.container}
-      backgroundColor="transparent"
+      backgroundColor={theme.colors.white}
       scrollable={false}
       onTouchStart={disableParentSwipeLeft}
       {...panResponder.panHandlers}>

@@ -35,9 +35,9 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
 
   // Set the initial users to be the list of the relationships to sync
   const [users, setUsers] = useState<FollowedUser[]>(relationshipsToSync);
-
-  const [fetchingMore, setFetchingMore] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchingMore, setFetchingMore] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
 
   // Callback that is used when some data is returned by the chain
@@ -60,12 +60,15 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
 
         return merged;
       });
+      setLoading(false);
+      setFetchingMore(false);
+      setRefreshing(false);
     },
     [updatePendingRelationships],
   );
 
   // Query used to get the following list
-  const { loading, fetchMore, refetch } = useQuery(GetAccountFollowing, {
+  const { fetchMore, refetch } = useQuery(GetAccountFollowing, {
     variables: {
       subspaceId,
       userAddress,
@@ -84,15 +87,17 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
 
       await fetchMore({
         variables: { offset: users.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          following: fetchMoreResult ? [...prev.following, ...fetchMoreResult.following] : prev,
-        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          if (fetchMoreResult.following.length === 0) setFetchingMore(false);
+          return {
+            following: [...prev.following, ...fetchMoreResult.following],
+          };
+        },
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [fetchMore, users.length]);
 
@@ -106,10 +111,8 @@ const useFollowing = (address?: string, usersPerPage: number = 50) => {
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);
 
