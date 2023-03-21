@@ -23,8 +23,9 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
   const subspaceId = useAppStateValue('subspaceId');
 
   const [followers, setFollowers] = useState<DesmosProfile[]>([]);
-  const [fetchingMore, setFetchingMore] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchingMore, setFetchingMore] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   // Callback to be called when the followers list is fetched
@@ -33,10 +34,13 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
 
     const profiles = (data.relationships as any[]).map(r => r.creator).map(convertGraphQLProfile);
     setFollowers(profiles);
+    setLoading(false);
+    setFetchingMore(false);
+    setRefreshing(false);
   }, []);
 
   // Query the followers list
-  const { loading, fetchMore, refetch } = useQuery(GetAccountFollowers, {
+  const { fetchMore, refetch } = useQuery(GetAccountFollowers, {
     variables: {
       subspaceId,
       userAddress,
@@ -56,17 +60,18 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
       // Fetch more notifications
       await fetchMore({
         variables: { offset: followers.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          relationships: fetchMoreResult
-            ? [...prev.relationships, ...fetchMoreResult.relationships]
-            : prev,
-        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          if (fetchMoreResult.relationships.length === 0) setFetchingMore(false);
+          // Append the new followers to the existing ones
+          return {
+            relationships: [...prev.relationships, ...fetchMoreResult.relationships],
+          };
+        },
       });
     } catch (e: any) {
-      setError(e.toString);
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString);
     }
   }, [fetchMore, followers.length]);
 
@@ -80,10 +85,8 @@ const useFollowers = (address?: string, followersPerPage: number = 50) => {
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);
 
