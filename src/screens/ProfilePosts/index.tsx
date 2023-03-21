@@ -98,7 +98,6 @@ const ProfilePosts = () => {
     tabBarStyle: styles.tabBar,
     tabBarItemStyle: styles.tabBarItem,
     tabBarLabelStyle: styles.tabBarLabel,
-    tabBarActiveTintColor: theme.colors.text,
     tabBarInactiveTintColor: theme.colors.grey01,
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
