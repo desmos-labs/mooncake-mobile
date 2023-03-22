@@ -8,20 +8,29 @@ import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
 import sleep from 'lib/sleep';
 import { useActiveAccountAddress } from '@recoil/accounts';
 
+type PostData = Pick<Post, 'subspaceId' | 'externalId'>;
+
 /**
  * Function that retrieves all the external post ids from the messages of the given transaction.
  */
 const getPostsData = (messages: EncodeObject[]) => {
-  const postsData: Pick<Post, 'subspaceId' | 'externalId'>[] = [];
-  messages.forEach(msg => {
-    if (msg.typeUrl === MsgCreatePostTypeUrl) {
-      const value = msg.value as MsgCreatePostEncodeObject['value'];
-      postsData.push({ subspaceId: value.subspaceId.toNumber(), externalId: value.externalId });
-    }
+  return messages
+    .map(msg => {
+      switch (msg.typeUrl) {
+        case MsgCreatePostTypeUrl: {
+          const value = msg.value as MsgCreatePostEncodeObject['value'];
+          return {
+            subspaceId: value.subspaceId.toNumber(),
+            externalId: value.externalId,
+          } as PostData;
+        }
 
-    // TODO: We should also handle edit and deletion here
-  });
-  return postsData;
+        default:
+          // TODO: We should also handle edit and deletion here
+          return undefined;
+      }
+    })
+    .filter((data): data is PostData => data !== undefined);
 };
 
 /**
