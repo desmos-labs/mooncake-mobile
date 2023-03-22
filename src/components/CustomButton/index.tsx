@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Button as NBButton } from 'native-base';
-import { ColorValue } from 'react-native';
 import { useMakeButtonStyle, useMakeButtonTypography } from 'components/CustomButton/hooks';
+import { ColorType } from 'native-base/lib/typescript/components/types';
 
 interface Props
   extends Omit<
@@ -21,17 +21,17 @@ interface Props
   /**
    * Optionally override the default button text color.
    */
-  textColor?: ColorValue;
+  textColor?: ColorType;
 
   /**
    * Change the background color of the button.
    */
-  backgroundColor?: string;
+  backgroundColor?: ColorType;
 
   /**
    * Change the outline/border color of the button. Only relevant for outlined variant.
    */
-  borderColor?: string;
+  borderColor?: ColorType;
 
   /**
    * What to do when the button is pressed.
