@@ -36,8 +36,7 @@ const useRenderMediaAttachment = (
       let imageHeight = 0;
       if (attachment.size) {
         const ratio =
-          (Dimensions.get('window').width - (horizontalPaddingWithAutoSize || 0)) /
-          attachment.size.width;
+          (screenDimensions.width - (horizontalPaddingWithAutoSize || 0)) / attachment.size.width;
         imageHeight = attachment.size.height * ratio;
       }
 

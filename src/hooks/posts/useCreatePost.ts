@@ -107,7 +107,7 @@ const useCreatePost = () => {
   const resetCreatePostState = useResetCreatePostState();
 
   const storePost = useStorePost(activeProfile.address);
-  const deletePost = useRemoveStoredPendingPost(activeProfile.address);
+  const deletePost = useRemoveStoredPendingPost();
 
   const uploadAssets = useUploadAssets();
   const broadcastTx = useBroadcastTx();
@@ -117,6 +117,13 @@ const useCreatePost = () => {
   // Callback that creates a post
   const createPost = React.useCallback(
     async (parent?: Post): Promise<Result<SuccessfulBroadcast, Error>> => {
+      // If the post has parent AKA is a reply we should reset the recoil associated with the comment text box value
+      // if not the comment text box will not be cleared after clicking the post
+      // button waiting for the comment creation to be completed cc @RiccardoM
+      if (parent) {
+        // TODO: Clear the text box
+      }
+
       // Upload the attachments
       setState({ type: CreatePostStateType.UPLOADING_ATTACHMENTS });
       const uploadResult = await uploadAssets(createPostState.attachments);
@@ -162,7 +169,7 @@ const useCreatePost = () => {
       const result = await broadcastTx([msgCreatePost]);
       if (result.isErr()) {
         // If there is an error, delete the post from the local storage
-        deletePost(post.subspaceId, post.externalId);
+        deletePost(activeProfile.address, post.subspaceId, post.externalId);
         if (isCanceledOperationError(result.error)) {
           setState({ type: CreatePostStateType.CANCELED });
         }

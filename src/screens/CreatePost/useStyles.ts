@@ -11,13 +11,11 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
   },
   postButton: {
-    width: 58,
+    width: 61,
+    height: 36,
   },
   contentContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 16,
-    alignItems: 'center',
+    padding: theme.spacing.m,
   },
   avatarGroup: {
     alignSelf: 'flex-start',

@@ -1,30 +1,30 @@
 import Typography from 'components/Typography';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import DView from 'components/DView';
-import { TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
 import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';
-import SelectedCommentImage from 'components/SelectedCommentImage';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { useTheme } from 'native-base';
-import FastImage from 'react-native-fast-image';
+import { Spinner, useTheme } from 'native-base';
 import { Post } from 'types/posts';
-import { useActiveProfile } from '@recoil/profiles';
 import useCreatePost from 'hooks/posts/useCreatePost';
-import { getProfilePicture } from 'lib/ProfileUtils';
 import {
   useAddCreatePostAttachment,
   useCreatePostValue,
   useRemoveCreatePostAttachment,
+  useResetCreatePostState,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
+import SelectedPostImage from 'components/SelectedPostImage';
+import { useToast } from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -49,8 +49,8 @@ const CreatePost = () => {
   const { t } = useTranslation('postInteraction');
   const styles = useStyles();
   const theme = useTheme();
-
-  const { goBack } = useNavigation<NavProps['navigation']>();
+  const toast = useToast();
+  const navigation = useNavigation<NavProps['navigation']>();
   const { params } = useRoute<NavProps['route']>();
   const parent = params?.parent;
 
@@ -58,7 +58,7 @@ const CreatePost = () => {
   // --- Useful hooks
   // -------------------------------------------------------------------------------------
 
-  const author = useActiveProfile();
+  const resetCreatePostState = useResetCreatePostState();
 
   // TODO: Properly display the state of the creation of the post
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -94,35 +94,45 @@ const CreatePost = () => {
     setLoading(false);
 
     if (result.isErr()) {
-      // TODO: Show the error somehow
       console.log('Error while creating post', result.error.message);
-      return;
+      return toast.show(t('errorWhileCreatingPost'), {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
     }
 
-    goBack();
-  }, [createPost, goBack, parent]);
+    navigation.goBack();
+  }, [createPost, navigation, parent, t, toast]);
+
+  const onCreatePostPressWrapper = useCallback(() => {
+    requestAnimationFrame(async () => {
+      await handleCreatePost();
+    });
+  }, [handleCreatePost]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
 
   const TopBarRightElement = React.useMemo(() => {
+    if (loading) {
+      return <Spinner />;
+    }
+
     return (
       <Button
-        loading={loading}
         mode={ButtonMode.CONTAINED}
         backgroundColor={theme.colors.primary}
         textColor={theme.colors.white}
         size={ButtonSize.S}
         disabled={!canCreatePost}
-        onPress={handleCreatePost}
+        onPress={onCreatePostPressWrapper}
         additionalStyle={styles.postButton}>
         {t('post')}
       </Button>
     );
   }, [
     canCreatePost,
-    handleCreatePost,
+    onCreatePostPressWrapper,
     loading,
     styles.postButton,
     t,
@@ -139,6 +149,20 @@ const CreatePost = () => {
     );
   }, [parent, t]);
 
+  // -------------------------------------------------------------------------------------
+  // --- Effects
+  // -------------------------------------------------------------------------------------
+
+  // When the user leaves the screen, we reset the state of the post and remove the attachment if any
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', () => {
+        resetCreatePostState();
+        removePostAttachment(postAttachments[0]);
+      }),
+    [navigation, postAttachments, removePostAttachment, resetCreatePostState],
+  );
+
   return (
     <>
       <DView
@@ -150,33 +174,32 @@ const CreatePost = () => {
             rightElement={TopBarRightElement}
           />
         }>
-        <View style={styles.contentContainer}>
-          <View style={styles.avatarGroup}>
-            <FastImage source={getProfilePicture(author)} style={styles.avatar} />
-          </View>
-
-          {/* this may get refactored into its own custom component */}
-          <TextInput
-            maxLength={EnvConfig.MAX_COMMENT_LENGTH}
-            placeholder={t(parent ? 'yourReply' : 'writeSomething')}
-            placeholderTextColor={theme.colors.grey02}
-            value={postText}
-            onChangeText={setPostText}
-            multiline
-            style={{
-              flex: 1,
-              alignSelf: 'stretch',
-              color: theme.colors.surfaceBlack,
-            }}
-            textAlignVertical="top"
-          />
+        <View>
+          <ScrollView style={styles.contentContainer}>
+            {/* this may get refactored into its own custom component */}
+            <TextInput
+              maxLength={EnvConfig.MAX_COMMENT_LENGTH}
+              placeholder={t(parent ? 'yourReply' : 'writeSomething')}
+              placeholderTextColor={theme.colors.grey02}
+              value={postText}
+              onChangeText={setPostText}
+              multiline
+              style={{
+                color: theme.colors.surfaceBlack,
+              }}
+              textAlignVertical="top"
+            />
+            {/* TODO: Allow to select multiple attachments */}
+            <SelectedPostImage
+              source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
+              dimensions={{
+                width: postAttachments.length > 0 ? postAttachments[0].width : undefined,
+                height: postAttachments.length > 0 ? postAttachments[0].height : undefined,
+              }}
+              handlePress={source => removePostAttachment(source)}
+            />
+          </ScrollView>
         </View>
-
-        {/* TODO: Allow to select multiple attachments */}
-        <SelectedCommentImage
-          source={postAttachments.length > 0 ? { uri: postAttachments[0].uri } : ('' as any)}
-          handlePress={source => removePostAttachment(source)}
-        />
       </DView>
       <MediaBottomPanel
         style={styles.bottomPanel}
@@ -184,9 +207,6 @@ const CreatePost = () => {
         imageSelected={postAttachments.length > 0}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
-        handlePressMention={() => {
-          console.log('placeholder');
-        }}
       />
     </>
   );
