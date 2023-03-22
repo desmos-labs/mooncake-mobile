@@ -29,13 +29,11 @@ export interface BroadcastTxWithApiOptions {
  * @param options The options to use to broadcast the transaction
  */
 const postTransaction = (messages: AminoMsg[], options?: BroadcastTxWithApiOptions) => {
-  return axiosInstance.post<AxiosResponse>(
-    options?.optimistic ? '/broadcast?optimistic=true' : '/broadcast',
-    {
-      messages,
-      memo: options?.memo,
-    },
-  );
+  return axiosInstance.post<AxiosResponse>('/broadcast', {
+    messages,
+    memo: options?.memo,
+    optimistic: options?.optimistic === true,
+  });
 };
 
 /**
