@@ -44,7 +44,7 @@ const WelcomeBack = () => {
           <Button
             size={44}
             textColor={theme.colors.white}
-            buttonColor={theme.colors.white}
+            borderColor={theme.colors.white}
             variant="outlined">
             {t('common:confirm')}
           </Button>

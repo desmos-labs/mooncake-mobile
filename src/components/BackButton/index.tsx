@@ -6,11 +6,23 @@ import { useTheme } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export type Props = {
+  /**
+   * What to do when the button is pressed.
+   */
   onPress: () => void;
+  /**
+   * The style of the button's container.
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * The tint color of the back arrow.
+   */
   iconColor?: ColorValue;
 };
 
+/**
+ * A button with a back arrow image.
+ */
 export const BackButton: React.FC<Props> = ({ onPress, style, iconColor }) => {
   const theme = useTheme();
   const styles = useStyles();

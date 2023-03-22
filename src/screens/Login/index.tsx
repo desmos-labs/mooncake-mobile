@@ -178,7 +178,7 @@ const Login = () => {
               disabled={loading || !password}
               isLoading={loading}
               onPress={handleSubmit}
-              buttonColor={theme.colors.white}
+              borderColor={theme.colors.white}
               variant="outlined">
               {t('common:confirm')}
             </Button>

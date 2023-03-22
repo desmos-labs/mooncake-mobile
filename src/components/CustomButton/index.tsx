@@ -8,21 +8,46 @@ interface Props
     React.ComponentProps<typeof NBButton>,
     'shadow' | '_pressed' | 'hover' | 'opacity' | 'color' | 'colorScheme' | '_text'
   > {
+  /**
+   * The relative height of the button.
+   */
   size?: 26 | 32 | 44 | 56;
 
+  /**
+   * The text that will be rendered on the button.
+   */
   children?: string;
 
+  /**
+   * Optionally override the default button text color.
+   */
   textColor?: ColorValue;
 
-  buttonColor?: string;
+  /**
+   * Change the background color of the button.
+   */
+  backgroundColor?: string;
 
+  /**
+   * Change the outline/border color of the button. Only relevant for outlined variant.
+   */
+  borderColor?: string;
+
+  /**
+   * What to do when the button is pressed.
+   */
   onPress?: () => void;
 }
 
+/**
+ * A button component based on the native-base Button.
+ * @constructor
+ */
 const CustomButton = ({
   size = 56,
   variant = 'solid',
-  buttonColor,
+  backgroundColor,
+  borderColor,
   textColor,
   children,
   ...rest
@@ -36,7 +61,7 @@ const CustomButton = ({
       {...makeButtonTypography({ size, textColor })}
       // can ignore this error as variant has a default value of solid
       // @ts-ignore
-      {...makeButtonStyle({ variant, buttonColor })}
+      {...makeButtonStyle({ variant, backgroundColor, borderColor })}
       py={size / 3}
       {...rest}>
       {children}

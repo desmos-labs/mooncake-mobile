@@ -36,20 +36,22 @@ export const useMakeButtonStyle = () => {
   return React.useCallback(
     ({
       variant,
-      buttonColor,
+      backgroundColor,
+      borderColor,
     }: {
       variant: Pick<React.ComponentProps<typeof Button>, 'variant'>;
-      buttonColor?: string;
+      backgroundColor?: string;
+      outlineColor?: string;
     }) => {
       const variantStyleMap: { [index: string]: any } = {
         solid: {
-          backgroundColor: buttonColor || theme.colors.primary,
+          backgroundColor: backgroundColor || theme.colors.primary,
         },
         link: {
           textDecorationLine: 'none',
         },
         outlined: {
-          borderColor: buttonColor || theme.colors.surfaceBlack,
+          borderColor: borderColor || theme.colors.surfaceBlack,
           borderWidth: 1,
         },
       };
