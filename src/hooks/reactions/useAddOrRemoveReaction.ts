@@ -2,7 +2,6 @@ import React from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import {
   useAddPostReaction,
-  useGetPostReaction,
   useHasPostReaction,
   useRemovePostReaction,
   useUpdatePostReactionStatus,
@@ -70,7 +69,6 @@ const useRemoveReaction = (activeAddress: string) => {
   const subspaceId = useAppStateValue('subspaceId');
   const broadcastTx = useBroadcastTx();
 
-  const getPostReaction = useGetPostReaction(activeAddress);
   const setPostReactionStatus = useUpdatePostReactionStatus(activeAddress);
 
   const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
@@ -81,10 +79,6 @@ const useRemoveReaction = (activeAddress: string) => {
     async (post: Post) => {
       // Remove the reaction locally
       setPostReactionStatus(post, DataStatus.DELETED_LOCALLY);
-
-      // Get the locally store reaction, if any
-      const localReaction = getPostReaction(post);
-      const localReactionId = localReaction?.id;
 
       // Get the reaction id from the server, if any
       const { data } = await getReaction({
@@ -103,7 +97,7 @@ const useRemoveReaction = (activeAddress: string) => {
         value: {
           subspaceId: Long.fromNumber(subspaceId),
           postId: Long.fromNumber(post.id),
-          reactionId: remoteReactionId ?? localReactionId,
+          reactionId: remoteReactionId,
           user: activeAddress,
         },
       };
@@ -115,7 +109,7 @@ const useRemoveReaction = (activeAddress: string) => {
         setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);
       }
     },
-    [setPostReactionStatus, getPostReaction, getReaction, activeAddress, subspaceId, broadcastTx],
+    [setPostReactionStatus, getReaction, activeAddress, subspaceId, broadcastTx],
   );
 };
 
