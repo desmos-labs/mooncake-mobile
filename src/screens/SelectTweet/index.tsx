@@ -143,13 +143,12 @@ const SelectTweet = () => {
         {tweets.length > 0 && (
           <View style={{ marginTop: theme.spacing.m }}>
             <Button
-              disabled={!selectedTweetId}
-              mode={ButtonMode.CONTAINED}
+              disabled={!selectedTweet}
               size={44}
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
-              onPress={handleConnect}
-              additionalStyle={styles.button}>
+              justifyContent="flex-end"
+              onPress={handleConnect}>
               {t('common:next')}
             </Button>
           </View>

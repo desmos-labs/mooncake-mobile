@@ -1,10 +1,6 @@
-import { makeStyleWithProps } from 'config/theme';
+import { makeStyle } from 'config/theme';
 
-interface StyleProps {
-  shouldDisableTipButton: boolean;
-}
-
-const useStyles = makeStyleWithProps((props: StyleProps, theme) => ({
+const useStyles = makeStyle(theme => ({
   container: {
     flex: 1,
     justifyContent: 'flex-end',

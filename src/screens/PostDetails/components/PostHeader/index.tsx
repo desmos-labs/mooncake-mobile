@@ -16,7 +16,6 @@ import {
   useHandlePressSendTips,
 } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import ToastConfig from 'config/ToastConfig';
 import { useTranslation } from 'react-i18next';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import useStyles from './useStyles';
@@ -64,9 +63,7 @@ const PostHeader = ({ post }: Props) => {
    */
   const checkUserAndHandleSendTips = useCallback(() => {
     if (isCurrentUserAuthor) {
-      toast.show(t('common:cannot tip yourself'), {
-        type: ToastConfig.ERROR_NO_RETRY,
-      });
+      toast.errorNoRetry(t('common:cannot tip yourself'));
     } else {
       handlePressSendTips(post);
     }

@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import ImageButton from 'components/ImageButton';
 import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
-import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
+import useConnectChain from 'screens/ManageConnectedChains/useHooks';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';

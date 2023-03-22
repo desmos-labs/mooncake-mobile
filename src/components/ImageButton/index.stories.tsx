@@ -20,7 +20,6 @@ const customStyle: CompProps = {
   style: {
     width: 150,
     height: 100,
-    tintColor: 'red',
     backgroundColor: 'gray',
   },
 };

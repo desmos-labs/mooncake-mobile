@@ -19,6 +19,7 @@ import {
 import { isCanceledOperationError } from 'types/error';
 import LinkableChains from 'config/LinkableChains';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
+import { useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.DISCONNECT_CHAIN_MODAL>;
@@ -88,7 +89,8 @@ const DisconnectChainModal = () => {
         }),
         primaryButtonLabel: t('common:retry') as string,
         onPressPrimary: handlePressYes,
-        secondaryButtonMode: 'outlined',
+        // TODO: how to properly type this?
+        secondaryButtonMode: 'outlined' as any,
         secondaryButtonLabel: t('resultModal:goToProfile') as string,
         onPressSecondary: navigateToProfile,
       });

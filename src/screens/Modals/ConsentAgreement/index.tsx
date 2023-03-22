@@ -67,7 +67,6 @@ const ConsentAgreement = () => {
         size={44}
         backgroundColor={theme.colors.surfaceBlack}
         textColor={theme.colors.white}
-        mode={ButtonMode.CONTAINED}
         onPress={handlePressContinue}>
         {t('common:continue')}
       </Button>

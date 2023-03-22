@@ -68,13 +68,13 @@ export type ConfirmModalParams = {
    * The mode of the primary button.
    * @default contained
    */
-  primaryButtonMode?: Pick<React.ComponentProps<typeof Button>, 'variant'>;
+  primaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
 
   /**
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?: Pick<React.ComponentProps<typeof Button>, 'variant'>;
+  secondaryButtonMode?: keyof Pick<React.ComponentProps<typeof Button>, 'variant'>;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;

@@ -60,7 +60,7 @@ const opacity = {
 /**
  * A map of commonly used overflow values.
  */
-const overflow = {
+const overflow: { visible: StyleProp<ViewStyle> } = {
   visible: {
     overflow: 'visible',
   },

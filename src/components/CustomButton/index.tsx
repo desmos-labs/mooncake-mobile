@@ -10,7 +10,7 @@ interface Props
   > {
   size?: 26 | 32 | 44 | 56;
 
-  children: string;
+  children?: string;
 
   textColor?: ColorValue;
 
