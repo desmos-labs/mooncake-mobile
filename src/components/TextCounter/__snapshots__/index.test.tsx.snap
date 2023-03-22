@@ -2,6 +2,7 @@
 
 exports[`component: TextCounter renders 1`] = `
 <View
+  dataSet={{}}
   style={
     {
       "alignSelf": "flex-end",
@@ -39,6 +40,7 @@ exports[`component: TextCounter renders 1`] = `
 
 exports[`component: TextCounter renders maxChar reached 1`] = `
 <View
+  dataSet={{}}
   style={
     {
       "alignSelf": "flex-end",
