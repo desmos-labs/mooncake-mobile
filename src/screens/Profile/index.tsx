@@ -321,7 +321,14 @@ const Profile = () => {
 
     // Nothing to show
     return undefined;
-  }, [appLinks, profile?.address, navigate]);
+  }, [
+    areAppLinksLoading,
+    appLinks,
+    styles.flexStart,
+    theme.colors.surfaceBlack,
+    profile?.address,
+    navigate,
+  ]);
 
   // Banner image needs to be memoized to avoid flickering
   const Banner = useMemo(() => {
@@ -337,7 +344,15 @@ const Profile = () => {
         />
       </AnimatedImageBackground>
     );
-  }, [profile]);
+  }, [
+    AnimatedBlurView,
+    AnimatedImageBackground,
+    animatedBlurStyle,
+    animatedImageBGStyle,
+    profile,
+    styles.banner,
+    styles.bannerBlur,
+  ]);
 
   // Profile image needs to be memoized to avoid flickering
   const ProfileImage = useMemo(() => {
@@ -347,7 +362,7 @@ const Profile = () => {
         style={[styles.profileImage, animatedProfilePicStyle]}
       />
     );
-  }, [profile]);
+  }, [AnimatedFastImage, animatedProfilePicStyle, profile, styles.profileImage]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

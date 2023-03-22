@@ -109,7 +109,7 @@ const SelectTweet = () => {
         </Button>
       </>
     );
-  }, [openTwitterApp, t, theme.colors.surfaceBlack]);
+  }, [openTwitterApp, t]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering

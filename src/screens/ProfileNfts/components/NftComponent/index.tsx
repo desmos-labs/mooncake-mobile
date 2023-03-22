@@ -4,6 +4,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
+import { Box } from 'native-base';
 import useStyles from './useStyles';
 
 export interface Props {
@@ -15,9 +16,8 @@ const NftComponent = ({ data, onPress }: Props) => {
   const styles = useStyles();
   const Image = createImageProgress(FastImage);
   return (
-    <View style={{ flex: 1 }}>
+    <Box flex={1} m="s">
       <DropShadowWrapper
-        style={{ margin: 6 }}
         customDistance={8}
         outerShadowProps={{ startColor: 'rgba(16, 24, 40, 0.03)', distance: 30 }}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
@@ -28,7 +28,7 @@ const NftComponent = ({ data, onPress }: Props) => {
           </View>
         </TouchableOpacity>
       </DropShadowWrapper>
-    </View>
+    </Box>
   );
 };
 

@@ -7,13 +7,16 @@ import { resetSecureStorage } from 'lib/SecureStorage';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { FC, useCallback } from 'react';
-import { Alert, FlatList, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Alert, FlatList, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import AcceptInvite from 'services/axios/requests/AcceptInvite';
 import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
+import { Box, HStack, VStack } from 'native-base';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.IMPACT_POINTS_MODAL,
   ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
   ROUTES.ACTIVITIES,
   ROUTES.ONBOARDING,
@@ -126,14 +129,14 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
   return (
     <DView>
       <FlatList
-        style={{ flex: 1 }}
+        style={CommonStyles.flex[1]}
         contentContainerStyle={styles.flatList}
         data={routesToRender}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
       <Spacer paddingVertical={4} />
-      <View style={{ marginHorizontal: 10 }}>
+      <Box mx="s">
         <Button
           backgroundColor="green"
           textColor="white"
@@ -152,8 +155,8 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
           Continue to Home screen
         </Button>
         <Spacer paddingVertical={8} />
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flexDirection: 'column', flex: 0.5 }}>
+        <HStack>
+          <VStack flex={0.5}>
             <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
               Show toast
             </Button>
@@ -161,9 +164,9 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             <Button onPress={redeemAnInvite} mode={ButtonMode.OUTLINED} size={32}>
               Accept invite
             </Button>
-          </View>
+          </VStack>
           <Spacer paddingHorizontal={4} />
-          <View style={{ flexDirection: 'column', flex: 0.5 }}>
+          <VStack flex={0.5}>
             <Button
               mode={ButtonMode.OUTLINED}
               size={32}
@@ -206,9 +209,9 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
               }}>
               Reset MMKV storage & Secure Storage
             </Button>
-          </View>
-        </View>
-      </View>
+          </VStack>
+        </HStack>
+      </Box>
     </DView>
   );
 };

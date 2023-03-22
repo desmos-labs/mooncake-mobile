@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Box, HStack, useTheme } from 'native-base';
 import { scale } from 'react-native-size-matters';
 import { ApplicationLink, ChainLink } from 'types/desmos';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -53,7 +53,7 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
   const hasChainLinks = chainLinks.length > 0;
 
   return isLoading ? (
-    <View style={{ alignSelf: 'flex-start', left: 26, height: scale(18) }}>
+    <View style={styles.loadingContainer}>
       <ActivityIndicator color={theme.colors.surfaceBlack} />
     </View>
   ) : (
@@ -63,26 +63,27 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
         style={styles.button}>
         {/* Twitter information */}
         {hasTwitterLink && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
+          <HStack alignItems="center">
             <FastImage source={twitterIcon} style={styles.iconStyle} />
-            <Typography.Body6 style={{ marginLeft: 4 }}>{twitterAppLink.username}</Typography.Body6>
-          </View>
+            <Box ml="xs">
+              <Typography.Body6>{twitterAppLink.username}</Typography.Body6>
+            </Box>
+          </HStack>
         )}
 
         {/* Separator */}
         {hasTwitterLink && hasChainLinks && (
-          <Typography.Body6 style={{ marginHorizontal: 4 }}>&</Typography.Body6>
+          <Box mx="xs">
+            <Typography.Body6>&</Typography.Body6>
+          </Box>
         )}
 
         {/* Connected chains images */}
         {hasChainLinks && (
-          <View
+          <HStack
+            // dynamic margin right calculation is left as an inline style as it behaves more
+            // predictably than using HStack's mr prop
             style={{
-              flexDirection: 'row',
               marginRight: -10 * chainLinks.length,
             }}>
             {chainLinks.map((x, idx) => (
@@ -92,7 +93,7 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
                 style={[styles.iconStyle, { left: -10 * idx }]}
               />
             ))}
-          </View>
+          </HStack>
         )}
 
         {/* Chain links counter */}

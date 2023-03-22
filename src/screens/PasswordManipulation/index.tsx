@@ -21,6 +21,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'rea
 import { Spinner, useTheme } from 'native-base';
 import * as Yup from 'yup';
 import { AccountWithWallet } from 'types/account';
+import CommonStyles from 'config/theme/CommonStyles';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -100,7 +101,7 @@ const PasswordManipulation = () => {
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}>
+        style={CommonStyles.flex[1]}>
         <Formik
           initialValues={initialFormValues}
           onSubmit={handleFormSubmit}
@@ -108,7 +109,10 @@ const PasswordManipulation = () => {
           {({ handleSubmit, values, errors, setFieldValue }) => {
             return (
               <>
-                <ScrollView ref={scrollViewRef} keyboardDismissMode="on-drag" style={{ flex: 1 }}>
+                <ScrollView
+                  ref={scrollViewRef}
+                  keyboardDismissMode="on-drag"
+                  style={CommonStyles.flex[1]}>
                   <View style={styles.labelGroup}>
                     <Typography.Subtitle2>{t(pwInputLabel)}</Typography.Subtitle2>
 

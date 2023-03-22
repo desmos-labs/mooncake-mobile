@@ -49,7 +49,7 @@ const AnimatedRing = ({ delay, color, size }: Props) => {
         -1,
       ),
     );
-  }, []);
+  }, [delay, ring]);
 
   return (
     <Animated.View

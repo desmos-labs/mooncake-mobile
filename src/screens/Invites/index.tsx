@@ -21,7 +21,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';
@@ -157,7 +157,7 @@ const Invites = () => {
 
       <Spacer paddingVertical={theme.spacing.s} />
 
-      <View style={{ alignItems: 'center' }}>
+      <Box alignItems="center">
         {/* Shows the number of generated invitation links */}
         <View style={styles.rowCenter}>
           <Image source={inviteUserIcon} style={styles.iconRight} />
@@ -172,7 +172,7 @@ const Invites = () => {
             <ActivityIndicator color={theme.colors.surfaceBlack} />
           )}
         </View>
-      </View>
+      </Box>
 
       <Spacer paddingVertical={16} />
       <View style={{ paddingHorizontal: theme.spacing.m }}>

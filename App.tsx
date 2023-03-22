@@ -10,6 +10,7 @@ import useClient from 'services/graphql/useClient';
 import { ViewProps } from 'react-native';
 import lightTheme from 'config/theme/LightTheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import CommonStyles from 'config/theme/CommonStyles';
 
 /**
  * Context provider that allows to properly instantiate an Apollo client that
@@ -24,7 +25,7 @@ const ButterApolloClientProvider = (props: ViewProps) => {
 
 function App(): JSX.Element {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={CommonStyles.flex[1]}>
       <SafeAreaProvider>
         <RecoilRoot>
           <NativeBaseProvider theme={lightTheme}>

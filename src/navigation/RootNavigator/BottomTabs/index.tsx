@@ -12,7 +12,7 @@ import HomeTabs, { HomeTabsParams } from 'navigation/RootNavigator/HomeTabs';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PingAnimation from 'screens/Profile/components/PingAnimation';
 import { useAppStateValue, useSetAppStateValue } from '@recoil/appState';
@@ -137,7 +137,7 @@ const BottomTabBar = (props: Props) => {
               <ImageButton
                 onPress={handlePressCreatePost}
                 image={middleButtonIcon}
-                style={{ height: 41, width: 41, alignSelf: 'center' }}
+                style={styles.middleButtonImage}
               />
             </View>
           );
@@ -147,11 +147,11 @@ const BottomTabBar = (props: Props) => {
           <View key={route.key} style={styles.buttonView}>
             <ImageButton
               overlayComponent={route.name === ROUTES.ACTIVITIES && OverlayComponent}
-              overlayPosition={{ left: 18, top: 2 }}
+              overlayPosition={styles.imageButtonOverlay}
               onPress={onPress}
               tintColor={isFocused ? theme.colors.butterOrange01 : theme.colors.lightGrey02}
               image={getCorrectImage(route.name)}
-              style={{ height: 32, width: 32, alignSelf: 'center' }}
+              style={styles.imageButton}
             />
           </View>
         );
@@ -165,12 +165,10 @@ const BottomTabBar = (props: Props) => {
  * @constructor
  */
 const BottomTabsNavigator = () => {
-  const theme = useTheme();
-
   const renderTabBar = useCallback((props: BottomTabBarProps) => <BottomTabBar {...props} />, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.white }}>
+    <Box flex={1} backgroundColor="white">
       <Tab.Navigator
         tabBar={renderTabBar}
         initialRouteName={ROUTES.HOME_TABS}
@@ -181,7 +179,7 @@ const BottomTabsNavigator = () => {
         <Tab.Screen name={ROUTES.ACTIVITIES} component={Activities} />
         <Tab.Screen name={ROUTES.PROFILE} component={Profile} />
       </Tab.Navigator>
-    </View>
+    </Box>
   );
 };
 

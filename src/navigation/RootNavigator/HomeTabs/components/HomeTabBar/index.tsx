@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -46,6 +46,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
     return {
       width: searchBarWidth.value,
       transform: [{ translateX: xOffset.value }],
+      position: 'absolute',
     };
   });
 
@@ -62,7 +63,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           <Animated.View
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(300)}
-            style={{ position: 'absolute', left: 0, right: 'auto' }}>
+            style={styles.searchBarRightElement}>
             <ImageButton
               tintColor={theme.colors.butterOrange01}
               style={styles.butterflyImage}
@@ -71,7 +72,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             />
           </Animated.View>
         )}
-        <Animated.View style={[{ position: 'absolute' }, animatedStyle]}>
+        <Animated.View style={animatedStyle}>
           <HomeSearchBar
             focused={focused}
             searchPlaceHolder={t('search something')}
@@ -91,9 +92,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
         </Animated.View>
 
         {!listState.searchBarFocused ? (
-          <Animated.View
-            exiting={FadeOut.duration(300)}
-            style={{ position: 'absolute', left: 'auto', right: 0 }}>
+          <Animated.View exiting={FadeOut.duration(300)} style={styles.searchBarRightElement}>
             <ImageButton
               style={styles.rightButton}
               image={homeInviteIcon}
@@ -101,22 +100,17 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             />
           </Animated.View>
         ) : (
-          <Animated.View
-            style={{
-              marginLeft: theme.spacing.m,
-              position: 'absolute',
-              left: 'auto',
-              right: 0,
-            }}
-            exiting={FadeOut.duration(300)}>
-            <TouchableOpacity
-              onPress={() => {
-                setListState(value => ({ ...value, searchBarFocused: false }));
-                setFocused(false);
-              }}>
-              <Typography.Body6>Cancel</Typography.Body6>
-            </TouchableOpacity>
-          </Animated.View>
+          <Box ml="m">
+            <Animated.View style={styles.searchBarRightElement} exiting={FadeOut.duration(300)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setListState(value => ({ ...value, searchBarFocused: false }));
+                  setFocused(false);
+                }}>
+                <Typography.Body6>Cancel</Typography.Body6>
+              </TouchableOpacity>
+            </Animated.View>
+          </Box>
         )}
       </Animated.View>
       {!listState.searchBarFocused && (

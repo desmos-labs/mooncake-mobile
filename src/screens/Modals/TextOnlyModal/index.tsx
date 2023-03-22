@@ -40,9 +40,7 @@ const TextOnlyModal = () => {
       {/* invoke dismiss fn or goBack if user presses the background */}
       <TouchableOpacity onPress={goBack} activeOpacity={1} style={StyleSheet.absoluteFillObject} />
       <View style={styles.innerContainer}>
-        {image && (
-          <FastImage source={image} style={{ width: 116, height: 116, alignSelf: 'center' }} />
-        )}
+        {image && <FastImage source={image} style={styles.image} />}
         <Typography.H5 style={bodyStyle}>{title}</Typography.H5>
         <Typography.Body6 style={[styles.subtitleText, bodyStyle]}>{body}</Typography.Body6>
       </View>

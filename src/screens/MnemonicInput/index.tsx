@@ -8,8 +8,9 @@ import { Formik } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CommonStyles from 'config/theme/CommonStyles';
 import { useInitialFormFields, useOnSubmit, useValidateForm } from './hooks';
 import useStyles from './useStyles';
 
@@ -33,7 +34,7 @@ const MnemonicInput = () => {
       <KeyboardAvoidingView
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 50 : 0}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}>
+        style={CommonStyles.flex[1]}>
         <Formik
           initialValues={initialFormFields}
           validate={validateForm}
@@ -42,7 +43,7 @@ const MnemonicInput = () => {
           {({ handleSubmit, errors, values, setFieldValue, resetForm }) => (
             <>
               <ScrollView keyboardDismissMode="on-drag">
-                <View style={{ flex: 1 }}>
+                <Box flex={1}>
                   <Typography.Body6 style={styles.descriptionText}>
                     {t('description')}
                   </Typography.Body6>
@@ -81,7 +82,7 @@ const MnemonicInput = () => {
                       </Typography.Subtitle4>
                     </View>
                   )}
-                </View>
+                </Box>
               </ScrollView>
 
               <View>

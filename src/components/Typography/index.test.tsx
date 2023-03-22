@@ -11,12 +11,6 @@ describe('component: Typography', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('renders Display1', () => {
-    const tree = render(<Typography.Display1>{testText}</Typography.Display1>).toJSON();
-
-    expect(tree).toMatchSnapshot();
-  });
-
   it('renders Display2', () => {
     const tree = render(<Typography.Display2>{testText}</Typography.Display2>).toJSON();
 

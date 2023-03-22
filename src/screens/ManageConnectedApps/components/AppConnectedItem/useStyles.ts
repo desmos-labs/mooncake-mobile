@@ -41,6 +41,19 @@ const useStyles = makeStyle(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  verifiedIcon: {
+    width: 20,
+    height: 20,
+    alignSelf: 'center',
+    marginLeft: 4,
+  },
+  unverifiedIcon: {
+    tintColor: 'rgba(221, 221, 221, 1)',
+    width: 20,
+    height: 20,
+    alignSelf: 'center',
+    marginLeft: 4,
+  },
 }));
 
 export default useStyles;

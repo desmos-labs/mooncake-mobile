@@ -25,6 +25,7 @@ import {
   useRemoveCreatePostAttachment,
   useSetCreatePostValue,
 } from '@recoil/screens/createPostState';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -119,20 +120,15 @@ const CreatePost = () => {
         {t('post')}
       </Button>
     );
-  }, [
-    canCreatePost,
-    handleCreatePost,
-    loading,
-    styles.postButton,
-    t,
-    theme.colors.primary,
-    theme.colors.white,
-  ]);
+  }, [canCreatePost, handleCreatePost, loading, t, theme.colors.primary, theme.colors.white]);
 
   const TopBarCenterElement = React.useMemo(() => {
     if (!parent) return undefined;
     return (
-      <Typography.Body7 numberOfLines={1} ellipsizeMode="tail" style={{ textAlign: 'center' }}>
+      <Typography.Body7
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={CommonStyles.textAlign.center}>
         {t('replyTo', { replyTo: `@${parent?.author.dTag}` })}
       </Typography.Body7>
     );
@@ -162,11 +158,7 @@ const CreatePost = () => {
             value={postText}
             onChangeText={setPostText}
             multiline
-            style={{
-              flex: 1,
-              alignSelf: 'stretch',
-              color: theme.colors.surfaceBlack,
-            }}
+            style={styles.textInput}
             textAlignVertical="top"
           />
         </View>
@@ -183,9 +175,6 @@ const CreatePost = () => {
         imageSelected={postAttachments.length > 0}
         handlePressGallery={imageFromLibrary}
         handlePressCamera={imageFromCamera}
-        handlePressMention={() => {
-          console.log('placeholder');
-        }}
       />
     </>
   );

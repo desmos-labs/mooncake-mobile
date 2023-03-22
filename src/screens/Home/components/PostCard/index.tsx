@@ -20,7 +20,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, useTheme } from 'native-base';
+import { Center, HStack, useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
@@ -29,6 +29,7 @@ import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -117,7 +118,7 @@ const PostCard = (props: PostCardProps) => {
         icon: reportIcon,
       },
     ],
-    [onPressFollow, onPressReport, isFollowing],
+    [isFollowing, t, onPressFollow, onPressReport],
   );
 
   // -------------------------------------------------------------------------------------
@@ -195,11 +196,11 @@ const PostCard = (props: PostCardProps) => {
   const ProfileInfo = React.useMemo(() => {
     return (
       <View style={styles.profileInfoView}>
-        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={onPressAuthor}>
+        <TouchableOpacity style={CommonStyles.flexDirection.row} onPress={onPressAuthor}>
           <FastImage source={getProfilePicture(post.author)} style={styles.profilePic} />
-          <View style={{ flexDirection: 'column' }}>
+          <View>
             <Typography.Subtitle2>{post.author.nickname}</Typography.Subtitle2>
-            <View style={{ flexDirection: 'row' }}>
+            <HStack>
               <Typography.Body6 style={{ color: theme.colors.midGrey }}>
                 @{post.author.dTag}
               </Typography.Body6>
@@ -210,7 +211,7 @@ const PostCard = (props: PostCardProps) => {
                 }}>
                 {!isPending && `· ${calculatedCreationDate}`}
               </Typography.Body6>
-            </View>
+            </HStack>
           </View>
         </TouchableOpacity>
         <Center justifyContent="flex-start">{PendingIndicator}</Center>
@@ -265,13 +266,7 @@ const PostCard = (props: PostCardProps) => {
         {/* the user tipped the post or not. This has been done for the following reasons: */}
         {/* 1. It's a bad UX: no social network changes the color of the buttons for this reason */}
         {/* 2. It's extremely hard to implement, and completely useless in the first place */}
-        <TouchableOpacity
-          onPress={checkUserAndHandleSendTips}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: theme.spacing.s,
-          }}>
+        <TouchableOpacity onPress={checkUserAndHandleSendTips} style={styles.tipButton}>
           <FastImage resizeMode="cover" source={postToTipIcon} style={styles.bottomBarIcon} />
           <Typography.Subtitle3 style={{ color: theme.colors.grey02 }}>
             {t('tip')}
@@ -284,11 +279,11 @@ const PostCard = (props: PostCardProps) => {
     styles.bottomBarInnerView,
     styles.bottomBarIcon,
     styles.commentButton,
+    styles.tipButton,
     onPressLike,
     hasReacted,
     theme.colors.butterOrange01,
     theme.colors.grey02,
-    theme.spacing.s,
     reactionsCount,
     onPressComment,
     commentsCount,

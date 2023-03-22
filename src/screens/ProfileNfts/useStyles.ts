@@ -10,6 +10,10 @@ const useStyles = makeStyle(theme => ({
     flexGrow: 1,
     backgroundColor: theme.colors.white,
   },
+  flatList: {
+    flex: 1,
+    margin: -theme.spacing.m,
+  },
 }));
 
 export default useStyles;

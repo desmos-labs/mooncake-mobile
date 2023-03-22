@@ -1,4 +1,5 @@
 import { makeStyle } from 'config/theme';
+import { scale } from 'react-native-size-matters';
 
 export type StyleProp = {
   numTypes: number;
@@ -30,6 +31,11 @@ const useStyles = makeStyle(theme => ({
     width: 28,
     height: 28,
     resizeMode: 'contain',
+  },
+  loadingContainer: {
+    alignSelf: 'flex-start',
+    left: 26,
+    height: scale(18),
   },
 }));
 

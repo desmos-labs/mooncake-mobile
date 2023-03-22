@@ -1,6 +1,10 @@
-import { makeStyle } from 'config/theme';
+import { makeStyleWithProps } from 'config/theme';
 
-const useStyles = makeStyle(theme => ({
+interface StyleProps {
+  shouldDisableTipButton: boolean;
+}
+
+const useStyles = makeStyleWithProps((props: StyleProps, theme) => ({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -46,6 +50,19 @@ const useStyles = makeStyle(theme => ({
   loadingView: {
     alignItems: 'center',
     paddingVertical: theme.spacing.m,
+  },
+  infoIcon: {
+    width: 16,
+    height: 16,
+    marginRight: 4,
+  },
+  spinner: {
+    left: 0,
+    marginRight: 'auto',
+  },
+  amountErrorText: {
+    marginTop: 6,
+    color: theme.colors.pink01,
   },
 }));
 

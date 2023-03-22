@@ -50,6 +50,10 @@ const useStyles = makeStyle(theme => ({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  inputLabel: {
+    color: theme.colors.white,
+    marginBottom: 6,
+  },
 }));
 
 export default useStyles;

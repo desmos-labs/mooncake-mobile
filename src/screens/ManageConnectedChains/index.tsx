@@ -20,6 +20,7 @@ import { addButton } from 'assets/images';
 import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGivenAddress';
 import { useConnectChain } from 'screens/ManageConnectedChains/useHooks';
 import useCustomToast from 'hooks/extended/useCustomToast';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -111,7 +112,7 @@ const ManageConnectedChains = () => {
       <View style={styles.zIndexWrapper}>
         <View style={styles.textContainer}>
           <View style={styles.headerTextGroup}>
-            <Typography.H4 style={{ flex: 1 }}>{t('connectedAddresses')}</Typography.H4>
+            <Typography.H4 style={CommonStyles.flex[1]}>{t('connectedAddresses')}</Typography.H4>
 
             <ImageButton
               onPress={handleConnectChain}
@@ -135,7 +136,7 @@ const ManageConnectedChains = () => {
           ListEmptyComponent={ListEmptyComponent}
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          style={{ overflow: 'visible' }}
+          style={CommonStyles.overflow.visible}
         />
       )}
     </DView>

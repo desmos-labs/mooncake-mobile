@@ -9,9 +9,8 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import { Account } from 'types/account';
 import { Wallet } from 'types/wallet';
 import { useSetActiveAccountAddress } from '@recoil/accounts';
@@ -108,10 +107,10 @@ const SaveAccount = ({ navigation }: NavProps) => {
 
   return (
     <DView style={styles.root} backgroundImage={accountCreatedBg} backgroundFillScreen={true}>
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <Box flex={1} justifyContent="center">
         <FastImage resizeMode="cover" source={accountCreatedIcon} style={styles.image} />
         <Spacer paddingTop={60} />
-        <View style={{ alignItems: 'center' }}>
+        <Box alignItems="center">
           {saving ? (
             <Typography.H4>{t('saving account')}</Typography.H4>
           ) : error !== undefined ? (
@@ -127,7 +126,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
               <Typography.Body6>{t('profile created')}</Typography.Body6>
             </>
           )}
-        </View>
+        </Box>
         <Spacer paddingTop={60} />
         {!saving && (
           <Button
@@ -139,7 +138,7 @@ const SaveAccount = ({ navigation }: NavProps) => {
           </Button>
         )}
         <Spacer paddingTop={theme.spacing.m} />
-      </View>
+      </Box>
     </DView>
   );
 };

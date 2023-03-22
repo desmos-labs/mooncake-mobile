@@ -15,6 +15,7 @@ import NftComponent from 'screens/ProfileNfts/components/NftComponent';
 import GetNftsData from 'services/axios/requests/GetNftsData';
 import useStyles from './useStyles';
 
+// PROFILE_NFTS was removed from RootNavigator
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE_NFTS>;
 
 const ProfileNfts = () => {
@@ -68,7 +69,7 @@ const ProfileNfts = () => {
           keyExtractor={item => item.tokenId}
           renderItem={renderNft}
           numColumns={2}
-          style={{ flex: 1, margin: -theme.spacing.m }}
+          style={styles.flatList}
           contentContainerStyle={styles.contentContainer}
           ListEmptyComponent={
             !loading ? (

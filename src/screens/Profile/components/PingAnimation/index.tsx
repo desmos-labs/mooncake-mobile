@@ -1,5 +1,6 @@
 import React from 'react';
 import { ColorValue, View } from 'react-native';
+import { Center } from 'native-base';
 import AnimatedRing from './AnimatedRing';
 
 export interface PingAnimationProps {
@@ -22,7 +23,7 @@ const PingAnimation = (props: PingAnimationProps) => {
   const { size, color } = props;
 
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+    <Center>
       <AnimatedRing {...props} delay={0} />
       <AnimatedRing {...props} delay={1000} />
       <View
@@ -33,7 +34,7 @@ const PingAnimation = (props: PingAnimationProps) => {
           borderRadius: size / 2,
         }}
       />
-    </View>
+    </Center>
   );
 };
 

@@ -3,8 +3,10 @@ import Button from 'components/CustomButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
-import { Image, View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Image } from 'react-native';
+import { Box, useTheme } from 'native-base';
+import CommonStyles from 'config/theme/CommonStyles';
+import useStyles from './useStyles';
 
 export interface EmptyPostComponentProps {
   readonly textLabel: string;
@@ -17,26 +19,19 @@ export interface EmptyPostComponentProps {
  */
 const EmptyPostComponent = (props: EmptyPostComponentProps) => {
   const theme = useTheme();
+  const styles = useStyles();
   const { textLabel, buttonLabel } = props;
 
   return (
-    <View style={{ flex: 1 }}>
+    <Box flex={1}>
       <Spacer paddingVertical={theme.spacing.m} />
-      <Image
-        style={{
-          height: 140,
-          resizeMode: 'contain',
-          marginVertical: theme.spacing.m,
-          alignSelf: 'center',
-        }}
-        source={errorImage}
-      />
-      <Typography.Body6 style={{ textAlign: 'center' }}>{textLabel}</Typography.Body6>
+      <Image style={styles.errorImage} source={errorImage} />
+      <Typography.Body6 style={CommonStyles.textAlign.center}>{textLabel}</Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
       <Button size={44} variant="outlined" mx={100} justifyContent="center">
         {buttonLabel}
       </Button>
-    </View>
+    </Box>
   );
 };
 

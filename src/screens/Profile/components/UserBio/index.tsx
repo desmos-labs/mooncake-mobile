@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import CommonStyles from 'config/theme/CommonStyles';
 
 type Props = {
   /**
@@ -51,10 +52,10 @@ const UserBio = ({ content }: Props) => {
     } else {
       expandView();
     }
-  }, [collapsed]);
+  }, [collapseView, collapsed, expandView]);
 
   if (!content) {
-    return <Typography.Body7 style={{ textAlign: 'left' }}>{t('noBio')}</Typography.Body7>;
+    return <Typography.Body7 style={CommonStyles.textAlign.left}>{t('noBio')}</Typography.Body7>;
   }
 
   return (

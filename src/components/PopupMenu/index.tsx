@@ -60,7 +60,7 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
         </Box>
       );
     });
-  }, [menuItems]);
+  }, [menuItems, styles.icon]);
 
   /**
    * Wrap the Menu trigger function in a useCallback.

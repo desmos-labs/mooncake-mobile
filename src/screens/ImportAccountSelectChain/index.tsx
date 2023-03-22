@@ -19,6 +19,7 @@ import {
   useSetImportAccountState,
 } from '@recoil/screens/importAccountState';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.IMPORT_ACCOUNT_SELECT_CHAIN>;
 
@@ -29,6 +30,7 @@ const ImportAccountSelectChain = () => {
   const [filter, setFilter] = useState('');
   const { onCancel } = useImportAccountState()!;
   const setImportAccountState = useSetImportAccountState();
+  const styles = useStyles();
   useOnBackAction(onCancel, []);
 
   const handlePressChainItem = React.useCallback(
@@ -74,20 +76,14 @@ const ImportAccountSelectChain = () => {
     ({ item, index }: ListRenderItemInfo<SupportedChain>) => {
       if (index === 0) {
         return (
-          <View
-            style={{
-              backgroundColor: 'white',
-              paddingHorizontal: theme.spacing.m,
-              marginHorizontal: -theme.spacing.m,
-              paddingBottom: theme.spacing.m,
-            }}>
+          <View style={styles.renderItem}>
             <SearchBar handleChange={setFilter} searchPlaceHolder={t('searchPlaceholder')} />
           </View>
         );
       }
       return <ChainItem chain={item} handlePress={handlePressChainItem(item)} />;
     },
-    [handlePressChainItem, t, theme.spacing.m],
+    [handlePressChainItem, styles.renderItem, t],
   );
 
   const ItemSeparatorComponent = React.useCallback(() => {

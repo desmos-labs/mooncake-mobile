@@ -34,12 +34,13 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 import MessageListItem from './components/MessageListItem';
 
@@ -183,15 +184,10 @@ const ProfileOperations = () => {
     }
 
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <Center flex={1}>
         <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyIcon} />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
-      </View>
+      </Center>
     );
   }, [isDataLoading, styles.emptyIcon, t]);
 
@@ -248,8 +244,8 @@ const ProfileOperations = () => {
       {/* Messages list */}
       {!isDataLoading && (
         <SectionList
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
+          style={CommonStyles.flex[1]}
+          contentContainerStyle={CommonStyles.flexGrow[1]}
           refreshing={refreshing}
           onRefresh={refreshActions}
           keyExtractor={keyExtractor}

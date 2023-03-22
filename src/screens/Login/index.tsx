@@ -19,6 +19,7 @@ import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
 import useGetPasswordFromBiometrics from 'hooks/useGetPasswordFromBiometrics';
 import { BiometricAuthorizations } from 'types/settings';
 import useOnSubmitPassword from 'screens/Login/hooks';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.LOGIN>;
@@ -148,8 +149,8 @@ const Login = () => {
       backgroundFillScreen
       style={styles.container}>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        style={CommonStyles.flex[1]}
+        contentContainerStyle={CommonStyles.flexGrow[1]}
         keyboardVerticalOffset={Platform.OS === 'ios' ? -100 : 0}
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}>
         <Image source={butterflyLandingIcon} style={styles.logo} />

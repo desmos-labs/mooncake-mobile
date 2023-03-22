@@ -4,7 +4,7 @@ import Typography from 'components/Typography';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box } from 'native-base';
 import SingleProperty from 'screens/NftDetails/components/SingleProperty';
 import useStyles from './useStyles';
 
@@ -14,7 +14,6 @@ interface Props {
 
 const PropertiesSection = (nftData: Props) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('nft');
 
   useEffect(() => {
@@ -22,7 +21,7 @@ const PropertiesSection = (nftData: Props) => {
   }, []);
 
   return (
-    <View style={{ marginTop: theme.spacing.m, flex: 1 }}>
+    <Box mt="m" flex={1}>
       <Typography.H5>{t('properties')}</Typography.H5>
       <Spacer paddingVertical={16}>
         <DropShadowWrapper
@@ -38,7 +37,7 @@ const PropertiesSection = (nftData: Props) => {
           </View>
         </DropShadowWrapper>
       </Spacer>
-    </View>
+    </Box>
   );
 };
 

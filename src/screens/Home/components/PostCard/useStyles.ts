@@ -45,8 +45,19 @@ const useStyles = makeStyle(theme => ({
     left: 'auto',
     right: 0,
   },
-  bottomBarInnerView: { flexDirection: 'row', alignItems: 'center' },
-  mediaView: { alignItems: 'center', marginTop: theme.spacing.m },
+  bottomBarInnerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mediaView: {
+    alignItems: 'center',
+    marginTop: theme.spacing.m,
+  },
+  tipButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: theme.spacing.s,
+  },
 }));
 
 export default useStyles;

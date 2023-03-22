@@ -22,6 +22,11 @@ const useStyles = makeStyle(theme => ({
     marginTop: theme.spacing.m,
     marginBottom: theme.spacing.l,
   },
+  image: {
+    width: 116,
+    height: 116,
+    alignSelf: 'center',
+  },
 }));
 
 export default useStyles;

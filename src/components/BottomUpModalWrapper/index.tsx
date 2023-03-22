@@ -1,8 +1,8 @@
 import { makeStyle } from 'config/theme';
 import React, { useState } from 'react';
-import { Keyboard, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { Keyboard, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 import Animated from 'react-native-reanimated';
 import useModalAnimations from 'screens/Modals/utils/useModalAnimations';
 
@@ -54,10 +54,10 @@ const BottomUpModalWrapper: React.FC<Props> = props => {
                 paddingBottom: paddingBottom || theme.spacing.l,
               },
             ]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <HStack justifyContent="center">
               <Animated.View style={[styles.tabIconLeft, tabAnimatedStyleLeft]} />
               <Animated.View style={[styles.tabIconRight, tabAnimatedStyleRight]} />
-            </View>
+            </HStack>
             {children}
           </TouchableOpacity>
         </Animated.View>

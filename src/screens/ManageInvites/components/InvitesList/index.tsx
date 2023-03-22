@@ -13,12 +13,13 @@ import {
   SectionListData,
   View,
 } from 'react-native';
-import { useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import InviteComponent from 'screens/ManageInvites/components/InviteComponent';
 import { Invite } from 'types/invites';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/ManageInvites';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 interface Props {
@@ -52,10 +53,10 @@ const InvitesList = ({
   const EmptyInvites = useMemo(() => {
     return (
       <View style={styles.container}>
-        <View style={{ alignItems: 'center' }}>
+        <Box alignItems="center">
           <Image source={emptyInvitesImage} style={styles.emptyImage} />
           <Typography.Body5>{t('no invites yet')}</Typography.Body5>
-        </View>
+        </Box>
 
         <Spacer paddingVertical="l" />
 
@@ -88,21 +89,14 @@ const InvitesList = ({
 
   const bottomComponent = useMemo(() => {
     return totalInvites === maxInvitations ? (
-      <Typography.Body6
-        style={{
-          color: theme.colors.grey01,
-          alignSelf: 'center',
-          textAlign: 'center',
-        }}>
-        {t('sent all')}
-      </Typography.Body6>
+      <Typography.Body6 style={styles.sendAllText}>{t('sent all')}</Typography.Body6>
     ) : (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        additionalStyle={{ marginHorizontal: theme.spacing.m }}>
+        mx="m">
         {t('invite more')}
       </Button>
     );
@@ -117,9 +111,9 @@ const InvitesList = ({
   ]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <Box flex={1}>
       {loading ? (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+        <SafeAreaView style={styles.loaderContainer}>
           <ActivityIndicator color={theme.colors.surfaceBlack} />
         </SafeAreaView>
       ) : (
@@ -128,11 +122,8 @@ const InvitesList = ({
             keyExtractor={(item, index) => item.code.toString() + index}
             refreshing={loading}
             onRefresh={refetchInvites}
-            style={{ flex: 1 }}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingHorizontal: theme.spacing.m,
-            }}
+            style={CommonStyles.flex[1]}
+            contentContainerStyle={styles.sectionListContentContainer}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={EmptyInvites}
             sections={inviteSections}
@@ -146,7 +137,7 @@ const InvitesList = ({
           {totalInvites !== 0 && bottomComponent}
         </>
       )}
-    </View>
+    </Box>
   );
 };
 

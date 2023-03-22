@@ -5,12 +5,6 @@ import { makeStyle } from 'config/theme';
  */
 const useStyles = makeStyle(theme => ({
   root: { flex: 1, paddingTop: theme.spacing.m },
-  scrollViewOuter: {
-    flex: 1,
-  },
-  scrollViewInner: {
-    flexGrow: 1,
-  },
   itemView: {
     width: '100%',
     height: '100%',
@@ -26,6 +20,9 @@ const useStyles = makeStyle(theme => ({
     width: 8,
     height: 8,
     marginHorizontal: 6,
+  },
+  topBar: {
+    zIndex: 2,
   },
 }));
 

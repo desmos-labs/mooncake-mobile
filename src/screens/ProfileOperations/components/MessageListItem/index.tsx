@@ -3,9 +3,9 @@ import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDe
 import React, { memo, ReactNode } from 'react';
 import { View } from 'react-native';
 import FastImage, { Source } from 'react-native-fast-image';
-import { useTheme } from 'native-base';
 import { formatCoins } from 'lib/FormatUtils';
 import { Coin } from '@cosmjs/stargate';
+import { HStack } from 'native-base';
 import useStyles from './useStyles';
 
 export interface MessageListItemProps {
@@ -34,7 +34,6 @@ export interface MessageListItemProps {
  * @constructor
  */
 const MessageListItem = (props: MessageListItemProps) => {
-  const theme = useTheme();
   const styles = useStyles();
 
   const { image, title, fees, timestamp } = props;
@@ -44,18 +43,16 @@ const MessageListItem = (props: MessageListItemProps) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.flexRowView}>
+      <HStack alignItems="center">
         <FastImage style={styles.avatar} source={image} />
         <View style={styles.profileView}>
           <Typography.Subtitle3>{title}</Typography.Subtitle3>
-          <Typography.Body7 style={{ color: theme.colors.grey02, marginTop: 2 }}>
-            {formattedDate}
-          </Typography.Body7>
+          <Typography.Body7 style={styles.formattedDate}>{formattedDate}</Typography.Body7>
         </View>
         <Typography.Subtitle3 numberOfLines={1} style={styles.feesText}>
           -{formatCoins(fees, ', ')}
         </Typography.Subtitle3>
-      </View>
+      </HStack>
     </View>
   );
 };

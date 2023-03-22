@@ -16,6 +16,7 @@ import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnectio
 import { useActiveAccount } from '@recoil/accounts';
 import { ApplicationLink } from 'types/desmos';
 import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
+import CommonStyles from 'config/theme/CommonStyles';
 import { useCreateAppLink, useUnlinkApplication } from './hooks';
 import useStyles from './useStyles';
 
@@ -83,7 +84,7 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
           ListEmptyComponent={ListEmptyComponent}
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          style={{ overflow: 'visible' }}
+          style={CommonStyles.overflow.visible}
         />
       )}
     </DView>

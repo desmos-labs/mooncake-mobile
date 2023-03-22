@@ -4,6 +4,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 type Props = {
@@ -41,7 +42,7 @@ const PostComponent = (props: Props) => {
         </View>
       );
     } else if (!post.text && post.attachments?.length !== 0) {
-      return <View style={{ flex: 1 }}>{MediaAttachment}</View>;
+      return <View style={CommonStyles.flex[1]}>{MediaAttachment}</View>;
     } else {
       return (
         <View>
@@ -50,7 +51,7 @@ const PostComponent = (props: Props) => {
         </View>
       );
     }
-  }, [MediaAttachment, post.attachments?.length, post.text, theme.spacing.m]);
+  }, [MediaAttachment, post.attachments?.length, post.text, styles.textContainer, theme.spacing.m]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering

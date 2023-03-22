@@ -1,6 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
 import Button from 'components/CustomButton';
 // dismiss button
 // import {iconCross} from 'assets/images';
@@ -20,6 +19,7 @@ import {
 } from 'react-native';
 import { useTheme } from 'native-base';
 import Spacer from 'components/Spacer';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type ConfirmModalParams = {
@@ -74,7 +74,7 @@ export type ConfirmModalParams = {
    * The mode of the secondary button.
    * @default text
    */
-  secondaryButtonMode?: ButtonMode;
+  secondaryButtonMode?: Pick<React.ComponentProps<typeof Button>, 'variant'>;
 };
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.CONFIRM_MODAL>;
@@ -92,8 +92,8 @@ const ConfirmModal = () => {
       onPressSecondary,
       removeModalAfterButtonPress,
       image,
-      primaryButtonMode = ButtonMode.CONTAINED,
-      secondaryButtonMode = ButtonMode.TEXT,
+      primaryButtonMode = 'solid',
+      secondaryButtonMode = 'link',
     },
   } = useRoute<NavProps['route']>();
 
@@ -111,6 +111,7 @@ const ConfirmModal = () => {
     }
   };
 
+  // @ts-ignore
   return (
     <View style={styles.container}>
       {/* invoke dismiss fn or goBack if user presses the background */}
@@ -123,7 +124,7 @@ const ConfirmModal = () => {
         {image && <Image source={image} style={styles.imageStyle} />}
 
         <Spacer paddingBottom={16}>
-          <Typography.H5 style={{ textAlign: 'center' }}>{title}</Typography.H5>
+          <Typography.H5 style={CommonStyles.textAlign.center}>{title}</Typography.H5>
         </Spacer>
 
         <Typography.Body5 style={[styles.subtitleText, subtitleStyle]}>
@@ -145,6 +146,7 @@ const ConfirmModal = () => {
               backgroundColor={theme.colors.surfaceBlack}
               alignSelf="stretch"
               // TODO: fix this properly
+              // @ts-ignore
               variant={primaryButtonMode as any}
               onPress={onPressPrimaryButton}>
               {primaryButtonLabel}
@@ -154,7 +156,7 @@ const ConfirmModal = () => {
             <Spacer paddingTop={theme.spacing.m}>
               <Button
                 size={44}
-                mb={theme.spacing.s}
+                mb="s"
                 alignSelf="stretch"
                 variant={secondaryButtonMode as any}
                 onPress={onPressSecondary}>

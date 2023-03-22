@@ -54,15 +54,15 @@ const RadialTextCounter = ({
 
   const fillColor = React.useMemo(() => {
     return customFillColor || theme.colors.iconGrey;
-  }, [customFillColor]);
+  }, [customFillColor, theme.colors.iconGrey]);
 
   const emptyColor = React.useMemo(() => {
     return customEmptyColor || theme.colors.lightGrey01;
-  }, [customEmptyColor]);
+  }, [customEmptyColor, theme.colors.lightGrey01]);
 
   const warnColor = React.useMemo(() => {
     return customWarnColor || theme.colors.pink01;
-  }, [customWarnColor]);
+  }, [customWarnColor, theme.colors.pink01]);
 
   return (
     <AnimatedCircularProgress

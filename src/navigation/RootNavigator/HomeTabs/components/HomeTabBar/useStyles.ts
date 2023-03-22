@@ -36,6 +36,11 @@ const useStyles = makeStyle(theme => ({
     height: 36,
     resizeMode: 'contain',
   },
+  searchBarRightElement: {
+    position: 'absolute',
+    left: 'auto',
+    right: 0,
+  },
 }));
 
 export default useStyles;

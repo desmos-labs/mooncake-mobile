@@ -8,8 +8,9 @@ import {
   ViewStyle,
 } from 'react-native';
 import FastImage, { ImageStyle, Source } from 'react-native-fast-image';
+import useStyles from './useStyles';
 
-interface Props extends TouchableOpacityProps {
+export interface Props extends TouchableOpacityProps {
   /**
    * The source of the image.
    */
@@ -43,16 +44,18 @@ interface Props extends TouchableOpacityProps {
   tintColor?: string;
 }
 
-const ImageButton = ({
-  image,
-  style,
-  overlayComponent,
-  overlayPosition,
-  hitSlopValue,
-  buttonStyle,
-  tintColor,
-  ...rest
-}: Props) => {
+const ImageButton = (props: Props) => {
+  const {
+    image,
+    style,
+    overlayComponent,
+    overlayPosition,
+    hitSlopValue,
+    buttonStyle,
+    tintColor,
+    ...rest
+  } = props;
+  const styles = useStyles(props);
   const hitSlop = hitSlopValue
     ? {
         top: hitSlopValue,
@@ -68,10 +71,7 @@ const ImageButton = ({
   }, [image]);
 
   return (
-    <TouchableOpacity
-      style={[{ opacity: rest.disabled ? 0.3 : 1 }, buttonStyle]}
-      hitSlop={hitSlop}
-      {...rest}>
+    <TouchableOpacity style={[styles.baseButtonStyle, buttonStyle]} hitSlop={hitSlop} {...rest}>
       <FastImage resizeMode="cover" style={style} source={imageSource} tintColor={tintColor} />
       {overlayComponent && (
         <View style={[StyleSheet.absoluteFillObject, { ...overlayPosition }]}>

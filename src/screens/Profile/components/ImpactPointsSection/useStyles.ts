@@ -7,6 +7,18 @@ const useStyles = makeStyle(theme => ({
     paddingVertical: theme.spacing.m,
     height: verticalScale(110),
   },
+  infoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoButtonText: {
+    color: theme.colors.surfaceBlack,
+    marginRight: 4,
+  },
+  infoButtonIcon: {
+    width: 22,
+    height: 22,
+  },
 }));
 
 export default useStyles;

@@ -9,7 +9,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useTheme } from 'native-base';
+import { Box, HStack, useTheme, VStack } from 'native-base';
 import { Invite } from 'types/invites';
 import useStyles from './useStyles';
 
@@ -28,21 +28,17 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
     return (
       <View style={styles.flexRowView}>
         {invite.claimer ? (
-          <View style={{ flexDirection: 'column', flex: 1 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <VStack flex={1}>
+            <HStack justifyContent="space-between">
               <Typography.Body5>
                 {t('invite')} # {index}
               </Typography.Body5>
               <Typography.Body7 style={{ color: theme.colors.midGrey }}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </HStack>
             <Spacer paddingBottom={theme.spacing.s} />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+            <HStack alignItems="center">
               <FastImage style={styles.avatar} source={getProfilePicture(invite.claimer)} />
               <View style={styles.profileView}>
                 <Typography.Subtitle2 numberOfLines={1}>
@@ -52,45 +48,45 @@ const InviteComponent: React.FC<InviteComponentProps> = ({ index, invite }) => {
                   @{invite.claimer?.dTag?.trimStart() || 'no-dtag'}
                 </Typography.Body7>
               </View>
-            </View>
-          </View>
+            </HStack>
+          </VStack>
         ) : (
-          <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Box flex={1}>
+            <HStack justifyContent="space-between">
               <Typography.Body5>
                 {t('invite')} # {index}
               </Typography.Body5>
               <Typography.Body7 style={{ color: theme.colors.midGrey }}>
                 {formattedDate}
               </Typography.Body7>
-            </View>
+            </HStack>
             <Spacer paddingBottom={theme.spacing.s} />
             <View>
-              <View style={{ flexDirection: 'row' }}>
+              <HStack>
                 <Typography.Body7 style={{ color: theme.colors.midGrey }}>
                   {invite.link}
                 </Typography.Body7>
                 <ImageButton
-                  buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
+                  buttonStyle={styles.buttonStyle}
                   image={copyIcon}
-                  style={{ width: 16, height: 16 }}
+                  style={styles.buttonImage}
                   onPress={() => Clipboard.setString(invite.link)}
                 />
-              </View>
+              </HStack>
               <Spacer paddingTop={theme.spacing.s} />
-              <View style={{ flexDirection: 'row' }}>
+              <HStack>
                 <Typography.Body7 style={{ color: theme.colors.midGrey }}>
                   {invite.code}
                 </Typography.Body7>
                 <ImageButton
-                  buttonStyle={{ alignSelf: 'center', marginLeft: 6 }}
+                  buttonStyle={styles.buttonStyle}
                   image={copyIcon}
-                  style={{ width: 16, height: 16 }}
+                  style={styles.buttonImage}
                   onPress={() => Clipboard.setString(invite.code)}
                 />
-              </View>
+              </HStack>
             </View>
-          </View>
+          </Box>
         )}
       </View>
     );

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { ApplicationLinkState } from '@desmoslabs/desmjs-types/desmos/profiles/v3/models_app_links';
 import { ApplicationLink } from 'types/desmos';
+import { HStack } from 'native-base';
 import useStyles from './useStyles';
 
 type Props = {
@@ -29,45 +30,26 @@ const AppConnectedItem = ({ applicationLink, onPressDisconnect }: Props) => {
       outerShadowProps={{
         startColor: 'rgba(37, 87, 188, 0.05)',
         offset: [10, 20],
-        radius: 40,
         distance: 40,
       }}
       innerShadowProps={{
         startColor: 'rgba(16, 24, 40, 0.05)',
         offset: [0, 1],
-        radius: 10,
         distance: 10,
       }}>
       <View style={styles.container}>
         <Image style={styles.icon} source={GetAppIcon(applicationLink.application)} />
 
         <View style={styles.centerGroup}>
-          <View style={{ flexDirection: 'row' }}>
+          <HStack>
             <Typography.H5 style={styles.baseText}>{applicationLink.username}</Typography.H5>
             {applicationLink.state ===
             ApplicationLinkState.APPLICATION_LINK_STATE_VERIFICATION_SUCCESS ? (
-              <Image
-                source={verifiedIcon}
-                style={{
-                  width: 20,
-                  height: 20,
-                  alignSelf: 'center',
-                  marginLeft: 4,
-                }}
-              />
+              <Image source={verifiedIcon} style={styles.verifiedIcon} />
             ) : (
-              <Image
-                source={verifiedIcon}
-                style={{
-                  tintColor: 'rgba(221, 221, 221, 1)',
-                  width: 20,
-                  height: 20,
-                  alignSelf: 'center',
-                  marginLeft: 4,
-                }}
-              />
+              <Image source={verifiedIcon} style={styles.unverifiedIcon} />
             )}
-          </View>
+          </HStack>
 
           <View style={styles.addressGroup}>
             <Typography.Body7 style={styles.baseText} numberOfLines={1} ellipsizeMode="middle">

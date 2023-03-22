@@ -48,10 +48,11 @@ export type Props = {
    */
   handlePostComment: () => void;
 
+  // TODO: marked for deletion
   /**
    * Is an action being processed? (block out interaction buttons)
    */
-  loading?: boolean;
+  // loading?: boolean;
 
   /**
    * A reference to the comment input box.
@@ -68,7 +69,7 @@ const EnterCommentBottomBar = (props: Props) => {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
 
-  const { author, onIconPress, handlePostComment, textInputRef, loading } = props;
+  const { author, onIconPress, handlePostComment, textInputRef } = props;
 
   // -------------------------------------------------------------------------------------
   // --- State
@@ -147,7 +148,14 @@ const EnterCommentBottomBar = (props: Props) => {
         {t('post')}
       </Button>
     );
-  }, [attachment, comment.length, loading, handlePostComment]);
+  }, [
+    theme.colors.white,
+    theme.colors.butterOrange01,
+    attachment,
+    comment.length,
+    handlePostComment,
+    t,
+  ]);
 
   // -------------------------------------------------------------------------------------
   // --- Rendering
@@ -207,9 +215,6 @@ const EnterCommentBottomBar = (props: Props) => {
             imageSelected={false}
             handlePressGallery={imageFromLibrary}
             handlePressCamera={imageFromCamera}
-            handlePressMention={() => {
-              console.log('placeholder');
-            }}
             rightComponent={RightButtonComponent}
             commentLength={comment.length}
           />

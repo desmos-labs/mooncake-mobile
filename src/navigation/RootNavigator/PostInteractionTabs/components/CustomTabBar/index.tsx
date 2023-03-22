@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, View, TouchableOpacity } from 'react-native';
 import Typography from 'components/Typography';
+import { Box } from 'native-base';
 import useStyles from './useStyles';
 
 const CustomTabBar = ({ state, descriptors, navigation, position }: any) => {
@@ -60,10 +61,13 @@ const CustomTabBar = ({ state, descriptors, navigation, position }: any) => {
             onPress={onPress}
             onLongPress={onLongPress}
             style={styles.tabButton}>
-            <Animated.View style={{ opacity, alignItems: 'center' }}>
-              <Typography.Button2 style={{ marginBottom: 4 }}>{label}</Typography.Button2>
+            <Box opacity={opacity} alignItems="center">
+              <Box mb="xs">
+                <Typography.Button2>{label}</Typography.Button2>
+              </Box>
+
               <Animated.View style={[styles.indicatorStyle, { opacity: indicatorOpacity }]} />
-            </Animated.View>
+            </Box>
           </TouchableOpacity>
         );
       })}

@@ -7,7 +7,7 @@ import Typography from 'components/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
-import { Text, useTheme } from 'native-base';
+import { Box, Text, useTheme } from 'native-base';
 import useStyles from './useStyles';
 
 /**
@@ -31,10 +31,8 @@ const WelcomeBack = () => {
         {t('description')}
       </Text>
       <Spacer paddingVertical={20} />
-      <View style={{ alignSelf: 'stretch' }}>
-        <Typography.Subtitle2 style={{ color: theme.colors.white, marginBottom: 6 }}>
-          {t('inputLabel')}
-        </Typography.Subtitle2>
+      <Box alignSelf="stretch">
+        <Typography.Subtitle2 style={styles.inputLabel}>{t('inputLabel')}</Typography.Subtitle2>
 
         <DSecureTextInput
           placeholder={t('inputPlaceholder')}
@@ -51,7 +49,7 @@ const WelcomeBack = () => {
             {t('common:confirm')}
           </Button>
         </Spacer>
-      </View>
+      </Box>
 
       <View style={styles.forgotPwGroup}>
         <Button variant="link" size={44} textColor={theme.colors.white}>

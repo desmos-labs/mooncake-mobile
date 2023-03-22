@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'native-base';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type AuthorizationModalParams = {
@@ -70,7 +71,7 @@ const AuthorizationModal = () => {
       />
       <View style={styles.innerContainer}>
         <Spacer paddingBottom={16}>
-          <Typography.H4 style={{ textAlign: 'center' }}>{t('permissions')}</Typography.H4>
+          <Typography.H4 style={CommonStyles.textAlign.center}>{t('permissions')}</Typography.H4>
         </Spacer>
 
         <Typography.Body5>{t('permissions modal subtitle')}</Typography.Body5>

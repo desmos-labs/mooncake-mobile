@@ -150,6 +150,8 @@ const BroadcastTxOnChain: React.FC = () => {
         {!broadcastingTx && (
           <>
             {/* TODO: Create a proper UI to display the tx messages */}
+            {/* ignored as this component is temporary */}
+            {/* eslint-disable-next-line react-native/no-inline-styles */}
             <ScrollView style={{ minHeight: '80%', flex: 1 }}>
               <Typography.Body5>{JSON.stringify(messages)}</Typography.Body5>
             </ScrollView>

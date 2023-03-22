@@ -19,6 +19,20 @@ const useStyles = makeStyle(theme => ({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  imageButton: {
+    height: 32,
+    width: 32,
+    alignSelf: 'center',
+  },
+  imageButtonOverlay: {
+    left: 18,
+    top: 2,
+  },
+  middleButtonImage: {
+    height: 41,
+    width: 41,
+    alignSelf: 'center',
+  },
 }));
 
 export default useStyles;

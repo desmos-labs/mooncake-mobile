@@ -109,7 +109,7 @@ const ReportPost = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={CommonStyles.flex[1]}
       keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : 0}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <BottomUpModalWrapper goBack={goBack}>
