@@ -90,6 +90,13 @@ export const convertPostToMsgCreatePost = (post: Post): MsgCreatePostEncodeObjec
 export const findSamePost = (posts: Post[], post: Post): number =>
   posts.findIndex(p => p.subspaceId === post.subspaceId && p.externalId === post.externalId);
 
+/**
+ * Allows to sort the given {@param posts} by creation date, from the most recent to the oldest.
+ */
+export const sortPostsByCreationDate = (posts: Post[]): Post[] => {
+  return posts.sort((a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate));
+};
+
 export enum PostUpdateType {
   CREATE,
   REPLACE,
@@ -206,9 +213,5 @@ export const mergePosts = (
   });
 
   // Order the posts to store based on their creation date descending
-  postsToStore = postsToStore.sort(
-    (a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate),
-  );
-
-  return [postsToStore, postsUpdates];
+  return [sortPostsByCreationDate(postsToStore), postsUpdates];
 };

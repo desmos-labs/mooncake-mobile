@@ -2,7 +2,7 @@ import { useActiveAccountAddress } from '@recoil/accounts';
 import { useAppStateValue } from '@recoil/appState';
 import { Post } from 'types/posts';
 import { useCallback, useState } from 'react';
-import { mergePosts } from 'lib/PostsUtils';
+import { mergePosts, sortPostsByCreationDate } from 'lib/PostsUtils';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { DocumentNode, useQuery } from '@apollo/client';
 
@@ -84,6 +84,7 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
 
   // Hook state
   const [posts, setPosts] = useState<Post[]>(getInitialPosts(userAddress));
+  const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -100,17 +101,20 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
         const [mergedPosts] = mergePosts(existingPosts, onChainPosts);
         return mergedPosts;
       });
+      setLoading(false);
+      setRefreshing(false);
+      setFetchingMore(false);
     },
     [setPosts],
   );
 
-  const { loading, refetch, fetchMore } = useQuery(options.query, {
+  const { refetch, fetchMore } = useQuery(options.query, {
     variables: {
       ...options.variables,
       subspaceId,
       user: userAddress,
       offset: 0,
-      limit: options.postsPerPage ?? 50,
+      limit: options.postsPerPage ?? 20,
     },
     onCompleted: onCompletedCallback,
   });
@@ -126,15 +130,19 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
         variables: { offset: posts.length },
 
         // Merge the data
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          posts: fetchMoreResult ? [...prev.posts, ...queryMapper(fetchMoreResult).posts] : prev,
-        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          if (queryMapper(fetchMoreResult).posts.length === 0) {
+            setFetchingMore(false);
+          }
+          return {
+            posts: fetchMoreResult ? [...prev.posts, ...queryMapper(fetchMoreResult).posts] : prev,
+          };
+        },
       });
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [fetchMore, posts.length, queryMapper]);
 
@@ -148,15 +156,13 @@ const usePostsDataByAddress = (options: PostsDataByAddressOptions) => {
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(queryMapper(data));
     } catch (e: any) {
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setRefreshing(false);
+      setError(e.toString());
     }
   }, [onCompletedCallback, refetch, queryMapper]);
 
   return {
-    posts,
+    posts: sortPostsByCreationDate(posts),
     loading,
     refetch: refetchPosts,
     refreshing,

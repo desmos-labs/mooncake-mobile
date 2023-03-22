@@ -18,8 +18,8 @@ const useStyles = makeStyle(theme => ({
     marginBottom: 140,
   },
   emptyListImage: {
-    width: 230,
-    height: 116,
+    width: 72,
+    height: 72,
     resizeMode: 'contain',
     marginVertical: theme.spacing.m,
     alignSelf: 'center',

@@ -66,7 +66,9 @@ import ProfileConnections, {
 import ProfileOperations, { ProfileOperationsParams } from 'screens/ProfileOperations';
 import SelectTweet, { SelectTweetParams } from 'screens/SelectTweet';
 import Login, { LoginParams } from 'screens/Login';
-import { SaveProfileModalParams } from 'screens/Modals/UploadProfilePicturesModal';
+import UploadProfilePicturesModal, {
+  SaveProfileModalParams,
+} from 'screens/Modals/UploadProfilePicturesModal';
 import {
   BottomSheetAndroid,
   ModalPresentationIOS,
@@ -456,6 +458,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.IMPACT_POINTS_MODAL} component={ImpactPointsModal} />
         <Stack.Screen name={ROUTES.POST_REPORT} component={ReportPost} />
         <Stack.Screen name={ROUTES.AUTHORIZATION_MODAL} component={AuthorizationModal} />
+        <Stack.Screen
+          name={ROUTES.UPLOAD_PROFILE_PICTURES_MODALS}
+          component={UploadProfilePicturesModal}
+        />
         <Stack.Screen
           name={ROUTES.BACKUP_PHRASE_BOTTOM_MODAL}
           component={BackupPhraseBottomModal}

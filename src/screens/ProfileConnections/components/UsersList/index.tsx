@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback, useMemo } from 'react';
 import { FlatList, Image, ListRenderItemInfo, View } from 'react-native';
 import useNavigateToProfile from 'hooks/navigation/useNavigateToProfile';
 import { DesmosProfile } from 'types/desmos';
-import { errorImage } from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import Typography from 'components/Typography';
 import ItemSeparator from '../../../UsersList/components/ItemSeparator';
 import UserListItem from '../UserListItem';
@@ -10,10 +10,6 @@ import useStyles from './useStyles';
 import Loading from '../Loading';
 
 export interface UsersListProps {
-  /**
-   * Address of the user for which the list is being rendered.
-   */
-  readonly userAddress: string;
   /**
    * The list of users to render.
    */
@@ -57,8 +53,7 @@ const ITEM_SEPARATOR_HEIGHT = 15;
 export const UsersList = (props: UsersListProps) => {
   const styles = useStyles();
 
-  const { userAddress, users, loading, fetchMore, fetchingMore, refresh, refreshing, emptyText } =
-    props;
+  const { users, loading, fetchMore, fetchingMore, refresh, refreshing, emptyText } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -87,17 +82,23 @@ export const UsersList = (props: UsersListProps) => {
   // Callback used to render each item within the list
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<DesmosProfile>) => {
-      return <UserListItem profileAddress={userAddress} user={item} onPress={navigateToProfile} />;
+      return (
+        <UserListItem
+          profileAddress={item.address}
+          user={item}
+          onPress={() => navigateToProfile(item.address)}
+        />
+      );
     },
-    [navigateToProfile, userAddress],
+    [navigateToProfile],
   );
 
   // Component used to render an empty list
   const EmptyComponent = useMemo(() => {
     return (
       <View style={styles.emptyListView}>
-        <Image style={styles.emptyListImage} source={errorImage} />
-        <Typography.Subtitle1 style={styles.emptyListText}>{emptyText}</Typography.Subtitle1>
+        <Image style={styles.emptyListImage} source={emptyListPlaceholder} />
+        <Typography.Body5 style={styles.emptyListText}>{emptyText}</Typography.Body5>
       </View>
     );
   }, [emptyText, styles.emptyListImage, styles.emptyListText, styles.emptyListView]);

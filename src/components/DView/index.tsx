@@ -44,6 +44,7 @@ export type Props = SafeAreaViewProps & {
   showLoadingOverlay?: boolean;
   onBackgroundPress?: () => void;
   backgroundFillScreen?: boolean;
+  onTouchStart?: () => void;
 };
 // TODO fix statusBarStyle accordingly with the theme
 const DView: React.FC<Props> = props => {
@@ -62,6 +63,7 @@ const DView: React.FC<Props> = props => {
     edges,
     showLoadingOverlay,
     onBackgroundPress,
+    onTouchStart,
     ...rest
   } = props;
   const styles = useStyles(props);
@@ -80,6 +82,7 @@ const DView: React.FC<Props> = props => {
         <SafeAreaView
           edges={edges ?? ['bottom', 'left', 'right', 'top']}
           style={[styles.root, backgroundColor ? { backgroundColor } : {}]}
+          onTouchStart={onTouchStart}
           {...rest}>
           <StatusBar
             barStyle="dark-content"

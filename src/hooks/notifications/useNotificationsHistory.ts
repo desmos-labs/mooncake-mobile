@@ -196,11 +196,16 @@ const useNotificationsHistory = (notificationsPerPage: number = 20) => {
       // Fetch more notifications
       await fetchMore({
         variables: { offset: notifications.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          notifications: fetchMoreResult
-            ? [...prev.notifications, ...fetchMoreResult.notifications]
-            : prev,
-        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          // If there are no more notifications, stop fetching more
+          if (fetchMoreResult.notifications.length === 0) {
+            setFetchingMore(false);
+          }
+          return {
+            notifications: [...prev.notifications, ...fetchMoreResult.notifications],
+          };
+        },
       });
     } catch (e: any) {
       setFetchingMore(false);

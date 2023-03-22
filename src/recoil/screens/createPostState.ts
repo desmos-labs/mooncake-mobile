@@ -125,7 +125,7 @@ export const useAddCreatePostAttachment = () => {
     (attachment: UploadAssetType) => {
       setCreatePostState(state => {
         const attachments = state.attachments ?? [];
-        if (!attachments.some(a => a === attachment)) {
+        if (!attachments.some(a => a.uri === attachment.uri)) {
           return {
             ...state,
             attachments: [...attachments, attachment],
@@ -143,14 +143,14 @@ export const useAddCreatePostAttachment = () => {
 };
 
 /**
- * Hook that allows to remove an attachment from the create post state.
+ * Hook that allows to remove an attachment from the createPostState.
  */
 export const useRemoveCreatePostAttachment = () => {
   const setCreatePostState = useSetRecoilState(createPostState);
   return React.useCallback(
     (attachment: UploadAssetType) => {
       setCreatePostState(state => {
-        const attachments = state.attachments?.filter(a => a !== attachment);
+        const attachments = state.attachments?.filter(a => a.uri !== attachment.uri);
         return {
           ...state,
           attachments,

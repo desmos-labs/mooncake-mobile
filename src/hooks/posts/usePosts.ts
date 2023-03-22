@@ -178,9 +178,16 @@ const usePosts = (queryType: PostsQueryType) => {
       setFetchingMore(true);
       await fetchMore({
         variables: { offset: posts.length },
-        updateQuery: (prev, { fetchMoreResult }) => ({
-          posts: fetchMoreResult ? [...prev.posts, ...fetchMoreResult.posts] : prev,
-        }),
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          // If there are no more posts, stop fetching more
+          if (fetchMoreResult.posts.length === 0) {
+            setFetchingMore(false);
+          }
+          return {
+            posts: [...prev.posts, ...fetchMoreResult.posts],
+          };
+        },
       });
     } catch (e: any) {
       setFetchingMore(false);

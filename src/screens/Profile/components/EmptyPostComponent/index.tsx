@@ -1,12 +1,13 @@
-import { errorImage } from 'assets/images';
+import { emptyListPlaceholder } from 'assets/images';
 import Button from 'components/CustomButton';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';
-import { Image } from 'react-native';
-import { Box, useTheme } from 'native-base';
-import CommonStyles from 'config/theme/CommonStyles';
-import useStyles from './useStyles';
+import { Image, View } from 'react-native';
+import { useTheme } from 'native-base';
+import { makeStyle } from 'config/theme';
+import useNavigateToHome from 'hooks/navigation/useNavigateToHome';
+import ROUTES from 'navigation/routes';
 
 export interface EmptyPostComponentProps {
   readonly textLabel: string;
@@ -19,20 +20,45 @@ export interface EmptyPostComponentProps {
  */
 const EmptyPostComponent = (props: EmptyPostComponentProps) => {
   const theme = useTheme();
-  const styles = useStyles();
   const { textLabel, buttonLabel } = props;
-
+  const styles = useStyles();
+  const navigateToHome = useNavigateToHome();
   return (
-    <Box flex={1}>
+    <View style={styles.container}>
       <Spacer paddingVertical={theme.spacing.m} />
-      <Image style={styles.errorImage} source={errorImage} />
-      <Typography.Body6 style={CommonStyles.textAlign.center}>{textLabel}</Typography.Body6>
+      <Image style={styles.emptyImage} source={emptyListPlaceholder} />
+      <Typography.Body6 style={styles.text}>{textLabel}</Typography.Body6>
       <Spacer paddingVertical={theme.spacing.m} />
-      <Button size={44} variant="outlined" mx={100} justifyContent="center">
+      <Button
+        onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}
+        size={44}
+        variant="outlined"
+        mx={100}
+        justifyContent="center">
         {buttonLabel}
       </Button>
-    </Box>
+    </View>
   );
 };
+
+const useStyles = makeStyle(theme => ({
+  container: {
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: theme.spacing.xl,
+    backgroundColor: theme.colors.white,
+  },
+  emptyImage: {
+    height: 72,
+    resizeMode: 'contain',
+    marginVertical: theme.spacing.m,
+    alignSelf: 'center',
+  },
+  text: { textAlign: 'center' },
+  button: {
+    marginHorizontal: 150,
+    justifyContent: 'center',
+  },
+}));
 
 export default EmptyPostComponent;

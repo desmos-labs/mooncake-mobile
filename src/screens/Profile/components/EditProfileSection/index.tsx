@@ -1,16 +1,9 @@
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Typography from 'components/Typography';
-import FastImage from 'react-native-fast-image';
-import { connectIcon } from 'assets/images';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from 'native-base';
 import useSaveProfile from 'hooks/profiles/useSaveProfile';
-import { ApplicationLink, DesmosProfile } from 'types/desmos';
-import ROUTES from 'navigation/routes';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootNavigatorParamList } from 'navigation/RootNavigator';
+import { DesmosProfile } from 'types/desmos';
 import useReturnToCurrentScreen from 'hooks/navigation/useReturnToCurrentScreen';
 import useStyles from './useStyles';
 
@@ -19,7 +12,6 @@ interface EditProfileSectionProps {
    * Profile to be edited.
    */
   profile: DesmosProfile;
-  appLinks: ApplicationLink[];
 }
 
 /**
@@ -28,11 +20,9 @@ interface EditProfileSectionProps {
  */
 const EditProfileSection = (props: EditProfileSectionProps) => {
   const { t } = useTranslation('profile');
-  const theme = useTheme();
   const styles = useStyles();
-  const { navigate } = useNavigation<StackNavigationProp<RootNavigatorParamList>>();
 
-  const { profile, appLinks } = props;
+  const { profile } = props;
 
   // -------------------------------------------------------------------------------------
   // --- Hooks
@@ -52,12 +42,6 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
     });
   }, [profile, returnToCurrentScreen, saveProfile]);
 
-  const handleConnectionButtonPressed = useCallback(() => {
-    navigate(ROUTES.MANAGE_CONNECTIONS_MODAL, {
-      appLinks,
-    });
-  }, [appLinks, navigate]);
-
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
   // -------------------------------------------------------------------------------------
@@ -66,9 +50,6 @@ const EditProfileSection = (props: EditProfileSectionProps) => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.editButton} onPress={handleSaveProfile}>
         <Typography.Subtitle4>{t('edit profile')}</Typography.Subtitle4>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.connectButton} onPress={handleConnectionButtonPressed}>
-        <FastImage source={connectIcon} style={styles.icon} tintColor={theme.colors.surfaceBlack} />
       </TouchableOpacity>
     </View>
   );

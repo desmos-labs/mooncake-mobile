@@ -2,7 +2,6 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
-import MaterialTopTabBar from '@react-navigation/material-top-tabs/src/views/MaterialTopTabBar';
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import DView from 'components/DView';
@@ -98,7 +97,6 @@ const ProfilePosts = () => {
     tabBarStyle: styles.tabBar,
     tabBarItemStyle: styles.tabBarItem,
     tabBarLabelStyle: styles.tabBarLabel,
-    tabBarActiveTintColor: theme.colors.midGrey,
     tabBarInactiveTintColor: theme.colors.grey01,
     tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled,
@@ -114,10 +112,7 @@ const ProfilePosts = () => {
       onTouchStart={disableParentSwipeLeft}>
       <Spacer paddingVertical={8} />
       <Typography.H3>{t('posts')}</Typography.H3>
-      <Tab.Navigator
-        screenOptions={screenOptions}
-        tabBar={MaterialTopTabBar}
-        initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
+      <Tab.Navigator screenOptions={screenOptions} initialRouteName={ROUTES.PROFILE_POSTS_POSTS}>
         <Tab.Screen
           name={ROUTES.PROFILE_POSTS_POSTS}
           component={UserPostsTab}

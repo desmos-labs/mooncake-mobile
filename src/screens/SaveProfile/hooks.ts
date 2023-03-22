@@ -112,7 +112,8 @@ export const useGetImageBackground = (
 ) => {
   const profileUri = React.useMemo(() => inputValue || profileValue, [inputValue, profileValue]);
   return React.useMemo(() => {
-    return profileUri ? { uri: profileUri } : defaultImage;
+    const profilePicToReturn = typeof profileUri === 'string' ? { uri: profileUri } : profileUri;
+    return profileUri ? profilePicToReturn : defaultImage;
   }, [profileUri, defaultImage]);
 };
 

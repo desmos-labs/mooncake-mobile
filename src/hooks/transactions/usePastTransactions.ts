@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PastTransactionMessage, PendingTransaction } from 'types/transactions';
 import { useQuery } from '@apollo/client';
 import GetTransactionsByAddress from 'services/graphql/queries/GetTransactionsByAddress';
@@ -53,7 +53,7 @@ const mergeTransactions = (
 /**
  * Hook that allows to retrieve the past actions of a user querying them from the GraphQL server.
  */
-const usePastTransactions = (address: string, transactionsPerPage: number = 50) => {
+const usePastTransactions = (address: string, transactionsPerPage: number = 20) => {
   // Get the pending transactions for the user
   const pendingTransactions = useUserPendingTransactions(address);
   const pendingMessages = pendingTransactions.flatMap(convertPendingTransaction);
@@ -61,6 +61,7 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
 
   // Set the pending transactions as the current value of the transactions
   const [remoteMessages, setRemoteMessages] = React.useState<PastTransactionMessage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -78,12 +79,16 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
       const onChainMessages = (data.messages as any[]).map(convertGraphQLTransactionMessage);
       updatePendingTransactions(onChainMessages);
       setRemoteMessages(onChainMessages);
+
+      setLoading(false);
+      setFetchingMore(false);
+      setRefreshing(false);
     },
     [updatePendingTransactions],
   );
 
   // Query the past transactions from the server
-  const { loading, fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
+  const { fetchMore, refetch } = useQuery(GetTransactionsByAddress, {
     variables: {
       address: `${address}`,
       limit: transactionsPerPage,
@@ -108,10 +113,8 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
       });
     } catch (e: any) {
       console.log(e);
-      setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
       setFetchingMore(false);
+      setError(e.toString());
     }
   }, [fetchMore, remoteMessages.length]);
 
@@ -125,10 +128,8 @@ const usePastTransactions = (address: string, transactionsPerPage: number = 50) 
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
+      setRefreshing(true);
       setError(e.toString());
-    } finally {
-      // Make sure to set the fetching to false in any case
-      setRefreshing(false);
     }
   }, [onCompletedCallback, refetch]);
 

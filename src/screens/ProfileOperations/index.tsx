@@ -13,7 +13,7 @@ import {
   addReactionTxIcon,
   createPostTxIcon,
   editProfileTxIcon,
-  emptyPostsIcon,
+  emptyListPlaceholder,
   sendReportTxIcon,
 } from 'assets/images';
 import DView from 'components/DView';
@@ -26,20 +26,15 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  ListRenderItemInfo,
-  SectionList,
-  SectionListData,
-  View,
-} from 'react-native';
+import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, useTheme } from 'native-base';
+import { Center, Flex, Spinner, useTheme } from 'native-base';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
+import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 import MessageListItem from './components/MessageListItem';
@@ -81,6 +76,8 @@ const ProfileOperations = () => {
     refreshing,
   } = usePastActionsSections(userAddress);
 
+  const formatDate = useFormatTimeForPostDetails();
+
   // -------------------------------------------------------------------------------------
   // --- Effects
   // -------------------------------------------------------------------------------------
@@ -99,7 +96,8 @@ const ProfileOperations = () => {
   // -------------------------------------------------------------------------------------
 
   const getImage = useCallback((messageType: string) => {
-    switch (messageType) {
+    const formattedMessage = `/${messageType}`;
+    switch (formattedMessage) {
       case MsgCreatePostTypeUrl:
         return createPostTxIcon;
       case MsgCreateRelationshipTypeUrl:
@@ -121,7 +119,8 @@ const ProfileOperations = () => {
 
   const getTitle = useCallback(
     (messageType: string) => {
-      switch (messageType) {
+      const formattedMessage = `/${messageType}`;
+      switch (formattedMessage) {
         case MsgCreatePostTypeUrl:
           return t('create comment post');
         case MsgCreateRelationshipTypeUrl:
@@ -153,13 +152,14 @@ const ProfileOperations = () => {
 
   const renderSectionHeader = useCallback(
     (info: { section: SectionListData<PastTransactionMessage> }) => {
+      const header = formatDate(info.section.title);
       return (
         <View style={styles.sectionHeader}>
-          <Typography.Button2>{info.section.title}</Typography.Button2>
+          <Typography.Button2>{header}</Typography.Button2>
         </View>
       );
     },
-    [styles.sectionHeader],
+    [formatDate, styles.sectionHeader],
   );
 
   // Callback used to render the items of the list
@@ -185,7 +185,7 @@ const ProfileOperations = () => {
 
     return (
       <Center flex={1}>
-        <FastImage resizeMode="contain" source={emptyPostsIcon} style={styles.emptyIcon} />
+        <FastImage resizeMode="contain" source={emptyListPlaceholder} style={styles.emptyIcon} />
         <Typography.Body5>{t('no operations')}</Typography.Body5>
       </Center>
     );
@@ -198,11 +198,13 @@ const ProfileOperations = () => {
     }
 
     return (
-      <View style={{ padding: theme.spacing.m }}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
-      </View>
+      <Flex marginY={theme.spacing.s}>
+        <Center>
+          <Spinner />
+        </Center>
+      </Flex>
     );
-  }, [fetchingMore, theme.colors.surfaceBlack, theme.spacing.m]);
+  }, [fetchingMore, theme.spacing.s]);
 
   // -------------------------------------------------------------------------------------
   // --- Screen rendering
@@ -216,22 +218,17 @@ const ProfileOperations = () => {
       style={styles.container}>
       {/* Balance section title */}
       <Typography.Body5>{t('balance')}</Typography.Body5>
-
       {/* Balance amount (in coins) */}
       {/* TODO: Show something if the balance is still loading */}
       <Typography.H2>{formatCoins(balance, ', ')}</Typography.H2>
-
       {/* Balance amount (in fiat) */}
       {/* TODO: Show something if the balance is still loading */}
       <Typography.H3>
         {symbol} {formatNumShorthand(fiatAmount)}
       </Typography.H3>
-
       <Spacer paddingVertical={theme.spacing.s} />
-
       {/* Past operations section title */}
       <Typography.H5>{t('operations')}</Typography.H5>
-
       {/* Loading indicator */}
       {isDataLoading && (
         <View style={{ marginVertical: theme.spacing.m }}>
@@ -240,8 +237,7 @@ const ProfileOperations = () => {
           <OperationContentLoader />
         </View>
       )}
-
-      {/* Messages list */}
+      {/* Messages list TODO: move to Flashlist */}
       {!isDataLoading && (
         <SectionList
           style={CommonStyles.flex[1]}
@@ -252,11 +248,13 @@ const ProfileOperations = () => {
           showsVerticalScrollIndicator={false}
           sections={sections}
           renderItem={renderItem}
+          initialNumToRender={20}
+          maxToRenderPerBatch={20}
+          windowSize={31}
           renderSectionHeader={renderSectionHeader}
           ListEmptyComponent={EmptyOperations}
           ListFooterComponent={FooterComponent}
           onEndReached={fetchMore}
-          onEndReachedThreshold={0.5}
         />
       )}
     </DView>

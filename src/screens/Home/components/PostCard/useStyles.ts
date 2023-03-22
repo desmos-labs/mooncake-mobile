@@ -16,8 +16,7 @@ const useStyles = makeStyle(theme => ({
     alignSelf: 'center',
     borderRadius: 24,
     marginRight: theme.spacing.s,
-    borderWidth: 0.5,
-    borderColor: theme.colors.lightGrey01,
+    backgroundColor: theme.colors.background,
   },
   bottomBarView: {
     flexDirection: 'row',
