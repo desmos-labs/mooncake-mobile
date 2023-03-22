@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode, ButtonSize } from 'components/Button';
+import Button from 'components/CustomButton';
 import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -82,16 +82,15 @@ const AuthorizationModal = () => {
           <Button
             textColor={theme.colors.white}
             backgroundColor={theme.colors.surfaceBlack}
-            mode={ButtonMode.CONTAINED}
-            size={ButtonSize.M}
+            size={44}
             onPress={onPressPrimaryButton}>
             {t('common:yes')}
           </Button>
           <Spacer paddingTop={theme.spacing.m}>
             <Button
               textColor={theme.colors.surfaceBlack}
-              mode={ButtonMode.OUTLINED}
-              size={ButtonSize.M}
+              variant="outlined"
+              size={44}
               onPress={onPressSecondaryButton}>
               {t('common:no')}
             </Button>

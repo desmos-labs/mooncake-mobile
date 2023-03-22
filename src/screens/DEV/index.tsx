@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import Button, { ButtonMode } from 'components/Button';
+import Button from 'components/CustomButton';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import { clearMMKV } from 'lib/MMKVStorage';
@@ -140,7 +140,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         <Button
           backgroundColor="green"
           textColor="white"
-          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() => navigate(ROUTES.LANDING)}>
           Continue to Landing screen
@@ -149,7 +148,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         <Button
           backgroundColor="orange"
           textColor="white"
-          mode={ButtonMode.CONTAINED}
           size={44}
           onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
           Continue to Home screen
@@ -157,18 +155,17 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         <Spacer paddingVertical={8} />
         <HStack>
           <VStack flex={0.5}>
-            <Button onPress={showToast} mode={ButtonMode.OUTLINED} size={32}>
+            <Button onPress={showToast} size={32}>
               Show toast
             </Button>
             <Spacer paddingVertical={4} />
-            <Button onPress={redeemAnInvite} mode={ButtonMode.OUTLINED} size={32}>
+            <Button onPress={redeemAnInvite} size={32}>
               Accept invite
             </Button>
           </VStack>
           <Spacer paddingHorizontal={4} />
           <VStack flex={0.5}>
             <Button
-              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert('Are you sure?', 'This will revoke all grants on chain.', [
@@ -187,7 +184,6 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
             </Button>
             <Spacer paddingVertical={4} />
             <Button
-              mode={ButtonMode.OUTLINED}
               size={32}
               onPress={() => {
                 Alert.alert(
