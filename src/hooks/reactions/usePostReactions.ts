@@ -24,7 +24,7 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
   // Get the reactions to be synced
   const getPostReactionsToSync = useGetPostReactionsToSync(activeAccountAddress);
   const postReactionsToSync = getPostReactionsToSync(post.subspaceId, post.id);
-  const updatePendingReactions = useUpdatePendingReactions(activeAccountAddress);
+  const updatePendingReactions = useUpdatePendingReactions();
 
   // Set the initial reactions state to be the reactions to sync.
   // This will later be merged with reactions from the chain at the first fetch.
@@ -51,14 +51,14 @@ const usePostReactions = (post: Pick<Post, 'subspaceId' | 'id'>, reactionsPerPag
         );
 
         // Update the pending reactions (delete the ones that have been sent or are expired)
-        updatePendingReactions(updates);
+        updatePendingReactions(activeAccountAddress, updates);
         return merged;
       });
       setLoading(false);
       setRefreshing(false);
       setFetchingMore(false);
     },
-    [updatePendingReactions],
+    [activeAccountAddress, updatePendingReactions],
   );
 
   // Query used to get the comments

@@ -118,7 +118,7 @@ const PostCard = (props: PostCardProps) => {
         icon: reportIcon,
       },
     ],
-    [onPressFollow, onPressReport, isFollowing],
+    [isFollowing, t, onPressFollow, onPressReport],
   );
 
   // -------------------------------------------------------------------------------------
