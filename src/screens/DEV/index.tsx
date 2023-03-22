@@ -138,7 +138,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
       <Spacer paddingVertical={4} />
       <Box mx="s">
         <Button
-          backgroundColor="green"
+          backgroundColor="rgb(0,140,0)"
           textColor="white"
           size={44}
           onPress={() => navigate(ROUTES.LANDING)}>
@@ -146,7 +146,7 @@ const DevScreen: FC<DevScreenProps> = ({ navigation }) => {
         </Button>
         <Spacer paddingVertical={4} />
         <Button
-          backgroundColor="orange"
+          backgroundColor="primary"
           textColor="white"
           size={44}
           onPress={() => navigateToHome(ROUTES.HOME_TAB_DISCOVER)}>
