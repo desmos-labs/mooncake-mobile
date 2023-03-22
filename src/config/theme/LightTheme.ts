@@ -1,7 +1,7 @@
 import { extendTheme } from 'native-base';
 import { addAlphaToHex } from 'config/theme/index';
 
-const baseSpacing = {
+export const baseSpacing = {
   xs: 4,
   s: 8,
   m: 16,
