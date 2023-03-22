@@ -14,7 +14,7 @@ const useGetOnChainTransactionsByHashes = () => {
       const { data } = await getTransactionsByHashes({
         variables: { hashes },
       });
-      return data.message.map((tx: any) => tx.transaction_hash);
+      return (data?.messages ?? []).map((tx: any) => tx.transaction_hash);
     },
     [getTransactionsByHashes],
   );
