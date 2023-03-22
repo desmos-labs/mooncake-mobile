@@ -2,12 +2,11 @@ import React from 'react';
 import { useQuery } from '@apollo/client';
 import GetPostByID from 'services/graphql/queries/GetPostByID';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useAppStateValue } from '@recoil/appState';
-import { getLikeReactionId } from 'types/desmos';
 import { usePostByID, useRemovePost, useStorePost } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePostReactionCache from 'hooks/reactions/useUpdatePostReactionsCache';
+import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
 
 /**
  * Hook that allows to get the details of a post, or refetch them if needed.
@@ -18,7 +17,6 @@ const usePost = (subspaceId: number, postId: number) => {
     throw new Error('Trying to get the details of a post without an active address');
   }
 
-  const subspaceParams = useAppStateValue('subspaceParams');
   const storePost = useStorePost(activeAddress);
   const deletePost = useRemovePost(activeAddress);
 
@@ -28,16 +26,14 @@ const usePost = (subspaceId: number, postId: number) => {
   const post = usePostByID(activeAddress, subspaceId, postId);
 
   // Query the post from the GraphQL server
+  const queryReactionValue = useQueryReactionValue();
   const { data, refetch, loading } = useQuery(GetPostByID, {
     refetchWritePolicy: 'overwrite',
     variables: {
       subspaceId,
       postId,
       user: activeAddress,
-      reaction: {
-        '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-        registered_reaction_id: getLikeReactionId(subspaceParams),
-      },
+      reaction: queryReactionValue,
     },
   });
 
