@@ -22,6 +22,7 @@ export const useMakeButtonTypography = () => {
           typographyStyle,
           {
             color: textColor || defaultTextColor,
+            numberOfLines: 1,
           },
         ]),
       };
@@ -41,7 +42,7 @@ export const useMakeButtonStyle = () => {
     }: {
       variant: Pick<React.ComponentProps<typeof Button>, 'variant'>;
       backgroundColor?: string;
-      outlineColor?: string;
+      borderColor?: string;
     }) => {
       const variantStyleMap: { [index: string]: any } = {
         solid: {
