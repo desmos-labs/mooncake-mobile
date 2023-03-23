@@ -128,8 +128,6 @@ const useAddOrRemoveReaction = () => {
 
   return React.useCallback(
     async (post: Post) => {
-      console.log('useAddOrRemoveReaction');
-
       const doesReactionExist = hasPostReaction(post.subspaceId, post.id);
       if (doesReactionExist) {
         await removeReaction(post);

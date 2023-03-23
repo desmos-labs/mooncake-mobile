@@ -74,7 +74,6 @@ const PostHeader = ({ post }: Props) => {
 
   const handlePressReaction = useCallback(
     (p: Post) => {
-      console.log('handlePressReaction');
       setLiked(value => !value);
       addOrRemovePostReactionDebounced(p);
     },
