@@ -25,17 +25,10 @@ interface Props {
   loading: boolean;
   pendingInvites: Invite[];
   claimedInvites: Invite[];
-  maxInvitations: number;
   refetchInvites: () => any;
 }
 
-const InvitesList = ({
-  loading,
-  pendingInvites,
-  claimedInvites,
-  maxInvitations,
-  refetchInvites,
-}: Props) => {
+const InvitesList = ({ loading, pendingInvites, claimedInvites, refetchInvites }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('invites');
@@ -88,16 +81,7 @@ const InvitesList = ({
   }, [claimedInvites, loading, pendingInvites, t]);
 
   const bottomComponent = useMemo(() => {
-    return totalInvites === maxInvitations ? (
-      <Typography.Body6
-        style={{
-          color: theme.colors.grey01,
-          alignSelf: 'center',
-          textAlign: 'center',
-        }}>
-        {t('sent all')}
-      </Typography.Body6>
-    ) : (
+    return (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
         mode={ButtonMode.CONTAINED}
@@ -108,15 +92,7 @@ const InvitesList = ({
         {t('invite more')}
       </Button>
     );
-  }, [
-    maxInvitations,
-    navigate,
-    t,
-    theme.colors.grey01,
-    theme.colors.surfaceBlack,
-    theme.spacing.m,
-    totalInvites,
-  ]);
+  }, [navigate, t, theme.colors.surfaceBlack, theme.colors.white, theme.spacing.m]);
 
   return (
     <View style={{ flex: 1 }}>

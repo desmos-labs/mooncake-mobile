@@ -8,9 +8,7 @@ const GetButterConfig = gql`
         port
         channel
       }
-      invites {
-        required_impact_points
-      }
+      invites
     }
   }
 `;
@@ -21,9 +19,7 @@ export interface GqlButterConfig {
     port: string;
     channel: string;
   };
-  invites: {
-    required_impact_points: number[];
-  };
+  invites: {};
 }
 
 export interface GqlButterConfigData {
