@@ -1,4 +1,4 @@
-import { backButton, cameraButton, defaultBanner, defaultProfilePic } from 'assets/images';
+import { backButton, defaultBanner, defaultProfilePic, editProfilePic } from 'assets/images';
 import Button from 'components/CustomButton';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
@@ -157,7 +157,7 @@ const SaveProfile = (props: NavProps) => {
       <View style={styles.headerButtonGroup}>
         <ProfileHeaderButton image={backButton} style={styles.topButton} onPress={goBack} />
         <ProfileHeaderButton
-          image={cameraButton}
+          image={editProfilePic}
           style={styles.topButton}
           onPress={selectCoverPicture}
         />
