@@ -52,7 +52,7 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
         return merged;
       });
       setLoading(false);
-      setFetchingMore(false);
+      setRefreshing(false);
       setFetchingMore(false);
     },
     [updatePendingTips],
@@ -83,6 +83,7 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
         }),
       });
     } catch (e: any) {
+      setFetchingMore(false);
       setError(e.toString());
     }
   }, [fetchMore, tips.length]);
@@ -97,6 +98,7 @@ const usePostTips = (post: Pick<Post, 'subspaceId' | 'id'>, tipsPerPage: number 
       const { data } = await refetch({ offset: 0 });
       onCompletedCallback(data);
     } catch (e: any) {
+      setRefreshing(false);
       setError(e.toString());
     }
   }, [onCompletedCallback, refetch]);

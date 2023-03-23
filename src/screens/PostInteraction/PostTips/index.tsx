@@ -12,14 +12,16 @@ import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInter
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ListRenderItemInfo } from 'react-native';
-import { Center, Spinner, useTheme } from 'native-base';
+import { View } from 'react-native';
+import { Center, Spinner } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
 import TipItem from 'screens/PostInteraction/PostTips/components/TipItem';
 import { Tip, TipTargetType } from 'types/tips';
 import usePostTips from 'hooks/tips/usePostTips';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
 
 type NavProps = CompositeScreenProps<
   StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
@@ -33,7 +35,6 @@ type NavProps = CompositeScreenProps<
 const PostTips = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const { t } = useTranslation('postInteraction');
-  const theme = useTheme();
   const styles = useStyles();
 
   const { params } = useRoute<NavProps['route']>();
@@ -89,7 +90,10 @@ const PostTips = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetchTips();
+      const timeout = setTimeout(async () => {
+        await refetchTips();
+      }, 500);
+      return () => clearTimeout(timeout);
     }, [refetchTips]),
   );
 
@@ -114,17 +118,18 @@ const PostTips = () => {
           })}
         </Typography.Body6>
       )}
-      <FlatList
-        data={tips}
-        refreshing={refreshing}
-        onRefresh={refetchTips}
-        renderItem={renderItem}
-        ListEmptyComponent={ListEmptyComponent}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        contentContainerStyle={styles.contentContainerStyle}
-        ListFooterComponentStyle={{ marginTop: theme.spacing.xl }}
-        onEndReached={fetchMore}
-      />
+      <View style={{ flexGrow: 1 }}>
+        <FlashList
+          data={tips}
+          refreshing={refreshing}
+          onRefresh={refetchTips}
+          renderItem={renderItem}
+          ListEmptyComponent={ListEmptyComponent}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          onEndReached={fetchMore}
+          estimatedItemSize={70}
+        />
+      </View>
     </>
   );
 };
