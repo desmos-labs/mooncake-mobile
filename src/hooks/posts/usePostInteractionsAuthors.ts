@@ -22,6 +22,8 @@ const usePostInteractionsAuthors = (
     throw new Error('Trying to get post interactions authors without active address');
   }
 
+  // TODO: Fetch the locally added reaction/tip, and prepend the current user to the authors list
+
   const [authors, setAuthors] = useState<DesmosProfile[]>([]);
 
   const hasReacted = useHasReacted(post);
