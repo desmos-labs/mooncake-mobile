@@ -117,13 +117,6 @@ const useCreatePost = () => {
   // Callback that creates a post
   const createPost = React.useCallback(
     async (parent?: Post): Promise<Result<SuccessfulBroadcast, Error>> => {
-      // If the post has parent AKA is a reply we should reset the recoil associated with the comment text box value
-      // if not the comment text box will not be cleared after clicking the post
-      // button waiting for the comment creation to be completed cc @RiccardoM
-      if (parent) {
-        // TODO: Clear the text box
-      }
-
       // Upload the attachments
       setState({ type: CreatePostStateType.UPLOADING_ATTACHMENTS });
       const uploadResult = await uploadAssets(createPostState.attachments);
@@ -158,6 +151,13 @@ const useCreatePost = () => {
         author: activeProfile,
       };
 
+      // If the post has parent AKA is a comment/reply we should reset the recoil associated with the comment text box value
+      // if not the comment text box will not be cleared after clicking the post
+      // button waiting for the comment creation to be completed
+      if (parent) {
+        resetCreatePostState();
+      }
+
       // Store the post locally
       storePost(post);
 
@@ -175,8 +175,6 @@ const useCreatePost = () => {
         }
         setState({ type: CreatePostStateType.ERROR, error: result.error });
       } else {
-        // If the post creation was successful, reset the state
-        resetCreatePostState();
         setState({ type: CreatePostStateType.SUCCESS });
       }
       return result;
