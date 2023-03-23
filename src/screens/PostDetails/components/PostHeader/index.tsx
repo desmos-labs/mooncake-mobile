@@ -4,7 +4,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import Spacer from 'components/Spacer';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import { Divider } from 'native-base';
-import { Post } from 'types/posts';
+import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
@@ -101,24 +101,26 @@ const PostHeader = ({ post }: Props) => {
   return (
     <>
       {/* Top Component */}
-      isRootPost(post) ? (
-      <>
-        <PostComponent post={post!} />
-        <PostActionButtonsBar
-          postLiked={liked}
-          handleLikePress={() => handlePressReaction(post!)}
-          handleCommentPress={focusTextInputRef}
-          handleTipPress={checkUserAndHandleSendTips}
-        />
-      </>
+      {isRootPost(post) ? (
+        <>
+          <PostComponent post={post!} />
+          <PostActionButtonsBar
+            postLiked={liked}
+            handleLikePress={() => handlePressReaction(post!)}
+            handleCommentPress={focusTextInputRef}
+            handleTipPress={checkUserAndHandleSendTips}
+          />
+        </>
       ) : (
-      <>
-        <CommentItem comment={post!} />
-        <Spacer paddingVertical={16} />
-        <Divider style={styles.divider} />
-      </>
-      )
+        <>
+          <CommentItem comment={post!} />
+          <Spacer paddingVertical={16} />
+          <Divider style={styles.divider} />
+        </>
+      )}
+
       <Spacer paddingVertical={16}>
+        {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
           loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
           likesCounter={reactionsCount}
@@ -127,6 +129,7 @@ const PostHeader = ({ post }: Props) => {
           interactionAuthors={interactionsAuthors}
         />
       </Spacer>
+
       <Divider style={styles.divider} />
       <Spacer paddingBottom={16} />
     </>
