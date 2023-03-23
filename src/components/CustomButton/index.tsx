@@ -63,6 +63,10 @@ const CustomButton = ({
       // @ts-ignore
       {...makeButtonStyle({ variant, backgroundColor, borderColor })}
       py={size / 3}
+      isDisabled={rest.disabled || rest.isDisabled}
+      _disabled={{
+        backgroundColor: 'tabIconGrey',
+      }}
       {...rest}>
       {children}
     </NBButton>

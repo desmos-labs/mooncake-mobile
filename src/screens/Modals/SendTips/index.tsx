@@ -141,17 +141,23 @@ const SendTips = (props: NavProps) => {
                           values.amount === String(value) ? theme.colors.white : theme.colors.black
                         }
                         disabled={!canEdit || shouldDisableTipButton(value)}
-                        variant={values.amount === String(value) ? 'solid' : 'outlined'}
                         size={44}
                         style={[
                           // can ignore this as it is part of the conditional style that requires the mapped value variable.
                           // eslint-disable-next-line react-native/no-inline-styles
                           {
                             minWidth: 106,
+                            borderWidth: 1,
                           },
+                          // Use disabled style if user has lack of funds, otherwise show orange outline if the denomination
+                          // is selected, or black if unselected
                           shouldDisableTipButton(value)
                             ? {
                                 borderColor: theme.colors.tabIconGrey,
+                              }
+                            : values.amount === String(value)
+                            ? {
+                                borderColor: theme.colors.butterOrange01,
                               }
                             : {
                                 borderColor: theme.colors.surfaceBlack,
