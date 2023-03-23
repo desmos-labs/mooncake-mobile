@@ -100,6 +100,9 @@ const SaveAccount = ({ navigation }: NavProps) => {
       routes: [
         {
           name: ROUTES.BOTTOM_TABS,
+          params: {
+            screen: ROUTES.HOME_TAB_DISCOVER,
+          },
         },
       ],
     });

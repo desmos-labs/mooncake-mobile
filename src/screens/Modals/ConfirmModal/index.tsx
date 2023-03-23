@@ -111,7 +111,15 @@ const ConfirmModal = () => {
     }
   };
 
-  // @ts-ignore
+  const onPressSecondaryButton = () => {
+    if (removeModalAfterButtonPress) {
+      goBack();
+      onPressSecondary && setTimeout(() => onPressSecondary(), 200);
+    } else {
+      onPressSecondary && onPressSecondary();
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* invoke dismiss fn or goBack if user presses the background */}
@@ -145,8 +153,6 @@ const ConfirmModal = () => {
               textColor={theme.colors.white}
               backgroundColor={theme.colors.surfaceBlack}
               alignSelf="stretch"
-              // TODO: fix this properly
-              // @ts-ignore
               variant={primaryButtonMode as any}
               onPress={onPressPrimaryButton}>
               {primaryButtonLabel}
@@ -159,7 +165,7 @@ const ConfirmModal = () => {
                 mb="s"
                 alignSelf="stretch"
                 variant={secondaryButtonMode as any}
-                onPress={onPressSecondary}>
+                onPress={onPressSecondaryButton}>
                 {secondaryButtonLabel}
               </Button>
             </Spacer>

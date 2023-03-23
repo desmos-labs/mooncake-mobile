@@ -6,16 +6,15 @@ import useSyncPendingTransactions from 'hooks/transactions/useSyncPendingTransac
 
 /**
  * Hook that allows to update the pending reactions based on the data retrieved from the server.
- * @param user {string} - Address of the user for which the pending reactions should be updated.
  */
-const useUpdatePendingReactions = (user: string) => {
-  const updateStoredPendingReaction = useUpdatePendingPostReaction(user);
-  const removeStoredPendingReaction = useRemovePendingPostReaction(user);
+const useUpdatePendingReactions = () => {
+  const updateStoredPendingReaction = useUpdatePendingPostReaction();
+  const removeStoredPendingReaction = useRemovePendingPostReaction();
 
   const syncPendingTransactions = useSyncPendingTransactions();
 
   return React.useCallback(
-    (updates: CachedDataUpdate<PostReaction>[]) => {
+    (user: string, updates: CachedDataUpdate<PostReaction>[]) => {
       updates.forEach(update => {
         switch (update.type) {
           case CachedDataUpdateType.CREATED:
@@ -24,13 +23,13 @@ const useUpdatePendingReactions = (user: string) => {
 
           case CachedDataUpdateType.UPDATED: {
             const { original, updated } = update;
-            updateStoredPendingReaction(original.post.subspaceId, original.post.id, updated);
+            updateStoredPendingReaction(user, original.post.subspaceId, original.post.id, updated);
             break;
           }
 
           case CachedDataUpdateType.DELETED: {
             const { data } = update;
-            removeStoredPendingReaction(data.post.subspaceId, data.post.id);
+            removeStoredPendingReaction(user, data.post.subspaceId, data.post.id);
             break;
           }
         }

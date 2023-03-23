@@ -11,6 +11,7 @@ import useSaveProfileOnChain from 'hooks/profiles/useSaveProfileOnChain';
 import { AccountWithWallet } from 'types/account';
 import { useStoreProfile } from '@recoil/profiles';
 import { err, ok, Result } from 'neverthrow';
+import useGetOnChainProfile from 'hooks/profiles/useGetOnChainProfile';
 import { NavProps } from './index';
 
 /**
@@ -157,6 +158,7 @@ export const useSubmitForm = (
   account: AccountWithWallet | undefined,
   saveOnChain: boolean = true,
 ) => {
+  const getOnChainProfile = useGetOnChainProfile();
   const storeProfile = useStoreProfile();
   const { status, saveProfile } = useSaveProfileOnChain();
 
@@ -173,11 +175,14 @@ export const useSubmitForm = (
         return err(new Error('Cannot save a profile without a known address'));
       }
 
+      // Get the on-chain profile
+      const onChainProfile = await getOnChainProfile(profileAddress);
+
       // Get the profile to save
       const profileToSaveOnChain: DesmosProfile = {
-        dTag: getValueToSave(values.dTag, profile?.dTag),
-        nickname: getValueToSave(values.nickname, profile?.nickname),
-        bio: getValueToSave(values.bio, profile?.bio),
+        dTag: getValueToSave(values.dTag ?? profile?.dTag, onChainProfile?.dTag),
+        nickname: getValueToSave(values.nickname ?? profile?.nickname, onChainProfile?.nickname),
+        bio: getValueToSave(values.bio ?? profile?.bio, onChainProfile?.bio),
         profilePicture: profilePic,
         coverPicture: coverPic,
         address: profileAddress,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDeletePendingTransactions, useGetPendingTransaction } from '@recoil/transactions';
 import useHandlePostsMessages from 'hooks/transactions/useHandlePostsMessages';
+import useHandleReactionsMessages from 'hooks/transactions/useHandleReactionsMessages';
 
 /**
  * Hook that returns a function that allows to handle the successful broadcasting of a transaction.
@@ -10,6 +11,7 @@ const useHandleSuccessfulTransaction = () => {
   const deletePendingTransactions = useDeletePendingTransactions();
 
   const handlePostsMessages = useHandlePostsMessages();
+  const handleReactionsMessages = useHandleReactionsMessages();
 
   return React.useCallback(
     async (txHash: string) => {
@@ -21,11 +23,17 @@ const useHandleSuccessfulTransaction = () => {
 
       // Handle the messages
       await handlePostsMessages(transaction.messages);
+      await handleReactionsMessages(transaction.messages);
 
       // Delete the pending transaction as it was successful
       deletePendingTransactions([txHash]);
     },
-    [deletePendingTransactions, getPendingTransaction, handlePostsMessages],
+    [
+      deletePendingTransactions,
+      getPendingTransaction,
+      handlePostsMessages,
+      handleReactionsMessages,
+    ],
   );
 };
 

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Spacer from 'components/Spacer';
 import { useTheme } from 'native-base';
+import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
@@ -60,6 +61,11 @@ const AuthorizationModal = () => {
     goBack();
     onDismiss && setTimeout(() => onDismiss(), 200);
   }, [goBack, onDismiss]);
+
+  // If the user goes back, consider it as a dismiss
+  useOnBackAction(() => {
+    onDismiss && setTimeout(() => onDismiss(), 200);
+  }, [onDismiss]);
 
   return (
     <View style={styles.container}>
