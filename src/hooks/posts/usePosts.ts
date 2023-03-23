@@ -138,8 +138,11 @@ const usePosts = (queryType: PostsQueryType) => {
       // If there is no data, just return
       if (!data) return;
 
+      // Filter all the posts that were created by someone who later deleted their profile
+      const filteredPosts = (data.posts as any[]).filter(post => post.author);
+
       // Convert the GraphQL data to the in-app format
-      const graphQLPosts = (data.posts as any[]).map(convertGraphQLPost);
+      const graphQLPosts = (filteredPosts as any[]).map(convertGraphQLPost);
 
       // Store the posts by merging the existing ones with the ones from the server
       storePosts(cachedPosts => {
