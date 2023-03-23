@@ -10,16 +10,14 @@ import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
-import {
-  useHandlePressCounters,
-  useHandlePressReaction,
-  useHandlePressSendTips,
-} from 'screens/PostDetails/hooks';
+import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
+import { debounce } from 'lodash';
 import useStyles from './useStyles';
 
 interface Props {
@@ -37,6 +35,11 @@ const PostHeader = ({ post }: Props) => {
   const { focusTextInputRef } = useFocusTextInputOnNavigate();
   const activeAddress = useActiveAccountAddress();
   const toast = useToast();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
   // Reactions data
   const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
   const hasReacted = useHasReacted(post);
@@ -48,17 +51,37 @@ const PostHeader = ({ post }: Props) => {
   const { authors: interactionsAuthors, loading: areInteractionsAuthorsLoading } =
     usePostInteractionsAuthors(post, 3);
 
+  // User data
   const isCurrentUserAuthor = useMemo(
     () => post.author.address === activeAddress,
     [post, activeAddress],
   );
 
-  /**
-   * Handlers for post actions
-   */
+  // -------------------------------------------------------------------------------------
+  // --- Handlers
+  // -------------------------------------------------------------------------------------
+
   const handlePressCounters = useHandlePressCounters();
-  const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
+
+  const [liked, setLiked] = React.useState(hasReacted);
+
+  const addOrRemoveReaction = useAddOrRemoveReaction();
+  const addOrRemovePostReactionDebounced = React.useMemo(() => {
+    return debounce(async (p: Post) => {
+      console.log('addOrRemoveReaction');
+      await addOrRemoveReaction(p);
+    }, 500);
+  }, [addOrRemoveReaction]);
+
+  const handlePressReaction = React.useCallback(
+    (p: Post) => {
+      console.log('handlePressReaction');
+      setLiked(value => !value);
+      addOrRemovePostReactionDebounced(p);
+    },
+    [addOrRemovePostReactionDebounced],
+  );
 
   /**
    * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
@@ -73,13 +96,17 @@ const PostHeader = ({ post }: Props) => {
     }
   }, [handlePressSendTips, isCurrentUserAuthor, post, t, toast]);
 
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
+
   const TopComponent = React.useMemo(() => {
     if (isRootPost(post!)) {
       return (
         <>
           <PostComponent post={post!} />
           <PostActionButtonsBar
-            postLiked={hasReacted}
+            postLiked={liked}
             handleLikePress={() => handlePressReaction(post!)}
             handleCommentPress={focusTextInputRef}
             handleTipPress={checkUserAndHandleSendTips}
@@ -99,7 +126,7 @@ const PostHeader = ({ post }: Props) => {
     checkUserAndHandleSendTips,
     focusTextInputRef,
     handlePressReaction,
-    hasReacted,
+    liked,
     post,
     styles.divider,
   ]);
