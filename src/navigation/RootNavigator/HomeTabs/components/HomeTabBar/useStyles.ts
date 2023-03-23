@@ -38,8 +38,11 @@ const useStyles = makeStyle(theme => ({
   },
   searchBarRightElement: {
     position: 'absolute',
-    left: 'auto',
     right: 0,
+  },
+  searchBarLeftElement: {
+    position: 'absolute',
+    left: 0,
   },
 }));
 

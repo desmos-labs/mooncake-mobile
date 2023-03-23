@@ -10,7 +10,7 @@ import ROUTES from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, TouchableOpacity } from 'react-native';
-import { Box, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -63,7 +63,7 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
           <Animated.View
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(300)}
-            style={styles.searchBarRightElement}>
+            style={styles.searchBarLeftElement}>
             <ImageButton
               tintColor={theme.colors.butterOrange01}
               style={styles.butterflyImage}
@@ -100,17 +100,15 @@ const HomeTabBar = ({ state, position, navigation }: MaterialTopTabBarProps) => 
             />
           </Animated.View>
         ) : (
-          <Box ml="m">
-            <Animated.View style={styles.searchBarRightElement} exiting={FadeOut.duration(300)}>
-              <TouchableOpacity
-                onPress={() => {
-                  setListState(value => ({ ...value, searchBarFocused: false }));
-                  setFocused(false);
-                }}>
-                <Typography.Body6>Cancel</Typography.Body6>
-              </TouchableOpacity>
-            </Animated.View>
-          </Box>
+          <Animated.View style={styles.searchBarRightElement} exiting={FadeOut.duration(300)}>
+            <TouchableOpacity
+              onPress={() => {
+                setListState(value => ({ ...value, searchBarFocused: false }));
+                setFocused(false);
+              }}>
+              <Typography.Body6>{t('common:cancel')}</Typography.Body6>
+            </TouchableOpacity>
+          </Animated.View>
         )}
       </Animated.View>
       {!listState.searchBarFocused && (
