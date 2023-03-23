@@ -21,7 +21,7 @@ const ManageInvites = () => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('invites');
-  const { rewardBalance, claimedInvites, pendingInvites, loading, refetch } =
+  const { rewardBalance, claimedInvites, pendingInvites, maxInvitations, loading, refetch } =
     useGetSectionedInvites();
 
   return (
@@ -46,6 +46,7 @@ const ManageInvites = () => {
       </View>
       <InvitesList
         loading={loading}
+        maxInvitations={maxInvitations}
         claimedInvites={claimedInvites}
         pendingInvites={pendingInvites}
         refetchInvites={refetch}

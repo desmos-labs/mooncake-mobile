@@ -39,6 +39,8 @@ const useGetSectionedInvites = () => {
     };
   }, [activeAddress, invites]);
 
+  const maxInvitations = 3;
+
   const refetch = React.useCallback(() => {
     refetchInvites();
   }, [refetchInvites]);
@@ -49,6 +51,7 @@ const useGetSectionedInvites = () => {
 
   return {
     ...sectionedInvites,
+    maxInvitations,
     loading: loadingInvites,
     refetch,
     error,

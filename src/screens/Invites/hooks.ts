@@ -10,6 +10,10 @@ export interface InvitesInfo {
    * Number of invites that the user have generated.
    */
   generatedInvites: number;
+  /**
+   * Number of invites that can be generated from the user.
+   */
+  generableInvitesCount: number;
 }
 
 /**
@@ -46,8 +50,12 @@ export const useGetActiveAccountInvitesInfo = () => {
       invite => invite.claimerAddress !== activeAddress,
     ).length;
 
+    // Compute the number of invites that this user can generate.
+    const generableInvitesCount = 3;
+
     return {
       generatedInvites,
+      generableInvitesCount,
     };
   }, [loadingInvites, loadingButterConfig, butterConfig, invitesData, activeAddress]);
 

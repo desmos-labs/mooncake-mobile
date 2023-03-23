@@ -1,7 +1,15 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { copyIcon, invite1, invite2, invite3, invite4, invitesBanner } from 'assets/images';
+import {
+  copyIcon,
+  invite1,
+  invite2,
+  invite3,
+  invite4,
+  invitesBanner,
+  inviteUserIcon,
+} from 'assets/images';
 import Button, { ButtonMode, ButtonSize } from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
@@ -11,7 +19,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Share, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
@@ -32,7 +40,7 @@ const Invites = () => {
   const { navigate } = useNavigation<NavProps['navigation']>();
   const toast = useToast();
   const generateInvite = useGenerateInvite();
-  const { refetch } = useGetActiveAccountInvitesInfo();
+  const { refetch, invitesInfo } = useGetActiveAccountInvitesInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -90,6 +98,18 @@ const Invites = () => {
     setGeneratingInvite(false);
   }, [generateInvite, toast]);
 
+  const generateButtonDisabled = useMemo(() => {
+    // Comment out this line to test the UI. Dev flag added to test the logic
+    if (__DEV__) {
+      return false;
+    }
+    return (
+      invitesInfo === undefined ||
+      invitesInfo.generatedInvites >= invitesInfo.generableInvitesCount ||
+      generatingInvite
+    );
+  }, [generatingInvite, invitesInfo]);
+
   return (
     <DView
       backgroundColor={theme.colors.background}
@@ -108,6 +128,7 @@ const Invites = () => {
       {inviteLink === undefined ? (
         /* Component to generate a new invitation link */
         <Button
+          disabled={generateButtonDisabled}
           onPress={handleGenerateInvitePress}
           size={44}
           textColor={theme.colors.white}
@@ -142,6 +163,23 @@ const Invites = () => {
       )}
 
       <Spacer paddingVertical={theme.spacing.s} />
+
+      <View style={{ alignItems: 'center' }}>
+        {/* Shows the number of generated invitation links */}
+        <View style={styles.rowCenter}>
+          <Image source={inviteUserIcon} style={styles.iconRight} />
+          {invitesInfo !== undefined ? (
+            <Typography.Body6 style={{ color: theme.colors.midGrey }}>
+              {t('invites shared', {
+                number: invitesInfo.generatedInvites,
+                total: invitesInfo.generableInvitesCount,
+              })}
+            </Typography.Body6>
+          ) : (
+            <ActivityIndicator color={theme.colors.surfaceBlack} />
+          )}
+        </View>
+      </View>
 
       <Spacer paddingVertical={16} />
       <View style={{ paddingHorizontal: theme.spacing.m }}>

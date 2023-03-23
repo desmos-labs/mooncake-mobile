@@ -25,10 +25,17 @@ interface Props {
   loading: boolean;
   pendingInvites: Invite[];
   claimedInvites: Invite[];
+  maxInvitations: number;
   refetchInvites: () => any;
 }
 
-const InvitesList = ({ loading, pendingInvites, claimedInvites, refetchInvites }: Props) => {
+const InvitesList = ({
+  loading,
+  pendingInvites,
+  claimedInvites,
+  maxInvitations,
+  refetchInvites,
+}: Props) => {
   const styles = useStyles();
   const theme = useTheme();
   const { t } = useTranslation('invites');
@@ -62,7 +69,14 @@ const InvitesList = ({ loading, pendingInvites, claimedInvites, refetchInvites }
         </Button>
       </View>
     );
-  }, [navigate, styles.container, styles.emptyImage, t, theme.colors.surfaceBlack]);
+  }, [
+    navigate,
+    styles.container,
+    styles.emptyImage,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   const inviteSections = React.useMemo(() => {
     const sections: SectionListData<Invite>[] = [];
@@ -81,18 +95,37 @@ const InvitesList = ({ loading, pendingInvites, claimedInvites, refetchInvites }
   }, [claimedInvites, loading, pendingInvites, t]);
 
   const bottomComponent = useMemo(() => {
-    return (
+    return totalInvites >= maxInvitations ? (
+      <Typography.Body6
+        style={{
+          color: theme.colors.grey01,
+          alignSelf: 'center',
+          textAlign: 'center',
+          marginTop: theme.spacing.m,
+        }}>
+        {t('sent all')}
+      </Typography.Body6>
+    ) : (
       <Button
         onPress={() => navigate(ROUTES.SETTINGS_INVITES)}
         mode={ButtonMode.CONTAINED}
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        additionalStyle={{ marginHorizontal: theme.spacing.m }}>
+        additionalStyle={{ marginHorizontal: theme.spacing.m, marginTop: theme.spacing.m }}>
         {t('invite more')}
       </Button>
     );
-  }, [navigate, t, theme.colors.surfaceBlack, theme.colors.white, theme.spacing.m]);
+  }, [
+    maxInvitations,
+    navigate,
+    t,
+    theme.colors.grey01,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+    theme.spacing.m,
+    totalInvites,
+  ]);
 
   return (
     <View style={{ flex: 1 }}>
