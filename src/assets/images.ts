@@ -92,7 +92,7 @@ export const galleryIcon = require('./images/galleryIcon.png');
 
 export const cameraIcon = require('./images/cameraIcon.png');
 
-export const whiteCross = require('./images/whiteCross.png');
+export const deleteButton = require('./images/delete.png');
 
 export const expandCommentIcon = require('./images/expandComment.png');
 

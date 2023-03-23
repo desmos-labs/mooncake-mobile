@@ -16,6 +16,7 @@ import { Box, HStack, VStack } from 'native-base';
 
 // Add the ROUTE enum of the screens that should be rendered here
 const routesToRender = [
+  ROUTES.SAVE_PROFILE,
   ROUTES.IMPACT_POINTS_MODAL,
   ROUTES.IMPORT_ACCOUNT_MNEMONIC_INPUT,
   ROUTES.ACTIVITIES,

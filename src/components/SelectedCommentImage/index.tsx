@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { whiteCross } from 'assets/images';
+import { deleteButton } from 'assets/images';
 import { makeStyle } from 'config/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'native-base';
@@ -47,7 +47,7 @@ const SelectedCommentImage = (props: Props) => {
         <TouchableOpacity style={styles.container} onPress={() => handlePress(rest.source!)}>
           <Image {...rest} style={styles.imageStyle} source={rest.source} />
           <View style={styles.closeButtonContainer}>
-            <Image style={styles.closeButton} source={whiteCross} />
+            <Image style={styles.closeButton} source={deleteButton} />
           </View>
         </TouchableOpacity>
       )}
