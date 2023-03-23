@@ -22,6 +22,7 @@ import useProfileParams from 'hooks/profiles/useProfileParams';
 import { SaveProfileStatus } from 'hooks/profiles/useSaveProfileOnChain';
 import useStyles from 'screens/SaveProfile/useStyles';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
+import useRefreshSession from 'hooks/apis/useRefreshSession';
 import CreateAvatar from './components/CreateAvatar';
 import {
   SaveProfileFormState,
@@ -127,6 +128,9 @@ const SaveProfile = (props: NavProps) => {
   // Hook to submit the form and check the status of the profile saving.
   const { status, submitForm } = useSubmitForm(profile, account, saveOnChain);
 
+  // Hook to refresh the session
+  const refreshSession = useRefreshSession();
+
   // Callback used when the user presses the Save button.
   const onEditProfile = useCallback(
     async (values: SaveProfileFormState) => {
@@ -134,10 +138,11 @@ const SaveProfile = (props: NavProps) => {
       if (result.isErr() && onError) {
         onError(result.error);
       } else if (result.isOk() && onSuccess) {
+        await refreshSession();
         onSuccess();
       }
     },
-    [coverPic, onError, onSuccess, profilePic, submitForm],
+    [coverPic, onError, onSuccess, profilePic, refreshSession, submitForm],
   );
 
   /**
