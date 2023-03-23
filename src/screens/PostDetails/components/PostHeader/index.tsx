@@ -6,7 +6,6 @@ import InteractionCountersBar from 'screens/PostDetails/components/InteractionCo
 import { Divider } from 'native-base';
 import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
@@ -16,8 +15,7 @@ import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
-import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
-import { debounce } from 'lodash';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 interface Props {
@@ -42,7 +40,6 @@ const PostHeader = ({ post }: Props) => {
 
   // Reactions data
   const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
-  const hasReacted = useHasReacted(post);
 
   // Tips data
   const { count: tipsCount, loading: isTipsCountLoading } = usePostTipsCount(post);
@@ -61,23 +58,9 @@ const PostHeader = ({ post }: Props) => {
   // --- Handlers
   // -------------------------------------------------------------------------------------
 
+  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
   const handlePressCounters = useHandlePressCounters();
   const handlePressSendTips = useHandlePressSendTips();
-
-  const [liked, setLiked] = React.useState(hasReacted);
-  const addOrRemoveReaction = useAddOrRemoveReaction();
-  const addOrRemovePostReactionDebounced = useMemo(
-    () => debounce(addOrRemoveReaction, 500),
-    [addOrRemoveReaction],
-  );
-
-  const handlePressReaction = useCallback(
-    (p: Post) => {
-      setLiked(value => !value);
-      addOrRemovePostReactionDebounced(p);
-    },
-    [addOrRemovePostReactionDebounced],
-  );
 
   /**
    * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
@@ -104,7 +87,7 @@ const PostHeader = ({ post }: Props) => {
           <PostComponent post={post!} />
           <PostActionButtonsBar
             postLiked={liked}
-            handleLikePress={() => handlePressReaction(post!)}
+            handleLikePress={() => addOrRemoveLike(post!)}
             handleCommentPress={focusTextInputRef}
             handleTipPress={checkUserAndHandleSendTips}
           />
