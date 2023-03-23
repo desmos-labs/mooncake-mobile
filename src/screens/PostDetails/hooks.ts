@@ -10,6 +10,9 @@ import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
+import { useToast } from 'react-native-toast-notifications';
+import ToastConfig from 'config/ToastConfig';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook that allows to report a user.
@@ -74,19 +77,21 @@ export const useHandleExpandCommentView = () => {
  */
 export const useHandleCreateComment = () => {
   const { state, createPost } = useCreatePost();
-
+  const { t } = useTranslation('postDetails');
+  const toast = useToast();
   const handleCreateComment = React.useCallback(
     async (post: Post) => {
+      // When the user clicks on the button, dismiss the keyboard
+      Keyboard.dismiss();
       const result = await createPost(post);
       if (result.isErr()) {
-        // TODO: Show the error somewhat
-        console.log('Error inside useHandleCreateComment', result.error.message);
-        return;
+        console.error('Error inside useHandleCreateComment', result.error.message);
+        return toast.show(t('failed to post comment'), {
+          type: ToastConfig.ERROR_NO_RETRY,
+        });
       }
-
-      Keyboard.dismiss();
     },
-    [createPost],
+    [createPost, t, toast],
   );
 
   return {
