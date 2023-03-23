@@ -69,7 +69,14 @@ const InvitesList = ({
         </Button>
       </View>
     );
-  }, [navigate, styles.container, styles.emptyImage, t, theme.colors.surfaceBlack]);
+  }, [
+    navigate,
+    styles.container,
+    styles.emptyImage,
+    t,
+    theme.colors.surfaceBlack,
+    theme.colors.white,
+  ]);
 
   const inviteSections = React.useMemo(() => {
     const sections: SectionListData<Invite>[] = [];
@@ -88,12 +95,13 @@ const InvitesList = ({
   }, [claimedInvites, loading, pendingInvites, t]);
 
   const bottomComponent = useMemo(() => {
-    return totalInvites === maxInvitations ? (
+    return totalInvites >= maxInvitations ? (
       <Typography.Body6
         style={{
           color: theme.colors.grey01,
           alignSelf: 'center',
           textAlign: 'center',
+          marginTop: theme.spacing.m,
         }}>
         {t('sent all')}
       </Typography.Body6>
@@ -104,7 +112,7 @@ const InvitesList = ({
         size={44}
         textColor={theme.colors.white}
         backgroundColor={theme.colors.surfaceBlack}
-        additionalStyle={{ marginHorizontal: theme.spacing.m }}>
+        additionalStyle={{ marginHorizontal: theme.spacing.m, marginTop: theme.spacing.m }}>
         {t('invite more')}
       </Button>
     );
@@ -114,6 +122,7 @@ const InvitesList = ({
     t,
     theme.colors.grey01,
     theme.colors.surfaceBlack,
+    theme.colors.white,
     theme.spacing.m,
     totalInvites,
   ]);

@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import useGetActiveAccountInvites from 'hooks/invites/useInvites';
-import useButterConfig from 'hooks/config/useButterConfig';
 
 const useGetSectionedInvites = () => {
   const activeAddress = useActiveAccountAddress();
@@ -12,12 +11,6 @@ const useGetSectionedInvites = () => {
     refetch: refetchInvites,
     error: errorInvites,
   } = useGetActiveAccountInvites();
-  const {
-    config,
-    loading: loadingButterConfig,
-    refetch: refetchConfig,
-    error: errorButterConfig,
-  } = useButterConfig();
 
   const sectionedInvites = useMemo(() => {
     let rewardBalance = 0;
@@ -46,23 +39,20 @@ const useGetSectionedInvites = () => {
     };
   }, [activeAddress, invites]);
 
-  const maxInvitations = useMemo(() => {
-    return config?.invites.requiredImpactPoints.length ?? 0;
-  }, [config]);
+  const maxInvitations = 3;
 
   const refetch = React.useCallback(() => {
     refetchInvites();
-    refetchConfig();
-  }, [refetchConfig, refetchInvites]);
+  }, [refetchInvites]);
 
   const error = React.useMemo(() => {
-    return errorInvites ?? errorButterConfig;
-  }, [errorButterConfig, errorInvites]);
+    return errorInvites;
+  }, [errorInvites]);
 
   return {
     ...sectionedInvites,
     maxInvitations,
-    loading: loadingInvites || loadingButterConfig,
+    loading: loadingInvites,
     refetch,
     error,
   };
