@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Typography from 'components/Typography';
 import { formatNumShorthand } from 'lib/FormatUtils';
@@ -6,11 +6,12 @@ import { PostInteractionTabsParamList } from 'navigation/RootNavigator/PostInter
 import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, ListRenderItemInfo } from 'react-native';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import { Center, Spinner } from 'native-base';
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -42,21 +43,25 @@ const PostReactions = () => {
   } = usePostReactions(post);
 
   const refetch = useCallback(async () => {
-    await refetchCount();
-    await refetchReactions();
+    await refetchReactions().then(() => refetchCount());
   }, [refetchCount, refetchReactions]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const timeout = setTimeout(async () => {
+        await refetch();
+      }, 500);
+
+      return () => clearTimeout(timeout);
+    }, [refetch]),
+  );
 
   // -------------------------------------------------------------------------------------
   // --- Child components
   // -------------------------------------------------------------------------------------
-
   const renderItem = React.useCallback(({ item }: ListRenderItemInfo<any>) => {
     return <ReactionItem reaction={item} />;
   }, []);
-
-  const ListEmptyComponent = React.useMemo(() => {
-    return <EmptyListComponent label={t('noReactions')} />;
-  }, [t]);
 
   if (loading) {
     return (
@@ -73,16 +78,16 @@ const PostReactions = () => {
           {t('totalReactions', { numReactions: formatNumShorthand(count) })}
         </Typography.Body6>
       )}
-      <FlatList
+      <FlashList
         refreshing={refreshing}
         onRefresh={refetch}
         keyExtractor={(item, index) => `${item.id?.toString() ?? ''}-${index}`}
         data={reactions}
         renderItem={renderItem}
-        contentContainerStyle={styles.contentContainerStyle}
         ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={ListEmptyComponent}
+        ListEmptyComponent={<EmptyListComponent label={t('noReactions')} />}
         onEndReached={fetchMore}
+        estimatedItemSize={63}
       />
     </>
   );
