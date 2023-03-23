@@ -4,7 +4,7 @@ import PostActionButtonsBar from 'screens/PostDetails/components/PostActionButto
 import Spacer from 'components/Spacer';
 import InteractionCountersBar from 'screens/PostDetails/components/InteractionCountersBar';
 import { Divider } from 'native-base';
-import { isRootPost, Post } from 'types/posts';
+import { Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
@@ -67,14 +67,12 @@ const PostHeader = ({ post }: Props) => {
   const [liked, setLiked] = React.useState(hasReacted);
 
   const addOrRemoveReaction = useAddOrRemoveReaction();
-  const addOrRemovePostReactionDebounced = React.useMemo(() => {
-    return debounce(async (p: Post) => {
-      console.log('addOrRemoveReaction');
-      await addOrRemoveReaction(p);
-    }, 500);
-  }, [addOrRemoveReaction]);
+  const addOrRemovePostReactionDebounced = useMemo(
+    () => debounce(addOrRemoveReaction, 500),
+    [addOrRemoveReaction],
+  );
 
-  const handlePressReaction = React.useCallback(
+  const handlePressReaction = useCallback(
     (p: Post) => {
       console.log('handlePressReaction');
       setLiked(value => !value);
@@ -100,40 +98,26 @@ const PostHeader = ({ post }: Props) => {
   // --- View rendering
   // -------------------------------------------------------------------------------------
 
-  const TopComponent = React.useMemo(() => {
-    if (isRootPost(post!)) {
-      return (
-        <>
-          <PostComponent post={post!} />
-          <PostActionButtonsBar
-            postLiked={liked}
-            handleLikePress={() => handlePressReaction(post!)}
-            handleCommentPress={focusTextInputRef}
-            handleTipPress={checkUserAndHandleSendTips}
-          />
-        </>
-      );
-    } else {
-      return (
-        <>
-          <CommentItem comment={post!} />
-          <Spacer paddingVertical={16} />
-          <Divider style={styles.divider} />
-        </>
-      );
-    }
-  }, [
-    checkUserAndHandleSendTips,
-    focusTextInputRef,
-    handlePressReaction,
-    liked,
-    post,
-    styles.divider,
-  ]);
-
   return (
     <>
-      {TopComponent}
+      {/* Top Component */}
+      isRootPost(post) ? (
+      <>
+        <PostComponent post={post!} />
+        <PostActionButtonsBar
+          postLiked={liked}
+          handleLikePress={() => handlePressReaction(post!)}
+          handleCommentPress={focusTextInputRef}
+          handleTipPress={checkUserAndHandleSendTips}
+        />
+      </>
+      ) : (
+      <>
+        <CommentItem comment={post!} />
+        <Spacer paddingVertical={16} />
+        <Divider style={styles.divider} />
+      </>
+      )
       <Spacer paddingVertical={16}>
         <InteractionCountersBar
           loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
@@ -143,7 +127,6 @@ const PostHeader = ({ post }: Props) => {
           interactionAuthors={interactionsAuthors}
         />
       </Spacer>
-
       <Divider style={styles.divider} />
       <Spacer paddingBottom={16} />
     </>
