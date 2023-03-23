@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme, useToken, Button } from 'native-base';
-import { StyleProp, StyleSheet, TextStyle } from 'react-native';
 import { TypographyStyles } from 'components/Typography';
+import { StyleProp, StyleSheet, TextStyle } from 'react-native';
 
 export const useMakeButtonTypography = () => {
   const defaultTextColor = useToken('colors', ['surfaceBlack'][0]);
