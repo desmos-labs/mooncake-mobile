@@ -65,7 +65,6 @@ const PostHeader = ({ post }: Props) => {
   const handlePressSendTips = useHandlePressSendTips();
 
   const [liked, setLiked] = React.useState(hasReacted);
-
   const addOrRemoveReaction = useAddOrRemoveReaction();
   const addOrRemovePostReactionDebounced = useMemo(
     () => debounce(addOrRemoveReaction, 500),
