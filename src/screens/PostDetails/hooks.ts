@@ -5,7 +5,6 @@ import { Keyboard } from 'react-native';
 import { NavProps } from 'screens/PostDetails/index';
 import { isCommentReply, Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
-import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
 import { DesmosProfile } from 'types/desmos';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
 import { TipTargetType } from 'types/tips';
@@ -98,19 +97,6 @@ export const useHandleCreateComment = () => {
     state,
     handleCreateComment,
   };
-};
-
-/**
- * Hook that allows to handle the addition or removal of a reaction from a post.
- */
-export const useHandlePressReaction = () => {
-  const addOrRemoveReaction = useAddOrRemoveReaction();
-  return React.useCallback(
-    async (post: Post) => {
-      await addOrRemoveReaction(post);
-    },
-    [addOrRemoveReaction],
-  );
 };
 
 /**

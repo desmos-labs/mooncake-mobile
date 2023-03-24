@@ -3,7 +3,6 @@ import ROUTES from 'navigation/routes';
 import React from 'react';
 import { NavProps } from 'screens/Home';
 import useFollowOrUnfollowUser from 'hooks/relationships/useFollowOrUnfollowUser';
-import useAddOrRemoveReaction from 'hooks/reactions/useAddOrRemoveReaction';
 import { isPostPending, Post } from 'types/posts';
 import { TipTargetType } from 'types/tips';
 import useNavigateToPost from 'hooks/navigation/useNavigateToPost';
@@ -30,23 +29,6 @@ export const useHandlePressDetails = () => {
       navigateToPost(post.subspaceId, post.id);
     },
     [navigateToPost],
-  );
-};
-
-/**
- * Hook that is called when the user wants to add a reaction to a post.
- */
-export const useHandlePressReaction = () => {
-  const addOrRemoveReaction = useAddOrRemoveReaction();
-  return React.useCallback(
-    async (post: Post) => {
-      if (isPostPending(post)) {
-        // TODO: Instead of just returning here, tell the user why they can't do this, maybe with a modal
-        return;
-      }
-      await addOrRemoveReaction(post);
-    },
-    [addOrRemoveReaction],
   );
 };
 

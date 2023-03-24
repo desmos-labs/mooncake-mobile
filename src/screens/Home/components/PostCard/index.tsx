@@ -24,12 +24,12 @@ import { Center, useTheme } from 'native-base';
 import { isPostPending, Post } from 'types/posts';
 import useIsFollowing from 'hooks/relationships/useIsFollowing';
 import { useActiveAccountAddress } from '@recoil/accounts';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
 import usePostCommentsCount from 'hooks/posts/comments/usePostCommentsCount';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import ToastConfig from 'config/ToastConfig';
 import { useToast } from 'react-native-toast-notifications';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 interface PostCardProps {
@@ -53,10 +53,6 @@ interface PostCardProps {
    * What to do if the entire post is pressed.
    */
   onPressDetails: () => void;
-  /**
-   * What to do if the post like button is pressed.
-   */
-  onPressLike: () => void;
   /**
    * What to do if the post comment button is pressed.
    */
@@ -85,7 +81,6 @@ const PostCard = (props: PostCardProps) => {
     onPressAuthor,
     onPressFollow,
     onPressReport,
-    onPressLike,
     onPressComment,
     onPressTip,
     onPressDetails,
@@ -97,7 +92,6 @@ const PostCard = (props: PostCardProps) => {
 
   const activeAddress = useActiveAccountAddress();
   const isFollowing = useIsFollowing(post.author.address);
-  const hasReacted = useHasReacted(post);
   const { count: reactionsCount } = usePostReactionsCount(post);
   const { count: commentsCount } = usePostCommentsCount(post);
 
@@ -163,6 +157,7 @@ const PostCard = (props: PostCardProps) => {
   // -------------------------------------------------------------------------------------
   // --- Utility functions
   // -------------------------------------------------------------------------------------
+
   /**
    * Checks if the current user is the author of the post and shows a toast if that's the case or calls the handler to send tips
    */
@@ -175,6 +170,20 @@ const PostCard = (props: PostCardProps) => {
       onPressTip();
     }
   }, [onPressTip, isCurrentUserAuthor, t, toast]);
+
+  // -------------------------------------------------------------------------------------
+  // --- Handles
+  // -------------------------------------------------------------------------------------
+
+  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
+  const onPressLike = useCallback(async () => {
+    if (isPostPending(post)) {
+      return toast.show(t('toast:postTxInProgress'), {
+        type: ToastConfig.ERROR_NO_RETRY,
+      });
+    }
+    addOrRemoveLike(post);
+  }, [addOrRemoveLike, post, t, toast]);
 
   // -------------------------------------------------------------------------------------
   // --- Child components
@@ -237,14 +246,12 @@ const PostCard = (props: PostCardProps) => {
         <View style={styles.bottomBarInnerView}>
           <ImageButton
             onPress={onPressLike}
-            tintColor={hasReacted ? theme.colors.butterOrange01 : theme.colors.grey02}
-            image={hasReacted ? postLikedIcon : postToLikeIcon}
+            tintColor={liked ? theme.colors.butterOrange01 : theme.colors.grey02}
+            image={liked ? postLikedIcon : postToLikeIcon}
             style={styles.bottomBarIcon}
           />
           <Typography.Subtitle3
-            style={
-              hasReacted ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }
-            }>
+            style={liked ? { color: theme.colors.butterOrange01 } : { color: theme.colors.grey02 }}>
             {reactionsCount}
           </Typography.Subtitle3>
           {/* I have completely removed the logic that changed the color of the button based on whether */}
@@ -288,7 +295,7 @@ const PostCard = (props: PostCardProps) => {
     styles.bottomBarIcon,
     styles.commentButton,
     onPressLike,
-    hasReacted,
+    liked,
     theme.colors.butterOrange01,
     theme.colors.grey02,
     theme.spacing.s,

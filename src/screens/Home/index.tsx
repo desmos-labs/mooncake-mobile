@@ -16,7 +16,6 @@ import {
   useHandlePressComments,
   useHandlePressDetails,
   useHandlePressFollow,
-  useHandlePressReaction,
   useHandlePressReport,
   useHandlePressTip,
 } from 'screens/Home/hooks';
@@ -68,7 +67,6 @@ const Home = () => {
   const handleNavigateToProfile = useNavigateToProfile();
   const handlePressFollow = useHandlePressFollow();
   const handlePressDetails = useHandlePressDetails();
-  const handlePressReaction = useHandlePressReaction();
   const handlePressReport = useHandlePressReport();
   const handlePressComments = useHandlePressComments();
   const handlePressTip = useHandlePressTip();
@@ -150,14 +148,6 @@ const Home = () => {
             }
             handlePressDetails(item);
           }}
-          onPressLike={() => {
-            if (isPostPending(item)) {
-              return toast.show(t('toast:postTxInProgress'), {
-                type: ToastConfig.ERROR_NO_RETRY,
-              });
-            }
-            handlePressReaction(item);
-          }}
           onPressComment={() => {
             if (isPostPending(item)) {
               return toast.show(t('toast:postTxInProgress'), {
@@ -192,7 +182,6 @@ const Home = () => {
       handlePressDetails,
       toast,
       t,
-      handlePressReaction,
       handlePressComments,
       handlePressTip,
       handlePressFollow,

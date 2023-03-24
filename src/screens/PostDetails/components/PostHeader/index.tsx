@@ -6,20 +6,16 @@ import InteractionCountersBar from 'screens/PostDetails/components/InteractionCo
 import { Divider } from 'native-base';
 import { isRootPost, Post } from 'types/posts';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import useHasReacted from 'hooks/reactions/useHasReacted';
 import usePostTipsCount from 'hooks/tips/usePostTipsCount';
 import usePostInteractionsAuthors from 'hooks/posts/usePostInteractionsAuthors';
 import useFocusTextInputOnNavigate from 'hooks/useFocusTextInputOnNavigate';
-import {
-  useHandlePressCounters,
-  useHandlePressReaction,
-  useHandlePressSendTips,
-} from 'screens/PostDetails/hooks';
+import { useHandlePressCounters, useHandlePressSendTips } from 'screens/PostDetails/hooks';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import { useTranslation } from 'react-i18next';
 import CommentItem from 'screens/PostInteraction/PostComments/components/CommentItem';
+import useAddOrRemoveLike from 'hooks/reactions/useAddOrRemoveLike';
 import useStyles from './useStyles';
 
 interface Props {
@@ -37,9 +33,13 @@ const PostHeader = ({ post }: Props) => {
   const { focusTextInputRef } = useFocusTextInputOnNavigate();
   const activeAddress = useActiveAccountAddress();
   const toast = useToast();
+
+  // -------------------------------------------------------------------------------------
+  // --- Hooks
+  // -------------------------------------------------------------------------------------
+
   // Reactions data
   const { count: reactionsCount, loading: isReactionsCountLoading } = usePostReactionsCount(post);
-  const hasReacted = useHasReacted(post);
 
   // Tips data
   const { count: tipsCount, loading: isTipsCountLoading } = usePostTipsCount(post);
@@ -48,16 +48,18 @@ const PostHeader = ({ post }: Props) => {
   const { authors: interactionsAuthors, loading: areInteractionsAuthorsLoading } =
     usePostInteractionsAuthors(post, 3);
 
+  // User data
   const isCurrentUserAuthor = useMemo(
     () => post.author.address === activeAddress,
     [post, activeAddress],
   );
 
-  /**
-   * Handlers for post actions
-   */
+  // -------------------------------------------------------------------------------------
+  // --- Handlers
+  // -------------------------------------------------------------------------------------
+
+  const { liked, addOrRemoveLike } = useAddOrRemoveLike(post);
   const handlePressCounters = useHandlePressCounters();
-  const handlePressReaction = useHandlePressReaction();
   const handlePressSendTips = useHandlePressSendTips();
 
   /**
@@ -73,41 +75,33 @@ const PostHeader = ({ post }: Props) => {
     }
   }, [handlePressSendTips, isCurrentUserAuthor, post, t, toast]);
 
-  const TopComponent = React.useMemo(() => {
-    if (isRootPost(post!)) {
-      return (
+  // -------------------------------------------------------------------------------------
+  // --- View rendering
+  // -------------------------------------------------------------------------------------
+
+  return (
+    <>
+      {/* Top Component */}
+      {isRootPost(post) ? (
         <>
           <PostComponent post={post!} />
           <PostActionButtonsBar
-            postLiked={hasReacted}
-            handleLikePress={() => handlePressReaction(post!)}
+            postLiked={liked}
+            handleLikePress={() => addOrRemoveLike(post!)}
             handleCommentPress={focusTextInputRef}
             handleTipPress={checkUserAndHandleSendTips}
           />
         </>
-      );
-    } else {
-      return (
+      ) : (
         <>
           <CommentItem comment={post!} />
           <Spacer paddingVertical={16} />
           <Divider style={styles.divider} />
         </>
-      );
-    }
-  }, [
-    checkUserAndHandleSendTips,
-    focusTextInputRef,
-    handlePressReaction,
-    hasReacted,
-    post,
-    styles.divider,
-  ]);
+      )}
 
-  return (
-    <>
-      {TopComponent}
       <Spacer paddingVertical={16}>
+        {/* Like, Comment and Tips bar */}
         <InteractionCountersBar
           loading={isReactionsCountLoading || isTipsCountLoading || areInteractionsAuthorsLoading}
           likesCounter={reactionsCount}

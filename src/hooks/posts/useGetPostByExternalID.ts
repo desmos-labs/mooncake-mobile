@@ -1,19 +1,18 @@
 import { useActiveAccountAddress } from '@recoil/accounts';
-import { useAppStateValue } from '@recoil/appState';
 import { useLazyQuery } from '@apollo/client';
 import React from 'react';
 import { Post } from 'types/posts';
-import { getLikeReactionId } from 'types/desmos';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import GetPostByExternalID from 'services/graphql/queries/GetPostByExternalID';
+import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
 
 /**
  * Hook that allows to get the data of a post given its subspace id and external id.
  */
 const useGetPostByExternalID = () => {
   const activeAddress = useActiveAccountAddress();
-  const subspaceParams = useAppStateValue('subspaceParams');
 
+  const queryReactionValue = useQueryReactionValue();
   const [getPost] = useLazyQuery(GetPostByExternalID, {
     fetchPolicy: 'network-only',
   });
@@ -29,10 +28,7 @@ const useGetPostByExternalID = () => {
           subspaceId,
           externalId,
           user: activeAddress,
-          reaction: {
-            '@type': '/desmos.reactions.v1.RegisteredReactionValue',
-            registered_reaction_id: getLikeReactionId(subspaceParams),
-          },
+          reaction: queryReactionValue,
         },
       });
       if (!data) {
@@ -41,7 +37,7 @@ const useGetPostByExternalID = () => {
 
       return data.posts.length > 0 ? convertGraphQLPost(data.posts[0]) : undefined;
     },
-    [activeAddress, getPost, subspaceParams],
+    [activeAddress, getPost, queryReactionValue],
   );
 };
 

@@ -33,56 +33,32 @@ const useAddReaction = (activeAddress: string) => {
   const addPostReaction = useAddPostReaction(activeAddress);
   const removePostReaction = useRemovePostReaction(activeAddress);
 
-  const [getReaction] = useLazyQuery(GetPostReactionsForUser, {
-    fetchPolicy: 'network-only',
-  });
-
   return React.useCallback(
     async (post: Post) => {
       // Add the reaction locally
       addPostReaction(post);
 
-      // Check if the reaction exists on the server
-      const { data } = await getReaction({
-        variables: {
-          subspaceId: post.subspaceId,
-          postId: post.id,
-          userAddress: activeAddress,
+      // If the reaction does not exist on the server, add it there
+      const messageAddReaction: MsgAddReactionEncodeObject = {
+        typeUrl: MsgAddReactionTypeUrl,
+        value: {
+          subspaceId: Long.fromNumber(subspaceId),
+          postId: Long.fromNumber(post.id),
+          value: registeredReactionValueToAny({
+            registeredReactionId: getLikeReactionId(subspaceParams),
+          }),
+          user: activeAddress,
         },
-      });
+      };
 
-      const hasReaction = data?.reactions?.length > 0;
-      if (!hasReaction) {
-        // If the reaction does not exist on the server, add it there
-        const messageAddReaction: MsgAddReactionEncodeObject = {
-          typeUrl: MsgAddReactionTypeUrl,
-          value: {
-            subspaceId: Long.fromNumber(subspaceId),
-            postId: Long.fromNumber(post.id),
-            value: registeredReactionValueToAny({
-              registeredReactionId: getLikeReactionId(subspaceParams),
-            }),
-            user: activeAddress,
-          },
-        };
-
-        // Broadcast the transaction
-        const result = await broadcastTx([messageAddReaction], { optimistic: true });
-        if (result.isErr()) {
-          // If the transaction is canceled or errors, revert the addition of the reaction.
-          removePostReaction(post);
-        }
+      // Broadcast the transaction
+      const result = await broadcastTx([messageAddReaction], { optimistic: true });
+      if (result.isErr()) {
+        // If the transaction is canceled or errors, revert the addition of the reaction.
+        removePostReaction(post);
       }
     },
-    [
-      addPostReaction,
-      getReaction,
-      activeAddress,
-      subspaceId,
-      subspaceParams,
-      broadcastTx,
-      removePostReaction,
-    ],
+    [addPostReaction, activeAddress, subspaceId, subspaceParams, broadcastTx, removePostReaction],
   );
 };
 
@@ -104,7 +80,7 @@ const useRemoveReaction = (activeAddress: string) => {
       // Remove the reaction locally
       setPostReactionStatus(post, DataStatus.DELETED_LOCALLY);
 
-      // Get the reaction id from the server
+      // Get the reaction id from the server, if any
       const { data } = await getReaction({
         variables: {
           subspaceId: post.subspaceId,
@@ -112,28 +88,25 @@ const useRemoveReaction = (activeAddress: string) => {
           userAddress: activeAddress,
         },
       });
-
-      const reactions = data?.reactions;
-      const reactionId = reactions?.length > 0 ? reactions[0].id : undefined;
+      const remoteReactions = data?.reactions;
+      const remoteReactionId = remoteReactions?.length > 0 ? remoteReactions[0].id : undefined;
 
       // If the reaction id is defined, delete it remotely
-      if (reactionId) {
-        const messageRemoveReaction: MsgRemoveReactionEncodeObject = {
-          typeUrl: MsgRemoveReactionTypeUrl,
-          value: {
-            subspaceId: Long.fromNumber(subspaceId),
-            postId: Long.fromNumber(post.id),
-            reactionId,
-            user: activeAddress,
-          },
-        };
+      const messageRemoveReaction: MsgRemoveReactionEncodeObject = {
+        typeUrl: MsgRemoveReactionTypeUrl,
+        value: {
+          subspaceId: Long.fromNumber(subspaceId),
+          postId: Long.fromNumber(post.id),
+          reactionId: remoteReactionId,
+          user: activeAddress,
+        },
+      };
 
-        // Broadcast the transaction
-        const result = await broadcastTx([messageRemoveReaction], { optimistic: true });
-        if (result.isErr()) {
-          // If the transaction is canceled or errors, revert the removal of the reaction.
-          setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);
-        }
+      // Broadcast the transaction
+      const result = await broadcastTx([messageRemoveReaction], { optimistic: true });
+      if (result.isErr()) {
+        // If the transaction is canceled or errors, revert the removal of the reaction.
+        setPostReactionStatus(post, DataStatus.CREATED_LOCALLY);
       }
     },
     [setPostReactionStatus, getReaction, activeAddress, subspaceId, broadcastTx],
