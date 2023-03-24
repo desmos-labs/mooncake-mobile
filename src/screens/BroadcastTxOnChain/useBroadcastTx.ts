@@ -46,7 +46,7 @@ const useGetSignerData = () => {
 /**
  * Hook that provides a function to sign a transaction.
  */
-export function useBroadcastTx() {
+const useBroadcastTx = () => {
   const getChainInfo = useGetCurrentChainInfo();
 
   const unlockWallet = useUnlockWallet();
@@ -125,4 +125,6 @@ export function useBroadcastTx() {
     },
     [getChainInfo, getSignerData, signTx, unlockWallet],
   );
-}
+};
+
+export default useBroadcastTx;
