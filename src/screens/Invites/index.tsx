@@ -19,13 +19,14 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Image, Share, TouchableOpacity, View } from 'react-native';
+import { Image, Share, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Box, useTheme } from 'native-base';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import StepComponent from 'screens/Invites/components/StepComponent';
 import { useGenerateInvite, useGetActiveAccountInvitesInfo } from 'screens/Invites/hooks';
 import { ResultAsync } from 'neverthrow';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.SETTINGS_INVITES>;
@@ -169,7 +170,7 @@ const Invites = () => {
               })}
             </Typography.Body6>
           ) : (
-            <ActivityIndicator color={theme.colors.surfaceBlack} />
+            <StyledSpinner />
           )}
         </View>
       </Box>

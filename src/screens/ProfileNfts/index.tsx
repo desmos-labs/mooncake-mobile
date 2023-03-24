@@ -8,11 +8,12 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { useTheme } from 'native-base';
 import EmptyPostComponent from 'screens/Profile/components/EmptyPostComponent';
 import NftComponent from 'screens/ProfileNfts/components/NftComponent';
 import GetNftsData from 'services/axios/requests/GetNftsData';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 // PROFILE_NFTS was removed from RootNavigator
@@ -78,7 +79,7 @@ const ProfileNfts = () => {
           }
         />
       ) : (
-        <ActivityIndicator size="small" color={theme.colors.surfaceBlack} />
+        <StyledSpinner />
       )}
     </DView>
   );

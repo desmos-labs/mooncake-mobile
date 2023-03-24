@@ -12,7 +12,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MediaBottomPanel from 'components/MediaBottomPanel';
-import { Center, Spinner, useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import useCreatePost from 'hooks/posts/useCreatePost';
 import {
@@ -25,6 +25,7 @@ import {
 import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -113,7 +114,7 @@ const CreatePost = () => {
 
   const TopBarRightElement = React.useMemo(() => {
     if (loading) {
-      return <Spinner />;
+      return <StyledSpinner />;
     }
 
     return (

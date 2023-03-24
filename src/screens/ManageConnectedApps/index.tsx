@@ -9,7 +9,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useTheme } from 'native-base';
 import AppConnectedItem from 'screens/ManageConnectedApps/components/AppConnectedItem';
 import NoAppConnections from 'screens/ManageConnectedApps/components/NoConnections';
@@ -17,6 +17,7 @@ import { useActiveAccount } from '@recoil/accounts';
 import { ApplicationLink } from 'types/desmos';
 import useAppLinksGivenAddress from 'hooks/profiles/applinks/useAppLinksGivenAddress';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import { useCreateAppLink, useUnlinkApplication } from './hooks';
 import useStyles from './useStyles';
 
@@ -76,7 +77,7 @@ const ManageConnectedApps: React.FC<NavProps> = () => {
       </View>
 
       {loading ? (
-        <ActivityIndicator />
+        <StyledSpinner />
       ) : (
         <FlatList
           data={appLinks}

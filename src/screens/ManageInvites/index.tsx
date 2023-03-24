@@ -7,12 +7,13 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { HStack, useTheme } from 'native-base';
 import InvitesList from 'screens/ManageInvites/components/InvitesList';
 import { useTranslation } from 'react-i18next';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useGetSectionedInvites from './hooks';
 import useStyles from './useStyles';
 
@@ -40,7 +41,7 @@ const ManageInvites = () => {
           {rewardBalance !== undefined ? (
             <Typography.H1>{rewardBalance} DSM</Typography.H1>
           ) : (
-            <ActivityIndicator color={theme.colors.surfaceBlack} style={CommonStyles.flex[1]} />
+            <StyledSpinner style={CommonStyles.flex[1]} />
           )}
         </View>
         <FastImage resizeMode="cover" source={invitesBanner2} style={styles.banner} />

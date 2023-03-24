@@ -5,7 +5,6 @@ import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, { useMemo } from 'react';
 import {
-  ActivityIndicator,
   Image,
   ListRenderItemInfo,
   SafeAreaView,
@@ -20,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { NavProps } from 'screens/ManageInvites';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 interface Props {
@@ -121,7 +121,7 @@ const InvitesList = ({
     <Box flex={1}>
       {loading ? (
         <SafeAreaView style={styles.loaderContainer}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
+          <StyledSpinner />
         </SafeAreaView>
       ) : (
         <>

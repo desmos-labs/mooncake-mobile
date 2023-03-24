@@ -7,8 +7,9 @@ import { useTranslation } from 'react-i18next';
 import UserPostsList from 'screens/ProfilePosts/UserPostsList';
 import usePostsTippedByAddress from 'hooks/tips/usePostsTippedByAddress';
 import sleep from 'lib/sleep';
-import { Center, Spinner } from 'native-base';
+import { Center } from 'native-base';
 import { View } from 'react-native';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS_LIKED>;
@@ -57,7 +58,7 @@ export const UserTippedPostsTab = () => {
     return (
       <View style={styles.loadingView}>
         <Center>
-          <Spinner />
+          <StyledSpinner />
         </Center>
       </View>
     );

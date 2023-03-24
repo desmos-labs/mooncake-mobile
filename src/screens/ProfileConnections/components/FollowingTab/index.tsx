@@ -6,10 +6,9 @@ import { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import useFollowing from 'hooks/relationships/useFollowing';
-import { makeStyle } from 'config/theme';
-import { View } from 'react-native';
-import { Center, Spinner } from 'native-base';
+import { Center } from 'native-base';
 import sleep from 'lib/sleep';
+import StyledSpinner from 'components/StyledSpinner';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWING>;
 
@@ -19,7 +18,6 @@ type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE
  */
 const FollowingTab = () => {
   const { t } = useTranslation('followingAndFollowers');
-  const styles = useStyles();
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
   const [firstFocus, setFirstFocus] = useState(true);
@@ -56,11 +54,9 @@ const FollowingTab = () => {
 
   if (firstFocus) {
     return (
-      <View style={styles.loadingView}>
-        <Center>
-          <Spinner />
-        </Center>
-      </View>
+      <Center flex={1} flexGrow={1} backgroundColor="white">
+        <StyledSpinner />
+      </Center>
     );
   }
 
@@ -77,9 +73,5 @@ const FollowingTab = () => {
     />
   );
 };
-
-const useStyles = makeStyle(theme => ({
-  loadingView: { flex: 1, flexGrow: 1, backgroundColor: theme.colors.white },
-}));
 
 export default FollowingTab;

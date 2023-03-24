@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 import usePostsLikedByAddress from 'hooks/posts/usePostsLikedByAddress';
 import UserPostsList from 'screens/ProfilePosts/UserPostsList';
 import sleep from 'lib/sleep';
-import { View } from 'react-native';
-import { Center, Spinner } from 'native-base';
-import useStyles from './useStyles';
+import { Box, Center } from 'native-base';
+import StyledSpinner from 'components/StyledSpinner';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_POSTS_LIKED>;
 
@@ -19,7 +18,6 @@ type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE
  */
 export const UserLikedPostsTab = () => {
   const { t } = useTranslation('profile');
-  const styles = useStyles();
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
   const [firstFocus, setFirstFocus] = useState(true);
@@ -55,11 +53,11 @@ export const UserLikedPostsTab = () => {
 
   if (firstFocus) {
     return (
-      <View style={styles.loadingView}>
+      <Box flex={1} flexGrow={1} backgroundColor="white">
         <Center>
-          <Spinner />
+          <StyledSpinner />
         </Center>
-      </View>
+      </Box>
     );
   }
 

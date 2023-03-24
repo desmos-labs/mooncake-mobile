@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { getProfilePicture } from 'lib/ProfileUtils';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 import AvatarImageProps from './props';
 
@@ -21,7 +22,7 @@ const AvatarImage: React.FC<AvatarImageProps> = props => {
           source={getProfilePicture(profile)}
           resizeMode="cover"
         />
-        {loading === true && <ActivityIndicator style={styles.indicator} />}
+        {loading === true && <StyledSpinner style={styles.indicator} />}
       </View>
     </TouchableWithoutFeedback>
   );

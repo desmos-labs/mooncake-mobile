@@ -9,7 +9,7 @@ import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { HStack, Spinner, useTheme } from 'native-base';
+import { HStack, useTheme } from 'native-base';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
@@ -18,6 +18,7 @@ import useAccountBalance from 'hooks/balance/useAccountBalance';
 import { formatCoins } from 'lib/FormatUtils';
 import { TipTarget } from 'types/tips';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 import {
   FormValues,
@@ -193,7 +194,7 @@ const SendTips = (props: NavProps) => {
 
                 {/* When we have the selected account properties, we will show the available balance and disable the buttons accordingly */}
                 {loadingBalance ? (
-                  <Spinner style={styles.spinner} size={16} color={theme.colors.surfaceBlack} />
+                  <StyledSpinner style={styles.spinnerPosition} />
                 ) : (
                   <Typography.Body7 style={{ color: theme.colors.accentGreen01 }}>
                     {formatCoins(balance)}

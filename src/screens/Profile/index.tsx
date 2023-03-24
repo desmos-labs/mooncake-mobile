@@ -10,7 +10,6 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   ImageBackground,
   InteractionManager,
   RefreshControl,
@@ -47,6 +46,7 @@ import EditProfileSection from 'screens/Profile/components/EditProfileSection';
 import usePostsByAddress from 'hooks/posts/usePostsByAddress';
 import usePostsCountByAddress from 'hooks/posts/usePostsCountByAddress';
 import FollowUnfollowButton from 'components/FollowUnfollowButton';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.PROFILE | ROUTES.GUEST_PROFILE>;
@@ -324,7 +324,7 @@ const Profile = () => {
   if (initialLoading) {
     return (
       <SafeAreaView style={styles.flexCenter}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
+        <StyledSpinner />
       </SafeAreaView>
     );
   }
@@ -333,7 +333,7 @@ const Profile = () => {
     if (isProfileLoading) {
       return (
         <SafeAreaView style={styles.flexCenter}>
-          <ActivityIndicator color={theme.colors.surfaceBlack} />
+          <StyledSpinner />
         </SafeAreaView>
       );
     }
@@ -416,7 +416,7 @@ const Profile = () => {
               {/* Followage count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowingPressed}>
                 {isFollowageCountLoading ? (
-                  <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
+                  <StyledSpinner size={21} />
                 ) : (
                   <Typography.Subtitle3>{followageCount}</Typography.Subtitle3>
                 )}
@@ -426,7 +426,7 @@ const Profile = () => {
               {/* Followers count */}
               <TouchableOpacity style={styles.centerLeftSpacingM} onPress={handleFollowersPressed}>
                 {isFollowersCountLoading ? (
-                  <ActivityIndicator size={21} color={theme.colors.surfaceBlack} />
+                  <StyledSpinner size={21} />
                 ) : (
                   <Typography.Subtitle3>{followersCount}</Typography.Subtitle3>
                 )}

@@ -10,7 +10,7 @@ import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useTheme } from 'native-base';
 import { Post } from 'types/posts';
 import { useAppStateValue } from '@recoil/appState';
@@ -19,6 +19,7 @@ import FastImage from 'react-native-fast-image';
 import { reportSuccessIcon } from 'assets/images';
 import { isPostAlreadyReportedError } from 'types/error';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
@@ -144,7 +145,7 @@ const ReportPost = () => {
             <Spacer paddingVertical={30}>
               {loading ? (
                 <View style={styles.loadingView}>
-                  <ActivityIndicator color={theme.colors.surfaceBlack} />
+                  <StyledSpinner />
                 </View>
               ) : (
                 <Button

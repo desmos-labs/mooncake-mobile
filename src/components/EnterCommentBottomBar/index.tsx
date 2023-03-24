@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Spinner, useTheme } from 'native-base';
+import { useTheme } from 'native-base';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Shadow } from 'react-native-shadow-2';
 import {
@@ -30,6 +30,7 @@ import {
 import { DesmosProfile } from 'types/desmos';
 import { getProfilePicture } from 'lib/ProfileUtils';
 import usePostsParams from 'hooks/posts/usePostsParams';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export type Props = {
@@ -148,7 +149,7 @@ const EnterCommentBottomBar = (props: Props) => {
 
   const RightButtonComponent = useMemo(() => {
     if (loading) {
-      return <Spinner />;
+      return <StyledSpinner />;
     }
     return (
       <Button

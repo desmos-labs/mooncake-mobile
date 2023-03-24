@@ -8,7 +8,7 @@ import Typography from 'components/Typography';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import { useTheme } from 'native-base';
 import ChainLinkItem from 'screens/ManageConnectedChains/components/ChainLinkItem';
 import NoConnections from 'screens/ManageConnectedChains/components/NoConnections';
@@ -21,6 +21,7 @@ import useChainLinksGivenAddress from 'hooks/profiles/chainlinks/useChainLinksGi
 import useConnectChain from 'screens/ManageConnectedChains/useHooks';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 type NavProps = StackScreenProps<RootNavigatorParamList, ROUTES.MANAGE_CONNECTED_CHAINS>;
@@ -128,7 +129,7 @@ const ManageConnectedChains = () => {
       </View>
 
       {loading ? (
-        <ActivityIndicator />
+        <StyledSpinner />
       ) : (
         <FlatList
           data={chainLinks}

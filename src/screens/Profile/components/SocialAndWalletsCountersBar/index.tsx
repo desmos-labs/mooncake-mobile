@@ -2,13 +2,14 @@ import { twitterIcon } from 'assets/images';
 import Typography from 'components/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Box, HStack, useTheme } from 'native-base';
+import { Box, HStack } from 'native-base';
 import { scale } from 'react-native-size-matters';
 import { ApplicationLink, ChainLink } from 'types/desmos';
 import { useActiveAccountAddress } from '@recoil/accounts';
 import { getChainLinkImage } from 'lib/ProfileUtils';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 export interface SocialAndWalletsCountersBarProps {
@@ -40,7 +41,6 @@ export interface SocialAndWalletsCountersBarProps {
  */
 const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) => {
   const styles = useStyles();
-  const theme = useTheme();
   const { t } = useTranslation('profile');
 
   const { address, loading: isLoading, appLinks, chainLinks, handlePressCounters } = props;
@@ -54,7 +54,7 @@ const SocialAndWalletsCountersBar = (props: SocialAndWalletsCountersBarProps) =>
 
   return isLoading ? (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator color={theme.colors.surfaceBlack} />
+      <StyledSpinner />
     </View>
   ) : (
     <View style={[styles.container, { height: scale(18) }]}>

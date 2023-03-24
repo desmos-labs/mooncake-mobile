@@ -18,10 +18,11 @@ import ROUTES from 'navigation/routes';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
-import { Spinner, useTheme } from 'native-base';
+import { Box, useTheme } from 'native-base';
 import * as Yup from 'yup';
 import { AccountWithWallet } from 'types/account';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useHooks from './useHooks';
 import useStyles from './useStyles';
 
@@ -168,9 +169,9 @@ const PasswordManipulation = () => {
                   )}
                 </ScrollView>
                 {loading ? (
-                  <View style={styles.loadingView}>
-                    <Spinner color={theme.colors.surfaceBlack} />
-                  </View>
+                  <Box alignItems="center" py="m">
+                    <StyledSpinner />
+                  </Box>
                 ) : (
                   <Button
                     size={44}

@@ -6,9 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import useFollowers from 'hooks/relationships/useFollowers';
 import sleep from 'lib/sleep';
-import { View } from 'react-native';
-import { Center, Spinner } from 'native-base';
-import { makeStyle } from 'config/theme';
+import { Center } from 'native-base';
+import StyledSpinner from 'components/StyledSpinner';
 import UsersList from '../UsersList';
 
 type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE_FOLLOWERS>;
@@ -19,7 +18,6 @@ type NavProps = MaterialTopTabScreenProps<RootNavigatorParamList, ROUTES.PROFILE
  */
 const FollowersTab = () => {
   const { t } = useTranslation('followingAndFollowers');
-  const styles = useStyles();
   const { params } = useRoute<NavProps['route']>();
   const { userAddress } = params;
   const [firstFocus, setFirstFocus] = useState(true);
@@ -55,11 +53,9 @@ const FollowersTab = () => {
 
   if (firstFocus) {
     return (
-      <View style={styles.loadingView}>
-        <Center>
-          <Spinner />
-        </Center>
-      </View>
+      <Center flex={1} flexGrow={1} backgroundColor="white">
+        <StyledSpinner />
+      </Center>
     );
   }
 
@@ -76,9 +72,5 @@ const FollowersTab = () => {
     />
   );
 };
-
-const useStyles = makeStyle(theme => ({
-  loadingView: { flex: 1, flexGrow: 1, backgroundColor: theme.colors.white },
-}));
 
 export default FollowersTab;

@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import usePostReactions from 'hooks/reactions/usePostReactions';
 import usePostReactionsCount from 'hooks/reactions/usePostReactionsCount';
-import { Center, Spinner } from 'native-base';
+import { Center } from 'native-base';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
+import StyledSpinner from 'components/StyledSpinner';
 import ItemSeparatorComponent from '../components/ItemSeparatorComponent';
 import ReactionItem from './components/ReactionItem';
 import useStyles from './useStyles';
@@ -66,7 +67,7 @@ const PostReactions = () => {
   if (loading) {
     return (
       <Center>
-        <Spinner />
+        <StyledSpinner />
       </Center>
     );
   }

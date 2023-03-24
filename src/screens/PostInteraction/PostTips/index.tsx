@@ -13,7 +13,7 @@ import ROUTES from 'navigation/routes';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { Center, Spinner } from 'native-base';
+import { Center } from 'native-base';
 import EmptyListComponent from 'screens/PostInteraction/components/EmptyListComponent';
 import ItemSeparatorComponent from 'screens/PostInteraction/components/ItemSeparatorComponent';
 import useStyles from 'screens/PostInteraction/PostReactions/useStyles';
@@ -23,6 +23,7 @@ import usePostTips from 'hooks/tips/usePostTips';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 
 type NavProps = CompositeScreenProps<
   StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
@@ -105,7 +106,7 @@ const PostTips = () => {
   if (areTipsLoading) {
     return (
       <Center>
-        <Spinner />
+        <StyledSpinner />
       </Center>
     );
   }

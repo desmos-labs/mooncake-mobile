@@ -52,7 +52,7 @@ const useStyles = makeStyle(theme => ({
     height: 16,
     marginRight: 4,
   },
-  spinner: {
+  spinnerPosition: {
     left: 0,
     marginRight: 'auto',
   },

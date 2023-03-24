@@ -43,7 +43,6 @@ const EmptyPostComponent = (props: EmptyPostComponentProps) => {
 
 const useStyles = makeStyle(theme => ({
   container: {
-    flex: 1,
     alignSelf: 'center',
     marginTop: theme.spacing.xl,
     backgroundColor: theme.colors.white,

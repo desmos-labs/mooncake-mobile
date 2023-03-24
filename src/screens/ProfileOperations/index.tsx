@@ -28,7 +28,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListRenderItemInfo, SectionList, SectionListData, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Center, Flex, Spinner, useTheme } from 'native-base';
+import { Center, useTheme } from 'native-base';
 import { PastTransactionMessage } from 'types/transactions';
 import { usePastActionsSections } from 'screens/ProfileOperations/hooks';
 import useAccountBalance from 'hooks/balance/useAccountBalance';
@@ -36,6 +36,7 @@ import { formatCoins, formatNumShorthand } from 'lib/FormatUtils';
 import useBalanceFiatAmount from 'hooks/balance/useBalanceFiatAmount';
 import useFormatTimeForPostDetails from 'hooks/formatting/useFormatTimeForPostDetails';
 import CommonStyles from 'config/theme/CommonStyles';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 import MessageListItem from './components/MessageListItem';
 
@@ -198,11 +199,9 @@ const ProfileOperations = () => {
     }
 
     return (
-      <Flex marginY={theme.spacing.s}>
-        <Center>
-          <Spinner />
-        </Center>
-      </Flex>
+      <Center my={theme.spacing.s}>
+        <StyledSpinner />
+      </Center>
     );
   }, [fetchingMore, theme.spacing.s]);
 

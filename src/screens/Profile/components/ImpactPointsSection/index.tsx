@@ -6,10 +6,11 @@ import Typography from 'components/Typography';
 import ROUTES from 'navigation/routes';
 import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { HStack, useTheme } from 'native-base';
 import useAccountImpactPoints from 'hooks/impactpoints/useAccountImpactPoints';
+import StyledSpinner from 'components/StyledSpinner';
 import useStyles from './useStyles';
 
 /**
@@ -51,7 +52,7 @@ const ImpactPointsSection = () => {
   if (areImpactPointsLoading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color={theme.colors.surfaceBlack} />
+        <StyledSpinner />
       </View>
     );
   }
