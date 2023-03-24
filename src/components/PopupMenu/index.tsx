@@ -48,6 +48,10 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
       return (
         <Box id={item.label} key={item.label}>
           <Menu.Item
+            _pressed={{
+              opacity: 0.5,
+              backgroundColor: 'surfaceGray',
+            }}
             accessibilityLabel={item.label}
             accessibilityRole="button"
             onPress={item.onPress}>
@@ -79,7 +83,12 @@ const PopupMenu: React.FC<Props> = ({ menuItems, onMenuOpen }) => {
   }, []);
 
   return (
-    <Menu placement="left top" trigger={menuTriggerFn} rounded="xl" onOpen={onMenuOpen}>
+    <Menu
+      disableScroll
+      placement="left top"
+      trigger={menuTriggerFn}
+      rounded="xl"
+      onOpen={onMenuOpen}>
       {menuOptions}
     </Menu>
   );

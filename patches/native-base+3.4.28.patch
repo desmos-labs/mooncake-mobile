@@ -1,0 +1,38 @@
+diff --git a/node_modules/native-base/src/components/composites/Menu/Menu.tsx b/node_modules/native-base/src/components/composites/Menu/Menu.tsx
+index df276a9..4c7f157 100644
+--- a/node_modules/native-base/src/components/composites/Menu/Menu.tsx
++++ b/node_modules/native-base/src/components/composites/Menu/Menu.tsx
+@@ -101,7 +101,7 @@ const Menu = (
+                 value={{ closeOnSelect, onClose: handleClose }}
+               >
+                 <FocusScope contain restoreFocus autoFocus>
+-                  <MenuContent menuRef={ref} {...resolvedProps}>
++                  <MenuContent menuRef={ref} {...resolvedProps} disableScroll={props.disableScroll}>
+                     {children}
+                   </MenuContent>
+                 </FocusScope>
+@@ -124,7 +124,7 @@ const MenuContent = ({
+ 
+   return (
+     <Box {...props} {...menuProps} {...typeaheadProps} ref={menuRef}>
+-      <ScrollView>{children}</ScrollView>
++      <ScrollView scrollEnabled={!props.disableScroll}>{children}</ScrollView>
+     </Box>
+   );
+ };
+diff --git a/node_modules/native-base/src/components/composites/Menu/types.ts b/node_modules/native-base/src/components/composites/Menu/types.ts
+index 92f333f..96c26e1 100644
+--- a/node_modules/native-base/src/components/composites/Menu/types.ts
++++ b/node_modules/native-base/src/components/composites/Menu/types.ts
+@@ -81,6 +81,11 @@ export interface InterfaceMenuProps extends InterfaceBoxProps<IMenuProps> {
+    * Backdrop related props can be passed in _backdrop.
+    */
+   _backdrop?: Partial<IPressableProps>;
++
++  /**
++   * Should the menu be scrollable?
++   */
++  disableScroll?: boolean;
+ }
+ 
+ export interface IMenuItemProps extends IPressableProps {
