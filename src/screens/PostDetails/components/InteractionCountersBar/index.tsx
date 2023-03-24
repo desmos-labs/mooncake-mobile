@@ -42,7 +42,7 @@ const InteractionCountersBar = (props: Props) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePressCounters} style={styles.button}>
         {interactionAuthors[0] && (
-          <Box width={calculatedWidth} height={30}>
+          <Box width={calculatedWidth} height="30px">
             {interactionAuthors.map((value, index) => {
               return (
                 <FastImage

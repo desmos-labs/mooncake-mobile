@@ -140,7 +140,7 @@ const Onboarding = () => {
                 {t('skip')}
               </Button>
             ) : (
-              <Box height={45} />
+              <Box height="45px" />
             )
           }
         />

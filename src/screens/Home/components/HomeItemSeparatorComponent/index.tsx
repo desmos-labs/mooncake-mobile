@@ -6,7 +6,7 @@ const HomeItemSeparatorComponent = () => {
 
   return (
     <Box
-      height={1}
+      height="1px"
       style={{
         paddingHorizontal: -theme.spacing.l,
         backgroundColor: theme.colors.dividerGrey,
