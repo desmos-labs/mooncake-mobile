@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import ToastConfig from 'config/ToastConfig';
 import { useTheme, Box, Toast } from 'native-base';

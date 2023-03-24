@@ -1,4 +1,4 @@
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';

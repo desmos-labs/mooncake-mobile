@@ -12,7 +12,7 @@ import useUploadPictures, {
 import { useTranslation } from 'react-i18next';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useTheme } from 'native-base';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import useStyles from './useStyles';
 
 export interface UploadPicturesSuccess {

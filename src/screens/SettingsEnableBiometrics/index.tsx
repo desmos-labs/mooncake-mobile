@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import TopBar from 'components/TopBar';

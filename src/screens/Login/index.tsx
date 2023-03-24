@@ -1,7 +1,7 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { butterflyLandingIcon, landingBG } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';

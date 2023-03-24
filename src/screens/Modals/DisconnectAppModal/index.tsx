@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { desmosIcon, disconnectIcon } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import GetAppIcon from 'lib/GetAppIcon';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';

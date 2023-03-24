@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import DView from 'components/DView';
 import { ScrollView, TextInput, View } from 'react-native';
 import TopBar from 'components/TopBar';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import EnvConfig from 'config/EnvConfig';
 import useImageFromDevice from 'hooks/useImageFromDevice';

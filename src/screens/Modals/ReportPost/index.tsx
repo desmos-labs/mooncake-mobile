@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import BottomUpModalWrapper from 'components/BottomUpModalWrapper';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import CustomRadioGroup, { RadioValue } from 'components/CustomRadioGroup';
 import DTextInput from 'components/DTextInput';
 import Spacer from 'components/Spacer';

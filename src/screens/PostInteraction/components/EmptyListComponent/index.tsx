@@ -1,5 +1,5 @@
 import { emptyListPlaceholder } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import Typography from 'components/Typography';
 import { makeStyle } from 'config/theme';
 import React from 'react';

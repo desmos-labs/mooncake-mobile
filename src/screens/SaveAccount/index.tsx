@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { accountCreatedBg, accountCreatedIcon } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import DView from 'components/DView';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';

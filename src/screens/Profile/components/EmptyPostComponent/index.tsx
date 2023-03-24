@@ -1,5 +1,5 @@
 import { emptyListPlaceholder } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import Spacer from 'components/Spacer';
 import Typography from 'components/Typography';
 import React from 'react';

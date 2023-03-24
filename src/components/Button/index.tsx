@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Button as NBButton } from 'native-base';
-import { useMakeButtonStyle, useMakeButtonTypography } from 'components/CustomButton/hooks';
+import { useMakeButtonStyle, useMakeButtonTypography } from 'components/Button/hooks';
 import { ColorType } from 'native-base/lib/typescript/components/types';
 
 interface Props
@@ -43,7 +43,7 @@ interface Props
  * A button component based on the native-base Button.
  * @constructor
  */
-const CustomButton = ({
+const Button = ({
   size = 56,
   variant = 'solid',
   backgroundColor,
@@ -73,4 +73,4 @@ const CustomButton = ({
   );
 };
 
-export default memo(CustomButton);
+export default memo(Button);

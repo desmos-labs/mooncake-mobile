@@ -1,5 +1,5 @@
 import { backButton, defaultBanner, defaultProfilePic, editProfilePic } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import DTextInput from 'components/DTextInput';
 import DView from 'components/DView';
 import ProfileHeaderButton from 'components/ProfileHeaderButton';

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import { BLELedger, LedgerApp } from 'types/ledger';
 import BluetoothTransport from '@ledgerhq/react-native-hw-transport-ble';
 import ROUTES from 'navigation/routes';

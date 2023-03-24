@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 // dismiss button
 // import {iconCross} from 'assets/images';
 import Typography from 'components/Typography';

@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
 import BackButton from 'components/BackButton';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import CustomCheckbox from 'components/CustomCheckbox';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DTextInput from 'components/DTextInput';

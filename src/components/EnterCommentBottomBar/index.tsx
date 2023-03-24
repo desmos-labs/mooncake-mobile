@@ -1,5 +1,5 @@
 import { expandCommentIcon } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import useDTextInputStyles from 'components/DTextInput/useStyles';
 import ImageButton from 'components/ImageButton';
 import MediaBottomPanel from 'components/MediaBottomPanel';

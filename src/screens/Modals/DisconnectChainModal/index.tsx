@@ -3,7 +3,7 @@ import { Image, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Typography from 'components/Typography';
 import { desmosIcon, disconnectIcon, dummyAvatar, errorImage, modalSuccess } from 'assets/images';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigatorParamList } from 'navigation/RootNavigator';
 import ROUTES from 'navigation/routes';

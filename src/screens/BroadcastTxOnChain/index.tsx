@@ -15,7 +15,7 @@ import useOnBackAction from 'hooks/navigation/useOnBackAction';
 import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import { isCanceledOperationError } from 'types/error';
 import { Wallet } from 'types/wallet';
 import useCustomToast from 'hooks/extended/useCustomToast';

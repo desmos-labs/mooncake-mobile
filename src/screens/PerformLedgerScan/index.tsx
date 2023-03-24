@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import Typography from 'components/Typography';
 import TopBar from 'components/TopBar';
 import ThemedLottieView from 'components/ThemedLottieView';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import ROUTES from 'navigation/routes';
 import { ConnectToLedgerStackParamList } from 'navigation/RootNavigator/ConnectToLedgerStack';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';

@@ -2,7 +2,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { passwordStrength } from 'check-password-strength';
-import Button from 'components/CustomButton';
+import Button from 'components/Button';
 import DSecureTextInput from 'components/DSecureTextInput';
 import DView from 'components/DView';
 import PasswordReqGroup from 'components/PasswordReqGroup';
