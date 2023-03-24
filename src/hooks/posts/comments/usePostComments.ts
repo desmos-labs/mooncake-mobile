@@ -7,7 +7,7 @@ import { usePostCommentsToSync } from '@recoil/posts';
 import { convertGraphQLPost } from 'lib/GraphQLUtils';
 import { mergePosts } from 'lib/PostsUtils';
 import useUpdatePendingPosts from 'hooks/posts/useUpdatePendingPosts';
-import useQueryReactionValue from 'hooks/graphql/useQueryReactionValue';
+import useGetQueryReactionValue from 'hooks/graphql/useGetQueryReactionValue';
 
 /**
  * Hook that allows to get the comments for a given post.
@@ -70,13 +70,13 @@ const usePostComments = (post: Pick<Post, 'subspaceId' | 'id'>, commentsPerPage:
   );
 
   // Query used to get the comments
-  const queryReactionValue = useQueryReactionValue();
+  const getQueryReactionValue = useGetQueryReactionValue();
   const { refetch, fetchMore } = useQuery(GetPostComments, {
     variables: {
       subspaceId: post.subspaceId,
       postId: post.id,
       user: activeAccountAddress,
-      reaction: queryReactionValue,
+      reaction: getQueryReactionValue(),
       offset: 0,
       limit: commentsPerPage,
     },
