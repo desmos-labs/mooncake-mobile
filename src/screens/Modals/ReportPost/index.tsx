@@ -18,6 +18,7 @@ import useReportPost from 'hooks/reports/useReportPost';
 import FastImage from 'react-native-fast-image';
 import { reportSuccessIcon } from 'assets/images';
 import { isPostAlreadyReportedError } from 'types/error';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type ReportPostParams = {
