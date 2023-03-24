@@ -22,6 +22,7 @@ import { Tip, TipTargetType } from 'types/tips';
 import usePostTips from 'hooks/tips/usePostTips';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { clearTimeout } from '@testing-library/react-native/build/helpers/timers';
+import CommonStyles from 'config/theme/CommonStyles';
 
 type NavProps = CompositeScreenProps<
   StackScreenProps<PostInteractionTabsParamList, ROUTES.POST_TIPS>,
@@ -118,7 +119,7 @@ const PostTips = () => {
           })}
         </Typography.Body6>
       )}
-      <View style={{ flexGrow: 1 }}>
+      <View style={CommonStyles.flexGrow[1]}>
         <FlashList
           data={tips}
           refreshing={refreshing}

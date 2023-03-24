@@ -24,6 +24,7 @@ import {
 } from '@recoil/screens/createPostState';
 import useCustomToast from 'hooks/extended/useCustomToast';
 import SelectedPostImage from 'components/SelectedPostImage';
+import CommonStyles from 'config/theme/CommonStyles';
 import useStyles from './useStyles';
 
 export type CreatePostParams = {
@@ -139,7 +140,10 @@ const CreatePost = () => {
   const TopBarCenterElement = React.useMemo(() => {
     if (!parent) return undefined;
     return (
-      <Typography.Body7 numberOfLines={1} ellipsizeMode="tail" style={{ textAlign: 'center' }}>
+      <Typography.Body7
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={CommonStyles.textAlign.center}>
         {t('replyTo', { replyTo: `@${parent?.author.dTag}` })}
       </Typography.Body7>
     );
