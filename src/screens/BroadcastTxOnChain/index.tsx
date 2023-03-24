@@ -12,7 +12,7 @@ import { useRoute } from '@react-navigation/native';
 import { broadcastAnim } from 'assets/animations';
 import { EncodeObject } from '@desmoslabs/desmjs';
 import useOnBackAction from 'hooks/navigation/useOnBackAction';
-import { useBroadcastTx, useEstimateFees } from 'screens/BroadcastTxOnChain/useHooks';
+import { useBroadcastTx } from 'screens/BroadcastTxOnChain/useHooks';
 import { Result } from 'neverthrow';
 import { StdFee } from '@cosmjs/amino';
 import Button, { ButtonMode, ButtonSize } from 'components/Button';
@@ -22,6 +22,7 @@ import { useTheme } from 'native-base';
 import { useToast } from 'react-native-toast-notifications';
 import ToastConfig from 'config/ToastConfig';
 import { PendingTransaction } from 'types/transactions';
+import useEstimateTransactionFees from 'hooks/transactions/useEstimateTransactionFees';
 import useStyles from './useStyles';
 
 export type BroadcastTxParams = {
@@ -65,7 +66,7 @@ const BroadcastTxOnChain: React.FC = () => {
   // -----------------------------------------------------------------------
 
   const toast = useToast();
-  const estimateFees = useEstimateFees();
+  const estimateFees = useEstimateTransactionFees();
   const broadcastTx = useBroadcastTx();
 
   // -----------------------------------------------------------------------
